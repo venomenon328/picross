@@ -7,7 +7,7 @@ import tempfile
 
 from tools.puzzle_production import authoring_package as ap, catalog_io as io
 from . import presentation as p
-from .sources import LocalSource, Archive, JSON_LIMIT
+from .sources import LocalSource, JSON_LIMIT
 
 
 def project(request, root):
@@ -24,8 +24,14 @@ def project(request, root):
 
 
 def _project(request, root):
+    base = LocalSource(root)
+    with p._Inspection(base, None) as operation:
+        return _project_checked(request, base.root, operation)
+
+
+def _project_checked(request, root, operation):
     r = p.validate(request, measured=False)
-    source = LocalSource(root)
+    source = operation.source
     result = deepcopy(r)
     result['format'] = p.CURRENT_FORMAT if r['format'] == p.CURRENT_REQUEST else p.FORMAT
     for ref in [result['record'], *(o['record'] for o in result['offers'])]:
@@ -39,18 +45,14 @@ def _project(request, root):
             name = loc['container']
             archive_raw = source.read(loc['commit'], name, ap.MAX_ZIP)
             loc['container'] = {'file': name, 'sha256': io.checksum(archive_raw), 'bytes': len(archive_raw)}
-            archive = Archive(archive_raw)
-            try:
-                raw = archive.read(loc['file'], 32 * JSON_LIMIT)
-            finally:
-                archive.close()
+            raw = source.member(loc['commit'], name, loc['file'], 32 * JSON_LIMIT)
         loc.update(sha256=io.checksum(raw), bytes=len(raw))
-    p.inspect(source, None, result)
+    operation.inspect(result)
     raw = p.data(result)
     ap.require(len(raw) <= JSON_LIMIT, 'Projektion überschreitet 1 MiB.')
     target_name = str(Path(r['record']['file']).with_name('workspace.json')).replace('\\', '/')
-    target = io.safe(source.root, target_name)
-    before = io.read(source.root, target_name, JSON_LIMIT, missing=True)
+    target = io.safe(root, target_name)
+    before = io.read(root, target_name, JSON_LIMIT, missing=True)
     source.recheck()
     if before is not None:
         ap.require(before == raw, 'Vorhandene fremde/abweichende Projektion wird nicht überschrieben.')
@@ -63,7 +65,7 @@ def _project(request, root):
             stream.flush()
             os.fsync(stream.fileno())
         source.recheck()
-        ap.require(io.safe(source.root, target_name) == target, 'Projektionsziel wurde geändert.')
+        ap.require(io.safe(root, target_name) == target, 'Projektionsziel wurde geändert.')
         # Atomic no-replace publication on NTFS/POSIX, not replace/rename-overwrite.
         os.link(stage, target, follow_symlinks=False)
     except FileExistsError as exc:
@@ -83,6 +85,7 @@ def automatic(root, directory, stage, index, *, overlay=None):
     from .sources import INDEX
     base = LocalSource(root)
     overlay = overlay or {}
+    stage_seen = {}
     class View:
         def read(self, commit, name, limit=JSON_LIMIT, missing=False):
             if commit is None:
@@ -93,13 +96,61 @@ def automatic(root, directory, stage, index, *, overlay=None):
                     row = {'puzzle_id': record['puzzle_id'], 'revision': record['revision'], 'record': directory + '/record.json'}
                     raw = p.data({**index, 'entries': [e for e in index['entries'] if e['record'] != row['record']] + [row]})
                 elif name in (directory + '/record.json', directory + '/handoff.json', directory + '/package.zip'):
-                    raw = io.read(stage, name.rsplit('/', 1)[1], limit)
+                    leaf = name.rsplit('/', 1)[1]
+                    raw = io.read(stage, leaf, limit)
+                    info = io.safe(stage, leaf).stat()
+                    identity = (*io.signature(info), info.st_ctime_ns)
+                    ap.require(stage_seen.setdefault(leaf, identity) == identity, 'Projection stage changed')
                 else:
                     return base.read(commit, name, limit, missing)
                 ap.require(len(raw) <= limit, 'Projection source exceeds bound')
                 return raw
             return base.read(commit, name, limit, missing)
-    source = View()
+    with p._Inspection(View(), None) as operation:
+        raw = _automatic(operation, directory)
+        operation.source.recheck()
+        return raw
+
+
+def finalization_views(root, directory, stage, index, before, after, overlay):
+    """Share only the closed finalizer delta; all other views stay fully fresh.
+
+    Called under the finalizer's lock, after BOTH content/background/approval
+    inspections. The ordinary automatic reader binds the unchanged originals;
+    the finalizer rechecks its byte/identity observations at every publication.
+    """
+    prior = automatic(root, directory, stage, index)
+    changed = {key for key in before if p.data(before[key]) != p.data(after.get(key))}
+    delta = {'state', 'background', 'verification', 'final_editorial_approval',
+             'blockers', 'next_step', 'next_action', 'source_commit', 'pr'}
+    def qualified(record):
+        v = record['verification']
+        return (record['state'] in ('background_review', 'content_ready', 'editorially_approved') and
+                v.get('technical') is True and v.get('format') == 'picross-authoring-content-inspection-v2' and
+                v.get('effective_state') == record['state'] and v.get('integration_ready') is False and
+                all(v.get(k) == record[k] for k in ('width', 'height', 'mode', 'used_colors', 'difficulty')) and
+                all(b == 'final_editorial: missing bound human final approval' or b.startswith('background')
+                    for b in v.get('blockers', [])))
+    common = (set(before) == set(after) and changed <= delta and qualified(before) and qualified(after) and
+              all(before['background'][k] == after['background'][k] for k in ('manifest', 'history')) and
+              before['verification'].get('original_state') == after['verification'].get('original_state'))
+    if not common:
+        return prior, automatic(root, directory, stage, index, overlay=overlay)
+    value = p.parse(prior)
+    p.bind(p.data(before), value['record'])
+    raw = overlay[directory + '/record.json']
+    ap.require(p.parse(raw) == after, 'Finalizer projection delta does not bind the new record')
+    measured = {**value['record'], 'sha256': io.checksum(raw), 'bytes': len(raw)}
+    for offer in value['offers']:
+        if offer['record'] == value['record']:
+            offer['record'] = deepcopy(measured)
+    value['record'] = measured
+    p.validate(value)
+    return prior, p.data(value)
+
+
+def _automatic(operation, directory):
+    source = operation.source
     record = p.parse(source.read(None, directory + '/record.json'))
     own_ref = {'commit': None, 'file': directory + '/record.json'}
     offers = record['presentation']['raster_offers']
@@ -112,7 +163,7 @@ def automatic(root, directory, stage, index, *, overlay=None):
         if key in seen:
             continue
         seen.add(key)
-        ctx = p.Record(source, None, ref, record['puzzle_id'])
+        ctx = operation.record(ref, record['puzzle_id'])
         measured = {**ref, 'sha256': io.checksum(ctx.raw), 'bytes': len(ctx.raw)}
         if ref == own_ref:
             value['record'] = measured
@@ -153,8 +204,7 @@ def automatic(root, directory, stage, index, *, overlay=None):
         ctx.close()
     ap.require(all(any(o['id'] == offered['id'] and o['kind'] == 'raster' for o in value['offers']) for offered in offers),
                'Declared raster offer is not qualified')
-    p.inspect(source, None, value)
-    base.recheck()
+    operation.inspect(value)
     raw = p.data(value)
     ap.require(len(raw) <= JSON_LIMIT, 'Projection exceeds 1 MiB')
     return raw
@@ -173,7 +223,7 @@ def complete(root, record_path, commit):
         before_raw = source.read(None, record_path)
         before = p.parse(before_raw)
         view_before = current_view.observe(root, before['puzzle_id'])
-        ap.require(before['format'] == 'picross-authoring-record-v3' and
+        ap.require(before['format'] in ('picross-authoring-record-v3', 'picross-authoring-record-v4') and
                    before['state'] in ('editorially_approved', 'registered'), 'Completion requires actual final approval')
         after = deepcopy(before)
         if before['state'] != 'registered':

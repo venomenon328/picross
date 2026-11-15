@@ -14,7 +14,7 @@ from tools.puzzle_production.authoring_staging import OwnedStage, StageError
 from tools.puzzle_production.authoring_package import open_package
 from tools.puzzle_production.contract import Aborted, load_json, write_json
 from tests.puzzle_production import test_background_content as content_tests
-from tests.puzzle_production.background_fixtures import file_ref, put, put_json
+from tests.puzzle_production.background_fixtures import file_ref, historical_description, put, put_json
 
 
 class AuthoringFinalizationTests(unittest.TestCase):
@@ -184,6 +184,34 @@ class AuthoringFinalizationTests(unittest.TestCase):
         report = load_json(sidecar / self.fixture.request["output"] / "derivation.json")
         self.assertIsNone(report["output"])
         self.assertEqual(self.run_finalize(request)["status"], "reused")
+
+    def test_qualified_old_record_is_checked_before_approval_and_stays_byte_identical(self):
+        self.build()
+        old = historical_description(assets.describe(generation=1))
+        self.fixture.request["expected_tool_sha256"] = old["tool_sha256"]
+        self.fixture.request["format"] = "picross-background-derive-request-v1"
+        with patch.object(assets, "_tool", return_value=old["tool"]):
+            initial = self.request()
+            self.assertEqual(self.run_finalize(initial)["status"], "updated")
+        old_sidecar = self.bytes_and_times(self.output / initial["sidecar_root"])
+        with patch.object(assets, "_SELECTED_PRODUCERS", frozenset({old["tool_sha256"]})):
+            request = self.approval_request()
+        before = self.bytes_and_times(self.output)
+        # An unknown old record fails before reading/publishing the new approval.
+        blocked = self.run_finalize(request)
+        self.assertEqual(blocked["status"], "invalid_input", blocked)
+        self.assertEqual(self.bytes_and_times(self.output), before)
+        with patch.object(assets, "_SELECTED_PRODUCERS", frozenset({old["tool_sha256"]})):
+            original = (self.directory / "package.zip").read_bytes()
+            with patch.object(assets, "_render", wraps=assets._render) as render:
+                result = self.run_finalize(request)
+            self.assertEqual(result["status"], "updated", result)
+            self.assertGreaterEqual(render.call_count, 2)  # Old record AND new outer view.
+            self.assertEqual(result["record"]["state"], "editorially_approved")
+            self.assertEqual(result["record"]["background"], initial["background"])
+            self.assertEqual((self.directory / "package.zip").read_bytes(), original)
+            self.assertEqual(self.bytes_and_times(self.output / initial["sidecar_root"]), old_sidecar)
+            self.assertEqual(self.run_finalize(request)["status"], "reused")
 
     def test_followup_approval_keeps_prior_sidecars_and_authorization_cannot_disappear(self):
         self.build()

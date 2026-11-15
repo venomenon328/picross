@@ -1,10 +1,10 @@
 {
   "format": "development-ci-plan/v1",
   "issue": "https://github.com/venomenon328/picross/issues/608",
-  "package": "Radieschen · Schritt 4 · Kontextzeichnungen nach Wahl RAD-K-r03",
+  "package": "Radieschen r05: Endabnahme und Erstintegration RAD-HG-A-b01",
   "modules": [],
-  "purpose": "Tatsächliche qualifizierte Rasterwahl am festen Quellcommit binden; drei unterschiedliche native Kontextzeichnungen mit Prompts, Herkunft und isolierten Q-HG01–04-Urteilen sichern. Neue vollständige r05 mit unverändertem Raster/Reveal/Motiv, frischer Prüfung des geschriebenen ZIPs, Inventar, Projektion, current-view und Remoteoriginalbytes. Allgemeiner Quellen-/Plankern docs/ci-required.",
-  "omitted": "Reine Rätselproduktion; keine Tool-/Spiel-/CI-Implementierung, keine neuen Rätseltests oder Bestandsreplays. Deshalb modules=[] und evidence.mode=none, kein Player-Build, Browserlauf oder technischer Upload. Gültige unveränderte Raster-/Difficulty-/Hinweissichtbelege passend weiterführen; Builder prüft die neue Paketfassung vollständig. Hintergrundwahl, Ableitung, Endabnahme und Integration bleiben offen. Temporäre Diagnoseansichten enden nach Sichtung; Produktionsoriginale und Fortsetzungsdaten bleiben bis Auswahl/Integration erhalten. Keine zusätzliche lokale Abschlussbereinigung, kein Merge.",
+  "purpose": "Unveränderte menschlich gewählte Hintergrundzeichnung, Raster und Reveal finalisieren; Export, frischer Plan, Registrierung und Completion. Quell- und Plankern docs/ci-required. Unabhängiges Review am tatsächlichen PR-Head vor bedingt autorisiertem Squash-Merge.",
+  "omitted": "Reine Rätselproduktion ohne Werkzeug-, Spiel- oder CI-Änderungen. Keine neuen Rätseltests, Solver-/Bestandsreplays, Player-Builds, Browserläufe oder technischen Uploads. Vorhandene passende Qualitäts- und Proofbelege weiterverwenden; neue Lieferung tatsächlich über die gemeinsamen Produktionswerkzeuge prüfen. Authoring §9 erst nach bestätigtem Mainabschluss.",
   "test_changes": [],
   "core_change": null,
   "evidence": {

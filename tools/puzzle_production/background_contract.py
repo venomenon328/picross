@@ -291,11 +291,20 @@ def _profile(value):
                  for key, expected in PROFILE.items()), "Only the fixed PNG2304 profile is supported")
 
 
+def validate_producer(value):
+    _keys(value, ("commit", "dirty"), "Producer provenance")
+    _require(isinstance(value["commit"], str) and re.fullmatch(r"[0-9a-f]{40}", value["commit"]) and
+             type(value["dirty"]) is bool, "Invalid producer provenance")
+    return value
+
+
 def validate_request(value):
     value = _isolated(value)
     _keys(value, ("format", "manifest", "decision", "source", "profile",
                   "expected_tool_sha256", "output"), "Derivation request")
-    _format(value["format"], "picross-background-derive-request-v1")
+    _require(type(value["format"]) is str, "Declared format must be a string")
+    _require(value["format"] in ("picross-background-derive-request-v1", "picross-background-derive-request-v2"),
+             "Unsupported declared background format", code="unsupported_format")
     _ref(value["manifest"])
     _ref(value["decision"])
     _optional_ref(value["source"])

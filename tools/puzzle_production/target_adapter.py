@@ -743,6 +743,7 @@ def main(argv=None):
     p.add_argument("--checkout", type=Path, required=True)
     p.add_argument("--integrated-commit", required=True)
     p.add_argument("--puzzle-id", action="append", required=True)
+    p.add_argument("--source-commit", nargs=2, metavar=("ID", "SHA"), action="append", default=[])
     for command in ("retire-reveal-production", "retire-background-production"):
         p = sub.add_parser(command)
         p.add_argument("--checkout", type=Path, required=True)
@@ -774,7 +775,8 @@ def main(argv=None):
             result = retire(args.checkout, args.authoring_revision, args.integrated_commit)
         elif args.command == "retire-production":
             from .integrated_content import retire
-            result = retire(args.checkout, args.puzzle_id, args.integrated_commit)
+            require(len(dict(args.source_commit)) == len(args.source_commit), "Duplicate source commit ID")
+            result = retire(args.checkout, args.puzzle_id, args.integrated_commit, source_commits=dict(args.source_commit))
         elif args.command == "inspect":
             require(args.allow_background or args.external_root is None and args.history_repo is None,
                     "Background roots require explicit --allow-background")

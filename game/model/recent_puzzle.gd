@@ -141,8 +141,9 @@ func _failed() -> bool:
 	error = "Fortsetzen-Merker nicht gespeichert. Erneut versuchen"
 	return false
 
-func _replace(temporary: String) -> bool:
+func _replace(temporary: String, replace_existing: bool = true) -> bool:
 	if OS.get_name() != "Windows":
+		if not replace_existing and FileAccess.file_exists(path): return false
 		# POSIX rename and Emscripten MEMFS rename replace without a delete gap.
 		return DirAccess.rename_absolute(temporary,path) == OK
 	# Godot's Windows rename deletes the destination first. Use the Windows
@@ -153,7 +154,7 @@ func _replace(temporary: String) -> bool:
 	# changed ID/revision launches this hidden process (same record is a no-op).
 	var source: String = Marshalls.utf8_to_base64(ProjectSettings.globalize_path(temporary))
 	var target: String = Marshalls.utf8_to_base64(ProjectSettings.globalize_path(path))
-	var command: String = "$ErrorActionPreference='Stop';try{Add-Type -Name RecentFile -Namespace Picross -MemberDefinition '[System.Runtime.InteropServices.DllImport(\"kernel32.dll\",CharSet=System.Runtime.InteropServices.CharSet.Unicode,SetLastError=true)] public static extern bool MoveFileEx(string source,string target,uint flags);';$s=[Text.Encoding]::UTF8.GetString([Convert]::FromBase64String('%s'));$d=[Text.Encoding]::UTF8.GetString([Convert]::FromBase64String('%s'));if([Picross.RecentFile]::MoveFileEx($s,$d,9)){exit 0};exit 1}catch{exit 1}" % [source,target]
+	var command: String = "$ErrorActionPreference='Stop';try{Add-Type -Name RecentFile -Namespace Picross -MemberDefinition '[System.Runtime.InteropServices.DllImport(\"kernel32.dll\",CharSet=System.Runtime.InteropServices.CharSet.Unicode,SetLastError=true)] public static extern bool MoveFileEx(string source,string target,uint flags);';$s=[Text.Encoding]::UTF8.GetString([Convert]::FromBase64String('%s'));$d=[Text.Encoding]::UTF8.GetString([Convert]::FromBase64String('%s'));if([Picross.RecentFile]::MoveFileEx($s,$d,%d)){exit 0};exit 1}catch{exit 1}" % [source,target,9 if replace_existing else 8]
 	var executable: String = OS.get_environment("SystemRoot").path_join("System32/WindowsPowerShell/v1.0/powershell.exe")
 	return OS.execute(executable,PackedStringArray(["-NoLogo","-NoProfile","-NonInteractive","-EncodedCommand",Marshalls.raw_to_base64(command.to_utf16_buffer())]),[],false,false) == 0
 

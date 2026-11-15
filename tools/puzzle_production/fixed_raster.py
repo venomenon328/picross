@@ -285,7 +285,7 @@ def derive(root, plan_path, output):
 
 def inspect_package(package, outer_budget):
     h, c = package.handoff, package.handoff['candidate']
-    ap.require(h['format'] == 'picross-authoring-handoff-v4' and h['rulebook']['version'] == '0.8.0', 'Fixed requires Authoring 0.8')
+    ap.require(h['format'] in ('picross-authoring-handoff-v4', 'picross-authoring-handoff-v5') and h['rulebook']['version'] == '0.8.0', 'Fixed requires Authoring 0.8')
     r = exact_keys(h['repair'], {'type', 'reference', 'reference_variant', 'plan', 'record', 'replay'})
     ap.require(r['type'] == 'fixed_edits_empty_crop' and c['variant'] == 'fixed', 'Wrong regular fixed selection')
     directory = package.bundle(c['bundle'])

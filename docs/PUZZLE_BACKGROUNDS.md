@@ -1,10 +1,22 @@
 # Rätselbezogene Hintergrundzeichnungen
 
-**PE / #576 · PE-A1 im Arbeitsbranch implementiert, Bildpflege noch Sollstand:**
-[PE-A2](PUZZLE_EDITOR.md#4-bilder-und-hintergrundauswahl) ergänzt später fertige
+> Aktueller Editor-Sonderweg: [PE §13](PUZZLE_EDITOR.md#13-pe-edit2-gezielte-pflege-statt-vollbestandsprüfung) definiert die gezielte Transaktion, Reveal v4, Hintergrund v6 und Rasterpaket v2. Normale Editoraktionen lesen keine historische Produktion. Explizite Produktionsprüfung/Recovery alter Formen bleiben bestehen; Folgeproduktion erhält die aktuelle technische Bildbindung. Die externe Migration gehört zu #641, nicht in die Editor-App.
+
+Der isolierte Spielerimport konsumiert auch kompakte Hintergrund-v6-Quellen
+ohne `notice` oder `authority` im `current`. Vorhandene historische TXT-Dateien
+am festen Hintergrundstamm bleiben unverändert und werden im technischen
+Importinventar mit echten Bytes/Hashes gebunden. Ohne vorhandene TXT-Datei ist
+dessen `notice` null; der Import erzeugt weder Ersatztext noch Herkunftspflichten.
+Aktive PNG-Bindung, sichere Namensräume und das gemeinsame Importprofil bleiben
+geprüft. Ältere Quellen behalten ihre bisherigen verpflichtenden Notice-Refs.
+
+
+**PE / #576 · PE-A1 integriert, PE-A2 zur Umsetzung beauftragt:**
+[PE-A2](PUZZLE_EDITOR.md#8-pe-a2-geschlossener-bild--und-präferenzvertrag) ergänzt fertige
 2304×576-Dateien ohne Neukodierung, die erste individuelle Zuordnung bei einem
 Legacyrätsel und die schreibbare Auswahl Standard/eigenes Bild/kein Hintergrund.
-Die bisherige Ableitung und Legacy-Sperre beschreiben weiter den vorhandenen Weg.
+Der geschlossene neue Vertrag steht in §14. Die bisherige Ableitung und Legacy-Sperre
+beschreiben weiter ausschließlich ihre alten Generationen.
 [PE-A1](PUZZLE_EDITOR.md#7-pe-a1-geschlossener-metadatenvertrag) verwendet
 Runtime v7 mit identischem v6-Hintergrundteilvertrag; Capability-v1 bleibt
 unverändert, Legacy-only aktiviert keine Hintergründe.
@@ -22,7 +34,7 @@ Bestehende Inhalts-, Proof-, Paletten-, Bild-, Freigabe- und Integrationsgaranti
 bleiben erhalten. Der Dienst bleibt lesend; Veröffentlichung und Gitabschluss
 führt der beauftragte Akteur aus. Historische Originale werden nicht migriert.
 
-**Vertrag 1.0 · Dokumentrevision 12 · 11.11.2026 · HP-W1/HP-W2 / #560; PB-H / #489; HP-I1a/HP-I1b1/HP-I1b2/HP-I1c/HP-I2 / #561; MJ-A/MJ-B / #490; BA-A/BA-B / #491**
+**Vertrag 1.0 · Dokumentrevision 14 · 14.11.2026 · HP-W2-COMPAT-1 / #645; HP-W1/HP-W2 / #560; PB-H / #489; HP-I1a/HP-I1b1/HP-I1b2/HP-I1c/HP-I2 / #561; MJ-A/MJ-B / #490; BA-A/BA-B / #491; PE-A2 / #576**
 
 ## 1. Geltung und tatsächlicher Unterstützungsstand
 
@@ -453,7 +465,9 @@ python -m tools.puzzle_production.background_assets verify --request <request.js
 ```
 
 Die [Werkzeuganleitung](../tools/puzzle_production/README.md#hp-w2-eigenständige-hintergrundableitung)
-beschreibt die lokale Verwendung mit dem gebundenen Pillowstand. `describe()` liefert exakt
+beschreibt die lokale Verwendung mit dem gebundenen Pillowstand. Neue Produktion
+verwendet die unten definierte v2-Generation. Die folgende ursprüngliche v1-Form
+bleibt unverändert: `describe(generation=1)` liefert exakt
 `{profile,profile_sha256,tool,tool_sha256}`. `profile` ist das Objekt aus §4.1,
 `tool_sha256=H(tool)`. `tool` ist exakt
 `{id,commit,dirty,versions,modules}`: `id="picross-background-1"`, tatsächlicher
@@ -466,7 +480,7 @@ verwendeten eigenen Dekodier-/Profil-/Prüf-/Schreibmodule. Keine behauptete
 `derive(request, source_root, output_root)` erhält dasselbe JSON-Objekt wie die
 CLI. Wurzeln müssen explizite vorhandene sichere Verzeichnisse sein, dürfen
 einander nicht überdecken und nicht auf einen aktiven Spiel-/Katalogbaum zeigen.
-Der neue Auftrag `picross-background-derive-request-v1` enthält genau:
+Der v1-Auftrag `picross-background-derive-request-v1` enthält genau:
 
 | Schlüssel | Typ / Bedeutung |
 | --- | --- |
@@ -537,9 +551,9 @@ in Eingänge oder Ausgabeordner und gibt bei Erfolg `verified` zurück. Kein Sol
 Engineimport gehört zu diesem Nachweis.
 
 Für **lesendes `verify`** bleiben Request, Befund, originales `tool` und ihre
-Hashes vollständig unverändert und werden strikt geprüft. Aktuelle `id`, die
-vollständige `versions`-Map und die exakte sortierte Modulpfad-/Bytehashmenge
-müssen dem Erzeugerstand entsprechen. Ausschließlich `commit` und `dirty`
+Hashes vollständig unverändert und werden strikt geprüft. In der Grundroute
+müssen aktuelle `id`, die vollständige `versions`-Map und die exakte sortierte
+Modulpfad-/Bytehashmenge dem Erzeugerstand entsprechen. Ausschließlich `commit` und `dirty`
 bezeichnen die unveränderte Herkunft des Erzeugerlaufs; sie verlangen keinen
 identischen HEAD oder Dirtyzustand im späteren Prüfcheckout. Geladene Modulbytes
 müssen den aktuellen Dateien entsprechen; dieser vollständige aktuelle
@@ -548,10 +562,36 @@ nicht ändern. Ausgabe und vollständigen Befund mit dem **originalen Toolobjekt
 frisch reproduzieren und bytegenau vergleichen. Eine passende Hashliste allein
 ist kein Reproduktionsnachweis.
 
+**HP-W2-COMPAT-1 / #645:** Zusätzlich zur obigen Gleichheitsroute darf ausschließlich
+lesendes `verify` eine explizit qualifizierte historische Erzeugeridentität bei
+`selected` prüfen. Die geschlossene Menge in `background_assets.py` bindet über
+`H(tool)` das vollständige originale Toolobjekt einschließlich Commit, dirty,
+sämtlicher neun Modulpfade/-hashes und Versionsmap. Erster Eintrag ist
+`23971ee3834218f28977a346e09f716de6eb18fd6fc3acb8cab25a5ad8cab691`
+aus Commit `94f0fb35ab4f6623a1ddde6d0ca3b03590be0e57`, dirty=false;
+Qualifizierung und Prüfplan stehen in der
+[Paketentscheidung](https://github.com/venomenon328/picross/issues/645#issuecomment-6882921168).
+Vor Aufnahme wurden die vollständigen gebundenen Quellen mit diesem Gitstand
+abgeglichen; weitere Identitäten benötigen einen eigenen qualifizierten Nachweis.
+Historischer Code wird nicht ausgeführt oder aus Git/Netz nachgeladen.
+
+Die Menge allein akzeptiert kein Ergebnis. Aktuelle ID und vollständige
+Codec-/Pythonversionsmap müssen weiterhin exakt passen. Aktuell geladene und
+gespeicherte Module werden vor und nach dem Lauf vollständig gebunden. Der
+aktuelle sichere Leser prüft sämtliche ursprünglichen Request-/Quell-/Entscheidungs-
+und Belegbindungen und reproduziert mit dem festen Profil sowohl das PNG als auch
+den vollständigen Befund einschließlich originalem Toolobjekt und Diagnostik
+bytegenau. Jede Abweichung scheitert. `none` und unbekannte historische Identitäten
+erhalten diese zusätzliche Route nicht. Keine pauschale Modulnamenausnahme,
+kein persistenter Brückenbeleg und keine Umschreibung bestehender Bytes.
+Finalizer prüft weiterhin zuerst den alten Record; Paket-/Exportreader und
+Offline-`verify-export` verwenden dieselbe zentrale Prüfung ohne Sonderfreigabe.
+
 `derive`, einschließlich seines schreibenden `reused`-Pfads, behält die strikte
 vollständige aktuelle `expected_tool_sha256`-Bindung. Tatsächlich geänderte
-Module, Codecs oder Profile bleiben `tool_mismatch` und erfordern eine getrennte
-neue Ableitung; alte Request-/Befund-/Freigabebytes werden nicht umgeschrieben.
+Module außerhalb der ausdrücklich qualifizierten lesenden Route sowie geänderte
+Codecs oder Profile bleiben Fehler und erfordern eine getrennte neue Ableitung;
+alte Request-/Befund-/Freigabebytes werden nicht umgeschrieben.
 Der v6-Prüfbericht führt den aktuellen Prüfstand in `tool`; die unveränderte
 Erzeugerbindung bleibt im über `background.binding.derivation` gebundenen
 Originalbefund. Offline prüfbar bedeutet ohne ursprünglichen
@@ -626,6 +666,50 @@ Bytes und bereits vollständige Veröffentlichungen erhalten und Restpfad melden
 Nach hartem Kill eigene Reste erst nach Besitz-/Lockprüfung gemäß WORKSPACE
 bereinigen. Ein möglicherweise vollständiger Rest wird erst nach vollständiger
 frischer Prüfung desselben Requests wiederverwendet.
+
+
+### 4.7 PW-PERF-C: neue HP-W2-Beleggeneration v2
+
+[Paketentscheidung](https://github.com/venomenon328/picross/issues/653#issuecomment-6892078406).
+Neue Aufträge verwenden `picross-background-derive-request-v2`, mit exakt den
+sieben v1-Feldern `format,manifest,decision,source,profile,expected_tool_sha256,output`.
+Das feste Profil `picross-background-png2304-v1`, kanonische Hashbildung und alle
+PNG-/Ressourcen-/Pfadgrenzen bleiben unverändert. Der Befund
+`picross-background-derivation-v2` hat exakt die bisherigen v1-Befundfelder plus
+`producer`. `producer` ist exakt `{commit,dirty}`: vollständige tatsächliche
+Git-HEAD-SHA und Boolean für den tatsächlichen Arbeitsbaum (einschließlich
+unversionierter Dateien), ermittelt zu Beginn des Aufrufs vor eigenen Lock-/
+Staging-/Ausgabeschreibvorgängen. Diese Herkunft gehört zum Befund, nicht zu
+H(tool). Spätere Git-Statusänderungen, insbesondere durch eigene Arbeitsdateien,
+sind kein Renderidentitätswechsel. Der Dirty-Status wird ohne zusätzliche
+Pfadausnahmen ermittelt; echte Eingangs-/Zieländerungen und Renderquellenwechsel
+werden weiterhin an ihren unabhängigen frischen Datei-/Bytegrenzen abgewiesen.
+
+V2-`tool` hat exakt `id,versions,modules`, ID `picross-background-2`.
+`versions` hat exakt `python,pillow,zlib,littlecms`; Pillow bleibt 12.3.0.
+`modules` ist die sortierte, eindeutige Liste aus exakt zwei `{file,sha256}`-Zeilen:
+`tools/puzzle_production/background_render.py` und
+`tools/puzzle_production/image_normalization.py`. Der erste enthält die strikte
+PNG-Prüfung, Geometrie, Alphabehandlung, Pixelbefunde und PNG-Kodierung, der zweite
+die tatsächliche Farb-/EXIF-Normalisierung. Keine Diagnose-, Git-, CLI-, I/O- oder
+Orchestrierungsmodule im Bildidentitätskern. Geladene Renderquellen und ihre
+physischen Dateiidentitäten müssen vor/nach dem Aufruf passen; lediglich aktuelle
+Dateien zu hashen genügt nicht. Profil/Codecs/Renderquellen ändern die Identität,
+reine Diagnose- oder Gitänderungen tun dies nicht.
+
+`describe`/`describe(generation=2)` liefert Profil/Tool samt Hashes und `producer`;
+`describe --generation 1` / `describe(generation=1)` beschreibt ausdrücklich v1.
+Der Request dispatcht derive/verify ohne Generationsraten. V1 behält seine exakten
+Felder, neun Module, Tool-ID und bisherigen Reproduktionsregeln. Die qualifizierte
+selected-Ausnahme aus #645 wird nicht erweitert; sie gilt weder für none noch
+Produktion. Request-, Tool- und Befundgeneration müssen zusammenpassen.
+
+Verify reproduziert Bild und den ganzen Originalbefund einschließlich ursprünglicher
+Herkunft. Identischer v2-Reuse erhält ebenfalls die ursprünglichen Befundbytes;
+er prüft Quellen, Ziele und aktuelle Implementierung frisch, ohne Überschreiben.
+Fremde/fehlende/teilweise Ziele bleiben Fehler. Katalog-, Receipt-, Paket-,
+Finalizer- und Offline-Reader dispatchen beide geschlossenen Formen. Export v6,
+Record-/Registryformen und historische Originalbytes ändern sich nicht.
 
 ## 5. Paketbindung und gewöhnliche finale Endabnahme
 
@@ -1278,7 +1362,7 @@ Menschenzeit und Auswahlwartezeit getrennt im vorhandenen Authoringprotokoll;
 unbekannte Zeiten `null`.
 
 Nach bestätigter Endabnahme und tatsächlicher Main-Integration gilt
-[Authoring §9](ai-workflows/PUZZLE_AUTHORING.md#9-produktionsabschluss-und-bereinigung).
+[Authoring §9](ai-workflows/PUZZLE_AUTHORING_STEP_5.md#9-produktionsabschluss-und-bereinigung).
 Aktives PNG beziehungsweise explizite Leerbindung, Nutzungsrechte/Attribution,
 kompakte echte Auswahl-/Ableitungs-/Integrationsbindungen und aktive Bildrevision
 bleiben. Originale, Kandidaten, Prompts, Arbeits-ZIPs und Zwischenbelege enden
@@ -2020,3 +2104,132 @@ gewählte Asset wird im letzten regulären Integrationsschritt übernommen.
 Reale Bildproduktion/HW07, Mehrjob-Sheet, Batch und Serienpilot bleiben eigene
 offene Umfänge. Ein grüner Werkzeug- oder Runtimefall schließt #560/#561/#563
 nicht ohne Prüfung ihrer vollständigen zuständigen Kriterien.
+
+## 14. PE-A2 · Fertigimport und ausdrückliche aktuelle Präferenz
+
+Vertrag vor konsumierendem Code gemäß
+[PE-A2](https://github.com/venomenon328/picross/issues/576#issuecomment-6839202555)
+und [Receipt-Präzisierung](https://github.com/venomenon328/picross/issues/576#issuecomment-6839354651).
+Der direkte Eingang `picross-prepared-background-png2304-v1` prüft genau 2304×576,
+höchstens 32 MiB, nicht animiertes vollständig dekodierbares PNG, bereits korrekte
+Orientierung und sRGB-Kompatibilität, mindestens einen vollständig transparenten
+und einen sichtbaren Pixel. Die bisherigen zulässigen höchstens 8-Bit-PNG-Farbtypen
+einschließlich erlaubtem tRNS und Interlacing bleiben. Quellbytes werden ohne
+Neukodierung importiert; es entsteht kein HP-W2-Derivationobjekt und kein neues
+HP-W2-Codec-/Modulprofil.
+
+Die isolierte Importvorbereitung aus §13.4 erhält weiterhin Kompression 0,
+Mipmaps und die bestehenden Alpha-/Größeneinstellungen. Der tatsächliche Engine-
+Import des direkten Eingangs wird nach Quellenfarbtyp geprüft: Graustufe mit
+Transparenz (Typ 0) und Graualpha (Typ 4) als LA8, RGB/Palette/RGBA (Typ 2/3/6)
+als RGBA8; Maße, tatsächliches Alpha und Mipmaps bleiben vollständig zu prüfen.
+Die alte RGBA8-Prüfung gilt weiter für den historischen HP-W2-Ableitungsausgang.
+Quellprüfung, echter Godotimport und PCK-Dekodierung sind getrennte Aussagen;
+PE-A2-K10/T02 bindet ihren neuen technischen Nachweis. Keine Importsidecars im
+aktiven Inhaltscheckout und keine behauptete Browser-/Windows-GUI-Abnahme.
+
+| Neue Form | Exakte Felder |
+| --- | --- |
+| `picross-catalog-background-v5` | `format,id,record_revision,origin,binding,current,record_hash`. |
+| `origin` | `entry,identity,notice,source`; unveränderter historischer Normalanker, Source v1–v4 oder null nur bei gültigem bisher sourcefreiem Legacy. Keine eingebettete v5-Hülle. |
+| `binding` | `entry,identity`; aktueller geprüfter Normalanker. Identity exakt `key,save_slot,definition,runtime_revision`, Definition als Ref. |
+| `current` | `image_revision,status,asset,notice,authority`; status standard/selected/none. Nur selected besitzt feste Asset-/Notice-Refs `game/art/backgrounds/<id>.png/.txt`, sonst null/null. |
+| Manuelle Autorität | `kind,decision,provenance`, kind manual; Decision/Provenienz/Notice exakt nach PE §8.1–8.2. Bildlose Auswahl hat provenance null. |
+| Produktive Autorität | `kind,candidate_revision,decision,derivation,provenance,review,adoption`, kind production; vorhandene HP-W2-Teilformen vollständig prüfen. |
+| Produktive v5-`adoption` | `request,revision,target,background,authorization,context`; bisherige fünf Unterformen unverändert, context exakt wie im tatsächlichen Request v2. |
+| `picross-background-adoption-request-v2` | `format,puzzle_id,revision,target,background,authorization,files,test_only,context`; die bisherigen acht Felder behalten ihren Vertrag. |
+| `context` | `source,production,reveal`; Source-Ref auf aktuelle Revealquelle oder sourcefreier vollständiger Produktionsanker `{entry,identity}`. Genau eines von source/production ist nicht null. reveal ist immer der aktuelle echte aktive Reveal-Ref. |
+| `picross-background-adoption-plan-v3` | `format,request,snapshot,old,new,files,plan_hash`; bisherige Textansichten/Bundle-Refs, vollständiger v8-Snapshot mit sieben Namespaces. |
+| `picross-background-adoption-journal-v4` | Achtfelderform des gemeinsamen Writers, operation background-adoption. Vollständig hergeleitete Text-/Binär-/Abwesenheitsdeltas aus alten/neuen Quellen; report_run null. |
+
+Manuelle Pflege verwendet separat `picross-editor-images-request-v1` und den
+gemeinsamen Editorbildplan/-writer aus [PE §8](PUZZLE_EDITOR.md#8-pe-a2-geschlossener-bild--und-präferenzvertrag).
+Reguläre Produktionsadoption verwendet weiterhin wirkliche Auswahl/Ableitung,
+Endfreigabe/Autorisierung und gebundene Quelldateien; sie darf die aktuelle
+Revealautorität nicht aus `origin.approval.selection.reveal` rekonstruieren.
+Kontext/Target werden beim Planen und unmittelbar vor Übernahme vollständig geprüft.
+Ein späterer manuell geänderter Reveal macht den alten Request stale.
+
+Source v5 bleibt nichtrekursiv. Erste echte Pflege respektiert den bisherigen
+wirksamen Bildzähler; spätere Bild-/Präferenzentscheidung erhöht image_revision
+einmal, Raster-Rebind nur record_revision. Identische Wiederholung erhält Zähler,
+Bytes und ursprüngliche Entscheidung/Zeit. Die genaue Zähler- und Noticeableitung
+steht in PE §8.1–8.2. Originale Rechte/Freigaben werden nicht umgeschrieben.
+
+Eine erforderliche Rebind-Überführung von BG-v1–v4 bei aktivem manuellen Reveal v3
+ist ausdrücklich produktiv: vollständige alte Quelle als unveränderter origin,
+exakt deren aktuelle Bild-/HP-Felder übernehmen, nur neue aktuelle binding und
+record_revision, keine neue image_revision/Entscheidung. Eine vorhandene alte
+fünffeldrige Adoption wird dabei unverändert durch Gleichheit mit der validierten
+Ausgangsquelle bewiesen. Ohne frühere Adoption ist null ausschließlich für das
+ursprüngliche Bild erlaubt, ebenfalls mit vollständigem Gleichheitsnachweis.
+Neue produktive Adoptionsentscheidungen verlangen den sechsfeldrigen v2-Kontext;
+alte Reader werden nicht erweitert. Die
+[begründete Präzisierung](https://github.com/venomenon328/picross/issues/576#issuecomment-6839354651)
+ändert keine Erstregistrierung und erzeugt keine historische Freigabe.
+
+Für eine wirkliche reguläre Request-v2-Adoption aus noch bestehender BG-v1–v4
+gilt der direkte produktive Erst-Adoptionsbuilder: neue v5-origin enthält die
+vollständige alte Quelle; adoption.target bleibt deren echter Source-Ref,
+damaliger Originhash und Bildzähler. Nur vollständige Gleichheit dieses Targets
+mit der validierten origin.source erlaubt den Erstfall. Die neuen aktuellen
+HP-Belege/context sind echt, beide Zähler steigen einmal; keine erfundene
+Zwischenquelle und kein alter Request mit neuer Bedeutung. Weitere v5-Adoptionen
+binden ihren regulären v5-Originhash.
+
+Inhaltsregistry bleibt v4; der vorhandene Hintergrundindex bindet jede neue Source.
+Runtime v8 behält den dreifeldrigen Hintergrund: legacy null/null, ausdrückliches
+standard mit positiver Präferenzrevision und asset null, selected/none wie bisher.
+Standard folgt der **aktuellen** Metadatenkategorie; fehlt deren vorhandene Zeichnung,
+ist kein Hintergrund wirksam. selected/none bleiben von Kategoriewechseln unabhängig.
+Alle sechs Zustandswechsel, Bildersatz, Legacy-Erstbindung und Standardrückkehr
+sind erlaubt. Defekte deklarierte Quelle ist Fehler, kein stiller Standardfallback.
+Legacy ohne Source beginnt optisch unverändert, ohne rückwirkende manuelle Entscheidung.
+
+Capability v1 gilt unverändert auch für v8 und dasselbe Renderprofil. selected/none
+erfordern enabled, legacy/standard allein nicht; eine vorhandene ungültige Capability
+bleibt Fehler. Die bestehende passive 4:1-Darstellung, untere Zentrierung,
+Besuchs-/Ladegrenzen und Spoiler-/Inputverträge bleiben. Keine neue Kategoriezeichnung.
+
+Die vollständigen T8/K8/C8-/Namespace-/Deltamengen stehen in PE §8.4 und
+[SD_CATALOG](SD_CATALOG.md#pe-a2--geschlossene-v8-quellen-pläne-und-journale).
+Neue Revealendungen und Hintergrund-PNGs werden mit tatsächlichen oder negativen
+Erwartungen gebunden. selected→standard/none entfernt nur eigene aktive PNG/TXT;
+Rollback kann sie wiederherstellen. Fremde Dateien bleiben unangetastet und blockieren.
+
+Für Legacy-Erstbindung mit späterem regulärem v6-Rasterupdate erhält der neue
+`picross-integrated-content-v3`-Receipt exakt
+`format,entry,integrated_commit,notice_sha256,background`; background exakt
+`origin_sha256,export_source`. Die echte aktuelle Export-Source v1 wird vor
+Retirement vollständig geprüft und gespeichert; bei sourcefreier Produktion null.
+Der Originhash bindet den unveränderten v5-Erstanker. Source v5 bekommt dafür
+weder fingierte Initialquelle noch weitere Historie; alte Receipt v1/v2 bleiben streng.
+Aktuelle manuelle Präferenz und Rechte überleben Registrierung, Raster-Rebind,
+reguläre Adoption, Sync, Batch und Produktionsabschluss.
+
+## PW-PERF-B · Begrenzte Erstregistrierungsprüfung
+
+Für Erstregistrierung auf v4/v8 gilt ausschließlich die neue geschlossene
+[v10-Semantik](PUZZLE_INTEGRATION.md). Gemeinsame Indizes, neue Produktion samt Freigaben/Proof,
+abhängige Quellen und Schreibziele bleiben vollständig gebunden. Unbeteiligte
+alte Paket-/Liveasset-/Sidecardateien werden nicht gelesen oder als intakt
+bestätigt; ihre Defekte erkennt der zuständige Reader oder ein expliziter
+Gesamtaudit. P0/P2 prüfen neue Quellen und freie/eigene Ziele, P5/P6 die neue
+Publikation, R0/R2 eigene Zwischenstände und alte Indizes. Alte Journalgenerationen
+und andere Writer behalten ihre bisherigen Prüfverträge. Keine Garantie gegen
+nichtkooperierendes ABA-/OS-Racing; keine Änderung menschlicher Freigaben.
+
+
+## PW-PERF-E · Gezielter Abschluss aktueller Quellen
+
+Für `retire-production` gilt der geschlossene [Receipt-v4- und Prüfvertrag](ZA1_ADAPTER.md#pw-perf-e--ausgewählter-produktionsabschluss-und-receipt-v4).
+Aktuelle Background v6 (selected/none/standard) und Reveal v4 (PNG/SVG) werden
+an binding/current geprüft, ohne erfundenen initial-Ursprung. Aktive
+Editorrasterpakete v1/v2 bleiben vollständige aktive Autorität. Alte Receipts
+v1/v2/v3 bleiben unverändert. V4 erhält Originalexport, Rechte und tatsächlichen
+Main-/Quellcommit getrennt; Sonderimportquellen werden je ID ausdrücklich mit
+`--source-commit ID SHA` gebunden. Keine erneute Endfreigabe oder Completion.
+Nur ausgewählte Abhängigkeiten werden gelesen, keine fremden Paket-/Bildbäume.
+Alle Preflights vor erster Löschung, gezielter Abschlussreadback, frischer
+Byte-/mtime-No-op und ehrliche Teilfehlerreste sind verbindlich. Dieses
+Werkzeugpaket beauftragt keine reale Bereinigung; sie braucht einen separaten Auftrag.

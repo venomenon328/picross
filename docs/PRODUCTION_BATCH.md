@@ -783,3 +783,14 @@ im Draft-PR. Empfänger BA-B-A01 mit Repositoryzugriff, Aufbewahrung bis unabhä
 Prüfung und beauftragtem Rückbau, spätestens 18.11.2026; Refablauf ist nicht automatisch.
 BA-B-A01 bleibt unabhängiges A-Gate vor Merge, Selbstreview separat. Kein Merge
 oder Gesamtabschluss von #491 durch die Implementierungslieferung.
+
+## PW-PERF-D · Snapshotverbrauch
+
+BA-A behält lokale 0.6/0.7-Eingänge. Einzeldateisnapshots werden gegen ihre
+ursprünglichen Gitbytes am Plan-source_commit geprüft, falls der aktuelle Router
+abweicht; keine Neubindung alter Pakete. BA-B nimmt zusätzlich Handoff v5/Record v4
+nach [PW-B](PW_B_CONTRACT.md#pw-perf-d--regelquellen-und-snapshotgeneration) an.
+Seine äußere Regelbindung bleibt version/document_revision/snapshot des gemeinsamen
+Kerns; die Originalmetadaten müssen dessen Hash und Revision treffen. Die gesamte
+neue Quellenmenge wird vor Reservierung und nativ vor Export geprüft. Neue
+Regeldateien gehören ausdrücklich zur tatsächlichen Werkzeugbindung beider Adapter.
