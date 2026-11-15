@@ -1,15 +1,15 @@
 {
-  "format": "development-ci-plan/v1",
-  "issue": "https://github.com/venomenon328/picross/issues/614",
-  "package": "Libelle: bestätigter Produktionsabschluss nach Authoring §9",
-  "modules": [],
-  "purpose": "Reiner Nachintegrationsabschluss der tatsächlich endabgenommenen und in PR #616 auf main integrierten Libelle. Geprüften r06-Ansichtsverweis entfernen, r01–r05 explizit als abgeschlossene Vorphasen auswählen und regulären Retirementwriter mit Mainbeleg ausführen. Quellen-/Plankern ohne Player-Build.",
-  "omitted": "Keine Werkzeug-, Spiel-, gemeinsamen Asset- oder CI-Änderungen. Aktive Runtime, Raster/Reveal/Hintergrund, Rechte, Quellen, Metadaten und L5/R4-Bewertung bleiben bytegleich. Keine Solver-/Proof-/Bild-/Spielreplays, Rätseltests, Fach-/Native-/Browsermodule oder technischen Uploads.",
-  "test_changes": [],
   "core_change": null,
   "evidence": {
+    "expires": null,
     "mode": "none",
-    "purpose": null,
-    "expires": null
-  }
+    "purpose": null
+  },
+  "format": "development-ci-plan/v1",
+  "issue": "https://github.com/venomenon328/picross/issues/610",
+  "modules": [],
+  "omitted": "Reine Rätselproduktion. Vorhandene passende Qualitäts- und Proofbelege weiterverwenden; neue Lieferung vollständig mit gemeinsamen Produktionswerkzeugen prüfen. Keine neuen Rätseltests, Bestandsreplays, Player-Builds, Browserläufe oder technischen Uploads. Authoring §9 nach bestätigtem Mainabschluss.",
+  "package": "Schnecke r07: unveränderte endabgenommene Lieferung integrieren",
+  "purpose": "Unverändertes Originalpaket mit echten Freigaben regulär exportieren, Difficulty 0.4 bei gleicher Logik rebindend erhalten, frisch planen und registrieren; Completion, unabhängiges Review und bedingter Squash-Merge nach aktuellen Gates.",
+  "test_changes": []
 }
