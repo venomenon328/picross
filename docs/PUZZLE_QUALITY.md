@@ -2,7 +2,7 @@
 
 **Vertrag 1.0 · Dokumentrevision 10 · 13.11.2026 · PW2-A / [#626](https://github.com/venomenon328/picross/issues/626)**
 
-Für neue Produktionen gilt [Authoring 0.8.0, Dokumentrevision 6](ai-workflows/PUZZLE_AUTHORING.md)
+Für neue Produktionen gilt [Authoring 0.8.0, Dokumentrevision 7](ai-workflows/PUZZLE_AUTHORING.md)
 mit dem geschlossenen [PW-B-Datenvertrag](PW_B_CONTRACT.md). Hintergrundbriefing,
 drei Kandidaten und Auswahl beginnen erst nach tatsächlicher qualifizierter
 Rasterwahl in Schritt 4. Frühere 0.6-/0.7-/Offline-Sheetangaben beschreiben ihre
@@ -16,7 +16,7 @@ Diese Datei bleibt die verbindliche redaktionelle Qualitätsreferenz an ihrem
 bisherigen Pfad. Geschlossene Qualitätsbindungen, Kriterien-IDs und Ergebnisformen
 ändern sich durch PW2-A nicht. Der [gemeinsame Bildstil](PUZZLE_IMAGE_STYLE.md)
 präzisiert die gestalterische Behandlung; die Einzelurteile bleiben hier.
-Die [Authoring-Phasenroute](ai-workflows/PUZZLE_AUTHORING.md#11-pflichtquellen-nach-phase)
+Die [Authoring-Phasenroute](ai-workflows/PUZZLE_AUTHORING.md)
 bestimmt die tatsächlich fällige Lektüre, nicht eine pauschale Volllektüre aller
 verlinkten Quellen. Bei einem operativen Verweis auf §8 sind §8.4–8.5 verbindlich;
 §8.1–8.3.1 dokumentieren die unveränderte Herkunft/Referenzeinordnung und sind
@@ -133,12 +133,12 @@ Schemas, Zahlen und Befehle bleiben ausschließlich in den verlinkten Normen.
 
 | ID / Voraussetzung | Herkunft | Methode und fälliger Zeitpunkt |
 | --- | --- | --- |
-| H-01 · Maße, Werte, verwendete Farbzahl und Farb-/Randregeln | [Authoring §4.2](ai-workflows/PUZZLE_AUTHORING.md), [ZA-1](ZA1_ADAPTER.md), [CLI](../tools/puzzle_production/README.md) | Bei jedem Import/finalen Kandidaten automatisch an exakter Matrix/Design/Hinweisen prüfen; vor `content_ready` vollständig belegen. Eine Randverletzung nur über die bereits unterstützte konkrete ZA-1-v2-Autorisierung behandeln, tatsächlichen Negativbefund sichtbar erhalten. |
-| H-02 · Vollständige Deduktion und unabhängiger Proof | [Produktion §5](PUZZLE_PRODUCTION.md), [Authoring §§4.2/4.2.1](ai-workflows/PUZZLE_AUTHORING.md) | Nach letzter Logikänderung vom unbekannten Start unter benanntem zugelassenem Profil lösen, geschriebenen vollständigen Proof unabhängig frisch prüfen und Endmatrix vergleichen; vor `content_ready`. `stalled`, Abbruch, Such-`unique` und bloßer Exitcode genügen nicht. |
-| H-03 · Herkunft, Rekonstruktion und Nutzungsgrundlage | [Produktion §§3–4](PUZZLE_PRODUCTION.md), [Authoring §§4.1/6](ai-workflows/PUZZLE_AUTHORING.md), [ZA-1](ZA1_ADAPTER.md) | Quellenbytes, Bearbeitung, Normalisierung, Parameter, Matrix-/Hinweisbindung und gegebenenfalls Reparatur-Replay dateibasiert prüfen; Rechte/Herkunft vor Freigabe klären. Kein erfundener Rechtetext oder Ersatz durch Eigentümerwunsch. Vor `content_ready` vollständig belegen. |
-| H-04 · Tatsächliche Bild-/Motivfreigaben und erlaubte Änderungen | [Authoring §§2.4/4.4/6](ai-workflows/PUZZLE_AUTHORING.md), [AT](REVEAL_TRANSPARENCY.md), [ZA-1](ZA1_ADAPTER.md) | Vor Abstraktion die konkrete Bildfreigabe, vor Rasterproduktion die Motivfreigabe samt Parameterkorridor prüfen. Materielle Änderungen erneut freigeben; vor `content_ready` alle gültigen Bindungen abgleichen. Ein ausdrücklich unterstützter historischer Autorisierungsweg gilt nur unter seinen eigenen Bedingungen. |
-| H-05 · Paket-/Inventarbindung, echte Endabnahme und Integrationsauftrag | [Authoring §§6–8](ai-workflows/PUZZLE_AUTHORING.md), [ZA-1](ZA1_ADAPTER.md) | Vor Ausgabe eines Angebots geschriebenes Einzelkandidatenpaket/Inventar prüfen. Endabnahme am tatsächlich ausgewählten Paket extern binden, vor Export/Integration vollständig nachweisen und Arbeitsbefugnis prüfen. `content_ready` darf noch die menschliche Endabnahme offen haben; eine Sheet-Auswahl erteilt sie nicht automatisch. |
-| H-06 · Gebundene Schwierigkeit | [Authoring §5](ai-workflows/PUZZLE_AUTHORING.md), [SD2-Integration](SD2_INTEGRATION.md) | Nach finaler Deduktion vor Endabnahme den aktuellen Methoden-/Analysevertrag am konkreten Kandidaten erfüllen; beim Export Definitionsbindung prüfen. Keine Ersatzstufe für fehlenden/abgebrochenen Nachweis und keine Neubewertung alter Pakete aus Q-A. |
+| H-01 · Maße, Werte, verwendete Farbzahl und Farb-/Randregeln | [Authoring §4.2](ai-workflows/PUZZLE_AUTHORING_STEP_3.md), [ZA-1](ZA1_ADAPTER.md), [CLI](../tools/puzzle_production/README.md) | Bei jedem Import/finalen Kandidaten automatisch an exakter Matrix/Design/Hinweisen prüfen; vor `content_ready` vollständig belegen. Eine Randverletzung nur über die bereits unterstützte konkrete ZA-1-v2-Autorisierung behandeln, tatsächlichen Negativbefund sichtbar erhalten. |
+| H-02 · Vollständige Deduktion und unabhängiger Proof | [Produktion §5](PUZZLE_PRODUCTION.md), [Authoring §§4.2/4.2.1](ai-workflows/PUZZLE_AUTHORING_STEP_3.md) | Nach letzter Logikänderung vom unbekannten Start unter benanntem zugelassenem Profil lösen, geschriebenen vollständigen Proof unabhängig frisch prüfen und Endmatrix vergleichen; vor `content_ready`. `stalled`, Abbruch, Such-`unique` und bloßer Exitcode genügen nicht. |
+| H-03 · Herkunft, Rekonstruktion und Nutzungsgrundlage | [Produktion §§3–4](PUZZLE_PRODUCTION.md), [Import §4.1](ai-workflows/PUZZLE_AUTHORING_STEP_3.md) / [Sicherung §6](ai-workflows/PUZZLE_AUTHORING.md), [ZA-1](ZA1_ADAPTER.md) | Quellenbytes, Bearbeitung, Normalisierung, Parameter, Matrix-/Hinweisbindung und gegebenenfalls Reparatur-Replay dateibasiert prüfen; Rechte/Herkunft vor Freigabe klären. Kein erfundener Rechtetext oder Ersatz durch Eigentümerwunsch. Vor `content_ready` vollständig belegen. |
+| H-04 · Tatsächliche Bild-/Motivfreigaben und erlaubte Änderungen | [Bildwahl §2.4](ai-workflows/PUZZLE_AUTHORING_STEP_1.md) / [Motiv §2.4](ai-workflows/PUZZLE_AUTHORING_STEP_2.md) / [Änderung §4.4](ai-workflows/PUZZLE_AUTHORING_STEP_3.md) / [Sicherung §6](ai-workflows/PUZZLE_AUTHORING.md), [AT](REVEAL_TRANSPARENCY.md), [ZA-1](ZA1_ADAPTER.md) | Vor Abstraktion die konkrete Bildfreigabe, vor Rasterproduktion die Motivfreigabe samt Parameterkorridor prüfen. Materielle Änderungen erneut freigeben; vor `content_ready` alle gültigen Bindungen abgleichen. Ein ausdrücklich unterstützter historischer Autorisierungsweg gilt nur unter seinen eigenen Bedingungen. |
+| H-05 · Paket-/Inventarbindung, echte Endabnahme und Integrationsauftrag | [Übergabe §§6–7](ai-workflows/PUZZLE_AUTHORING.md) / [Integration §8](ai-workflows/PUZZLE_AUTHORING_STEP_5.md), [ZA-1](ZA1_ADAPTER.md) | Vor Ausgabe eines Angebots geschriebenes Einzelkandidatenpaket/Inventar prüfen. Endabnahme am tatsächlich ausgewählten Paket extern binden, vor Export/Integration vollständig nachweisen und Arbeitsbefugnis prüfen. `content_ready` darf noch die menschliche Endabnahme offen haben; eine Sheet-Auswahl erteilt sie nicht automatisch. |
+| H-06 · Gebundene Schwierigkeit | [Authoring §5](ai-workflows/PUZZLE_AUTHORING_STEP_3.md), [SD2-Integration](SD2_INTEGRATION.md) | Nach finaler Deduktion vor Endabnahme den aktuellen Methoden-/Analysevertrag am konkreten Kandidaten erfüllen; beim Export Definitionsbindung prüfen. Keine Ersatzstufe für fehlenden/abgebrochenen Nachweis und keine Neubewertung alter Pakete aus Q-A. |
 
 Für neue 0.8-Angebote erfüllt bereits `raster_ready` alle fälligen Rastergarantien;
 nur Hintergrundbereitschaft und nachfolgende echte Endabnahme bleiben getrennt.
@@ -148,7 +148,7 @@ ungeprüft vorzuziehen. Weniger Angebote senken keines dieser Gates.
 ## 5. Sichtung ohne vollständig qualifizierten Kandidaten
 
 Nach der vorgesehenen bedarfsweisen Varianten-/Profil-/Reparatursuche innerhalb
-der [Authoringbudgets §§4.1–4.4](ai-workflows/PUZZLE_AUTHORING.md) MUSS die KI bei
+der [Authoringbudgets §§4.1–4.4](ai-workflows/PUZZLE_AUTHORING_STEP_3.md) MUSS die KI bei
 null vollständig qualifizierten Kandidaten die **zwei bis drei möglichst
 unterschiedlichen besten vorliegenden brauchbaren Entwürfe** zur menschlichen
 Ansicht zeigen, sofern vorhanden. Bei nur einem diesen zeigen. Weitere sinnvolle
@@ -639,7 +639,7 @@ erzeugt keine Buchsichtpflicht; ein geänderter Motivkontext wird gezielt beurte
 Eine reine Hintergrundrevision ändert keine Lösungs-, Hinweis-, Paletten-,
 Schwierigkeits- oder Saveidentität und erzwingt keine unveränderten Logiknachweise.
 Sicherung während der Auswahl und Abschluss der Arbeitsdateien folgen
-[Authoring §9](ai-workflows/PUZZLE_AUTHORING.md) und dem Hintergrundvertrag;
+[Authoring §9](ai-workflows/PUZZLE_AUTHORING_STEP_5.md) und dem Hintergrundvertrag;
 nach bestätigter Integration bleibt kein dauerhaftes Kandidatenarchiv.
 
 **Bestehende Bild-/Rasterqualität bleibt erhalten:** §§3–8, die

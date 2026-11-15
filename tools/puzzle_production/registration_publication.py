@@ -1,4 +1,4 @@
-"""RI-C v6/v7/v8 registration boundaries; no proof authority or persistent cache.
+"""RI-C v6-v9 and dependency-scoped v10 registration boundaries; no proof authority or persistent cache.
 
 Expectations come from the validated journal. Every comparison reads the current
 filesystem. Only these generations opt in; the shared historical writer stays
@@ -13,9 +13,7 @@ from .authoring_package import require
 
 
 def supports(journal):
-    return (isinstance(journal, dict)
-            and journal.get("format") in ("picross-registration-journal-v6", "picross-registration-journal-v7", "picross-registration-journal-v8")
-            and journal.get("operation") == "registration")
+    return tx.registration_route(journal) == "phased"
 
 
 def hashes(texts):
@@ -27,7 +25,7 @@ class Guards:
     """Exact phase expectations, never trusted observations of unchanged files."""
 
     def __init__(self, root, journal, raw, additions=None, *, recovering=False, staged=None):
-        require(supports(journal), "Phased guards require registration v6/v7/v8")
+        require(supports(journal), "Phased guards require a supported registration generation")
         self.root, self.raw = root, raw
         self.view = pub._JournalView(journal, raw)
         self.j = self.view.j
@@ -45,7 +43,9 @@ class Guards:
                            {hashes({name: self.j[side][name]})[name] for side in ("old", "new")})
                 require(io.checksum(data) in allowed, "Foreign recovery target: " + name)
                 self.expected[name] = io.checksum(data)
-        self.packages = {e["production"]["package"] for r in self.view.registries for e in r["entries"]}
+        self.dependencies = self.j["format"] == tx.DEPENDENCY_FORMATS["registration"]
+        self.packages = ({tx._delta(self.j, *self.view.registries)} if self.dependencies else
+                         {e["production"]["package"] for r in self.view.registries for e in r["entries"]})
         self.allowed_files = set(self.j["old"]) | set(self.j["retained"]) | set(self.j["additions"]) | set(self.view.temps.values())
         self.allowed_dirs = {p.as_posix() for n in self.allowed_files for p in Path(n).parents}
         if tx.background(self.j):
@@ -54,9 +54,29 @@ class Guards:
             for side, registry in zip(("old", "new"), self.view.registries):
                 refs = background.index(registry)
                 for entry in registry["entries"]:
-                    if entry["id"] not in refs: continue
+                    if entry["id"] not in refs or self.dependencies and entry["production"]["package"] not in self.packages: continue
                     source = background.validate(io.json_bytes(self.j[side][background.path(entry["id"])].encode(), background.LIMIT), entry)
-                    origin = background.initial(source)["origin"]
+                    initial = background.initial(source)
+                    if initial is None:
+                        # Slim sources have current technical bindings only.
+                        # Authorize an empty transport root from the actual
+                        # bound export, never an invented historical approval.
+                        entry = source["binding"]["entry"]
+                        package = entry["production"]["package"]
+                        manifest_name = package + "/manifest.json"
+                        if bound.get(manifest_name) != entry["production"]["package_sha256"]:
+                            continue
+                        raw_manifest = io.read(root, manifest_name, 8 * 1024 * 1024)
+                        require(io.checksum(raw_manifest) == bound[manifest_name], "Bound export changed")
+                        manifest = io.json_bytes(raw_manifest, 8 * 1024 * 1024)
+                        if manifest.get("format") != "picross-target-export-v6":
+                            continue
+                        if (not any(n.startswith("external/") for n in manifest["files"]) and
+                                all(manifest["background"][k]["storage"] != "external"
+                                    for k in ("manifest", "decision", "derivation"))):
+                            self.allowed_dirs.add(package + "/external")
+                        continue
+                    origin = initial["origin"]
                     prefix = origin["package"] + "/external"
                     binding = origin["approval"]["background"]
                     if (bound.get(origin["package"] + "/manifest.json") == origin["export_manifest_sha256"] and
@@ -134,7 +154,8 @@ class Guards:
         pub.check_temps(self.root, self.j, self.raw, additions=self.additions,
                         temps={name: temporary}, restore=self.view.restore)
         self.temp_namespace(Path(name).parent.as_posix())
-        if name.startswith(("content/packages/", "content/difficulty/pz-", "content/backgrounds/", "game/art/backgrounds/")):
+        if (name.startswith(("content/packages/", "content/difficulty/pz-")) or
+                not self.dependencies and name.startswith(("content/backgrounds/", "game/art/backgrounds/"))):
             self.tree(Path(name).parent.as_posix(), recursive=False)
         if source is not None:
             require(self.additions.get(name) == source and
@@ -260,8 +281,12 @@ def execute(root, journal, additions, *, fail_step=None, under_lock=None, verifi
         # The journal's single new export was replayed independently during
         # staging. Keep its full P5 verification without re-running historical
         # producers for every other registered package.
-        check_checkout(root, replay=True, replay_package=package, pending_journal=raw,
-                       **({"_verification": verification} if verification is not None else {}))
+        if state.dependencies:
+            from .registration_dependencies import checkout
+            checkout(root, j, verification=verification, raw=raw)
+        else:
+            check_checkout(root, replay=True, replay_package=package, pending_journal=raw,
+                           **({"_verification": verification} if verification is not None else {}))
         state.full("G5b")
         diagnostic.begin_segment("P6")
         state.cleanup()
@@ -325,7 +350,11 @@ def recover(root, journal, raw, *, staged=None):
             state.write(tx.RUNTIME, runtime.encode())
         pub._checkpoint("R1-runtime")
     diagnostic.begin_segment("R2")
-    check_checkout(root, **({"pending_journal": raw} if staged is None else {}))
+    if state.dependencies:
+        from .registration_dependencies import checkout
+        checkout(root, state.j, old=True)
+    else:
+        check_checkout(root, **({"pending_journal": raw} if staged is None else {}))
     require(state.expected == {**hashes(state.j["old"]), **dict.fromkeys(state.j["additions"])},
             "Recovery goal differs")
     if staged is None:

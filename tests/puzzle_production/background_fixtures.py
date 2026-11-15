@@ -207,7 +207,8 @@ class BackgroundFixture:
             **human, "presented_package": None, "previous_decision": None,
             "carried_from": None, "accepted_deviations": [], "test_only": True,
         }
-        self.request = {"format": "picross-background-derive-request-v1", "manifest": None,
+        generation = 2 if description.get("tool", {}).get("id") == "picross-background-2" else 1
+        self.request = {"format": "picross-background-derive-request-v" + str(generation), "manifest": None,
                         "decision": None, "source": None, "profile": copy.deepcopy(PROFILE),
                         "expected_tool_sha256": description["tool_sha256"], "output": "derived/bg01"}
         self.refresh()

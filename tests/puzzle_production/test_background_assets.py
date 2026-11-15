@@ -44,7 +44,7 @@ class BackgroundAssetsTests(unittest.TestCase):
 
     def fixture(self, **kwargs):
         self.number += 1
-        return BackgroundFixture(self.root / str(self.number), assets.describe(), **kwargs)
+        return BackgroundFixture(self.root / str(self.number), assets.describe(generation=1), **kwargs)
 
     def derive(self, fixture):
         return assets.derive(fixture.request, fixture.source, fixture.output)
@@ -74,6 +74,8 @@ class BackgroundAssetsTests(unittest.TestCase):
             self.assertTrue(Path(result["remaining"]).exists())
 
     def cli(self, *arguments, cwd=ROOT):
+        if arguments == ("describe",):
+            arguments = ("describe", "--generation", "1")
         completed = subprocess.run(
             [sys.executable, "-m", "tools.puzzle_production.background_assets", *map(str, arguments)],
             cwd=cwd, capture_output=True, text=True, timeout=30)
@@ -106,7 +108,7 @@ class BackgroundAssetsTests(unittest.TestCase):
         return checkout
 
     def test_describe_binds_actual_profile_modules_versions_and_import_boundary(self):
-        description = assets.describe()
+        description = assets.describe(generation=1)
         self.assertEqual(set(description), {"profile", "profile_sha256", "tool", "tool_sha256"})
         self.assertEqual(description["profile"], PROFILE)
         self.assertEqual(description["profile_sha256"], digest(PROFILE))
@@ -552,7 +554,7 @@ class BackgroundAssetsTests(unittest.TestCase):
                     self.assertEqual(self.report(fixture)["tool"], producer["tool"])
 
     def historical_fixture(self, *, none=False):
-        old = historical_description(assets.describe())
+        old = historical_description(assets.describe(generation=1))
         self.number += 1
         fixture = BackgroundFixture(self.root / str(self.number), old, none=none)
         # Simulate the earlier producer only while creating the synthetic input.
@@ -1012,9 +1014,9 @@ class BackgroundAssetsTests(unittest.TestCase):
         self.assertEqual(list(fixture.output.rglob("derivation.json")), [])
 
     def test_cli_api_parity_success_validation_and_controlled_fault_exit_codes(self):
-        exit_code, description, _ = self.cli("describe")
+        exit_code, description, _ = self.cli("describe", "--generation", "1")
         self.assertEqual(exit_code, 0)
-        self.assertEqual(description, assets.describe())
+        self.assertEqual(description, assets.describe(generation=1))
         fixture = self.fixture()
         request = fixture.request_file()
         code, result, _ = self.cli("derive", "--request", request,
@@ -1090,6 +1092,227 @@ class BackgroundAssetsTests(unittest.TestCase):
         self.assertFalse(fixture.target.exists())
         self.assertEqual(list(fixture.output.rglob("background.png")), [])
         self.assertEqual(list(fixture.output.rglob("derivation.json")), [])
+
+
+
+class BackgroundV2Tests(unittest.TestCase):
+    def setUp(self):
+        self.helper = BackgroundAssetsTests()
+        self.helper.setUp()
+        self.addCleanup(self.helper.doCleanups)
+        self.root = self.helper.root
+
+    def fixture(self, name, **kw):
+        return BackgroundFixture(self.root / name, assets.describe(), **kw)
+
+    def test_v2_selected_none_exact_pixels_and_legacy_dispatch(self):
+        description = assets.describe()
+        self.assertEqual(set(description), {'tool', 'tool_sha256', 'profile', 'profile_sha256', 'producer'})
+        self.assertEqual(set(description['tool']), {'id', 'versions', 'modules'})
+        self.assertEqual([r['file'] for r in description['tool']['modules']], [
+            'tools/puzzle_production/background_render.py', 'tools/puzzle_production/image_normalization.py'])
+        for none in (False, True):
+            f = self.fixture(str(none), none=none)
+            self.assertEqual(assets.derive(f.request, f.source, f.output)['status'], 'none' if none else 'derived')
+            prior = snapshot(f.target)
+            self.assertEqual(assets.derive(f.request, f.source, f.output)['status'], 'reused')
+            self.assertEqual(assets.verify(f.request, f.source, f.target)['status'], 'verified')
+            self.assertEqual(snapshot(f.target), prior)
+            report = json.loads((f.target / 'derivation.json').read_bytes())
+            self.assertEqual(report['format'], 'picross-background-derivation-v2')
+            self.assertEqual(report['producer'], description['producer'])
+            old = BackgroundFixture(self.root / ('legacy-' + str(none)), assets.describe(generation=1), none=none)
+            self.assertEqual(assets.derive(old.request, old.source, old.output)['status'], 'none' if none else 'derived')
+            self.assertEqual(assets.verify(old.request, old.source, old.target)['status'], 'verified')
+            if not none:
+                self.assertEqual((old.target / 'background.png').read_bytes(), (f.target / 'background.png').read_bytes())
+            old_report = json.loads((old.target / 'derivation.json').read_bytes())
+            self.assertNotIn('producer', old_report)
+            self.assertEqual(set(report) - set(old_report), {'producer'})
+            for request, target in ((f.request, old.target), (old.request, f.target)):
+                self.assertNotEqual(assets.verify(request, f.source, target)['status'], 'verified')
+
+    def test_git_and_diagnostics_preserve_identity_original_producer_and_reuse(self):
+        checkout = self.helper.tool_checkout()
+        name = 'tools/puzzle_production/background_render.py'
+        shutil.copyfile(ROOT / name, checkout / name)
+        self.helper.git(checkout, 'add', '.')
+        self.helper.git(checkout, 'commit', '-qm', 'Synthetic v2 tool')
+        def cli(*args):
+            return self.helper.cli(*args, cwd=checkout)
+        code, description, _ = cli('describe', '--generation', '2')
+        self.assertEqual(code, 0)
+        self.assertFalse(description['producer']['dirty'])
+        f = BackgroundFixture(self.root / 'input', description)
+        request = f.request_file()
+        self.assertEqual(cli('derive', '--request', request, '--source-root', f.source, '--output-root', f.output)[0], 0)
+        original = snapshot(f.target)
+        diag = checkout / 'tools/puzzle_production/operation_diagnostics.py'
+        diag.write_bytes(diag.read_bytes() + b'\n# Synthetic diagnostic-only edit.\n')
+        changed = cli('describe', '--generation', '2')[1]
+        self.assertEqual(changed['tool'], description['tool'])
+        self.assertTrue(changed['producer']['dirty'])
+        self.helper.git(checkout, 'add', '.')
+        self.helper.git(checkout, 'commit', '-qm', 'Synthetic diagnostic commit')
+        changed = cli('describe', '--generation', '2')[1]
+        self.assertEqual(changed['tool_sha256'], description['tool_sha256'])
+        self.assertNotEqual(changed['producer']['commit'], description['producer']['commit'])
+        for command, option, output in [('verify', '--output-dir', f.target), ('derive', '--output-root', f.output)]:
+            code, result, stderr = cli(command, '--request', request, '--source-root', f.source, option, output)
+            self.assertEqual(code, 0, (result, stderr))
+        self.assertEqual(snapshot(f.target), original)
+        render = checkout / name
+        render.write_bytes(render.read_bytes() + b'\n# Synthetic pixel implementation revision.\n')
+        changed = cli('describe', '--generation', '2')[1]
+        self.assertNotEqual(changed['tool_sha256'], description['tool_sha256'])
+        self.assertNotEqual(cli('verify', '--request', request, '--source-root', f.source, '--output-dir', f.target)[0], 0)
+        self.assertEqual(snapshot(f.target), original)
+
+    def test_first_derive_inside_clean_checkout_preserves_provenance_and_noop(self):
+        for none in (False, True):
+            with self.subTest(none=none):
+                checkout = self.helper.tool_checkout()
+                name = 'tools/puzzle_production/background_render.py'
+                shutil.copyfile(ROOT / name, checkout / name)
+                def cli(*args):
+                    code, result, stderr = self.helper.cli(*args, cwd=checkout)
+                    self.assertEqual(code, 0, (result, stderr))
+                    return result
+                description = cli('describe', '--generation', '2')
+                f = BackgroundFixture(checkout / 'work', description, none=none)
+                request = f.request_file()
+                self.helper.git(checkout, 'add', '.')
+                self.helper.git(checkout, 'commit', '-qm', 'Bound synthetic inputs')
+                self.assertEqual(self.helper.git(checkout, 'status', '--porcelain',
+                                                '--untracked-files=normal'), '')
+                start = cli('describe', '--generation', '2')
+                self.assertFalse(start['producer']['dirty'])
+                self.assertFalse((f.output / '.background-writer.lock').exists())
+                before = snapshot(f.source)
+                first = cli('derive', '--request', request, '--source-root', f.source,
+                            '--output-root', f.output)
+                self.helper.assert_success(first, 'none' if none else 'derived', f.target)
+                self.assertEqual(set(p.name for p in f.target.iterdir()),
+                                 {'derivation.json'} if none else {'derivation.json', 'background.png'})
+                report = json.loads((f.target / 'derivation.json').read_bytes())
+                self.assertEqual(report['producer'], start['producer'])
+                self.assertTrue((f.output / '.background-writer.lock').exists())
+                self.assertEqual(list(f.output.glob('.hp-w2-stage-*')), [])
+                after = cli('describe', '--generation', '2')
+                self.assertTrue(after['producer']['dirty'])
+                self.assertEqual(after['tool'], start['tool'])
+                original = snapshot(f.root)
+                for command, option, output, status in (
+                        ('derive', '--output-root', f.output, 'reused'),
+                        ('verify', '--output-dir', f.target, 'verified')):
+                    result = cli(command, '--request', request, '--source-root', f.source,
+                                 option, output)
+                    self.helper.assert_success(result, status, f.target)
+                    self.assertEqual(snapshot(f.root), original)
+                self.assertEqual(snapshot(f.source), before)
+                # A real pre-existing untracked file must still yield dirty=true.
+                self.helper.git(checkout, 'add', '.')
+                self.helper.git(checkout, 'commit', '-qm', 'Synthetic published result')
+                self.assertEqual(self.helper.git(checkout, 'status', '--porcelain',
+                                                '--untracked-files=normal'), '')
+                foreign = checkout / 'foreign.txt'
+                foreign.write_bytes(b'Unrelated untracked data must remain visible.')
+                current = cli('describe', '--generation', '2')
+                self.assertTrue(current['producer']['dirty'])
+                f.request['output'] = 'derived/bg02'
+                request = f.request_file()
+                result = cli('derive', '--request', request, '--source-root', f.source,
+                             '--output-root', f.output)
+                self.helper.assert_success(result, 'none' if none else 'derived', f.target)
+                self.assertEqual(json.loads((f.target / 'derivation.json').read_bytes())['producer'],
+                                 current['producer'])
+                self.assertEqual(foreign.read_bytes(), b'Unrelated untracked data must remain visible.')
+
+    def test_v2_publication_rechecks_source_target_and_codec_changes(self):
+        for none in (False, True):
+            for kind in ('source', 'target', 'codec'):
+                with self.subTest(none=none, kind=kind):
+                    f = self.fixture(f'publication-{none}-{kind}', none=none)
+                    write = bio.Stage.write
+                    codec = assets.features.version_codec
+                    changed = False
+                    foreign = f.source / f.request['decision']['file']
+                    def mutate(stage, name, raw):
+                        nonlocal changed, foreign
+                        write(stage, name, raw)
+                        if name == 'derivation.json':
+                            changed = True
+                            if kind == 'source':
+                                foreign.write_bytes(b'Foreign source bytes')
+                            elif kind == 'target':
+                                f.target.mkdir(parents=True)
+                                foreign = f.target / 'foreign.txt'
+                                foreign.write_bytes(b'Foreign target bytes')
+                    def version(name):
+                        return 'foreign-codec' if changed and kind == 'codec' else codec(name)
+                    with patch.object(bio.Stage, 'write', new=mutate), patch.object(
+                            assets.features, 'version_codec', side_effect=version):
+                        result = assets.derive(f.request, f.source, f.output)
+                    self.assertTrue(changed)
+                    code = {'source': 'source_changed', 'target': 'target_conflict',
+                            'codec': 'tool_mismatch'}[kind]
+                    self.helper.assert_error(result, code,
+                        'invalid_input' if kind == 'codec' else 'conflict')
+                    self.assertFalse((f.target / 'derivation.json').exists())
+                    self.assertEqual(list(f.output.glob('.hp-w2-stage-*')), [])
+                    if kind != 'codec':
+                        self.assertEqual(foreign.read_bytes(), f'Foreign {kind} bytes'.encode())
+
+    def test_loaded_render_identity_and_mid_operation_replacement_reject(self):
+        from tools.puzzle_production import background_render
+        checkout = self.helper.tool_checkout()
+        name = 'tools/puzzle_production/background_render.py'
+        shutil.copyfile(ROOT / name, checkout / name)
+        render = checkout / name
+        original = render.read_bytes()
+        with patch.object(assets, '_ROOT', checkout):
+            f = self.fixture('mid-operation')
+            actual = background_render._render
+            def replace(*a, **kw):
+                result = actual(*a, **kw)
+                temporary = render.with_suffix('.next')
+                temporary.write_bytes(original)
+                os.replace(temporary, render)
+                return result
+            with patch.object(background_render, '_render', side_effect=replace):
+                result = assets.derive(f.request, f.source, f.output)
+            self.assertNotIn(result['status'], ('derived', 'reused'))
+            self.assertFalse(f.target.exists())
+            render.write_bytes(original + b'\n# Changed after import.\n')
+            self.assertEqual(assets.describe()['error']['code'], 'tool_mismatch')
+
+    def test_v2_closed_report_profile_codecs_and_changed_targets(self):
+        f = self.fixture('tamper')
+        self.assertEqual(assets.derive(f.request, f.source, f.output)['status'], 'derived')
+        report_path = f.target / 'derivation.json'
+        original = report_path.read_bytes()
+        for field in ('generation', 'producer', 'module', 'codec', 'diagnostic'):
+            report = json.loads(original)
+            if field == 'generation': report['format'] = 'picross-background-derivation-v1'
+            elif field == 'producer': report['producer']['extra'] = True
+            elif field == 'module': report['tool']['modules'].reverse()
+            elif field == 'codec': report['tool']['versions']['zlib'] = 'foreign'
+            else: report['diagnostics']['upscaled'] = not report['diagnostics']['upscaled']
+            report_path.write_bytes(canonical(report) + b'\n')
+            before = snapshot(f.target)
+            self.assertNotEqual(assets.verify(f.request, f.source, f.target)['status'], 'verified', field)
+            self.assertEqual(snapshot(f.target), before)
+        report_path.write_bytes(original)
+        request = copy.deepcopy(f.request); request['profile']['width'] = 2305
+        self.assertNotEqual(assets.verify(request, f.source, f.target)['status'], 'verified')
+        with patch.object(assets.features, 'version_codec', return_value='foreign-codec'):
+            self.assertEqual(assets.verify(f.request, f.source, f.target)['error']['code'], 'tool_mismatch')
+        png = f.target / 'background.png'; raw = png.read_bytes()
+        png.write_bytes(raw + b'foreign')
+        self.assertNotEqual(assets.verify(f.request, f.source, f.target)['status'], 'verified')
+        png.unlink()
+        self.assertNotEqual(assets.derive(f.request, f.source, f.output)['status'], 'reused')
+        self.assertFalse(png.exists())
 
 
 if __name__ == "__main__":

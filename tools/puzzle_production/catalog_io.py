@@ -16,6 +16,7 @@ from .contract import Aborted, canonical_bytes
 from . import operation_diagnostics as diagnostic
 
 CHUNK = 1024 * 1024
+_retirement_reads = ContextVar("retirement_reads", default=None)
 _deadline = ContextVar("catalog_deadline", default=None)
 _operation_data = ContextVar("catalog_operation_data", default=None)
 if os.name == "nt":
@@ -145,6 +146,13 @@ def signature(info):
 
 
 def read(root, name, limit, *, missing=False):
+    scope = _retirement_reads.get()
+    if scope is not None:
+        return scope.read(root, name, limit, missing=missing)
+    return _read(root, name, limit, missing=missing)
+
+
+def _read(root, name, limit, *, missing=False):
     diagnostic.count("safe_reads")
     path = safe(root, name)
     try:
@@ -179,6 +187,13 @@ def read(root, name, limit, *, missing=False):
 
 
 def checksum(raw):
+    scope = _retirement_reads.get()
+    if scope is not None:
+        return scope.checksum(raw)
+    return _checksum(raw)
+
+
+def _checksum(raw):
     if raw is not None:
         diagnostic.count("bytes_hashed", len(raw))
         diagnostic.count("hash_calls")

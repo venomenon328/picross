@@ -256,7 +256,13 @@ def export_background(source, output, *, name, revision, stem, save_slot, approv
                 temporary.write("export/manifest.json", _json(manifest))
                 # The private candidate explicitly has no export success flag.
                 # Only the actual, independently read staged transport promotes it.
-                _, verified = verify_background_export(stage, manifest, _json(manifest), _pending=True)
+                # Only our exact pending bytes can use this invocation's inspection.
+                _, pending = _snapshot(stage, manifest)
+                ap.require(set(pending) == set(payload) | {"manifest.json"} and
+                           all(pending[n][1] == io.checksum(raw) for n, raw in payload.items()) and
+                           io.read(stage, "manifest.json", JSON_LIMIT) == _json(manifest),
+                           "Pending export differs from inspected inputs")
+                verified = {**report, "export_verified": True}
                 temporary.replace("export/inspection.json", _json(verified))
                 manifest["files"]["inspection.json"] = io.checksum(_json(verified))
                 temporary.replace("export/manifest.json", _json(manifest))
@@ -301,8 +307,8 @@ def _snapshot(directory, manifest):
     return files, observations
 
 
-def verify_background_export(directory, manifest, manifest_bytes, *, _pending=False):
-    """Full fresh v6 read. The private pending mode is only for staged production."""
+def verify_background_export(directory, manifest, manifest_bytes):
+    """Full fresh v6 read, including independent staged and offline invocations."""
     from . import target_adapter as adapter
     with io.budget():
         directory = io.external(directory)
@@ -340,7 +346,7 @@ def verify_background_export(directory, manifest, manifest_bytes, *, _pending=Fa
             ap.require(package.background_enabled, "Export v6 requires original handoff v3/0.7.0 or v4/0.8.0")
             inspected, design, matrix, logic, approval = adapter.inspect(package, files["approval.json"], allow_background=True,
                 manual_authorization=manual_path, palette_exception=exception)
-            report = _report(inspected, catalog, manifest["category_id"], verified=not _pending)
+            report = _report(inspected, catalog, manifest["category_id"], verified=True)
             ap.require(approval is not None and manifest["approval_sha256"] == approval["sha256"] and
                        _same(manifest["background"], approval["record"]["background"]), "Final background approval differs")
             palette_gate.same(gate, report["palette_gate"], "Stale or altered export palette gate")
