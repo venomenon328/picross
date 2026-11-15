@@ -82,6 +82,8 @@ def _retire(root, ids, integrated_commit, reads, source_commits):
     require(isinstance(source_commits, dict) and set(source_commits) <= set(ids), "Foreign source commit ID")
     for commit in source_commits.values():
         require(isinstance(commit,str) and re.fullmatch(r"[0-9a-f]{40}",commit), "Use full source commit")
+        require(git("cat-file", "-t", commit).strip() == b"commit",
+                "Source Git identity must be a commit object")
     from .retirement_scope import capture
     snapshot = capture(root, ids)
     current = snapshot["registry"]

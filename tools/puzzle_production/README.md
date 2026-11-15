@@ -2545,7 +2545,9 @@ an binding/current geprüft, ohne erfundenen initial-Ursprung. Aktive
 Editorrasterpakete v1/v2 bleiben vollständige aktive Autorität. Alte Receipts
 v1/v2/v3 bleiben unverändert. V4 erhält Originalexport, Rechte und tatsächlichen
 Main-/Quellcommit getrennt; Sonderimportquellen werden je ID ausdrücklich mit
-`--source-commit ID SHA` gebunden. Keine erneute Endfreigabe oder Completion.
+`--source-commit ID SHA` gebunden. SHA muss direkt ein vorhandenes Gitobjekt
+vom Typ `commit` bezeichnen; Tree-/Blob-/Tag-SHAs stoppen vor Lock oder
+Dateiänderung. Keine erneute Endfreigabe oder Completion.
 Nur ausgewählte Abhängigkeiten werden gelesen, keine fremden Paket-/Bildbäume.
 Alle Preflights vor erster Löschung, gezielter Abschlussreadback, frischer
 Byte-/mtime-No-op und ehrliche Teilfehlerreste sind verbindlich. Dieses
