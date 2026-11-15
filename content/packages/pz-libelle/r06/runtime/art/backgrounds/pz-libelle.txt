@@ -1,0 +1,6 @@
+Production ID: pz-libelle
+Background: LIB-HG-A-b02
+Image revision: b02
+Artwork: Native ImageGen in Codex, auf Auftrag des Repositoryeigentümers
+Source: Eingebaute image_gen-Funktion; exec-81e81e7e-99f0-451c-9e4f-cf190ebdbe40.png; mechanische Leinwanderweiterung nach aktuellem Nutzerauftrag, unveränderte Originalpixel
+Usage basis: Neue auf Nutzerauftrag für picross erzeugte Illustration ohne Fremdassets; siehe Rechtebeleg und Auftrag.
