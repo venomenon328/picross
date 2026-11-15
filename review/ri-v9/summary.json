@@ -1,0 +1,33 @@
+{
+  "status": "passed",
+  "main": "628f88101d5bdc01cd44299eaaa2065e26bbcc03",
+  "source": "e3b177673011c5477dd605c24420fef589e8f878",
+  "tool_head": "4b7286461d3b074eaf6f044d45d69237d0b8b42b",
+  "registration_commit": "ba3b353070063f9c7f32d857e2a5cd037f290bad",
+  "registered": true,
+  "completion": true,
+  "completion_seconds": 8.0428735999958,
+  "completion_changed": [
+    "content/authoring/pz-fliegenpilz/current-view.json",
+    "content/authoring/pz-fliegenpilz/r07/record.json",
+    "content/authoring/pz-fliegenpilz/r07/workspace.json"
+  ],
+  "current_revision": "r07",
+  "replays": {
+    "old": 0,
+    "new": 2
+  },
+  "guards": [
+    "G0",
+    "G2",
+    "G5a",
+    "G5b",
+    "G6"
+  ],
+  "existing_entries_preserved": 56,
+  "original_zip_unchanged": true,
+  "approval_unchanged": true,
+  "retirement": false,
+  "merge": false,
+  "content_pr_changed": false
+}

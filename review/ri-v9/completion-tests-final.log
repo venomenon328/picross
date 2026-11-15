@@ -1,0 +1,6 @@
+test_current_view_finalizer_interruption_completion_and_noop (tests.puzzle_production.test_authoring_workflow.WorkflowTests.test_current_view_finalizer_interruption_completion_and_noop) ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 86.599s
+
+OK

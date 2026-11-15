@@ -1,0 +1,11 @@
+register/registration phase=Finish elapsed=0.057s event=progress steps=0 files=0 last=call started
+register/registration phase=Input/Plan/Method freeze elapsed=30.316s event=progress steps=72 files=0 last=Method freeze
+register/registration phase=Input/Plan/Plan/Projection/Staging/Proof/Checkout validation elapsed=60.318s event=progress steps=373 files=0 last=read: content/registry.json
+register/registration phase=Input/Plan/Publication/P0/Journal validation/Staging/Proof/Checkout validation elapsed=90.318s event=progress steps=557 files=0 last=read: content/packages/pz-dbbebc72556d4f0c9a37ab69275480e9/r04/manifest.json
+register/registration phase=Input/Plan/Publication/P5/Checkout validation elapsed=120.319s event=progress steps=765 files=25 last=read: input/package.zip
+register/registration phase=Input/Plan/Publication/P5/Checkout validation/Verified package readback elapsed=150.393s event=progress steps=765 files=25 last=read: raster_parameters.py
+register/registration phase=Input/Plan/Publication/P5/Checkout validation elapsed=180.523s event=progress steps=766 files=25 last=read: content/packages/pz-zitrone/r05/manifest.json
+register/registration phase=Input/Plan/Publication/P5/Checkout validation elapsed=210.613s event=progress steps=766 files=25 last=read: content/backgrounds/pz-zitrone.json
+register/registration phase=Input/Plan/Publication/P5/G5b/Guards elapsed=246.078s event=progress steps=770 files=25 last=Method freeze
+register/registration phase=Input/Plan/Publication/P5/G5b/Guards elapsed=276.081s event=progress steps=770 files=25 last=read: content/.registration-pending.json
+register/registration phase=Finish elapsed=286.655s event=end steps=777 files=25 last=Input/Plan

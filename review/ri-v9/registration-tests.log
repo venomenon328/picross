@@ -1,0 +1,44 @@
+test_every_declared_registration_generation_has_an_explicit_route (tests.puzzle_production.test_registration_publication.CurrentGenerationTests.test_every_declared_registration_generation_has_an_explicit_route) ... ok
+test_generated_v9_mixed_slim_sources_no_old_replay_and_noop (tests.puzzle_production.test_registration_publication.CurrentGenerationTests.test_generated_v9_mixed_slim_sources_no_old_replay_and_noop) ... ok
+test_new_unknown_generation_or_foreign_slim_bytes_never_write (tests.puzzle_production.test_registration_publication.CurrentGenerationTests.test_new_unknown_generation_or_foreign_slim_bytes_never_write) ... ok
+test_none_current_choice_and_empty_transport_exception_are_precise (tests.puzzle_production.test_registration_publication.CurrentGenerationTests.test_none_current_choice_and_empty_transport_exception_are_precise) ... ok
+test_package_runtime_and_staging_recover_v9_with_fresh_conflict_guards (tests.puzzle_production.test_registration_publication.CurrentGenerationTests.test_package_runtime_and_staging_recover_v9_with_fresh_conflict_guards) ... 
+  test_package_runtime_and_staging_recover_v9_with_fresh_conflict_guards (tests.puzzle_production.test_registration_publication.CurrentGenerationTests.test_package_runtime_and_staging_recover_v9_with_fresh_conflict_guards) (phase='P5') ... FAIL
+test_controlled_deadlines_at_stage_lock_file_and_commit_boundaries (tests.puzzle_production.test_registration_publication.PublicationTests.test_controlled_deadlines_at_stage_lock_file_and_commit_boundaries) ... Publication: warning after 1801.000s; operation unfinished
+Publication: warning after 1801.000s; operation unfinished
+Publication: warning after 1801.000s; operation unfinished
+Publication: warning after 1801.000s; operation unfinished
+Publication: warning after 1801.000s; operation unfinished
+Publication: warning after 1801.000s; operation unfinished
+Publication: warning after 1801.000s; operation unfinished
+Publication: warning after 1801.000s; operation unfinished
+ok
+test_current_and_legacy_dispatch_is_explicit (tests.puzzle_production.test_registration_publication.PublicationTests.test_current_and_legacy_dispatch_is_explicit) ... ok
+test_every_full_boundary_preserves_foreign_bytes_and_exact_phase (tests.puzzle_production.test_registration_publication.PublicationTests.test_every_full_boundary_preserves_foreign_bytes_and_exact_phase) ... ok
+test_guards_are_outside_file_loops_runtime_last_and_recovery_independent (tests.puzzle_production.test_registration_publication.PublicationTests.test_guards_are_outside_file_loops_runtime_last_and_recovery_independent) ... ok
+test_interruptions_staging_and_repeated_recovery (tests.puzzle_production.test_registration_publication.PublicationTests.test_interruptions_staging_and_repeated_recovery) ... ok
+test_new_text_race_remains_atomic_no_replace (tests.puzzle_production.test_registration_publication.PublicationTests.test_new_text_race_remains_atomic_no_replace) ... ok
+test_real_kill_then_rekill_and_signal_keep_same_recoverable_journal (tests.puzzle_production.test_registration_publication.PublicationTests.test_real_kill_then_rekill_and_signal_keep_same_recoverable_journal) ... ok
+test_recovery_foreign_global_and_local_bytes_never_get_relabelled (tests.puzzle_production.test_registration_publication.PublicationTests.test_recovery_foreign_global_and_local_bytes_never_get_relabelled) ... ok
+test_target_temp_staging_parent_and_phase_changes_stop_locally (tests.puzzle_production.test_registration_publication.PublicationTests.test_target_temp_staging_parent_and_phase_changes_stop_locally) ... ok
+test_valid_but_wrong_phase_bytes_and_changed_staged_source (tests.puzzle_production.test_registration_publication.PublicationTests.test_valid_but_wrong_phase_bytes_and_changed_staged_source) ... ok
+test_valid_empty_rollback_namespaces_do_not_block_next_registration (tests.puzzle_production.test_registration_publication.PublicationTests.test_valid_empty_rollback_namespaces_do_not_block_next_registration) ... ok
+test_all_text_and_retained_authorities_and_absences_are_fresh (tests.puzzle_production.test_registration_publication.SourceTests.test_all_text_and_retained_authorities_and_absences_are_fresh) ... ok
+test_complete_namespaces_and_actual_freeze_sources (tests.puzzle_production.test_registration_publication.SourceTests.test_complete_namespaces_and_actual_freeze_sources) ... ok
+test_new_registration_replays_only_new_export_and_guards_old_bytes (tests.puzzle_production.test_registration_publication.SourceTests.test_new_registration_replays_only_new_export_and_guards_old_bytes)
+A historical producer mismatch must not veto an unrelated new ID. ... ok
+
+======================================================================
+FAIL: test_package_runtime_and_staging_recover_v9_with_fresh_conflict_guards (tests.puzzle_production.test_registration_publication.CurrentGenerationTests.test_package_runtime_and_staging_recover_v9_with_fresh_conflict_guards) (phase='P5')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "E:\Zeuch\Coding\picross\.work-ri-v9\tests\puzzle_production\test_registration_publication.py", line 527, in test_package_runtime_and_staging_recover_v9_with_fresh_conflict_guards
+    self.assertEqual(fixture.files(self.root), original)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: {'con[3941 chars]94702692188932800), 'game/data/background-capa[439949 chars]100)} != {'con[3941 chars]94702597247116100), 'game/data/background-capa[439949 chars]100)}
+Diff is 2482161 characters long. Set self.maxDiff to None to see it.
+
+----------------------------------------------------------------------
+Ran 19 tests in 616.267s
+
+FAILED (failures=1)

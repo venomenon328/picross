@@ -1,0 +1,11 @@
+test_every_declared_registration_generation_has_an_explicit_route (tests.puzzle_production.test_registration_publication.CurrentGenerationTests.test_every_declared_registration_generation_has_an_explicit_route) ... ok
+test_generated_v9_mixed_slim_sources_no_old_replay_and_noop (tests.puzzle_production.test_registration_publication.CurrentGenerationTests.test_generated_v9_mixed_slim_sources_no_old_replay_and_noop) ... ok
+test_new_input_and_unknown_empty_directory_reject_without_mutation (tests.puzzle_production.test_registration_publication.CurrentGenerationTests.test_new_input_and_unknown_empty_directory_reject_without_mutation) ... ok
+test_new_unknown_generation_or_foreign_slim_bytes_never_write (tests.puzzle_production.test_registration_publication.CurrentGenerationTests.test_new_unknown_generation_or_foreign_slim_bytes_never_write) ... ok
+test_none_current_choice_and_empty_transport_exception_are_precise (tests.puzzle_production.test_registration_publication.CurrentGenerationTests.test_none_current_choice_and_empty_transport_exception_are_precise) ... ok
+test_package_runtime_and_staging_recover_v9_with_fresh_conflict_guards (tests.puzzle_production.test_registration_publication.CurrentGenerationTests.test_package_runtime_and_staging_recover_v9_with_fresh_conflict_guards) ... ok
+
+----------------------------------------------------------------------
+Ran 6 tests in 132.601s
+
+OK
