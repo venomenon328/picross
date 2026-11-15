@@ -1,6 +1,6 @@
 {
   "format": "development-ci-plan/v1",
-  "issue": "https://github.com/venomenon328/picross",
+  "issue": "https://github.com/venomenon328/picross/issues/610",
   "package": "Schnecke r07: Endabnahme und Erstintegration HG-A-b01",
   "modules": [],
   "purpose": "Unveränderte gewählte Kontextzeichnung HG-A-b01 samt Raster R-B-r06 und Reveal finalisieren, exportieren, frisch planen und registrieren; Completion und unabhängiges Review vor bedingt autorisiertem Squash-Merge.",
