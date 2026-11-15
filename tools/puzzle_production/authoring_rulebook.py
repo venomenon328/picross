@@ -43,9 +43,7 @@ def validate(rule, handoff_format, repo_commit, read, revision=None, *, history_
         raw = read(rule['file'])
         ap.require(io.checksum(raw) == rule['sha256'], 'Rulebook snapshot hash mismatch')
         text = raw.decode('utf-8')
-        declared = re.search(r'^\*\*Version 0\.8\.0 · Dokumentrevision ([0-9]+) ·', text, re.M)
-        ap.require(rule['version'] != '0.8.0' or declared is None or int(declared[1]) <= 6,
-                   'Rev7 requires the new rulebook generation')
+        reject_relabel(rule, raw)
         if revision is not None:
             pattern = r'^\*\*Version ' + re.escape(rule['version']) + r' · Dokumentrevision ' + str(revision) + r' ·'
             ap.require(re.search(pattern, text, re.M), 'Rulebook version/document revision does not match snapshot')
@@ -108,3 +106,11 @@ def read_git(repository, commit, path):
                'Rulebook Git source must be a regular canonical file')
     ap.require(int(git(repository, 'cat-file', '-s', oid)) <= 1024 * 1024, 'Rulebook Git source too large')
     return git(repository, 'cat-file', 'blob', oid)
+
+
+def reject_relabel(rule, raw):
+    """Prevent Rev7-as-single-file without imposing new legacy viewing gates."""
+    from . import authoring_package as ap
+    declared = re.search(rb'^\*\*Version 0\.8\.0 \xc2\xb7 Dokumentrevision ([0-9]+) \xc2\xb7', raw, re.M)
+    ap.require(rule['version'] != '0.8.0' or declared is None or int(declared[1]) <= 6,
+               'Rev7 requires the new rulebook generation')
