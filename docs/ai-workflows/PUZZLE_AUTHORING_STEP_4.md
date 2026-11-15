@@ -55,8 +55,9 @@ Bevorzugt die vollständige ursprüngliche Leinwand pixelgleich und unten mittig
 auf eine größere transparente 4:1-Leinwand setzen. Beispiel: 2172×724 wird
 2896×724 mit je 362 transparenten Pixeln links/rechts, ohne Resampling.
 Falls eine Größenanpassung nötig ist, ausschließlich proportional, mit erhaltener
-feiner Zeichnung/Alpha und transparentem Freiraum. Kein Strecken, Beschnitt
-gezeichneter oder bewusst leerer Bereiche, Alpha-Bounds-Crop, gesondertes
+feiner Zeichnung/Alpha und transparentem Freiraum. Bei dieser mechanischen
+Korrektur kein Strecken, Beschnitt gezeichneter oder bewusst leerer Bereiche,
+Alpha-Bounds-Crop, gesondertes
 Verschieben sichtbarer Motive, Umzeichnen oder geometrisches Ersatzbild.
 
 Die korrigierte vollständige Leinwand erneut nach Q-HG01–Q-HG04 ansehen und

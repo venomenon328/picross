@@ -784,8 +784,9 @@ muss genau diese Wahl verwenden. Keine alten Freigaben überschreiben. Für
 `carried_from` gilt dieselbe azyklische Vorgängerregel; der neue Record kann
 nicht auf sich oder einen Nachfolger zeigen. Eine Materialänderung ist darüber
 nicht übertragbar. Der ursprüngliche ImageGen-Prompt allein legitimiert keine
-materielle Umgestaltung. Die ausdrücklich beauftragte Formatkorrektur nach
-Schritt 4 §6.3.1 erlaubt das Herstellen korrigierter Kandidatenbytes, einschließlich
+materielle Umgestaltung. Die bereits vom Hintergrundproduktionsauftrag umfasste
+Formatkorrektur nach Schritt 4 §6.3.1 erlaubt das Herstellen korrigierter Kandidatenbytes,
+einschließlich
 transparenter Leinwanderweiterung per Skript; ihre tatsächliche Wahl bleibt offen.
 Dieser Vorwahlschritt ist keine HP-W2-Ableitung und verändert weder deren Profil
 noch bereits integrierte Bilder oder historische Freigaben.
