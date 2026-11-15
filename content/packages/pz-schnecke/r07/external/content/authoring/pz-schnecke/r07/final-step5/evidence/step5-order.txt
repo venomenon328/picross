@@ -1,9 +1,0 @@
-Repository: venomenon328/picross · Ziel: main. Lies AGENTS.md und den gemeinsamen Authoring-Kern, den vollständigen Bildstil und die dort für Schritt 5 geroutete Phasendatei im aktuellen main (Authoring 0.8.0).
-
-Produktionsdatensatz: https://github.com/venomenon328/picross/blob/448397bb10c9d0a7f143d35f6f5b52cf1dc5595c/content/authoring/pz-schnecke/r07/record.json
-
-Schritt 5: Ich wähle die unveränderte Kontextzeichnung aus Angebot HG-A-b01.
-
-Ich erteile die Endabnahme für diese Hintergrundentscheidung zusammen mit dem gewählten Raster und dem zugehörigen Reveal im gebundenen Datensatz und beauftrage deren Integration.
-
-Commit, Push und PR; unabhängiges Review, danach Squash-Merge nur bei erfüllten aktuellen Vor-Merge-Gates. Bestätigten Mainabschluss und Produktionsabschluss nach Authoring §9 durchführen.
