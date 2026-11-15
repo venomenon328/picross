@@ -383,7 +383,7 @@ def _early_registration(raw, *, staged=False):
     if fields is None:
         return False
     fmt = fields.get("format")
-    modern = fmt in (tx.IMAGE_FORMATS["registration"], tx.PE_FORMATS["registration"], tx.BACKGROUND_FORMATS["registration"], tx.FORMATS["registration"], tx.AT_FORMATS["registration"])
+    modern = tx.registration_route({"format": fmt, "operation": "registration"}) is not None
     previous = fmt in (tx.PREVIOUS_FORMATS["registration"], tx.LEGACY_FORMATS["registration"])
     if staged and not modern:
         return False

@@ -1126,6 +1126,43 @@ keine historischen Daten-/Freigabeänderungen oder neue Toolhash-Ausnahmen.
 Dies präzisiert den P5-Produktionsnachweis, nicht die RI-C-Quellen- und
 Fremdänderungsgarantien.
 
+### RI-V9 · Geschlossener Erzeuger-, Quellen- und Recoveryweg (#652)
+
+Die vorhandene geschlossene Journalvalidierung prüft weiterhin vollständige
+Registry-/Runtime-/Quellenbindungen. Die gemeinsame Registrierungstabelle
+in `catalog_transaction.REGISTRATION_GENERATIONS` bindet zusätzlich die
+Erzeugerauswahl, den Writer und die Recoveryklassifikation aneinander:
+
+| Erzeugergeneration | Registry / erzeugte Runtime | Journal | Publikation und Recovery |
+| --- | --- | --- | --- |
+| at | v2 / v4 | v5 | Historischer gemeinsamer Writer |
+| sd2 | v2 / v5 | v6 | Phasierter RI-C-Writer |
+| background | v2 oder v3 / v6 | v7 | Phasierter RI-C-Writer |
+| metadata | v4 / v7 | v8 | Phasierter RI-C-Writer |
+| images | v4 / v8 | v9 | Phasierter RI-C-Writer |
+
+Die reguläre aktuelle Produktion wählt metadata beziehungsweise images anhand
+des echten Zielzustands. Die Tabelle ist kein Downgrade-/Migrationsweg.
+Historische Journal-v3/v4-Reader bleiben getrennt. Unbekannte Generationen
+oder eine nicht zugeordnete Erzeugeränderung blockieren vor Mutation.
+
+v9 erhält die in PE §13 eingeführten schlanken Reveal-v4-/Hintergrund-v6-Quellen
+mit `binding/current` sowie unterstützte historische Quellen. Ein fehlendes
+historisches initial ist bei schlanken Quellen gültig und wird nicht durch
+einen konstruierten Origin ersetzt. Die alleinige leere `external/`-Ausnahme
+eines alten Vollpakets benötigt dessen tatsächlich gebundenes v6-Manifest,
+ein Inventar ohne externe Dateien und nicht externe Hintergrundbezüge.
+Weitere unbekannte leere Verzeichnisse bleiben gesperrt.
+
+G0/G2/G5a/G5b/G6 und GR0/GR2 gelten unverändert auch für v8/v9 einschließlich
+Journalstaging und wiederholtem unterbrochenem Rollback. Die neue Produktion
+wird vollständig am Eingang und unabhängig im Staging geprüft; P5 bleibt auf
+das eine neue Journalpaket begrenzt. Als gezielte Erweiterung von RI-REPLAY-1
+prüft auch die identische Registerwiederholung nur ihren vollständigen Eingang
+und die aktuelle Checkoutintegrität, ohne fremde historische Produktion.
+Vollaudit und verify-export bleiben strikt. Completion und synthetischer
+§9-Abschluss folgen dem [RI-V9-Vertrag](PUZZLE_INTEGRATION.md).
+
 ## HP-I1b2 · Hintergrundwechsel und Quellenkompatibilität
 
 Vertrag vor Code, 10.11.2026, [HP-I1b2](https://github.com/venomenon328/picross/issues/561#issuecomment-6763700809).

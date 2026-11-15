@@ -1126,6 +1126,17 @@ Explizites `check-registry` (`replay=True` ohne Ziel) sowie
 Unbekannte historische HP-W2-Tools werden nicht per Ausnahme zugelassen.
 Keine Änderung von RI-B-Kontextgrenzen, Recovery oder anderen Operationen.
 
+**RI-V9 / #652:** Der geschlossene Generationsvertrag verbindet Erzeuger,
+Dispatch und Recovery: v5 bleibt gemeinsam; v6/v7/v8/v9 laufen phasiert.
+Ein echter v4/v8-Checkout erzeugt v9. Reveal-v4-/Hintergrund-v6-Quellen
+werden über ihre aktuellen Bindungen gelesen, ohne historischen Origin.
+Die leere externe Transportwurzel alter Vollpakete benötigt das gebundene
+v6-Exportmanifest; unbekannte Verzeichnisse bleiben Fehler. Identische
+Registrierung wiederholt Eingangsprüfung und Checkoutintegrität, keinen
+fremden Produktionsreplay. Completion folgt P6 und Registrierungscommit;
+normaler §9-Abschluss bleibt an bestätigtes main gebunden.
+Details: [RI-V9-Vertrag](../../docs/PUZZLE_INTEGRATION.md#6-hp-i1b1--erweiterung-der-belegten-quellenmenge).
+
 KE-N1: `recover-registration` übernimmt gültige alte Runtime-v2-Snapshots in
 Registrierungsjournal v2 bzw. Updatejournal v1 und stellt direkt einen vollständig
 geprüften v3-Checkout her. Beide Snapshots müssen kanonisch und formatgleich sein.

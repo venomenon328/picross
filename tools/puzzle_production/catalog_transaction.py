@@ -59,6 +59,33 @@ IMAGE_FORMATS = {"registration": "picross-registration-journal-v9", "update": "p
 RASTER_FORMAT = "picross-editor-raster-journal-v1"
 IMAGE_FORMATS["editor-raster"] = RASTER_FORMAT
 
+# Closed registration capabilities, shared by producer, publish and recovery.
+# Adding a format map alone must never silently enable a different writer.
+REGISTRATION_GENERATIONS = {
+    "at": (AT_FORMATS, "picross-registration-journal-v5", "shared"),
+    "sd2": (FORMATS, "picross-registration-journal-v6", "phased"),
+    "background": (BACKGROUND_FORMATS, "picross-registration-journal-v7", "phased"),
+    "metadata": (PE_FORMATS, "picross-registration-journal-v8", "phased"),
+    "images": (IMAGE_FORMATS, "picross-registration-journal-v9", "phased"),
+}
+
+
+def registration_route(journal):
+    if not isinstance(journal, dict) or journal.get("operation") != "registration":
+        return None
+    for formats, name, route in REGISTRATION_GENERATIONS.values():
+        require(formats["registration"] == name, "Unserved registration generation")
+        if journal.get("format") == name:
+            return route
+    return None
+
+
+def registration_format(generation):
+    require(generation in REGISTRATION_GENERATIONS, "Unsupported registration generation")
+    formats, name, _ = REGISTRATION_GENERATIONS[generation]
+    require(formats["registration"] == name, "Unserved registration generation")
+    return name
+
 
 def images(j):
     return isinstance(j, dict) and j.get("format") in IMAGE_FORMATS.values()
@@ -551,6 +578,8 @@ def prepare(root, snapshot, changes, *, operation, additions=None, report_run=No
          "new": {n: b.decode("utf-8") if b is not None else None for n, b in new.items()},
          "retained": {n: h for n, h in snapshot["retained"].items() if n not in (replacements or {})},
          "additions": {}, "report_run": report_run, "replacements": replacements or {}}
+    if operation == "registration":
+        j["format"] = registration_format(generation)
     # Bind source bytes before deriving the journal-based ZIP exception.
     for n, p in additions.items():
         limit = _addition_limit(after, n, p)
@@ -754,6 +783,8 @@ def validate_journal(root, j, *, before_write=False):
             any(formats.get(j["operation"]) == j["format"] for formats in
                 (IMAGE_FORMATS, PE_FORMATS, REBIND_FORMATS, BACKGROUND_FORMATS, FORMATS, AT_FORMATS, PREVIOUS_FORMATS, LEGACY_FORMATS)),
             "Unsupported catalog journal")
+    if j["operation"] == "registration" and current_generation:
+        require(registration_route(j) is not None, "Unserved registration generation")
     legacy = j["format"] in LEGACY_FORMATS.values()
     for k in ("old", "new", "retained", "additions"): require(isinstance(j[k], dict), "Invalid journal map")
     require(all(v is None or isinstance(v, str) for side in ("old", "new") for v in j[side].values()), "Invalid journal text")

@@ -1,18 +1,23 @@
 {
   "format": "development-ci-plan/v1",
-  "issue": "https://github.com/venomenon328/picross/issues/650",
-  "package": "RI-REPLAY-1",
+  "issue": "https://github.com/venomenon328/picross/issues/652",
+  "package": "RI-V9",
   "modules": [
     "production.adapter",
     "production.catalog"
   ],
-  "purpose": "INT-B02: mutierende Erstregistrierung prüft die neue Produktion in P5 vollständig/bytegebunden, ohne historische Export-Producer alter unkompaktierter Einträge erneut auszuführen. Adapter sichert die vollständige neue Export-, Staging- und Provenienzprüfung; Catalog sichert aktuelle Quellen-/Inventar-/Namespace-/Journal-Guards sowie Abbruch und Recovery. Pflichtkern mit normalem Windows-Spielerbuild bei Werkzeugänderungen.",
+  "purpose": "RI-V9: geschlossener Registrierungsgenerationsvertrag, echte v4/v8→v9-Route und slim Reveal-v4/Background-v6 im gemischten Bestand. Vollständige neue Eingangs-/Stagingprüfung, bestandsgebundene Integrität, gezieltes P5, Recovery und Wiederholung. Pflichtkern einschließlich Windows-Spielerbuild.",
   "omitted": "Keine Solver-/Bildalgorithmusänderung, daher production.solver/images nicht gewählt. Keine native Spiel-/Runtimeänderung, daher native.* und delivery nicht gewählt; keine Browser-, Installer-, Produktionsdaten- oder Gesamtbestandsreplays. Bestehende P0–P6/R0–R2-Tests werden über gewählte Fachmodule ausgeführt. Reale Fliegenpilz-/Birne-Demonstration einmalig isoliert im Reviewkontext, kein bleibendes CI-Rätselkorpus.",
   "test_changes": [
     {
       "path": "tests/puzzle_production/test_registration_publication.py",
       "disposition": "change-scoped",
-      "reason": "Kleiner synthetischer Alt-Vollpaket-/Neu-Export-Test: altes verify-export gezielt fehlschlagen lassen, erfolgreiche neue Registrierung und deren vollständige Prüfung belegen; optionaler vollständiger Audit bleibt streng; ungültiges Replayziel und manipulierte Bestandsbytes scheitern. Vorhandene Guards/Recovery-Tests bleiben mitgewählt."
+      "reason": "Echte öffentliche v9-Erzeugung mit slim Quellen und Voll-/Kompaktbestand; geschlossene Generationsabdeckung, standard/selected/none, kein alter Produktionsreplay, No-op, Paket-/Runtime-/Stagingabbruch und wiederholte Recovery. Vorhandene RI-C-Matrix bleibt gewählt."
+    },
+    {
+      "path": "tests/puzzle_production/test_authoring_workflow.py",
+      "disposition": "change-scoped",
+      "reason": "Vorhandener synthetischer Completion-/Resume-Test erhält echte v9-Registrierung auf v4/v8 statt Metadatenstub; danach normaler isolierter Main-/§9-Abschluss mit unveränderten Livebytes und No-op."
     }
   ],
   "core_change": null,

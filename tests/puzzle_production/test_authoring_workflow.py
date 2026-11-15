@@ -192,19 +192,37 @@ class WorkflowTests(unittest.TestCase):
         bound = cv.inspect(LocalSource(root),
                            None, (root / name).read_bytes(), 'pz-hp-synthetic', originals=True)
         self.assertEqual(bound['record']['sha256'], io.checksum(f.helper.record_path.read_bytes()))
-        # Completion reads only these committed registration metadata, as specified
-        # by its existing reader contract; no catalog writer or solver is mocked.
-        record = final['record']; directory = 'content/packages/pz-hp-synthetic/r02'
-        manifest = {'format': 'picross-target-export-v6', 'definition_id': record['puzzle_id'],
-                    'package_revision': 'r02', 'editorial_approved': True, 'technical': True,
-                    'input': {'original_package': record['package']},
-                    'approval_sha256': record['final_editorial_approval']['sha256']}
-        manifest_ref = put_json(root, directory + '/manifest.json', manifest)
-        entry = {'id': record['puzzle_id'], 'definition': 'test-only.json', 'reveal': 'test-only.png', 'save_slot': 'test-only',
-                 'production': {'status': 'registered', 'blockers': [], 'package': directory, 'revision': 'r02',
-                                'package_sha256': manifest_ref['sha256']}}
-        put_json(root, 'content/registry.json', {'entries': [entry]})
-        put_json(root, 'game/data/registry.json', {'entries': [entry]})
+
+        # RI-V9: complete a real current registration, then exercise the normal
+        # main-bound retirement in this isolated synthetic Git repository.
+        from tests.puzzle_production.catalog_fixtures import registered
+        from tests.puzzle_production.test_editor_change import current_fixture
+        from tools.puzzle_production import target_adapter as adapter, content_registry as registry
+        from tools.puzzle_production import integrated_content, catalog_background as bg
+        from tools.puzzle_production.za1_fixtures import rated_registration
+        old = f.root / 'old'
+        registered(old, stem='completion_old', save_slot='completion_old')
+        current_fixture(old / 'base')
+        shutil.copytree(old / 'base', root, dirs_exist_ok=True)
+        put_json(root, bg.CAPABILITY, {'format': bg.CAPABILITY_FORMAT,
+                 'runtime_format': bg.RUNTIME_FORMAT, 'profile_id': 'picross-background-png2304-v1', 'enabled': True})
+        record = final['record']
+        # This isolated retirement fixture has exactly one active revision;
+        # the raster-choice predecessor remains reachable in synthetic history.
+        predecessor = root / 'content/authoring/pz-hp-synthetic/r01'
+        self.assertTrue(predecessor.resolve().is_relative_to(root.resolve()))
+        shutil.rmtree(predecessor)
+        index = load_json(root / builder.INDEX)
+        index['entries'] = [row for row in index['entries'] if row['revision'] == 'r02']
+        put_json(root, builder.INDEX, index)
+        exported = f.root / 'export'
+        adapter.export(root / record['package']['file'], exported, name='TEST ONLY completion',
+                       revision=1, stem='completion_new', save_slot='completion_new',
+                       approval_path=root / record['final_editorial_approval']['file'],
+                       category_id='voegel', categories_path=root / 'content/categories.json',
+                       allow_background=True, external_root=root, history_repo=root)
+        self.assertEqual(rated_registration(exported, root, apply=True)['status'], 'registered')
+        registry.check_checkout(root)
         sha = f.commit()
         with patch.object(cv, 'checkpoint', side_effect=stop), self.assertRaises(RuntimeError):
             projector.complete(root, f.helper.record_name, sha)
@@ -215,3 +233,14 @@ class WorkflowTests(unittest.TestCase):
         self.assertEqual(((root / name).read_bytes(), (root / name).stat().st_mtime_ns), before)
         current = cv.inspect(GitSource(root), f.commit(), (root / name).read_bytes(), 'pz-hp-synthetic', originals=True)
         self.assertEqual(current['revision'], 'r02')
+
+        integrated_commit = git(root, 'rev-parse', 'HEAD').decode().strip()
+        git(root, 'update-ref', 'refs/remotes/origin/main', integrated_commit)
+        # The verified completed pointer is removed before §9, as in Authoring.
+        (root / name).unlink()
+        game_before = {str(p.relative_to(root)): p.read_bytes() for p in (root / 'game').rglob('*') if p.is_file()}
+        result = integrated_content.retire(root, ['pz-hp-synthetic'], integrated_commit)
+        self.assertEqual(result['status'], 'production_retired')
+        self.assertEqual(integrated_content.retire(root, ['pz-hp-synthetic'], integrated_commit)['status'], 'no-op')
+        self.assertEqual(game_before, {str(p.relative_to(root)): p.read_bytes() for p in (root / 'game').rglob('*') if p.is_file()})
+        registry.check_checkout(root)
