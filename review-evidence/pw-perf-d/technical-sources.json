@@ -1,0 +1,113 @@
+{
+  "base": "a559e8b38be7e658ff1d3d2aa667380657c89f4d",
+  "head": "77392b2b07021a88b8eb02e74ceb213fb83d187d",
+  "operations": {
+    "Paketbau": [
+      "docs/PW_B_CONTRACT.md",
+      "tools/puzzle_production/README.md"
+    ],
+    "Import/Proof": [
+      "docs/PUZZLE_PRODUCTION.md",
+      "tools/puzzle_production/README.md"
+    ],
+    "Paarprofil (bedingt)": [
+      "docs/PAIRED_LINES.md",
+      "tools/puzzle_production/README.md"
+    ],
+    "Feste Korrektur/RP-5 (bedingt)": [
+      "docs/FIXED_RASTER.md",
+      "tools/puzzle_production/README.md"
+    ],
+    "Difficulty/Rebind (bedingt)": [
+      "docs/SD2_INTEGRATION.md",
+      "tools/puzzle_production/README.md"
+    ],
+    "HP-W2 (nur gewähltes Bild/none)": [
+      "docs/PUZZLE_BACKGROUNDS.md",
+      "tools/puzzle_production/README.md"
+    ],
+    "Finalizer/Export": [
+      "docs/PW_B_CONTRACT.md",
+      "docs/ZA1_ADAPTER.md",
+      "docs/PUZZLE_BACKGROUNDS.md",
+      "tools/puzzle_production/README.md"
+    ],
+    "Plan/Register/Recovery (kein realer Auftrag)": [
+      "docs/PUZZLE_INTEGRATION.md",
+      "docs/ZA1_ADAPTER.md",
+      "tools/puzzle_production/README.md"
+    ],
+    "Retirement (kein realer Auftrag)": [
+      "docs/PUZZLE_BACKGROUNDS.md",
+      "tools/puzzle_production/README.md"
+    ]
+  },
+  "files": {
+    "docs/FIXED_RASTER.md": {
+      "before_file_bytes": 9434,
+      "after_file_bytes": 9434,
+      "before_sha256": "b44680ec22b526baa245073f5ea4e85cc198fe88a3c564b628bef7663ddfe3bc",
+      "after_sha256": "b44680ec22b526baa245073f5ea4e85cc198fe88a3c564b628bef7663ddfe3bc",
+      "read_scope": "nur die im Kern/Phasendokument genannten Abschnitte; ganze Dateibytes sind kein zusätzlicher Volllektüreauftrag"
+    },
+    "docs/PAIRED_LINES.md": {
+      "before_file_bytes": 10395,
+      "after_file_bytes": 10395,
+      "before_sha256": "5896bd346e1c0a3daa379a4835c1ca663a6a6d542bbacaa282d6741d26616803",
+      "after_sha256": "5896bd346e1c0a3daa379a4835c1ca663a6a6d542bbacaa282d6741d26616803",
+      "read_scope": "nur die im Kern/Phasendokument genannten Abschnitte; ganze Dateibytes sind kein zusätzlicher Volllektüreauftrag"
+    },
+    "docs/PUZZLE_BACKGROUNDS.md": {
+      "before_file_bytes": 187770,
+      "after_file_bytes": 187777,
+      "before_sha256": "d2e3936ecf444b4808022ed7b99747ea3a1dc1f99353b5a36efda24801877fb5",
+      "after_sha256": "156e9562e29ae5f939057e5326b183d8ab82a4c0ffccbbfa89a39abd4f538a4b",
+      "read_scope": "nur die im Kern/Phasendokument genannten Abschnitte; ganze Dateibytes sind kein zusätzlicher Volllektüreauftrag"
+    },
+    "docs/PUZZLE_INTEGRATION.md": {
+      "before_file_bytes": 33902,
+      "after_file_bytes": 33916,
+      "before_sha256": "e47e223fba25c5db814b24a531d31fef8466cc0a20ae0d2908c29f77e50aa99b",
+      "after_sha256": "7d633afebb07148fb4a29a118207bc96fef04dd4e6f646ad6a8bee4258115ef4",
+      "read_scope": "nur die im Kern/Phasendokument genannten Abschnitte; ganze Dateibytes sind kein zusätzlicher Volllektüreauftrag"
+    },
+    "docs/PUZZLE_PRODUCTION.md": {
+      "before_file_bytes": 45311,
+      "after_file_bytes": 45311,
+      "before_sha256": "5fd5001cbfe2608801837ff3778fc7145735dbb4a8043b6dc8988264d2068e6b",
+      "after_sha256": "5fd5001cbfe2608801837ff3778fc7145735dbb4a8043b6dc8988264d2068e6b",
+      "read_scope": "nur die im Kern/Phasendokument genannten Abschnitte; ganze Dateibytes sind kein zusätzlicher Volllektüreauftrag"
+    },
+    "docs/PW_B_CONTRACT.md": {
+      "before_file_bytes": 13748,
+      "after_file_bytes": 18468,
+      "before_sha256": "5c5105d7221156de3b943b4e8ab020c70004b52649d0b7aca78f2ed5e659bc2c",
+      "after_sha256": "522ec677bfda163e8618927fc601de80ed286d5f83ef041637dc5525f0351b30",
+      "read_scope": "nur die im Kern/Phasendokument genannten Abschnitte; ganze Dateibytes sind kein zusätzlicher Volllektüreauftrag"
+    },
+    "docs/SD2_INTEGRATION.md": {
+      "before_file_bytes": 21783,
+      "after_file_bytes": 21783,
+      "before_sha256": "5e39086d2867defa4d0bbfabc8ebdabc0f8c7fce229c884b90ee6c97429bcfa2",
+      "after_sha256": "5e39086d2867defa4d0bbfabc8ebdabc0f8c7fce229c884b90ee6c97429bcfa2",
+      "read_scope": "nur die im Kern/Phasendokument genannten Abschnitte; ganze Dateibytes sind kein zusätzlicher Volllektüreauftrag"
+    },
+    "docs/ZA1_ADAPTER.md": {
+      "before_file_bytes": 124209,
+      "after_file_bytes": 124753,
+      "before_sha256": "e76998bbb9a0dad34b5f3280aa538e87a27025bfa484ed366d75cbbc803f41bb",
+      "after_sha256": "843745d84199da4d12d16d277f6e470ef83307ad1382ea6ea78fb9eff592f905",
+      "read_scope": "nur die im Kern/Phasendokument genannten Abschnitte; ganze Dateibytes sind kein zusätzlicher Volllektüreauftrag"
+    },
+    "tools/puzzle_production/README.md": {
+      "before_file_bytes": 174224,
+      "after_file_bytes": 174785,
+      "before_sha256": "468a41ba6b85e8d5e3fd541ca2252441fedef80dfb60f2a61beeb2bd358ba995",
+      "after_sha256": "26cc9facf717baaf5207913438cc43ec506bb9f16d32980e9df51c32457562af",
+      "read_scope": "nur die im Kern/Phasendokument genannten Abschnitte; ganze Dateibytes sind kein zusätzlicher Volllektüreauftrag"
+    }
+  },
+  "actual_t03_operation": "Quellenabruf, keine kreative/solver-/katalogschreibende Operation",
+  "actual_t02_operations": "Isolierte synthetische Builder/Reader/Finalizer/Export-Tests, keine reale Produktion oder Katalogbereinigung",
+  "boundary": "Technische Verträge sind separat erfasst, nicht im Byte-/Zeitbudget der operativen Quellenprobe. Die vollständige Dateigröße wird offen genannt; insbesondere PW-B wächst durch den geschlossenen neuen Vertrag."
+}

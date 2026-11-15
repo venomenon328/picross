@@ -1,0 +1,1328 @@
+{
+  "base": "a559e8b38be7e658ff1d3d2aa667380657c89f4d",
+  "head": "77392b2b07021a88b8eb02e74ceb213fb83d187d",
+  "sections": [
+    {
+      "old_heading": "1. Einstieg und Befugnisse",
+      "old_anchor": "1-einstieg-und-befugnisse",
+      "old_line": 14,
+      "units": []
+    },
+    {
+      "old_heading": "1.1 Pflichtquellen nach Phase",
+      "old_anchor": "11-pflichtquellen-nach-phase",
+      "old_line": 16,
+      "units": [
+        {
+          "old_text": "Zuerst den Produktionseinstieg der aktuellen [AGENTS.md](../../AGENTS.md), diesen\nAbschnitt 1 und den vollständigen [gemeinsamen Bildstil](../PUZZLE_IMAGE_STYLE.md)\nlesen. Danach nur die folgende Zeile für die tatsächlich beauftragte Phase.\nAbschnittsangaben verlangen den genannten Abschnitt, nicht die ganze Datei.\nHerkunfts-/Querverweise darin sind keine rekursive Volllektüreplicht. Vor einer\nkonkreten technischen Operation zusätzlich ihren unten benannten Vertrag lesen;\nbenötigte Felder, Grenzen und Prüfungen niemals aus einem Kurztext erraten.",
+          "sha256": "07ea52896556f01432b7ce9aee97505ee4192e27ed65984446e9456f8c9c18bb",
+          "authority": {
+            "file": "docs/ai-workflows/PUZZLE_AUTHORING.md",
+            "anchor": "11-pflichtquellen-nach-phase"
+          },
+          "assessment": "Phasen-/Inhaltsgates erhalten; nur Quellenorganisation und ausdrücklich versionierte Snapshotformen ändern sich."
+        },
+        {
+          "old_text": "| Auftrag | Operative Pflichtlektüre zusätzlich zum gemeinsamen Kern |",
+          "sha256": "10f1f47f34ce479befcaff14cc0c734c9c36e97eed27ac94ab5d15d5082551ff",
+          "authority": {
+            "file": "docs/ai-workflows/PUZZLE_AUTHORING.md",
+            "anchor": "11-pflichtquellen-nach-phase"
+          },
+          "assessment": "Phasen-/Inhaltsgates erhalten; nur Quellenorganisation und ausdrücklich versionierte Snapshotformen ändern sich."
+        },
+        {
+          "old_text": "| 1 · Abschlussbilder | §§2.1–2.4; Qualität §2 und §3.1; Transparenz §2. Vor Veröffentlichung §§6.1–6.2 und §7. |",
+          "sha256": "4b05917b3c0a6b80640c05559763e615e0449135e69c9edd251a076066fcaad9",
+          "authority": {
+            "file": "docs/ai-workflows/PUZZLE_AUTHORING.md",
+            "anchor": "11-pflichtquellen-nach-phase"
+          },
+          "assessment": "Phasen-/Inhaltsgates erhalten; nur Quellenorganisation und ausdrücklich versionierte Snapshotformen ändern sich."
+        },
+        {
+          "old_text": "| 2 · Motivvorlage | §§2.1–2.4; Qualität §2 und §3.2 sowie H-03/H-04 aus §4. Vor Veröffentlichung §§6.1–6.2 und §7. |",
+          "sha256": "feb0d2c09506fc88604d8888cd5d3fbb06dcd7298089b71a9c8f8233eed1a4fb",
+          "authority": {
+            "file": "docs/ai-workflows/PUZZLE_AUTHORING.md",
+            "anchor": "11-pflichtquellen-nach-phase"
+          },
+          "assessment": "Phasen-/Inhaltsgates erhalten; nur Quellenorganisation und ausdrücklich versionierte Snapshotformen ändern sich."
+        },
+        {
+          "old_text": "| 3 · Rasterangebote | §§4.1–4.5 und §5.2; Qualität §§2–4, §5 bei fehlendem qualifiziertem Kandidaten, §6 nur bei konkreter redaktioneller Ausnahme; bei Farbe zusätzlich §8. Vor Veröffentlichung §§6.1–6.2 und §7. |",
+          "sha256": "1da8e68e19b57c662a25a1e3831ab3fbbd7004594830963f0d26f9ae1c356c95",
+          "authority": {
+            "file": "docs/ai-workflows/PUZZLE_AUTHORING.md",
+            "anchor": "11-pflichtquellen-nach-phase"
+          },
+          "assessment": "Phasen-/Inhaltsgates erhalten; nur Quellenorganisation und ausdrücklich versionierte Snapshotformen ändern sich."
+        },
+        {
+          "old_text": "| 4 · Hintergrund | §6.3; Qualität §2 und §9.1; Hintergrundvertrag §3 für Arbeitsmanifest/Entscheidung. Vor Veröffentlichung §§6.1–6.2 und §7. HP-W2 §4 erst bei tatsächlich anstehender Ableitung/Prüfung des ausgewählten Bilds. |",
+          "sha256": "3f9da7180b95536ad13101da37a3f7635f1b2069ad7131e07a2243b2df3088eb",
+          "authority": {
+            "file": "docs/ai-workflows/PUZZLE_AUTHORING.md",
+            "anchor": "11-pflichtquellen-nach-phase"
+          },
+          "assessment": "Phasen-/Inhaltsgates erhalten; nur Quellenorganisation und ausdrücklich versionierte Snapshotformen ändern sich."
+        },
+        {
+          "old_text": "| 5 · Abschluss/Integration | §§6–9; die in §8 für die tatsächliche Operation gerouteten Integrations-/Zielverträge. Bereits passende Bild-/Rasterbelege prüfen, nicht deren Produktion wiederholen. |",
+          "sha256": "99ad3847602a7f4375f7460270b116d1bc566806522783e7a2105daf335a56cd",
+          "authority": {
+            "file": "docs/ai-workflows/PUZZLE_AUTHORING.md",
+            "anchor": "11-pflichtquellen-nach-phase"
+          },
+          "assessment": "Phasen-/Inhaltsgates erhalten; nur Quellenorganisation und ausdrücklich versionierte Snapshotformen ändern sich."
+        },
+        {
+          "old_text": "| Bild-/Rasterkorrektur | §4.4 und die betroffene Phase oben. Nur abhängige Entscheidungen erneuern; für integrierte Bildrevisionen zusätzlich deren eigenen Ziel-/Abschlussweg in §§8–9. |",
+          "sha256": "7c2a0567c77c8cce971c993c24fe522301485dc1e69a918244fdec1f7e42b378",
+          "authority": {
+            "file": "docs/ai-workflows/PUZZLE_AUTHORING.md",
+            "anchor": "11-pflichtquellen-nach-phase"
+          },
+          "assessment": "Phasen-/Inhaltsgates erhalten; nur Quellenorganisation und ausdrücklich versionierte Snapshotformen ändern sich."
+        },
+        {
+          "old_text": "| Wiederaufnahme | §§6.1–6.2 und §7, aktuelle tatsächliche Phase oben; bei geänderten Bytes zusätzlich §4.4. Verbrauchte Budgets und gültige Entscheidungen aus dem gebundenen Stand fortführen. |",
+          "sha256": "f77c0d599fda660d8d4bd7f9afe61cbce441a5196bc42cf868c07c756ae87636",
+          "authority": {
+            "file": "docs/ai-workflows/PUZZLE_AUTHORING.md",
+            "anchor": "11-pflichtquellen-nach-phase"
+          },
+          "assessment": "Phasen-/Inhaltsgates erhalten; nur Quellenorganisation und ausdrücklich versionierte Snapshotformen ändern sich."
+        },
+        {
+          "old_text": "Die Tabellenbegriffe meinen [Qualität](../PUZZLE_QUALITY.md),\n[Transparenz](../REVEAL_TRANSPARENCY.md) und\n[Hintergrundvertrag](../PUZZLE_BACKGROUNDS.md). Ihre Kriterien und technischen\nInvarianten gelten weiter; nur die Lesereihenfolge ist phasengerecht.\n[Produktdefinition](../PRODUCT_DEFINITION.md), [Gestaltung](../DESIGN_CONCEPT.md),\n[Produktion](../PUZZLE_PRODUCTION.md), [PW](../PRODUCTION_WORKSPACE.md) und die\n[Tool-README](../../tools/puzzle_production/README.md) sind für normale Produktion\nkeine zusätzlichen pauschalen Gesamthandbücher. Technische Detaillektüre entsteht\nnur durch eine tatsächlich verwendete Operation:",
+          "sha256": "520748741283c3f5b05ce328f6c1801bcca41f17536531e1da22eb94af1ccda6",
+          "authority": {
+            "file": "docs/ai-workflows/PUZZLE_AUTHORING.md",
+            "anchor": "11-pflichtquellen-nach-phase"
+          },
+          "assessment": "Phasen-/Inhaltsgates erhalten; nur Quellenorganisation und ausdrücklich versionierte Snapshotformen ändern sich."
+        },
+        {
+          "old_text": "| Operation | Vor Ausführung benötigte Referenz |",
+          "sha256": "5da1b7119f9c38f679f157acdd2ba4b94e82c0610a3ec5fa031dec2e50269e31",
+          "authority": {
+            "file": "docs/ai-workflows/PUZZLE_AUTHORING.md",
+            "anchor": "11-pflichtquellen-nach-phase"
+          },
+          "assessment": "Phasen-/Inhaltsgates erhalten; nur Quellenorganisation und ausdrücklich versionierte Snapshotformen ändern sich."
+        },
+        {
+          "old_text": "| Paket bauen/veröffentlichen | [PW-B-Vertrag](../PW_B_CONTRACT.md): Phasen, geschlossene Generationen und Veröffentlichung; Tool-README Abschnitte PW-B und PB-A; §6 dieses Dokuments |",
+          "sha256": "9950fc712be3cdd3d7aede3e09f3f2f677a26b43b3593a892766b88f5f92cb46",
+          "authority": {
+            "file": "docs/ai-workflows/PUZZLE_AUTHORING.md",
+            "anchor": "11-pflichtquellen-nach-phase"
+          },
+          "assessment": "Phasen-/Inhaltsgates erhalten; nur Quellenorganisation und ausdrücklich versionierte Snapshotformen ändern sich."
+        },
+        {
+          "old_text": "| Direkter Rasterimport und Endprüfung | Tool-README RP-3, Datenvertrag und Ressourcen; Produktion §§4–5 für verwendete Mono-/Farbsemantik und unabhängigen Proof |",
+          "sha256": "0f7e1f1674388069ddb6d3b9503ea1e1d66f6b52e9a95caef511025e2e8182d4",
+          "authority": {
+            "file": "docs/ai-workflows/PUZZLE_AUTHORING.md",
+            "anchor": "11-pflichtquellen-nach-phase"
+          },
+          "assessment": "Phasen-/Inhaltsgates erhalten; nur Quellenorganisation und ausdrücklich versionierte Snapshotformen ändern sich."
+        },
+        {
+          "old_text": "| Paarprofil | [PAIRED_LINES](../PAIRED_LINES.md) vollständig und Tool-README Paarlinienprofil; kein Routinepaarlauf bei bereits vollständig gelöster Linienlogik |",
+          "sha256": "4dba8401fd88c66b2b8d5c44d87600fdea1ee7742ffbe4da555cdc46887019eb",
+          "authority": {
+            "file": "docs/ai-workflows/PUZZLE_AUTHORING.md",
+            "anchor": "11-pflichtquellen-nach-phase"
+          },
+          "assessment": "Phasen-/Inhaltsgates erhalten; nur Quellenorganisation und ausdrücklich versionierte Snapshotformen ändern sich."
+        },
+        {
+          "old_text": "| Feste Korrektur oder RP-5-Suche | [FIXED_RASTER](../FIXED_RASTER.md) beziehungsweise Tool-README RP-5; §4.4 und der wirklich verwendete Ableitungsvertrag |",
+          "sha256": "1dc0f2529b23b909342d082571925fc8280345da4e8b491231c649011c82e229",
+          "authority": {
+            "file": "docs/ai-workflows/PUZZLE_AUTHORING.md",
+            "anchor": "11-pflichtquellen-nach-phase"
+          },
+          "assessment": "Phasen-/Inhaltsgates erhalten; nur Quellenorganisation und ausdrücklich versionierte Snapshotformen ändern sich."
+        },
+        {
+          "old_text": "| Aktuelle Schwierigkeit/Rebind | [SD2-Integration](../SD2_INTEGRATION.md) und Tool-README SD2-C/SD2-B; Analyse-/Bewertungsvertrag nur für die tatsächlich verwendeten Befehle |",
+          "sha256": "09c1055604587b5bbea7c91d30f791ab537679f26be8566d5a9dc05d134aec0a",
+          "authority": {
+            "file": "docs/ai-workflows/PUZZLE_AUTHORING.md",
+            "anchor": "11-pflichtquellen-nach-phase"
+          },
+          "assessment": "Phasen-/Inhaltsgates erhalten; nur Quellenorganisation und ausdrücklich versionierte Snapshotformen ändern sich."
+        },
+        {
+          "old_text": "| Gewählten Hintergrund ableiten | Hintergrundvertrag §4 und Tool-README HP-W2; keine Ableitung ungeklärter Kandidaten |",
+          "sha256": "633010cc85f3bba71ccd548054c62b9a6e88f1fc9fded710531cd36ea874c9c4",
+          "authority": {
+            "file": "docs/ai-workflows/PUZZLE_AUTHORING.md",
+            "anchor": "11-pflichtquellen-nach-phase"
+          },
+          "assessment": "Phasen-/Inhaltsgates erhalten; nur Quellenorganisation und ausdrücklich versionierte Snapshotformen ändern sich."
+        },
+        {
+          "old_text": "| Export/Plan/Register/Recovery | [RI](../PUZZLE_INTEGRATION.md) mit seinen aktuellen Budget-/Guardentscheidungen, [ZA-1](../ZA1_ADAPTER.md) für die verwendete Generation und die entsprechende CLI-Anleitung; §8 |",
+          "sha256": "a1e30e933f6f746a21f7e833bb0752ddae13a4d7893dadd98c63ca0d4bdc8fa7",
+          "authority": {
+            "file": "docs/ai-workflows/PUZZLE_AUTHORING.md",
+            "anchor": "11-pflichtquellen-nach-phase"
+          },
+          "assessment": "Phasen-/Inhaltsgates erhalten; nur Quellenorganisation und ausdrücklich versionierte Snapshotformen ändern sich."
+        },
+        {
+          "old_text": "| Nachintegration/Bildrevision abschließen | §9 und der dort bezeichnete revisionsgenaue Retirementvertrag; keine allgemeine historische Lieferberichtslektüre |",
+          "sha256": "9aff34f922d606597ef8ed72f04623b09b0083506ffb4d468bf4ebaa1d739855",
+          "authority": {
+            "file": "docs/ai-workflows/PUZZLE_AUTHORING.md",
+            "anchor": "11-pflichtquellen-nach-phase"
+          },
+          "assessment": "Phasen-/Inhaltsgates erhalten; nur Quellenorganisation und ausdrücklich versionierte Snapshotformen ändern sich."
+        },
+        {
+          "old_text": "Ein Link auf eine Einführung oder historische Lieferung ist kein neuer Auftrag.\nDer aktuelle Quellenstand muss erreichbar und mit vollständiger Commit-SHA\ngebunden sein. Die Regeldatei und die zugehörigen Stil-/Fachquellen aus demselben\nfestgehaltenen Regelstand lesen; alte versiegelte Snapshots nicht umschreiben.\nDer bestehende Regelwerks-Snapshot und seine tatsächlichen Datei-/Hashbindungen\nbleiben erhalten. Diese Dokumentrevision ändert keine Request-/Handoff-/Writer-\nSchemas. Fehlende benötigte Quellen oder Widersprüche blockieren die betroffene\nOperation, nicht automatisch unabhängige Arbeit.",
+          "sha256": "e7f5aa6a305a1b8d1da22e277d75bd17c78d335438e4b1a93084659d38954329",
+          "authority": {
+            "file": "docs/ai-workflows/PUZZLE_AUTHORING.md",
+            "anchor": "11-pflichtquellen-nach-phase"
+          },
+          "assessment": "Phasen-/Inhaltsgates erhalten; nur Quellenorganisation und ausdrücklich versionierte Snapshotformen ändern sich."
+        },
+        {
+          "old_text": "Separat beauftragte Regel-/Werkzeug-/Spiel-/CI-Entwicklung verwendet weiterhin die\nvollständige Entwicklungsroute aus AGENTS einschließlich WORKFLOW, Projektprofil\nund auftragsbezogenen Fachquellen. Diese Ausnahme ist kein Entwickler-Kurzweg.",
+          "sha256": "d8019428702256230d2969fc3cd43647199f42d36fa08479b0b4c143c7e55b86",
+          "authority": {
+            "file": "docs/ai-workflows/PUZZLE_AUTHORING.md",
+            "anchor": "11-pflichtquellen-nach-phase"
+          },
+          "assessment": "Phasen-/Inhaltsgates erhalten; nur Quellenorganisation und ausdrücklich versionierte Snapshotformen ändern sich."
+        }
+      ]
+    },
+    {
+      "old_heading": "1.2 Gemeinsame Arbeitsregeln",
+      "old_anchor": "12-gemeinsame-arbeitsregeln",
+      "old_line": 70,
+      "units": [
+        {
+          "old_text": "Zu Beginn Kategorienquelle, Arbeitsindex und Runtime-Registry lesen, aber keine\nBestandsrätsel einzeln laden oder nachprüfen. Kategorie nach Auftrag oder prägendem\nHauptgegenstand gemäß [Kategorienvertrag](../CATEGORIES.md) zuordnen und in\nBriefing/Record führen. Repository-/Toolstand mit vollständiger SHA binden.\nTatsächlichen Datei-, Bild-, Repository- und Ausführungszugriff prüfen. Keine\nFunktionen, Originale, Prüfungen oder Erfolge behaupten, die nicht verfügbar oder\nnicht ausgeführt sind. Bestehende Formate, Farbregeln, Solverprofile, Nachweise und\nReparaturverträge verwenden. Normale Produktion entwickelt keine neuen Werkzeuge.",
+          "sha256": "8407790b7bea5c96fc531d9c28cce91d206d43f2600c089e42693255ada6848d",
+          "authority": {
+            "file": "docs/ai-workflows/PUZZLE_AUTHORING.md",
+            "anchor": "12-gemeinsame-arbeitsregeln"
+          },
+          "assessment": "Phasen-/Inhaltsgates erhalten; nur Quellenorganisation und ausdrücklich versionierte Snapshotformen ändern sich."
+        },
+        {
+          "old_text": "Keine direkte Modell-API einbauen. Ein Produktionsauftrag mit Repositoryablage\nerlaubt ausschließlich die beauftragte Paketsicherung samt Index; ein\nIntegrationsauftrag zusätzlich §8 und den fachlichen Abschluss nach §9.\nAblage-/Integrationsmerge braucht eine passende ausdrückliche oder bedingte\nFreigabe. Bereits erteilte passende Aufträge nicht erneut erfragen. Kein direkter\nSchreibzugriff auf main, keine fremden Änderungen, ungeklärten Fremdassets,\nSecrets oder privaten Daten übernehmen. Vor lokaler Arbeit die beauftragte\nArbeitswurzel und [WORKSPACE](../dev-rules/WORKSPACE.md) beachten; diese Lektüre\nbetrifft die konkrete Ablage/Bereinigung, nicht den gesamten Entwicklungsworkflow.",
+          "sha256": "56a8d369eff320cd6d2f0493594faa4f8aaa8d0181a12fe0e5b8aa0212816878",
+          "authority": {
+            "file": "docs/ai-workflows/PUZZLE_AUTHORING.md",
+            "anchor": "12-gemeinsame-arbeitsregeln"
+          },
+          "assessment": "Phasen-/Inhaltsgates erhalten; nur Quellenorganisation und ausdrücklich versionierte Snapshotformen ändern sich."
+        },
+        {
+          "old_text": "Menschliches Probespielen ist optional und kein Produktionsgate. Verpflichtend\nbleiben die tatsächliche Abschlussbildfreigabe, Motiv-/Parameterfreigabe,\ntechnische Qualifikation, Raster-/Hintergrundwahl und finale redaktionelle\nAbnahme am konkreten Gegenstand. Empfehlung, Dateiexistenz, Klick, Kopieren,\nAktualisierung oder Schweigen erzeugen keine Freigabe. Materiell geänderte\nkreative Bytes benötigen die passende neue Entscheidung.",
+          "sha256": "143c8d2fc5ca18446a6d373e5d3e1b19c944a45ee4f2ae81df70280d282082b2",
+          "authority": {
+            "file": "docs/ai-workflows/PUZZLE_AUTHORING.md",
+            "anchor": "12-gemeinsame-arbeitsregeln"
+          },
+          "assessment": "Phasen-/Inhaltsgates erhalten; nur Quellenorganisation und ausdrücklich versionierte Snapshotformen ändern sich."
+        },
+        {
+          "old_text": "Normale Produktionsaufträge 1–5 einschließlich Korrektur und Wiederaufnahme\nliefern keine Modell-, Reasoning- oder Eigenumsetzungsempfehlung. MODEL_SELECTION\nund MODEL_CATALOG nicht dafür laden oder recherchieren. Der Nutzer wählt seine\nOberfläche selbst; fehlende erforderliche Bild-/Datei-/Werkzeugfähigkeiten bleiben\nkonkrete Blocker. Das Produktionsabschlussformat aus §7 gilt, nicht das\nEntwicklungs-HANDOFF-JSON.",
+          "sha256": "971f52ee9c013bff751b6973b865ecdd8e45ba63964d68408d1598659aac7332",
+          "authority": {
+            "file": "docs/ai-workflows/PUZZLE_AUTHORING.md",
+            "anchor": "12-gemeinsame-arbeitsregeln"
+          },
+          "assessment": "Phasen-/Inhaltsgates erhalten; nur Quellenorganisation und ausdrücklich versionierte Snapshotformen ändern sich."
+        }
+      ]
+    },
+    {
+      "old_heading": "Prüfungen gehören zur Produktion, nicht zur CI",
+      "old_anchor": "prüfungen-gehören-zur-produktion-nicht-zur-ci",
+      "old_line": 105,
+      "units": [
+        {
+          "old_text": "Sämtliche rätselbezogenen Prüfungen – Lösbarkeit, Eindeutigkeit, unabhängiger\nProof, Herkunft, Reparatur, Gestaltung und Zielintegration – für die jeweilige\nneue/geänderte Revision tatsächlich durchführen und dateigebunden belegen.\nUnveränderte passend gebundene Ergebnisse wiederverwenden; §4.4 bestimmt die\nnötigen Neuprüfungen. Keine rätselspezifischen Unit-Tests, Test-Snapshots,\nCI-Falllisten oder dauerhaften Replayjobs. Auftragsprüfskripte bleiben temporär\naußerhalb der Test-Discovery; Ergebnisse gehören zum Paket, nicht in einen\nwachsenden CI-Korpus.",
+          "sha256": "8fa6f74063e310c28e27dbce65d504521c30c0cfc7d57c6a63b4b82f1e84eb6f",
+          "authority": {
+            "file": "docs/ai-workflows/PUZZLE_AUTHORING.md",
+            "anchor": "prüfungen-gehören-zur-produktion-nicht-zur-ci"
+          },
+          "assessment": "Phasen-/Inhaltsgates erhalten; nur Quellenorganisation und ausdrücklich versionierte Snapshotformen ändern sich."
+        },
+        {
+          "old_text": "Vor jedem Inhalts-/Ablage-/Cleanup-PR den Abschnitt Paketplan sowie die buildfreien\nÄnderungsklassen aus [CI v2](../CI_WORKFLOW_V2.md) lesen und einen aktuellen\n`.ci/package.json` führen. Reine Inhalte wählen begründet `modules=[]` und\n`evidence.mode=none`; Quellen-/Planintegrität bleibt Pflicht, ohne Player-Build,\nauch im Main-Nachlauf. Keine Solver-/Proof-Replays, vollständigen Fachtests oder\nnativen Rendermatrizen allein wegen eines neuen Rätsels ergänzen. Code, gemeinsame\nSpielassets und CI-Änderungen sind getrennte Entwicklungsarbeit mit geeignetem\nPrüfplan; nicht die Inhaltsausnahme ausweiten oder manuell `all` wählen.",
+          "sha256": "c7315f173abc99a46a426a6fe2b6c0c557a69cdfaf10768aa5b5ce40d48d91eb",
+          "authority": {
+            "file": "docs/ai-workflows/PUZZLE_AUTHORING.md",
+            "anchor": "prüfungen-gehören-zur-produktion-nicht-zur-ci"
+          },
+          "assessment": "Phasen-/Inhaltsgates erhalten; nur Quellenorganisation und ausdrücklich versionierte Snapshotformen ändern sich."
+        }
+      ]
+    },
+    {
+      "old_heading": "2. Abschlussbild zuerst, danach Abstraktion",
+      "old_anchor": "2-abschlussbild-zuerst-danach-abstraktion",
+      "old_line": 125,
+      "units": []
+    },
+    {
+      "old_heading": "2.1 Eingaben und Konfiguration",
+      "old_anchor": "21-eingaben-und-konfiguration",
+      "old_line": 127,
+      "units": [
+        {
+          "old_text": "Zulässiger Input: Motivtext beliebiger Ausführlichkeit und/oder Ausgangsbild;\noptional Breite/Höhe (ungefähr/fest), Mono/Farbe, Vordergrundfarbzahl\n(ungefähr/genau) und weitere Einschränkungen. Eine Vorschau ersetzt keine\nOriginaldatei. Hauptmotiv, unverzichtbare Merkmale, erlaubte Umgestaltung und\nEinschränkungen erfassen. Reversible Details sinnvoll ergänzen; nur wesentliche\noffene Entscheidungen mit Empfehlung und Konsequenzen klären.",
+          "sha256": "3d68283dc47740cfdec8c8607a60fab1294bcfa6847e97ab8c1ee23c80a14b87",
+          "authority": {
+            "file": "docs/ai-workflows/PUZZLE_AUTHORING_STEP_1.md",
+            "anchor": "21-eingaben-und-konfiguration"
+          },
+          "assessment": "Phasen-/Inhaltsgates erhalten; nur Quellenorganisation und ausdrücklich versionierte Snapshotformen ändern sich."
+        },
+        {
+          "old_text": "Frühe Breiten-/Höhenwünsche sind unabhängig: keine, eine oder beide Achsen.\nExakt/ungefähr gilt für ausgefüllte Achsen. Offene Achsen zum Motiv bestimmen;\nkeine 0, angenommene Quadratseite oder Wiederherstellung aufgehobener Altwerte.\nEine ausdrücklich aufgehobene Breite erhält die weiter gültige Höhe und umgekehrt.\nBloßes Leeren hebt keine veröffentlichte Vorgabe auf. Wünsche im Motivbriefing\nsichern; die konkrete spätere Matrix besitzt zwei Maße. Ein freigegebener\nParameterkorridor wird nicht stillschweigend durch spätere Formularwerte geändert.",
+          "sha256": "2dbae7ce4c9b59acbe050215485b781c98e55a02beb744b0a8b034ec4fb13dd6",
+          "authority": {
+            "file": "docs/ai-workflows/PUZZLE_AUTHORING_STEP_1.md",
+            "anchor": "21-eingaben-und-konfiguration"
+          },
+          "assessment": "Phasen-/Inhaltsgates erhalten; nur Quellenorganisation und ausdrücklich versionierte Snapshotformen ändern sich."
+        },
+        {
+          "old_text": "Zuerst farbige detaillierte Abschlussbilder, noch keine Abstraktion, Zellmatrix\noder Hinweise. Fehlende Rastermaße/offener Modus blockieren diese Bildwahl nicht.\nDie spätere Abstrahierbarkeit berücksichtigen, ohne die Illustration vorzeitig\nauf Zellniveau zu vereinfachen. Eine eigene Eingangsdatei ist zunächst Referenz,\nkeine automatisch freigegebene Abschlussbilddatei.",
+          "sha256": "78993b1aefc2519586c433d4c53e82f0e4ed1d8f35be6a14c7249ba5e58c3452",
+          "authority": {
+            "file": "docs/ai-workflows/PUZZLE_AUTHORING_STEP_1.md",
+            "anchor": "21-eingaben-und-konfiguration"
+          },
+          "assessment": "Phasen-/Inhaltsgates erhalten; nur Quellenorganisation und ausdrücklich versionierte Snapshotformen ändern sich."
+        },
+        {
+          "old_text": "Nach Bildfreigabe bei offener Konfiguration zwei bis drei sinnvolle Möglichkeiten\nknapp vergleichen und eine empfehlen. Motivtreue, Darstellbarkeit, Logikrisiko\nund Spielgefühl getrennt begründen; Rechtecke gleichberechtigt berücksichtigen.\nDies verlangt nicht mehrere tatsächliche Abstraktionsbilder.",
+          "sha256": "d83a26369dc8ba392e239cffb844d2e045728a517643aa0b651aa1d2e7f20faa",
+          "authority": {
+            "file": "docs/ai-workflows/PUZZLE_AUTHORING_STEP_2.md",
+            "anchor": "21-konfiguration-nach-bildfreigabe"
+          },
+          "assessment": "Phasen-/Inhaltsgates erhalten; nur Quellenorganisation und ausdrücklich versionierte Snapshotformen ändern sich."
+        },
+        {
+          "old_text": "- Regulär höchstens 50 Zellen je Achse; größere technische Werkzeuggrenzen sind\n  keine Produktfreigabe. Klein (längste Achse bis 20), mittel (21–35) und groß\n  (36–50) unterscheiden Detailspielraum, nicht logische Schwierigkeit.\n- Acht Vordergrundfarben plus Leer sind die technische Obergrenze, kein Ziel.\n  Die kleinste motivgerechte Palette empfehlen; Ausgangspunkt Mono oder 2–4 Farben.\n  5–8 nur mit benanntem motivischem Nutzen und erklärtem Verlust bei Zusammenlegung.\n  Keine Farbe nur für Verfügbarkeit, Solvererfolg oder künstliche Schwierigkeit.\n- Farbzahl zählt tatsächlich verwendete Vordergrund-IDs; EMPTY zählt nicht,\n  Weiß kann Vordergrundfarbe sein. Unbenutzte Einträge, ähnliche Schattierungen\n  und dekorative Einzelzellen erfüllen keinen Farbwunsch. Vor Versiegelung auf\n  nötige Einträge reduzieren und die erforderlichen Neuprüfungen ausführen.\n- Genaue Farbzahl ist fest; Konflikte vor Abweichung klären. Ungefähr ist ein\n  begründbar abweichendes Ziel innerhalb des vorgeschlagenen und danach\n  freigegebenen Korridors. Mono hat eine Vordergrundfarbe. Bei offener Farbzahl\n  die empfohlene Palette und eine sinnvoll reduzierte Alternative erläutern,\n  jede Farbe einer Motivfunktion zuordnen. Keine zusätzliche Vollmatrix verlangen.\n- Maße, Seitenverhältnis und Palette zum Motiv wählen; vor Nachweis keine\n  Lösbarkeit versprechen. Das Abschlussbild bleibt unabhängig davon ausgearbeitet\n  und farbig. Materielle Abweichungen vor weiterer Produktion entscheiden lassen.",
+          "sha256": "4c5b27f8ac1d44d94261f8a20d57918ba9f2bedb29980aed1e344e67b7c5ee5b",
+          "authority": {
+            "file": "docs/ai-workflows/PUZZLE_AUTHORING_STEP_2.md",
+            "anchor": "21-konfiguration-nach-bildfreigabe"
+          },
+          "assessment": "Phasen-/Inhaltsgates erhalten; nur Quellenorganisation und ausdrücklich versionierte Snapshotformen ändern sich."
+        }
+      ]
+    },
+    {
+      "old_heading": "2.2 Darstellungen auseinanderhalten",
+      "old_anchor": "22-darstellungen-auseinanderhalten",
+      "old_line": 175,
+      "units": [
+        {
+          "old_text": "| Ursprungsidee / Bildquelle | Auftrag/Referenz; Original, Herkunft und Nutzungsgrundlage erhalten. |",
+          "sha256": "240d91fa58471ea411b370470d47a775c0baa0b33ef844e73d1705f9b96506ea",
+          "authority": {
+            "file": "docs/ai-workflows/PUZZLE_AUTHORING.md",
+            "anchor": "darstellungen-und-sichtung"
+          },
+          "assessment": "Phasen-/Inhaltsgates erhalten; nur Quellenorganisation und ausdrücklich versionierte Snapshotformen ändern sich."
+        },
+        {
+          "old_text": "| Abschlussbild | Zuerst erzeugte farbige detaillierte Illustration; nach tatsächlicher Auswahl/Freigabe gestalterische Referenz und spätere Belohnungsansicht. |",
+          "sha256": "557b8b587ebba1ae3ba4cea9e07b2486a5d87a15f248cf67c2feb966c1b3a10c",
+          "authority": {
+            "file": "docs/ai-workflows/PUZZLE_AUTHORING.md",
+            "anchor": "darstellungen-und-sichtung"
+          },
+          "assessment": "Phasen-/Inhaltsgates erhalten; nur Quellenorganisation und ausdrücklich versionierte Snapshotformen ändern sich."
+        },
+        {
+          "old_text": "| Motivvorlage | Aus genau diesem gespeicherten Bild abgeleitete vereinfachte Illustration; eigene Motiv-/Parameterfreigabe vor Rasterproduktion. |",
+          "sha256": "eeb1d14b89af8c1e6d1ee6dcb01bb3dfda3eec0475211b6f4b7f0acda3965e37",
+          "authority": {
+            "file": "docs/ai-workflows/PUZZLE_AUTHORING.md",
+            "anchor": "darstellungen-und-sichtung"
+          },
+          "assessment": "Phasen-/Inhaltsgates erhalten; nur Quellenorganisation und ausdrücklich versionierte Snapshotformen ändern sich."
+        },
+        {
+          "old_text": "| Lösungsraster | Exakte diskrete Zellmatrix; alleinige Grundlage von Hinweisen und Logiknachweis. |",
+          "sha256": "c74e9650407e52f0c5d2734fe0e0bf287e3fe848a2cfcd44810d31c46ad76a5b",
+          "authority": {
+            "file": "docs/ai-workflows/PUZZLE_AUTHORING.md",
+            "anchor": "darstellungen-und-sichtung"
+          },
+          "assessment": "Phasen-/Inhaltsgates erhalten; nur Quellenorganisation und ausdrücklich versionierte Snapshotformen ändern sich."
+        },
+        {
+          "old_text": "| Hintergrundzeichnung | Eigenständiger Kontext, separate Bildrevision und Wahl; keine Quelle von Lösungszellen. |",
+          "sha256": "85506ce9e3913fa9eb20654307282a6542cc0b3e005f6e982733e59ce18b54b2",
+          "authority": {
+            "file": "docs/ai-workflows/PUZZLE_AUTHORING.md",
+            "anchor": "darstellungen-und-sichtung"
+          },
+          "assessment": "Phasen-/Inhaltsgates erhalten; nur Quellenorganisation und ausdrücklich versionierte Snapshotformen ändern sich."
+        },
+        {
+          "old_text": "Input → Abschlussbild → freigegebene Abstraktion → Lösungsraster bleibt die\nverbindliche Richtung. Motivische Konsistenz, nicht Pixelidentität. Dateien und\nRevisionen getrennt führen; das detaillierte Original nicht mit der Abstraktion\nüberschreiben. Der Hintergrund gehört nicht in diese Ableitungskette.",
+          "sha256": "2db7cbeca13b2d49f025ee2217791a869dcc7a238f0a0a409a2f287031c31fd1",
+          "authority": {
+            "file": "docs/ai-workflows/PUZZLE_AUTHORING.md",
+            "anchor": "darstellungen-und-sichtung"
+          },
+          "assessment": "Phasen-/Inhaltsgates erhalten; nur Quellenorganisation und ausdrücklich versionierte Snapshotformen ändern sich."
+        }
+      ]
+    },
+    {
+      "old_heading": "2.3 Styleguide",
+      "old_anchor": "23-styleguide",
+      "old_line": 190,
+      "units": [
+        {
+          "old_text": "Die gemeinsame gestalterische Norm steht vollständig in\n[PUZZLE_IMAGE_STYLE](../PUZZLE_IMAGE_STYLE.md): warme klare Illustration mit\nFilzstift-/Tuscheanmutung, kontrollierte Abstraktion und leichte Graphitkontexte.\nSie ist in jeder Phase Pflicht. [Q-B02/Q-B03](../PUZZLE_QUALITY.md#31-abschlussbildphase)\nund [AT §2](../REVEAL_TRANSPARENCY.md#2-verbindlicher-bildstandard) behalten\nEinzelurteile, echte Transparenz, helle Motivteile und saubere Alphakanten.\nSzenen bewahren notwendige Umgebung und erhalten eine bewusste transparente\nAußenkomposition. Originale groß/klein direkt ansehen, bei Bedarf auf neutralem\nGrund/Schachbrett. Keine routinemäßige Buch-/Katalogmontage, Fadeprobe oder\nTestintegration, auch nicht in spätere Produktionsphasen verlagert.",
+          "sha256": "6548bcc59b6dde9e9ddd971a2ac9a4c9856c5406078f476aae84f0c7a6abbcca",
+          "authority": {
+            "file": "docs/ai-workflows/PUZZLE_AUTHORING.md",
+            "anchor": "darstellungen-und-sichtung"
+          },
+          "assessment": "Phasen-/Inhaltsgates erhalten; nur Quellenorganisation und ausdrücklich versionierte Snapshotformen ändern sich."
+        },
+        {
+          "old_text": "Je fälligem Qualitätskriterium erfüllt/Warnung/nicht erfüllt/nicht geprüft mit\nkurzer Begründung und konkreter Datei-/Revisionsbindung festhalten. Kein guter\nGesamteindruck verdeckt negative Einzelkriterien. Q-H01/Q-H02 behalten die echte\nZell-/Hinweissicht, ohne obligatorischen Spielstart je Rätsel. Im Raster nur\ndiskrete Werte, keine Textur/Zwischenfarben als Zellzustand. Transparenz des\nReveals ändert weder EMPTY noch weiße Vordergrundfarben der Matrix.",
+          "sha256": "5913163c9a0699d89017f1fb1af70b6b709ddaaf1f7d9e455242af066f6babf5",
+          "authority": {
+            "file": "docs/ai-workflows/PUZZLE_AUTHORING.md",
+            "anchor": "darstellungen-und-sichtung"
+          },
+          "assessment": "Phasen-/Inhaltsgates erhalten; nur Quellenorganisation und ausdrücklich versionierte Snapshotformen ändern sich."
+        }
+      ]
+    },
+    {
+      "old_heading": "2.4 Abschlussbildauswahl und Abstraktionsfreigabe",
+      "old_anchor": "24-abschlussbildauswahl-und-abstraktionsfreigabe",
+      "old_line": 210,
+      "units": [
+        {
+          "old_text": "1. Standardmäßig drei sinnvoll unterschiedliche echte Abschlussbilder erzeugen;\n   Komposition/Pose/Farbgebung variieren, Stil, Detailanspruch und Auftrag bewahren.\n   Bindende Referenz (`faithful`) und freie Interpretation (`free`) unterscheiden.\n   Nur eine ausdrückliche Vorgabe reduziert die Variantenanzahl.",
+          "sha256": "8fd4b85df32801f181fb8f45482cb3da4cb4c4ea508ac002c7da1498f8074f7c",
+          "authority": {
+            "file": "docs/ai-workflows/PUZZLE_AUTHORING_STEP_1.md",
+            "anchor": "24-abschlussbildauswahl-und-abstraktionsfreigabe"
+          },
+          "assessment": "Phasen-/Inhaltsgates erhalten; nur Quellenorganisation und ausdrücklich versionierte Snapshotformen ändern sich."
+        },
+        {
+          "old_text": "2. Native Bildgenerierung verwenden; jede Variante tatsächlich als Einzeldatei\n   speichern und zeigen. Eine Kontaktübersicht ist nur Auswahlhilfe. Fehlende\n   Bildfunktion blockiert den Bildschritt; Konzepte ersetzen keine Originale.",
+          "sha256": "14b2da062c5437257f7c033255275d5ebeef71041b6cba30a62befb3de702eaf",
+          "authority": {
+            "file": "docs/ai-workflows/PUZZLE_AUTHORING_STEP_1.md",
+            "anchor": "24-abschlussbildauswahl-und-abstraktionsfreigabe"
+          },
+          "assessment": "Phasen-/Inhaltsgates erhalten; nur Quellenorganisation und ausdrücklich versionierte Snapshotformen ändern sich."
+        },
+        {
+          "old_text": "3. Vor jeder Abstraktion muss das konkrete Abschlussbild ausdrücklich freigegeben\n   sein: Datei, Revision/Hash und geschützte Merkmale. Eine Auswahl mit Korrekturwunsch\n   ist keine Freigabe noch nicht vorhandener korrigierter Bytes.",
+          "sha256": "c9b6e9f6b64d6e03ea90062abe708578df4d09b4e60d4b9f82a46c015dde98c1",
+          "authority": {
+            "file": "docs/ai-workflows/PUZZLE_AUTHORING_STEP_1.md",
+            "anchor": "24-abschlussbildauswahl-und-abstraktionsfreigabe"
+          },
+          "assessment": "Phasen-/Inhaltsgates erhalten; nur Quellenorganisation und ausdrücklich versionierte Snapshotformen ändern sich."
+        },
+        {
+          "old_text": "4. Danach standardmäßig eine begründete Abstraktion aus den gespeicherten Bytes\n   für die empfohlene Konfiguration erstellen. Weitere Varianten nur für konkrete\n   offene Darstellungs-/Detailfragen, nicht zur Erfüllung einer Quote. Reveal und\n   Motivvorlage nebeneinander vorlegen; Verluste und Parameterkorridor benennen.",
+          "sha256": "0497c88a0145965b4e7ba1302d90c9750098477bedf4a75b6a89a83f68677384",
+          "authority": {
+            "file": "docs/ai-workflows/PUZZLE_AUTHORING_STEP_2.md",
+            "anchor": "24-abstraktionsfreigabe"
+          },
+          "assessment": "Phasen-/Inhaltsgates erhalten; nur Quellenorganisation und ausdrücklich versionierte Snapshotformen ändern sich."
+        },
+        {
+          "old_text": "5. Vor Rasterproduktion echte Freigabe der Motivdatei samt Revision/Hash,\n   Revealbezug, Invarianten und zulässigen Maß-/Modus-/Cropvarianten abwarten.\n   Bildfreigabe ersetzt keine Motivfreigabe; Schweigen ist keine Entscheidung.",
+          "sha256": "8e3b0ee412930846f99d75c3650df58eeffa30c8972eccbc7caf2cbebd55d647",
+          "authority": {
+            "file": "docs/ai-workflows/PUZZLE_AUTHORING_STEP_2.md",
+            "anchor": "24-abstraktionsfreigabe"
+          },
+          "assessment": "Phasen-/Inhaltsgates erhalten; nur Quellenorganisation und ausdrücklich versionierte Snapshotformen ändern sich."
+        },
+        {
+          "old_text": "Nur die gewählte Darstellung korrigieren, geschützte Merkmale nennen und neue\nRevision sichern. Nach zwei erfolglosen Bildkorrekturrunden Ursache und geänderten\nPlan vorlegen. Bei ungeeigneter Abstraktion Vereinfachung, Größe oder Palette\nüberdenken; anderes Abschlussbild erneut freigeben lassen, nicht heimlich an\ntechnische Fehlschläge anpassen.",
+          "sha256": "83b995e21b97d86e6449da8db59d296b41b27c0a3033302f5eca220e8bf7b8aa",
+          "authority": {
+            "file": "docs/ai-workflows/PUZZLE_AUTHORING.md",
+            "anchor": "gemeinsame-bildkorrektur"
+          },
+          "assessment": "Phasen-/Inhaltsgates erhalten; nur Quellenorganisation und ausdrücklich versionierte Snapshotformen ändern sich."
+        }
+      ]
+    },
+    {
+      "old_heading": "3. Standardablauf: fünf Aufträge",
+      "old_anchor": "3-standardablauf-fünf-aufträge",
+      "old_line": 236,
+      "units": [
+        {
+          "old_text": "| 1 · Abschlussbilder | Motivbriefing/optionale Referenz; drei echte detaillierte farbige transparente Bilder. Keine erfundene ID oder Gitquelle beim neuen Briefing. | reveal_review, erreichbare Originale; tatsächliche Bildwahl/-freigabe. |",
+          "sha256": "3799b97a3a48e449fa5c3c631e09eb4c87039afe088070e496331398227e4748",
+          "authority": {
+            "file": "docs/ai-workflows/PUZZLE_AUTHORING_STEP_1.md",
+            "anchor": "2-abschlussbild-zuerst"
+          },
+          "assessment": "Phasen-/Inhaltsgates erhalten; nur Quellenorganisation und ausdrücklich versionierte Snapshotformen ändern sich."
+        },
+        {
+          "old_text": "| 2 · Motivvorlage | Freigegebene gespeicherte Revealbytes abstrahieren; geeigneten Parameterkorridor empfehlen. | motif_review, Vergleich/Verluste/Parameter; echte Motivfreigabe. |",
+          "sha256": "bd95f978b7bba0692a9a506f7a6a41573eb4cfdfbf64ffd1a7cacf9510ed34d8",
+          "authority": {
+            "file": "docs/ai-workflows/PUZZLE_AUTHORING_STEP_2.md",
+            "anchor": "2-motivvorlage-nach-revealfreigabe"
+          },
+          "assessment": "Phasen-/Inhaltsgates erhalten; nur Quellenorganisation und ausdrücklich versionierte Snapshotformen ändern sich."
+        },
+        {
+          "old_text": "| 3 · Rasterangebote | Erst nach Motivfreigabe bedarfsweise Kandidaten und erforderliche Korrekturen; vollständige technische/redaktionelle Qualifikation. | Qualifizierte Einzelrevisionen raster_ready; Sichtungsentwürfe getrennt raster_review. Keine automatische Rasterwahl. |",
+          "sha256": "33cdbfbbeb63beb6839f819b7b89c2c155fea1535a90f6558597dc109b89463f",
+          "authority": {
+            "file": "docs/ai-workflows/PUZZLE_AUTHORING_STEP_3.md",
+            "anchor": "4-rasterproduktion-und-technische-pflichtprüfung"
+          },
+          "assessment": "Phasen-/Inhaltsgates erhalten; nur Quellenorganisation und ausdrücklich versionierte Snapshotformen ändern sich."
+        },
+        {
+          "old_text": "| 4 · Kontextzeichnungen | Ausdrückliche Wahl einer qualifizierten Rasteroption am festen Quellencommit; erst danach drei unterschiedliche isolierte Kontextbilder. | background_review; Auswahl, Korrektur oder ausdrückliches none. content_ready erst bei vollständiger Bereitschaft. |",
+          "sha256": "707a362ae4b60fad820a445b848d37efb3558cd49e932d4da33e1630ba341c31",
+          "authority": {
+            "file": "docs/ai-workflows/PUZZLE_AUTHORING_STEP_4.md",
+            "anchor": "63-hintergrundarbeit-in-schritt-4"
+          },
+          "assessment": "Phasen-/Inhaltsgates erhalten; nur Quellenorganisation und ausdrücklich versionierte Snapshotformen ändern sich."
+        },
+        {
+          "old_text": "| 5 · Integration | Tatsächliche Endabnahme, gültiger Rasterstand und ausgewählter abgeleiteter Hintergrund bzw. none. | Finalizer → Export → frischer Plan → autorisiertes Register; Git/Draft-PR, tatsächlicher Mainmerge und §9 nur mit passenden Befugnissen. |",
+          "sha256": "8baab24b2125087d280d0b03ba16117952fb25602faae0e5ce720df748689227",
+          "authority": {
+            "file": "docs/ai-workflows/PUZZLE_AUTHORING_STEP_5.md",
+            "anchor": "8-abgenommenes-paket-ins-spiel-integrieren"
+          },
+          "assessment": "Phasen-/Inhaltsgates erhalten; nur Quellenorganisation und ausdrücklich versionierte Snapshotformen ändern sich."
+        },
+        {
+          "old_text": "Klick/Kopieren ist lokale Absicht, erst ein abgesendeter Auftrag erklärt eine\nEntscheidung. Erst zurückgelesene Gitdaten belegen einen erreichten Stand.\nDer Assistent ist kein Modellaufrufer oder Projektwriter. Quelle für Cloudakteure\nmuss über Git erreichbar sein, nicht bloß über localhost oder einen lokalen Pfad.",
+          "sha256": "7285bceb859cb51447454a471a8ee6f0dc36988d981bd414bf31608b9d7b57bc",
+          "authority": {
+            "file": "docs/ai-workflows/PUZZLE_AUTHORING.md",
+            "anchor": "3-gesamtfolge"
+          },
+          "assessment": "Phasen-/Inhaltsgates erhalten; nur Quellenorganisation und ausdrücklich versionierte Snapshotformen ändern sich."
+        },
+        {
+          "old_text": "PW2-B in [#626](https://github.com/venomenon328/picross/issues/626) verbindet in der\nSchlussübersicht konkrete Hintergrundwahl/none, Endabnahme und Integration in\neinem regulären Auftrag. Der Standard beauftragt anschließend Commit/PR,\nunabhängiges Review und Squash-Merge erst nach aktuellen Vor-Merge-Gates sowie\n§9. Ein bewusst gewählter Draft-Umfang bleibt ausdrücklich erhalten. Korrektur\nund Wiederaufnahme erklären keine neue Endabnahme oder Mergefreigabe. Die\ntechnischen Zwischenzustände und Byteprüfungen bleiben, lediglich der gesonderte\nBenutzerauftrag „Zur Endabnahme vorbereiten“ entfällt. Erst das tatsächliche\nAbsenden erteilt die genannten Befugnisse, nicht dieser Normtext oder ein Klick.",
+          "sha256": "eba9ca9d7db03d3be19996eaf0822448207cd93950f4cfa7abf2a9af14b7ca37",
+          "authority": {
+            "file": "docs/ai-workflows/PUZZLE_AUTHORING.md",
+            "anchor": "3-gesamtfolge"
+          },
+          "assessment": "Phasen-/Inhaltsgates erhalten; nur Quellenorganisation und ausdrücklich versionierte Snapshotformen ändern sich."
+        }
+      ]
+    },
+    {
+      "old_heading": "4. Rasterproduktion und technische Pflichtprüfung",
+      "old_anchor": "4-rasterproduktion-und-technische-pflichtprüfung",
+      "old_line": 261,
+      "units": [
+        {
+          "old_text": "Rasterprüfung hat einen eigenen Gegenstand. Hintergründe liefern keine Zellwerte\nund werden nicht durch Solvererfolg freigegeben. Für 0.8.0 ist vollständig\nqualifiziertes raster_ready ohne Hintergrund zulässig; content_ready setzt später\ndie eigene Hintergrundbereitschaft voraus. Keine vorgezogenen Hintergrundblocker.",
+          "sha256": "c2c5909ef654cb223b503ecd2a1a6be277efedf7d41f821449a6cbae21ec40ff",
+          "authority": {
+            "file": "docs/ai-workflows/PUZZLE_AUTHORING_STEP_3.md",
+            "anchor": "4-rasterproduktion-und-technische-pflichtprüfung"
+          },
+          "assessment": "Phasen-/Inhaltsgates erhalten; nur Quellenorganisation und ausdrücklich versionierte Snapshotformen ändern sich."
+        }
+      ]
+    },
+    {
+      "old_heading": "4.1 Import und Rastervarianten",
+      "old_anchor": "41-import-und-rastervarianten",
+      "old_line": 268,
+      "units": [
+        {
+          "old_text": "1. Von der freigegebenen gespeicherten Motivvorlage ausgehen; Ableitung aus genau\n   dem freigegebenen Reveal anhand Originalen, Hashes und Bearbeitung prüfen.\n   Originalbytes, SHA-256, Normalisierung, Rechte, Parameter und Toolversion erhalten.\n   Während der Produktion beginnt deterministische Prüfung bei Bildbytes, nicht\n   beim Prompt. Nach finaler Integration gilt der Abschluss nach §9.\n2. Striktes bestehendes Designformat und aktuelle Format-/Ressourcengrenzen der\n   RP-3-Anleitung verwenden. Redaktionelle Zusatzangaben in Begleitdateien.\n   Crop und Seitenverhältnis beachten, nicht stillschweigend strecken.\n3. Mit dem aussichtsreichsten begründeten Rasterkandidaten beginnen. Einen zweiten\n   und weitere jeweils nacheinander nur für ein konkret benanntes unerfülltes\n   Kriterium und eine neue motivisch zulässige Hypothese erzeugen. Keine anfängliche\n   Viererquote, keine neue Zweierquote und keine blinde Kreuzprodukt-Suche.\n   Ein vollständig geeigneter qualifizierter Kandidat genügt. Die bestehende\n   Obergrenze bleibt höchstens sechs Rasterkandidaten pro Runde; alle bisherigen\n   Versuche zählen kumulativ. Neue Namen, Ordner oder Wiederaufnahme setzen weder\n   Gesamt-/Such-/Reparaturbudgets noch den freigegebenen Korridor zurück.\n4. Vor teurer Qualifikation preisgünstige Ausschlüsse und Duplikate erkennen:\n   Maße/Werte/Palette, feste Wünsche, offensichtliche Form-/Randmängel und exakten\n   Vergleich von Maßen, Palette und Zellwerten. Parametergebundene Kandidatenhashes\n   sind kein reiner Matrixvergleich. Entstehungswege und Ablehnungsgründe erhalten.\n   Diese Vorprüfung ersetzt keine vollständige Prüfung eines angebotenen Rasters.\n5. Unterschiedliche globale Maße, Crops oder Paletten benötigen getrennte Designs.\n   Beim farbigen area-Pfad ist der Schwellenwert wirkungslos; reine Schwellenvarianten\n   sind dort kein neuer Ansatz. Mono-Schwellen anhand des Bilds wählen. Verfahren\n   mit zwangsläufig leeren Außenkanten, insbesondere der entsprechende contour-Pfad,\n   nicht unverändert als reguläres Ergebnis übernehmen; derzeit area bevorzugen.\n6. Passend gebundene unveränderte Nachweise wiederverwenden. Geänderte Logikeingänge\n   erhalten die Neuprüfungen aus §4.4. Echte Raster klein, ohne Glättung vergrößert\n   und mit Gitter beurteilen. Logischer Erfolg allein ist keine Auswahl.",
+          "sha256": "65ee674bf59835447cebfe10973a5c6498a22d60b80162428a76c452b616b285",
+          "authority": {
+            "file": "docs/ai-workflows/PUZZLE_AUTHORING_STEP_3.md",
+            "anchor": "41-import-und-rastervarianten"
+          },
+          "assessment": "Phasen-/Inhaltsgates erhalten; nur Quellenorganisation und ausdrücklich versionierte Snapshotformen ändern sich."
+        }
+      ]
+    },
+    {
+      "old_heading": "4.2 Harte Kriterien",
+      "old_anchor": "42-harte-kriterien",
+      "old_line": 300,
+      "units": [
+        {
+          "old_text": "Jeder angebotene freigabefähige Kandidat erfüllt vollständig:",
+          "sha256": "aae35efdab704752cb92019dffd5f8c637ee6f79a7478f4382a0513771cb6c9f",
+          "authority": {
+            "file": "docs/ai-workflows/PUZZLE_AUTHORING_STEP_3.md",
+            "anchor": "42-harte-kriterien"
+          },
+          "assessment": "Phasen-/Inhaltsgates erhalten; nur Quellenorganisation und ausdrücklich versionierte Snapshotformen ändern sich."
+        },
+        {
+          "old_text": "- Gültige Maße, Werte, Palette und Formate; regulär höchstens 50 je Achse.\n  Tatsächliche Vordergrundzahl als len({v für v in allen Zellen, wenn v != EMPTY})\n  zählen; endgültige Palette, genaue Vorgabe und freigegebener Korridor passen.\n  Wunsch, Istzahl und Farbrollen nennen, nicht bloß Paletteinträge zählen.\n- Hinweise deterministisch aus exakt dieser Matrix. Gleichfarbige Folgeblöcke\n  haben mindestens eine Leerzelle Abstand; verschiedenfarbige dürfen sich berühren.\n- Vollständige deduktive Lösung vom unbekannten Start, ohne vorgefüllte Zellen,\n  notwendiges Raten, Suchannahmen oder Motivwissen; vollständiger Proof unter\n  benanntem Profil, frischer unabhängiger Prüferprozess und exakter Endmatrixvergleich.\n- Datei-/redaktionelle Herkunft Input → freigegebenes Reveal → freigegebene\n  Motivvorlage; deterministische Rekonstruktion Motivvorlage → Normalisierung →\n  Matrix → Hinweise. Alle Dateien/Parameter prüfen, bei Reparatur zusätzlich\n  Referenz, Plan und Replay. Rechte und echte Freigaben sind keine Solverergebnisse.\n- Randregel: mindestens eine gefüllte Zelle an linker ODER rechter Außenkante\n  UND mindestens eine an oberer ODER unterer Außenkante. Jede Vordergrundfarbe\n  zählt, nicht alle vier Kanten sind nötig; gilt auch für Breite/Höhe 1.\n  Ein vollständig leeres Raster scheitert. Keine motivfremden Randpixel/Rahmen\n  allein zum Bestehen der Regel hinzufügen.",
+          "sha256": "38db2bcc1c68a15111b4dfc2be12bcbabdc7fe7539d267f47c136dfb300cb87d",
+          "authority": {
+            "file": "docs/ai-workflows/PUZZLE_AUTHORING_STEP_3.md",
+            "anchor": "42-harte-kriterien"
+          },
+          "assessment": "Phasen-/Inhaltsgates erhalten; nur Quellenorganisation und ausdrücklich versionierte Snapshotformen ändern sich."
+        },
+        {
+          "old_text": "Eine tatsächliche menschliche Randregel-Ausnahme für eine konkrete Endrevision\nnur über den unterstützten äußeren ZA-1-v2-Autorisierungsvertrag an Originalpaket,\nHandoff, Inventar, Wahl und Endfreigabe binden. Negativen Originalbefund sichtbar\nerhalten; kein pass-Flag oder allgemeiner Bypass. Alle übrigen Gates bleiben hart.",
+          "sha256": "ba343a255bfccac42573e5a426e8fb096ab5790d9f1463cb6871b8f9b35417ab",
+          "authority": {
+            "file": "docs/ai-workflows/PUZZLE_AUTHORING_STEP_3.md",
+            "anchor": "42-harte-kriterien"
+          },
+          "assessment": "Phasen-/Inhaltsgates erhalten; nur Quellenorganisation und ausdrücklich versionierte Snapshotformen ändern sich."
+        },
+        {
+          "old_text": "Vollständige gültige Deduktion belegt Eindeutigkeit. stalled beweist weder\nMehrdeutigkeit noch Unlösbarkeit; aborted ist Abbruch. Exitcode 0, Importbündel,\ngeneriertes Zahlenbild und KI-Erfolgsaussage sind keine Zertifizierung.\nDie separate Eindeutigkeitsdiagnose sucht und liefert eigene Lösungszeugen;\nunique ersetzt keinen Deduktionsproof, unknown nach einer Lösung keine\nEindeutigkeit. check-diagnosis prüft Bindungen/Zeugen, nicht die vollständige Suche.\nKeine neue Schwierigkeit oder Freigabe aus einem Suchurteil ableiten.",
+          "sha256": "74bda1b1af319bcba8194acf36be1d100577b2401fadbe07384490807d69671a",
+          "authority": {
+            "file": "docs/ai-workflows/PUZZLE_AUTHORING_STEP_3.md",
+            "anchor": "42-harte-kriterien"
+          },
+          "assessment": "Phasen-/Inhaltsgates erhalten; nur Quellenorganisation und ausdrücklich versionierte Snapshotformen ändern sich."
+        },
+        {
+          "old_text": "Die vorhandene Rekonstruktionsprüfung (inspect_candidate bzw. passender Reparatur-/\nExportreader) zusätzlich zur Logik benutzen. Nur wirklich verfügbare Befehle/API\nverwenden; aktuelle Zeit-/Linien-/Ressourcengrenzen der entsprechenden README-\nAbschnitte vor Ausführung lesen. Abgebrochene Versuche nicht umetikettieren.",
+          "sha256": "addca093f04ca3dc8205d8d32be425f9604a71b00d2ef0ef175029851796d377",
+          "authority": {
+            "file": "docs/ai-workflows/PUZZLE_AUTHORING_STEP_3.md",
+            "anchor": "42-harte-kriterien"
+          },
+          "assessment": "Phasen-/Inhaltsgates erhalten; nur Quellenorganisation und ausdrücklich versionierte Snapshotformen ändern sich."
+        }
+      ]
+    },
+    {
+      "old_heading": "4.2.1 Profilwahl und Produktionsnachweise",
+      "old_anchor": "421-profilwahl-und-produktionsnachweise",
+      "old_line": 341,
+      "units": [
+        {
+          "old_text": "1. full-line-mono beziehungsweise full-line-color ist der Ausgangspunkt.\n   Vollständig unabhängig bestätigte Linienlogik genügt; kein zusätzlicher\n   Paarprofil- oder Eindeutigkeitssuchlauf als Routinepflicht.\n2. Bei visuell tragfähigem, unabhängig bestätigtem Linienfixpunkt stalled vor\n   rein logikbedingter Rasteränderung zunächst das passende zugelassene Paarprofil\n   am unveränderten Raster prüfen. Eine begründete Abweichung (etwa ausdrücklich\n   einfache Techniken oder Ressourcenblocker) festhalten. Vorgaben bleiben wirksam;\n   Profilprüfung derselben Matrix ist keine zusätzliche Rastervariante. Durch\n   zwei geprüfte Lösungen belegtes multiple dagegen direkt nach §4.4 bearbeiten.\n3. Profil-ID und Zeit-/Linien-/Paarbudgets vor Lauf binden. import-image explizit\n   mit --profile paired-lines-mono bzw. paired-lines-color und Paarbudgets aufrufen;\n   Standard bleibt Linienlogik. Bestehende direkte Quelle mit identischem Design\n   in neues Ziel importieren, Matrix-/Logikgleichheit prüfen. Isoliertes solve ist\n   kein exportfähiges Produktionsbündel; keinen Proof im alten Manifest austauschen.\n4. Der Paarlauf erzeugt eigenen full-line-Baselineproof und Assessment. Baseline\n   und Paarproof derselben Logik frisch unabhängig prüfen, etwa mittels assess\n   --input ... --proof ... --baseline ... gemäß CLI. Das ersetzt weder Herkunft\n   noch Endmatrix-/Dateiprüfung. picross-quality-report-v1 ersetzt weder\n   picross-deduction-assessment-v1 noch difficulty.json oder menschliche Freigaben.\n5. Nur verifizierte stalled-Baseline plus vollständiger verifizierter Paarproof\n   belegen notwendigen R4. Aborted, unvollständiger Paarproof oder unique genügen\n   nicht. Bei Nichtabschluss Profil, offene Zellen, verbrauchte Budgets und Endgrund\n   nennen, keine absolute Aussage über alle denkbaren Lösungsregeln treffen.\n6. Passende versionierte Import-/Reparatur-/manuelle Ableitungsformen nach\n   PAIRED_LINES und die exakte certification durch alle Stufen einschließlich\n   candidate.certification im Handoff führen. Nicht in alten Ableitungsvertrag\n   zurückfallen. Quelle, Motivschutz, Bildfreigaben und Endabnahme bleiben Pflicht.",
+          "sha256": "f7c7683f1811a2a68af4148461db33fbe01c96eef0ca1a13f61b89b33f68cb7e",
+          "authority": {
+            "file": "docs/ai-workflows/PUZZLE_AUTHORING_STEP_3.md",
+            "anchor": "421-profilwahl-und-produktionsnachweise"
+          },
+          "assessment": "Phasen-/Inhaltsgates erhalten; nur Quellenorganisation und ausdrücklich versionierte Snapshotformen ändern sich."
+        },
+        {
+          "old_text": "Die separate Eindeutigkeitsdiagnose ist nur bei konkreter offener Frage sinnvoll,\nkeine Voraussetzung der bereits zugelassenen Paarprofilwahl. Kein neuer CI-Fall\noder Bestandsreplay entsteht aus einer konkreten Produktion.",
+          "sha256": "30cbf902d1e448b6dc3ef6322e15d1df3b935e74e4e4b1caf5aa5acfe9995395",
+          "authority": {
+            "file": "docs/ai-workflows/PUZZLE_AUTHORING_STEP_3.md",
+            "anchor": "421-profilwahl-und-produktionsnachweise"
+          },
+          "assessment": "Phasen-/Inhaltsgates erhalten; nur Quellenorganisation und ausdrücklich versionierte Snapshotformen ändern sich."
+        }
+      ]
+    },
+    {
+      "old_heading": "4.3 Redaktionelle Kriterien",
+      "old_anchor": "43-redaktionelle-kriterien",
+      "old_line": 375,
+      "units": [
+        {
+          "old_text": "[Qualität §§2–4](../PUZZLE_QUALITY.md) bindet Einzelurteile zu Flächennutzung,\nHauptformen, Perspektive/Proportionen, Details/Negativräumen, Farbrollen,\ntatsächlicher Raster-/Hinweissicht und Reveal-Konsistenz. Mono und Farbe behalten\nunterschiedliche Erkennbarkeitsziele. Ein Auge darf eine Zelle sein; ein Henkel\nbraucht Innenraum. Leere Innenstreifen nicht mechanisch entfernen.",
+          "sha256": "6f9e84087af0b623d10a59da1534c338526c8f89d6afd2a02b23af51d56519e6",
+          "authority": {
+            "file": "docs/ai-workflows/PUZZLE_AUTHORING_STEP_3.md",
+            "anchor": "43-redaktionelle-kriterien"
+          },
+          "assessment": "Phasen-/Inhaltsgates erhalten; nur Quellenorganisation und ausdrücklich versionierte Snapshotformen ändern sich."
+        },
+        {
+          "old_text": "Belegung unter 15 %/über 85 %, isolierte Zellen und leere Innenlinien sind\nPrüfanlässe, keine automatischen Ablehnungen. Motivischen Nutzen/Mangel begründen;\nkeine Verschlechterung der Form für eine Kennzahl. Alle tatsächlich verwendeten\nFarbpaare betrachten, auch seltene/unbenachbarte. Kleine Zell-/Hinweisgrößen auf\naktuellem Papier mit Kontur/Schraffur, normale, abgeschwächte und ausgekreuzte\nHinweise wirklich ansehen. Verfügbare Farbsinnsimulation nur ergänzend.",
+          "sha256": "428b72c2e57b5c2d5d6393966c15c200ec396f1097e371b12d1716ffafb227fd",
+          "authority": {
+            "file": "docs/ai-workflows/PUZZLE_AUTHORING_STEP_3.md",
+            "anchor": "43-redaktionelle-kriterien"
+          },
+          "assessment": "Phasen-/Inhaltsgates erhalten; nur Quellenorganisation und ausdrücklich versionierte Snapshotformen ändern sich."
+        },
+        {
+          "old_text": "Die eingeführte und für 0.8.0 fortgeltende Regel picross-palette-separation-1 aus\n[Qualität §8](../PUZZLE_QUALITY.md#8-p-a-v01-freigegebene-regel-für-paarweise-farbunterscheidbarkeit)\ntrennt Oklab-Ausschluss, Warnzone und Sichturteil. RP-3 prüft die Ist-Matrix vor\nSolver, RP-5 jede Bewertung, feste Wege die rekonstruierte Matrix vor Endproof.\nNegative Entwürfe bleiben sichtbar. check-palette ist nur zusätzliche Diagnose.\nNach Änderungen Matrix, IDs/RGB/Nutzung und Regelbindung frisch rekonstruieren;\nPalettenentwürfe ohne tatsächliche Verwendung sind vorläufig.",
+          "sha256": "85c70ed52393b3851b5265a25c1126cb9c8f5ab6316c20db0d5e6a524ba87047",
+          "authority": {
+            "file": "docs/ai-workflows/PUZZLE_AUTHORING_STEP_3.md",
+            "anchor": "43-redaktionelle-kriterien"
+          },
+          "assessment": "Phasen-/Inhaltsgates erhalten; nur Quellenorganisation und ausdrücklich versionierte Snapshotformen ändern sich."
+        },
+        {
+          "old_text": "Vor einem qualifizierten Angebot das geschriebene Paket frisch mit ZA-1 prüfen;\nraster_ready enthält alle Rastergarantien, content_ready später zusätzlich den\nHintergrund. Der Adapter erhebt den Pflichtbefund an allen Paaren frisch.\nOptionales palette_assessment wird zusätzlich neu verifiziert; Farbpakete binden\npalette_review an den inventarisierten picross-palette-visual-review-v1-Record\nmit tatsächlichen Q-R04/Q-H01/Q-H02-Ansichten und Einzelurteilen. Die geschlossenen\nFelder bleiben in [ZA-1 P-B2](../ZA1_ADAPTER.md#p-b2--authoring-060-und-additive-palettengeneration-v5)\nund der entsprechenden Tool-Anleitung. Fehlende/stale Sichtung, nicht geprüft\nund positive S-Werte allein erlauben keine Freigabe.",
+          "sha256": "b388d6d22f0f38e22843e354a148fb26f5be69bd85d7c0351c5d2f71c34b6916",
+          "authority": {
+            "file": "docs/ai-workflows/PUZZLE_AUTHORING_STEP_3.md",
+            "anchor": "43-redaktionelle-kriterien"
+          },
+          "assessment": "Phasen-/Inhaltsgates erhalten; nur Quellenorganisation und ausdrücklich versionierte Snapshotformen ändern sich."
+        },
+        {
+          "old_text": "Bei Warnung/negativem Sichturteil verlangt eine zulässige Annahme Qualität §6:\nursprüngliches Urteil, tatsächlicher Akteur, UTC, Wortlaut, Begründung und Beleg.\nEin negativer technischer Befund bleibt negativ. Für tatsächliche Übernahme den\näußeren picross-palette-editorial-exception-v1 mit sämtlichen negativen Paaren,\nexakten Werten/IDs und Kandidaten-/Revisions-/Istmatrix-/Quell-/Regel-/Handoff-/\nInventar-/Paketbindung und echter Endfreigabe benutzen, außerhalb versiegelter\nOriginale und ausdrücklich via --palette-exception. Bereits erforderliche\nmanuelle Autorisierungen bleiben zusätzlich nötig. Die Ausnahme heilt weder\nProof noch Rechte, Freigaben, feste Parameter, Difficulty oder Randregel.",
+          "sha256": "0f11a476703c5f9cca6d7c836429f39c11db8b3693d3e84cd36f6a8d794bca24",
+          "authority": {
+            "file": "docs/ai-workflows/PUZZLE_AUTHORING_STEP_3.md",
+            "anchor": "43-redaktionelle-kriterien"
+          },
+          "assessment": "Phasen-/Inhaltsgates erhalten; nur Quellenorganisation und ausdrücklich versionierte Snapshotformen ändern sich."
+        },
+        {
+          "old_text": "Historische F05-Referenzannahmen sind keine Ausnahme oder Freigabe eines neuen\nrealen Kandidaten. Bei null qualifizierten Kandidaten §4.5 verwenden, mit echten\nBildern, Defiziten und Korrekturmöglichkeiten; keine qualifizierten Angebote vortäuschen.",
+          "sha256": "4df34220f8088227f8230747e0607f8b61fd19bcfcd4a1f1200b5aede2314aa3",
+          "authority": {
+            "file": "docs/ai-workflows/PUZZLE_AUTHORING_STEP_3.md",
+            "anchor": "43-redaktionelle-kriterien"
+          },
+          "assessment": "Phasen-/Inhaltsgates erhalten; nur Quellenorganisation und ausdrücklich versionierte Snapshotformen ändern sich."
+        }
+      ]
+    },
+    {
+      "old_heading": "4.4 Reparaturen und Änderungen",
+      "old_anchor": "44-reparaturen-und-änderungen",
+      "old_line": 422,
+      "units": [
+        {
+          "old_text": "Konkrete kleine Kontur-/Flächenmängel und störende leere Außenlinien innerhalb\ndes freigegebenen Korridors vor Rückgabe bearbeiten, auch bei solved. Gute\nKandidaten nicht unnötig ändern. Reguläre feste Korrektur folgt\n[FIXED_RASTER](../FIXED_RASTER.md): vollständiger vorab gebundener Plan gegen\nden direkten unveränderten RP-3-Import, keine Suche/nachträglich erweiterte\nEditliste, Schutzmaske und frische Endnachweise einschließlich aktiver 0.4-Analyse.\nOffene/ungefähre Endmaße bleiben trotz konkretem Importstart offen/ungefähr.\nMaterielle Änderungen entscheiden lassen; eine Zelle ist nicht automatisch\nharmlos. Runden/Kandidaten/Änderungen zählen kumulativ unter allen Namen/Ordnern.\nErst frisch geprüfter geschriebener Builder-ZIP erlaubt raster_ready, ohne damit\nRasterwahl, Hintergrund oder Endfreigabe zu erklären.",
+          "sha256": "6e163fcef2e15db9bf71ee3a03fb46ac46a7bce90588af76445429cbb0a8d3f6",
+          "authority": {
+            "file": "docs/ai-workflows/PUZZLE_AUTHORING_STEP_3.md",
+            "anchor": "44-reparaturen-und-änderungen"
+          },
+          "assessment": "Phasen-/Inhaltsgates erhalten; nur Quellenorganisation und ausdrücklich versionierte Snapshotformen ändern sich."
+        },
+        {
+          "old_text": "Wenn kein visuell tragfähiger Kandidat vollständig zertifiziert ist, gezielte\nVerbesserungen versuchen, bevor allein wegen stalled oder belegtem multiple\nzurückgegeben wird. Unique genügt nicht. Nur tragfähige Formen reparieren;\nsonst zuerst Abstraktion/Größe/Palette und notwendige Motivfreigaben klären.",
+          "sha256": "5cf3b0c93e25438e8be6093c6c4313b53c3588d762ab0fbae03c78dce2764d95",
+          "authority": {
+            "file": "docs/ai-workflows/PUZZLE_AUTHORING_STEP_3.md",
+            "anchor": "44-reparaturen-und-änderungen"
+          },
+          "assessment": "Phasen-/Inhaltsgates erhalten; nur Quellenorganisation und ausdrücklich versionierte Snapshotformen ändern sich."
+        },
+        {
+          "old_text": "1. Ursache trennen. Stalled betrifft das benannte Profil; §4.2.1 ausschöpfen.\n   Bei multiple beide Zeugen/Differenzbereiche prüfen. No_solution/contradiction\n   bei Hinweisen aus derselben Matrix ist zunächst ein Eingangs-/Werkzeugwiderspruch,\n   kein erfundener Bildfehler. Unknown/aborted erfordert Ressourcenanalyse.\n2. Standardmäßig bis zu zwei gezielte Reparaturrunden, bei Erfolg sofort stoppen.\n   Runde 1 am besten geeigneten Kandidaten: offene Domains/Kreuzlinien/Zeugen\n   bestimmen zulässige Regionen. Motivisch plausible Kontur-/Flächen-/Negativraum-\n   änderungen begründen; kein Rauschpixel, Zusatzrahmen oder neue Farbe als Logikanker.\n3. Vor jedem RP-5-Lauf unveränderte Referenz, Schutzmaske für wichtige gefüllte\n   und leere Zellen, Operatoren, Seed und Änderungs-/Such-/Abschlussbudgets speichern.\n   Runde 1 standardmäßig höchstens zwei geänderte Positionen, 64 bewertete\n   Kandidaten und 512 Vorschläge. Zeit-/Linien-/Paarbudgets passend zur gemessenen\n   Referenz innerhalb Werkzeuggrenzen wählen; frische Abschlussprüfung reservieren.\n   Kleinere Budgets nur begründet, nicht als Alibiversuch.\n4. Ohne Fund eine andere begründete Hypothese, zulässige Region oder geeignete\n   Referenz prüfen. Runde 2 bis 128 Kandidaten/1024 Vorschläge. Höheres Zellbudget\n   nur vorab motivbezogen begründen; Schutzmerkmale und Korridor bleiben hart.\n   Keine identische Wiederholung oder Umwertung alter Abbrüche. Ressourcen-/Replay-\n   grenzen können kleinere Runden erfordern; Reichweite/Endgrund berichten.\n   Früher Stopp nur bei Erfolg, fehlendem erlaubtem Änderungsraum, materieller\n   Motivänderung oder konkretem technischem Blocker; nächsten Schritt benennen.\n5. RP-5 optimiert begrenzt lokale Zelländerungen, nicht selbst nach Diagnosezeugen.\n   Akteur legt Hypothese/Maske fest. Reicht das nicht, konkrete Formkorrektur oder\n   Abstraktions-/Maß-/Palettenänderung vorschlagen und nur mit passender Befugnis\n   ausführen. Historische manuelle Ableitungen brauchen ihren unterstützten\n   ZA-1-Vertrag und gesonderte Autorisierung; nicht als regulären Import ausgeben.",
+          "sha256": "24900280c01dd11f3a3e43887696624f04666f0fdca73e260f71059101e34753",
+          "authority": {
+            "file": "docs/ai-workflows/PUZZLE_AUTHORING_STEP_3.md",
+            "anchor": "44-reparaturen-und-änderungen"
+          },
+          "assessment": "Phasen-/Inhaltsgates erhalten; nur Quellenorganisation und ausdrücklich versionierte Snapshotformen ändern sich."
+        },
+        {
+          "old_text": "Je Runde genügen Hypothese, Referenz-/Plankennung, tatsächliche Kandidaten-/\nÄnderungszahl, Endgrund und Auswahlentscheidung im bestehenden Protokoll.\nBegrenzter Nichtfund ist kein Beweis unmöglicher Reparatur. Referenz, Resultat\nund markierten Zell-Diff vergleichen; found allein genügt nicht ohne Endproof,\nunabhängige Prüfung, Replay und Redaktion. Neue Hinweise verlangen eigene\nBaseline/Endnachweise; Paarpläne binden certification bereits vor Lauf.",
+          "sha256": "b4de3ef608da76190115e0e94888439103f5adfe4e094673f326d4991d3b8e78",
+          "authority": {
+            "file": "docs/ai-workflows/PUZZLE_AUTHORING_STEP_3.md",
+            "anchor": "44-reparaturen-und-änderungen"
+          },
+          "assessment": "Phasen-/Inhaltsgates erhalten; nur Quellenorganisation und ausdrücklich versionierte Snapshotformen ändern sich."
+        },
+        {
+          "old_text": "| Zellwert oder Rastermaß, auch eine Zelle oder nur leerer Außenbeschnitt | Neue Revision, Hinweise, vollständiger Logiknachweis, unabhängige Prüfung und Rasterbewertung. |",
+          "sha256": "76fb202de65d434a6c2af3abbe9e9e660d40692b24df2b55d79c2196762f03d5",
+          "authority": {
+            "file": "docs/ai-workflows/PUZZLE_AUTHORING_STEP_3.md",
+            "anchor": "44-reparaturen-und-änderungen"
+          },
+          "assessment": "Phasen-/Inhaltsgates erhalten; nur Quellenorganisation und ausdrücklich versionierte Snapshotformen ändern sich."
+        },
+        {
+          "old_text": "| Quelle, Crop, Palette oder Importparameter | Neuer gebundener Import und vollständige Prüfung. |",
+          "sha256": "8a806902478085b0754c90f880c391807dcf904e91afa4c80c1cf66c1e465423",
+          "authority": {
+            "file": "docs/ai-workflows/PUZZLE_AUTHORING_STEP_3.md",
+            "anchor": "44-reparaturen-und-änderungen"
+          },
+          "assessment": "Phasen-/Inhaltsgates erhalten; nur Quellenorganisation und ausdrücklich versionierte Snapshotformen ändern sich."
+        },
+        {
+          "old_text": "| Materielle Motivänderung | Zusätzlich erneute ausdrückliche Motivfreigabe. |",
+          "sha256": "fe954154c9dc01c9a78f3c511c7c273d4fd6eab98d63f56dfaaaaf184cf742e0",
+          "authority": {
+            "file": "docs/ai-workflows/PUZZLE_AUTHORING_STEP_3.md",
+            "anchor": "44-reparaturen-und-änderungen"
+          },
+          "assessment": "Phasen-/Inhaltsgates erhalten; nur Quellenorganisation und ausdrücklich versionierte Snapshotformen ändern sich."
+        },
+        {
+          "old_text": "| Abschlussbild | Neue Bildrevision und menschliche Bildfreigabe; Ableitung, Motiv-/Rasterkonsistenz und Endabnahme erneut prüfen. Materielle Änderungen invalidieren abhängige Motivfreigaben. Kein neuer Logiklauf allein bei nachweislich identischem Raster/Logikeingang. |",
+          "sha256": "075620a516df05a09d1b21d6b5f2e40812092fadca5aec87e607236dc6339402",
+          "authority": {
+            "file": "docs/ai-workflows/PUZZLE_AUTHORING_STEP_3.md",
+            "anchor": "44-reparaturen-und-änderungen"
+          },
+          "assessment": "Phasen-/Inhaltsgates erhalten; nur Quellenorganisation und ausdrücklich versionierte Snapshotformen ändern sich."
+        },
+        {
+          "old_text": "| Hintergrundillustration, Komposition oder Transparenz | Neue Bildrevision/Wahl und abhängige Ableitung; Ablehnung mit Grund sichern, kein automatisches none. Unveränderte Raster-/Proof-/Schwierigkeitsbindungen erhalten. |",
+          "sha256": "ebda5e0090d28b798857c36add435f4f9070c9021f91ed284ece6e5320d5fa17",
+          "authority": {
+            "file": "docs/ai-workflows/PUZZLE_AUTHORING_STEP_3.md",
+            "anchor": "44-reparaturen-und-änderungen"
+          },
+          "assessment": "Phasen-/Inhaltsgates erhalten; nur Quellenorganisation und ausdrücklich versionierte Snapshotformen ändern sich."
+        },
+        {
+          "old_text": "| Nur Schwierigkeit/Kategorie/Metadaten | Keine neue Bild-/Rasterproduktion oder Freigabe allein deswegen; bei versiegelten Paketen äußere Ergänzung/Exportbindung, passende Nachweise erhalten. |",
+          "sha256": "0fa43ea093eabe7177e5fd230325cf12dfd06653bc56286c8115a94861e5e885",
+          "authority": {
+            "file": "docs/ai-workflows/PUZZLE_AUTHORING_STEP_3.md",
+            "anchor": "44-reparaturen-und-änderungen"
+          },
+          "assessment": "Phasen-/Inhaltsgates erhalten; nur Quellenorganisation und ausdrücklich versionierte Snapshotformen ändern sich."
+        },
+        {
+          "old_text": "| Erstmals Paarprofil bei gleicher Matrix | Neue profilierte Produktionsbindung samt Baseline, Paarproof und Assessment; keine umetikettierten Altproofs oder veränderten Rasterwerte. Neue Produktion bindet aktuellen 0.8-Regelstand; alte versiegelte Originale bleiben. Endfreigabe bindet tatsächliches Handoff/Inventar. |",
+          "sha256": "afbf064f08ba85b8db4ec7077224e2fba4b857bc84506b33136941fc576059f2",
+          "authority": {
+            "file": "docs/ai-workflows/PUZZLE_AUTHORING_STEP_3.md",
+            "anchor": "44-reparaturen-und-änderungen"
+          },
+          "assessment": "Phasen-/Inhaltsgates erhalten; nur Quellenorganisation und ausdrücklich versionierte Snapshotformen ändern sich."
+        },
+        {
+          "old_text": "Materiell sind Identität, Pose, prägende Proportionen, wichtige Innenräume,\nGesichtszüge oder geschützte Merkmale; schon eine Zelle kann materiell sein.\nEine reine Freistellung ist eine neue Bildrevision nach AT, keine Freigabe durch\nSpezifikation. Bei unveränderten Definitionen/Runtime-Revision/Raster/Logik\nentstehen keine neuen Solver-/Proof-/Difficulty-Läufe allein wegen Bildarbeit.\nIdentität, Ressourcenpfade, Slots, Rating und Hinzugefügt-Daten bleiben erhalten.",
+          "sha256": "5e2e77d894b80331943e149d5a17dd3099507c5aa28670d8967f2ed5ba47d91f",
+          "authority": {
+            "file": "docs/ai-workflows/PUZZLE_AUTHORING_STEP_3.md",
+            "anchor": "44-reparaturen-und-änderungen"
+          },
+          "assessment": "Phasen-/Inhaltsgates erhalten; nur Quellenorganisation und ausdrücklich versionierte Snapshotformen ändern sich."
+        },
+        {
+          "old_text": "Deterministische vereinbarte Hintergrundableitung und bytegleicher Transport\nbrauchen keine erneute kreative Wahl. Reine Rastergeometrie-/Palettenänderung\nverlangt keine Buchabnahme oder neue Dreierauswahl; geänderten Motivkontext gezielt\ngegen Briefing/Bild prüfen. Hintergrundersatz folgt seinem eigenen Ziel-/Abschluss-\nvertrag, nicht dem AT- oder Rasterersatzbefehl. Unabhängige unveränderte Freigaben\nbleiben gültig; Korrektur/Wiederaufnahme erteilen keine neue End- oder Mergefreigabe.",
+          "sha256": "1e091d90455cf9fb60940cf1b547662211bd4ad81bef1502b66f60214de16552",
+          "authority": {
+            "file": "docs/ai-workflows/PUZZLE_AUTHORING_STEP_3.md",
+            "anchor": "44-reparaturen-und-änderungen"
+          },
+          "assessment": "Phasen-/Inhaltsgates erhalten; nur Quellenorganisation und ausdrücklich versionierte Snapshotformen ändern sich."
+        }
+      ]
+    },
+    {
+      "old_heading": "4.5 Geprüfte Raster zur menschlichen Auswahl",
+      "old_anchor": "45-geprüfte-raster-zur-menschlichen-auswahl",
+      "old_line": 499,
+      "units": [
+        {
+          "old_text": "Ein vollständig geeigneter, technisch und redaktionell qualifizierter Kandidat\ngenügt. Bereits vorhandene sinnvoll unterschiedliche qualifizierte Alternativen\ndürfen mit kurzer Empfehlung angeboten werden. Keine Zwei-/Dreierquote und keine\nErzeugung weiterer Varianten allein für eine Angebotszahl. Jedes Angebot erfüllt\nKorridor und §§4–5 vollständig: eigene technische Prüfung, visuelle Bewertung,\nBildkonsistenz, gebundene Schwierigkeit oder zulässige ausdrücklich angenommene\nredaktionelle Abweichung nach Qualität §6. Gleiche Matrizen unter anderer ID oder\nanderem Solverprofil sind keine zusätzlichen Angebote. Empfehlung ist keine Wahl.",
+          "sha256": "4d6dc2292cb040f0b184e54410f44f62b36ab48cf02443fa1163401e45d5777c",
+          "authority": {
+            "file": "docs/ai-workflows/PUZZLE_AUTHORING_STEP_3.md",
+            "anchor": "45-geprüfte-raster-zur-menschlichen-auswahl"
+          },
+          "assessment": "Phasen-/Inhaltsgates erhalten; nur Quellenorganisation und ausdrücklich versionierte Snapshotformen ändern sich."
+        },
+        {
+          "old_text": "Budgets werden nicht für eine Quote erweitert. Bei null qualifizierten Kandidaten\nnach Qualität §5 zwei bis drei möglichst unterschiedliche beste brauchbare\nbereits vorliegende Entwürfe zeigen, sofern vorhanden; bei nur einem diesen.\nDas ist Sichtung, keine neue Kandidatenerzeugungspflicht. Jede Ansicht nennt\nstabile ID/Revision, tatsächliches Raster/Reveal mit echten Links, Prüfungen/Lücken,\nQualitätsdefizite und Korrekturmöglichkeiten sowie ausdrücklich\n`Sichtungsentwurf – nicht integrationsbereit`. Ohne brauchbaren Entwurf konkreten\nNichtfund und nächsten Korrekturschritt nennen; keine Dateien erfinden.",
+          "sha256": "5f736b48afeea66fec6601fd55cacf7a961f268b064f71189026ca0d3c4db82d",
+          "authority": {
+            "file": "docs/ai-workflows/PUZZLE_AUTHORING_STEP_3.md",
+            "anchor": "45-geprüfte-raster-zur-menschlichen-auswahl"
+          },
+          "assessment": "Phasen-/Inhaltsgates erhalten; nur Quellenorganisation und ausdrücklich versionierte Snapshotformen ändern sich."
+        },
+        {
+          "old_text": "Sichtungsentwürfe sind keine Integrationsoptionen oder raster_ready. Raster_review\nbzw. blocked mit Grund führen. Erst zulässige Korrektur/Einzelfallentscheidung und\nalle technischen Nachweise erlauben den gültigen Auswahlweg. Fehlende Proofs oder\nunklare Rechte bleiben Blocker. Empfehlungen erteilen keine automatische Freigabe.",
+          "sha256": "4f9aafd288fe32486c43030f80f896928646846acd34279b8143c9722a02c12b",
+          "authority": {
+            "file": "docs/ai-workflows/PUZZLE_AUTHORING_STEP_3.md",
+            "anchor": "45-geprüfte-raster-zur-menschlichen-auswahl"
+          },
+          "assessment": "Phasen-/Inhaltsgates erhalten; nur Quellenorganisation und ausdrücklich versionierte Snapshotformen ändern sich."
+        },
+        {
+          "old_text": "Jedes Angebot bekommt stabile Kennung, Unterschiede, Maße/Modus/Istfarbzahl,\nSchwierigkeit und echte Rasteransichten. Vor Ausgabe pro Raster eine kollisionsfreie\nEinzelpaketrevision derselben ID nach §6 sichern, mit genau einem handoff.candidate,\nallen nötigen Inputs und Inventar. Geschriebene ZIPs frisch prüfen; keine neue\nMehrfachhülle und keine verschachtelten Alternativen-ZIPs. Vergleich ersetzt kein Paket.\nWorkspace bindet Angebote an Einzelrecord, Originalinventar, Bilder und Quellencommit.\nSchritt 4 beginnt erst mit tatsächlicher qualifizierter Rasterwahl; die neue Revision\nführt picross-raster-selection-v1 nach PW-B. Originale bleiben bytegleich, nicht\ngewählte Angebote bis bestätigter Mainintegration erreichbar. Weder erste Option\nnoch höchste Revisionsnummer gilt automatisch als Wahl.",
+          "sha256": "57b09298357915f9e7551fdd1efefe57186e8b6033091a67ef210e48148fa2bc",
+          "authority": {
+            "file": "docs/ai-workflows/PUZZLE_AUTHORING_STEP_3.md",
+            "anchor": "45-geprüfte-raster-zur-menschlichen-auswahl"
+          },
+          "assessment": "Phasen-/Inhaltsgates erhalten; nur Quellenorganisation und ausdrücklich versionierte Snapshotformen ändern sich."
+        }
+      ]
+    },
+    {
+      "old_heading": "5. Schwierigkeit L1–L5",
+      "old_anchor": "5-schwierigkeit-l1l5",
+      "old_line": 535,
+      "units": [
+        {
+          "old_text": "Logische Schwierigkeit, Rastergröße, Bearbeitungsumfang und Lösungszeit trennen;\nSterne-/Fehlerwertung im Spiel bleibt unabhängig. Hintergrundstatus/-wahl fließen\nnicht ein. Bei reiner Bildrevision passende unveränderte Analyse-/Proofbindungen\nerhalten; tatsächliche Logikänderungen verlangen neue Nachweise nach §4.",
+          "sha256": "9d776c1ab5812930ea29f07927d37970e6684bc273fad538b3ada6ff16d6ed97",
+          "authority": {
+            "file": "docs/ai-workflows/PUZZLE_AUTHORING_STEP_3.md",
+            "anchor": "5-schwierigkeit-l1l5"
+          },
+          "assessment": "Phasen-/Inhaltsgates erhalten; nur Quellenorganisation und ausdrücklich versionierte Snapshotformen ändern sich."
+        }
+      ]
+    },
+    {
+      "old_heading": "5.1 Historische Produktionsmethoden 0.1 und 0.2",
+      "old_anchor": "51-historische-produktionsmethoden-01-und-02",
+      "old_line": 542,
+      "units": [
+        {
+          "old_text": "Diese Methoden beschreiben ihre damaligen Pakete, nicht die Wahl für neue 0.8-\nProduktionen. Alte Schätzungen, Snapshots und Freigaben bleiben unverändert.\nDie damaligen Technik-/Engstellen-/Schätzregeln sind im\n[gebundenen Vorgängerstand](https://github.com/venomenon328/picross/blob/a4bb4f929f29cd6d6e188500b5a8dbb1dead60fe/docs/ai-workflows/PUZZLE_AUTHORING.md#51-historische-produktionsmethoden-01-und-02)\nlesbar; keine Routinelektüre oder rückwirkende Neubewertung. Profilverwendung\nallein beweist auch heute keine Notwendigkeit der stärksten Technik. Stalled oder\nAbbruch ist keine zusätzliche Schwierigkeitsstufe.",
+          "sha256": "4a746583f7e7b9ed2b7a5dc36bd738b3a795e19b8be370c94ebd7c9e8543a845",
+          "authority": {
+            "file": "docs/ai-workflows/PUZZLE_AUTHORING_STEP_3.md",
+            "anchor": "52-aktueller-zusätzlicher-integrationsstandard-sd"
+          },
+          "assessment": "Phasen-/Inhaltsgates erhalten; nur Quellenorganisation und ausdrücklich versionierte Snapshotformen ändern sich."
+        }
+      ]
+    },
+    {
+      "old_heading": "5.2 Aktueller zusätzlicher Integrationsstandard SD",
+      "old_anchor": "52-aktueller-zusätzlicher-integrationsstandard-sd",
+      "old_line": 552,
+      "units": [
+        {
+          "old_text": "Für neue Produktion gilt die aktive 0.4-Analyse-/Bewertungsbindung aus\n[SD2](../PUZZLE_DIFFICULTY_V2.md) und [SD2-Integration](../SD2_INTEGRATION.md).\nVor Endfreigabe aus endgültiger Matrix/Design/normalisierter Logik den passenden\nvorläufigen Input erzeugen und den vollständigen aktuellen Bericht prüfen.\nR4-Baseline/Paarproof nur bei tatsächlich beanspruchtem Bedarf binden. Nach\nEndfreigabe/Export das unterstützte Rebind bei gleicher ID/Logik/Matrix auf die\nwirklichen Definitionsbytes anwenden; ursprüngliches rating.source erhalten.\nBefehle/Budgets vor Ausführung in den entsprechenden SD2-Abschnitten der\nTool-README lesen. Keine freie Ersatzschätzung, pauschale Stufe 5 oder neue\nBildproduktion bei fehlender/abgebrochener Analyse.",
+          "sha256": "30c3cd0a7b8bdc9be9cfe806ae48afac9668546d81a4ad54dc925a5a9b93a183",
+          "authority": {
+            "file": "docs/ai-workflows/PUZZLE_AUTHORING_STEP_3.md",
+            "anchor": "52-aktueller-zusätzlicher-integrationsstandard-sd"
+          },
+          "assessment": "Phasen-/Inhaltsgates erhalten; nur Quellenorganisation und ausdrücklich versionierte Snapshotformen ändern sich."
+        },
+        {
+          "old_text": "Passend gebundene vollständige Ergebnisse wiederverwenden. Gleiche Methodenversion\nund Eingabe bestimmen dieselbe Bewertung. Keine Skalenenden aus dem realen Katalog,\nkein realer Rätselbestand als Testkorpus. Titel/Kategorie/Reveal bei gleicher Logik\nerzwingen keinen neuen Analyselauf. Alte Originalpakete/Handoffs/Freigaben nicht\nüberschreiben; aktive Bewertungen außerhalb versiegelter Produktion führen.\nProbespielen bleibt optional; technische Referenzen sind keine empirische\nmenschliche Kalibrierung. Ungemessene Lösungszeiten nicht behaupten.",
+          "sha256": "5a3f6823d221d688c9615aa277fcb7f072560af20672f6bb3f8e5748cd22a8a1",
+          "authority": {
+            "file": "docs/ai-workflows/PUZZLE_AUTHORING_STEP_3.md",
+            "anchor": "52-aktueller-zusätzlicher-integrationsstandard-sd"
+          },
+          "assessment": "Phasen-/Inhaltsgates erhalten; nur Quellenorganisation und ausdrücklich versionierte Snapshotformen ändern sich."
+        }
+      ]
+    },
+    {
+      "old_heading": "6. Dateien, Übergabe und Wiederaufnahme",
+      "old_anchor": "6-dateien-übergabe-und-wiederaufnahme",
+      "old_line": 573,
+      "units": []
+    },
+    {
+      "old_heading": "6.1 Repositoryablage während der laufenden Produktion",
+      "old_anchor": "61-repositoryablage-während-der-laufenden-produktion",
+      "old_line": 575,
+      "units": [
+        {
+          "old_text": "Neuer Job: neue pz-ID und genau ein stabiler Branch content/pw/<puzzle_id> von main.\nAlle Phasen/Varianten/Korrekturen/Wiederaufnahmen bleiben dort. Index und Kollisionen\nprüfen, keine fremde Arbeit überschreiben. Jede Übergabe erhält eine vollständige\nRevision unter content/authoring/<puzzle_id>/<revision>/ und Eintrag im Arbeitsindex.\nEchten unversiegelten Request v3, Handoff v4, tatsächlichen aktuellen 0.8-Snapshot\nund explizite Dateiliste nach PW-B und der PB-A-Anleitung benutzen:",
+          "sha256": "5ddefecaa07845b4914a7ad01568a941a9ae53a10de784552ab6dacc543d1e27",
+          "authority": {
+            "file": "docs/ai-workflows/PUZZLE_AUTHORING.md",
+            "anchor": "61-repositoryablage-während-der-laufenden-produktion"
+          },
+          "assessment": "Phasen-/Inhaltsgates erhalten; nur Quellenorganisation und ausdrücklich versionierte Snapshotformen ändern sich."
+        },
+        {
+          "old_text": "```text\npython -m tools.puzzle_production.authoring_builder build --request <request-v3.json> --source-root <vorbereitete-dateien> --output-root <eigene-arbeitswurzel> --publish-to <produktionscheckout> --history-repo <produktionscheckout>\n```",
+          "sha256": "9a6e812dab15f62de6b6785bd18fe8d6a7caeca67e92b2e61a52523ed3ea8d41",
+          "authority": {
+            "file": "docs/ai-workflows/PUZZLE_AUTHORING.md",
+            "anchor": "61-repositoryablage-während-der-laufenden-produktion"
+          },
+          "assessment": "Phasen-/Inhaltsgates erhalten; nur Quellenorganisation und ausdrücklich versionierte Snapshotformen ändern sich."
+        },
+        {
+          "old_text": "Der vorhandene Builder validiert Dateien, erzeugt Inventar v1, geschriebenen\nOriginal-ZIP, bytegleiche Handoffkopie, Record v3 und geprüfte workspace.json.\nDer [Ansichtsübergabeschritt](../PRODUCTION_CURRENT_VIEW.md) bindet current-view.json\nan genau diese Übergabe; das ist keine Bild-/Rasterwahl. Finalizer/Completion\nziehen tatsächliche Bindungen auch bei In-place-Fortschreibung nach. Frühphasen\nsind keine Zertifikate; raster_ready/spätere Inhaltsphasen werden frisch geprüft.\nPresentation enthält nur tatsächliche Angebote; weitere Raster referenzieren\nbereits gesicherte qualifizierte Einzelrecords. Keine erfundene Galerie, kein\nProjektwriter im lesenden Dienst.",
+          "sha256": "3e340901e397a3f30316b3ddd6a88381a2b8daec410b67b3ce600680062cbe33",
+          "authority": {
+            "file": "docs/ai-workflows/PUZZLE_AUTHORING.md",
+            "anchor": "61-repositoryablage-während-der-laufenden-produktion"
+          },
+          "assessment": "Phasen-/Inhaltsgates erhalten; nur Quellenorganisation und ausdrücklich versionierte Snapshotformen ändern sich."
+        },
+        {
+          "old_text": "Vollständige benötigte Originale einschließlich sichtbarer Alternativen, Index,\nProjektion und Ansichtsverweis committen/pushen; feste Remote-Commit-/Dateipfade\nwirklich prüfen. Sicherungscommit erst nach Erfolg melden; repo_commit ist nur\ngelesene Herkunft. Lokale Pfade/localhost und ungesicherte SHAs sind keine\nCloudübergabe. Neuere Quellen ausdrücklich im Assistenten laden; bloße Suche\nbewahrt gebundene Ansicht/Eingaben. Job-/Quellwechsel verwirft alte Auswahlabsichten.\nBei Wiederaufnahme aktuelle Quellen, gültige Freigaben, Budgets und offene Arbeit\nprüfen; keine abgeschlossenen historischen Voraussetzungen erneut erfinden.",
+          "sha256": "ba26ba7813502e33c9e09123082b26d8b23d4a232e4b40eedddbdd531ef34631",
+          "authority": {
+            "file": "docs/ai-workflows/PUZZLE_AUTHORING.md",
+            "anchor": "61-repositoryablage-während-der-laufenden-produktion"
+          },
+          "assessment": "Phasen-/Inhaltsgates erhalten; nur Quellenorganisation und ausdrücklich versionierte Snapshotformen ändern sich."
+        }
+      ]
+    },
+    {
+      "old_heading": "6.2 Übergabedatensatz",
+      "old_anchor": "62-übergabedatensatz",
+      "old_line": 607,
+      "units": [
+        {
+          "old_text": "[PW-B_CONTRACT](../PW_B_CONTRACT.md) definiert unverändert Request v3, Handoff v4,\nRecord v3, Resultat v3, Rasterwahl, Inspektion v2 und Projektion v2. Für neue\nProduktion genau die 0.8-Generation verwenden. Frühes background=null ist keine\nLeerentscheidung; beide Hintergrundgates pending, ihre Belege null. Erst\nbackground_review/content_ready besitzen Hintergrundarbeit und qualifizierte\nRasterwahl. Registered erst nach wirklicher Registrierung, Main erst nach\nbestätigtem Merge berichten. Inventar v1, Index v1 und technische Bild-/Proof-/\nFreigabeformen behalten; keine historischen Originale umetikettieren oder neu\nversiegeln. Unsichere Restpfade, Konflikte und unvollständige Publikation offen\nmelden. Nur vollständig geprüfte identische Wiederholung ist No-op; keine\npauschale Locklöschung oder verdeckte Recovery.",
+          "sha256": "42c27ec5b2d97612eb2215f5da8f70488b2b51553fdc09060518a904a2dc45cd",
+          "authority": {
+            "file": "docs/ai-workflows/PUZZLE_AUTHORING.md",
+            "anchor": "62-übergabedatensatz"
+          },
+          "assessment": "Phasen-/Inhaltsgates erhalten; nur Quellenorganisation und ausdrücklich versionierte Snapshotformen ändern sich."
+        }
+      ]
+    },
+    {
+      "old_heading": "6.3 Hintergrundarbeit in Schritt 4",
+      "old_anchor": "63-hintergrundarbeit-in-schritt-4",
+      "old_line": 621,
+      "units": [
+        {
+          "old_text": "Erst nach tatsächlicher Wahl eines qualifizierten Rasters Kontextbriefing und\ndrei inhaltlich unterschiedliche echte ImageGen-Originale erstellen, speichern\nund isoliert vorlegen. Gemeinsamer [Bildstil](../PUZZLE_IMAGE_STYLE.md) und\n[Q-HG-Kriterien](../PUZZLE_QUALITY.md#91-isolierte-visuelle-beurteilung) sind Pflicht:\nleichte Graphitsprache, echte Transparenz und vollständige 2304×576-Komposition\nmit ihrem Freiraum. Andere native Maße bilden dieselbe vollständige 4:1-Leinwand\nab; gemeinsamer Fit/Anker, kein Alpha-Bounds-Crop oder sichtmotivbezogenes Zentrieren.\nKontext statt Rätselsubjekt/Lösung/UI; indirekte Hinweise sind keine zugesicherte\nSpoilerfreiheit. Nur tatsächliche dokumentierte Eigentümervorgabe erlaubt eine\nandere anfängliche Bildzahl oder frühen Kandidatenverzicht. Fehlende Bilder sind\nkein none. Die bedarfsweise Rasterregel verändert nicht diese Dreier-Bildauswahl.",
+          "sha256": "c40eb1efe42f006c784d3e778237f9d2db80d2d9d85d87fae6656c81fdac58e1",
+          "authority": {
+            "file": "docs/ai-workflows/PUZZLE_AUTHORING_STEP_4.md",
+            "anchor": "63-hintergrundarbeit-in-schritt-4"
+          },
+          "assessment": "Phasen-/Inhaltsgates erhalten; nur Quellenorganisation und ausdrücklich versionierte Snapshotformen ändern sich."
+        },
+        {
+          "old_text": "Arbeitsmanifest/Entscheidung aus Hintergrundvertrag §3 verwenden. Wahl/none bindet\ndie tatsächlich vorgelegten Bytes. Rechte und isolierte Sichturteile bleiben\ngetrennt von Dateidiagnosen. Nur ausgewähltes Original gemäß HP-W2 §4 ableiten;\nbei none echten Nullbefund prüfen. Keine Kandidaten-Testintegration, Buchvorschau\noder zusätzliche persönliche Buchabnahme. Geänderte kreative Bytes brauchen neue\nWahl; bytegleicher Transport und festgelegte Ableitung keine erneute kreative Wahl.\nEine offene Hintergrundwahl darf zusammen mit der tatsächlichen Endabnahme im\npassend beauftragten Schlussauftrag erklärt werden; nicht dieselbe unveränderte\nEntscheidung ein weiteres Mal verlangen. Die Schlussübersicht nach PW2-B bezeichnet die konkrete unveränderte Kombination.",
+          "sha256": "408fadf6cf8ae1ef1e417071732634d773b8ce88623740913c3fe34f80dec9a5",
+          "authority": {
+            "file": "docs/ai-workflows/PUZZLE_AUTHORING_STEP_4.md",
+            "anchor": "63-hintergrundarbeit-in-schritt-4"
+          },
+          "assessment": "Phasen-/Inhaltsgates erhalten; nur Quellenorganisation und ausdrücklich versionierte Snapshotformen ändern sich."
+        }
+      ]
+    },
+    {
+      "old_heading": "7. Freigaben und Abschlussausgabe",
+      "old_anchor": "7-freigaben-und-abschlussausgabe",
+      "old_line": 645,
+      "units": [
+        {
+          "old_text": "Bild-, Motiv-/Parameter-, Raster-, Hintergrund- und finale redaktionelle\nEntscheidungen stammen aus tatsächlichen menschlichen Erklärungen. Software\nprüft Aufzeichnungen/Bytes, authentifiziert keine Menschen und ergänzt kein\nSchweigen. Korrekturwünsche geben noch nicht vorhandene neue Fassungen nicht frei.",
+          "sha256": "c0f03faf9712180b620752f6ee184671222280b30dbd71f0d58eedac3f5e2237",
+          "authority": {
+            "file": "docs/ai-workflows/PUZZLE_AUTHORING.md",
+            "anchor": "7-freigaben-und-abschlussausgabe"
+          },
+          "assessment": "Phasen-/Inhaltsgates erhalten; nur Quellenorganisation und ausdrücklich versionierte Snapshotformen ändern sich."
+        },
+        {
+          "old_text": "Jede Chatübergabe nennt kurz erreichte Phase, feste Quelle, tatsächlich ausgeführte\nPrüfungen, offene Entscheidung und nächsten Schritt; echte Bild-/Dateilinks und\nstabile Angebotskennungen. Keine Routine-JSON-Sammlung für ein zweites Sheet:\nder Assistent liest veröffentlichte Originaldaten. Normale Produktion verwendet\nihr eigenes Abschlussformat, nicht Entwicklungs-HANDOFF.",
+          "sha256": "0090be5f2155c70b4facab34f5ff6136520e72ca8a75e2f87be83010d3edcfc2",
+          "authority": {
+            "file": "docs/ai-workflows/PUZZLE_AUTHORING.md",
+            "anchor": "7-freigaben-und-abschlussausgabe"
+          },
+          "assessment": "Phasen-/Inhaltsgates erhalten; nur Quellenorganisation und ausdrücklich versionierte Snapshotformen ändern sich."
+        },
+        {
+          "old_text": "Persönliche Arbeitswurzel und Merge bleiben ausdrücklich gewählte Auftragsoptionen,\nkeine Rechte aus einem Record oder einer Projektion. Normale Produktionsprompts\nbeauftragen keine zusätzliche lokale Ablagebereinigung; gesonderter Auftrag nach\nWORKSPACE. Der fachliche Produktionsabschluss nach §9 bleibt davon unberührt.\nNeue lokale Briefingentwürfe behaupten keine ID/Quelle/Freigabe. Eigene spätere\nHintergrundrevisionen benutzen HP-I1b2, keinen Alt-Sheet-Sitzungsimport.",
+          "sha256": "b8af091ea064a06c9d8e8d641e131416da3dcdba867c962865f128a530640815",
+          "authority": {
+            "file": "docs/ai-workflows/PUZZLE_AUTHORING.md",
+            "anchor": "7-freigaben-und-abschlussausgabe"
+          },
+          "assessment": "Phasen-/Inhaltsgates erhalten; nur Quellenorganisation und ausdrücklich versionierte Snapshotformen ändern sich."
+        }
+      ]
+    },
+    {
+      "old_heading": "8. Abgenommenes Paket ins Spiel integrieren",
+      "old_anchor": "8-abgenommenes-paket-ins-spiel-integrieren",
+      "old_line": 665,
+      "units": [
+        {
+          "old_text": "Schritt 5 setzt vollständige gültige Raster-/Hintergrundbereitschaft und echte\nEndfreigabe v2 am unveränderten Original-ZIP voraus. Vorhandene äußere Entscheidung,\nAbleitung und Endfreigabe über Finalizer v2 nachtragen; Originale bleiben bytegleich.\nAtomare Recordfortschreibung und geprüfte Projektion verwenden denselben Stand.\nFehlende Freigaben sind keine technische Kleinigkeit.",
+          "sha256": "01c32785215b94c69a7d4e9da53c8d8f310a8df787feba45dcf7e1009d82cd2f",
+          "authority": {
+            "file": "docs/ai-workflows/PUZZLE_AUTHORING_STEP_5.md",
+            "anchor": "8-abgenommenes-paket-ins-spiel-integrieren"
+          },
+          "assessment": "Phasen-/Inhaltsgates erhalten; nur Quellenorganisation und ausdrücklich versionierte Snapshotformen ändern sich."
+        },
+        {
+          "old_text": "Vor Erstintegration, Wiederaufnahme und jeder registrierenden Mutation tatsächlich\norigin/main aktualisieren, vollständige SHA und beauftragten Zielcheckout feststellen.\nAktuelles main sicher in den Produktionsbranch einbeziehen, schmutzige WIP/Fremddaten\nnicht überschreiben. Gültige Inhaltsregistry v4, die vom aktuellen gemeinsamen\nWriter unterstützte Runtimegeneration und je ID genau eine aktuelle Metadatenzeile\nmit gültiger Kategorie prüfen. Die [PE-A2-Zielregeln](../PUZZLE_EDITOR.md#8-pe-a2-geschlossener-bild--und-präferenzvertrag)\ngehören zum bestehenden Zielvertrag, nicht zu einer Migration durch dieses Regelpaket.\nVeraltete/inkonsistente Ziele, Konflikte, Locks/Journale oder ungeklärte Recovery\nstoppen vor Mutation; keine implizite Zielmigration oder Rückstufung.",
+          "sha256": "e727586cbc5a653e61f59202418cf2bfad76ee484cacaf4a8ee4e3a06f876dbc",
+          "authority": {
+            "file": "docs/ai-workflows/PUZZLE_AUTHORING_STEP_5.md",
+            "anchor": "8-abgenommenes-paket-ins-spiel-integrieren"
+          },
+          "assessment": "Phasen-/Inhaltsgates erhalten; nur Quellenorganisation und ausdrücklich versionierte Snapshotformen ändern sich."
+        },
+        {
+          "old_text": "Registered auf Draftbranch ist kein Mainabschluss. Bei verändertem Zielkatalog\nmit unveränderten gebundenen Originalen und gültigen Freigaben frisch export → plan →\nregister gegen aktuellen Zielcheckout ausführen. Zielabhängige Index-/Runtime-/\nSource-/Receipt-/Abschlussdaten fachlich neu erzeugen. Alte generierte Registries\nnicht als Ersatz für aktuellen Bestand oder durch bloße Textkonfliktauflösung\nübernehmen; alle bestehenden Inhalte/Metadaten erhalten. Original-ZIP, Raster-/\nRevealbytes, historische Herkunft/Freigaben bleiben unverändert. Gültiges\nDifficulty-Rebind benutzen, bei neuer ID --runtime-revision 1 beibehalten.\nTechnisch unmögliche Neubindung oder ungeklärte Herkunft konkret melden, nicht\nerfinden/umschreiben. Keine direkte Mainmutation oder Umgehung von Guards.",
+          "sha256": "293bac24f0ed60e37d4725a28f5a24aebc9536e28469160e5f1df2f152d04502",
+          "authority": {
+            "file": "docs/ai-workflows/PUZZLE_AUTHORING_STEP_5.md",
+            "anchor": "8-abgenommenes-paket-ins-spiel-integrieren"
+          },
+          "assessment": "Phasen-/Inhaltsgates erhalten; nur Quellenorganisation und ausdrücklich versionierte Snapshotformen ändern sich."
+        },
+        {
+          "old_text": "```text\npython -m tools.puzzle_production.authoring_builder finalize-background --request <finalize-v2.json> --source-root <neue-belege> --output-root <produktionscheckout> --history-repo <produktionscheckout>\npython -m tools.puzzle_production.target_adapter export --allow-background --input <original-package.zip> --external-root <produktionscheckout> --approval <echte-endfreigabe.json> --name <motivname> --runtime-revision 1 --stem <stamm> --save-slot <slot> --category-id <kategorie> --categories content/categories.json --output-dir <neuer-export>\npython -m tools.puzzle_production.target_adapter plan --export <neuer-export> --checkout <produktionscheckout> --difficulty <geprüfte-difficulty.json>\npython -m tools.puzzle_production.target_adapter register --export <neuer-export> --checkout <produktionscheckout> --difficulty <geprüfte-difficulty.json>\n```",
+          "sha256": "96636d4e5e7a6eafa2dc1f485910e492c56e8198a1cc4453ecad4521e2f72bd2",
+          "authority": {
+            "file": "docs/ai-workflows/PUZZLE_AUTHORING_STEP_5.md",
+            "anchor": "8-abgenommenes-paket-ins-spiel-integrieren"
+          },
+          "assessment": "Phasen-/Inhaltsgates erhalten; nur Quellenorganisation und ausdrücklich versionierte Snapshotformen ändern sich."
+        },
+        {
+          "old_text": "Nur gewählte Lieferung übernehmen. Export v6 prüft vollständig vor Veröffentlichung;\nfrischer lesender Plan vor autorisierter Registrierung. Register plant selbst neu,\nkein fremder Plan als Vertrauenscache. Historisch gespeicherte false-Readinessfelder\nbleiben; Zielbereitschaft und registrierter Checkout werden frisch ermittelt.\nRI, ZA-1 und aktuelle Katalogguards behalten sichere Pfade/Namespaces/Dateitypen,\nQuelle/Capability/Provenienz, Bilder/Palette/Proof, Kategorie/Difficulty, IDs/Slots\nund test_only. Keine Save-/Registry-/Runtimeänderung als Abkürzung.",
+          "sha256": "1f4e647afa2521a591f3558087769a5f22cee9af9595d06bb9d41cf3f7a7385f",
+          "authority": {
+            "file": "docs/ai-workflows/PUZZLE_AUTHORING_STEP_5.md",
+            "anchor": "8-abgenommenes-paket-ins-spiel-integrieren"
+          },
+          "assessment": "Phasen-/Inhaltsgates erhalten; nur Quellenorganisation und ausdrücklich versionierte Snapshotformen ändern sich."
+        },
+        {
+          "old_text": "Registrierung und Recovery behalten getrennte 1800-s-Schutzrahmen und 300-s-Warnung;\nein äußerer Ablauf darf Recovery nicht auf verbrauchte Restzeit beschränken.\nExport/Plan/Eingangsprüfung behalten ihre eigenen Grenzen. Unterbrechung, Rollback,\noffene Recovery und Abschluss getrennt berichten. Unklare/fremde Bytes und Journal\nerhalten. Der bestehende BA-B-Runner bleibt nur bei ausdrücklich vorbereiteten\npassenden Einzelintegrationen nutzbar, mit eigenen Mengen-/Budget-/Publikationsgrenzen.\nKein neuer Batchauftrag, versteckter Solverlauf oder zweites Hintergrundregister.",
+          "sha256": "5915b96d87586e7f710badcfbc5549913d2aeb012d002c4d7cb2f235d6981d54",
+          "authority": {
+            "file": "docs/ai-workflows/PUZZLE_AUTHORING_STEP_5.md",
+            "anchor": "8-abgenommenes-paket-ins-spiel-integrieren"
+          },
+          "assessment": "Phasen-/Inhaltsgates erhalten; nur Quellenorganisation und ausdrücklich versionierte Snapshotformen ändern sich."
+        },
+        {
+          "old_text": "Nach wirklicher Registrierung Diff/Lieferbytes prüfen und Registrierungsstand\ncommitten. Den Abschluss binden mit:",
+          "sha256": "9e851ee79bfd92452948e5ff1d1cf4575bc539fd0ee2c8d7cfdc77ec71fb38fa",
+          "authority": {
+            "file": "docs/ai-workflows/PUZZLE_AUTHORING_STEP_5.md",
+            "anchor": "8-abgenommenes-paket-ins-spiel-integrieren"
+          },
+          "assessment": "Phasen-/Inhaltsgates erhalten; nur Quellenorganisation und ausdrücklich versionierte Snapshotformen ändern sich."
+        },
+        {
+          "old_text": "```text\npython -m tools.production_workspace.projector --repository <checkout> --complete-record <recordpfad> --integration-commit <volle-SHA>\n```",
+          "sha256": "aa25ba4526170099c94bd4471c4498a60374e8ec55099493266c5ff03a3ad46f",
+          "authority": {
+            "file": "docs/ai-workflows/PUZZLE_AUTHORING_STEP_5.md",
+            "anchor": "8-abgenommenes-paket-ins-spiel-integrieren"
+          },
+          "assessment": "Phasen-/Inhaltsgates erhalten; nur Quellenorganisation und ausdrücklich versionierte Snapshotformen ändern sich."
+        },
+        {
+          "old_text": "Record, Projektion und Ansichtsverweis danach committen/pushen und Draft-PR im\nbeauftragten Umfang erstellen. Reine Produktion erhält CI-Kern ohne Windowsbau\nund ohne neue rätselspezifische Tests. Vor Merge aktuellen Head/Basis, unabhängiges\nReview am tatsächlichen Stand, ausgewählte Pflichtchecks, Konfliktfreiheit,\nerforderliche Abnahmen und ausdrückliche/bedingte Befugnis prüfen; Squash verwenden,\nkeine Release-/Deploymentfreigabe ableiten. Main erst am zurückgelesenen Mergecommit\nmelden; danach der revisionsgenaue Abschluss nach §9. Ein lokaler Erfolg reicht nicht.",
+          "sha256": "234c6f930b9e43920d3abc4b8012a1a6069e4f56656f0cfb0df7804558ea69f5",
+          "authority": {
+            "file": "docs/ai-workflows/PUZZLE_AUTHORING_STEP_5.md",
+            "anchor": "8-abgenommenes-paket-ins-spiel-integrieren"
+          },
+          "assessment": "Phasen-/Inhaltsgates erhalten; nur Quellenorganisation und ausdrücklich versionierte Snapshotformen ändern sich."
+        }
+      ]
+    },
+    {
+      "old_heading": "9. Produktionsabschluss und Bereinigung",
+      "old_anchor": "9-produktionsabschluss-und-bereinigung",
+      "old_line": 732,
+      "units": [
+        {
+          "old_text": "Eigentümerentscheidung vom 14.10.2026: Ein fertiggestelltes und final auf main\nintegriertes Rätsel muss nicht erneut produzierbar sein. Produktionsunterlagen\nsind Arbeitsmaterial, kein dauerhaft wachsender Spiel-/CI-Bestand.",
+          "sha256": "a082e27313556b01f49c511886eba8fc3b3aadfe02681336c53a2c07afade52c",
+          "authority": {
+            "file": "docs/ai-workflows/PUZZLE_AUTHORING_STEP_5.md",
+            "anchor": "9-produktionsabschluss-und-bereinigung"
+          },
+          "assessment": "Phasen-/Inhaltsgates erhalten; nur Quellenorganisation und ausdrücklich versionierte Snapshotformen ändern sich."
+        },
+        {
+          "old_text": "1. Tatsächliche Endabnahme und Merge nachweisen, origin/main aktualisieren und\n   vollständigen enthaltenen Commit nennen. Registered auf Draft genügt nicht.\n   Neuere/offene Arbeit derselben ID zuerst klären, fremde/offene Produktion erhalten.\n2. Nach Merge in eigenem kleinen Cleanup-Diff zuerst den\n   [abgeschlossenen Ansichtsverweis](../PRODUCTION_CURRENT_VIEW.md) frisch gegen\n   Revision/Mainbeleg prüfen und entfernen. Verweis auf neuere/offene Arbeit erhalten;\n   bei ungeklärter ID vor Abschluss stoppen. Dann:",
+          "sha256": "1a0a96597d248476d53669be389cd13f3f54abe321b90b1cbf8048aa7aee4de4",
+          "authority": {
+            "file": "docs/ai-workflows/PUZZLE_AUTHORING_STEP_5.md",
+            "anchor": "9-produktionsabschluss-und-bereinigung"
+          },
+          "assessment": "Phasen-/Inhaltsgates erhalten; nur Quellenorganisation und ausdrücklich versionierte Snapshotformen ändern sich."
+        },
+        {
+          "old_text": "```sh\n   python -m tools.puzzle_production.target_adapter retire-production --checkout . --integrated-commit <vollstaendige-main-SHA> --puzzle-id <pz-ID>\n   ```",
+          "sha256": "9a7b33645ea41c7b4eb08ee0d46a139e3e1d5396f70dba6d52de2f0117fa3864",
+          "authority": {
+            "file": "docs/ai-workflows/PUZZLE_AUTHORING_STEP_5.md",
+            "anchor": "9-produktionsabschluss-und-bereinigung"
+          },
+          "assessment": "Phasen-/Inhaltsgates erhalten; nur Quellenorganisation und ausdrücklich versionierte Snapshotformen ändern sich."
+        },
+        {
+          "old_text": "Mehrere bestätigte IDs durch wiederholtes --puzzle-id. Der Befehl prüft Main-\n   Abstammung und unveränderte Integrations-/Arbeitsbytes, entfernt abgeschlossene\n   Authoringrevisionen/Indexeinträge und ersetzt das Produktionspaket durch einen\n   kompakten Integrationsdatensatz. Kein Solver-, Proof- oder Bildreplay.\n3. Dauerhaft bleiben Runtime-Definition mit Matrix/Hinweisen, Reveal, Rechte/Notices,\n   ID/Runtime-Revision/Save-Slot, Kategorie und relevante Schwierigkeit. Kompakter\n   Datensatz bindet diese Daten, ursprünglichen Exporthash und bestätigten Maincommit.\n   Aktive Bildbindung samt Herkunft/Freigaben erhalten, nicht auf Vorgänger zurücksetzen\n   oder historische Belege für nachträgliche Freigaben umschreiben. Aktive Bewertung,\n   kompakte Berichte und Eingangs-/Methoden-/Referenzbindungen bleiben außerhalb\n   versiegelter Produktion. Manuelle Neubewertung verlangt keinen Produktionsreplay.\n4. Entfernt werden Quellen-/Abstraktionsbilder, verworfene Varianten, Prompts, ZIPs,\n   duplizierte Exporte, Proofs, Reparaturspuren, Galerien und Zwischenberichte. Keine\n   Kopien in neuen Archiven, Builds oder CI-Artefakten. Git-Historie und kompakte\n   Commit-/PR-Entscheidungsbezüge genügen; Nutzungsrechte/Attribution nicht verlieren.\n5. Diff und unveränderte Runtime kontrollieren, Cleanup committen/pushen, getrennt\n   selbst prüfen und nach erfolgreichen Pflichtchecks unmittelbar mergen.\n   Eigentümerfreigabe vom 15.10.2026: Genau dieser eng begrenzte Nachintegrations-\n   Cleanup einschließlich Merge ist beauftragt, auch nach zuvor als Draft geliefertem\n   Integrations-PR. Kein weiterer Routineprompt oder dauerhaft offener Cleanup-Draft.\n   Vor tatsächlichem Integrationsmerge nichts bereinigen; konkrete Blocker melden.\n   Eigener aktueller Paketplan mit begründet modules=[], Quellen-/Plankern ohne\n   Player-Build und ohne rätselspezifische Tests. Maincommit/erhaltene Runtime nachweisen.",
+          "sha256": "dc9c5780b8b89e7a79acdf9e13aa025eab23205de5b6afc4a2f43e21fec5d507",
+          "authority": {
+            "file": "docs/ai-workflows/PUZZLE_AUTHORING_STEP_5.md",
+            "anchor": "9-produktionsabschluss-und-bereinigung"
+          },
+          "assessment": "Phasen-/Inhaltsgates erhalten; nur Quellenorganisation und ausdrücklich versionierte Snapshotformen ändern sich."
+        },
+        {
+          "old_text": "Spätere echte Rätseländerungen sind neue Aufträge. Fehlende alte Arbeitsdateien\nsind kein Defekt und keine Wiederherstellungspflicht. Neue Exporte bleiben vollständig\ngeprüft; Bestandsregistrierung/Kategorienpflege benutzen die kompakte Integrationsbindung.\nDiese fachliche Cleanupfreigabe erweitert keine lokale Checkoutbereinigung und\nkeine Befugnis für Werkzeug-/CI-Pakete.",
+          "sha256": "234247cc7f45fa126fcd3ebfa820b24f9ce1d0fd77a9415df6e6021d12c13fb9",
+          "authority": {
+            "file": "docs/ai-workflows/PUZZLE_AUTHORING_STEP_5.md",
+            "anchor": "9-produktionsabschluss-und-bereinigung"
+          },
+          "assessment": "Phasen-/Inhaltsgates erhalten; nur Quellenorganisation und ausdrücklich versionierte Snapshotformen ändern sich."
+        }
+      ]
+    },
+    {
+      "old_heading": "Abschluss nachträglicher Bildrevisionen · CI2 vom 26.10.2026",
+      "old_anchor": "abschluss-nachträglicher-bildrevisionen--ci2-vom-26102026",
+      "old_line": 780,
+      "units": [
+        {
+          "old_text": "Spätere Revealrevisionen bereits integrierter Rätsel haben einen eigenen\nrevisionsgenauen Abschluss; eine bereinigte Rasterproduktion wird dafür nicht\nwiederhergestellt. Vor Abschluss tatsächliche Bildfreigabe, aktive Bildbindung\nund enthaltenen Maincommit prüfen; neuere/offene Arbeit erhalten. Zugehörige\nerledigte Quellen, Prompts, Varianten, ZIP-/Rohkopien und Indexeinträge entfernen,\naber aktuelle Bilddatei, Rechte, Herkunft/Freigaben und aktive Revision behalten.\nDefinitionsbytes, Runtime-Revision, Save-Slot, Registrierung und Bewertungen bleiben.\nUrsprüngliche versiegelte Integrationsbelege nicht neu erzeugen/umschreiben.",
+          "sha256": "edd5b9649b420c594145a039e76d0f36900162cad2c48efb2d8aa3de54955ccc",
+          "authority": {
+            "file": "docs/ai-workflows/PUZZLE_AUTHORING_STEP_5.md",
+            "anchor": "abschluss-nachträglicher-bildrevisionen--ci2-vom-26102026"
+          },
+          "assessment": "Phasen-/Inhaltsgates erhalten; nur Quellenorganisation und ausdrücklich versionierte Snapshotformen ändern sich."
+        },
+        {
+          "old_text": "```sh\npython -m tools.puzzle_production.target_adapter retire-reveal-production --checkout . --integrated-commit <vollstaendige-main-SHA> --authoring-revision <pz-ID> <Authoringrevision>\n```",
+          "sha256": "b360d5ca1406d10d9b475ad958db86a91956e822d613947d5160a6f1fbdb0f70",
+          "authority": {
+            "file": "docs/ai-workflows/PUZZLE_AUTHORING_STEP_5.md",
+            "anchor": "abschluss-nachträglicher-bildrevisionen--ci2-vom-26102026"
+          },
+          "assessment": "Phasen-/Inhaltsgates erhalten; nur Quellenorganisation und ausdrücklich versionierte Snapshotformen ändern sich."
+        },
+        {
+          "old_text": "Jede Revision ausdrücklich wiederholen, kein impliziter ID-Gesamtabbau.\nOrigin/main vorher aktualisieren. Main muss Record, finale Freigabe und exakt\naktuelle Bildquelle binden. Offene Journale, fremde Bytes, Teilentfernung und\nbetroffene Indexänderungen blockieren vor Löschung. Neuere/offene Geschwister\nbleiben. Identische Wiederholung nach vollständiger Entfernung ist nach frischer\nPrüfung No-op, auch ohne alte Pakete. Unterstützte kompakte v1-Datensätze und\nvollständige ursprüngliche Pakete unverändert belassen; retire-production bleibt\nder Rasterabschlussweg. Begrenzter Datei-/Referenzvergleich, kein Solver-/Bild-/\nKatalog-/Spielerreplay allein zur Bereinigung. Die enge Nachintegrationsfreigabe\naus §9 bleibt, nicht eine neue Befugnis aus historischen CI2-Lieferberichten.",
+          "sha256": "3b89b8ecf716bec6eb1a329d153e2265a7cda7254aea42c3da7bfd5d9e177cc0",
+          "authority": {
+            "file": "docs/ai-workflows/PUZZLE_AUTHORING_STEP_5.md",
+            "anchor": "abschluss-nachträglicher-bildrevisionen--ci2-vom-26102026"
+          },
+          "assessment": "Phasen-/Inhaltsgates erhalten; nur Quellenorganisation und ausdrücklich versionierte Snapshotformen ändern sich."
+        }
+      ]
+    },
+    {
+      "old_heading": "Abschluss der Hintergrundarbeit",
+      "old_anchor": "abschluss-der-hintergrundarbeit",
+      "old_line": 806,
+      "units": [
+        {
+          "old_text": "[Hintergrundvertrag §10](../PUZZLE_BACKGROUNDS.md#10-hp-i1b1--erste-registrierung-und-kompakter-produktionsabschluss)\nergänzt Erstintegration: retire-production erhält aktive kompakte Hintergrundsource,\nechte Freigabe-/Rechte-/Ableitungsbindungen, PNG/none/Notice und ursprünglichen\nExportanker; Mainbeleg separat im Receipt v2. Vor Löschung gewählte IDs/Bytes\ngegen tatsächliches main prüfen. Offene/neuere/fremde Arbeit erhalten, bei nicht\ntrennbarem ID-Baum stoppen. Alte innere Refs sind danach historische Identitäten,\nkeine wieder zu öffnenden Pflichtdateien. Retire-reveal-production ist kein\nHintergrundabschlusswriter.",
+          "sha256": "c59810511dfb8d1e0789739453db0629c3a1d12fd145e1b013c5e347bf6059b6",
+          "authority": {
+            "file": "docs/ai-workflows/PUZZLE_AUTHORING_STEP_5.md",
+            "anchor": "abschluss-der-hintergrundarbeit"
+          },
+          "assessment": "Phasen-/Inhaltsgates erhalten; nur Quellenorganisation und ausdrücklich versionierte Snapshotformen ändern sich."
+        },
+        {
+          "old_text": "Bis Auswahl drei Einzelbilder erreichbar halten; bis tatsächlicher Integration\nalle noch nötigen Arbeits-/Rechte-/Wahlbindungen. Nach bestätigter Endabnahme und\nMainintegration nur abgeschlossene Hintergrundarbeit entfernen: verworfene\nKandidaten, Prompts, Quellen-/Ableitungskopien, ZIPs und temporäre Review-/Diagnosedaten.\nKein Kandidatenarchiv, keine Wiederherstellung alter Rasterproduktion oder Solver-/\nBild-/Buchreplay. Aktives Asset bzw. echte Leerentscheidung, Rechte/Attribution,\naktive Bildrevision und kompakte Wahl-/Ableitungs-/Integrationsbindungen bleiben.\nHistorische Originale nicht umschreiben, aktive Bilder nicht zurücksetzen.",
+          "sha256": "65796761a1b6426032b2ac367c1835bb2a948e54098768ef17a073fb3678f3fe",
+          "authority": {
+            "file": "docs/ai-workflows/PUZZLE_AUTHORING_STEP_5.md",
+            "anchor": "abschluss-der-hintergrundarbeit"
+          },
+          "assessment": "Phasen-/Inhaltsgates erhalten; nur Quellenorganisation und ausdrücklich versionierte Snapshotformen ändern sich."
+        }
+      ]
+    },
+    {
+      "old_heading": "HP-I1b2: eigene Hintergrundrevision und ihr Abschluss",
+      "old_anchor": "hp-i1b2-eigene-hintergrundrevision-und-ihr-abschluss",
+      "old_line": 826,
+      "units": [
+        {
+          "old_text": "[Hintergrundvertrag §11](../PUZZLE_BACKGROUNDS.md#11-hp-i1b2--eigenständiger-hintergrundwechsel)\ndefiniert den unveränderlichen picross-background-adoption-request-v1. Tatsächliche\nAuswahl/Entfernung und Zielautorisierung aufzeichnen, keine Dummy-ZIPs oder neue\nRasterfreigabe. Bytegleiche aktuelle Source/freigegebenes Reveal binden, ursprüngliche\nRevealautorität in initial erhalten. Eigener Folgeauftrag nach §7.6 bleibt\nunveränderlich; historische Sheetbedienung ist kein paralleler Assistent.\nAktuelle integrierte Herkunft lesen, Arbeitsrevision via catalog_background_change\nstore samt Index sichern, dann plan und autorisiertes adopt nach CLI. Fehlende/\nfalse-Capability blockiert, kein Override. Gültige Freigaben nicht erneut verlangen;\nRaster-/Revealneubindung folgt gegebenenfalls HP-I1c, nicht einem erfundenen Ersatzweg.",
+          "sha256": "7b06dfe04d02641b0c6ee0db8065ed00f0cd594bba63d7f7a3409039cfdc7e6a",
+          "authority": {
+            "file": "docs/ai-workflows/PUZZLE_AUTHORING_STEP_5.md",
+            "anchor": "hp-i1b2-eigene-hintergrundrevision-und-ihr-abschluss"
+          },
+          "assessment": "Phasen-/Inhaltsgates erhalten; nur Quellenorganisation und ausdrücklich versionierte Snapshotformen ändern sich."
+        },
+        {
+          "old_text": "Nach bestätigter Mainintegration origin/main aktualisieren und gezielt ausführen:",
+          "sha256": "d8b3125e388d6f446f200df50fc8bad9cd8050e0a329b93dc56050b13e4397d1",
+          "authority": {
+            "file": "docs/ai-workflows/PUZZLE_AUTHORING_STEP_5.md",
+            "anchor": "hp-i1b2-eigene-hintergrundrevision-und-ihr-abschluss"
+          },
+          "assessment": "Phasen-/Inhaltsgates erhalten; nur Quellenorganisation und ausdrücklich versionierte Snapshotformen ändern sich."
+        },
+        {
+          "old_text": "```text\npython -m tools.puzzle_production.target_adapter retire-background-production --checkout <checkout> --integrated-commit <vollständige-main-SHA> --authoring-revision <pz-ID> <revision>\n```",
+          "sha256": "0eea86627d596cc3a278eb157aba91549afac3e31a4f5b5fda12361b38a92b3b",
+          "authority": {
+            "file": "docs/ai-workflows/PUZZLE_AUTHORING_STEP_5.md",
+            "anchor": "hp-i1b2-eigene-hintergrundrevision-und-ihr-abschluss"
+          },
+          "assessment": "Phasen-/Inhaltsgates erhalten; nur Quellenorganisation und ausdrücklich versionierte Snapshotformen ändern sich."
+        },
+        {
+          "old_text": "Nur ausdrücklich gewählte vollständig belegte Revisionen/Indexzeilen entfernen;\nneuere Arbeit, aktives PNG/none/Notice/Receipt bleiben. Eine inzwischen abgelöste,\ntatsächlich integrierte Revision darf mit historischem Mainbeleg abgeschlossen\nwerden. Vollständig entfernte Revision plus Index ergibt nach frischer Prüfung\nNo-op, Teilreste nicht. Kein altes Raster-ZIP rekonstruieren oder Solver-/Buchreplay.\nDer Befehl liefert lokalen Diff, keinen automatischen Commit/Merge.",
+          "sha256": "d43b7237bf52bfababebef796816206642e4665fe9ae04624b89309d203c2bd5",
+          "authority": {
+            "file": "docs/ai-workflows/PUZZLE_AUTHORING_STEP_5.md",
+            "anchor": "hp-i1b2-eigene-hintergrundrevision-und-ihr-abschluss"
+          },
+          "assessment": "Phasen-/Inhaltsgates erhalten; nur Quellenorganisation und ausdrücklich versionierte Snapshotformen ändern sich."
+        }
+      ]
+    },
+    {
+      "old_heading": "PW-PERF-B · Begrenzte Erstregistrierungsprüfung",
+      "old_anchor": "pw-perf-b--begrenzte-erstregistrierungsprüfung",
+      "old_line": 852,
+      "units": [
+        {
+          "old_text": "Für Erstregistrierung auf v4/v8 gilt ausschließlich die neue geschlossene\n[v10-Semantik](../PUZZLE_INTEGRATION.md). Gemeinsame Indizes, neue Produktion samt Freigaben/Proof,\nabhängige Quellen und Schreibziele bleiben vollständig gebunden. Unbeteiligte\nalte Paket-/Liveasset-/Sidecardateien werden nicht gelesen oder als intakt\nbestätigt; ihre Defekte erkennt der zuständige Reader oder ein expliziter\nGesamtaudit. P0/P2 prüfen neue Quellen und freie/eigene Ziele, P5/P6 die neue\nPublikation, R0/R2 eigene Zwischenstände und alte Indizes. Alte Journalgenerationen\nund andere Writer behalten ihre bisherigen Prüfverträge. Keine Garantie gegen\nnichtkooperierendes ABA-/OS-Racing; keine Änderung menschlicher Freigaben.",
+          "sha256": "1997f646c3bd2aabb025e5ac73ff150824b1dc306378d09019c6ee7759823864",
+          "authority": {
+            "file": "docs/ai-workflows/PUZZLE_AUTHORING_STEP_5.md",
+            "anchor": "pw-perf-b--begrenzte-erstregistrierungsprüfung"
+          },
+          "assessment": "Phasen-/Inhaltsgates erhalten; nur Quellenorganisation und ausdrücklich versionierte Snapshotformen ändern sich."
+        }
+      ]
+    }
+  ],
+  "target_errors": []
+}

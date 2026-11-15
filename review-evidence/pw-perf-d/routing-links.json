@@ -1,0 +1,385 @@
+{
+  "links": [
+    {
+      "source": "AGENTS.md",
+      "label": "Authoring §1",
+      "target": "docs/ai-workflows/PUZZLE_AUTHORING.md#1-einstieg-und-befugnisse"
+    },
+    {
+      "source": "docs/DESIGN_CONCEPT.md",
+      "label": "fünfstufige Authoringweg",
+      "target": "ai-workflows/PUZZLE_AUTHORING.md"
+    },
+    {
+      "source": "docs/DEVELOPMENT_ARCHIVE.md",
+      "label": "Authoring §9",
+      "target": "ai-workflows/PUZZLE_AUTHORING_STEP_5.md#9-produktionsabschluss-und-bereinigung"
+    },
+    {
+      "source": "docs/PRODUCTION_BATCH.md",
+      "label": "Authoring",
+      "target": "ai-workflows/PUZZLE_AUTHORING.md"
+    },
+    {
+      "source": "docs/PRODUCTION_WORKSPACE.md",
+      "label": "Authoring 0.8.0, Dokumentrevision 7, §1.1",
+      "target": "ai-workflows/PUZZLE_AUTHORING.md#11-pflichtquellen-nach-phase"
+    },
+    {
+      "source": "docs/PRODUCTION_WORKSPACE.md",
+      "label": "fünfstufige Authoringweg",
+      "target": "ai-workflows/PUZZLE_AUTHORING.md"
+    },
+    {
+      "source": "docs/PRODUCTION_WORKSPACE.md",
+      "label": "Authoring",
+      "target": "ai-workflows/PUZZLE_AUTHORING.md"
+    },
+    {
+      "source": "docs/PRODUCTION_WORKSPACE.md",
+      "label": "Authoring §2.1",
+      "target": "ai-workflows/PUZZLE_AUTHORING_STEP_2.md"
+    },
+    {
+      "source": "docs/PRODUCTION_WORKSPACE.md",
+      "label": "Authoring §7",
+      "target": "ai-workflows/PUZZLE_AUTHORING.md"
+    },
+    {
+      "source": "docs/PRODUCTION_WORKSPACE.md",
+      "label": "Authoring",
+      "target": "ai-workflows/PUZZLE_AUTHORING.md"
+    },
+    {
+      "source": "docs/PRODUCTION_WORKSPACE.md",
+      "label": "0.7-Iststand",
+      "target": "ai-workflows/PUZZLE_AUTHORING_0_7_0_PREVIEW.md"
+    },
+    {
+      "source": "docs/PRODUCT_DEFINITION.md",
+      "label": "fünfstufige Authoringweg",
+      "target": "ai-workflows/PUZZLE_AUTHORING.md"
+    },
+    {
+      "source": "docs/PRODUCT_DEFINITION.md",
+      "label": "KI-Arbeitsanweisung",
+      "target": "ai-workflows/PUZZLE_AUTHORING.md"
+    },
+    {
+      "source": "docs/PROJECT_PROFILE.md",
+      "label": "Authoring §1",
+      "target": "ai-workflows/PUZZLE_AUTHORING.md#1-einstieg-und-befugnisse"
+    },
+    {
+      "source": "docs/PROJECT_PROFILE.md",
+      "label": "Phasenroute in Authoring §1.1",
+      "target": "ai-workflows/PUZZLE_AUTHORING.md#11-pflichtquellen-nach-phase"
+    },
+    {
+      "source": "docs/PROJECT_PROFILE.md",
+      "label": "0.7.0-Vorschausnapshot",
+      "target": "ai-workflows/PUZZLE_AUTHORING_0_7_0_PREVIEW.md"
+    },
+    {
+      "source": "docs/PROJECT_PROFILE.md",
+      "label": "PUZZLE_AUTHORING",
+      "target": "ai-workflows/PUZZLE_AUTHORING.md"
+    },
+    {
+      "source": "docs/PROJECT_PROFILE.md",
+      "label": "PUZZLE_AUTHORING",
+      "target": "ai-workflows/PUZZLE_AUTHORING.md"
+    },
+    {
+      "source": "docs/PUZZLE_BACKGROUNDS.md",
+      "label": "fünfstufige Authoringweg",
+      "target": "ai-workflows/PUZZLE_AUTHORING.md"
+    },
+    {
+      "source": "docs/PUZZLE_BACKGROUNDS.md",
+      "label": "0.7.0-Vorschausnapshot",
+      "target": "ai-workflows/PUZZLE_AUTHORING_0_7_0_PREVIEW.md"
+    },
+    {
+      "source": "docs/PUZZLE_BACKGROUNDS.md",
+      "label": "Authoring",
+      "target": "ai-workflows/PUZZLE_AUTHORING.md"
+    },
+    {
+      "source": "docs/PUZZLE_BACKGROUNDS.md",
+      "label": "Authoring §9",
+      "target": "ai-workflows/PUZZLE_AUTHORING_STEP_5.md#9-produktionsabschluss-und-bereinigung"
+    },
+    {
+      "source": "docs/PUZZLE_DIFFICULTY.md",
+      "label": "Authoring",
+      "target": "ai-workflows/PUZZLE_AUTHORING.md"
+    },
+    {
+      "source": "docs/PUZZLE_EDITOR.md",
+      "label": "PUZZLE_AUTHORING",
+      "target": "ai-workflows/PUZZLE_AUTHORING.md"
+    },
+    {
+      "source": "docs/PUZZLE_IMAGE_STYLE.md",
+      "label": "Authoring",
+      "target": "ai-workflows/PUZZLE_AUTHORING.md"
+    },
+    {
+      "source": "docs/PUZZLE_INTEGRATION.md",
+      "label": "Authoring §8",
+      "target": "ai-workflows/PUZZLE_AUTHORING_STEP_5.md"
+    },
+    {
+      "source": "docs/PUZZLE_INTEGRATION.md",
+      "label": "Authoring §8",
+      "target": "ai-workflows/PUZZLE_AUTHORING_STEP_5.md"
+    },
+    {
+      "source": "docs/PUZZLE_PRODUCTION.md",
+      "label": "fünfstufige Authoringweg",
+      "target": "ai-workflows/PUZZLE_AUTHORING.md"
+    },
+    {
+      "source": "docs/PUZZLE_PRODUCTION.md",
+      "label": "PUZZLE_AUTHORING",
+      "target": "ai-workflows/PUZZLE_AUTHORING.md"
+    },
+    {
+      "source": "docs/PUZZLE_PRODUCTION.md",
+      "label": "0.7.0-Vorschausnapshot",
+      "target": "ai-workflows/PUZZLE_AUTHORING_0_7_0_PREVIEW.md"
+    },
+    {
+      "source": "docs/PUZZLE_PRODUCTION.md",
+      "label": "KI-Arbeitsanweisung zur Rätselproduktion",
+      "target": "ai-workflows/PUZZLE_AUTHORING.md"
+    },
+    {
+      "source": "docs/PUZZLE_PRODUCTION.md",
+      "label": "Authoringworkflow",
+      "target": "ai-workflows/PUZZLE_AUTHORING.md"
+    },
+    {
+      "source": "docs/PUZZLE_QUALITY.md",
+      "label": "Authoring 0.8.0, Dokumentrevision 7",
+      "target": "ai-workflows/PUZZLE_AUTHORING.md"
+    },
+    {
+      "source": "docs/PUZZLE_QUALITY.md",
+      "label": "Authoring-Phasenroute",
+      "target": "ai-workflows/PUZZLE_AUTHORING.md"
+    },
+    {
+      "source": "docs/PUZZLE_QUALITY.md",
+      "label": "Authoring §4.2",
+      "target": "ai-workflows/PUZZLE_AUTHORING_STEP_3.md"
+    },
+    {
+      "source": "docs/PUZZLE_QUALITY.md",
+      "label": "Authoring §§4.2/4.2.1",
+      "target": "ai-workflows/PUZZLE_AUTHORING_STEP_3.md"
+    },
+    {
+      "source": "docs/PUZZLE_QUALITY.md",
+      "label": "Import §4.1",
+      "target": "ai-workflows/PUZZLE_AUTHORING_STEP_3.md"
+    },
+    {
+      "source": "docs/PUZZLE_QUALITY.md",
+      "label": "Sicherung §6",
+      "target": "ai-workflows/PUZZLE_AUTHORING.md"
+    },
+    {
+      "source": "docs/PUZZLE_QUALITY.md",
+      "label": "Bildwahl §2.4",
+      "target": "ai-workflows/PUZZLE_AUTHORING_STEP_1.md"
+    },
+    {
+      "source": "docs/PUZZLE_QUALITY.md",
+      "label": "Motiv §2.4",
+      "target": "ai-workflows/PUZZLE_AUTHORING_STEP_2.md"
+    },
+    {
+      "source": "docs/PUZZLE_QUALITY.md",
+      "label": "Änderung §4.4",
+      "target": "ai-workflows/PUZZLE_AUTHORING_STEP_3.md"
+    },
+    {
+      "source": "docs/PUZZLE_QUALITY.md",
+      "label": "Sicherung §6",
+      "target": "ai-workflows/PUZZLE_AUTHORING.md"
+    },
+    {
+      "source": "docs/PUZZLE_QUALITY.md",
+      "label": "Übergabe §§6–7",
+      "target": "ai-workflows/PUZZLE_AUTHORING.md"
+    },
+    {
+      "source": "docs/PUZZLE_QUALITY.md",
+      "label": "Integration §8",
+      "target": "ai-workflows/PUZZLE_AUTHORING_STEP_5.md"
+    },
+    {
+      "source": "docs/PUZZLE_QUALITY.md",
+      "label": "Authoring §5",
+      "target": "ai-workflows/PUZZLE_AUTHORING_STEP_3.md"
+    },
+    {
+      "source": "docs/PUZZLE_QUALITY.md",
+      "label": "Authoringbudgets §§4.1–4.4",
+      "target": "ai-workflows/PUZZLE_AUTHORING_STEP_3.md"
+    },
+    {
+      "source": "docs/PUZZLE_QUALITY.md",
+      "label": "Authoring §9",
+      "target": "ai-workflows/PUZZLE_AUTHORING_STEP_5.md"
+    },
+    {
+      "source": "docs/REVEAL_TRANSPARENCY.md",
+      "label": "Authoring §9",
+      "target": "ai-workflows/PUZZLE_AUTHORING_STEP_5.md#9-produktionsabschluss-und-bereinigung"
+    },
+    {
+      "source": "docs/REVEAL_TRANSPARENCY.md",
+      "label": "PUZZLE_AUTHORING",
+      "target": "ai-workflows/PUZZLE_AUTHORING.md"
+    },
+    {
+      "source": "docs/SD2_INTEGRATION.md",
+      "label": "Authoring",
+      "target": "ai-workflows/PUZZLE_AUTHORING.md"
+    },
+    {
+      "source": "docs/ZA1_ADAPTER.md",
+      "label": "fünfstufige Authoringweg",
+      "target": "ai-workflows/PUZZLE_AUTHORING.md"
+    },
+    {
+      "source": "docs/ZA1_ADAPTER.md",
+      "label": "Authoring-0.7.0-Vorschausnapshot",
+      "target": "ai-workflows/PUZZLE_AUTHORING_0_7_0_PREVIEW.md"
+    },
+    {
+      "source": "docs/ZA1_ADAPTER.md",
+      "label": "PUZZLE_AUTHORING",
+      "target": "ai-workflows/PUZZLE_AUTHORING.md"
+    },
+    {
+      "source": "docs/ZA1_ADAPTER.md",
+      "label": "PUZZLE_AUTHORING §8",
+      "target": "ai-workflows/PUZZLE_AUTHORING_STEP_5.md"
+    },
+    {
+      "source": "docs/ZA1_ADAPTER.md",
+      "label": "Abschluss späterer Bildrevisionen",
+      "target": "ai-workflows/PUZZLE_AUTHORING_STEP_5.md#abschluss-nachträglicher-bildrevisionen--ci2-vom-26102026"
+    },
+    {
+      "source": "docs/ai-workflows/PUZZLE_AUTHORING.md",
+      "label": "Schritt 1",
+      "target": "PUZZLE_AUTHORING_STEP_1.md"
+    },
+    {
+      "source": "docs/ai-workflows/PUZZLE_AUTHORING.md",
+      "label": "Schritt 2",
+      "target": "PUZZLE_AUTHORING_STEP_2.md"
+    },
+    {
+      "source": "docs/ai-workflows/PUZZLE_AUTHORING.md",
+      "label": "Schritt 3",
+      "target": "PUZZLE_AUTHORING_STEP_3.md"
+    },
+    {
+      "source": "docs/ai-workflows/PUZZLE_AUTHORING.md",
+      "label": "Schritt 4",
+      "target": "PUZZLE_AUTHORING_STEP_4.md"
+    },
+    {
+      "source": "docs/ai-workflows/PUZZLE_AUTHORING.md",
+      "label": "Schritt 5",
+      "target": "PUZZLE_AUTHORING_STEP_5.md"
+    },
+    {
+      "source": "docs/ai-workflows/PUZZLE_AUTHORING.md",
+      "label": "Änderungsregeln §4.4",
+      "target": "PUZZLE_AUTHORING_STEP_3.md#44-reparaturen-und-änderungen"
+    },
+    {
+      "source": "docs/ai-workflows/PUZZLE_AUTHORING.md",
+      "label": "Schritt-5-Weg",
+      "target": "PUZZLE_AUTHORING_STEP_5.md#9-produktionsabschluss-und-bereinigung"
+    },
+    {
+      "source": "docs/ai-workflows/PUZZLE_AUTHORING_0_7_0_PREVIEW.md",
+      "label": "aktive Authoringweg",
+      "target": "PUZZLE_AUTHORING.md"
+    },
+    {
+      "source": "docs/ai-workflows/PUZZLE_AUTHORING_STEP_1.md",
+      "label": "gemeinsamer Kern",
+      "target": "PUZZLE_AUTHORING.md"
+    },
+    {
+      "source": "docs/ai-workflows/PUZZLE_AUTHORING_STEP_2.md",
+      "label": "gemeinsamer Kern",
+      "target": "PUZZLE_AUTHORING.md"
+    },
+    {
+      "source": "docs/ai-workflows/PUZZLE_AUTHORING_STEP_3.md",
+      "label": "Kern",
+      "target": "PUZZLE_AUTHORING.md"
+    },
+    {
+      "source": "docs/ai-workflows/PUZZLE_AUTHORING_STEP_4.md",
+      "label": "gemeinsamer Kern",
+      "target": "PUZZLE_AUTHORING.md"
+    },
+    {
+      "source": "docs/ai-workflows/PUZZLE_AUTHORING_STEP_5.md",
+      "label": "gemeinsamer Kern",
+      "target": "PUZZLE_AUTHORING.md"
+    },
+    {
+      "source": "docs/ai-workflows/Picross_Raetselproduktion_Cheat-Sheet.html",
+      "label": "HTML href",
+      "target": "PUZZLE_AUTHORING.md"
+    },
+    {
+      "source": "tools/puzzle_production/README.md",
+      "label": "fünfstufige Authoringweg",
+      "target": "../../docs/ai-workflows/PUZZLE_AUTHORING.md"
+    },
+    {
+      "source": "tools/puzzle_production/README.md",
+      "label": "Authoring §§6–8",
+      "target": "../../docs/ai-workflows/PUZZLE_AUTHORING.md"
+    },
+    {
+      "source": "tools/puzzle_production/README.md",
+      "label": "Authoring-0.7.0-Vorschausnapshot",
+      "target": "../../docs/ai-workflows/PUZZLE_AUTHORING_0_7_0_PREVIEW.md"
+    },
+    {
+      "source": "tools/puzzle_production/README.md",
+      "label": "Authoringworkflow",
+      "target": "../../docs/ai-workflows/PUZZLE_AUTHORING.md"
+    },
+    {
+      "source": "tools/puzzle_production/README.md",
+      "label": "Authoringworkflow",
+      "target": "../../docs/ai-workflows/PUZZLE_AUTHORING.md"
+    },
+    {
+      "source": "tools/puzzle_production/README.md",
+      "label": "Authoring §9",
+      "target": "../../docs/ai-workflows/PUZZLE_AUTHORING_STEP_5.md"
+    },
+    {
+      "source": "tools/production_workspace/README.md",
+      "label": "Authoring §1.1",
+      "target": "../../docs/ai-workflows/PUZZLE_AUTHORING.md#11-pflichtquellen-nach-phase"
+    }
+  ],
+  "errors": []
+}

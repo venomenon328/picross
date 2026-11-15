@@ -1,0 +1,39 @@
+{
+  "product_head": "77392b2b07021a88b8eb02e74ceb213fb83d187d",
+  "base": "a559e8b38be7e658ff1d3d2aa667380657c89f4d",
+  "pr": 658,
+  "purpose": "PW-PERF-D-A01: T01–T03 Originale und reproduzierbare Quellenprobe",
+  "expires": "2026-11-22",
+  "files": [
+    {
+      "file": "norm-coverage.json",
+      "bytes": 120151,
+      "sha256": "67377908231ada46399dafafebf9c68298b38d0e34ae66f6f4b5e006b69d7705"
+    },
+    {
+      "file": "README.md",
+      "bytes": 13173,
+      "sha256": "1bc08676ec8643c5741faad8dfcedea36366911f2e0d52bc3825365a9a69709c"
+    },
+    {
+      "file": "routing-links.json",
+      "bytes": 12241,
+      "sha256": "65835a5a043fd92d003cc55eab227284679d82001711e2a3118f424082174685"
+    },
+    {
+      "file": "source-map.json",
+      "bytes": 49345,
+      "sha256": "dac432b6b33507cfc1a54395cbeac1a476e70b4bef02d960d55730b489352310"
+    },
+    {
+      "file": "source_probe.py",
+      "bytes": 4921,
+      "sha256": "63846946444e61553d9f59a2652ae7aff1e623d25b855c4d3a091a3acf87603f"
+    },
+    {
+      "file": "technical-sources.json",
+      "bytes": 5698,
+      "sha256": "22c7c5926ff5bb6a3283e0a0a1814006d610b394f7a6d19a032ba308bfb6ad41"
+    }
+  ]
+}
