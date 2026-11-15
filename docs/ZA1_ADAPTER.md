@@ -947,7 +947,7 @@ benötigten Originaldateien. Es behauptet keine vollständige Paketkopie.
 Der Spieler erhält Runtime-Ressourcen und einen `.txt`-Hinweis aus
 Urheber/Nutzungsgrundlage. Proofs, Quellen, Freigabeprotokolle und Testpakete
 bleiben ausgeschlossen. Für reine Inhaltsintegration gelten die Adapter-/Dateiprüfungen
-aus [PUZZLE_AUTHORING §8](ai-workflows/PUZZLE_AUTHORING.md); keine zusätzliche
+aus [PUZZLE_AUTHORING §8](ai-workflows/PUZZLE_AUTHORING_STEP_5.md); keine zusätzliche
 native Spiel-/Neustart-/PCK-Funktionsprobe je Rätsel. Der allgemeine
 [Quellen-/Plankern](CI_WORKFLOW_V2.md) gilt für jeden PR; reine Dokumente und reine Rätselinhalte bleiben ohne Player-Build.
 Weitere Proben nur mit konkretem Zweck; allgemeine Code-/Exportmodule werden
@@ -1625,7 +1625,7 @@ bereitet ausschließlich einen Git-Diff vor; Commit, PR und Merge folgen dem Wor
 Kein automatischer Nach-Merge-Job und kein wachsender CI-Testbestand.
 
 Die freigegebene [CI2-Spezifikation](CI_SLIMMING.md) ergänzt den eigenständigen
-[Abschluss späterer Bildrevisionen](ai-workflows/PUZZLE_AUTHORING.md#abschluss-nachträglicher-bildrevisionen--ci2-vom-26102026)
+[Abschluss späterer Bildrevisionen](ai-workflows/PUZZLE_AUTHORING_STEP_5.md#abschluss-nachträglicher-bildrevisionen--ci2-vom-26102026)
 auch bei bereits vorhandenem `picross-integrated-content-v1`-Datensatz. Das ist ein
 noch umzusetzender Abschlussweg, keine bereits verfügbare Erweiterung des obigen
 Befehls; Receiptformat, aktive Bildbindungen und ursprüngliche Belege bleiben erhalten.
@@ -1838,3 +1838,12 @@ abweichende Darstellungs-/Bild-/Angebotsquellen verlangen vollständige Prüfung
 Alte und neue Inhalts-/Freigabeprüfung bleiben eigenständig. Sidecar vor Record,
 Bytevergleich, Fremddatenschutz, Wiederaufnahme und No-op bleiben verbindlich.
 Keine Befunde über Aufrufe, Ziele oder Locks hinweg weiterverwenden.
+
+## PW-PERF-D · Mehrdateisnapshot im unveränderten Export v6
+
+[PW-B](PW_B_CONTRACT.md#pw-perf-d--regelquellen-und-snapshotgeneration) definiert
+Handoff v5/Record v4 und rulebook-v2. Export v6/Offlineprüfung prüft sämtliche acht
+inventarisierten Regelquellen statt einer einzelnen Datei, ohne alte Originale
+umzubinden. Palettenausnahme v2 bindet das vollständige neue Regelobjekt; v1 bleibt
+alten Handoffs vorbehalten. Alle übrigen Ausnahmefelder, Negativbefunde, echten
+Endfreigaben und Inhaltsgates bleiben unverändert.

@@ -117,7 +117,8 @@ def audited_consumers(root):
 
 
 # Filled from the reviewed import graph; the fast tool audit rejects drift.
-SOURCE_GROUPS = {'tests/puzzle_production/background_catalog_fixtures.py': ('catalog',),
+SOURCE_GROUPS = {'tools/puzzle_production/authoring_rulebook.py': ('solver', 'images', 'adapter', 'catalog'),
+ 'tests/puzzle_production/background_catalog_fixtures.py': ('catalog',),
  'tests/puzzle_production/background_change_fixtures.py': ('catalog',),
  'tests/puzzle_production/background_fixtures.py': ('images', 'adapter', 'catalog'),
  'tests/puzzle_production/batch_fixtures.py': ('adapter',),
