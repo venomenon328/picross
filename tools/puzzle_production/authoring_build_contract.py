@@ -44,6 +44,7 @@ FORMATS = set('PNG JPEG picross-authoring-handoff-v2 picross-authoring-file-inve
               'picross-uniqueness-v1 picross-uniqueness-check-v1 picross-solution-witness-v1 '
               'picross-editorial-approval-v1 picross-palette-editorial-exception-v1'.split())
 FORMATS.update(f'picross-{kind}-v{v}' for kind in ('manual-authorization', 'owner-override') for v in range(1, 7))
+FORMATS.add(workflow.rules.FORMAT)
 FORMATS.update(('picross-raster-parameters-v1', 'picross-fixed-raster-plan-v1',
                 'picross-fixed-raster-v1', 'picross-fixed-raster-manifest-v1', 'picross-catalog-sd2-rating-v1'))
 
@@ -87,11 +88,11 @@ def source_record(value, *, member=False, background=False):
 def validate_request(value):
     # Roundtrip also isolates caller mutations and applies strict JSON limits to API calls.
     r = io.json_bytes(canonical_bytes(value), 8 * 1024 * 1024)
-    current = r.get('format') == workflow.REQUEST
+    current = r.get('format') in workflow.REQUESTS
     exact_keys(r, {'format', 'handoff', 'document_revision', 'files', 'target',
                    'category_id', 'reveal_options', 'external'} | ({'presentation'} if current else set()))
-    ap.require(r['format'] in (FORMAT, BACKGROUND_FORMAT, workflow.REQUEST), 'Unsupported build request')
-    background = r['format'] in (BACKGROUND_FORMAT, workflow.REQUEST)
+    ap.require(r['format'] in (FORMAT, BACKGROUND_FORMAT, *workflow.REQUESTS), 'Unsupported build request')
+    background = r['format'] in (BACKGROUND_FORMAT, *workflow.REQUESTS)
     if current:
         workflow.presentation(r['presentation'])
     integer(r['document_revision'], 1, 1_000_000, 'rulebook document revision')
@@ -103,7 +104,7 @@ def validate_request(value):
     ap.require(isinstance(h, dict) and set(h) <= HANDOFF_KEYS | ({'background'} if background else set()) |
                ({'raster_selection'} if current else set()),
                'Unknown handoff fields; use editorial for prose')
-    ap.require(h.get('format') == (workflow.HANDOFF if current else 'picross-authoring-handoff-v3' if background else 'picross-authoring-handoff-v2')
+    ap.require(h.get('format') == ((workflow.rules.HANDOFF if r['format'] == workflow.rules.REQUEST else workflow.HANDOFF) if current else 'picross-authoring-handoff-v3' if background else 'picross-authoring-handoff-v2')
                and h.get('inventory') is None, 'Only matching unsealed Authoring drafts can be built')
     if background and h.get('background') is not None:
         from .background_package import validate_binding
@@ -114,11 +115,9 @@ def validate_request(value):
     ap.require(h.get('state') in (workflow.EARLY + workflow.LATE if current else BACKGROUND_STATES if background else STATES), 'Unsupported build phase')
     ap.require(isinstance(h.get('repo_commit'), str) and re.fullmatch(r'[0-9a-f]{40}', h['repo_commit']),
                'Missing actual source commit')
-    exact_keys(h.get('rulebook'), {'version', 'file', 'sha256'})
+    workflow.rules.shape(h.get('rulebook'), h['format'], h['repo_commit'], r['document_revision'])
     ap.require(h['rulebook']['version'] == ('0.8.0' if current else '0.7.0' if background else '0.6.0'),
                'Build generation and authoring rulebook differ; old packages stay sealed')
-    ap.relative(h['rulebook']['file'])
-    ap.sha(h['rulebook']['sha256'])
     for key in ('brief', 'next_action', 'authorization'):
         ap.string(h.get(key), key)
     ap.require(type(h.get('test_only', False)) is bool, 'Invalid test_only')
@@ -208,7 +207,7 @@ def references(p):
                 walk(child, parent)
         elif isinstance(value, dict):
             if 'format' in value:
-                handoff_v3 = value is p.handoff and value.get('format') in ('picross-authoring-handoff-v3', workflow.HANDOFF)
+                handoff_v3 = value is p.handoff and value.get('format') in ('picross-authoring-handoff-v3', *workflow.HANDOFFS)
                 ap.require(isinstance(value['format'], str) and (value['format'] in FORMATS or handoff_v3),
                            'Unsupported declared technical format: ' + str(value['format']))
             # Historical references are deliberately external and must name an
@@ -258,10 +257,9 @@ def references(p):
 def validate_phase(root, r, deadline, *, history_repo=None):
     h = r['handoff']
     p = PhaseFiles(root, h, deadline)
-    snapshot = p.bound(h['rulebook']).read_text(encoding='utf-8')
-    ap.require(re.search(r'^\*\*Version ' + re.escape(h['rulebook']['version']) +
-                        r' · Dokumentrevision ' + str(r['document_revision']) + r' ·', snapshot, re.M),
-               'Rulebook version/document revision does not match snapshot')
+    workflow.rules.validate(h['rulebook'], h['format'], h['repo_commit'],
+                            lambda name: p.file(name).read_bytes(), r['document_revision'],
+                            history_repo=history_repo, verify_git=h['format'] == workflow.rules.HANDOFF)
     p.file(h['brief'])
     for key in ('report', 'decisions', 'effort', 'origin_verification', 'difficulty',
                 'manual_edit_record', 'editorial_manual_derivation'):
@@ -304,7 +302,7 @@ def validate_phase(root, r, deadline, *, history_repo=None):
     state = h['state']
     if state == 'reveal_review':
         ap.require(bool(r['reveal_options']) or 'reveal' in selected, 'Reveal review requires offered originals')
-        if r['format'] == workflow.REQUEST:
+        if r['format'] in workflow.REQUESTS:
             ap.require(len(r['reveal_options']) == 3 and len({o['SHA-256'] for o in r['reveal_options']}) == 3,
                        '0.8 reveal review requires three distinct original offers')
             from PIL import Image
@@ -344,9 +342,9 @@ def validate_phase(root, r, deadline, *, history_repo=None):
         for key in ('plan', 'replay', 'record'):
             if repair.get(key):
                 p.file(repair[key])
-    if r['format'] == workflow.REQUEST:
+    if r['format'] in workflow.REQUESTS:
         p.selection_files = workflow.selection(root, h, history_repo=history_repo, verify_git=True)
-    if r['format'] in (BACKGROUND_FORMAT, workflow.REQUEST):
+    if r['format'] in (BACKGROUND_FORMAT, *workflow.REQUESTS):
         from .background_package import validate
         p.background = validate(root, h, history_repo=history_repo, deadline=deadline)
         for name in p.files:

@@ -1,12 +1,12 @@
 # Lokaler Produktionsassistent (PW-B)
 
 Der fünfstufige Assistent für neue Authoring-0.8.0-Produktionen verwendet
-Handoff v4, Record v3 und Projektion v2. Der aktuelle operative Regelstand ist
-**Authoring 0.8.0, Dokumentrevision 6 (PW2-A/PW2-B)**. Normale Produktion liest den
+Handoff v5, Record v4 und Projektion v2. Der aktuelle operative Regelstand ist
+**Authoring 0.8.0, Dokumentrevision 7 (PW-PERF-D)**. Normale Produktion liest den
 Produktionseinstieg in [AGENTS](../../AGENTS.md),
 [Authoring §1.1](../../docs/ai-workflows/PUZZLE_AUTHORING.md#11-pflichtquellen-nach-phase),
 den vollständigen [gemeinsamen Bildstil](../../docs/PUZZLE_IMAGE_STYLE.md) und
-nur die dort geroutete Phase. Diese Anleitung, der
+nur die dort geroutete Phasendatei. Diese Anleitung, der
 [PW-B-Datenvertrag](../../docs/PW_B_CONTRACT.md) und die technische
 [Produktions-README](../puzzle_production/README.md) werden für die konkret
 verwendete Operation abschnittsbezogen gelesen, nicht pauschal vollständig.

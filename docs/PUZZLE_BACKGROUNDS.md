@@ -1362,7 +1362,7 @@ Menschenzeit und Auswahlwartezeit getrennt im vorhandenen Authoringprotokoll;
 unbekannte Zeiten `null`.
 
 Nach bestätigter Endabnahme und tatsächlicher Main-Integration gilt
-[Authoring §9](ai-workflows/PUZZLE_AUTHORING.md#9-produktionsabschluss-und-bereinigung).
+[Authoring §9](ai-workflows/PUZZLE_AUTHORING_STEP_5.md#9-produktionsabschluss-und-bereinigung).
 Aktives PNG beziehungsweise explizite Leerbindung, Nutzungsrechte/Attribution,
 kompakte echte Auswahl-/Ableitungs-/Integrationsbindungen und aktive Bildrevision
 bleiben. Originale, Kandidaten, Prompts, Arbeits-ZIPs und Zwischenbelege enden

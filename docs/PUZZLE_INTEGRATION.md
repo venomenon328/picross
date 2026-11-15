@@ -52,7 +52,7 @@ freigabe allein erteilt keinen Implementierungs- oder Mergeauftrag.
 
 ## 1. Problem, Belege und Ziel
 
-Standardauftrag 4 nach [Authoring §8](ai-workflows/PUZZLE_AUTHORING.md) soll ein
+Standardauftrag 4 nach [Authoring §8](ai-workflows/PUZZLE_AUTHORING_STEP_5.md) soll ein
 abgenommenes Paket kontrolliert ins Spiel übernehmen. Der äußere Ablauf ist
 bereits schlank; interne Prüfungen verursachen dennoch wiederholte Arbeit:
 `export → plan → register` inspiziert den neuen Kandidaten auf dem vollständigen
@@ -287,7 +287,7 @@ ausdrücklich benannten Abläufe; versiegelte Pakete und historische Belege blei
 unverändert.
 
 Bei den jeweiligen Implementierungslieferungen die betroffenen Verträge,
-[Authoring §8](ai-workflows/PUZZLE_AUTHORING.md) und nötigenfalls dessen Offline-
+[Authoring §8](ai-workflows/PUZZLE_AUTHORING_STEP_5.md) und nötigenfalls dessen Offline-
 Cheat-Sheet samt Regelwerksnapshot/Revision gemeinsam auf den ausführbaren Stand
 fortschreiben. Diese Spezifikationslieferung verändert deren operative Aufträge
 und eingebetteten Snapshot noch nicht. Es werden keine neuen Freigabeschritte für

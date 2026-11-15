@@ -122,15 +122,22 @@ def _metadata(job, source):
                     "Declared final approval covers another identity/revision")
     if inputs["record"] is not None:
         record = bio.json_bytes(_file(inputs["record"], source)[1])
-        bio.require(isinstance(record, dict) and record.get("format") in ("picross-authoring-record-v1", "picross-authoring-record-v2", "picross-authoring-record-v3") and
+        bio.require(isinstance(record, dict) and record.get("format") in ("picross-authoring-record-v1", "picross-authoring-record-v2", "picross-authoring-record-v3", "picross-authoring-record-v4") and
                     all(record.get(k) == job[k] for k in ("puzzle_id", "revision")), "Declared authoring record covers another original")
     rule = handoff.get("rulebook", {})
     bio.require(isinstance(rule, dict), "Package rulebook must be an object")
+    if handoff.get('format') == 'picross-authoring-handoff-v5':
+        from . import authoring_rulebook as rules, authoring_package as ap
+        rules.shape(rule, handoff['format'], handoff['repo_commit'], job['rulebook']['document_revision'])
+        with ap.open_files(package) as (root, _, _):
+            rules.validate(rule, handoff['format'], handoff['repo_commit'],
+                           lambda name: bio.read(io.safe(root, name)), job['rulebook']['document_revision'])
     # Historical native forms remain native. If a package declares these
     # current authoring versions, its original rule snapshot must agree.
     if rule.get("version") in ("0.6.0", "0.7.0", "0.8.0"):
         bio.require(rule["version"] == job["rulebook"]["version"] and
-                    rule.get("sha256") == job["rulebook"]["snapshot"]["sha256"],
+                    (next(item['sha256'] for item in rule['sources'] if item['path'] == 'docs/ai-workflows/PUZZLE_AUTHORING.md')
+                     if handoff.get('format') == 'picross-authoring-handoff-v5' else rule.get('sha256')) == job["rulebook"]["snapshot"]["sha256"],
                     "Package rulebook differs from the actual batch snapshot")
     return handoff
 

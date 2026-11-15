@@ -181,8 +181,9 @@ class Package:
         self.handoff = self.json("handoff.json")
         h = self.handoff
         require(isinstance(h, dict), "Unsupported Authoring handoff")
-        current = h.get('format') == 'picross-authoring-handoff-v4'
-        self.background_enabled = h.get("format") in ("picross-authoring-handoff-v3", 'picross-authoring-handoff-v4')
+        from . import authoring_workflow as workflow
+        current = workflow.is_current(h)
+        self.background_enabled = h.get("format") in ("picross-authoring-handoff-v3", *workflow.HANDOFFS)
         require(h.get("format") == "picross-authoring-handoff-v2" or
                 self.background_enabled and allow_background,
                 "Unsupported Authoring handoff; background content requires explicit read-only admission")
@@ -220,14 +221,7 @@ class Package:
                 (rule.get("version") == ('0.8.0' if current else "0.7.0") if self.background_enabled else
                  rule.get("version") in ("0.4.0", "0.4.1", "0.5.0", "0.6.0")),
                 "Unsupported authoring rulebook")
-        rule_path = self.bound(rule)
-        if rule["version"] in ("0.5.0", "0.6.0", "0.7.0", '0.8.0'):
-            require(re.search(r"^\*\*Version " + re.escape(rule["version"]) + r"(?: | ·)",
-                              rule_path.read_text(encoding="utf-8"), re.M) is not None,
-                    "Rulebook " + rule["version"] + " requires a matching versioned snapshot")
-        else:
-            require(re.search(r"^\*\*Version 0\.[678]\.0(?: | ·)", rule_path.read_text(encoding="utf-8"), re.M) is None,
-                    "Legacy rulebook label conflicts with snapshot")
+        workflow.rules.validate(rule, h['format'], h['repo_commit'], lambda name: self.file(name).read_bytes())
         inv = h.get("inventory")
         require(isinstance(inv, dict) and inv.get("file") == "inventory.json", "Missing inventory binding")
         self.bound(inv)

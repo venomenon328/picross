@@ -5,6 +5,10 @@ from .contract import exact_keys, integer
 REQUEST = 'picross-authoring-build-request-v3'
 HANDOFF = 'picross-authoring-handoff-v4'
 RECORD = 'picross-authoring-record-v3'
+from . import authoring_rulebook as rules
+REQUESTS = (REQUEST, rules.REQUEST)
+HANDOFFS = (HANDOFF, rules.HANDOFF)
+RECORDS = (RECORD, rules.RECORD)
 EARLY = ('brief_ready', 'reveal_review', 'motif_review', 'motif_approved', 'raster_review', 'raster_ready')
 LATE = ('background_review', 'content_ready')
 NEXT = {'brief_ready': '1 · Abschlussbilder erzeugen',
@@ -19,7 +23,7 @@ NEXT = {'brief_ready': '1 · Abschlussbilder erzeugen',
 
 
 def is_current(h):
-    return h.get('format') == HANDOFF
+    return h.get('format') in HANDOFFS
 
 
 def phase(h):
@@ -96,7 +100,7 @@ def selection(root, h, *, history_repo=None, verify_git=False):
         ap.require(len(raw) == ref['bytes'], 'Selection source size differs')
         copies[key] = raw
     r, projection = p.parse(copies['record']), p.validate(p.parse(copies['projection']))
-    ap.require(r['format'] == RECORD and r['puzzle_id'] == h['puzzle_id'] and r['state'] == 'raster_ready',
+    ap.require(r['format'] in RECORDS and r['puzzle_id'] == h['puzzle_id'] and r['state'] == 'raster_ready',
                'Only a qualified raster-ready revision can be selected')
     ap.require(s['record']['file'] == f"content/authoring/{r['puzzle_id']}/{r['revision']}/record.json" and
                r['inventory_sha256'] == ap.sha(s['inventory_sha256']), 'Selected revision/inventory differs')
