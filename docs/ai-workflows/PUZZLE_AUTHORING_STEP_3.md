@@ -152,15 +152,15 @@ Felder bleiben in [ZA-1 P-B2](../ZA1_ADAPTER.md#p-b2--authoring-060-und-additive
 und der entsprechenden Tool-Anleitung. Fehlende/stale Sichtung, nicht geprüft
 und positive S-Werte allein erlauben keine Freigabe.
 
-Bei Warnung/negativem Sichturteil verlangt eine zulässige Annahme Qualität §6:
-ursprüngliches Urteil, tatsächlicher Akteur, UTC, Wortlaut, Begründung und Beleg.
-Ein negativer technischer Befund bleibt negativ. Für tatsächliche Übernahme den
-äußeren picross-palette-editorial-exception-v1 mit sämtlichen negativen Paaren,
-exakten Werten/IDs und Kandidaten-/Revisions-/Istmatrix-/Quell-/Regel-/Handoff-/
-Inventar-/Paketbindung und echter Endfreigabe benutzen, außerhalb versiegelter
-Originale und ausdrücklich via --palette-exception. Bereits erforderliche
-manuelle Autorisierungen bleiben zusätzlich nötig. Die Ausnahme heilt weder
-Proof noch Rechte, Freigaben, feste Parameter, Difficulty oder Randregel.
+Bei Warnung/negativem Sichturteil gilt Qualität §6: ursprüngliches Urteil,
+Akteur, UTC, Wortlaut, Begründung und Beleg. Technischer Negativbefund bleibt negativ.
+Für die Übernahme außerhalb versiegelter Originale via --palette-exception:
+Handoff v5/Rev7 verlangt picross-palette-editorial-exception-v2 mit vollständigem
+rulebook-v2 in binding.rulebook; historische Originale ausschließlich v1.
+Alle negativen Paare, exakte Werte/IDs, Kandidat/Revision/Istmatrix/Quelle/Regel,
+Handoff/Inventar/Paket und echte Endfreigabe binden. Erforderliche manuelle
+Autorisierungen bleiben zusätzlich nötig. Die Ausnahme heilt weder Proof noch
+Rechte, Freigaben, feste Parameter, Difficulty oder Randregel.
 
 Historische F05-Referenzannahmen sind keine Ausnahme oder Freigabe eines neuen
 realen Kandidaten. Bei null qualifizierten Kandidaten §4.5 verwenden, mit echten
