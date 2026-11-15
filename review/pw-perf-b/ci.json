@@ -1,0 +1,34 @@
+{
+  "source_head": "58e8fb32ac61e432268c771f972f5442bc226866",
+  "base_commit": "c243d9ce95f7cfe55332840f3bf44b313d3b9128",
+  "tested_commit": "e4223a97934132e30da647c7fc3a853a57fb3411",
+  "run_id": 43671948059,
+  "run_attempt": 1,
+  "run_url": "https://github.com/venomenon328/picross/actions/runs/43671948059",
+  "evidence_mode": "none",
+  "jobs": [
+    {
+      "name": "core/docs",
+      "url": "https://github.com/venomenon328/picross/actions/runs/43671948059/job/132683712201"
+    },
+    {
+      "name": "windows-player",
+      "url": "https://github.com/venomenon328/picross/actions/runs/43671948059/job/132683790084"
+    },
+    {
+      "name": "production.catalog",
+      "url": "https://github.com/venomenon328/picross/actions/runs/43671948059/job/132683790088"
+    },
+    {
+      "name": "production.adapter",
+      "url": "https://github.com/venomenon328/picross/actions/runs/43671948059/job/132683790208"
+    }
+  ],
+  "windows_artifact": {
+    "url": "https://github.com/venomenon328/picross/actions/runs/43671948059/artifacts/14145050660",
+    "expires": "2026-11-29",
+    "archive_bytes": 130170347,
+    "sha256": "dc698da2ed8219861bc5c5fb64bd0190516f42cf3e27127c42439a2fccbea930"
+  },
+  "note": "Immutable run/file binding; final results and complete test counts are recorded in the product PR and linked original job logs."
+}

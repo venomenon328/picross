@@ -1,0 +1,29 @@
+{
+  "old": {
+    "package:reads": 1180,
+    "package:bytes": 534259808,
+    "live:reads": 1126,
+    "live:bytes": 704997276,
+    "package:hashes": 594,
+    "live:hashes": 342
+  },
+  "io": {
+    "input-or-temp:calls": 705,
+    "input-or-temp:bytes": 322227468,
+    "live-content:calls": 2217,
+    "live-content:bytes": 1007896827,
+    "catalog-source:calls": 2441,
+    "catalog-source:bytes": 98832053,
+    "old-package:calls": 1713,
+    "old-package:bytes": 742893494,
+    "new-package:calls": 65,
+    "new-package:bytes": 130956777
+  },
+  "stage_copies": [
+    {
+      "files": 528,
+      "bytes": 188805517,
+      "seconds": 12.285042600000452
+    }
+  ]
+}

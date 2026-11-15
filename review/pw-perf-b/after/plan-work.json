@@ -1,0 +1,16 @@
+{
+  "old": {},
+  "io": {
+    "input-or-temp:calls": 270,
+    "input-or-temp:bytes": 387944482,
+    "live-content:calls": 26,
+    "live-content:bytes": 159510,
+    "catalog-source:calls": 105,
+    "catalog-source:bytes": 21221053,
+    "tool-runtime:calls": 460,
+    "tool-runtime:bytes": 11033168,
+    "new-package:calls": 30,
+    "new-package:bytes": 0
+  },
+  "stage_copies": []
+}

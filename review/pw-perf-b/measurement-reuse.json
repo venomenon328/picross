@@ -1,0 +1,31 @@
+{
+  "measured_tool_head": "5070cb0e2b0893734d790a333653d09e22f698e7",
+  "final_product_head": "58e8fb32ac61e432268c771f972f5442bc226866",
+  "changed_paths": [
+    "tests/puzzle_production/test_registration_publication.py"
+  ],
+  "equal_git_trees": {
+    "tools": {
+      "measured": "ff4df80c7fa90c9db215f08643ba9c7570709db1",
+      "final": "ff4df80c7fa90c9db215f08643ba9c7570709db1"
+    },
+    "content": {
+      "measured": "29ba9d87c3594ece3dda29ea359e40964a4a1d4a",
+      "final": "29ba9d87c3594ece3dda29ea359e40964a4a1d4a"
+    },
+    "game": {
+      "measured": "130b7232319d2fb460fe73c6625d122dd602ead8",
+      "final": "130b7232319d2fb460fe73c6625d122dd602ead8"
+    },
+    "docs": {
+      "measured": "85d8734088145cd40637ccff5977feb50b28f1f8",
+      "final": "85d8734088145cd40637ccff5977feb50b28f1f8"
+    },
+    ".ci": {
+      "measured": "c10b225dbf220b1b1e2b1a870c16fefe0908dfd4",
+      "final": "c10b225dbf220b1b1e2b1a870c16fefe0908dfd4"
+    }
+  },
+  "measurement_repeated": false,
+  "reason": "Only the existing dispatch test expectation and its class description changed. All measured implementation/configuration/content bytes are identical; preserve the one matched T02 before/after measurement without manufacturing a new run. T01 and full CI rerun at final head."
+}
