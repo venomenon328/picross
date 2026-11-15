@@ -6,13 +6,13 @@
     "production.catalog",
     "production.adapter"
   ],
-  "purpose": "PW-PERF-E K01–K08: ausgewählte Retirementreader, aktuelle Quellen und Receipt v4; production.catalog für Lifecycle/Guards, production.adapter für tatsächlich geänderte gemeinsame Receipt-/CLI-Consumer. Schlanker Kern und regulärer Windowsbau.",
+  "purpose": "PW-PERF-E K01–K08: ausgewählte Retirementreader, aktuelle Quellen und Receipt v4; production.catalog für Lifecycle/Guards, production.adapter für tatsächlich geänderte gemeinsame Receipt-/CLI-Consumer. Schlanker Kern und regulärer Windowsbau. B01-Nacharbeit: echte Commitobjektart vor allen Mutationen, synthetischer Root-Tree-Negativfall und separater Quellcommit.",
   "omitted": "Keine echte Rätselbereinigung, Solver-/Bildproduktion, Editor-UX, Spiel- oder Saveänderung. Daher keine tools-, production.solver/images-, native-, delivery- oder Chromium-Suite. Gemeinsame Indizes werden geprüft; unbeteiligte Altdateien sind keine Retirementabhängigkeit.",
   "test_changes": [
     {
       "path": "tests/puzzle_production/test_retirement_current.py",
       "disposition": "change-scoped",
-      "reason": "Kleine synthetische T01-Lifecycle-, Quellen-/Rechte-, Main-, Fremddaten-, Teilfehler- und Nullread-Prüfungen."
+      "reason": "Kleine synthetische T01-Lifecycle-, Quellen-/Rechte-, Main-, Fremddaten-, Teilfehler- und Nullread-Prüfungen. B01 erweitert den vorhandenen Sonderimportfall um unveränderte Bytes/mtimes, Lock-/Lösch-/Schreibfallen und einen echten nicht verwandten Quellcommit."
     },
     {
       "path": "tools/puzzle_production/integrated_content.py",
@@ -22,8 +22,8 @@
   ],
   "core_change": null,
   "evidence": {
-    "mode": "failure",
-    "purpose": "Gezielte Diagnose des in Lauf 43725097262 fehlgeschlagenen SD2-CLI-Tests; vollstaendiger tests.log-Traceback fuer PW-PERF-E, kein Galerieupload.",
-    "expires": "2026-11-22"
+    "mode": "none",
+    "purpose": null,
+    "expires": null
   }
 }

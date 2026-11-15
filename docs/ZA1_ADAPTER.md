@@ -1869,7 +1869,10 @@ die aktuelle Registry bindet ausschließlich den Hash R der tatsächlichen Recei
   `--source-commit ID SHA` angegeben. Bei jeder neuen v4-Kompaktierung müssen der dortige Entry und Paket-Gitbaum
   exakt zum importierten Export passen; der dort indexierte Authoringrecord muss
   dieselbe Revision als registered ohne Blocker führen, auch wenn source_commit und
-  integrated_commit gleich sind. Fehlende Quellen sperren.
+  integrated_commit gleich sind. Fehlende Quellen sperren. Vor Locknahme oder
+  Dateiänderung muss jede ausdrücklich übergebene SHA direkt ein Gitobjekt
+  vom Typ `commit` bezeichnen. Tree-, Blob- und Tagobjekte sind keine
+  Quellcommits; erfolgreiche Treeish-Pfadabfragen genügen nicht.
 - `main_commit`: voller geprüfter origin/main-Stand des Retirementaufrufs. Beide
   Maincommits müssen Vorfahren von HEAD sein; integrated_commit zusätzlich von
   origin/main. source_commit darf der ursprüngliche, nicht gemergte Produktionshead
