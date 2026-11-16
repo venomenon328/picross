@@ -242,7 +242,7 @@ Szenerie müssen entweder vollständig in die Leinwand passen oder an jeder
 Bildkante mit Konturen, Schraffur und Tonwerten weich in echte Transparenz
 auslaufen. Ein hart abgeschnittener Baum, ein Gebäude- oder Landschaftsanschnitt
 ist kein zulässiger offener Aufbau. An allen vier Kanten vor Angebot nach
-Q-HG03/Q-HG04 visuell prüfen; ohne diesen Befund kein abnahmefähiges Angebot.
+Q-HG03/Q-HG04 visuell prüfen; ohne positiven Randbefund kein abnahmefähiges Angebot.
 Die lockere Höhenverteilung bleibt davon unabhängig.
 Keine individuellen Positions-, Crop- oder Maskenparameter. Korrektur vor Auswahl folgt
 [Schritt 4 §6.3.1](ai-workflows/PUZZLE_AUTHORING_STEP_4.md#631-formatkorrektur-vor-der-bildwahl),
