@@ -72,11 +72,12 @@ def build(destination, *, version=None, app=PW):
     work = destination / 'work'; work.mkdir()
     generated = []
     helper = None
-    if app == PW:
+    if app in (PW, PE):
         compiler = Path(os.environ['SystemRoot']) / 'Microsoft.NET/Framework64/v4.0.30319/csc.exe'
         helper = work / 'UpdateHelper.exe'
         subprocess.run([str(compiler), '/nologo', '/target:exe', '/platform:x64',
                         '/reference:System.Web.Extensions.dll', '/out:' + str(helper),
+                        *(['/define:PE'] if app == PE else []),
                         str(PACKAGE / 'packaging/UpdateHelper.cs')], check=True)
         generated.append(helper)
     env = os.environ.copy()
@@ -112,7 +113,7 @@ def build(destination, *, version=None, app=PW):
         for name in PE_EXCLUDED:
             extra_args += ['--exclude-module', 'tools.puzzle_production.' + name]
         # PE uses current targeted readers, not PW's Git/presentation endpoints.
-        for name in ('sources', 'current_view', 'presentation', 'processes', 'projector'):
+        for name in ('sources', 'current_view', 'presentation', 'projector'):
             extra_args += ['--exclude-module', 'tools.production_workspace.' + name]
         extra_args += ['--exclude-module', 'tools.puzzle_editor.diagnostic',
                        '--exclude-module', 'tools.puzzle_editor.frozen_diagnostic']
@@ -210,15 +211,16 @@ def verify_update_payload(image, pyz, audit, *, app=PW):
     required = {'tools.production_workspace.update_verifier', 'tools.production_workspace.release_manifest',
                 'tools.production_workspace.release', 'tools.app_products',
                 'cryptography.hazmat.primitives.asymmetric.ed25519'}
-    if app == PW:
+    if app in (PW, PE):
         required |= {'tools.production_workspace.update_client', 'tools.production_workspace.update_storage',
                      'tools.production_workspace.update_windows', 'tools.production_workspace.app_updates'}
-    else:
-        required |= {'tools.puzzle_editor.server', 'tools.puzzle_editor.worker', 'tools.puzzle_editor.desktop',
+    if app == PE:
+        required |= {'tools.puzzle_editor.app_updates', 'tools.puzzle_editor.server', 'tools.puzzle_editor.worker', 'tools.puzzle_editor.desktop',
                      'tools.puzzle_production.editor_change', 'tools.puzzle_production.current_content',
                      'tools.puzzle_production.editor_image_input'}
         if any(name.startswith('tools.production_workspace.') and name.rsplit('.', 1)[-1] not in
-               {'release', 'payload', 'release_manifest', 'update_verifier', 'install_interlock'} for name in names):
+               {'release', 'payload', 'release_manifest', 'update_verifier', 'install_interlock',
+                'app_updates', 'update_client', 'update_storage', 'update_windows', 'instance', 'processes'} for name in names):
             raise RuntimeError('PE includes unrelated PW application code')
     if not required <= names or any('tools.production_workspace.' + name in names for name in ('update_diagnostic', 'helper_diagnostic')):
         raise RuntimeError('Frozen Verifier-/Kryptografieinventar fehlt oder enthält den Testadapter.')

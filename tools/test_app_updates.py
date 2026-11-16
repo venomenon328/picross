@@ -676,5 +676,167 @@ class LifecycleTests(unittest.TestCase):
             self.assertEqual(updates.recovery_attempts,10)
 
 
+
+class EditorUpdateTests(unittest.TestCase):
+    """PE exercises the same signed channel and GUI controller, without MSI execution."""
+    def setUp(self):
+        from tools.app_products import PE
+        self.app = PE
+        temp = tempfile.TemporaryDirectory(prefix="pe-app-b-")
+        self.addCleanup(temp.cleanup)
+        self.root = Path(temp.name)
+        self.api = fixtures.MemoryGitHub(app=PE)
+        self.trust, self.secret = update_diagnostic.test_identity(app=PE)
+        self.plan, manifest = fixtures.AppReleaseTests.candidate(self, app=PE)
+        self.files = {n: (self.root/n).read_bytes() for n in manifest["assets"]}
+        self.raw, self.signature = verifier._sign(manifest, self.files, self.secret, self.trust, app=PE)
+        self.transport = MemoryTransport(self.raw, self.signature, self.files)
+        self.cancel = threading.Event()
+
+    def discover(self, version="0.2.0", **kwargs):
+        return client._discover(version, self.cancel, self.transport,
+            lambda raw, sig: verifier._verify_metadata(raw, sig, self.trust, app=self.app), app=self.app, **kwargs)
+
+    def identity(self):
+        m = strict_json(self.raw)
+        return SimpleNamespace(version=m["version"], commit=m["source_commit"], payload_fingerprint=m["payload_fingerprint"],
+            product_code=m["product_code"], upgrade_code=m["upgrade_code"], executable=self.root/"program"/"editor.exe")
+
+    def test_editor_channel_full_bytes_and_cross_app(self):
+        metadata, assets = self.discover()
+        self.assertEqual(len(self.transport.calls), 3)
+        stage = Stage(self.root/"state"/".updates")
+        try:
+            result = client._download(metadata, assets, stage, self.cancel, self.transport,
+                lambda raw, sig, files: verifier._verify(raw, sig, files, self.trust, app=self.app))
+            self.assertIs(type(result), verifier.VerifiedCandidate)
+            with self.assertRaises(ValueError): verifier.assess_update(result, "0.1.0")
+            with self.assertRaises(ValueError): verifier.assess_update(result, "0.2.2", app=self.app)
+        finally: stage.cleanup()
+        self.transport.rows = [{**self.transport.row, "tag_name":"pw-v0.1.99"}]
+        with self.assertRaises(ValueError): self.discover()
+
+    def test_same_version_authenticates_local_source_and_never_downloads(self):
+        local = self.identity()
+        result, _ = self.discover(local.version, installation=local)
+        self.assertEqual(result.version, local.version)
+        self.assertEqual(len(self.transport.calls), 3)
+        self.transport.calls.clear()
+        for field in ("commit", "payload_fingerprint", "product_code", "upgrade_code"):
+            with self.subTest(field=field):
+                different = SimpleNamespace(**{**vars(local), field:"foreign"})
+                with self.assertRaises(client.InstallationMismatch): self.discover(local.version, installation=different)
+        self.assertFalse(any(u.endswith(".msi") for u in self.transport.calls))
+
+    def controller(self, enabled=True):
+        from tools.puzzle_editor.app_updates import Controller
+        state = self.root/"state"
+        if enabled is not None: Preferences(state/".updates").write(enabled)
+        identity = self.identity(); identity.version="0.2.0"
+        with patch.object(windows,"installation",return_value=identity), patch.object(verifier,"production_trust",return_value=self.trust):
+            # Delay starting until each test has attached its controlled worker.
+            with patch.object(app_updates.Updates,"start",return_value=False): controller=Controller(state)
+        self.addCleanup(lambda: controller.finish("test cleanup"))
+        return controller
+
+    def test_no_consent_portable_and_invalid_preference_never_request(self):
+        from tools.puzzle_editor.app_updates import Controller
+        with patch.object(windows,"installation",side_effect=ValueError("portable")), patch.object(client,"discover") as request:
+            portable=Controller(self.root/"portable-state")
+            portable.poll(); portable.choose(True); portable.finish()
+            self.assertFalse((self.root/"portable-state").exists()); request.assert_not_called()
+        controller=self.controller(None)
+        self.assertTrue(controller.waiting)
+        with patch.object(client,"discover") as request:
+            controller.poll(); request.assert_not_called()
+            controller.skip(); self.assertFalse(controller.waiting)
+            controller.choose(True); request.assert_not_called()
+            self.assertTrue(controller.updates.preferences.read())
+        controller.finish()
+        (self.root/"state"/".updates"/"app-updates.json").write_bytes(b'{"enabled":"yes"}')
+        controller=self.controller(None)
+        with patch.object(client,"discover") as request:
+            self.assertFalse(controller.updates.start()); request.assert_not_called()
+            self.assertIsNone(controller.updates.enabled)
+
+    def test_skip_and_optout_before_helper_take_prevent_go(self):
+        for action in ("skip", "optout", "stop"):
+            with self.subTest(action=action):
+                controller=self.controller()
+                entered, release = threading.Event(), threading.Event()
+                def delayed(*a, **kw):
+                    entered.set(); self.assertTrue(release.wait(5))
+                    return self.discover()
+                with patch.object(client,"discover",side_effect=delayed), patch.object(windows,"prepare") as prepare:
+                    controller.waiting=controller.updates.start()
+                    self.assertTrue(entered.wait(5))
+                    if action=="skip": controller.skip()
+                    elif action=="optout": controller.choose(False)
+                    else: controller.stopping()
+                    release.set(); controller.updates.thread.join(5); controller.poll()
+                    prepare.assert_not_called(); self.assertIsNone(controller.handoff)
+                self.assertEqual(controller.updates.preferences.read(), action!="optout")
+                controller.finish()
+
+    def test_taken_handoff_locks_choice_and_requires_successful_finally(self):
+        controller=self.controller()
+        handoff=Mock(committed=False,selection=controller.runtime.selection)
+        controller.updates.thread=Mock(); controller.updates.thread.is_alive.return_value=False
+        controller.updates.handoff=handoff
+        self.assertIs(controller.poll(),handoff)
+        controller.skip(); controller.choose(False)
+        self.assertTrue(controller.waiting); self.assertTrue(controller.updates.preferences.read())
+        controller.finish("drain failed")
+        handoff.commit.assert_not_called(); handoff.abort.assert_called()
+
+    def test_editor_recovery_inventory_cannot_accept_pw_or_foreign_files(self):
+        from tools.production_workspace.release import release
+        launcher=self.root/"state"/".updates"
+        stage=Stage(launcher)
+        msi=release(version="0.2.1",app=self.app)["filename"]
+        names={msi,msi+".sha256","START.txt","delivery.json","inputs.json","manifest.json","manifest.sig.json","UpdateHelper.exe","active"}
+        for name in names: stage.write(name,b"test")
+        pending={"format":"picross-update-pending-v1","nonce":stage.path.name,"stage":stage.path.name,"version":"0.2.1","files":sorted(names)}
+        atomic_json(launcher/"update-pending.json",pending)
+        self.assertIn("unbestätigt",recover(launcher,app=self.app))
+        with self.assertRaises(ValueError): recover(launcher)
+        atomic_json(launcher/"update-result.json",{"format":"picross-update-result-v1","nonce":stage.path.name,"version":"0.2.1","status":"cancelled"})
+        (stage.path/"foreign.txt").write_bytes(b"preserve")
+        with self.assertRaises(OSError): recover(launcher,app=self.app)
+        self.assertEqual((stage.path/"foreign.txt").read_bytes(),b"preserve")
+        (stage.path/"foreign.txt").unlink()
+        self.assertIn("abgebrochen",recover(launcher,app=self.app))
+        self.assertFalse(stage.path.exists())
+
+    def test_hardlink_update_input_rejected_without_touching_original(self):
+        original=self.root/"original"; original.write_bytes(b"preserve")
+        alias=self.root/"alias"
+        try: os.link(original,alias)
+        except OSError as exc: self.skipTest(str(exc))
+        with self.assertRaises(ValueError): no_links(alias)
+        self.assertEqual(original.read_bytes(),b"preserve")
+
+    def test_changed_selection_aborts_before_drain_and_config_is_untouched(self):
+        controller=self.controller()
+        handoff=Mock(committed=False,selection=controller.runtime.selection)
+        controller.updates.thread=Mock(); controller.updates.thread.is_alive.return_value=False
+        controller.updates.handoff=handoff
+        controller.select({"checkout": "C:/other ü", "port": "1234"})
+        self.assertIsNone(controller.poll())
+        self.assertFalse(controller.waiting); handoff.abort.assert_called()
+        controller.finish(); handoff.commit.assert_not_called()
+        self.assertFalse((self.root/"state/config.json").exists())
+
+    def test_restart_selection_is_canonical_and_only_display_data(self):
+        from tools.puzzle_editor.app_updates import restored_selection, selection_data
+        selection={"checkout": 'C:/path ü \"quoted\"', "port": "bad"}
+        raw=selection_data(selection)
+        with patch.dict(os.environ,{"PICROSS_PE_READY_SELECTION":raw,"PICROSS_PE_READY_KEY":"a"*48,"PICROSS_PE_READY_NONCE":"b"*48}):
+            self.assertEqual(restored_selection("ignored",0),selection)
+            self.assertNotIn("PICROSS_PE_READY_SELECTION",os.environ)
+        for value in ({"checkout":"", "port":0}, {"checkout":"","port":"0","command":"bad"}):
+            with self.assertRaises(ValueError): selection_data(value)
+
+
 if __name__ == '__main__':
     unittest.main()

@@ -1,4 +1,5 @@
 """Installed-image identity and private pipe/real-handle helper handoff."""
+from tools.app_products import PW, PE
 import ctypes
 from ctypes import wintypes as w
 from dataclasses import dataclass
@@ -53,20 +54,21 @@ class Installation:
     payload_fingerprint: str
 
 
-def installation():
+def installation(*, app=PW):
     require(os.name == 'nt' and getattr(sys, 'frozen', False), 'Updates nur in der installierten Windows-App.')
     require(not ctypes.windll.shell32.IsUserAnAdmin(), 'App-Updates nur ohne Administratorrechte starten.')
-    expected = no_links(local_appdata() / 'Programs/Picross-Produktionsassistent/Picross-Start.exe')
+    expected = no_links(local_appdata() / 'Programs' / app.install_directory / (app.executable + '.exe'))
     require(no_links(sys.executable) == expected, 'Portable App: Updates über manuelle Installation.')
-    built = read_small(PACKAGE / 'build.json')
+    package = PACKAGE if app == PW else app.source
+    built = read_small(package / 'build.json')
     components = read_small(expected.parent / 'components.json')
     require(built == components and built['format'] == 'picross-windows-app-v1' and
             built['architecture'] == 'windows-x64' and hex_string(built['commit'], 40) and
             hex_string(built['payload_fingerprint'], 64), 'Invalid installed build identity')
-    product = release(version=built['version'])
+    product = release(version=built['version'], app=app)
     require(all(built[k] == product[k] for k in ('version', 'product_code', 'upgrade_code')) and
             installed_version(product['product_code']) == built['version'], 'Installed MSI version mismatch')
-    helper = PACKAGE / 'UpdateHelper.exe'
+    helper = package / 'UpdateHelper.exe'
     require(hex_string(built['resources'].get('UpdateHelper.exe'), 64) and
             sha(helper) == built['resources']['UpdateHelper.exe'], 'Installed helper binding mismatch')
     return Installation(expected, built['version'], built['product_code'], built['commit'], helper, sha(helper),
@@ -85,7 +87,8 @@ def parent_handle():
 
 
 class Handoff:
-    def __init__(self, process, nonce):
+    def __init__(self, process, nonce, selection=None):
+        self.selection = selection
         self.process, self.nonce, self.committed = process, nonce, False
 
     def commit(self, runtime):
@@ -101,15 +104,15 @@ class Handoff:
             self.process.stdin.close()  # EOF means refusal, never implicit installation.
 
 
-def prepare(candidate, stage, identity, runtime, *, cancelled=None, transition=None):
+def prepare(candidate, stage, identity, runtime, *, cancelled=None, transition=None, app=PW):
     require(type(candidate) is VerifiedCandidate, 'Full verified candidate required')
     # Revalidate bytes, packaged roots and actual installed identity at the final boundary.
-    require(installation() == identity, 'Installed application changed')
+    require((installation() if app == PW else installation(app=app)) == identity, 'Installed application changed')
     manifest = strict_json(candidate.manifest_bytes)
     files = {name: no_links(stage.path / name).read_bytes() for name in manifest['assets']}
     verified = verify_candidate(no_links(stage.path / 'manifest.json').read_bytes(),
-                                no_links(stage.path / 'manifest.sig.json').read_bytes(), files)
-    require(verified == candidate and assess_update(verified, identity.version) == 'update', 'Candidate changed')
+                                no_links(stage.path / 'manifest.sig.json').read_bytes(), files, app=app)
+    require(verified == candidate and assess_update(verified, identity.version, app=app) == 'update', 'Candidate changed')
     report = strict_json(files['delivery.json'])
     require(hex_string(report.get('exe_sha256'), 64) and type(report.get('exe_bytes')) is int and report['exe_bytes'] > 0,
             'Missing new executable binding')
@@ -120,14 +123,19 @@ def prepare(candidate, stage, identity, runtime, *, cancelled=None, transition=N
     bindings = {name: {'bytes': (stage.path / name).stat().st_size, 'sha256': sha(stage.path / name)}
                 for name in manifest['assets'].keys() | {'manifest.json', 'manifest.sig.json'}}
     state = runtime.lock.state
-    state_hashes = {name: sha(state / name) for name in ('config.json', '.launcher/address.json', '.launcher/app-updates.json')}
-    value = {'format': 'picross-update-handoff-v1', 'nonce': nonce, 'state': str(state),
+    state_names = ('config.json', '.launcher/address.json', '.launcher/app-updates.json') if app == PW else ('config.json', '.updates/app-updates.json')
+    state_hashes = {name: sha(state / name) if no_links(state / name).exists() else None for name in state_names}
+    if app == PW:
+        require(all(state_hashes.values()), 'Missing launcher state')
+    value = {'format': 'picross-update-handoff-v1' if app == PW else 'picross-pe-update-handoff-v1', 'nonce': nonce, 'state': str(state),
              'pid': os.getpid(), 'instance': runtime.metadata['instance'], 'old_version': identity.version,
              'old_product': identity.product_code, 'old_commit': identity.commit, 'old_exe_sha256': sha(identity.executable),
              'version': candidate.version, 'product': manifest['product_code'], 'upgrade': manifest['upgrade_code'],
              'commit': candidate.source_commit, 'binding': candidate.binding, 'files': bindings,
              'state_hashes': state_hashes, 'exe_sha256': report['exe_sha256'], 'exe_bytes': report['exe_bytes'],
              'no_browser': runtime.no_browser}
+    if app == PE:
+        value['selection'] = runtime.selection
     stage.target('active')
     atomic_json(runtime.lock.directory / 'update-pending.json',
                 {'format': 'picross-update-pending-v1', 'nonce': nonce, 'stage': nonce,
@@ -153,9 +161,11 @@ def prepare(candidate, stage, identity, runtime, *, cancelled=None, transition=N
                 replies.put(process.stdout.readline(128))
             except OSError:
                 replies.put(b'')
-        threading.Thread(target=read_reply, name='PW-update-handshake', daemon=True).start()
+        reader = threading.Thread(target=read_reply, name=app.key.upper()+'-update-handshake', daemon=True)
+        reader.start()
         require(replies.get(timeout=20) == ('READY ' + nonce + '\n').encode(), 'Helper handshake failed')
-        return Handoff(process, nonce)
+        reader.join()
+        return Handoff(process, nonce, value.get('selection'))
     except BaseException:
         if process and process.stdin and not process.stdin.closed:
             process.stdin.close()
@@ -170,7 +180,7 @@ def prepare(candidate, stage, identity, runtime, *, cancelled=None, transition=N
             atomic_json(runtime.lock.directory / 'update-result.json',
                         {'format': 'picross-update-result-v1', 'nonce': nonce,
                          'status': 'cancelled', 'version': candidate.version})
-            recover(runtime.lock.directory)
+            recover(runtime.lock.directory, app=app)
         raise
     finally:
         kernel = ctypes.WinDLL('kernel32', use_last_error=True)

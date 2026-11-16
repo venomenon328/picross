@@ -48,7 +48,8 @@ PE_SHARED = {
     'release_channel.py', 'build_windows.py', 'build_installer.py',
     'verify_installer.py', 'smoke_installer.py', 'install_interlock.py',
     'requirements-windows.txt', 'requirements-update.txt', 'packaging/Guard.cs',
-    'assets/launcher.ico',
+    'assets/launcher.ico', 'packaging/UpdateHelper.cs', 'app_updates.py', 'update_client.py',
+    'update_storage.py', 'update_windows.py', 'instance.py', 'processes.py',
 }
 PE_EXCLUDED = {'images_cli', 'metadata_cli', 'raster_cli', 'editor_cli', 'za1_fixtures'}
 PE_DIAGNOSTIC = {'diagnostic.py', 'frozen_diagnostic.py'}
