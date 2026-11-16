@@ -1,0 +1,1086 @@
+{
+  "format": "picross-app-inputs-v1",
+  "sha256": "a916d8d25115180cac46ac7ab8ba58904ee7a383a029b562cf1a9ade5b0aa0de",
+  "files": [
+    {
+      "file": ".github/workflows/pe-installer.yml",
+      "mode": "100644",
+      "bytes": 9803,
+      "sha256": "73dcdc1dbeddac80edb42f744268f9f621877a6affba6e46669399f140c1a99e"
+    },
+    {
+      "file": "game/art/drawing/margins/NOTICE.txt",
+      "mode": "100644",
+      "bytes": 296,
+      "sha256": "539f16ef05bf70593d60d9ec76182d55d6deafce209d7834eb7abb10468337a9"
+    },
+    {
+      "file": "game/art/drawing/margins/help_left.png",
+      "mode": "100644",
+      "bytes": 518528,
+      "sha256": "879c30e29f25cf6d64e692ab3858f5a8e61c0c1ad1ca2d99827ebf6f5a85c738"
+    },
+    {
+      "file": "game/art/drawing/margins/help_left.png.import",
+      "mode": "100644",
+      "bytes": 950,
+      "sha256": "d9118ad7eb6201ac4c4ccac651a045fda131ae1291d239e4256a5d754e1f1c48"
+    },
+    {
+      "file": "game/art/drawing/margins/help_right.png",
+      "mode": "100644",
+      "bytes": 1359623,
+      "sha256": "4d425a0b0ee52cb441c15b6a23025a03fce9149fc0f09a58e83d003a8f4562d7"
+    },
+    {
+      "file": "game/art/drawing/margins/help_right.png.import",
+      "mode": "100644",
+      "bytes": 953,
+      "sha256": "7d8beb24c049e7cfe5ebfa4d28161ca792eea151c3fe75a40a8720538d111540"
+    },
+    {
+      "file": "game/art/drawing/margins/nature_left.png",
+      "mode": "100644",
+      "bytes": 914022,
+      "sha256": "8c4b2517b7f3b15555c7a39bee27588bce386426ca9017a2a4ed691c67e68aba"
+    },
+    {
+      "file": "game/art/drawing/margins/nature_left.png.import",
+      "mode": "100644",
+      "bytes": 956,
+      "sha256": "f20b5412ef493eaa9f5c1288a459ca7927c032a8450b4b5d3ab75ee7400403df"
+    },
+    {
+      "file": "game/art/drawing/margins/nature_right.png",
+      "mode": "100644",
+      "bytes": 1648717,
+      "sha256": "a7f6cf74752fa1c43b20e55f31934167df7179b6af4f93fa5c41f79fb64857ac"
+    },
+    {
+      "file": "game/art/drawing/margins/nature_right.png.import",
+      "mode": "100644",
+      "bytes": 959,
+      "sha256": "af5621c36f0b1fca3452425585b41fb6a59288eae16ae5ab19d10b6cd056d83e"
+    },
+    {
+      "file": "game/art/drawing/margins/provenance.json",
+      "mode": "100644",
+      "bytes": 10300,
+      "sha256": "9db56bafb27d2f52055fdda8b66200bf3af929d8461682fe6aad3504f175b51b"
+    },
+    {
+      "file": "game/art/drawing/margins/water_left.png",
+      "mode": "100644",
+      "bytes": 710420,
+      "sha256": "6f6e356e09874466f38a8e2e09367b60f31101d58e2f85a3db818db12ab9f0c4"
+    },
+    {
+      "file": "game/art/drawing/margins/water_left.png.import",
+      "mode": "100644",
+      "bytes": 952,
+      "sha256": "eae1f6fbbc4840b7c2976a6a175967352df3639a08efbb98dd1facdf486a8572"
+    },
+    {
+      "file": "game/art/drawing/margins/water_right.png",
+      "mode": "100644",
+      "bytes": 1297261,
+      "sha256": "cc720e94e0a9bd0af55d44aa4ca813982ce92bb28e8eb9554c0210146fd5de20"
+    },
+    {
+      "file": "game/art/drawing/margins/water_right.png.import",
+      "mode": "100644",
+      "bytes": 956,
+      "sha256": "a532cc65dcd08ac825f3e77834058266df017f5dfeacc758275e6bd6fd7b98a2"
+    },
+    {
+      "file": "game/book/paper.json",
+      "mode": "100644",
+      "bytes": 2000,
+      "sha256": "4b03745631543dadf1be83021e64b7fba6dcfe63befb829b143849e7ed386986"
+    },
+    {
+      "file": "game/book/paper.png",
+      "mode": "100644",
+      "bytes": 2564246,
+      "sha256": "1af9f61957619d7cea98b69021688b0b78997d84baf93698c9f02dcbb866362f"
+    },
+    {
+      "file": "tools/app_products.py",
+      "mode": "100644",
+      "bytes": 1502,
+      "sha256": "81fdac4ef2fe39909c49639d9e5f1d672d4d528f65d11544d34f6e000b21d06e"
+    },
+    {
+      "file": "tools/msi_database.py",
+      "mode": "100644",
+      "bytes": 725,
+      "sha256": "c807da83881317807aafdd545d84126b07bc87c0f8b720997dc6fc4fbb0572fc"
+    },
+    {
+      "file": "tools/production_workspace/__init__.py",
+      "mode": "100644",
+      "bytes": 78,
+      "sha256": "14fe28e02e042b1c91905f800a3878bfae0a5644742c6de04e23f8fd81379ca4"
+    },
+    {
+      "file": "tools/production_workspace/assets/launcher.ico",
+      "mode": "100644",
+      "bytes": 141731,
+      "sha256": "be439fa4c88bbea59d9fc1deceedd9baebb3a1472015ecbbd4688caaeb9b3082"
+    },
+    {
+      "file": "tools/production_workspace/build_installer.py",
+      "mode": "100644",
+      "bytes": 12432,
+      "sha256": "e85ae6f8a33ad0a3bc4204ac2698c6a4d23734ef4975a6a2b5f3dcce1afa61c2"
+    },
+    {
+      "file": "tools/production_workspace/build_windows.py",
+      "mode": "100644",
+      "bytes": 15519,
+      "sha256": "55405de9d023fa762b8b87e7b72965f0f62ef86ccaa2e916c4b8e97737b97142"
+    },
+    {
+      "file": "tools/production_workspace/install_interlock.py",
+      "mode": "100644",
+      "bytes": 4195,
+      "sha256": "eaf1b166cda713854b538a0db5a6c0e35886cbe1a87d4ec77ea0e5e8553126c8"
+    },
+    {
+      "file": "tools/production_workspace/licenses/Expat-2.8.1.txt",
+      "mode": "100644",
+      "bytes": 1144,
+      "sha256": "31b15de82aa19a845156169a17a5488bf597e561b2c318d159ed583139b25e87"
+    },
+    {
+      "file": "tools/production_workspace/licenses/OpenSSL-3.0.21.txt",
+      "mode": "100644",
+      "bytes": 10175,
+      "sha256": "7d5450cb2d142651b8afa315b5f238efc805dad827d91ba367d8516bc9d49e7a"
+    },
+    {
+      "file": "tools/production_workspace/licenses/OpenSSL-4.0.3.txt",
+      "mode": "100644",
+      "bytes": 10175,
+      "sha256": "7d5450cb2d142651b8afa315b5f238efc805dad827d91ba367d8516bc9d49e7a"
+    },
+    {
+      "file": "tools/production_workspace/licenses/Tcl-8.6.15.txt",
+      "mode": "100644",
+      "bytes": 2255,
+      "sha256": "c0a69a2bfd757361ec7e6143973b103c90409316b49e9c88db26ad6388e79f16"
+    },
+    {
+      "file": "tools/production_workspace/licenses/bzip2-1.0.8.txt",
+      "mode": "100644",
+      "bytes": 1891,
+      "sha256": "67fc67381a47fe66f07b5f6705472d26314e6bcdf949f92c2cdde64521bbfdce"
+    },
+    {
+      "file": "tools/production_workspace/licenses/mpdecimal-4.0.0.txt",
+      "mode": "100644",
+      "bytes": 1285,
+      "sha256": "2713324211652ce4a60e6e21e54f9dc3004299e591b0933a352f1a89c5fb53c2"
+    },
+    {
+      "file": "tools/production_workspace/licenses/xz-5.2.5.txt",
+      "mode": "100644",
+      "bytes": 2774,
+      "sha256": "073060d5c1ee43ee909638ed7dba5547161ab264f7859cfddef8a213ef6b67fe"
+    },
+    {
+      "file": "tools/production_workspace/licenses/zlib-1.3.1.txt",
+      "mode": "100644",
+      "bytes": 1002,
+      "sha256": "845efc77857d485d91fb3e0b884aaa929368c717ae8186b66fe1ed2495753243"
+    },
+    {
+      "file": "tools/production_workspace/packaging/Guard.cs",
+      "mode": "100644",
+      "bytes": 5565,
+      "sha256": "b98283efbed63f41c3c0e5a27ddc328bac7945d3b0afb141a54635dd67420cf2"
+    },
+    {
+      "file": "tools/production_workspace/payload.py",
+      "mode": "100644",
+      "bytes": 7863,
+      "sha256": "8db2a4b514929ddf4f2d428f02c6b248a985388723c9ecea4b95f046d8ae6c86"
+    },
+    {
+      "file": "tools/production_workspace/release.py",
+      "mode": "100644",
+      "bytes": 2295,
+      "sha256": "abc12d1db1b20da4cd8b1e037fcf084ef21e537b05b93c65c2a1cf9a9e4023d8"
+    },
+    {
+      "file": "tools/production_workspace/release_channel.py",
+      "mode": "100644",
+      "bytes": 19501,
+      "sha256": "c5ffd47e9a751bb96748d71694b9839e4cc2c754560aa980c6558c79c3265548"
+    },
+    {
+      "file": "tools/production_workspace/release_manifest.py",
+      "mode": "100644",
+      "bytes": 5778,
+      "sha256": "980138b82d0aefe020800f411126bc90e648f03c2b8fc2b75520440a86a34e0d"
+    },
+    {
+      "file": "tools/production_workspace/requirements-update.txt",
+      "mode": "100644",
+      "bytes": 211,
+      "sha256": "1b0f850b8fe34d5f3dbbd4ee00bb46b66cbce2629c3a3c7310b93dd1c7629a85"
+    },
+    {
+      "file": "tools/production_workspace/requirements-windows.txt",
+      "mode": "100644",
+      "bytes": 269,
+      "sha256": "894faac588abc897b7fa6d7c2b2f99ae17d7c934410f4be484a2779f6a88a227"
+    },
+    {
+      "file": "tools/production_workspace/smoke_installer.py",
+      "mode": "100644",
+      "bytes": 14756,
+      "sha256": "868f2c9eb35a9a6f5a20f270e8f650250e3b406e740b0b03ab591a44f5825ee8"
+    },
+    {
+      "file": "tools/production_workspace/update_verifier.py",
+      "mode": "100644",
+      "bytes": 8291,
+      "sha256": "08abbef6c145057b23054f87f8c641e7cdd5b364a601a904859e80d29759594e"
+    },
+    {
+      "file": "tools/production_workspace/verify_installer.py",
+      "mode": "100644",
+      "bytes": 11178,
+      "sha256": "bcaa1598aa411a9c8d2c9f1f54bb8fca2e80ce4856e710293ce97878c2e1b848"
+    },
+    {
+      "file": "tools/puzzle_editor/README.md",
+      "mode": "100644",
+      "bytes": 10303,
+      "sha256": "a9e8205326ddafa9857f642803fb9ce80b6ecaec8fb2a4f3f5c7fa0a4caf48c2"
+    },
+    {
+      "file": "tools/puzzle_editor/__init__.py",
+      "mode": "100644",
+      "bytes": 365,
+      "sha256": "ca273cf7bd76ad7cbd50c8c20b1169ca10cb03961d87382f5565766f666735f8"
+    },
+    {
+      "file": "tools/puzzle_editor/__main__.py",
+      "mode": "100644",
+      "bytes": 231,
+      "sha256": "1b9f5b2174788df146aa66e39cc79df819a84e3f6f1d4f96b700d5eee7eba359"
+    },
+    {
+      "file": "tools/puzzle_editor/build_installer.py",
+      "mode": "100644",
+      "bytes": 449,
+      "sha256": "8572ed449987196e7a42504530389136443722e2e163147546c9bb81947094bd"
+    },
+    {
+      "file": "tools/puzzle_editor/build_windows.py",
+      "mode": "100644",
+      "bytes": 563,
+      "sha256": "136699f512e4f14d02800da62707618c271c726861499643e8da515c71c045f5"
+    },
+    {
+      "file": "tools/puzzle_editor/bundle.py",
+      "mode": "100644",
+      "bytes": 1295,
+      "sha256": "1b153d466a31107fcbb92ac4994bbc8f9ce925d536ff7a9624f997d70207c2df"
+    },
+    {
+      "file": "tools/puzzle_editor/desktop.py",
+      "mode": "100644",
+      "bytes": 8521,
+      "sha256": "a05d756366bb716265c5073ecf084d32aea4b80d29290cb5307e53aa87f15201"
+    },
+    {
+      "file": "tools/puzzle_editor/desktop_entry.py",
+      "mode": "100644",
+      "bytes": 426,
+      "sha256": "6aad64d6ad3ba49a2f2deac5f716f6f03554e87cd49159a0017ea5eaf762aeb7"
+    },
+    {
+      "file": "tools/puzzle_editor/instance.py",
+      "mode": "100644",
+      "bytes": 1648,
+      "sha256": "893f85a3a570c822be9b6dcc28608d0bc045ed7f82346f515ee55b36d0fcc728"
+    },
+    {
+      "file": "tools/puzzle_editor/progress.py",
+      "mode": "100644",
+      "bytes": 3165,
+      "sha256": "18cc5755fc555fbbc8f332fe183d3197a64b1a6e02a7a25afb3a645b8c50fd95"
+    },
+    {
+      "file": "tools/puzzle_editor/release.json",
+      "mode": "100644",
+      "bytes": 303,
+      "sha256": "3a94de7ee7adbca80cb5628737ea1a96831b9f510a8172af0f31039e1406afd9"
+    },
+    {
+      "file": "tools/puzzle_editor/release_channel.py",
+      "mode": "100644",
+      "bytes": 224,
+      "sha256": "afded7a1d5997af81b4badd6f2401913385b42513c9e0994ab21a7668a20426d"
+    },
+    {
+      "file": "tools/puzzle_editor/requirements-windows.txt",
+      "mode": "100644",
+      "bytes": 107,
+      "sha256": "bd3cee4253974726d4599a322abbb07f0a2a24389b4415d0509a5a5a023ab4b5"
+    },
+    {
+      "file": "tools/puzzle_editor/server.py",
+      "mode": "100644",
+      "bytes": 24144,
+      "sha256": "01aea2e712b673f2e20d3de987c7273038faf80353bf14950545c8607dc58976"
+    },
+    {
+      "file": "tools/puzzle_editor/settings.py",
+      "mode": "100644",
+      "bytes": 2685,
+      "sha256": "e17f5a4db86c9a4217bd131ed822e03d8465fd033b15b84ceb6c9fd33e35bdef"
+    },
+    {
+      "file": "tools/puzzle_editor/ui/app.js",
+      "mode": "100644",
+      "bytes": 26076,
+      "sha256": "e99a5f8400c63d5c3a23973d72428e694b063fdfdad78b6b7d04f1a3f038371b"
+    },
+    {
+      "file": "tools/puzzle_editor/ui/index.html",
+      "mode": "100644",
+      "bytes": 6688,
+      "sha256": "775f46980559e400cb6e3a7c65595a8effeaa6b7bb31296f7ac38be4954d6c73"
+    },
+    {
+      "file": "tools/puzzle_editor/ui/style.css",
+      "mode": "100644",
+      "bytes": 9889,
+      "sha256": "5c4155de68d7cf57ea5ae562392ffa99786693d677d03cb5769ed221d4872423"
+    },
+    {
+      "file": "tools/puzzle_editor/update-trust.json",
+      "mode": "100644",
+      "bytes": 256,
+      "sha256": "560cc713fe2eb81c47f8c2c0545bdeaa9c94346c050387d525dc821dc69fc06f"
+    },
+    {
+      "file": "tools/puzzle_editor/verify_installer.py",
+      "mode": "100644",
+      "bytes": 697,
+      "sha256": "0dacbd3532d0f7a0475d940d4a103b5c4bc9dad8d311007928e9fed7a7599909"
+    },
+    {
+      "file": "tools/puzzle_editor/worker.py",
+      "mode": "100644",
+      "bytes": 4631,
+      "sha256": "ce003f14eb7bc87c6d6bc26918f8e1b0099612281215186b0f21e29e9fb6b44d"
+    },
+    {
+      "file": "tools/puzzle_production/README.md",
+      "mode": "100644",
+      "bytes": 151317,
+      "sha256": "82138eb0cae15aa56c8497ce9579904fbdcd4d393284dc109437082761d7437b"
+    },
+    {
+      "file": "tools/puzzle_production/__init__.py",
+      "mode": "100644",
+      "bytes": 83,
+      "sha256": "dd0e71d7ffc7b40e412dacfe08e854870229155b1fb023f68f2753687634d882"
+    },
+    {
+      "file": "tools/puzzle_production/__main__.py",
+      "mode": "100644",
+      "bytes": 48,
+      "sha256": "935a1c1166b0c1ea35a82256345000bf2c73ded718d77773bc27a71ecce28f7d"
+    },
+    {
+      "file": "tools/puzzle_production/accepted_raster.py",
+      "mode": "100644",
+      "bytes": 7746,
+      "sha256": "003491ff41543f3f8b52ff789fd239542eb868cb1bd35eb80f71227361f5104f"
+    },
+    {
+      "file": "tools/puzzle_production/analysis.py",
+      "mode": "100644",
+      "bytes": 2872,
+      "sha256": "fbfaeaa8f3e9b85d4ee50c30236072a80f056bca7b9809cc92a8c607bfe23394"
+    },
+    {
+      "file": "tools/puzzle_production/analysis_cli.py",
+      "mode": "100644",
+      "bytes": 4658,
+      "sha256": "ffebfee44638706a406239883a5e25d5b18e9f6756900502eb24af1f97ef9ad4"
+    },
+    {
+      "file": "tools/puzzle_production/analysis_contract.py",
+      "mode": "100644",
+      "bytes": 10127,
+      "sha256": "f78e2da6396bf19f2faa18975d9f8109a9994b7eeaa0d515ef8e980fc2d6f795"
+    },
+    {
+      "file": "tools/puzzle_production/analysis_io.py",
+      "mode": "100644",
+      "bytes": 15091,
+      "sha256": "c4d24577262b3a2065c568f92150c06546d7fb4e25d45815d7917243516e3270"
+    },
+    {
+      "file": "tools/puzzle_production/analysis_rules.py",
+      "mode": "100644",
+      "bytes": 5164,
+      "sha256": "a0b362e760630721d53c0092ab319ff0d3f2f3238f3e85cad1348d110df1939a"
+    },
+    {
+      "file": "tools/puzzle_production/analysis_verifier.py",
+      "mode": "100644",
+      "bytes": 9664,
+      "sha256": "39386d4a6e599cf7e65c34924be75b97c0688b758b7354c0df3da4f16e4bcf70"
+    },
+    {
+      "file": "tools/puzzle_production/authoring_build_contract.py",
+      "mode": "100644",
+      "bytes": 22768,
+      "sha256": "be0ed568b914346e8cb6b86db38dfd9b19a2ed4a89aeabc2ff44c8d81e23ffda"
+    },
+    {
+      "file": "tools/puzzle_production/authoring_builder.py",
+      "mode": "100644",
+      "bytes": 30485,
+      "sha256": "a05bea2c9704a74a47400059c4ab877db6010d62ba8890e61ad7eafe8bb7be55"
+    },
+    {
+      "file": "tools/puzzle_production/authoring_finalization.py",
+      "mode": "100644",
+      "bytes": 34180,
+      "sha256": "519639ac2e57763d64703e0788ea9fec769cb0c07b36a3085ca7ce9be4141d1c"
+    },
+    {
+      "file": "tools/puzzle_production/authoring_inspection.py",
+      "mode": "100644",
+      "bytes": 31042,
+      "sha256": "1a63044a2d3c6c1e8d4a7f424940b388a31dcff1de5f38048e2810ac3f92e45d"
+    },
+    {
+      "file": "tools/puzzle_production/authoring_package.py",
+      "mode": "100644",
+      "bytes": 18613,
+      "sha256": "2007e3c63af9ca64f37f225cc88474b47642e6dbb7e091cb6199ef4f9c87fada"
+    },
+    {
+      "file": "tools/puzzle_production/authoring_rulebook.py",
+      "mode": "100644",
+      "bytes": 6437,
+      "sha256": "59f2c6872f6d74c2938f2fc7187ffd1b2ed249677f4654f96d47c0a8996d03c7"
+    },
+    {
+      "file": "tools/puzzle_production/authoring_staging.py",
+      "mode": "100644",
+      "bytes": 8446,
+      "sha256": "bc266d65d4b17d929c0fac9ba14b1948c63d2d352c19eace096f642e0ef29c0e"
+    },
+    {
+      "file": "tools/puzzle_production/authoring_workflow.py",
+      "mode": "100644",
+      "bytes": 8460,
+      "sha256": "9ae0b43f3c58ca7cda2684d8f04cb420efc19ccac5a2dcbef0928917606b3a6f"
+    },
+    {
+      "file": "tools/puzzle_production/background_assets.py",
+      "mode": "100644",
+      "bytes": 28151,
+      "sha256": "d24cc98e7fd8305bec8b1037b78b53a33539e609e41629c5128107ed98d5d2ae"
+    },
+    {
+      "file": "tools/puzzle_production/background_contract.py",
+      "mode": "100644",
+      "bytes": 30671,
+      "sha256": "0aa6dac86a635b73ce983ce6126358da6d7b7aa400f552cf3c26757e5c0633d4"
+    },
+    {
+      "file": "tools/puzzle_production/background_export.py",
+      "mode": "100644",
+      "bytes": 280,
+      "sha256": "c55760c14e23f02ce9d836584265f65ece48c296fe3a2d48f14b7e5d42014248"
+    },
+    {
+      "file": "tools/puzzle_production/background_io.py",
+      "mode": "100644",
+      "bytes": 14020,
+      "sha256": "0600d3823ebdfee87296ae9ea45b7116b38392c00387a85952001493af7f9829"
+    },
+    {
+      "file": "tools/puzzle_production/background_package.py",
+      "mode": "100644",
+      "bytes": 28577,
+      "sha256": "1d91f223dddbaa457483cf5cc72a73a63951fca256ee49323cb0e7a2c9f30068"
+    },
+    {
+      "file": "tools/puzzle_production/background_render.py",
+      "mode": "100644",
+      "bytes": 7092,
+      "sha256": "2982c7158c1de722796be377bd06b2d0f05a7a3a5b8a5508bf682197b726b105"
+    },
+    {
+      "file": "tools/puzzle_production/background_retirement.py",
+      "mode": "100644",
+      "bytes": 120,
+      "sha256": "0c47254a0e064ce2ebc06ce2c3ecfc0271a303fde4c95a24a5cfd613e06fb142"
+    },
+    {
+      "file": "tools/puzzle_production/batch_cli.py",
+      "mode": "100644",
+      "bytes": 1752,
+      "sha256": "38b2499ffa239505bc21f3c85ef0c9f9e32a919694333b7383aeffbf0a968771"
+    },
+    {
+      "file": "tools/puzzle_production/batch_contract.py",
+      "mode": "100644",
+      "bytes": 16103,
+      "sha256": "a90385fb54c80580f6545f9c24e6a32d942059df7fd32e1bc1efba718f12aa3b"
+    },
+    {
+      "file": "tools/puzzle_production/batch_io.py",
+      "mode": "100644",
+      "bytes": 10793,
+      "sha256": "8022438ae272c93c949f904fac296c7f63b804e51e3e406df6bbd0d8eca517ca"
+    },
+    {
+      "file": "tools/puzzle_production/batch_operations.py",
+      "mode": "100644",
+      "bytes": 65669,
+      "sha256": "8530530eef606d6f51cd745b2077e4066474c074ec4c590e42eae70a43a563b6"
+    },
+    {
+      "file": "tools/puzzle_production/batch_runner.py",
+      "mode": "100644",
+      "bytes": 39018,
+      "sha256": "7e92bd4a175b6e6187a6e493967b7f970d6d85f792217c4f87b04316cbf914a1"
+    },
+    {
+      "file": "tools/puzzle_production/batch_worker.py",
+      "mode": "100644",
+      "bytes": 4779,
+      "sha256": "d7e9bbac0391aed14d7da1def5596895bd75b450146feeb5a60ce47cdd24edcb"
+    },
+    {
+      "file": "tools/puzzle_production/benchmark.py",
+      "mode": "100644",
+      "bytes": 10913,
+      "sha256": "6e19a325242c0ed3ef42ae2d282bfb13b1e1402b46ea297b8fefe8612ebc423e"
+    },
+    {
+      "file": "tools/puzzle_production/catalog_added.py",
+      "mode": "100644",
+      "bytes": 5100,
+      "sha256": "6b5ee7073b0f57654088d8682899709127ce5b19a3bb5ea7f2ac1f635e0b6f4b"
+    },
+    {
+      "file": "tools/puzzle_production/catalog_added_history.py",
+      "mode": "100644",
+      "bytes": 23866,
+      "sha256": "e94409d6cf90729c0971b71f2148321f0ee76e24573160455445b718c460ba60"
+    },
+    {
+      "file": "tools/puzzle_production/catalog_analysis.py",
+      "mode": "100644",
+      "bytes": 29732,
+      "sha256": "7373c182bc9eccfc873b26e03c54f6905d5f11ddbb5d5b665ec4f71f88488dd0"
+    },
+    {
+      "file": "tools/puzzle_production/catalog_background.py",
+      "mode": "100644",
+      "bytes": 8349,
+      "sha256": "3c2cdc80f79a3d1bd6f1304381f3e0f424e06ef8047ec5e9c0bd23ef81d3e158"
+    },
+    {
+      "file": "tools/puzzle_production/catalog_background_change.py",
+      "mode": "100644",
+      "bytes": 2736,
+      "sha256": "3e0b2094278d1d36958b8734f13f5d9a840692ed2867df3c242bcf456c6106ef"
+    },
+    {
+      "file": "tools/puzzle_production/catalog_difficulty.py",
+      "mode": "100644",
+      "bytes": 3094,
+      "sha256": "32dcc74843bfe37d748a3387197680d4e00d028dd93f342132d81af0a90e6533"
+    },
+    {
+      "file": "tools/puzzle_production/catalog_images.py",
+      "mode": "100644",
+      "bytes": 262,
+      "sha256": "238ba32f2a3ae672f4387d45977935657f02d3f67b0ada1149a30d05f1c2712f"
+    },
+    {
+      "file": "tools/puzzle_production/catalog_integration.py",
+      "mode": "100644",
+      "bytes": 6409,
+      "sha256": "5b1224734080cc652284e6c8bedf1413ba3ca7cdd8e9529d08b0a2653da52fbc"
+    },
+    {
+      "file": "tools/puzzle_production/catalog_io.py",
+      "mode": "100644",
+      "bytes": 11935,
+      "sha256": "75cd32031466aa755861d90e6e21dc22ee689fba57c2df6856c7515ba2acd2e3"
+    },
+    {
+      "file": "tools/puzzle_production/catalog_metadata.py",
+      "mode": "100644",
+      "bytes": 10787,
+      "sha256": "d7f7564196ebc10f302ea788771380d45030a00c006e53f1c9bbd9976f154bd1"
+    },
+    {
+      "file": "tools/puzzle_production/catalog_method.py",
+      "mode": "100644",
+      "bytes": 11060,
+      "sha256": "16fd1dfdb3463b019a62cb7e5ca03cca795f015622f654cb76429ab75880a87b"
+    },
+    {
+      "file": "tools/puzzle_production/catalog_publication.py",
+      "mode": "100644",
+      "bytes": 6892,
+      "sha256": "3961eb0a07d502a6df5771bf92dbccbdab406675262e10ba3b90b16cfc138306"
+    },
+    {
+      "file": "tools/puzzle_production/catalog_raster.py",
+      "mode": "100644",
+      "bytes": 262,
+      "sha256": "238ba32f2a3ae672f4387d45977935657f02d3f67b0ada1149a30d05f1c2712f"
+    },
+    {
+      "file": "tools/puzzle_production/catalog_rating.py",
+      "mode": "100644",
+      "bytes": 27680,
+      "sha256": "00398a2733052cdc3a14c256b4f02c3be836dadf4ebf62041fa84b3b674ba88d"
+    },
+    {
+      "file": "tools/puzzle_production/catalog_reveal.py",
+      "mode": "100644",
+      "bytes": 231,
+      "sha256": "15cb461103eb261d4131487b78c7fe2e6ea0917b0560b8017a13c961a306e556"
+    },
+    {
+      "file": "tools/puzzle_production/catalog_transaction.py",
+      "mode": "100644",
+      "bytes": 15363,
+      "sha256": "f4d82073449f9a120bfecf1648b8a0e240f6f77748232ab34371a79deb5c1114"
+    },
+    {
+      "file": "tools/puzzle_production/categories.py",
+      "mode": "100644",
+      "bytes": 2199,
+      "sha256": "3790a5bce1b6bebc238e23db8e35e79c887261c57c3e41b78d190694a91758a5"
+    },
+    {
+      "file": "tools/puzzle_production/certification.py",
+      "mode": "100644",
+      "bytes": 6936,
+      "sha256": "c570827bc7273dc41133c01a21a4d61291cda68257c0aa83f0c86556599cf1dd"
+    },
+    {
+      "file": "tools/puzzle_production/cli.py",
+      "mode": "100644",
+      "bytes": 7148,
+      "sha256": "340e97ea132df8e6921a7a6a0399c5cbe109cafbac0a820a66d3b84dad46f814"
+    },
+    {
+      "file": "tools/puzzle_production/color_derivation.py",
+      "mode": "100644",
+      "bytes": 17162,
+      "sha256": "0eac2966957191ad7ed89c3840a01728b3047486ff4f6c26a2b2fef511855c22"
+    },
+    {
+      "file": "tools/puzzle_production/content_registry.py",
+      "mode": "100644",
+      "bytes": 6303,
+      "sha256": "d3580fa23af7b8a0d4a104fc49f337223685e141a693e949fb0a1233131dba96"
+    },
+    {
+      "file": "tools/puzzle_production/content_update.py",
+      "mode": "100644",
+      "bytes": 284,
+      "sha256": "7b492cd740611d05628ee48ff4893105e590e6b404e396cb3870259f9a59eba3"
+    },
+    {
+      "file": "tools/puzzle_production/contract.py",
+      "mode": "100644",
+      "bytes": 11356,
+      "sha256": "5e9459d65cffab98b63435b51ed4b704d9a55596accd595bf0be1edf553e51f8"
+    },
+    {
+      "file": "tools/puzzle_production/current_content.py",
+      "mode": "100644",
+      "bytes": 10848,
+      "sha256": "8fcb65eefeb680a9779d6fc0cbf978d0e70239ec3875da46ca71fcd3267f16d1"
+    },
+    {
+      "file": "tools/puzzle_production/current_delivery.py",
+      "mode": "100644",
+      "bytes": 2632,
+      "sha256": "943e1f30cf701bb81fbd9b6b572e3cb5ab2e050032dda291fca8df25f6b352dd"
+    },
+    {
+      "file": "tools/puzzle_production/current_rating.py",
+      "mode": "100644",
+      "bytes": 4034,
+      "sha256": "b2ba99f777b7aaccf6e743a9390f0ec98c13665ee74660dde20c81e48c60edf7"
+    },
+    {
+      "file": "tools/puzzle_production/current_registration.py",
+      "mode": "100644",
+      "bytes": 16879,
+      "sha256": "39a7e127f207a4ca517243f8cf2d2f240eab57479129ab8a0096304cf533d18b"
+    },
+    {
+      "file": "tools/puzzle_production/diagnosis.py",
+      "mode": "100644",
+      "bytes": 11941,
+      "sha256": "8e42d59622c7dea817d3a5ddc324a7592271eef8f0214ff7198b762cdf3378b6"
+    },
+    {
+      "file": "tools/puzzle_production/diagnosis_cli.py",
+      "mode": "100644",
+      "bytes": 2199,
+      "sha256": "60ba292c3ea70ebf7c181a1d2b41be6d522961b5600040d0587a64bf471b3510"
+    },
+    {
+      "file": "tools/puzzle_production/diagnosis_verifier.py",
+      "mode": "100644",
+      "bytes": 3851,
+      "sha256": "f3f86b140b727aca29e4b1bf527b30c1bc71ddd9803bed54f72101f32cc4140b"
+    },
+    {
+      "file": "tools/puzzle_production/difficulty_calibration_0_3.json",
+      "mode": "100644",
+      "bytes": 16997,
+      "sha256": "6b352ebcb65e3164fc110a1bc76bad17b63f7b863cddf2a752cc7ae2d20c5757"
+    },
+    {
+      "file": "tools/puzzle_production/difficulty_identity.py",
+      "mode": "100644",
+      "bytes": 165,
+      "sha256": "e54ff7a845d23f714063c76f4bdd97c058c924629360011c84a5671f5b32e2de"
+    },
+    {
+      "file": "tools/puzzle_production/difficulty_method_0_3.json",
+      "mode": "100644",
+      "bytes": 2446,
+      "sha256": "fb61754a2fed179df5ad992c58118114a76ad951496240b1ee0ba1453a9721b0"
+    },
+    {
+      "file": "tools/puzzle_production/difficulty_rating.py",
+      "mode": "100644",
+      "bytes": 9385,
+      "sha256": "d423d86e005f463ce0cc911034b0ccbfabc4a4c2633b50a95d71ef3ecf040fba"
+    },
+    {
+      "file": "tools/puzzle_production/difficulty_references_0_3.json",
+      "mode": "100644",
+      "bytes": 53389,
+      "sha256": "0bdb08e03caaf155335c5ec930477ee0f2fc024a4217526ece92edcbbd1d2be7"
+    },
+    {
+      "file": "tools/puzzle_production/editor_change.py",
+      "mode": "100644",
+      "bytes": 38194,
+      "sha256": "283a6c9205be1ef4668eb849e72fef1de18ffdf7e5e60b8cf4e71e3dd4a557a8"
+    },
+    {
+      "file": "tools/puzzle_production/editor_image_input.py",
+      "mode": "100644",
+      "bytes": 6652,
+      "sha256": "bc566838b16860f2042dda663cec81a589d4ec9ef5454121d0e53db6b9615d4b"
+    },
+    {
+      "file": "tools/puzzle_production/editor_image_source.py",
+      "mode": "100644",
+      "bytes": 2548,
+      "sha256": "85648a2ffb2893571c7ee81f16c0a6ec4e7fa90aa54c3924d0dfab5e2499587c"
+    },
+    {
+      "file": "tools/puzzle_production/editor_raster.py",
+      "mode": "100644",
+      "bytes": 2894,
+      "sha256": "f24d62c3cc77e3949545994e7e5f2afd1c828d629a24ac5f8187b330ecbd539b"
+    },
+    {
+      "file": "tools/puzzle_production/fixed_raster.py",
+      "mode": "100644",
+      "bytes": 21448,
+      "sha256": "8266f0e941b5044562d199b341abff631338c7539b9f2d7c1c3565fa86e7df98"
+    },
+    {
+      "file": "tools/puzzle_production/image_cli.py",
+      "mode": "100644",
+      "bytes": 2745,
+      "sha256": "2e0e09c430130e6f660c2464eef2764b15c8c9fc560453aadc96b646d7c981ea"
+    },
+    {
+      "file": "tools/puzzle_production/image_normalization.py",
+      "mode": "100644",
+      "bytes": 4261,
+      "sha256": "91a1839053e9aebe692551fe28ecaa32c7943a3f7b6c0e67a31c10a6fa9c3f88"
+    },
+    {
+      "file": "tools/puzzle_production/image_validation.py",
+      "mode": "100644",
+      "bytes": 2435,
+      "sha256": "9bfc1d6c5fe84f96e4d61c1612c181bb5e8f957defe76406569bc64aff679e08"
+    },
+    {
+      "file": "tools/puzzle_production/images.py",
+      "mode": "100644",
+      "bytes": 23571,
+      "sha256": "d017b9d26ba785e7059e4fd8d7b4fd57fab9b2938d9248bb9e041a09a8019287"
+    },
+    {
+      "file": "tools/puzzle_production/integrated_content.py",
+      "mode": "100644",
+      "bytes": 8455,
+      "sha256": "f1b792059234cde65cc3276489b1505c4cb2a0973f8e5a47030350a8af66fbe8"
+    },
+    {
+      "file": "tools/puzzle_production/integration_batch_cli.py",
+      "mode": "100644",
+      "bytes": 1959,
+      "sha256": "aa891b194bd40a2655e7ebf8c270ed1a2a72dc27fa7e66c6148fc225b8ce016f"
+    },
+    {
+      "file": "tools/puzzle_production/integration_batch_contract.py",
+      "mode": "100644",
+      "bytes": 13883,
+      "sha256": "d2abeee25168b62cdd13521be4084a72b1d6bdb601258849d52dd7a1af318e23"
+    },
+    {
+      "file": "tools/puzzle_production/integration_batch_operations.py",
+      "mode": "100644",
+      "bytes": 8638,
+      "sha256": "3c52e5e94799b6e5bead65b2675aec5b873e145ec33a02390d04d1b3456f4028"
+    },
+    {
+      "file": "tools/puzzle_production/integration_batch_runner.py",
+      "mode": "100644",
+      "bytes": 47146,
+      "sha256": "a3ff3a5384a0f54e214e68c2ee484033c6876b7a727641123ace9a377fef1fca"
+    },
+    {
+      "file": "tools/puzzle_production/integration_input.py",
+      "mode": "100644",
+      "bytes": 9106,
+      "sha256": "4a625dfb3dd6b2cfbf726b60d14f61f8c54468aec6d8d9876a7731f40660e249"
+    },
+    {
+      "file": "tools/puzzle_production/manual_derivation.py",
+      "mode": "100644",
+      "bytes": 20086,
+      "sha256": "53309a972f8ac381acc9f603356180879c7a154986a844b64aac149333beb7b1"
+    },
+    {
+      "file": "tools/puzzle_production/operation_diagnostics.py",
+      "mode": "100644",
+      "bytes": 16743,
+      "sha256": "f8419b7dd170e07490858fd145b122ee818193d9f5f4aa5f0394d6f792f5bc0f"
+    },
+    {
+      "file": "tools/puzzle_production/p1_export.py",
+      "mode": "100644",
+      "bytes": 11435,
+      "sha256": "5ea354e103dd0c009bde73f9cc844fe61d4654bb5607d7f0133b546211e6fe91"
+    },
+    {
+      "file": "tools/puzzle_production/paired_solver.py",
+      "mode": "100644",
+      "bytes": 7939,
+      "sha256": "72e5c16656c038b591bd3f6f07b27ecceb9bade84f53db559941e4992a61c811"
+    },
+    {
+      "file": "tools/puzzle_production/paired_verifier.py",
+      "mode": "100644",
+      "bytes": 11553,
+      "sha256": "05460f0b312549ecea5d71462bb3d7354743b70c57d111082eff238b9e01b428"
+    },
+    {
+      "file": "tools/puzzle_production/palette_gate.py",
+      "mode": "100644",
+      "bytes": 7425,
+      "sha256": "6f4dc28f46218ca52c9d9443c57c00887a66b83dd5b19cd51b7b8d9e82d214f0"
+    },
+    {
+      "file": "tools/puzzle_production/palette_quality.py",
+      "mode": "100644",
+      "bytes": 14747,
+      "sha256": "0c13f8d2fb3953fed66721a23c840c0c804d1a552c8df51a8027d178ef63ca2c"
+    },
+    {
+      "file": "tools/puzzle_production/quality.py",
+      "mode": "100644",
+      "bytes": 4914,
+      "sha256": "5a9aec411782661c2dc4183d15b908052a4c88edc03e1e32c751a7ec0332f3b0"
+    },
+    {
+      "file": "tools/puzzle_production/raster_parameters.py",
+      "mode": "100644",
+      "bytes": 4695,
+      "sha256": "7d2087d1f510d9de310666aa7629c4a4640d4bcbb78b6e48b2b9386766f11fc5"
+    },
+    {
+      "file": "tools/puzzle_production/repair.py",
+      "mode": "100644",
+      "bytes": 37102,
+      "sha256": "758026ac783fbd29d029ece1a9bb32fe6c3f9c73100992fca79b942bcc661725"
+    },
+    {
+      "file": "tools/puzzle_production/retirement_scope.py",
+      "mode": "100644",
+      "bytes": 5756,
+      "sha256": "13b7c38a435eeecd7974320f750ac7e9c26fe5cfa45cf6f0c5b38047c577d7d4"
+    },
+    {
+      "file": "tools/puzzle_production/reveal_retirement.py",
+      "mode": "100644",
+      "bytes": 2272,
+      "sha256": "1d337c5feab3a3914211f5c75af01835b58d27e0f002d3617ff63cd9a3f958ea"
+    },
+    {
+      "file": "tools/puzzle_production/reveal_source.py",
+      "mode": "100644",
+      "bytes": 3959,
+      "sha256": "a65fa17335998fb377cedd18fc8398fb9bd8d77b209d8613b5707df7e036be79"
+    },
+    {
+      "file": "tools/puzzle_production/sd2_analysis.py",
+      "mode": "100644",
+      "bytes": 2857,
+      "sha256": "98346cf97b715808efad039b7ee7afab1b4d78c74c4b5d54bfeaa45d9d5368e8"
+    },
+    {
+      "file": "tools/puzzle_production/sd2_calibration_0_4.json",
+      "mode": "100644",
+      "bytes": 37830,
+      "sha256": "00b1020ceca267dd235b752de54a4bba95d29e900275e8a603e71a8457cac857"
+    },
+    {
+      "file": "tools/puzzle_production/sd2_catalog_rating.py",
+      "mode": "100644",
+      "bytes": 15636,
+      "sha256": "81c961910e19d749c8760855a38bb06aafa1a7eb5ea63361cd274630b4dc169c"
+    },
+    {
+      "file": "tools/puzzle_production/sd2_cli.py",
+      "mode": "100644",
+      "bytes": 3893,
+      "sha256": "4596a827ff16b36d418806970f8974c4cbe8772caf1eef293ada0cd9faa5f261"
+    },
+    {
+      "file": "tools/puzzle_production/sd2_comparison_0_4.json",
+      "mode": "100644",
+      "bytes": 101067,
+      "sha256": "84d16816831a354dbf2938824497ae596eec02188a05a885edcf03f688d0c816"
+    },
+    {
+      "file": "tools/puzzle_production/sd2_contract.py",
+      "mode": "100644",
+      "bytes": 3195,
+      "sha256": "8628fe4aed40567a24646865ab63c337cbcb8ab90c6eae6cd73a7690600edf38"
+    },
+    {
+      "file": "tools/puzzle_production/sd2_io.py",
+      "mode": "100644",
+      "bytes": 9794,
+      "sha256": "e916d105c63d2313cf3e28de8a9dfd956b012efa1e4012d64c422682416f9c24"
+    },
+    {
+      "file": "tools/puzzle_production/sd2_method_0_4.json",
+      "mode": "100644",
+      "bytes": 4327,
+      "sha256": "6b8d83c8167d1c48aa2c88ed0ec2ceaa4b4f647660c07be6095219e878a7e3e6"
+    },
+    {
+      "file": "tools/puzzle_production/sd2_profiles.py",
+      "mode": "100644",
+      "bytes": 11245,
+      "sha256": "2e043fdb16f9fb4652c323cfa7494949f2dcbdc8339b1046e76314c5d3b3813c"
+    },
+    {
+      "file": "tools/puzzle_production/sd2_rating.py",
+      "mode": "100644",
+      "bytes": 8203,
+      "sha256": "cb30c6fd58c66b56b48c3741985fa2c52a797c62c0df5646469315e8e9397831"
+    },
+    {
+      "file": "tools/puzzle_production/sd2_rating_cli.py",
+      "mode": "100644",
+      "bytes": 4139,
+      "sha256": "8c1ebd01de47d5569e4de9eeaed21a98d5d2a46d0b18387d2c842269891617b8"
+    },
+    {
+      "file": "tools/puzzle_production/sd2_rating_freeze.py",
+      "mode": "100644",
+      "bytes": 1576,
+      "sha256": "5c7682f2783d9e83e8ca8065bcf8539405c1a6fd5f69785f7d8ea2193b9f6b56"
+    },
+    {
+      "file": "tools/puzzle_production/sd2_rating_identity.py",
+      "mode": "100644",
+      "bytes": 165,
+      "sha256": "6fc0599137345c2a66d2d86f55543105481f30731f965a03fba011d85435afed"
+    },
+    {
+      "file": "tools/puzzle_production/sd2_rating_io.py",
+      "mode": "100644",
+      "bytes": 5017,
+      "sha256": "8d9f90c53df02cbcef61d95a7bb6a6063458ee937517de5f7b45598db3dafaf6"
+    },
+    {
+      "file": "tools/puzzle_production/sd2_reference_checks.py",
+      "mode": "100644",
+      "bytes": 4597,
+      "sha256": "7141afd2b03fa4db1f44c90e5980f93d5d8ba76f9148bdcd41fa4ff812797199"
+    },
+    {
+      "file": "tools/puzzle_production/sd2_references_0_4.json",
+      "mode": "100644",
+      "bytes": 421921,
+      "sha256": "be18dd7db638fd05567986d546ed6c25b06c4efdc1e19dc71e0814bffaf8b2a5"
+    },
+    {
+      "file": "tools/puzzle_production/sd2_rules.py",
+      "mode": "100644",
+      "bytes": 5664,
+      "sha256": "345095b5419161eb9cef1d798a079a945201562d0a6b5df5e4577015205022da"
+    },
+    {
+      "file": "tools/puzzle_production/sd2_validation_0_4.json",
+      "mode": "100644",
+      "bytes": 30196,
+      "sha256": "ee7061f7af3ca2ab05c77b29b52577a3dbccf1b274807262f9e3faa31a6c4018"
+    },
+    {
+      "file": "tools/puzzle_production/sd2_verifier.py",
+      "mode": "100644",
+      "bytes": 10490,
+      "sha256": "7afdd52a6e8a38ede26735685680c599750d5abcb0908c75ecbab90641a6a3e7"
+    },
+    {
+      "file": "tools/puzzle_production/solver.py",
+      "mode": "100644",
+      "bytes": 5257,
+      "sha256": "02f663a9eeaf5e1a7b237d652cdd45f0efdcba07af214b5bbbee47c1803d4fed"
+    },
+    {
+      "file": "tools/puzzle_production/target_adapter.py",
+      "mode": "100644",
+      "bytes": 4632,
+      "sha256": "d5302473af6ed661f77443cee9e166ea897a1df8df5e5500ab9516da48f6d636"
+    },
+    {
+      "file": "tools/puzzle_production/verifier.py",
+      "mode": "100644",
+      "bytes": 7948,
+      "sha256": "f489b139fdd78f89cd933e1810274774d2ae1fb080cebd6538755996540a1112"
+    }
+  ]
+}

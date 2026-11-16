@@ -1,0 +1,14 @@
+{
+  "format": "picross-installer-inspection-v1",
+  "commit": "faaa6e7d7ce510559298272adc982e6cf8db1e31",
+  "version": "0.1.18",
+  "payload_fingerprint": "5afcf768c1acfb344d70152c5bc0cdfcf3b25f24aa6a1f90c811625ce5e4afee",
+  "msi_sha256": "38c60a0862410f2172466cd844c5cce1c53d6549fae9028f7c27eb26d646535b",
+  "msi_bytes": 25377784,
+  "product_code": "B8BBADE3-98FA-5C7B-BAE2-AF7352508CE3",
+  "upgrade_code": "9F958827-537B-4D84-AF17-462F8F78A8D4",
+  "inventory_files": 1045,
+  "license_files": 19,
+  "compared_to_build": true,
+  "limits": "Actual MSI database and all unpacked bytes verified. No installation; T02 requires a non-elevated Windows client."
+}
