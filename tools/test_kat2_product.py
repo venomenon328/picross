@@ -1,6 +1,9 @@
 """Small P2-E-A-V02 selection/checkpoint/boundary counterexamples; no renderer."""
 from copy import deepcopy
 import math
+import json
+from pathlib import Path
+import tempfile
 import unittest
 
 from ci_scope import classify
@@ -34,6 +37,35 @@ class CatalogMatrix(unittest.TestCase):
             plan = classify([path])
             self.assertEqual(plan['native_groups'], ['catalog'])
             self.assertEqual(plan['browser_groups'], [])
+
+    def test_adapter_historical_fixture_has_exact_v5_fields_and_preserves_sources(self):
+        from tests.puzzle_production import current_fixtures as fixture
+        from tests.puzzle_production.catalog_fixtures import pre_metadata
+        from tools.puzzle_production import content_registry
+        from product_fixtures import install_runtime_fixtures
+
+        with tempfile.TemporaryDirectory() as temporary:
+            home = Path(temporary)
+            checkout = fixture.checkout(home / 'checkout')
+            package = fixture.make(home / 'input', identifier='pz-test-kat2-adapter')
+            content_registry.registration(package, checkout, apply=True)
+            before = fixture.fingerprints(checkout)
+            original = json.loads((checkout / 'game/data/registry.json').read_bytes())
+            pre_metadata(checkout, runtime_version=5)
+            install_runtime_fixtures(Path(__file__).resolve().parents[1], checkout / 'game', append=True)
+            runtime = json.loads((checkout / 'game/data/registry.json').read_bytes())
+            self.assertEqual(runtime['format'], 'picross-runtime-registry-v5')
+            fields = {'id', 'key', 'save_slot', 'definition', 'reveal', 'visible',
+                      'difficulty', 'added_at', 'category_id'}
+            for entry in runtime['entries']:
+                self.assertEqual(set(entry), fields)
+            adapted = next(e for e in runtime['entries'] if e['id'] == 'pz-test-kat2-adapter')
+            self.assertEqual(adapted, {k: v for k, v in original['entries'][0].items() if k in fields})
+            self.assertEqual(runtime['categories'], original['categories'])
+            after = fixture.fingerprints(checkout)
+            for name, fingerprint in before.items():
+                if name != 'game/data/registry.json':
+                    self.assertEqual(after[name], fingerprint, name)
 
     def test_missing_duplicate_reordered_unexecuted_or_failed_case_is_rejected(self):
         for mode in ('ke', 'kk', 'pages'):
