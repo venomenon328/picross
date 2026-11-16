@@ -111,6 +111,9 @@ def build(destination, *, version=None, app=PW):
             extra_args += ['--add-data', str(ROOT / relative) + ':' + target]
         for name in PE_EXCLUDED:
             extra_args += ['--exclude-module', 'tools.puzzle_production.' + name]
+        # PE uses current targeted readers, not PW's Git/presentation endpoints.
+        for name in ('sources', 'current_view', 'presentation', 'processes', 'projector'):
+            extra_args += ['--exclude-module', 'tools.production_workspace.' + name]
         extra_args += ['--exclude-module', 'tools.puzzle_editor.diagnostic',
                        '--exclude-module', 'tools.puzzle_editor.frozen_diagnostic']
     from cryptography.hazmat.backends.openssl.backend import backend
@@ -138,7 +141,7 @@ def build(destination, *, version=None, app=PW):
                     '--version-file', str(file_version),
                     '--distpath', str(destination / 'dist'),
                     '--workpath', str(work / 'pyinstaller'), '--specpath', str(work), '--paths', str(ROOT),
-                    '--collect-submodules', 'tools.puzzle_production',
+                    *(['--collect-submodules', 'tools.puzzle_production'] if app == PW else []),
                     *(arg for name in FROZEN_EXCLUDES for arg in ('--exclude-module', name)),
                     '--hidden-import', 'tools.production_workspace.update_verifier',
                     '--hidden-import', 'cryptography.hazmat.primitives.asymmetric.ed25519',
