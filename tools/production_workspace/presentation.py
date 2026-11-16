@@ -120,7 +120,7 @@ def registration(source, record):
     value=record["integration"]
     ap.require(isinstance(value,dict) and value.get("operation")=="register","Unbekannter Abschluss.")
     check_commit(value["commit"])
-    actual=current_delivery.snapshot(lambda name,limit:source.read(value["commit"],name,limit),record["puzzle_id"])
+    actual=current_delivery.snapshot(lambda name,limit,missing=False:source.read(value["commit"],name,limit,missing),record["puzzle_id"])
     if "result" in value:
         exact_keys(value,{"operation","commit","result"})
         ap.require(current_delivery.same(actual,value["result"]),"Aktuelle Lieferung unterscheidet sich.")

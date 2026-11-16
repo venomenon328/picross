@@ -143,7 +143,9 @@ def validate(value):
             [e for e in runtime["entries"] if e["id"] != identifier] == old_runtime["entries"] and
             sum(e["id"] == identifier for e in runtime["entries"]) == 1, "Foreign runtime mutation")
     # Recovery validates the actual new delivery, not just the write inventory.
-    delivery = content.selected(None, after, identifier, read=lambda n, limit=content.LIMIT: sides[n][1])
+    delivery = content.selected(None, after, identifier,
+                                read=lambda n, limit=content.LIMIT, *, missing=False:
+                                sides.get(n, (None, None))[1] if missing else sides[n][1])
     require(content.runtime_row(delivery) == next(e for e in runtime["entries"] if e["id"] == identifier),
             "Registration journal runtime does not describe its current data")
     require(delivery["reveal"]["record_revision"] == delivery["background"]["record_revision"] == 1 and
