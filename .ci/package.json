@@ -1,19 +1,11 @@
 {
   "format": "development-ci-plan/v1",
   "issue": "https://github.com/venomenon328/picross/issues/671",
-  "package": "RETIRE-NOTICE-COMPAT",
-  "modules": [
-    "production.catalog"
-  ],
-  "purpose": "Gezielten §9-Abschluss nach PE-EDIT2 für selected-Hintergründe ohne künstliche TXT-Notice ermöglichen. Vorhandene Hintergrundnotices, verpflichtende Revealnotices, Mainvergleich, Byteguards und aktive Assets weiter schützen.",
-  "omitted": "Kein voller production.*-Satz, keine Native-/Browsergruppe: nur Abschlussreader, Callbackbindung, Normtext und kleine synthetische Regressionen betroffen. Windows-Paket folgt unverändert der normalen Entwicklungs-Kernpflicht, kein Bild-/Player-Verhaltensanspruch aus den Fachtests.",
-  "test_changes": [
-    {
-      "path": "tests/puzzle_production/test_current_completion.py",
-      "disposition": "change-scoped",
-      "reason": "Gezielte Regression für optional fehlende Hintergrund-TXT, unzulässige fremde TXT und weiterhin nötige Reveal-TXT; keine neue Testfamilie oder gesonderte Wiederholung."
-    }
-  ],
+  "package": "HG-BESTAND-01-ABSCHLUSS",
+  "modules": [],
+  "purpose": "Enger Produktionsabschluss nach Schritt 5 §9: genau 193 abgeschlossene HG-BESTAND-01-Arbeitsdateien für Kaktus, Japanische Teekanne und Qualle nach bestätigter Mainintegration entfernen. Aktive Bilder, Quellen, Rechte und Rätseldaten bleiben bytegleich.",
+  "omitted": "Reine Produktionsbereinigung mit aktuellem Paketplan. Keine Code-, Test-, Regel- oder Spielassetänderungen; daher Quellen-/Plankern ohne Zusatzmodule und ohne Playerbau. Aktuelle Lieferung und Bytegleichheit wurden gezielt vor und nach retire-production geprüft, Wiederholung ist No-op.",
+  "test_changes": [],
   "core_change": null,
   "evidence": {
     "mode": "none",
