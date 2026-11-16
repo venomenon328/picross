@@ -1,6 +1,6 @@
 # HG-BESTAND-02 · Banane
 
-Phase: background_review. Tatsächliche Eigentümerwahl offen.
+Phase: ausgewählt; Integration in Vorbereitung. Eigentümerwahl: N2/r01. Erklärung und Folgeauftrag sind in evidence/owner-choice-d01.txt und decisions/d01.json gebunden. Die deterministische 2304×768-Ableitung liegt unter derived/d01/.
 
 Quelle/Regeln: main@a5e751322f68a9cb9686dc66f12c772e921baef7. Sicherungsbranch: content/hg-bestand-02.
 
