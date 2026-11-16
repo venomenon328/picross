@@ -57,7 +57,7 @@ class WorkflowFixture:
         for name, raw in payload.items():
             put(self.helper.source, name, raw)
         (self.helper.source / 'rulebook.md').unlink()
-        self.request.update(format=rules.REQUEST, document_revision=8)
+        self.request.update(format=rules.REQUEST, document_revision=9)
         self.request['handoff'].update(format=rules.HANDOFF, repo_commit=commit, rulebook=rule)
         return payload
 
@@ -168,7 +168,7 @@ class WorkflowTests(unittest.TestCase):
         item.clear(); item.update(original); put(f.helper.source, name, payload[name])
         f.request['document_revision'] = 6
         with self.assertRaisesRegex(ValueError, 'revision'): verify()
-        f.request['document_revision'] = 8
+        f.request['document_revision'] = 9
         original_commit = h['repo_commit']
         h['rulebook']['source_commit'] = 'f' * 40
         with self.assertRaisesRegex(ValueError, 'commit'): verify()

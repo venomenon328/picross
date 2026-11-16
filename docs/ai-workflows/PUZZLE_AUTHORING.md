@@ -1,6 +1,6 @@
 # Picross: Produktionsregeln
 
-**Version 0.8.0 · Dokumentrevision 8 · 16.11.2026 · RI-ONE**
+**Version 0.8.0 · Dokumentrevision 9 · 16.11.2026 · RI-ONE**
 
 ## 1. Einstieg und Befugnisse
 
@@ -43,7 +43,7 @@ Produktdefinition/Gestaltung und historische Lieferberichte nicht pauschal voll 
 Felder/Grenzen nie erraten; fehlende Quellen/Widersprüche blockieren nur
 abhängige Operationen. Vorhandene Arbeitsoriginale und Freigaben bleiben bytegleich. Alt-WIP ist kein
 Kompatibilitätsziel; keine automatische WIP-Migration. Integration benutzt
-ausschließlich den aktuellen Eingang nach RI-ONE. Neue Rev8-Snapshots:
+ausschließlich den aktuellen Eingang nach RI-ONE. Neue Rev9-Snapshots:
 [PW-B](../PW_B_CONTRACT.md#pw-perf-d--regelquellen-und-snapshotgeneration).
 Regeln/Stil/Fachquellen vom selben vollen Quellcommit lesen. Separate Entwicklung
 an Regeln/Werkzeugen/Spiel/CI folgt vollständig AGENTS.
@@ -134,7 +134,7 @@ Phasen/Varianten/Korrekturen/Wiederaufnahmen bleiben dort. Index/Kollisionen pr�
 fremde Arbeit erhalten. Jede Übergabe bekommt vollständige Einzelrevision unter
 `content/authoring/<puzzle_id>/<revision>/` und Arbeitsindexeintrag.
 Unversiegelten Request v4/Handoff v5 mit expliziter Dateiliste und geschlossenem
-Rev7-Snapshot nach PW-B/PB-A verwenden:
+Rev9-Snapshot nach PW-B/PB-A verwenden:
 
 ```text
 python -m tools.puzzle_production.authoring_builder build --request <request-v4.json> --source-root <vorbereitete-dateien> --output-root <eigene-arbeitswurzel> --publish-to <produktionscheckout> --history-repo <produktionscheckout>

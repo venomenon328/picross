@@ -1,9 +1,15 @@
 # PW · Git-gestützter Produktionsassistent
 
+**HG31 / #675:** Neue 3:1-Einzelkompositionen und 2304×768 unter eigenem Profil;
+4:1-Bestand und sein Profil bleiben bytegleich. Maßgeblicher geschlossener
+[Profil-/Capability-/Geometrievertrag](PUZZLE_BACKGROUNDS.md#hg31--zwei-geschlossene-bildprofile)
+ersetzt widersprechende aktive Einprofilangaben unten. Keine Inhaltsmigration;
+Mainaktivierung erst nach technischen Nachweisen und unabhängigem HG31-A01.
+
 ## PW2-A · Operativer Quellenweg
 
 Für normale Rätselproduktion aller fünf Schritte einschließlich Korrektur und
-Wiederaufnahme gilt [Authoring 0.8.0, Dokumentrevision 7, §1.1](ai-workflows/PUZZLE_AUTHORING.md#11-pflichtquellen-nach-phase):
+Wiederaufnahme gilt [Authoring 0.8.0, Dokumentrevision 9, §1.1](ai-workflows/PUZZLE_AUTHORING.md#11-pflichtquellen-nach-phase):
 AGENTS-Produktionseinstieg, gemeinsamer Authoringkern, vollständiger
 [Bildstil](PUZZLE_IMAGE_STYLE.md), dann nur die fällige Phase und die konkret
 benötigte technische Operation. Dieser PW-Gesamtvertrag, WORKFLOW, Projektprofil
@@ -15,7 +21,7 @@ Historische Paketgrenzen und Lieferstände sind keine neuen Produktionsaufträge
 
 Die gemeinsame Stilnorm präzisiert farbige Reveals in Richtung Filzstift/farbiger
 Tusche und leichte neutralgraue Graphitkontexte. Auch komplexe Szenen und Gruppen
-bleiben zulässig. Hintergrundkomposition meint die vollständige 2304×576-Leinwand
+bleiben zulässig. Hintergrundkomposition meint die vollständige 2304×768-Leinwand für neue 3:1-Arbeit
 mit transparentem Freiraum, nicht die Alpha-Bounds des sichtbaren Motivs.
 Gemeinsamer Fit/Anker und alle geschlossenen Dateiformen bleiben unverändert.
 PW2-A führte allein den Normschnitt ein. PW2-B ergänzt den unten beschriebenen

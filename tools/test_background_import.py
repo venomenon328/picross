@@ -49,6 +49,25 @@ class BackgroundImportTests(unittest.TestCase):
             path.write_bytes(b"GST2" + struct.pack("<8I", 1, 2304, 576, 1 << 23, 0xffffffff, 0, 0, 0)
                              + struct.pack("<IHHII", 2, 2304, 576, 11, image_format) + (struct.pack("<I", 1) + b"x")*12)
 
+    def test_hg31_geometry_and_capability_are_bound_before_import(self):
+        from io import BytesIO
+        from PIL import Image
+        row=self.inventory['assets'][0]
+        stream=BytesIO();image=Image.new('RGBA',(2304,768),(0,0,0,0));image.putpixel((100,700),(50,50,50,128));image.save(stream,format='PNG')
+        raw=stream.getvalue();(self.project/row['asset']['file']).write_bytes(raw)
+        row['asset'].update(bytes=len(raw),sha256=hashlib.sha256(raw).hexdigest())
+        capability=self.project/'data/background-capability.json'
+        capability.write_text(json.dumps({'format':'picross-runtime-background-capability-v1','runtime_format':'picross-runtime-registry-v6','profile_id':'picross-background-png2304-v1','enabled':True}))
+        with self.assertRaisesRegex(ValueError,'capability'):background.prepare_import(self.project,self.inventory)
+        capability.write_text(json.dumps({'format':'picross-runtime-background-capability-v2','runtime_format':'picross-runtime-registry-v8','profile_ids':['picross-background-png2304-v1','picross-background-png2304x768-v1'],'enabled':True}))
+        self.assertEqual(background.prepare_import(self.project,self.inventory),self.inventory)
+        self.assertEqual((self.project/row['asset']['file']).read_bytes(),raw)
+        self.header_only_import()
+        with self.assertRaisesRegex(ValueError,'header differs'):background.verify_import(self.project,self.inventory)
+        for height in (575,577,767,769):
+            bad=bytearray(raw);struct.pack_into('>I',bad,20,height)
+            with self.assertRaisesRegex(ValueError,'supported PNG2304'):background._png_image_format(bytes(bad),'wrong-height.png')
+
     def test_direct_png_header_allowlist_and_source_format_binding(self):
         # Header counterexamples only; these deliberately do not prove PNG
         # decoding, tRNS/Adam7 pixel correctness or the real PCK import path.

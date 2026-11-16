@@ -2,7 +2,7 @@
 
 Der fünfstufige Assistent für neue Authoring-0.8.0-Produktionen verwendet
 Handoff v5, Record v4 und Projektion v2. Der aktuelle operative Regelstand ist
-**Authoring 0.8.0, Dokumentrevision 7 (PW-PERF-D)**. Normale Produktion liest den
+**Authoring 0.8.0, Dokumentrevision 9 (PW-PERF-D)**. Normale Produktion liest den
 Produktionseinstieg in [AGENTS](../../AGENTS.md),
 [Authoring §1.1](../../docs/ai-workflows/PUZZLE_AUTHORING.md#11-pflichtquellen-nach-phase),
 den vollständigen [gemeinsamen Bildstil](../../docs/PUZZLE_IMAGE_STYLE.md) und
@@ -485,3 +485,14 @@ abweichende Darstellungs-/Bild-/Angebotsquellen verlangen vollständige Prüfung
 Alte und neue Inhalts-/Freigabeprüfung bleiben eigenständig. Sidecar vor Record,
 Bytevergleich, Fremddatenschutz, Wiederaufnahme und No-op bleiben verbindlich.
 Keine Befunde über Aufrufe, Ziele oder Locks hinweg weiterverwenden.
+
+## HG31: explizite Profilwahl
+
+Neue Einzelkompositionen sind exakt 3:1. HP-W2: `describe --profile-id
+picross-background-png2304x768-v1` (in einer Zeile aufrufen), dann dessen
+vollständiges Profil/Hash in Request v2 und Entscheidung binden. Ausgabe
+2304×768 RGBA8; verify prüft dieselbe Bindung. Altes Profil bleibt unverändert.
+Fertigimport erkennt 2304×768 bzw. 2304×576 aus validierten PNG-Bytes und
+übernimmt unverändert. V1-Capability erlaubt ausschließlich das alte Profil.
+[Geschlossener Vertrag](../../docs/PUZZLE_BACKGROUNDS.md#hg31--zwei-geschlossene-bildprofile).
+Keine Kandidatenintegration vor geprüftem Mainmerge oder neue WIP-Migration.

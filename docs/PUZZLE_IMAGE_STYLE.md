@@ -83,52 +83,29 @@ Motivvorlage und Lösungsraster bleiben verschiedene Freigabegegenstände.
 
 ## Hintergrundkomposition: die vollständige Leinwand
 
-Gestalterisch maßgeblich und ausgeliefert ist die **vollständige 2304×576-RGBA-
-Leinwand (4:1)**. Ihre Komposition nutzt die volle dafür vorgesehene gemeinsame
-Hintergrundfläche auf dem Buchpapier; die bestehenden Falz-/Randabstände bleiben.
-Entscheidend sind die sichtbare Breitenverteilung und die geplanten seitlichen
-Positionen, nicht allein die Dateibreite. **Ein 4:1-Dateikasten mit zusätzlich
-angehängten transparenten Seitenbalken ist keine Formatkorrektur:** Er darf die
-Zeichnung weder schmaler erscheinen lassen noch zur Mitte verschieben und große
-zusätzliche seitliche Freiräume erzeugen.
+HG31 / [#675](https://github.com/venomenon328/picross/issues/675#umsetzungsvorbereitung-hg31):
+Neue Kandidaten sind vollständige zusammenhängende transparente Einzelbilder
+exakt 3:1. Native Maße dürfen variieren, etwa 2172×724. Die ausdrücklich gewählte
+HP-W2-Ableitung liefert 2304×768 RGBA8 unter dem eigenen neuen Profil.
+Bereits gewählte 4:1-Bilder behalten ihre unveränderten Bytes und 2304×576.
+Die Profilkörper und der synchrone Mainübergang stehen im
+[Hintergrundvertrag](PUZZLE_BACKGROUNDS.md#hg31--zwei-geschlossene-bildprofile).
 
-Bewusst gestalteter transparenter Freiraum bleibt Teil der Komposition. Ein nur
-rechts gezeichnetes Motiv wird schon rechts auf dieser vollständigen Leinwand
-angelegt und behält seinen linken Leerraum. Das ganze Bild wird über denselben
-proportionalen Fit und unteren mittigen Anker platziert: kein Alpha-Bounds-Zuschnitt,
-kein nachträgliches Zentrieren nur des sichtbaren Motivs und keine rätselspezifischen
-Positions-, Crop- oder Maskenparameter. Das Funktionslayout wird nicht verkleinert.
+Die gesamte Leinwand samt bewusstem Freiraum nutzt die gemeinsame sichere
+Papierbreite mit erhaltenen Falz-/Randabständen und seitlichen Positionen.
+Bei gleicher Breite darf 3:1 ein Drittel höher stehen; Platzmangel wird durch
+proportionalen Fit der ganzen Komposition gelöst. Unterer mittiger Anker,
+kein Alpha-Bounds-Crop oder Nachzentrieren nur des sichtbaren Motivs.
+Rechtsbetonte, offene, durchgehende, U-/Halb-U-Kompositionen sind erlaubt;
+keine Randpixel-, Prozentbelegungs-, Objektzahl- oder Zwei-Eckenpflicht.
 
-Als lockere Gestaltungsrichtung eignet sich eine asymmetrische U-/Halb-U-
-Komposition: rechts gegebenenfalls die vollen 576 Pixel Höhe, links ordentlich
-bis voll, in der Mitte weniger. Ebenso zulässig sind offene, durchgehende oder
-ausschließlich rechts liegende Kompositionen. **Keine verbindliche U-Form,
-Höhenprozente, Zwei-Ecken-Anordnung oder Objektzahl.** Motiv und Bildgewicht
-entscheiden; volle Höhe bezeichnet stets die Leinwand, nicht einen späteren
-Zuschnitt auf sichtbare Pixel.
-
-Andere native Pixeldimensionen dürfen dieselbe vollständige 4:1-Komposition
-abbilden, ausdrücklich auch kleinere Originale wie **2048×512**. Eine
-Generatorbreite von 2896 Pixeln ist keine Pflicht; wiederholte 3:1-Ausgaben
-beweisen keine feste KI-Auflösungsgrenze. Die vollständige Zeichnung und ihre
-Strichqualität müssen bei der proportionalen Ableitung erhalten bleiben.
-Der vorhandene gemeinsame Ableitungsweg liefert weiterhin 2304×576, ohne kreative
-Neukomposition oder Beschnitt. Die technische logische Referenz 3072×768 ist keine
-zweite gestalterische Zielfläche. Das feste HP-W2-Profil, seine Rundung,
-Alpha-/Farbbehandlung und der gemeinsame Runtime-Fit bleiben unverändert.
-
-3:1-Generatorbilder sind als Rohmaterial zulässig. Vor der Bildwahl müssen die
-tatsächlichen Kandidatenmaße jedoch exakt 4:1 erfüllen und die vollständige
-Komposition die vorgesehene Breite erhalten. Andere Auflösung allein ändert kein
-Seitenverhältnis. Format- und dadurch nötige Kompositionskorrekturen werden nach
-[Schritt 4 §6.3.1](ai-workflows/PUZZLE_AUTHORING_STEP_4.md#631-formatkorrektur-vor-der-bildwahl)
-im laufenden Auftrag ohne zusätzliche Ausführungserlaubnis hergestellt und als
-neue Fassung zur normalen Bildwahl vorgelegt. Nötigenfalls zeichnerisch erweitern
-oder passend neu komponieren; bloßes Seitenpadding, Strecken oder Abschneiden
-gezeichneter beziehungsweise bewusst leerer Bereiche erfüllt den Auftrag nicht.
-Q-HG03 prüft diese Breitenwirkung am Auswahlbild und an der gewählten fertigen
-Ableitung. Ein technisch erfolgreicher Reader-/HP-W2-Lauf ersetzt dieses Urteil
-nicht. Keine Randpixel-, Prozentbelegungs- oder Zwei-Eckenpflicht daraus ableiten.
+Tatsächliche PNG-Maße vor der Auswahl lesen: Breite=3*Höhe. Kein Seitenpadding,
+Stitching zweier generierter Hälften, Stretch, Beschnitt oder individuelles
+Verschieben zur Formatheilung. Formatkorrekturen folgen
+[Schritt 4 §6.3.1](ai-workflows/PUZZLE_AUTHORING_STEP_4.md#631-formatkorrektur-vor-der-bildwahl).
+Die vollständige Zeichnung, feine Striche und Alpha bleiben bei proportionaler
+Ableitung erhalten. Q-HG03 prüft tatsächliche Breitenverteilung am Original
+und an der gewählten fertigen Ableitung; technischer Erfolg ersetzt kein Urteil.
 
 ## Sichtung, Freigabe und Bestand
 

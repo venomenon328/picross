@@ -323,9 +323,9 @@ def plan(root, request, *, uploads=None, work=None, expected=None, expected_defi
                     require(part["status"] in ("standard", "selected", "none"), "Invalid background preference")
                     raw = uploads[part["upload"]]["raw"] if part["upload"] else None
                     if raw is not None:
-                        from .editor_image_input import PROFILE
+                        from .editor_image_input import PROFILES
                         checked = uploads[part["upload"]]["checked"]
-                        require(checked["profile"] == PROFILE and checked["sha256"] == checksum(raw), "Prepared background binding differs")
+                        require(checked["profile"] in PROFILES.values() and checked["sha256"] == checksum(raw), "Prepared background binding differs")
                     require(part["status"] == "selected" or raw is None, "Image-free background has upload")
                     asset = None
                     if part["status"] == "selected":
@@ -338,7 +338,8 @@ def plan(root, request, *, uploads=None, work=None, expected=None, expected_defi
                     if (part["status"], asset) != (old_current["status"], old_asset):
                         if part["status"] in ("selected", "none"):
                             capability = inputs.json(bg.CAPABILITY, 4096, missing=True)
-                            bg.capability(inputs.root, {bg.CAPABILITY: encoded(capability) if capability else None}, required=True)
+                            bg.capability(inputs.root, {bg.CAPABILITY: encoded(capability) if capability else None}, required=True,
+                                          profile_id=bg.image_profile(raw) if raw is not None else None)
                         if raw is not None: put(bg.asset_path(identifier), raw)
                         elif old_current["status"] == "selected": put(bg.asset_path(identifier), None)
                         current = {"image_revision": (old_current["image_revision"] or 0)+1, "status": part["status"], "asset": asset}

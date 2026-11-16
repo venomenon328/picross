@@ -1,6 +1,6 @@
 # Schritt 3: Rasterangebote
 
-**Version 0.8.0 · Dokumentrevision 8 · 16.11.2026 · RI-ONE**
+**Version 0.8.0 · Dokumentrevision 9 · 16.11.2026 · RI-ONE**
 
 Pflicht: vollständiger [Kern](PUZZLE_AUTHORING.md) und [Bildstil](../PUZZLE_IMAGE_STYLE.md).
 Zusätzlich: [Qualität](../PUZZLE_QUALITY.md) §§2–4; §5 bei fehlendem qualifiziertem Kandidaten, §6 bei konkreter Ausnahme. Farbe: ausschließlich operative §§8.4–8.5; §§8.1–8.3.1 sind historische Referenz-/Herkunftslektüre nur bei konkreter Frage. Q-R04/Q-H01/Q-H02, Farb-/Ausnahme-/Proofgates und echte Endfreigaben bleiben.
