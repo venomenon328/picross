@@ -1,68 +1,17 @@
 {
   "format": "development-ci-plan/v1",
-  "issue": "https://github.com/venomenon328/picross/issues/675",
-  "package": "HG31",
+  "issue": "https://github.com/venomenon328/picross/issues/677",
+  "package": "PW-INST-FIX",
   "modules": [
-    "tools",
-    "production.images",
-    "production.adapter",
-    "production.catalog",
-    "native.catalog",
-    "native.export",
-    "delivery"
+    "tools"
   ],
-  "purpose": "HG31-K01–K07: explizite Doppelprofile über HP-W2, Editor/RI, native/Webanzeige und Engine-/PCK-Import. Windows-Kerndownload aus native.export wiederverwenden.",
-  "omitted": "production.solver, preflight, native.core/history/completion/adapters/graphics und Browsermatrix: keine Logik-, Save-, Gesten-, Font- oder funktionale Layoutänderung. T01 Durchstich, T02 Bestandsschutz und T03 echte native/Web-/Editorbedienung separat; kein Chromiumauftrag.",
+  "purpose": "PW-INST-FIX K01–K04: PyInstaller-Testfixtureausschluss, geschlossener Fingerprint-/Analysis-/PYZ-Abgleich und gezielte Installerregressionen. Separater nicht veröffentlichender Windows-MSI-Diagnoselauf als einmaliger Integrationsnachweis.",
+  "omitted": "production.*, native.*, preflight, delivery: keine Änderungen an Rätsel-, Spiel-, Engine- oder Webpfaden. Echte Windows-MSI-/Frozen-Prüfung erfolgt als separater manueller PW-Installer-Dispatch und wird nicht als Dauerlast der Package CI übernommen.",
   "test_changes": [
     {
-      "path": "tests/puzzle_production/test_authoring_workflow.py",
+      "path": "tools/test_production_installer.py",
       "disposition": "change-scoped",
-      "reason": "HG31: geschlossene Doppelprofile und ihre Negativ-/Bestandsgrenzen in der vorhandenen Familie; bei Ablösung des Profils neu entscheiden."
-    },
-    {
-      "path": "tests/puzzle_production/test_background_assets.py",
-      "disposition": "change-scoped",
-      "reason": "HG31: geschlossene Doppelprofile und ihre Negativ-/Bestandsgrenzen in der vorhandenen Familie; bei Ablösung des Profils neu entscheiden."
-    },
-    {
-      "path": "tests/puzzle_production/test_current_integration.py",
-      "disposition": "change-scoped",
-      "reason": "HG31: geschlossene Doppelprofile und ihre Negativ-/Bestandsgrenzen in der vorhandenen Familie; bei Ablösung des Profils neu entscheiden."
-    },
-    {
-      "path": "tests/puzzle_production/test_editor_change.py",
-      "disposition": "change-scoped",
-      "reason": "HG31: geschlossene Doppelprofile und ihre Negativ-/Bestandsgrenzen in der vorhandenen Familie; bei Ablösung des Profils neu entscheiden."
-    },
-    {
-      "path": "game/tests/background_tests.gd",
-      "disposition": "change-scoped",
-      "reason": "HG31: geschlossene Doppelprofile und ihre Negativ-/Bestandsgrenzen in der vorhandenen Familie; bei Ablösung des Profils neu entscheiden."
-    },
-    {
-      "path": "game/tests/content_pack_probe.gd",
-      "disposition": "change-scoped",
-      "reason": "HG31: geschlossene Doppelprofile und ihre Negativ-/Bestandsgrenzen in der vorhandenen Familie; bei Ablösung des Profils neu entscheiden."
-    },
-    {
-      "path": "tools/test_background_import.py",
-      "disposition": "change-scoped",
-      "reason": "HG31: geschlossene Doppelprofile und ihre Negativ-/Bestandsgrenzen in der vorhandenen Familie; bei Ablösung des Profils neu entscheiden."
-    },
-    {
-      "path": "tools/web_tests/background_loader_contract.cjs",
-      "disposition": "change-scoped",
-      "reason": "HG31 erweitert den vorhandenen Web-Worker-Vertrag um Profilwechsel und abweichende Geometrie; keine neue Testfamilie."
-    },
-    {
-      "path": "tests/puzzle_production/catalog_fixtures.py",
-      "disposition": "change-scoped",
-      "reason": "B01: synthetische v8-zu-v5-Adapterfixture entfernt auch das erst ab v7 gültige Namensfeld. Produktregistry und Quelldaten bleiben unverändert."
-    },
-    {
-      "path": "tools/test_kat2_product.py",
-      "disposition": "change-scoped",
-      "reason": "B01: kleiner nicht rendernder Aufbau prüft die tatsächliche Adapterfixture, exakte v5-Felder nach Geometrieanfügung und unveränderte Quellbytes; keine neue Prozessfamilie."
+      "reason": "Sehr kleine existierende Quelle-/Fingerprint-Regression für test-only ZA-1, negative Analysis und den tatsächlich beobachteten Leckpfad; bleibt im bedarfsgewählten tools-Modul."
     }
   ],
   "core_change": null,
