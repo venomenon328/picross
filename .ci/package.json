@@ -271,6 +271,11 @@
       "reason": "RI-ONE: aktuellen Integrations-, Quellen- und Verbraucherweg prüfen; kreative Qualitätsgrenzen bleiben erhalten. Keine zusätzliche dauerhafte Vollbestandsregression."
     },
     {
+      "path": "tools/test_p1_product.py",
+      "disposition": "change-scoped",
+      "reason": "Aktuelle synthetische Eingabe des unveränderten Spielerexports; kein Legacy-Katalog im Produktreader."
+    },
+    {
       "path": "tools/test_production_ci.py",
       "disposition": "change-scoped",
       "reason": "RI-ONE: aktuellen Integrations-, Quellen- und Verbraucherweg prüfen; kreative Qualitätsgrenzen bleiben erhalten. Keine zusätzliche dauerhafte Vollbestandsregression."

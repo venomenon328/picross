@@ -99,23 +99,30 @@ def registration(export_dir, root, *, apply=False, fail_step=None, publication_s
                      publication_seconds=publication_seconds, recovery_seconds=recovery_seconds)
 
 
-def recover(root, *, recovery_seconds=None):
-    from . import current_registration, editor_change
-    root = catalog_io.external(root)
+@catalog_io.bounded
+def _recovery_kind(root):
+    from . import current_registration, editor_change, catalog_transaction
+    from .catalog_publication import EDITOR_PREFIX
     for name in (editor_change.LOCK, editor_change.STAGE):
         path = catalog_io.safe(root, name)
         if path.exists():
-            from .catalog_publication import EDITOR_PREFIX
             with path.open("rb") as stream: prefix = stream.read(len(EDITOR_PREFIX))
-            if prefix == EDITOR_PREFIX:
-                require(recovery_seconds is None, "Editor recovery has its own budget")
-                with catalog_io.budget(300): return editor_change.recover(root)
+            if prefix == EDITOR_PREFIX: return "editor"
             break
-    from . import catalog_transaction
     raw = catalog_io.read(root, current_registration.LOCK, 128*1024*1024, missing=True)
-    if raw is None:
-        raw = catalog_io.read(root, catalog_transaction.STAGE, 128*1024*1024, missing=True)
+    if raw is None: raw = catalog_io.read(root, catalog_transaction.STAGE, 128*1024*1024, missing=True)
     if raw is not None and catalog_io.json_bytes(raw, 128*1024*1024).get("format") == catalog_transaction.FORMAT:
-        require(recovery_seconds is None, "Catalog operation has its own recovery budget")
-        with catalog_io.budget(300): return catalog_transaction.recover(root)
+        return "catalog"
+    return "registration"
+
+
+def recover(root, *, recovery_seconds=None):
+    from . import current_registration, editor_change, catalog_transaction
+    diagnostic.seconds(recovery_seconds)
+    root = catalog_io.external(root)
+    kind = _recovery_kind(root)
+    if kind in ("editor", "catalog"):
+        require(recovery_seconds is None, "This operation has its own recovery budget")
+        with catalog_io.budget(300):
+            return (editor_change if kind == "editor" else catalog_transaction).recover(root)
     return current_registration.recover(root, recovery_seconds=recovery_seconds)
