@@ -20,6 +20,13 @@ für die 2304×768-Ausgabe. Die Zeichnung nutzt mit ihrem bewusst gestalteten
 Freiraum die volle vorgesehene Papierbreite; keine zusätzliche seitliche Leere
 durch technisches Padding. Auch kleinere native 3:1-Originale sind zulässig;
 gemeinsamer Fit/Anker, kein Alpha-Bounds-Crop oder sichtmotivbezogenes Zentrieren.
+**Verbindlich vor der Kandidatenvorlage:** An allen vier Kanten die tatsächlichen
+Einzelbilder prüfen. Baumkronen, Stämme, Architektur und übrige gezeichnete
+Szenenteile müssen entweder vollständig Platz finden oder mit Kontur, Schraffur
+und Alpha zeichnerisch weich in echte Transparenz auslaufen. Harte Anschnitte
+sind kein zulässiger offener Bildaufbau und dürfen nicht als abnahmefähiger
+Kandidat angeboten werden. Ein solcher Befund wird nach §6.3.1 im bestehenden
+Bildkorrekturbudget behoben, ohne die Eigentümerwahl vorwegzunehmen.
 Zusätzliche Höhe als Spielraum behandeln: als unverbindliche Gestaltungsrichtung
 besonders die horizontale Bildmitte eher niedrig/luftig lassen; auch die Seiten
 müssen die volle Höhe nicht ausnutzen. Motivgerechte höhere Partien bleiben
@@ -59,6 +66,10 @@ Keine Serienversuche zum Erraten einer Generatorgrenze.
 Sichtbare Breitenverteilung und bewusst gestalteten Freiraum der vollständigen
 Leinwand prüfen. Geplante seitliche Positionen sowie Falz-/Randabstände bleiben;
 rechtsbetonte und offene Kompositionen sind erlaubt. Keine Randpixelquote.
+Ebenso die vier Bildränder direkt am Original prüfen: sichtbare abrupte
+Motivanschnitte durch passende Neukomposition oder zeichnerisches Auslaufen
+in Transparenz korrigieren; reines Beschneiden, Seitenpadding oder technische
+Überblendleisten lösen den Bildfehler nicht.
 Format-/Kompositionskorrekturen im laufenden Auftrag ohne weitere Rückfrage
 innerhalb des bestehenden Bildkorrekturbudgets herstellen. Nötigenfalls eine
 passende vollständige 3:1-Komposition neu erzeugen. Kein Padding, Stitching aus

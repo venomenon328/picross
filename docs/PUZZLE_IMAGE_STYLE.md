@@ -108,6 +108,21 @@ kein Alpha-Bounds-Crop oder Nachzentrieren nur des sichtbaren Motivs.
 Rechtsbetonte, offene, durchgehende, U-/Halb-U-Kompositionen sind erlaubt;
 keine Randpixel-, Prozentbelegungs-, Objektzahl- oder Zwei-Eckenpflicht.
 
+**Verbindlicher Bildrandabschluss:** Alle dargestellten Objekte und
+zusammenhängenden Szenenteile müssen entweder vollständig in die Leinwand passen
+oder an jeder erreichten Bildkante **weich zeichnerisch in echte Transparenz
+auslaufen**. Insbesondere Baumkronen, Stämme, Dächer, Gebäude und andere
+erkennbar weiterführende Formen dürfen oben, unten, links oder rechts nicht
+hart angeschnitten wirken. Konturen, Schraffur und sichtbare Tonwerte müssen
+vor dem Rand nachvollziehbar auslaufen; ein unvermittelt endender Stamm,
+eine abgeschnittene Silhouette oder eine harte Schnittlinie sind Mängel.
+Dies verlangt weder vollständig freibleibende Ränder noch feste Alpha- oder
+Randpixelwerte. Asymmetrische, durchgehende und hohe Kompositionen sind bei
+sauberem Auslauf weiterhin erlaubt. Kein nachträglicher Crop, technische
+Randkaschierung oder deckender Fade-Balken als Ersatz für eine stimmige Zeichnung.
+Dieser Randabschluss ist verbindlich; die nachstehenden Höhenhinweise bleiben
+ausdrücklich unverbindlich.
+
 Die zusätzliche vertikale Höhe ist gestalterischer Spielraum, kein Belegungsziel.
 **Als unverbindliche Gestaltungsrichtung** die volle Höhe besonders in der
 horizontalen Bildmitte nicht routinemäßig ausschöpfen; die Mitte darf eher niedrig
