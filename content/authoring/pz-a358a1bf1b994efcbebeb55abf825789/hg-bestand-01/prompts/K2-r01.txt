@@ -1,0 +1,10 @@
+Use case: illustration-story
+Asset type: isolated transparent graphite context illustration for the lower margin of a puzzle game.
+Primary request: Create ONE original hand-drawn context illustration on a complete very wide 4:1 transparent RGBA canvas, ideally 2304 x 576 pixels. Do not make a collage, contact sheet or multiple panels.
+Style/medium: airy, delicate LIGHT neutral-gray graphite pencil linework; lively slightly retraced open contours, sparse soft hatching. Clear recognizable forms with no opaque object fills: transparent areas INSIDE objects and between pencil strokes so the underlying game paper can show through. Not geometric vector art.
+Composition/framing: full panoramic 4:1 canvas INCLUDING meaningful transparent free space, with an open low middle and more visual weight to the sides; maintain natural coherent environmental relationships. Do not draw a page, background rectangle, border or interface. Entire drawing comfortably within the canvas.
+Color palette: light neutral graphite gray only; no colors, no solid dark ink masses.
+Text: none.
+Constraints: actual PNG alpha transparency across all unused exterior and interior areas, clean fine strokes, no white/cream paper, no checkerboard imitation, no lettering, no labels, no watermark, no grid, no UI, no puzzle silhouette. This is an independent context drawing, never a depiction of the thing being guessed.
+Scene/backdrop: close low panorama of a dry desert wash: one beautifully weathered twisting fallen branch resting diagonally among smooth river-worn stones toward the right, gentle wind-rippled sand below, a few sparse wiry dry grass stems at the left. No distant mesa landscape: focus on the dry wash's intimate natural textures in very sparse pencil strokes.
+Avoid: cacti, succulents, upright branched cactus shapes, living trees, paper fill, text.
