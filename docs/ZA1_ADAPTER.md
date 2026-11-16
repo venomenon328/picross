@@ -66,6 +66,16 @@ Nach tatsächlichem Mainmerge dessen vollen Commit und frisch aktualisiertes ori
 python -m tools.puzzle_production.target_adapter retire-production --checkout <checkout> --integrated-commit <main-SHA> --puzzle-id <pz-ID> --completed-revision <pz-ID> <frühere-revision> --completed-work <pz-ID> <relativer-arbeitsordner>
 ```
 
-Zusatzoptionen sind wiederholbar und gehören zur bestehenden Abschlussbefugnis, ohne neue Freigabe pro Vorgängerrecord. Zuordnung aus tatsächlichem Produktionsverlauf und bytegleichen Mainquellen, keine numerische Revisionsheuristik. Aktuelle Bild-/Definitions-/Notice-/Rating-/Datumsdaten bleiben erhalten. Der Pointer entfällt nur, wenn er exakt auf eine ausgewählte abgeschlossene Revision zeigt; neue/offene Arbeit und fremde Bytes bleiben. Unbekannte Dateien innerhalb ausgewählter Arbeit blockieren vor Löschung. Teilentfernung ist ehrlich zu melden und anhand desselben Mainankers wiederholbar; vollständige Wiederholung ist schreibfreier No-op. Keine neue historische Dauerakte.
+Zusatzoptionen sind wiederholbar und gehören zur bestehenden Abschlussbefugnis, ohne neue Freigabe pro Vorgängerrecord. Zuordnung aus tatsächlichem Produktionsverlauf und bytegleichen Mainquellen, keine numerische Revisionsheuristik. Aktuelle Bild-/Definitions-/Notice-/Rating-/Datumsdaten bleiben erhalten.
+
+**Keine neue Abschluss-Notice:** Aktuelle PE-EDIT2-Hintergründe haben keine
+Pflicht-`.txt` am Hintergrundstamm. `retire-production` prüft den ausgewählten
+Livebild-/Quellen-/Runtimezustand und die dazugehörigen tatsächlichen Bytes
+gegen bestätigtes `main`; eine vorhandene historische Hintergrund-`.txt`
+wird dabei bytegleich geprüft, ihre Abwesenheit ebenso. Keine künstliche
+Textdatei, rückwirkende Herkunftserklärung oder zusätzliche Abschlussformalität.
+Die weiterhin erforderliche Reveal-Notice sowie tatsächlich vorhandene
+Rechte-/Lizenztexte bleiben geschützt. Dieser Kompatibilitätsgrundsatz hebt
+keine Fremdarbeits-, Main-, Byte- oder Recoveryguards auf. Der Pointer entfällt nur, wenn er exakt auf eine ausgewählte abgeschlossene Revision zeigt; neue/offene Arbeit und fremde Bytes bleiben. Unbekannte Dateien innerhalb ausgewählter Arbeit blockieren vor Löschung. Teilentfernung ist ehrlich zu melden und anhand desselben Mainankers wiederholbar; vollständige Wiederholung ist schreibfreier No-op. Keine neue historische Dauerakte.
 
 Eigenständige aktuelle Bild-/Rasteränderungen verwenden den gezielten Editor. Deren ausgewählte abgeschlossene Arbeitsdateien können nach tatsächlichem Mainnachweis über denselben ausgewählten Abschlussweg bereinigt werden; bestehende aktuelle Rechte und Bilder bleiben. Alte `retire-reveal-production`-/`retire-background-production`-Receiptpfade sind abgelöst.
