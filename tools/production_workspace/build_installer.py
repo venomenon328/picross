@@ -14,6 +14,8 @@ import uuid
 from .build_windows import build, sha, ROOT, PACKAGE
 from .release import release
 
+from tools.app_products import PW, PE
+
 NS = 'http://schemas.microsoft.com/wix/2006/wi'
 ET.register_namespace('', NS)
 
@@ -22,9 +24,9 @@ def element(parent, tag, **attrs):
     return ET.SubElement(parent, '{' + NS + '}' + tag, attrs)
 
 
-def wix_source(app, product, guard):
+def wix_source(image, product, guard, *, app=PW):
     root = ET.Element('{' + NS + '}Wix')
-    p = element(root, 'Product', Id=product['product_code'], Name='Picross-Produktionsassistent', Language='1031',
+    p = element(root, 'Product', Id=product['product_code'], Name=app.title, Language='1031',
                 Version=product['version'], Manufacturer='venomenon328', UpgradeCode=product['upgrade_code'])
     element(p, 'Package', InstallerVersion='500', Compressed='yes', InstallScope='perUser', InstallPrivileges='limited', Platform='x64')
     element(p, 'MediaTemplate', EmbedCab='yes')
@@ -42,17 +44,17 @@ def wix_source(app, product, guard):
     element(p, 'Property', Id='ARPPRODUCTICON', Value='AppIcon')
     target = element(p, 'Directory', Id='TARGETDIR', Name='SourceDir')
     local = element(target, 'Directory', Id='LocalAppDataFolder')
-    install = element(local, 'Directory', Id='INSTALLFOLDER', Name='Picross-Produktionsassistent')
-    element(p, 'SetDirectory', Id='INSTALLFOLDER', Value='[LocalAppDataFolder]Programs\\Picross-Produktionsassistent')
+    install = element(local, 'Directory', Id='INSTALLFOLDER', Name=app.install_directory)
+    element(p, 'SetDirectory', Id='INSTALLFOLDER', Value='[LocalAppDataFolder]Programs\\' + app.install_directory)
     directories = {'': install}
-    feature = element(p, 'Feature', Id='Application', Title='Produktionsassistent', Level='1', Absent='disallow')
+    feature = element(p, 'Feature', Id='Application', Title=app.title, Level='1', Absent='disallow')
     import hashlib
     def identifier(prefix, text):
         return prefix + hashlib.sha256(text.encode('utf-8')).hexdigest()[:30]
-    for file in sorted(app.rglob('*')):
+    for file in sorted(image.rglob('*')):
         if not file.is_file():
             continue
-        relative = file.relative_to(app)
+        relative = file.relative_to(image)
         for directory in reversed(relative.parents):
             name = directory.as_posix()
             if name == '.' or name in directories:
@@ -63,20 +65,20 @@ def wix_source(app, product, guard):
         name = relative.as_posix()
         component = element(directories['' if parent == '.' else parent], 'Component', Id=identifier('C', name),
                             Guid=str(uuid.uuid5(uuid.UUID(product['upgrade_code']), name)), Win64='yes')
-        element(component, 'File', Id='LauncherExe' if name == 'Picross-Start.exe' else identifier('F', name), Source=str(file), KeyPath='no')
-        element(component, 'RegistryValue', Root='HKCU', Key='Software\\PicrossProductionWorkspace\\Installer\\Files',
+        element(component, 'File', Id='LauncherExe' if name == app.executable + '.exe' else identifier('F', name), Source=str(file), KeyPath='no')
+        element(component, 'RegistryValue', Root='HKCU', Key=app.registry + '\\Installer\\Files',
                 Name=identifier('F', name), Type='string', Value=product['version'], KeyPath='yes')
         element(feature, 'ComponentRef', Id=identifier('C', name))
     menu = element(target, 'Directory', Id='ProgramMenuFolder')
-    menu = element(menu, 'Directory', Id='AppMenu', Name='Picross-Produktionsassistent')
+    menu = element(menu, 'Directory', Id='AppMenu', Name=app.title)
     desktop = element(target, 'Directory', Id='DesktopFolder')
     for directory, cid in ((menu, 'MenuShortcut'), (desktop, 'DesktopShortcut')):
         component = element(directory, 'Component', Id=cid, Guid='*', Win64='yes')
         if cid == 'DesktopShortcut':
             element(component, 'Condition').text = 'INSTALLDESKTOP=1'
-        element(component, 'Shortcut', Id=cid + 'Link', Name='Picross-Produktionsassistent', Target='[INSTALLFOLDER]Picross-Start.exe',
+        element(component, 'Shortcut', Id=cid + 'Link', Name=app.title, Target='[INSTALLFOLDER]' + app.executable + '.exe',
                 WorkingDirectory='INSTALLFOLDER', Icon='AppIcon', Advertise='no')
-        element(component, 'RegistryValue', Root='HKCU', Key='Software\\PicrossProductionWorkspace\\Installer', Name=cid,
+        element(component, 'RegistryValue', Root='HKCU', Key=app.registry + '\\Installer', Name=cid,
                 Type='integer', Value='1', KeyPath='yes')
         if cid == 'MenuShortcut':
             element(component, 'RemoveFolder', Id='RemoveMenu', On='uninstall')
@@ -84,7 +86,7 @@ def wix_source(app, product, guard):
     # Only remove directories if empty; no wildcard or recursive deletion.
     component = element(install, 'Component', Id='EmptyFolders',
                         Guid=str(uuid.uuid5(uuid.UUID(product['upgrade_code']), 'EmptyFolders')), Win64='yes')
-    element(component, 'RegistryValue', Root='HKCU', Key='Software\\PicrossProductionWorkspace\\Installer',
+    element(component, 'RegistryValue', Root='HKCU', Key=app.registry + '\\Installer',
             Name='EmptyFolders', Type='integer', Value='1', KeyPath='yes')
     for name, directory in directories.items():
         element(component, 'RemoveFolder', Id=identifier('R', name), Directory=directory.get('Id'), On='uninstall')
@@ -95,8 +97,10 @@ def wix_source(app, product, guard):
     element(sequence, 'Custom', Action='CheckStopped', Before='InstallValidate').text = '1'
     element(p, 'UIRef', Id='WixUI_Common')
     ui = element(p, 'UI')
-    element(ui, 'Error', Id='1722').text = ('App läuft oder Zugriff ist unklar. Assistent regulär beenden '
-        'und Produktionsentfernung abwarten. Dann Installer erneut starten. Kein Prozess wird beendet.')
+    element(ui, 'Error', Id='1722').text = ('App läuft oder Zugriff ist unklar. ' +
+        ('Assistent regulär beenden und Produktionsentfernung abwarten. ' if app == PW else
+         'Editor regulär beenden und laufende Fachoperation abwarten. ') +
+        'Dann Installer erneut starten. Kein Prozess wird beendet.')
     element(ui, 'TextStyle', Id='WixUI_Font_Normal', FaceName='Segoe UI', Size='9')
     element(ui, 'TextStyle', Id='WixUI_Font_Bigger', FaceName='Segoe UI', Size='12')
     element(ui, 'TextStyle', Id='WixUI_Font_Title', FaceName='Segoe UI', Size='10', Bold='yes')
@@ -105,7 +109,7 @@ def wix_source(app, product, guard):
         element(ui, 'DialogRef', Id=did)
     element(ui, 'Publish', Dialog='ExitDialog', Control='Finish', Event='EndDialog', Value='Return').text = '1'
     dialog = element(ui, 'Dialog', Id='InstallOptions', Width='370', Height='200', Title='Picross installieren')
-    element(dialog, 'Control', Id='Info', Type='Text', X='20', Y='20', Width='330', Height='60', Text='Installiert nur für diesen Benutzer. Git für Windows bleibt erforderlich. Die unsignierte App enthält private Laufzeit und Lizenzen. Einrichtung und Produktionsdaten bleiben getrennt erhalten.')
+    element(dialog, 'Control', Id='Info', Type='Text', X='20', Y='20', Width='330', Height='60', Text=('Installiert nur für diesen Benutzer. ' + ('Git für Windows bleibt erforderlich. ' if app == PW else '') + 'Die unsignierte App enthält private Laufzeit und Lizenzen. Einrichtung und Daten bleiben getrennt erhalten.'))
     element(dialog, 'Control', Id='Desktop', Type='CheckBox', X='20', Y='95', Width='320', Height='18', Property='INSTALLDESKTOP', CheckBoxValue='1', Text='Zusätzlich Desktopverknüpfung anlegen')
     button = element(dialog, 'Control', Id='Install', Type='PushButton', X='205', Y='160', Width='70', Height='18', Default='yes', Text='Installieren')
     element(button, 'Publish', Event='EndDialog', Value='Return').text = '1'
@@ -123,9 +127,9 @@ def write_checksum(msi):
     return checksum
 
 
-def run(output, *, version=None):
-    product = release(version=version)
-    build(output, version=version)  # Pins interpreter, components, clean commit, onedir and licenses.
+def run(output, *, version=None, app=PW):
+    product = release(version=version, app=app)
+    build(output, version=version, app=app)  # Pins interpreter, components, clean commit, onedir and licenses.
     work = output / 'work'
     archive = work / 'wix.zip'
     urllib.request.urlretrieve(product['wix_url'], archive)
@@ -136,23 +140,28 @@ def run(output, *, version=None):
         z.extractall(wix)
     compiler = Path(os.environ['SystemRoot']) / 'Microsoft.NET/Framework64/v4.0.30319/csc.exe'
     guard = work / 'Guard.exe'
-    app = output / 'dist/Picross-Start'
-    shutil.copyfile(wix / 'LICENSE.TXT', app / 'LICENSES/WiX.txt')
-    files = [{'file': f.relative_to(app).as_posix(), 'bytes': f.stat().st_size, 'sha256': sha(f)}
-             for f in sorted(app.rglob('*')) if f.is_file() and f.name != 'inventory.json']
-    (app / 'inventory.json').write_text(json.dumps({'commit': json.loads((app / 'components.json').read_text(encoding='utf-8'))['commit'],
+    image = output / 'dist' / app.executable
+    shutil.copyfile(wix / 'LICENSE.TXT', image / 'LICENSES/WiX.txt')
+    files = [{'file': f.relative_to(image).as_posix(), 'bytes': f.stat().st_size, 'sha256': sha(f)}
+             for f in sorted(image.rglob('*')) if f.is_file() and f.name != 'inventory.json']
+    (image / 'inventory.json').write_text(json.dumps({'commit': json.loads((image / 'components.json').read_text(encoding='utf-8'))['commit'],
                                                   'files': files}, indent=2) + '\n', encoding='utf-8')
     payload = work / 'Payload.txt'
-    payload.write_text('\n'.join(f.relative_to(app).as_posix() for f in sorted(app.rglob('*')) if f.is_file()) + '\n', encoding='utf-8')
+    payload.write_text('\n'.join(f.relative_to(image).as_posix() for f in sorted(image.rglob('*')) if f.is_file()) + '\n', encoding='utf-8')
+    guard_source = work / 'Guard.cs'
+    guard_text = (PACKAGE / 'packaging/Guard.cs').read_text(encoding='utf-8')
+    if app == PE:
+        guard_text = guard_text.replace('Picross-Produktionsassistent', app.install_directory).replace('PicrossProductionWorkspace', app.state_directory)
+    guard_source.write_text(guard_text, encoding='utf-8')
     subprocess.run([str(compiler), '/nologo', '/target:winexe', '/platform:x64', '/out:' + str(guard),
-                    '/resource:' + str(payload) + ',Payload.txt', str(PACKAGE / 'packaging/Guard.cs')], check=True)
-    portable = output / 'Picross-Start-windows-x64.zip'
+                    '/resource:' + str(payload) + ',Payload.txt', str(guard_source)], check=True)
+    portable = output / (app.executable + '-windows-x64.zip')
     with zipfile.ZipFile(portable, 'w', zipfile.ZIP_DEFLATED) as archive:
-        for file in sorted(app.rglob('*')):
+        for file in sorted(image.rglob('*')):
             if file.is_file():
-                archive.write(file, 'Picross-Start/' + file.relative_to(app).as_posix())
+                archive.write(file, app.executable + '/' + file.relative_to(image).as_posix())
     source = work / 'installer.wxs'
-    wix_source(app, product, guard).write(source, encoding='utf-8', xml_declaration=True)
+    wix_source(image, product, guard, app=app).write(source, encoding='utf-8', xml_declaration=True)
     obj = work / 'installer.wixobj'
     msi = output / product['filename']
     subprocess.run([str(wix / 'candle.exe'), '-nologo', '-arch', 'x64', '-out', str(obj), str(source)], check=True)
@@ -161,7 +170,7 @@ def run(output, *, version=None):
     subprocess.run([str(wix / 'light.exe'), '-nologo', '-sice:ICE91', '-ext', str(wix / 'WixUIExtension.dll'),
                     '-cultures:de-de', '-out', str(msi), str(obj)], check=True)
     checksum = write_checksum(msi)
-    shutil.copyfile(PACKAGE / 'START-WINDOWS.txt', output / 'START.txt')
+    shutil.copyfile(PACKAGE / 'START-WINDOWS.txt' if app == PW else app.source / 'README.md', output / 'START.txt')
     report = json.loads((output / 'delivery.json').read_text(encoding='utf-8'))
     report.update(msi_file=msi.name, msi_sha256=checksum, msi_bytes=msi.stat().st_size,
                   wix_package=product['wix_package'], wix_sha256=product['wix_sha256'],

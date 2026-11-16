@@ -1174,3 +1174,57 @@ Für ausgewählte abgeschlossene Arbeit gilt [Authoring Schritt 5 §9](ai-workfl
 Aktuelle Definitionen, Bilder, Notices, Ratings und Datumsdaten bleiben erhalten.
 Kein neuer Receipt und kein Nachproduzieren entfernter Originale. Fachlich eigenständige
 Bild-/Rasteränderungen bleiben eigene ausdrückliche Änderungsaufträge.
+
+## 14. PE-APP-A · feste Windows-Produkt- und Releasebindung
+
+Vertrag vor konsumierendem Code gemäß [#691 / PE-APP-A](https://github.com/venomenon328/picross/issues/691#umsetzungsvorbereitung-pe-app-a).
+Der bestehende gezielte Editor aus §13 bleibt unverändert. MSI und portable
+Diagnoseausgabe enthalten dieselben privaten Programmbytes; der Entwicklerstart
+bleibt nutzbar. Ein clientseitiges Selbstupdate wird erst in PE-APP-B geliefert.
+
+Die feste PE-UpgradeGUID lautet `6A6CBDE3-60BA-4A72-A44E-D1F3AF186985`.
+ProductCode ist UUIDv5 dieser GUID und der Version. Programmziel ist ausschließlich
+`%LOCALAPPDATA%/Programs/PicrossPuzzleEditor`, Zustand bleibt
+`%LOCALAPPDATA%/PicrossPuzzleEditor`. Registry und produktweites Running-Ereignis
+verwenden `PicrossPuzzleEditor`; PW-Identitäten bleiben unverändert.
+Installation, Upgrade und Uninstall verändern ausschließlich eigene Programmdateien
+und Links. Alle laufenden PE-Instanzen veröffentlichen das Lebenszeichen vor
+Einrichtung bis nach vollständigem Writer-Drain, unabhängig von Checkout/--state.
+MSI prüft es und reale Dateibelegungen ohne Kill oder erzwungenen Neustart.
+
+PE verwendet exakt die geschlossenen Feld-/Byte-/Asset-/Prüfformen des
+[PW-Updatevertrags §6](PRODUCTION_UPDATES.md#6-app-b1--signierte-autorität-und-feste-roots),
+mit folgenden ausschließlich festen Ersetzungen: `picross-pe-release-v1`
+als unsignierte Bauprovenienz, `picross-pe-release-v2` als ausschließlich vom
+Publisher erzeugte Updateautorität, `picross-pe-signature-v1`,
+`picross-pe-trust-v1`, Signaturdomäne ASCII `picross-pe-release-v2` plus NUL.
+Tags heißen `pe-vX.Y.Z`, MSI `Picross-Bestandseditor-X.Y.Z-windows-x64.msi`.
+0.2.0 ist ausschließlich Portable-Startanker, erster MSI-Kandidat 0.2.1;
+anschließend genau Patch +1 bei verändertem veröffentlichtem Fingerprint.
+PW-Kandidaten sind in PE und PE-Kandidaten in PW unzulässig. Feste Produktadapter
+kommen aus dem Programmpaket, niemals aus Inhaltscheckout oder Updateauftrag.
+
+Der feste PE-Trust enthält denselben bereits freigegebenen öffentlichen
+Ed25519-Root wie PW, mit eigener Format-/Signaturdomäne. Keine Schlüsselerzeugung,
+keine dynamische Rootübernahme. `PE_RELEASE_ENABLED` und
+`PE_UPDATE_SIGNING_ENABLED` sowie das vorbestehende exakt Main-only-Environment
+`pe-app-release` sperren Veröffentlichung bis zum gesonderten Betriebsauftrag.
+Nur dessen Publisher erhält `PE_UPDATE_SIGNING_KEY`; es muss zur festen Wurzel
+passen. Dieses Paket setzt keine Flags, Secrets oder Environments und publiziert
+keinen Release. PW-Betriebszustand bleibt unberührt.
+
+Der getrennte PE-Workflow prüft erfolgreiche Main-Push-Package-CI, aktuellen Head,
+Payload und veröffentlichte PE-Autorität vor Bau und Veröffentlichung. Gleicher
+Payload ist No-op; Diagnose-Dispatch kann nie veröffentlichen. Draft-first,
+Rückdownload sämtlicher Bytes, monotone Versionierung, Teilupload-Recovery und
+Rennschutz verwenden denselben Code wie PW. Kein PE-Pflichtmodul in Package CI.
+Der Fingerprint bindet alle wirksamen Code-/Daten-/Collector-/Analysisinputs,
+Papier-/Randressourcen, Anleitung, Pins und Lizenzen; unbekannte mögliche Inputs
+stoppen. Testfixtures werden weder eingefroren noch als Methodenquellen kopiert.
+
+T01 im gewählten tools-Modul und einmalige T02/T03 am fixierten Windowskandidaten
+stehen in #691. Technischer Stand und Originaldownload werden im Draft-PR gebunden;
+kein Belegcommit im Produktdiff. PE-APP-A-A01 bleibt unabhängiges Vor-Merge-Review.
+Reale nicht erhöhte Windows-11-Installation/Upgrade/Uninstall und Browserbedienung
+bleiben PE-APP-R01/PE-B-U01 vor Release; Selbstupdate und Betriebsstart folgen
+separat. MSI-Inspektion ersetzt diese persönlichen Proben nicht.
