@@ -16,7 +16,7 @@ class Deliveries:
         self.main_results={}
 
     def result(self,source,commit,identifier):
-        return current.snapshot(lambda name,limit:source.read(commit,name,limit),identifier)
+        return current.snapshot(lambda name,limit,missing=False:source.read(commit,name,limit,missing),identifier)
 
     def same_delivery(self,job):
         identifier=job["puzzle_id"]
