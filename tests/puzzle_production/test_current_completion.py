@@ -99,7 +99,7 @@ class CurrentCompletionTests(unittest.TestCase):
         (self.root/notice).unlink()
         main=self.commit()
         self.git('update-ref','refs/remotes/origin/main',main)
-        put(self.root,notice,b'Uncommitted foreign notice.\\n')
+        put(self.root,notice,b'Uncommitted foreign notice.\n')
         before=fingerprints(self.root)
         with self.assertRaisesRegex(ValueError,'Current selected delivery differs'):
             integrated_content.retire(self.root,['pz-current'],main,
