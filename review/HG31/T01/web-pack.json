@@ -1,0 +1,48 @@
+{
+	"format": "picross-background-pack-v1",
+	"images": [
+		{
+			"asset": {
+				"bytes": 5246.0,
+				"file": "art/backgrounds/pz-hg31-legacy.png",
+				"sha256": "21bd9095ab40b792cb5fa29b5830cfeb774a637564860ba9ecfb0435ebb7ffed"
+			},
+			"base_rgba_sha256": "454cf41a907c6d94d923d9deacb3f79e71041fe89e0238006cd6012447658de8",
+			"decoded_base_bytes": 5308416,
+			"decoded_with_mips_bytes": 7077844,
+			"id": "pz-hg31-legacy",
+			"image_revision": 1.0,
+			"imported_bytes": 676,
+			"mipmap_count": 11,
+			"notice_sha256": "c7e82a0319721d8f1d215194ffecd5970a4a96a681577617b6138434f40cf86b",
+			"remap": "res://.godot/imported/pz-hg31-legacy.png-ed95043ec81f960363e10f7e3497eb03.ctex"
+		},
+		{
+			"asset": {
+				"bytes": 179789.0,
+				"file": "art/backgrounds/pz-hg31-new.png",
+				"sha256": "aaab196da0bc24fc9866c2bd22ed691c472e6d153ed2dc41d487c01c9f87ec3a"
+			},
+			"base_rgba_sha256": "c5140dcaf74956064afd8a35e886d1f6ff3791bb8fd65a9023f21439c4f0b6e2",
+			"decoded_base_bytes": 7077888,
+			"decoded_with_mips_bytes": 9437176,
+			"id": "pz-hg31-new",
+			"image_revision": 1.0,
+			"imported_bytes": 150582,
+			"mipmap_count": 11,
+			"notice_sha256": "c7e82a0319721d8f1d215194ffecd5970a4a96a681577617b6138434f40cf86b",
+			"remap": "res://.godot/imported/pz-hg31-new.png-7c9d0d5f05d21959a916266a817d7b18.ctex"
+		}
+	],
+	"imported_inventory": [
+		"pz-hg31-legacy.png-ed95043ec81f960363e10f7e3497eb03.ctex",
+		"pz-hg31-new.png-7c9d0d5f05d21959a916266a817d7b18.ctex"
+	],
+	"inventory": [
+		"pz-hg31-legacy.png",
+		"pz-hg31-legacy.txt",
+		"pz-hg31-new.png",
+		"pz-hg31-new.txt"
+	],
+	"target": "web"
+}

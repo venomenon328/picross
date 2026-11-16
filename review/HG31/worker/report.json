@@ -1,0 +1,28 @@
+{
+  "purpose": "T01 actual shipped worker decodes real Godot CTEX imports in Firefox; this is not the T03 book-rendering proof",
+  "source_head": "c6c4be5bb19fecc535a9a86c5ee4fa962a2c748e",
+  "cases": [
+    {
+      "key": "new",
+      "width": 2304,
+      "height": 768,
+      "bytes": 9437176,
+      "base_rgba_sha256": "d7211b3078ea90b0958c52f380334d242ec1b38bd7899612cc1ab161c3c13ec0"
+    },
+    {
+      "key": "legacy",
+      "width": 2304,
+      "height": 576,
+      "bytes": 7077844,
+      "base_rgba_sha256": "454cf41a907c6d94d923d9deacb3f79e71041fe89e0238006cd6012447658de8"
+    },
+    {
+      "key": "new",
+      "width": 2304,
+      "height": 768,
+      "bytes": 9437176,
+      "base_rgba_sha256": "d7211b3078ea90b0958c52f380334d242ec1b38bd7899612cc1ab161c3c13ec0"
+    }
+  ],
+  "firefox": "146.0.1"
+}

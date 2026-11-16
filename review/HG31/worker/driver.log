@@ -1,0 +1,10 @@
+127.0.0.1 - - [16/Nov/2026 13:11:13] "GET / HTTP/1.1" 200 -
+127.0.0.1 - - [16/Nov/2026 13:11:13] "GET /background_loader.js HTTP/1.1" 200 -
+127.0.0.1 - - [16/Nov/2026 13:11:13] code 404, message File not found
+127.0.0.1 - - [16/Nov/2026 13:11:13] "GET /favicon.ico HTTP/1.1" 404 -
+127.0.0.1 - - [16/Nov/2026 13:11:13] "GET /new.ctex HTTP/1.1" 200 -
+{'key': 'new', 'width': 2304, 'height': 768, 'bytes': 9437176, 'base_rgba_sha256': 'd7211b3078ea90b0958c52f380334d242ec1b38bd7899612cc1ab161c3c13ec0'}
+127.0.0.1 - - [16/Nov/2026 13:11:13] "GET /legacy.ctex HTTP/1.1" 200 -
+{'key': 'legacy', 'width': 2304, 'height': 576, 'bytes': 7077844, 'base_rgba_sha256': '454cf41a907c6d94d923d9deacb3f79e71041fe89e0238006cd6012447658de8'}
+127.0.0.1 - - [16/Nov/2026 13:11:13] "GET /new.ctex HTTP/1.1" 304 -
+{'key': 'new', 'width': 2304, 'height': 768, 'bytes': 9437176, 'base_rgba_sha256': 'd7211b3078ea90b0958c52f380334d242ec1b38bd7899612cc1ab161c3c13ec0'}

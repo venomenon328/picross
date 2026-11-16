@@ -1,0 +1,1526 @@
+{
+  "source_head": "21ae27c3d2ce6e88852a41765d84c76695d0d8f7",
+  "environment": "Windows native EXE/PCK; NVIDIA RTX3070 OpenGL; borderless client; external read-only observer",
+  "trace": [
+    {
+      "capture": "native-new-1920x1080-ui100.png",
+      "state": {
+        "background": {
+          "active_requests": 0,
+          "binding": {
+            "asset": {
+              "bytes": 179789.0,
+              "file": "art/backgrounds/pz-hg31-new.png",
+              "sha256": "aaab196da0bc24fc9866c2bd22ed691c472e6d153ed2dc41d487c01c9f87ec3a"
+            },
+            "id": "pz-hg31-new",
+            "image_revision": 1.0,
+            "status": "selected",
+            "token": 1
+          },
+          "completed_count": 1,
+          "diagnostic": "",
+          "discarded_count": 0,
+          "frozen": true,
+          "has_ready": false,
+          "has_texture": true,
+          "image_size": "(2304, 768)",
+          "last_load_usec": 112098,
+          "peak_requests": 1,
+          "queued": false,
+          "rect": [
+            228.444458007813,
+            523.851867675781,
+            1596.4443359375,
+            532.148132324219
+          ],
+          "request_count": 1,
+          "size": [
+            2304,
+            768
+          ],
+          "stale_requests": 0,
+          "state": "visible",
+          "visible_id": "pz-hg31-new",
+          "visible_revision": 1.0,
+          "visible_token": 1
+        },
+        "barrier": false,
+        "blocked": false,
+        "board_hover": [
+          -1,
+          -1
+        ],
+        "board_rect": [
+          68.0,
+          93.120002746582,
+          1568.0,
+          908.880004882813
+        ],
+        "buttons": 0,
+        "card": [],
+        "card_clip": [
+          90.0,
+          152.0,
+          715.0,
+          709.0
+        ],
+        "cards": {
+          "pz-hg31-legacy": [
+            128.0,
+            152.0,
+            301.0,
+            223.0
+          ],
+          "pz-hg31-new": [
+            441.0,
+            152.0,
+            301.0,
+            223.0
+          ],
+          "pz-hg31-none": [
+            128.0,
+            387.0,
+            301.0,
+            223.0
+          ],
+          "pz-hg31-standard": [
+            441.0,
+            387.0,
+            301.0,
+            223.0
+          ]
+        },
+        "cell_size": 24.0,
+        "cells": [
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1
+        ],
+        "clue": false,
+        "cursor": 0,
+        "focus": "",
+        "framebuffer": [
+          1920,
+          1080
+        ],
+        "gesture": false,
+        "grid": [
+          824.0,
+          522.120002746582,
+          72.0,
+          72.0
+        ],
+        "gui_hover": "",
+        "held": 0,
+        "history": [],
+        "history_size": 0,
+        "info_return": [
+          100.0,
+          110.0,
+          44.0,
+          44.0
+        ],
+        "info_switch": [
+          410.0,
+          110.0,
+          140.0,
+          44.0
+        ],
+        "memory": {},
+        "mode": 0,
+        "pointer": "(592.0, 264.0)",
+        "presentation": "res://book/main.gd",
+        "renderer": "NVIDIA GeForce RTX 3070",
+        "retry": [
+          180.0,
+          163.0,
+          340.0,
+          44.0
+        ],
+        "retry_visible": false,
+        "save_error": "",
+        "scale_control": [
+          180.0,
+          190.0,
+          115.0,
+          44.0
+        ],
+        "scale_popup": {
+          "position": [
+            0,
+            0
+          ],
+          "size": [
+            100,
+            100
+          ],
+          "visible": false
+        },
+        "screen_dpi": 96,
+        "screen_scale": 1.0,
+        "section": "settings",
+        "selected": "pz-hg31-new",
+        "size": [
+          1920,
+          1080
+        ],
+        "slot_path": "E:/Zeuch/Coding/picross_codex/675-hg31-20261116/native-visual/appdata/Godot/app_userdata/picross \u00b7 P1/p1/saves/pz-hg31-new.json",
+        "state": 3,
+        "tips": {
+          "color-1": {
+            "caption": "Farbe 1 w\u00e4hlen \u00b7 aktiviert F\u00fcllen",
+            "rect": [
+              1692.0,
+              315.119995117188,
+              44.0,
+              44.0
+            ],
+            "visible": false
+          },
+          "erase": {
+            "caption": "Radierer \u00b7 Markierungen entfernen",
+            "rect": [
+              1716.0,
+              399.119995117188,
+              44.0,
+              44.0
+            ],
+            "visible": false
+          },
+          "fill": {
+            "caption": "F\u00fcllen \u00b7 links Farbe setzen, rechts leer markieren",
+            "rect": [
+              1668.0,
+              399.119995117188,
+              44.0,
+              44.0
+            ],
+            "visible": false
+          },
+          "help": {
+            "caption": "Hilfe \u00f6ffnen",
+            "rect": [
+              1750.0,
+              54.7777481079102,
+              44.0,
+              44.0
+            ],
+            "visible": false
+          },
+          "menu": {
+            "caption": "Einstellungen \u00f6ffnen",
+            "rect": [
+              1692.0,
+              54.7777481079102,
+              44.0,
+              44.0
+            ],
+            "visible": false
+          },
+          "minus": {
+            "caption": "Raster verkleinern",
+            "rect": [
+              1668.0,
+              495.119995117188,
+              44.0,
+              44.0
+            ],
+            "visible": false
+          },
+          "nav-information": {
+            "caption": "Zur\u00fcck zum Katalog",
+            "rect": [
+              1634.0,
+              54.7777481079102,
+              44.0,
+              44.0
+            ],
+            "visible": false
+          },
+          "nav-work": {
+            "caption": "Zur Arbeitsseite zur\u00fcck",
+            "rect": [
+              100.0,
+              110.0,
+              44.0,
+              44.0
+            ],
+            "visible": false
+          },
+          "plus": {
+            "caption": "Raster vergr\u00f6\u00dfern",
+            "rect": [
+              1716.0,
+              495.119995117188,
+              44.0,
+              44.0
+            ],
+            "visible": false
+          },
+          "redo": {
+            "caption": "Zur\u00fcckgenommenen Strich wiederholen",
+            "rect": [
+              1716.0,
+              447.119995117188,
+              44.0,
+              44.0
+            ],
+            "visible": false
+          },
+          "reset": {
+            "caption": "R\u00e4tsel zur\u00fccksetzen",
+            "rect": [
+              938.0,
+              968.0,
+              44.0,
+              44.0
+            ],
+            "visible": false
+          },
+          "undo": {
+            "caption": "Letzten Strich r\u00fcckg\u00e4ngig machen",
+            "rect": [
+              1668.0,
+              447.119995117188,
+              44.0,
+              44.0
+            ],
+            "visible": false
+          }
+        },
+        "tool": [
+          false,
+          1
+        ],
+        "ui_scale": 1.0,
+        "us": 30235461
+      },
+      "stimulus": "actual Win32 OS input",
+      "client": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "capture": "native-legacy-1920x1080-ui100.png",
+      "state": {
+        "background": {
+          "active_requests": 0,
+          "binding": {
+            "asset": {
+              "bytes": 5246.0,
+              "file": "art/backgrounds/pz-hg31-legacy.png",
+              "sha256": "21bd9095ab40b792cb5fa29b5830cfeb774a637564860ba9ecfb0435ebb7ffed"
+            },
+            "id": "pz-hg31-legacy",
+            "image_revision": 1.0,
+            "status": "selected",
+            "token": 2
+          },
+          "completed_count": 2,
+          "diagnostic": "",
+          "discarded_count": 0,
+          "frozen": true,
+          "has_ready": false,
+          "has_texture": true,
+          "image_size": "(2304, 576)",
+          "last_load_usec": 146217,
+          "peak_requests": 1,
+          "queued": false,
+          "rect": [
+            228.444458007813,
+            656.888916015625,
+            1596.4443359375,
+            399.111083984375
+          ],
+          "request_count": 2,
+          "size": [
+            2304,
+            576
+          ],
+          "stale_requests": 0,
+          "state": "visible",
+          "visible_id": "pz-hg31-legacy",
+          "visible_revision": 1.0,
+          "visible_token": 2
+        },
+        "barrier": false,
+        "blocked": false,
+        "board_hover": [
+          -1,
+          -1
+        ],
+        "board_rect": [
+          68.0,
+          93.120002746582,
+          1568.0,
+          908.880004882813
+        ],
+        "buttons": 0,
+        "card": [],
+        "card_clip": [
+          90.0,
+          152.0,
+          715.0,
+          709.0
+        ],
+        "cards": {
+          "pz-hg31-legacy": [
+            128.0,
+            152.0,
+            301.0,
+            223.0
+          ],
+          "pz-hg31-new": [
+            441.0,
+            152.0,
+            301.0,
+            223.0
+          ],
+          "pz-hg31-none": [
+            128.0,
+            387.0,
+            301.0,
+            223.0
+          ],
+          "pz-hg31-standard": [
+            441.0,
+            387.0,
+            301.0,
+            223.0
+          ]
+        },
+        "cell_size": 24.0,
+        "cells": [
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1
+        ],
+        "clue": false,
+        "cursor": 0,
+        "focus": "",
+        "framebuffer": [
+          1920,
+          1080
+        ],
+        "gesture": false,
+        "grid": [
+          824.0,
+          522.120002746582,
+          72.0,
+          72.0
+        ],
+        "gui_hover": "",
+        "held": 0,
+        "history": [],
+        "history_size": 0,
+        "info_return": [
+          100.0,
+          110.0,
+          44.0,
+          44.0
+        ],
+        "info_switch": [
+          410.0,
+          110.0,
+          140.0,
+          44.0
+        ],
+        "memory": {},
+        "mode": 0,
+        "pointer": "(361.0, 372.0)",
+        "presentation": "res://book/main.gd",
+        "renderer": "NVIDIA GeForce RTX 3070",
+        "retry": [
+          180.0,
+          163.0,
+          340.0,
+          44.0
+        ],
+        "retry_visible": false,
+        "save_error": "",
+        "scale_control": [
+          180.0,
+          190.0,
+          115.0,
+          44.0
+        ],
+        "scale_popup": {
+          "position": [
+            0,
+            0
+          ],
+          "size": [
+            100,
+            100
+          ],
+          "visible": false
+        },
+        "screen_dpi": 96,
+        "screen_scale": 1.0,
+        "section": "settings",
+        "selected": "pz-hg31-legacy",
+        "size": [
+          1920,
+          1080
+        ],
+        "slot_path": "E:/Zeuch/Coding/picross_codex/675-hg31-20261116/native-visual/appdata/Godot/app_userdata/picross \u00b7 P1/p1/saves/pz-hg31-legacy.json",
+        "state": 3,
+        "tips": {
+          "color-1": {
+            "caption": "Farbe 1 w\u00e4hlen \u00b7 aktiviert F\u00fcllen",
+            "rect": [
+              1692.0,
+              315.119995117188,
+              44.0,
+              44.0
+            ],
+            "visible": false
+          },
+          "erase": {
+            "caption": "Radierer \u00b7 Markierungen entfernen",
+            "rect": [
+              1716.0,
+              399.119995117188,
+              44.0,
+              44.0
+            ],
+            "visible": false
+          },
+          "fill": {
+            "caption": "F\u00fcllen \u00b7 links Farbe setzen, rechts leer markieren",
+            "rect": [
+              1668.0,
+              399.119995117188,
+              44.0,
+              44.0
+            ],
+            "visible": false
+          },
+          "help": {
+            "caption": "Hilfe \u00f6ffnen",
+            "rect": [
+              1750.0,
+              54.7777481079102,
+              44.0,
+              44.0
+            ],
+            "visible": false
+          },
+          "menu": {
+            "caption": "Einstellungen \u00f6ffnen",
+            "rect": [
+              1692.0,
+              54.7777481079102,
+              44.0,
+              44.0
+            ],
+            "visible": false
+          },
+          "minus": {
+            "caption": "Raster verkleinern",
+            "rect": [
+              1668.0,
+              495.119995117188,
+              44.0,
+              44.0
+            ],
+            "visible": false
+          },
+          "nav-information": {
+            "caption": "Zur\u00fcck zum Katalog",
+            "rect": [
+              1634.0,
+              54.7777481079102,
+              44.0,
+              44.0
+            ],
+            "visible": false
+          },
+          "nav-work": {
+            "caption": "Zur Arbeitsseite zur\u00fcck",
+            "rect": [
+              100.0,
+              110.0,
+              44.0,
+              44.0
+            ],
+            "visible": false
+          },
+          "plus": {
+            "caption": "Raster vergr\u00f6\u00dfern",
+            "rect": [
+              1716.0,
+              495.119995117188,
+              44.0,
+              44.0
+            ],
+            "visible": false
+          },
+          "redo": {
+            "caption": "Zur\u00fcckgenommenen Strich wiederholen",
+            "rect": [
+              1716.0,
+              447.119995117188,
+              44.0,
+              44.0
+            ],
+            "visible": false
+          },
+          "reset": {
+            "caption": "R\u00e4tsel zur\u00fccksetzen",
+            "rect": [
+              938.0,
+              968.0,
+              44.0,
+              44.0
+            ],
+            "visible": false
+          },
+          "undo": {
+            "caption": "Letzten Strich r\u00fcckg\u00e4ngig machen",
+            "rect": [
+              1668.0,
+              447.119995117188,
+              44.0,
+              44.0
+            ],
+            "visible": false
+          }
+        },
+        "tool": [
+          false,
+          1
+        ],
+        "ui_scale": 1.0,
+        "us": 36907541
+      },
+      "stimulus": "actual Win32 OS input",
+      "client": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "capture": "native-settings-before-scale.png",
+      "state": {
+        "background": {
+          "active_requests": 0,
+          "binding": {},
+          "completed_count": 3,
+          "diagnostic": "",
+          "discarded_count": 0,
+          "frozen": false,
+          "has_ready": false,
+          "has_texture": false,
+          "image_size": "(2304, 576)",
+          "last_load_usec": 101763,
+          "peak_requests": 1,
+          "queued": false,
+          "rect": [
+            228.444458007813,
+            656.888916015625,
+            1596.4443359375,
+            399.111083984375
+          ],
+          "request_count": 3,
+          "size": [
+            2304,
+            576
+          ],
+          "stale_requests": 0,
+          "state": "idle",
+          "visible_id": "",
+          "visible_revision": null,
+          "visible_token": null
+        },
+        "barrier": false,
+        "blocked": false,
+        "board_hover": [
+          -1,
+          -1
+        ],
+        "board_rect": [
+          68.0,
+          93.120002746582,
+          1568.0,
+          908.880004882813
+        ],
+        "buttons": 0,
+        "card": [],
+        "card_clip": [
+          90.0,
+          152.0,
+          715.0,
+          709.0
+        ],
+        "cards": {
+          "pz-hg31-legacy": [
+            128.0,
+            152.0,
+            301.0,
+            223.0
+          ],
+          "pz-hg31-new": [
+            441.0,
+            152.0,
+            301.0,
+            223.0
+          ],
+          "pz-hg31-none": [
+            128.0,
+            387.0,
+            301.0,
+            223.0
+          ],
+          "pz-hg31-standard": [
+            441.0,
+            387.0,
+            301.0,
+            223.0
+          ]
+        },
+        "cell_size": 24.0,
+        "cells": [
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1
+        ],
+        "clue": false,
+        "cursor": 0,
+        "focus": "ui-scale",
+        "framebuffer": [
+          1920,
+          1080
+        ],
+        "gesture": false,
+        "grid": [
+          824.0,
+          522.120002746582,
+          72.0,
+          72.0
+        ],
+        "gui_hover": "",
+        "held": 0,
+        "history": [],
+        "history_size": 0,
+        "info_return": [
+          1531.55554199219,
+          69.7777481079102,
+          44.0,
+          44.0
+        ],
+        "info_switch": [
+          1647.55554199219,
+          69.7777481079102,
+          44.0,
+          44.0
+        ],
+        "memory": {},
+        "mode": 0,
+        "pointer": "(1714.0, 77.0)",
+        "presentation": "res://book/main.gd",
+        "renderer": "NVIDIA GeForce RTX 3070",
+        "retry": [
+          1490.0,
+          1000.0,
+          340.0,
+          44.0
+        ],
+        "retry_visible": false,
+        "save_error": "",
+        "scale_control": [
+          712.111206054688,
+          429.777740478516,
+          479.0,
+          44.0
+        ],
+        "scale_popup": {
+          "position": [
+            0,
+            0
+          ],
+          "size": [
+            100,
+            100
+          ],
+          "visible": false
+        },
+        "screen_dpi": 96,
+        "screen_scale": 1.0,
+        "section": "settings",
+        "selected": "pz-hg31-new",
+        "size": [
+          1920,
+          1080
+        ],
+        "slot_path": "E:/Zeuch/Coding/picross_codex/675-hg31-20261116/native-visual/appdata/Godot/app_userdata/picross \u00b7 P1/p1/saves/pz-hg31-new.json",
+        "state": 4,
+        "tips": {
+          "color-1": {
+            "caption": "Farbe 1 w\u00e4hlen \u00b7 aktiviert F\u00fcllen",
+            "rect": [
+              1692.0,
+              315.119995117188,
+              44.0,
+              44.0
+            ],
+            "visible": false
+          },
+          "erase": {
+            "caption": "Radierer \u00b7 Markierungen entfernen",
+            "rect": [
+              1716.0,
+              399.119995117188,
+              44.0,
+              44.0
+            ],
+            "visible": false
+          },
+          "fill": {
+            "caption": "F\u00fcllen \u00b7 links Farbe setzen, rechts leer markieren",
+            "rect": [
+              1668.0,
+              399.119995117188,
+              44.0,
+              44.0
+            ],
+            "visible": false
+          },
+          "help": {
+            "caption": "Hilfe \u00f6ffnen",
+            "rect": [
+              1634.0,
+              48.0,
+              44.0,
+              44.0
+            ],
+            "visible": false
+          },
+          "menu": {
+            "caption": "Einstellungen \u00f6ffnen",
+            "rect": [
+              1692.0,
+              48.0,
+              44.0,
+              44.0
+            ],
+            "visible": false
+          },
+          "minus": {
+            "caption": "Raster verkleinern",
+            "rect": [
+              1668.0,
+              495.119995117188,
+              44.0,
+              44.0
+            ],
+            "visible": false
+          },
+          "nav-information": {
+            "caption": "Zur\u00fcck zum Katalog",
+            "rect": [
+              6.0,
+              105.0,
+              44.0,
+              44.0
+            ],
+            "visible": false
+          },
+          "nav-work": {
+            "caption": "Zur\u00fcck zum R\u00e4tsel",
+            "rect": [
+              1531.55554199219,
+              69.7777481079102,
+              44.0,
+              44.0
+            ],
+            "visible": false
+          },
+          "plus": {
+            "caption": "Raster vergr\u00f6\u00dfern",
+            "rect": [
+              1716.0,
+              495.119995117188,
+              44.0,
+              44.0
+            ],
+            "visible": false
+          },
+          "redo": {
+            "caption": "Zur\u00fcckgenommenen Strich wiederholen",
+            "rect": [
+              1716.0,
+              447.119995117188,
+              44.0,
+              44.0
+            ],
+            "visible": false
+          },
+          "reset": {
+            "caption": "R\u00e4tsel zur\u00fccksetzen",
+            "rect": [
+              938.0,
+              968.0,
+              44.0,
+              44.0
+            ],
+            "visible": false
+          },
+          "undo": {
+            "caption": "Letzten Strich r\u00fcckg\u00e4ngig machen",
+            "rect": [
+              1668.0,
+              447.119995117188,
+              44.0,
+              44.0
+            ],
+            "visible": false
+          }
+        },
+        "tool": [
+          false,
+          1
+        ],
+        "ui_scale": 1.0,
+        "us": 45180788
+      },
+      "stimulus": "actual Win32 OS input",
+      "client": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "capture": "native-new-1920x1080-ui125.png",
+      "state": {
+        "background": {
+          "active_requests": 0,
+          "binding": {
+            "asset": {
+              "bytes": 179789.0,
+              "file": "art/backgrounds/pz-hg31-new.png",
+              "sha256": "aaab196da0bc24fc9866c2bd22ed691c472e6d153ed2dc41d487c01c9f87ec3a"
+            },
+            "id": "pz-hg31-new",
+            "image_revision": 1.0,
+            "status": "selected",
+            "token": 4
+          },
+          "completed_count": 4,
+          "diagnostic": "",
+          "discarded_count": 0,
+          "frozen": true,
+          "has_ready": false,
+          "has_texture": true,
+          "image_size": "(2304, 768)",
+          "last_load_usec": 92918,
+          "peak_requests": 1,
+          "queued": false,
+          "rect": [
+            234.444458007813,
+            521.851867675781,
+            1584.4443359375,
+            528.148132324219
+          ],
+          "request_count": 4,
+          "size": [
+            2304,
+            768
+          ],
+          "stale_requests": 0,
+          "state": "visible",
+          "visible_id": "pz-hg31-new",
+          "visible_revision": 1.0,
+          "visible_token": 4
+        },
+        "barrier": false,
+        "blocked": false,
+        "board_hover": [
+          -1,
+          -1
+        ],
+        "board_rect": [
+          85.0,
+          105.870002746582,
+          1480.0,
+          876.630004882813
+        ],
+        "buttons": 0,
+        "card": [],
+        "card_clip": [
+          112.5,
+          177.0,
+          715.0,
+          709.0
+        ],
+        "cards": {
+          "pz-hg31-legacy": [
+            265.5,
+            177.0,
+            377.0,
+            278.5
+          ],
+          "pz-hg31-new": [
+            265.5,
+            471.0,
+            377.0,
+            278.5
+          ],
+          "pz-hg31-none": [
+            265.5,
+            765.0,
+            377.0,
+            278.5
+          ],
+          "pz-hg31-standard": [
+            265.5,
+            1059.0,
+            377.0,
+            278.5
+          ]
+        },
+        "cell_size": 24.0,
+        "cells": [
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1
+        ],
+        "clue": false,
+        "cursor": 0,
+        "focus": "",
+        "framebuffer": [
+          1920,
+          1080
+        ],
+        "gesture": false,
+        "grid": [
+          797.0,
+          518.870002746582,
+          72.0,
+          72.0
+        ],
+        "gui_hover": "",
+        "held": 0,
+        "history": [],
+        "history_size": 0,
+        "info_return": [
+          100.0,
+          110.0,
+          55.0,
+          55.0
+        ],
+        "info_switch": [
+          512.5,
+          110.0,
+          175.0,
+          55.0
+        ],
+        "memory": {},
+        "mode": 0,
+        "pointer": "(1513.0, 102.0)",
+        "presentation": "res://book/main.gd",
+        "renderer": "NVIDIA GeForce RTX 3070",
+        "retry": [
+          180.0,
+          182.5,
+          425.0,
+          55.0
+        ],
+        "retry_visible": false,
+        "save_error": "",
+        "scale_control": [
+          744.5,
+          400.5,
+          600.0,
+          55.0
+        ],
+        "scale_popup": {
+          "position": [
+            712,
+            473
+          ],
+          "size": [
+            479,
+            86
+          ],
+          "visible": false
+        },
+        "screen_dpi": 96,
+        "screen_scale": 1.0,
+        "section": "settings",
+        "selected": "pz-hg31-new",
+        "size": [
+          1920,
+          1080
+        ],
+        "slot_path": "E:/Zeuch/Coding/picross_codex/675-hg31-20261116/native-visual/appdata/Godot/app_userdata/picross \u00b7 P1/p1/saves/pz-hg31-new.json",
+        "state": 3,
+        "tips": {
+          "color-1": {
+            "caption": "Farbe 1 w\u00e4hlen \u00b7 aktiviert F\u00fcllen",
+            "rect": [
+              1672.5,
+              383.369995117188,
+              55.0,
+              55.0
+            ],
+            "visible": false
+          },
+          "erase": {
+            "caption": "Radierer \u00b7 Markierungen entfernen",
+            "rect": [
+              1702.5,
+              488.369995117188,
+              55.0,
+              55.0
+            ],
+            "visible": false
+          },
+          "fill": {
+            "caption": "F\u00fcllen \u00b7 links Farbe setzen, rechts leer markieren",
+            "rect": [
+              1642.5,
+              488.369995117188,
+              55.0,
+              55.0
+            ],
+            "visible": false
+          },
+          "help": {
+            "caption": "Hilfe \u00f6ffnen",
+            "rect": [
+              1745.0,
+              56.0277481079102,
+              55.0,
+              55.0
+            ],
+            "visible": false
+          },
+          "menu": {
+            "caption": "Einstellungen \u00f6ffnen",
+            "rect": [
+              1672.5,
+              56.0277481079102,
+              55.0,
+              55.0
+            ],
+            "visible": false
+          },
+          "minus": {
+            "caption": "Raster verkleinern",
+            "rect": [
+              1642.5,
+              608.369995117188,
+              55.0,
+              55.0
+            ],
+            "visible": false
+          },
+          "nav-information": {
+            "caption": "Zur\u00fcck zum Katalog",
+            "rect": [
+              1600.0,
+              56.0277481079102,
+              55.0,
+              55.0
+            ],
+            "visible": false
+          },
+          "nav-work": {
+            "caption": "Zur\u00fcck zum R\u00e4tsel",
+            "rect": [
+              100.0,
+              110.0,
+              55.0,
+              55.0
+            ],
+            "visible": false
+          },
+          "plus": {
+            "caption": "Raster vergr\u00f6\u00dfern",
+            "rect": [
+              1702.5,
+              608.369995117188,
+              55.0,
+              55.0
+            ],
+            "visible": false
+          },
+          "redo": {
+            "caption": "Zur\u00fcckgenommenen Strich wiederholen",
+            "rect": [
+              1702.5,
+              548.369995117188,
+              55.0,
+              55.0
+            ],
+            "visible": false
+          },
+          "reset": {
+            "caption": "R\u00e4tsel zur\u00fccksetzen",
+            "rect": [
+              938.0,
+              968.0,
+              44.0,
+              44.0
+            ],
+            "visible": false
+          },
+          "undo": {
+            "caption": "Letzten Strich r\u00fcckg\u00e4ngig machen",
+            "rect": [
+              1642.5,
+              548.369995117188,
+              55.0,
+              55.0
+            ],
+            "visible": false
+          }
+        },
+        "tool": [
+          false,
+          1
+        ],
+        "ui_scale": 1.25,
+        "us": 53721044
+      },
+      "stimulus": "actual Win32 OS input",
+      "client": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "capture": "native-legacy-1920x1080-ui125.png",
+      "state": {
+        "background": {
+          "active_requests": 0,
+          "binding": {
+            "asset": {
+              "bytes": 5246.0,
+              "file": "art/backgrounds/pz-hg31-legacy.png",
+              "sha256": "21bd9095ab40b792cb5fa29b5830cfeb774a637564860ba9ecfb0435ebb7ffed"
+            },
+            "id": "pz-hg31-legacy",
+            "image_revision": 1.0,
+            "status": "selected",
+            "token": 5
+          },
+          "completed_count": 5,
+          "diagnostic": "",
+          "discarded_count": 0,
+          "frozen": true,
+          "has_ready": false,
+          "has_texture": true,
+          "image_size": "(2304, 576)",
+          "last_load_usec": 98216,
+          "peak_requests": 1,
+          "queued": false,
+          "rect": [
+            234.444458007813,
+            653.888916015625,
+            1584.4443359375,
+            396.111083984375
+          ],
+          "request_count": 5,
+          "size": [
+            2304,
+            576
+          ],
+          "stale_requests": 0,
+          "state": "visible",
+          "visible_id": "pz-hg31-legacy",
+          "visible_revision": 1.0,
+          "visible_token": 5
+        },
+        "barrier": false,
+        "blocked": false,
+        "board_hover": [
+          -1,
+          -1
+        ],
+        "board_rect": [
+          85.0,
+          105.870002746582,
+          1480.0,
+          876.630004882813
+        ],
+        "buttons": 0,
+        "card": [],
+        "card_clip": [
+          112.5,
+          190.0,
+          707.0,
+          636.0
+        ],
+        "cards": {
+          "pz-hg31-legacy": [
+            261.5,
+            190.0,
+            377.0,
+            279.0
+          ],
+          "pz-hg31-new": [
+            261.5,
+            484.0,
+            377.0,
+            279.0
+          ],
+          "pz-hg31-none": [
+            261.5,
+            778.0,
+            377.0,
+            279.0
+          ],
+          "pz-hg31-standard": [
+            261.5,
+            1072.0,
+            377.0,
+            279.0
+          ]
+        },
+        "cell_size": 24.0,
+        "cells": [
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1
+        ],
+        "clue": false,
+        "cursor": 0,
+        "focus": "",
+        "framebuffer": [
+          1920,
+          1080
+        ],
+        "gesture": false,
+        "grid": [
+          797.0,
+          518.870002746582,
+          72.0,
+          72.0
+        ],
+        "gui_hover": "",
+        "held": 0,
+        "history": [],
+        "history_size": 0,
+        "info_return": [
+          100.0,
+          110.0,
+          55.0,
+          55.0
+        ],
+        "info_switch": [
+          512.5,
+          110.0,
+          175.0,
+          55.0
+        ],
+        "memory": {},
+        "mode": 0,
+        "pointer": "(514.0, 455.0)",
+        "presentation": "res://book/main.gd",
+        "renderer": "NVIDIA GeForce RTX 3070",
+        "retry": [
+          180.0,
+          182.5,
+          425.0,
+          55.0
+        ],
+        "retry_visible": false,
+        "save_error": "",
+        "scale_control": [
+          744.5,
+          400.5,
+          600.0,
+          55.0
+        ],
+        "scale_popup": {
+          "position": [
+            712,
+            473
+          ],
+          "size": [
+            479,
+            86
+          ],
+          "visible": false
+        },
+        "screen_dpi": 96,
+        "screen_scale": 1.0,
+        "section": "settings",
+        "selected": "pz-hg31-legacy",
+        "size": [
+          1920,
+          1080
+        ],
+        "slot_path": "E:/Zeuch/Coding/picross_codex/675-hg31-20261116/native-visual/appdata/Godot/app_userdata/picross \u00b7 P1/p1/saves/pz-hg31-legacy.json",
+        "state": 3,
+        "tips": {
+          "color-1": {
+            "caption": "Farbe 1 w\u00e4hlen \u00b7 aktiviert F\u00fcllen",
+            "rect": [
+              1672.5,
+              383.369995117188,
+              55.0,
+              55.0
+            ],
+            "visible": false
+          },
+          "erase": {
+            "caption": "Radierer \u00b7 Markierungen entfernen",
+            "rect": [
+              1702.5,
+              488.369995117188,
+              55.0,
+              55.0
+            ],
+            "visible": false
+          },
+          "fill": {
+            "caption": "F\u00fcllen \u00b7 links Farbe setzen, rechts leer markieren",
+            "rect": [
+              1642.5,
+              488.369995117188,
+              55.0,
+              55.0
+            ],
+            "visible": false
+          },
+          "help": {
+            "caption": "Hilfe \u00f6ffnen",
+            "rect": [
+              1745.0,
+              56.0277481079102,
+              55.0,
+              55.0
+            ],
+            "visible": false
+          },
+          "menu": {
+            "caption": "Einstellungen \u00f6ffnen",
+            "rect": [
+              1672.5,
+              56.0277481079102,
+              55.0,
+              55.0
+            ],
+            "visible": false
+          },
+          "minus": {
+            "caption": "Raster verkleinern",
+            "rect": [
+              1642.5,
+              608.369995117188,
+              55.0,
+              55.0
+            ],
+            "visible": false
+          },
+          "nav-information": {
+            "caption": "Zur\u00fcck zum Katalog",
+            "rect": [
+              1600.0,
+              56.0277481079102,
+              55.0,
+              55.0
+            ],
+            "visible": false
+          },
+          "nav-work": {
+            "caption": "Zur\u00fcck zum R\u00e4tsel",
+            "rect": [
+              100.0,
+              110.0,
+              55.0,
+              55.0
+            ],
+            "visible": false
+          },
+          "plus": {
+            "caption": "Raster vergr\u00f6\u00dfern",
+            "rect": [
+              1702.5,
+              608.369995117188,
+              55.0,
+              55.0
+            ],
+            "visible": false
+          },
+          "redo": {
+            "caption": "Zur\u00fcckgenommenen Strich wiederholen",
+            "rect": [
+              1702.5,
+              548.369995117188,
+              55.0,
+              55.0
+            ],
+            "visible": false
+          },
+          "reset": {
+            "caption": "R\u00e4tsel zur\u00fccksetzen",
+            "rect": [
+              938.0,
+              968.0,
+              44.0,
+              44.0
+            ],
+            "visible": false
+          },
+          "undo": {
+            "caption": "Letzten Strich r\u00fcckg\u00e4ngig machen",
+            "rect": [
+              1642.5,
+              548.369995117188,
+              55.0,
+              55.0
+            ],
+            "visible": false
+          }
+        },
+        "tool": [
+          false,
+          1
+        ],
+        "ui_scale": 1.25,
+        "us": 60126402
+      },
+      "stimulus": "actual Win32 OS input",
+      "client": [
+        1920,
+        1080
+      ]
+    }
+  ]
+}
