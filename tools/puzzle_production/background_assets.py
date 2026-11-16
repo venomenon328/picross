@@ -22,7 +22,7 @@ from PIL import Image, ImageFile, PngImagePlugin, __version__, features
 from . import background_io as io
 from .background_contract import (BackgroundError, MAX_JSON, MAX_PNG, PROFILE,
                                   canonical, digest, load_inputs, parse_json,
-                                  validate_request, validate_producer)
+                                  validate_request, validate_producer, PROFILES)
 from .contract import InvalidInput
 from .image_normalization import normalize_bytes
 
@@ -133,12 +133,15 @@ def _v2_tool(budget):
     return {"id": "picross-background-2", "versions": versions, "modules": modules}, producer, reader
 
 
-def describe(generation=2):
+def describe(generation=2, *, profile_id=PROFILE["id"]):
     try:
         if type(generation) is not int or generation not in (1, 2):
             raise BackgroundError("unsupported_format", "Unsupported tool generation")
+        if type(profile_id) is not str or profile_id not in PROFILES or generation == 1 and profile_id != PROFILE["id"]:
+            raise BackgroundError("invalid_request", "Unsupported background profile for this generation")
+        profile = PROFILES[profile_id]
         tool, producer, _ = _v2_tool(io.Budget()) if generation == 2 else (_tool(io.Budget()), None, None)
-        return {"profile": parse_json(canonical(PROFILE)), "profile_sha256": digest(PROFILE),
+        return {"profile": parse_json(canonical(profile)), "profile_sha256": digest(profile),
                 "tool": tool, "tool_sha256": digest(tool), **({"producer": producer} if generation == 2 else {})}
     except (Exception, KeyboardInterrupt, SystemExit) as exc:
         return _error(exc)
@@ -262,10 +265,12 @@ def _prepare(request, reader, tool, budget, producer=None):
     manifest, decision, candidate = load_inputs(request, reader)
     png, diagnostics = None, {"source": None, "output": None, "upscaled": None}
     if candidate is not None:
-        render = _render
+        raw = reader.read_ref(request["source"], MAX_PNG)
         if producer is not None:
             from .background_render import _render as render
-        png, diagnostics = render(reader.read_ref(request["source"], MAX_PNG), budget)
+            png, diagnostics = render(raw, budget, request["profile"])
+        else:
+            png, diagnostics = _render(raw, budget)
     derivation = {"format": "picross-background-derivation-v1", "request_sha256": digest(request),
                   "request": request, "puzzle_id": manifest["puzzle_id"], "job_id": manifest["job_id"],
                   "background_revision": manifest["revision"],
@@ -486,7 +491,9 @@ def main(argv=None):
             handlers[signum] = signal.signal(signum, interrupted)
         parser = _Parser(description=__doc__, add_help=False)
         commands = parser.add_subparsers(dest="command", required=True, parser_class=_Parser)
-        commands.add_parser("describe", add_help=False).add_argument("--generation", type=int, choices=(1, 2), default=2)
+        description = commands.add_parser("describe", add_help=False)
+        description.add_argument("--generation", type=int, choices=(1, 2), default=2)
+        description.add_argument("--profile-id", default=PROFILE["id"])
         for name, output_option in (("derive", "--output-root"), ("verify", "--output-dir")):
             sub = commands.add_parser(name, add_help=False)
             sub.add_argument("--request", required=True)
@@ -494,7 +501,7 @@ def main(argv=None):
             sub.add_argument(output_option, required=True)
         args = parser.parse_args(argv)
         if args.command == "describe":
-            result = describe(args.generation)
+            result = describe(args.generation, profile_id=args.profile_id)
         else:
             request_path = io.external(args.request)
             budget = io.Budget()

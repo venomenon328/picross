@@ -49,7 +49,7 @@ angelegt. Namen und knappe Kategorien sind sichtbar, technische IDs nicht.
 Referenzen; sichtbare Bilder werden erst bei Bedarf geladen. Rechts
 Name/Kategorie bearbeiten und Bilder über Dateiauswahl oder Drop bereitstellen.
 PNG/SVG-Reveal: höchstens 32 MiB, 8192 Pixel je Achse, 8 Mio. Pixel und
-mindestens zwei Pixel je Rasterzelle. Hintergrund: 2304×576 PNG mit sichtbaren
+mindestens zwei Pixel je Rasterzelle. Hintergrund: 2304×768 PNG (neues Profil) oder 2304×576 PNG (Legacy) mit sichtbaren
 und transparenten Pixeln. Importbytes werden nicht umgerechnet.
 
 Standard folgt der gewählten Kategorie, eigenes Bild und kein Hintergrund sind
@@ -135,3 +135,14 @@ UI-Originale (hell/dunkel) und die getestete portable Ausgabe werden dem
 unabhängigen Reviewer für höchstens sieben Tage zugestellt. Kein automatisches
 Spiel-Chromiumprofil. PE-EDIT2-A01 vor Merge und die persönliche PE-B-U01 aus
 #576 vor Release bleiben offen bis zur jeweiligen unabhängigen Abnahme.
+
+## HG31: explizite Profilwahl
+
+Neue Einzelkompositionen sind exakt 3:1. HP-W2: `describe --profile-id
+picross-background-png2304x768-v1` (in einer Zeile aufrufen), dann dessen
+vollständiges Profil/Hash in Request v2 und Entscheidung binden. Ausgabe
+2304×768 RGBA8; verify prüft dieselbe Bindung. Altes Profil bleibt unverändert.
+Fertigimport erkennt 2304×768 bzw. 2304×576 aus validierten PNG-Bytes und
+übernimmt unverändert. V1-Capability erlaubt ausschließlich das alte Profil.
+[Geschlossener Vertrag](../../docs/PUZZLE_BACKGROUNDS.md#hg31--zwei-geschlossene-bildprofile).
+Keine Kandidatenintegration vor geprüftem Mainmerge oder neue WIP-Migration.

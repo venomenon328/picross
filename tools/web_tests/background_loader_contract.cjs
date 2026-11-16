@@ -4,9 +4,9 @@ const assert = require("node:assert/strict");
 const vm = require("node:vm");
 const {parseCTEX, decodeCTEX, createBridge} = require(process.argv[2]);
 
-const sizes = [[2304,576],[1152,288],[576,144],[288,72],[144,36],[72,18],[36,9],[18,4],[9,2],[4,1],[2,1],[1,1]];
+let sizes = [[2304,576],[1152,288],[576,144],[288,72],[144,36],[72,18],[36,9],[18,4],[9,2],[4,1],[2,1],[1,1]];
 const expectedBytes = sizes.reduce((sum, [w,h]) => sum + w*h*4, 0);
-function container(encoding = 1) {
+function container(encoding = 1, height = sizes[0][1]) {
     const blocks = sizes.map(([w,h]) => {
         if (encoding === 1) {
             // Minimal codec header: decoding is deliberately a separate seam.
@@ -26,9 +26,9 @@ function container(encoding = 1) {
     });
     const bytes = Buffer.alloc(52 + blocks.reduce((sum, b) => sum+b.length+4,0));
     bytes.write("GST2"); bytes.writeUInt32LE(1,4);
-    bytes.writeUInt32LE(2304,8); bytes.writeUInt32LE(576,12);
+    bytes.writeUInt32LE(2304,8); bytes.writeUInt32LE(height,12);
     bytes.writeUInt32LE(1<<23,16); bytes.writeUInt32LE(0xffffffff,20);
-    bytes.writeUInt32LE(encoding,36); bytes.writeUInt16LE(2304,40); bytes.writeUInt16LE(576,42);
+    bytes.writeUInt32LE(encoding,36); bytes.writeUInt16LE(2304,40); bytes.writeUInt16LE(height,42);
     bytes.writeUInt32LE(11,44); bytes.writeUInt32LE(5,48);
     let offset = 52;
     for (const block of blocks) {
@@ -113,20 +113,20 @@ async function main() {
     assert.equal(bridge.start("first"),""); assert.equal(bridge.poll(),"pending");
     assert.equal(bridge.start("second"),"loader_busy");
     const first=workers[0], oldGeneration=first.request.generation;
-    first.emit({generation:oldGeneration+1,bytes:new ArrayBuffer(expectedBytes)});
+    first.emit({generation:oldGeneration+1,width:2304,height:576,bytes:new ArrayBuffer(expectedBytes)});
     assert.equal(bridge.poll(),"pending","wrong request cannot publish");
-    first.emit({generation:oldGeneration,bytes:new ArrayBuffer(expectedBytes)});
+    first.emit({generation:oldGeneration,width:2304,height:576,bytes:new ArrayBuffer(expectedBytes)});
     assert.equal(bridge.poll(),"loaded"); assert.equal(bridge.take().byteLength,expectedBytes);
     assert.equal(bridge.poll(),"idle"); assert.equal(bridge.take(),null,"result is released, not cached");
     bridge.start("before-cancel"); const staleGeneration=first.request.generation;
     bridge.cancel(); assert(first.terminated); assert.equal(bridge.poll(),"idle");
     bridge.start("new-visit"); assert.equal(workers.length,2);
-    first.emit({generation:staleGeneration,bytes:new ArrayBuffer(expectedBytes)});
+    first.emit({generation:staleGeneration,width:2304,height:576,bytes:new ArrayBuffer(expectedBytes)});
     assert.equal(bridge.poll(),"pending","old worker callback is ignored");
     const second=workers[1];
     second.emit({generation:second.request.generation,error:"controlled_failure"});
     assert.equal(bridge.poll(),"error"); assert.equal(bridge.error(),"controlled_failure");
-    bridge.start("bad-length"); second.emit({generation:second.request.generation,bytes:new ArrayBuffer(1)});
+    bridge.start("bad-length"); second.emit({generation:second.request.generation,width:2304,height:576,bytes:new ArrayBuffer(1)});
     assert.equal(bridge.error(),"worker_result_bytes");
     bridge.close(); assert(second.terminated); assert.deepEqual(urls,revoked,"every Blob URL revoked");
     const missingEnv={...environment,Worker:undefined};
@@ -146,6 +146,28 @@ async function main() {
     assert.equal(reply.bytes.byteLength,expectedBytes); assert.equal(transfer[0],reply.bytes);
     await scope.self.onmessage({data:{generation:43,encoded:"not_base64!"}});
     assert.equal(reply.generation,43); assert.equal(typeof reply.error,"string");
+    const legacySizes = sizes;
+    sizes = [[2304,768],[1152,384],[576,192],[288,96],[144,48],[72,24],[36,12],[18,6],[9,3],[4,1],[2,1],[1,1]];
+    for(const encoding of [1,2]) {
+        const parsed=parseCTEX(container(encoding));
+        assert.deepEqual(parsed.mips.map(m=>[m.width,m.height]),sizes);
+        assert.equal(parsed.pixelBytes,9437176);
+        const damaged=container(encoding); damaged[12]=1;
+        assert.throws(()=>parseCTEX(damaged),/ctex_dimensions/);
+    }
+    const profiles=createBridge(environment);
+    for(const height of [576,768,576]) {
+        assert.equal(profiles.start("profile",2304,height),"");
+        const active=workers.at(-1), generation=active.request.generation;
+        active.emit({generation,width:2304,height:height===576?768:576,bytes:new ArrayBuffer(height===576?9437176:7077844)});
+        assert.equal(profiles.poll(),"error","different profile cannot be published");
+        profiles.start("profile",2304,height);
+        active.emit({generation:active.request.generation,width:2304,height,bytes:new ArrayBuffer(height===576?7077844:9437176)});
+        assert.equal(profiles.poll(),"loaded");
+        assert.equal(profiles.width(),2304);assert.equal(profiles.height(),height);
+        profiles.take();
+    }
+    profiles.close();sizes=legacySizes;
     console.log("PASS background container, asynchronous ownership, cancellation and pixels");
 }
 main().catch(error=>{console.error(error);process.exitCode=1;});

@@ -203,13 +203,13 @@ class BackgroundFixture:
             "manifest": None, "outcome": "none" if none else "selected",
             "candidate_id": None if none else "A",
             "original": None if none else copy.deepcopy(self.manifest["candidates"][0]["original"]),
-            "profile": None if none else {"id": PROFILE["id"], "sha256": digest(PROFILE)},
+            "profile": None if none else {"id": description["profile"]["id"], "sha256": digest(description["profile"])},
             **human, "presented_package": None, "previous_decision": None,
             "carried_from": None, "accepted_deviations": [], "test_only": True,
         }
         generation = 2 if description.get("tool", {}).get("id") == "picross-background-2" else 1
         self.request = {"format": "picross-background-derive-request-v" + str(generation), "manifest": None,
-                        "decision": None, "source": None, "profile": copy.deepcopy(PROFILE),
+                        "decision": None, "source": None, "profile": copy.deepcopy(description["profile"]),
                         "expected_tool_sha256": description["tool_sha256"], "output": "derived/bg01"}
         self.refresh()
 

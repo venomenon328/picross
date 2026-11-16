@@ -3,7 +3,8 @@ extends Control
 const Registry = preload("res://model/content_registry.gd")
 const NativeLoader = preload("res://book/puzzle_background_loader.gd")
 const WebLoader = preload("res://book/puzzle_background_web.gd")
-const IMAGE_SIZE := Vector2i(2304, 576)
+const IMAGE_SIZES: Array = [Vector2i(2304, 576), Vector2i(2304, 768)]
+var image_size := Vector2i(2304, 576)
 const OPACITY: float = 0.48
 
 var backend: RefCounted = NativeLoader.new()
@@ -83,6 +84,7 @@ func leave() -> void:
 func _clear_view() -> void:
 	texture = null
 	ready_texture = null
+	image_size = Vector2i(2304, 576)
 	desired.clear()
 
 func _retire_request() -> void:
@@ -123,33 +125,47 @@ func _poll() -> void:
 		diagnostic = str(result.get("error", "texture_load_failed"))
 		return
 	var loaded: Texture2D = result.texture
-	if Vector2i(loaded.get_width(), loaded.get_height()) != IMAGE_SIZE:
+	var size := Vector2i(loaded.get_width(), loaded.get_height())
+	if not size in IMAGE_SIZES:
 		state = "failed"
 		diagnostic = "invalid_texture_dimensions"
+		return
+	if not Registry.texture_profile(size) in Registry.background_profiles:
+		state = "failed"
+		diagnostic = "unsupported_texture_profile"
 		return
 	# The Web decoder already owns the verified CPU image. Reuse it for this
 	# check instead of forcing an immediate synchronous GPU readback.
 	var image: Image = result.get("image", null)
 	if image == null: image = loaded.get_image()
-	if image == null or image.is_empty() or image.get_mipmap_count() != 11:
+	if image == null or image.is_empty() or image.get_size() != size or image.get_mipmap_count() != 11 or not image.get_format() in [Image.FORMAT_RGBA8, Image.FORMAT_LA8] or (size.y == 768 and image.get_format() != Image.FORMAT_RGBA8) or image.get_data().size() != mipmap_bytes(size, 4 if image.get_format() == Image.FORMAT_RGBA8 else 2):
 		state = "failed"
 		diagnostic = "invalid_texture_mipmaps"
 		return
+	image_size = size
 	ready_texture = loaded
 	state = "ready"
 
-static func placement(paper: Rect2, viewport: Vector2, u: float) -> Rect2:
+static func mipmap_bytes(size: Vector2i, channels: int = 4) -> int:
+	var total: int = 0
+	while true:
+		total += size.x * size.y * channels
+		if size == Vector2i.ONE: return total
+		size = Vector2i(maxi(1, size.x >> 1), maxi(1, size.y >> 1))
+	return total
+
+static func placement(paper: Rect2, viewport: Vector2, u: float, ratio: float = 4.0) -> Rect2:
 	# Same fold/rim safety envelope for every image. No functional rectangles
 	# or zoom inputs: variant A stays behind both cells and clues.
 	var safe := Rect2(Vector2(paper.position.x + paper.size.x * 0.075 + 24 * u, maxf(24 * u, paper.position.y + 20 * u)), Vector2.ZERO)
 	safe.size = Vector2(paper.end.x - 24 * u, minf(viewport.y - 24 * u, paper.end.y - 24 * u)) - safe.position
 	if safe.size.x <= 0 or safe.size.y <= 0: return Rect2()
-	var width: float = minf(safe.size.x, safe.size.y * 4.0)
-	var extent := Vector2(width, width / 4.0)
+	var width: float = minf(safe.size.x, safe.size.y * ratio)
+	var extent := Vector2(width, width / ratio)
 	return Rect2(Vector2(safe.get_center().x - width / 2.0, safe.end.y - extent.y), extent)
 
 func arrange(paper: Rect2, viewport: Vector2, u: float) -> void:
-	var next: Rect2 = placement(paper, viewport, u)
+	var next: Rect2 = placement(paper, viewport, u, float(image_size.x) / image_size.y)
 	if box == next: return
 	box = next
 	queue_redraw()
@@ -160,7 +176,7 @@ func snapshot() -> Dictionary:
 		"diagnostic":diagnostic, "visible_id":binding.get("id", "") if texture != null else "",
 		"visible_revision":binding.get("image_revision") if texture != null else null,
 		"visible_token":binding.get("token") if texture != null else null,
-		"has_texture":texture != null, "has_ready":ready_texture != null,
+		"image_size":image_size, "has_texture":texture != null, "has_ready":ready_texture != null,
 		"active_requests":0 if request.is_empty() else 1,
 		"stale_requests":0 if request.is_empty() or (request == binding and not frozen) else 1,
 		"queued":not desired.is_empty(), "request_count":request_count,
