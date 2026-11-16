@@ -16,7 +16,12 @@ from tools.production_workspace.sources import GitSource
 class CurrentCompletionTests(unittest.TestCase):
     def setUp(self):
         self.temp=tempfile.TemporaryDirectory();self.addCleanup(self.temp.cleanup)
-        self.work=Path(self.temp.name);self.root=checkout(self.work/'repo');self.source=make(self.work/'input',background='selected')
+        # Only the new optional-notice scenarios need a selected background.
+        selected=self._testMethodName in (
+            'test_retire_selected_background_without_legacy_notice',
+            'test_retire_rejects_foreign_notice_added_after_main')
+        self.work=Path(self.temp.name);self.root=checkout(self.work/'repo')
+        self.source=make(self.work/'input',background='selected' if selected else 'standard')
         self.git('init','-q','-b','main')
         catalog_integration.integrate(self.source,self.root,apply=True)
         self.rows=[]
