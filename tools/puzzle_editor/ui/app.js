@@ -32,7 +32,7 @@ async function job(route, body, binaryType) {
     $('recovery').hidden = !state.recovery_required;
     const item = state.job;
     if (!item || item.id !== start.job) throw new Error('Die aktive Fachoperation hat gewechselt. Neu laden.');
-    message(item.stage + ' Â· ' + item.elapsed_seconds + ' s');
+    message(item.stage + ' · ' + item.elapsed_seconds + ' s');
     if (item.state === 'error') throw new Error(item.error);
     if (item.state === 'done') return item.result;
   }
@@ -45,14 +45,14 @@ async function perform(fn) {
 }
 function mark() {
   dirty = true; plan = null; $('preview').hidden = true;
-  $('dirty').textContent = 'Ungespeicherte Ã„nderungen'; $('dirty').classList.add('changed');
+  $('dirty').textContent = 'Ungespeicherte Änderungen'; $('dirty').classList.add('changed');
 }
 function clean() {
   dirty = false; plan = null; imports = {}; importAssets={}; $('preview').hidden = true;
   $('dirty').textContent = 'Gespeichert'; $('dirty').classList.remove('changed');
 }
 async function leave() {
-  if ((dirty || plan) && !confirm('Ungespeicherte Ã„nderungen und Vorschau verwerfen?')) return false;
+  if ((dirty || plan) && !confirm('Ungespeicherte Änderungen und Vorschau verwerfen?')) return false;
   if (dirty || plan) await api('discard', {confirmed: true});
   clean(); return true;
 }
@@ -67,13 +67,13 @@ async function load() {
   const status = await api('status');
   $('checkout').textContent = status.checkout; $('origin').textContent = status.origin;
   $('recovery').hidden = !status.recovery_required;
-  if (status.recovery_required) { message('Recovery erforderlich. Noch keine neue Bearbeitung mÃ¶glich.', true); return; }
+  if (status.recovery_required) { message('Recovery erforderlich. Noch keine neue Bearbeitung möglich.', true); return; }
   listing = await api('catalog');
   options($('filter'), listing.categories, 'Alle Kategorien');
   if (listing.categories.some(row => row.id === filter)) $('filter').value = filter;
   $('migration').hidden = !listing.migration_required;
   current = null; $('form').hidden = true; $('empty').hidden = false;
-  $('list').scrollTop = scroll; renderList(); message('Aktuelle Metadaten geladen. Quellenbindung beim Ã–ffnen.');
+  $('list').scrollTop = scroll; renderList(); message('Aktuelle Metadaten geladen. Quellenbindung beim Öffnen.');
   if (selected && listing.entries.some(row => row.id === selected)) await select(selected);
 }
 const ROW_HEIGHT = 64, BUFFER = 4;
@@ -158,21 +158,21 @@ async function select(id) {
   $('title').textContent = row.name; $('name').value = row.name;
   options($('category'), listing.categories); $('category').value = row.category_id;
   $('background').value = result.detail.runtime.background.status;
-  $('background-note').textContent = $('background').value === 'legacy' ? 'Bisherige Kategoriezeichnung. Eine erste ausdrÃ¼ckliche Standardzuordnung ist eine eigene Entscheidung.' : '';
+  $('background-note').textContent = $('background').value === 'legacy' ? 'Bisherige Kategoriezeichnung. Eine erste ausdrückliche Standardzuordnung ist eine eigene Entscheidung.' : '';
   $('raster').value = result.raster.text; $('profile').value = 'line';
   $('reveal-file').value = ''; $('background-file').value = ''; $('reveal-info').textContent = ''; $('background-info').textContent = '';
   $('palette').replaceChildren();
-  const empty = document.createElement('span'); empty.className = 'swatch'; empty.textContent = '0 Â· leer'; $('palette').append(empty);
+  const empty = document.createElement('span'); empty.className = 'swatch'; empty.textContent = '0 · leer'; $('palette').append(empty);
   for (const color of result.raster.palette) {
     const span = document.createElement('span'); span.className = 'swatch';
     const swatch = document.createElement('i'); swatch.style.backgroundColor = '#' + color.color;
-    span.append(swatch, document.createTextNode(color.id + ' Â· ' + (color.name || color.color || color.hex || ''))); $('palette').append(span);
+    span.append(swatch, document.createTextNode(color.id + ' · ' + (color.name || color.color || color.hex || ''))); $('palette').append(span);
   }
   await showPictures('reveal', result.pictures.reveal); await showPictures('background', result.pictures.background);
   $('composition').style.backgroundImage = 'url(' + await picture(result.pictures.paper) + ')';
   compose();
   $('zoom').value=Math.max(4,Math.min(48,Math.floor(Math.min(($('grid-view').clientWidth-8)/result.raster.width,290/result.raster.height))));
-  grid(); renderList(); message('Detail und aktuelle Quellen geprÃ¼ft. Ã„nderungen erst nach PrÃ¼fen und Ãœbernehmen.');
+  grid(); renderList(); message('Detail und aktuelle Quellen geprüft. Änderungen erst nach Prüfen und Übernehmen.');
 }
 function clues(line) {
   const result = []; let prev = 0;
@@ -188,28 +188,28 @@ function grid() {
       const tokens = line.trim().split(/\s+/);
       if (!line.trim() || y >= 50) throw new Error(`Zeile ${y + 1}, Spalte 1: leere Zeile oder mehr als 50 Zeilen`);
       return tokens.map((token, x) => {
-        if (!/^[0-9]+$/.test(token) || !allowed.has(Number(token)) || x >= 50) throw new Error(`Zeile ${y + 1}, Spalte ${x + 1}: ungÃ¼ltige Palette-ID oder mehr als 50 Zellen`);
+        if (!/^[0-9]+$/.test(token) || !allowed.has(Number(token)) || x >= 50) throw new Error(`Zeile ${y + 1}, Spalte ${x + 1}: ungültige Palette-ID oder mehr als 50 Zellen`);
         return Number(token);
       });
     });
     matrix.forEach((row, y) => { if (row.length !== matrix[0].length) throw new Error(`Zeile ${y + 1}, Spalte ${Math.min(row.length, matrix[0].length) + 1}: abweichende Zeilenbreite`); });
-    $('dimensions').textContent = 'Â· ' + matrix[0].length + ' Ã— ' + matrix.length;
+    $('dimensions').textContent = '· ' + matrix[0].length + ' × ' + matrix.length;
     const rows = matrix.map(clues), cols = matrix[0].map((_, x) => clues(matrix.map(row => row[x])));
     $('clues').textContent = JSON.stringify({rows, columns: cols}, null, 2);
     drawGrid(matrix);
     $('grid-status').classList.remove('error');
-    $('grid-status').textContent = 'Textstruktur gÃ¼ltig. Deduktion und Rating erfolgen erst beim PrÃ¼fen.';
+    $('grid-status').textContent = 'Textstruktur gültig. Deduktion und Rating erfolgen erst beim Prüfen.';
   } catch (error) { $('grid-status').textContent = error.message; $('grid-status').classList.add('error'); $('clues').textContent = ''; $('grid').width = 0; }
 }
 async function upload(kind, file) {
-  if (!current) throw new Error('Zuerst ein RÃ¤tsel auswÃ¤hlen.');
+  if (!current) throw new Error('Zuerst ein Rätsel auswählen.');
   const suffix = file.name.split('.').at(-1).toLowerCase();
   if (!['png', 'svg'].includes(suffix) || (kind === 'background' && suffix !== 'png')) throw new Error('PNG / begrenztes SVG erwartet; Hintergrund nur PNG.');
-  if (!file.size || file.size > 32 * 1024 * 1024) throw new Error('Datei muss 1 Byte bis 32 MiB groÃŸ sein.');
+  if (!file.size || file.size > 32 * 1024 * 1024) throw new Error('Datei muss 1 Byte bis 32 MiB groß sein.');
   const result = await job('upload/' + kind + '/' + suffix, file, suffix === 'png' ? 'image/png' : 'image/svg+xml');
   imports[kind] = result.upload; importAssets[kind]=result.asset; mark();
   await showPictures(kind, [result.asset]);
-  $(kind + '-info').textContent = file.name + ' Â· ' + result.bytes + ' Bytes Â· geprÃ¼ft, noch nicht Ã¼bernommen';
+  $(kind + '-info').textContent = file.name + ' · ' + result.bytes + ' Bytes · geprüft, noch nicht übernommen';
   if (kind === 'background') $('background').value = 'selected';
   compose(); message('Originaldatei gepr\u00fcft. Vorschau vor dem Speichern kontrollieren.');
 }
@@ -220,7 +220,7 @@ function request() {
   if ($('category').value !== old.category_id) metadata.category_id = $('category').value;
   const bg = $('background').value;
   const backgroundChanged = bg !== current.detail.runtime.background.status || !!imports.background;
-  if (backgroundChanged && bg === 'legacy') throw new Error('FÃ¼r RÃ¼ckkehr die ausdrÃ¼ckliche StandardprÃ¤ferenz wÃ¤hlen.');
+  if (backgroundChanged && bg === 'legacy') throw new Error('Für Rückkehr die ausdrückliche Standardpräferenz wählen.');
   const rasterChanged = $('raster').value !== current.raster.text;
   const imageChanged = !!imports.reveal || backgroundChanged;
   return {snapshot: current.snapshot, id: current.detail.id, metadata: Object.keys(metadata).length ? metadata : null,
@@ -237,20 +237,20 @@ async function backgroundPreview() {
   } else if (status === 'none') await showPictures('background', []);
   else if (imports.background) await showPictures('background',[importAssets.background]);
   else if (current.detail.runtime.background.status === 'selected') await showPictures('background', current.pictures.background);
-  else if (!imports.background) { $('background-pictures').replaceChildren(); $('background-pictures').textContent = 'Vorbereitete Datei auswÃ¤hlen'; }
+  else if (!imports.background) { $('background-pictures').replaceChildren(); $('background-pictures').textContent = 'Vorbereitete Datei auswählen'; }
   compose();
-  $('background-note').textContent = 'Vorschau der gewÃ¤hlten Einstellung; noch nicht Ã¼bernommen.';
+  $('background-note').textContent = 'Vorschau der gewählten Einstellung; noch nicht übernommen.';
 }
 function preview(result) {
   plan = result; $('preview').hidden = false;
   $('plan-summary').replaceChildren();
-  const p = document.createElement('p'); p.textContent = (result.id || 'Kategorien / Runtimeprojektion') + ' Â· ' + result.files.length + ' geÃ¤nderte Dateien';
+  const p = document.createElement('p'); p.textContent = (result.id || 'Kategorien / Runtimeprojektion') + ' · ' + result.files.length + ' geänderte Dateien';
   $('plan-summary').append(p);
   const table = document.createElement('table');
   const header = document.createElement('tr');
   for (const text of ['Feld', 'Vorher', 'Nachher']) { const cell = document.createElement('th'); cell.textContent = text; header.append(cell); }
   table.append(header);
-  const row = (label, before, after) => { const tr = document.createElement('tr'); for (const text of [label, before ?? 'â€”', after ?? 'â€”']) { const td = document.createElement('td'); td.textContent = String(text); tr.append(td); } table.append(tr); };
+  const row = (label, before, after) => { const tr = document.createElement('tr'); for (const text of [label, before ?? '—', after ?? '—']) { const td = document.createElement('td'); td.textContent = String(text); tr.append(td); } table.append(tr); };
   const category = id => listing.categories.find(item => item.id === id)?.name || id;
   const metadata = (before, after) => {
     if (before?.name !== after?.name) row('Name', before?.name, after?.name);
@@ -260,26 +260,26 @@ function preview(result) {
   if (result.kind === 'metadata') {
     for (const change of result.after) {
       if (change.kind === 'category') row('Kategorie ' + change.id, change.before?.name, change.after?.name);
-      else { row('RÃ¤tsel', change.before?.name || change.id, change.after?.name || change.id); metadata(change.before, change.after); }
+      else { row('Rätsel', change.before?.name || change.id, change.after?.name || change.id); metadata(change.before, change.after); }
     }
   } else {
     metadata(result.before.metadata, result.after.metadata);
-    if (JSON.stringify(result.before.reveal) !== JSON.stringify(result.after.reveal)) row('Abschlussbild', 'Bisheriges Bild', 'GeprÃ¼fter Import / aktuelle Bindung');
+    if (JSON.stringify(result.before.reveal) !== JSON.stringify(result.after.reveal)) row('Abschlussbild', 'Bisheriges Bild', 'Geprüfter Import / aktuelle Bindung');
     if (JSON.stringify(result.before.background) !== JSON.stringify(result.after.background)) row('Hintergrund', background(result.before.runtime.background.status), background(result.after.runtime.background.status));
     if (result.kind === 'raster') {
-      const dimensions = value => value.width + ' Ã— ' + value.height + ' Â· Revision ' + value.revision;
+      const dimensions = value => value.width + ' × ' + value.height + ' · Revision ' + value.revision;
       row('Raster', dimensions(result.before.definition), dimensions(result.after.definition));
       const rating = result.quality?.checked?.rating?.result;
       const text = document.createElement('p');
-      text.textContent = result.logic_changed ? 'Deduktionsnachweis vollstÃ¤ndig geprÃ¼ft. Schwierigkeit: ' + (['', 'Sehr leicht', 'Leicht', 'Mittel', 'Schwer', 'Sehr schwer'][rating?.level] || 'geprÃ¼ft') + '.' : 'Gleiche Rasterlogik: keine neue Revision und kein Spielstandneustart.';
+      text.textContent = result.logic_changed ? 'Deduktionsnachweis vollständig geprüft. Schwierigkeit: ' + (['', 'Sehr leicht', 'Leicht', 'Mittel', 'Schwer', 'Sehr schwer'][rating?.level] || 'geprüft') + '.' : 'Gleiche Rasterlogik: keine neue Revision und kein Spielstandneustart.';
       $('plan-summary').append(text);
     }
   }
   $('plan-summary').append(table);
-  $('plan-files').textContent = result.files.join('\n') || 'No-op: keine DateiÃ¤nderung.';
+  $('plan-files').textContent = result.files.join('\n') || 'No-op: keine Dateiänderung.';
   $('revision-warning').hidden = !result.logic_changed;
   $('preview').scrollIntoView({block: 'start'});
-  message('Echter Plan erfolgreich geprÃ¼ft. Ãœbernehmen ist ein eigener Schritt (zehn Minuten gÃ¼ltig).');
+  message('Echter Plan erfolgreich geprüft. Übernehmen ist ein eigener Schritt (zehn Minuten gültig).');
 }
 const filterList = () => { $('list').scrollTop=0; renderList(); };
 $('search').oninput = filterList; $('filter').onchange = filterList; $('sort').onchange = filterList;
@@ -321,12 +321,12 @@ $('apply').onclick = () => perform(async () => {
     current.pictures={...current.pictures,...shownPictures};
   }
   clean(); renderList();
-  message('Writer bestÃ¤tigt: ' + result.status + '. Aktuellen Bestand neu gelesen. Git / Build / VerÃ¶ffentlichung bleiben extern.');
+  message('Writer bestätigt: ' + result.status + '. Aktuellen Bestand neu gelesen. Git / Build / Veröffentlichung bleiben extern.');
 });
 $('reload').onclick = () => perform(async () => { if (await leave()) await load(); });
-$('recover').onclick = () => perform(async () => { if (confirm('Bestehendes Journal prÃ¼fen und ausschlieÃŸlich den gebundenen gÃ¼ltigen Altstand wiederherstellen?')) { await job('recover', {confirmed: true}); clean(); await load(); } });
+$('recover').onclick = () => perform(async () => { if (confirm('Bestehendes Journal prüfen und ausschließlich den gebundenen gültigen Altstand wiederherstellen?')) { await job('recover', {confirmed: true}); clean(); await load(); } });
 $('stop').onclick = async () => {
-  if (!confirm((dirty ? 'Ungespeicherte Ã„nderungen gehen verloren. ' : '') + 'Editor geordnet beenden? Bereits laufende Fachoperationen werden abgeschlossen.')) return;
+  if (!confirm((dirty ? 'Ungespeicherte Änderungen gehen verloren. ' : '') + 'Editor geordnet beenden? Bereits laufende Fachoperationen werden abgeschlossen.')) return;
   try { await api('stop', {confirmed: true}); message('Editor beendet neue Arbeit und wartet auf laufende Fachoperationen.'); } catch (error) { message(error.message, true); }
 };
 $('categories').onclick = () => perform(async () => {
@@ -337,7 +337,7 @@ $('categories').onclick = () => perform(async () => {
 });
 function categoryUsage() {
   const id = $('category-target').value;
-  $('category-usage').textContent = (listing?.entries.filter(row => row.category_id === id).length || 0) + ' RÃ¤tsel in dieser Kategorie. Eine LÃ¶schung ordnet alle gemeinsam neu zu.';
+  $('category-usage').textContent = (listing?.entries.filter(row => row.category_id === id).length || 0) + ' Rätsel in dieser Kategorie. Eine Löschung ordnet alle gemeinsam neu zu.';
 }
 $('category-target').onchange = categoryUsage;
 $('category-close').onclick = () => $('category-dialog').close();
@@ -346,7 +346,7 @@ $('category-check').onclick = () => perform(async () => {
   if (op !== 'category_create') operation.id = $('category-target').value;
   if (op !== 'category_delete') operation.name = $('category-name').value;
   else {
-    if (!$('category-confirmed').checked) throw new Error('LÃ¶schung / vollstÃ¤ndige Neuzuordnung ausdrÃ¼cklich bestÃ¤tigen.');
+    if (!$('category-confirmed').checked) throw new Error('Löschung / vollständige Neuzuordnung ausdrücklich bestätigen.');
     if ($('category-reassign').value) operation.reassign_to = $('category-reassign').value;
   }
   const result = await job('plan', {snapshot: listing.snapshot, id: null, metadata: [operation], text: null, profile: null, reveal: null, background: null});
@@ -357,7 +357,7 @@ window.addEventListener('hashchange', () => {
   const fresh = location.hash.slice(1);
   history.replaceState(null, '', '/');
   if (!/^[0-9a-f]{64}$/.test(fresh) || fresh === token) return;
-  if ((dirty || plan) && !confirm('Neue Editorsitzung Ã¶ffnen und ungespeicherte Ã„nderungen verwerfen?')) return;
+  if ((dirty || plan) && !confirm('Neue Editorsitzung öffnen und ungespeicherte Änderungen verwerfen?')) return;
   token = fresh; sessionStorage.setItem('pe-session', token); clean(); perform(load);
 });
 perform(load);
@@ -391,6 +391,5 @@ function compose() {
   const target=$('composition-background'); target.replaceChildren();
   const pictures=[...$('background-pictures').querySelectorAll('img')];
   target.classList.toggle('category',pictures.length===2);
-  target.dataset.profile = pictures.length===1 ? 'selected' : 'standard';
   for(const original of pictures) {const img=document.createElement('img');img.src=original.src;img.alt='';target.append(img);}
 }

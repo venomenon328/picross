@@ -11,8 +11,8 @@
     "native.export",
     "delivery"
   ],
-  "purpose": "HG31-K01â€“K07: explizite Doppelprofile Ã¼ber HP-W2, Editor/RI, native/Webanzeige und Engine-/PCK-Import. Windows-Kerndownload aus native.export wiederverwenden.",
-  "omitted": "production.solver, preflight, native.core/history/completion/adapters/graphics und Browsermatrix: keine Logik-, Save-, Gesten-, Font- oder funktionale LayoutÃ¤nderung. T01 Durchstich, T02 Bestandsschutz und T03 echte native/Web-/Editorbedienung separat; kein Chromiumauftrag.",
+  "purpose": "HG31-K01–K07: explizite Doppelprofile über HP-W2, Editor/RI, native/Webanzeige und Engine-/PCK-Import. Windows-Kerndownload aus native.export wiederverwenden.",
+  "omitted": "production.solver, preflight, native.core/history/completion/adapters/graphics und Browsermatrix: keine Logik-, Save-, Gesten-, Font- oder funktionale Layoutänderung. T01 Durchstich, T02 Bestandsschutz und T03 echte native/Web-/Editorbedienung separat; kein Chromiumauftrag.",
   "test_changes": [
     {
       "path": "tests/puzzle_production/test_authoring_workflow.py",
@@ -48,6 +48,11 @@
       "path": "tools/test_background_import.py",
       "disposition": "change-scoped",
       "reason": "HG31: geschlossene Doppelprofile und ihre Negativ-/Bestandsgrenzen in der vorhandenen Familie; bei Ablösung des Profils neu entscheiden."
+    },
+    {
+      "path": "tools/web_tests/background_loader_contract.cjs",
+      "disposition": "change-scoped",
+      "reason": "HG31 erweitert den vorhandenen Web-Worker-Vertrag um Profilwechsel und abweichende Geometrie; keine neue Testfamilie."
     }
   ],
   "core_change": null,

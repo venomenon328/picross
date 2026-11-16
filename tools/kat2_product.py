@@ -86,7 +86,7 @@ def run(root, workspace, output, engine, environment, run_phase, python_phase, h
             isolated_checkout(checkout)
             categories_path = checkout / "content/categories.json"
             categories = json.loads(categories_path.read_text(encoding="utf-8"))
-            categories["categories"].append(dict(id="test-only-kat2-extra", name="ZusÃ¤tzliche Testkategorie mit einer besonders langen deutschen Bezeichnung fÃ¼r die datenbasierte Katalogdarstellung", order=50))
+            categories["categories"].append(dict(id="test-only-kat2-extra", name="Zusätzliche Testkategorie mit einer besonders langen deutschen Bezeichnung für die datenbasierte Katalogdarstellung", order=50))
             write_json(categories_path,categories)
             content_registry.sync_runtime(checkout)
             package = current_fixture.make(workspace/"kat2-adapter-input",identifier="pz-test-direct-mono")
