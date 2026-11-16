@@ -43,7 +43,7 @@ def build(output):
     source = ROOT/"tools/puzzle_production"
     source_data = work/"puzzle_production"; source_data.mkdir()
     # Frozen methods verify real .py/JSON bytes; include those exact trusted sources.
-    excluded = {"editor_migration", "images_cli", "metadata_cli", "raster_cli", "editor_cli"}
+    excluded = {"images_cli", "metadata_cli", "raster_cli", "editor_cli"}
     for file in source.iterdir():
         if file.is_file() and file.stem not in excluded and file.suffix in (".py", ".json", ".md"):
             shutil.copyfile(file, source_data/file.name)
