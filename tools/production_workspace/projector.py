@@ -226,8 +226,8 @@ def complete(root, record_path, commit, *, current_input):
         before_raw = source.read(None, record_path)
         before = p.parse(before_raw)
         ap.require(before['puzzle_id'] == incoming.entry['id'], 'Completion input belongs to another job')
-        actual = current_delivery.snapshot(lambda name,limit:source.read(None,name,limit), before['puzzle_id'])
-        committed = current_delivery.snapshot(lambda name,limit:source.read(commit,name,limit), before['puzzle_id'])
+        actual = current_delivery.snapshot(lambda name,limit,missing=False:source.read(None,name,limit,missing), before['puzzle_id'])
+        committed = current_delivery.snapshot(lambda name,limit,missing=False:source.read(commit,name,limit,missing), before['puzzle_id'])
         ap.require(current_delivery.same(actual,committed), 'Commit does not contain the selected current delivery')
         view_before = current_view.observe(root, before['puzzle_id'])
         ap.require(before['format'] in ('picross-authoring-record-v3', 'picross-authoring-record-v4') and
@@ -236,7 +236,7 @@ def complete(root, record_path, commit, *, current_input):
         if before['state'] != 'registered':
             from tools.puzzle_production import current_delivery
             binding = {"operation": "register", "commit": commit,
-                       "result": current_delivery.snapshot(lambda name,limit:source.read(commit,name,limit),before["puzzle_id"])}
+                       "result": current_delivery.snapshot(lambda name,limit,missing=False:source.read(commit,name,limit,missing),before["puzzle_id"])}
             after.update(state='registered', integration=binding, blockers=[],
                          next_step='5 · Lokal registriert; unabhängiges Review und Git-/Mainabschluss prüfen')
         ap.require(after['integration']['commit'] == commit, 'Completion belongs to another registration')
