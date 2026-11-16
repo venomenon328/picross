@@ -1,7 +1,0 @@
-Tatsächliche Eigentümererklärung im aktuellen Codex-Chat:
-„C3, D2, F1, P2, B1“
-
-Eindeutige Zuordnung zur tatsächlich vorgelegten Gruppe HG-BESTAND-04: Chupacabra C3/r01, Drachenfrucht D2/r01, Efeutute F1/r01, Erbse P2/r01, Erdbeere B1/r01.
-Vorlage: https://github.com/venomenon328/picross/issues/671#issuecomment-6927905528
-
-Aufgezeichnet bei Verarbeitung dieser Erklärung am 2026-11-16T20:16:25Z. Kein früherer menschlicher Entscheidungszeitpunkt erfunden. Zusammen mit dem bestehenden Serienauftrag autorisiert die tatsächliche Wahl Ableitung, gezielte Bildintegration, Eigenprüfung, Pflicht-CI, bedingten Squash-Merge nach main und §9-Abschluss einschließlich Cleanup-Merge.
