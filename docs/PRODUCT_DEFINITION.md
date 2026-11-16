@@ -1,5 +1,11 @@
 # Produktdefinition: picross
 
+**HG31 / #675:** Neue 3:1-Einzelkompositionen und 2304×768 unter eigenem Profil;
+4:1-Bestand und sein Profil bleiben bytegleich. Maßgeblicher geschlossener
+[Profil-/Capability-/Geometrievertrag](PUZZLE_BACKGROUNDS.md#hg31--zwei-geschlossene-bildprofile)
+ersetzt widersprechende aktive Einprofilangaben unten. Keine Inhaltsmigration;
+Mainaktivierung erst nach technischen Nachweisen und unabhängigem HG31-A01.
+
 **PW-B · 0.8.0, 11.11.2026:** Für neue Produktionen gilt der
 [fünfstufige Authoringweg](ai-workflows/PUZZLE_AUTHORING.md) mit dem geschlossenen
 [PW-B-Datenvertrag](PW_B_CONTRACT.md). Hintergrundbriefing, drei Kandidaten und

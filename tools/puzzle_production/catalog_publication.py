@@ -91,7 +91,7 @@ def _validate_background_image(path):
         with Image.open(streams.BytesIO(raw), formats=("PNG",)) as image:
             image.verify()
         with Image.open(streams.BytesIO(raw), formats=("PNG",)) as image:
-            require(image.mode == "RGBA" and image.size == (2304, 576) and image.info == {"srgb": 0},
+            require(image.mode == "RGBA" and image.size in ((2304, 576), (2304, 768)) and image.info == {"srgb": 0},
                     "Background binary does not match the fixed PNG profile")
             image.load()
             assets._diagnostic(image)

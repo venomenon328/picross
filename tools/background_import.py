@@ -18,6 +18,7 @@ import struct
 FORMAT = "picross-background-import-v1"
 NAMESPACE = "art/backgrounds"
 SIZE = (2304, 576)
+SIZES = ((2304, 576), (2304, 768))
 PROFILE = {
     "compress/mode": "0",
     "compress/high_quality": "false",
@@ -59,15 +60,27 @@ def _png_image_format(raw, name, *, prepared=True):
     if len(raw) < 33 or raw[:16] != b"\x89PNG\r\n\x1a\n\0\0\0\rIHDR":
         raise ValueError("Background source is not supported PNG2304: " + name)
     width, height, depth, color, compression, filtering, interlace = struct.unpack(">IIBBBBB", raw[16:29])
-    if not prepared and (width, height, depth, color, compression, filtering, interlace) != (*SIZE, 8, 6, 0, 0, 0):
+    if not prepared and ((width, height) not in SIZES or (depth, color, compression, filtering, interlace) != (8, 6, 0, 0, 0)):
         raise ValueError("Historical HP-W2 background output is not PNG2304 RGBA8: " + name)
     depths = {0: (1, 2, 4, 8), 2: (8,), 3: (1, 2, 4, 8), 4: (8,), 6: (8,)}
-    if ((width, height) != SIZE or depth not in depths.get(color, ())
+    if ((width, height) not in SIZES or depth not in depths.get(color, ())
+            or height == 768 and (depth, color) != (8, 6)
             or compression or filtering or interlace not in (0, 1)):
         raise ValueError("Background source is not supported PNG2304: " + name)
     # A valid direct input has visible and transparent pixels. Grayscale/tRNS
     # and grayscale-alpha decode to LA8; RGB/tRNS, palette and RGBA to RGBA8.
     return 1 if color in (0, 4) else 5
+
+
+def _check_capability(project, raw):
+    from tools.puzzle_production import catalog_background as background
+    name = project / "data/background-capability.json"
+    profile = background.image_profile(raw)
+    capability = _regular(name).read_bytes() if name.exists() else None
+    # Legacy synthetic import inventories predate capability transport. They
+    # cannot admit the new profile; real source_inventory always requires it.
+    if capability is not None or struct.unpack_from(">I", raw, 20)[0] == 768:
+        background.capability(None, {background.CAPABILITY: capability}, required=True, profile_id=profile)
 
 
 def _read_bound(project, ref):
@@ -82,6 +95,7 @@ def _read_bound(project, ref):
         raise ValueError("Background source size/hash differs: " + name)
     if name.endswith(".png"):
         _png_image_format(raw, name)
+        _check_capability(project, raw)
     return raw
 
 
@@ -240,12 +254,14 @@ def verify_import(project: Path, inventory: dict) -> dict:
                 or json.loads(config.get("deps", "dest_files", fallback="[]")) != [remap]
                 or any(config.get("params", key, fallback="") != value for key, value in PROFILE.items())):
             raise ValueError("Background import profile/remap differs: " + asset)
+        source = _read_bound(project, row["asset"])
+        size = struct.unpack_from(">II", source, 16)
         imported = _regular(project / remap.removeprefix("res://")).read_bytes()
         if (len(imported) < 52 or imported[:4] != b"GST2"
-                or struct.unpack_from("<8I", imported, 4) != (1, *SIZE, 1 << 23, 0xffffffff, 0, 0, 0)):
+                or struct.unpack_from("<8I", imported, 4) != (1, *size, 1 << 23, 0xffffffff, 0, 0, 0)):
             raise ValueError("Background imported texture header differs: " + asset)
         codec, width, height, mipmaps, image_format = struct.unpack_from("<IHHII", imported, 36)
-        if codec not in (1, 2) or (width, height, mipmaps, image_format) != (*SIZE, 11, image_formats[asset]):
+        if codec not in (1, 2) or (width, height, mipmaps, image_format) != (*size, 11, image_formats[asset]):
             raise ValueError("Background imported lossless/source-format/mipmap header differs: " + asset)
         offset = 52
         for _ in range(mipmaps + 1):

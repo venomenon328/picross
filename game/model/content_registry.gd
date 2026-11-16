@@ -5,6 +5,8 @@ const CAPABILITY_PATH: String = "res://data/background-capability.json"
 const Difficulty = preload("res://model/catalog_difficulty.gd")
 static var cached: Dictionary = {}
 static var load_error: String = ""
+const BACKGROUND_PROFILES: Array = ["picross-background-png2304-v1", "picross-background-png2304x768-v1"]
+static var background_profiles: Array = ["picross-background-png2304-v1"]
 static var indexed_cache: Dictionary = {}
 static var indexed_count: int = -1
 static var id_positions: Dictionary = {}
@@ -101,12 +103,27 @@ static func validate_capability(registry: Dictionary, value: Variant, present: b
 	# The capability continues to certify the unchanged v6 background contract.
 	var enabled: bool = false
 	if present:
-		if not value is Dictionary or value.size() != 4 or value.get("format") != "picross-runtime-background-capability-v1" or value.get("runtime_format") != "picross-runtime-registry-v6" or value.get("profile_id") != "picross-background-png2304-v1" or not value.get("enabled") is bool:
+		if capability_profiles(value).is_empty():
 			return "Invalid background capability"
 		enabled = value.enabled
 	for entry: Dictionary in registry.entries:
 		if entry.background.status in ["selected", "none"] and not enabled:
 			return "Background catalog requires enabled compatible capability"
+	return ""
+
+static func capability_profiles(value: Variant) -> Array:
+	if not value is Dictionary or value.size() != 4 or not value.get("enabled") is bool: return []
+	if value.get("format") == "picross-runtime-background-capability-v1":
+		if value.get("runtime_format") == "picross-runtime-registry-v6" and value.get("profile_id") == BACKGROUND_PROFILES[0]:
+			return [BACKGROUND_PROFILES[0]]
+	elif value.get("format") == "picross-runtime-background-capability-v2":
+		if value.get("runtime_format") == "picross-runtime-registry-v8" and value.get("profile_ids") == BACKGROUND_PROFILES:
+			return BACKGROUND_PROFILES.duplicate()
+	return []
+
+static func texture_profile(size: Vector2i) -> String:
+	if size == Vector2i(2304, 576): return BACKGROUND_PROFILES[0]
+	if size == Vector2i(2304, 768): return BACKGROUND_PROFILES[1]
 	return ""
 
 static func bounded_integer(value: Variant, minimum: int, maximum: int) -> bool:
@@ -189,6 +206,7 @@ static func _load() -> Dictionary:
 		load_error = validate_capability(raw, capability, present)
 		if not load_error.is_empty():
 			return {}
+		background_profiles = capability_profiles(capability) if present and capability.enabled else []
 	cached = raw
 	return cached
 

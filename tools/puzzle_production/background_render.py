@@ -85,7 +85,7 @@ def _diagnostic(image):
                       "partial_pixels": sum(histogram[1:255]), "opaque_pixels": histogram[255]}}
 
 
-def _render(raw, budget):
+def _render(raw, budget, profile=None):
     _png(raw, budget)
     if ImageFile.LOAD_TRUNCATED_IMAGES:
         raise BackgroundError("internal_error", "Strict Pillow decoding was disabled by the host process")
@@ -100,10 +100,13 @@ def _render(raw, budget):
     budget.check()
     source_diagnostic = _diagnostic(normal)
     width, height = normal.size
-    if width * 576 >= height * 2304:
-        fit = (2304, max(1, height * 2304 // width))
+    target_width, target_height = (2304, 576) if profile is None else (profile["width"], profile["height"])
+    if target_height == 768 and width != 3 * height:
+        raise BackgroundError("invalid_image", "New background source must be exactly 3:1")
+    if width * target_height >= height * target_width:
+        fit = (target_width, max(1, height * target_width // width))
     else:
-        fit = (max(1, width * 576 // height), 576)
+        fit = (max(1, width * target_height // height), target_height)
     scaled = (normal if normal.size == fit else
               normal.convert("RGBa").resize(fit, Image.Resampling.LANCZOS).convert("RGBA"))
     rgba = bytearray(scaled.tobytes())
@@ -111,8 +114,8 @@ def _render(raw, budget):
         if rgba[index + 3] == 0:
             rgba[index:index + 3] = b"\0\0\0"
     scaled = Image.frombytes("RGBA", fit, bytes(rgba))
-    canvas = Image.new("RGBA", (2304, 576), (0, 0, 0, 0))
-    canvas.paste(scaled, ((2304 - fit[0]) // 2, 576 - fit[1]))
+    canvas = Image.new("RGBA", (target_width, target_height), (0, 0, 0, 0))
+    canvas.paste(scaled, ((target_width - fit[0]) // 2, target_height - fit[1]))
     _diagnostic(canvas)
     budget.check()
     info = PngImagePlugin.PngInfo()
@@ -123,7 +126,7 @@ def _render(raw, budget):
     _png(result, budget)
     with Image.open(bytes_io.BytesIO(result), formats=("PNG",)) as actual:
         actual.load()
-        if actual.mode != "RGBA" or actual.size != (2304, 576) or actual.info != {"srgb": 0}:
+        if actual.mode != "RGBA" or actual.size != (target_width, target_height) or actual.info != {"srgb": 0}:
             raise BackgroundError("internal_error", "PNG encoder did not preserve the fixed profile")
         output_diagnostic = _diagnostic(actual)
     budget.check()

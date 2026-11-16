@@ -237,5 +237,23 @@ class CurrentIntegrationTests(unittest.TestCase):
         self.assertEqual(fingerprints(self.root),before)
 
 
-if __name__=="__main__":
-    unittest.main()
+
+    def test_hg31_new_profile_first_integration_and_capability_boundary(self):
+        from io import BytesIO
+        from PIL import Image, PngImagePlugin
+        source=make(self.work/'hg31-input',background='selected')
+        value=json.loads((source/'manifest.json').read_bytes())
+        image=Image.new('RGBA',(2304,768),(0,0,0,0));image.putpixel((100,700),(60,60,60,128))
+        stream=BytesIO();info=PngImagePlugin.PngInfo();info.add(b'sRGB',b'\0');image.save(stream,format='PNG',pnginfo=info)
+        raw=stream.getvalue();value['background']['image']['asset']=put(source,'background.png',raw);approve(source,value)
+        before=fingerprints(self.root)
+        with self.assertRaisesRegex(ValueError,'capability'): core.integrate(source,self.root,apply=True)
+        self.assertEqual(fingerprints(self.root),before)
+        json_file(self.root,'game/data/background-capability.json',{'format':'picross-runtime-background-capability-v2',
+            'runtime_format':'picross-runtime-registry-v8','profile_ids':['picross-background-png2304-v1','picross-background-png2304x768-v1'],'enabled':True})
+        self.assertEqual(core.integrate(source,self.root)['status'],'planned')
+        self.assertEqual(core.integrate(source,self.root,apply=True)['status'],'registered')
+        self.assertEqual((self.root/'game/art/backgrounds/pz-current.png').read_bytes(),raw)
+        before=fingerprints(self.root)
+        self.assertEqual(core.integrate(source,self.root,apply=True)['status'],'no-op')
+        self.assertEqual(fingerprints(self.root),before)

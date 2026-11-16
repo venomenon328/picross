@@ -61,17 +61,37 @@ def _raw(root, name, limit, texts=None, *, missing=False):
     return io.read(root, name, limit, missing=missing)
 
 
-def capability(root, texts=None, *, required=False):
+def capability(root, texts=None, *, required=False, profile_id=None):
     raw = _raw(root, CAPABILITY, CAPABILITY_LIMIT, texts, missing=True)
-    enabled = False
+    enabled, profiles = False, []
     if raw is not None:
-        value = exact_keys(io.json_bytes(raw, CAPABILITY_LIMIT), {"format", "runtime_format", "profile_id", "enabled"})
-        ap.require(value["format"] == CAPABILITY_FORMAT and value["runtime_format"] == RUNTIME_FORMAT and
-                   value["profile_id"] == bc.PROFILE["id"] and type(value["enabled"]) is bool,
-                   "Invalid background capability")
+        value = io.json_bytes(raw, CAPABILITY_LIMIT)
+        ap.require(isinstance(value, dict), "Invalid background capability")
+        if value.get("format") == CAPABILITY_FORMAT:
+            exact_keys(value, {"format", "runtime_format", "profile_id", "enabled"})
+            ap.require(value["runtime_format"] == RUNTIME_FORMAT and value["profile_id"] == bc.PROFILE["id"],
+                       "Invalid background capability")
+            profiles = [bc.PROFILE["id"]]
+        else:
+            exact_keys(value, {"format", "runtime_format", "profile_ids", "enabled"})
+            ap.require(value["format"] == "picross-runtime-background-capability-v2" and
+                       value["runtime_format"] == "picross-runtime-registry-v8" and
+                       value["profile_ids"] == list(bc.PROFILES), "Invalid background capability")
+            profiles = value["profile_ids"]
+        ap.require(type(value["enabled"]) is bool, "Invalid background capability")
         enabled = value["enabled"]
     ap.require(not required or enabled, "Selected/none background requires enabled target capability")
+    ap.require(profile_id is None or enabled and profile_id in profiles, "Background profile requires compatible enabled target capability")
     return enabled
+
+
+def image_profile(raw):
+    """Geometry of already validated PNG bytes, never a new assetref field."""
+    import struct
+    ap.require(len(raw) >= 33 and raw[:16] == b"\x89PNG\r\n\x1a\n\0\0\0\rIHDR", "Invalid background PNG header")
+    profile = bc.SIZES.get(struct.unpack_from(">II", raw, 16))
+    ap.require(profile is not None, "Unsupported background dimensions")
+    return profile
 
 
 def index(registry):
@@ -156,7 +176,8 @@ def load(root, registry, entry, texts=None):
     active = current(source)
     capability(root,texts,required=active["status"] in ("selected","none"))
     if active["asset"]:
-        _bound(active["asset"],_raw(root,active["asset"]["file"],32*1024*1024,texts))
+        raw = _bound(active["asset"],_raw(root,active["asset"]["file"],32*1024*1024,texts))
+        capability(root, texts, required=True, profile_id=image_profile(raw))
     return source
 
 

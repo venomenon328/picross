@@ -12,15 +12,15 @@
         const view = new DataView(bytes.buffer, bytes.byteOffset, bytes.byteLength);
         const text = (at, n) => String.fromCharCode(...bytes.subarray(at, at + n));
         const u32 = at => view.getUint32(at, true);
-        const width = 2304, height = 576;
+        const width = u32(8), height = u32(12);
         require(text(0, 4) === "GST2" && u32(4) === 1, "ctex_version");
-        require(u32(8) === width && u32(12) === height, "ctex_dimensions");
+        require(width === 2304 && [576, 768].includes(height), "ctex_dimensions");
         const knownFlags = (1 << 22) | (1 << 23) | (1 << 24) | (1 << 26) | (1 << 27);
         require((u32(16) & (1 << 23)) !== 0 && (u32(16) & ~knownFlags) === 0, "ctex_mipmap_flags");
         require(u32(20) === 0xffffffff && u32(24) === 0 && u32(28) === 0 && u32(32) === 0, "ctex_header");
         const encoding = u32(36);
         require(encoding === 1 || encoding === 2, "ctex_lossless_encoding");
-        require(view.getUint16(40, true) === width && view.getUint16(42, true) === height && u32(48) === 5, "ctex_rgba_dimensions");
+        require(view.getUint16(40, true) === width && view.getUint16(42, true) === height && (u32(48) === 5 || height === 576 && u32(48) === 1), "ctex_rgba_dimensions");
         let w = width, h = height, count = 0, pixelBytes = 0;
         do {
             pixelBytes += w * h * 4;
@@ -46,7 +46,7 @@
                 const header = new DataView(block.buffer, block.byteOffset, block.byteLength);
                 require([137, 80, 78, 71, 13, 10, 26, 10].every((v, i) => block[i] === v), "ctex_png_signature");
                 require(header.getUint32(8) === 13 && String.fromCharCode(...block.subarray(12, 16)) === "IHDR", "ctex_png_header");
-                require(header.getUint32(16) === w && header.getUint32(20) === h && block[24] === 8 && [2, 6].includes(block[25]), "ctex_png_dimensions");
+                require(header.getUint32(16) === w && header.getUint32(20) === h && block[24] === 8 && (u32(48) === 1 ? [0,4] : [2,6]).includes(block[25]), "ctex_png_dimensions");
                 mime = "image/png";
             } else {
                 require(block.length >= 26 && String.fromCharCode(...block.subarray(0, 4)) === "RIFF" && String.fromCharCode(...block.subarray(8, 16)) === "WEBPVP8L", "ctex_webp_lossless");
@@ -102,8 +102,9 @@
                 // Base64 decoding, container parsing and image decoding all run here.
                 const raw = atob(encoded);
                 const bytes = Uint8Array.from(raw, character => character.charCodeAt(0));
-                const result = await decodeCTEX(parseCTEX(bytes));
-                self.postMessage({generation, bytes: result}, [result]);
+                const parsed = parseCTEX(bytes);
+                const result = await decodeCTEX(parsed);
+                self.postMessage({generation, width: parsed.width, height: parsed.height, bytes: result}, [result]);
             } catch (error) {
                 self.postMessage({generation, error: String(error.message || error)});
             }
@@ -112,7 +113,7 @@
 
     function createBridge(environment) {
         const env = environment || root;
-        let worker = null, serial = 0, current = 0, result = null, state = "idle", error = "";
+        let worker = null, serial = 0, current = 0, result = null, state = "idle", error = "", width = 0, height = 0;
         const stop = () => { if (worker) worker.terminate(); worker = null; };
         const spawn = () => {
             if (worker) return;
@@ -123,7 +124,7 @@
             const owner = worker;
             worker.onmessage = event => {
                 if (worker !== owner || event.data.generation !== current || state !== "pending") return;
-                if (event.data.bytes instanceof ArrayBuffer && event.data.bytes.byteLength === 7077844) {
+                if (event.data.bytes instanceof ArrayBuffer && event.data.width === width && event.data.height === height && event.data.bytes.byteLength === (height === 576 ? 7077844 : 9437176)) {
                     result = event.data.bytes;
                     state = "loaded";
                 } else {
@@ -141,9 +142,10 @@
         // Warm only the decoder, never an image or a catalog-wide preload.
         try { spawn(); } catch (_) { /* A visit retries and reports the error. */ }
         return {
-            start(encoded) {
+            start(encoded, wantedWidth = 2304, wantedHeight = 576) {
+                if (wantedWidth !== 2304 || ![576, 768].includes(wantedHeight)) return "worker_profile";
                 if (state === "pending") return "loader_busy";
-                result = null; error = ""; current = ++serial;
+                result = null; error = ""; current = ++serial; width = wantedWidth; height = wantedHeight;
                 try {
                     spawn();
                     state = "pending";
@@ -155,6 +157,8 @@
                     return error;
                 }
             },
+            width() { return width; },
+            height() { return height; },
             poll() { return state; },
             error() { return error; },
             take() { const bytes = result; result = null; state = "idle"; return bytes; },

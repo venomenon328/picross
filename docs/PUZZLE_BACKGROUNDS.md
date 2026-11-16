@@ -41,7 +41,92 @@ Bestehende Inhalts-, Proof-, Paletten-, Bild-, Freigabe- und Integrationsgaranti
 bleiben erhalten. Der Dienst bleibt lesend; Veröffentlichung und Gitabschluss
 führt der beauftragte Akteur aus. Historische Originale werden nicht migriert.
 
-**Vertrag 1.0 · Dokumentrevision 16 · 16.11.2026 · HG-KOMPOSITION / [#673](https://github.com/venomenon328/picross/issues/673); HP-W2-COMPAT-1 / #645; HP-W1/HP-W2 / #560; PB-H / #489; HP-I1a/HP-I1b1/HP-I1b2/HP-I1c/HP-I2 / #561; MJ-A/MJ-B / #490; BA-A/BA-B / #491; PE-A2 / #576**
+**Vertrag 1.0 · Dokumentrevision 17 · 16.11.2026 · HG-KOMPOSITION / [#673](https://github.com/venomenon328/picross/issues/673); HP-W2-COMPAT-1 / #645; HP-W1/HP-W2 / #560; PB-H / #489; HP-I1a/HP-I1b1/HP-I1b2/HP-I1c/HP-I2 / #561; MJ-A/MJ-B / #490; BA-A/BA-B / #491; PE-A2 / #576**
+
+
+## HG31 · zwei geschlossene Bildprofile
+
+Vertrag vor konsumierendem Code · 16.11.2026 · [Paketentscheidung #675](https://github.com/venomenon328/picross/issues/675#umsetzungsvorbereitung-hg31).
+Dieser Abschnitt ersetzt für neue HG31-Arbeit die widersprechenden 4:1-Vorgaben
+in §§1–4, 6, 13–14 und den aktuellen RI-Abschnitten. Historische Belege bleiben
+unverändert. Neue Kandidaten sind durchgehende Einzelbilder exakt 3:1;
+Originalmaße dürfen variieren (etwa 2172×724). Drei verschiedene Angebote und
+persönliche Bildwahl bleiben. Keine Halbbildmontage, Seitenstreifen, Crop,
+Stretch oder Motivverschiebung. Alte gewählte 4:1-Bilder bleiben bytegleich.
+
+Das neue vollständige HP-W2-Profil lautet exakt:
+
+```json
+{
+  "id": "picross-background-png2304x768-v1",
+  "width": 2304,
+  "height": 768,
+  "format": "PNG",
+  "mode": "RGBA",
+  "fit": "exact",
+  "anchor": "bottom-center",
+  "upscale": true,
+  "resample": "pillow-rgba-premultiplied-lanczos",
+  "color_space": "sRGB",
+  "transparent_rgb": "zero",
+  "png_compress_level": 9,
+  "png_optimize": false,
+  "metadata": "sRGB-only"
+}
+```
+
+H(profile) verwendet die bestehende Kanonisierung. Das bisherige Profil in §4.1
+behält seinen Körper und Hash. V2-Request/Befund unterstützen genau beide Profile;
+Entscheidung v1 erweitert nur ihre geschlossene {id,sha256}-Wertedomäne.
+V1-Request/Befund bleiben ausschließlich beim alten Profil. Arbeitsmanifest v1
+bleibt unverändert. `describe(generation=2, profile_id=...)` bzw.
+`describe --profile-id ...` wählt das Profil ausdrücklich; ohne Angabe bleibt der
+bisherige API-Default. Neue 3:1-Produktion gibt stets die neue ID an.
+Request, Entscheidung, Befund und verify müssen dasselbe vollständige Profil
+und dessen Hash binden. Keine automatische Auswahl aus zufälligen Quellmaßen.
+Für das neue Profil gilt nach Orientierung exakt W=3H; sonst Abweisung vor
+Publikation. Die gesamte Quelle wird auf 2304×768 skaliert, ohne Padding.
+Farb-, Alpha-, Encoder-, Ressourcen- und tatsächliche Renderidentität bleiben
+nach §4 gebunden; geänderter Rendercode erfordert neue echte Bindungen.
+Historische Originale werden niemals umetikettiert oder neu versiegelt.
+
+Fertigimport ergänzt `picross-prepared-background-png2304x768-v1`: exakt
+2304×768 PNG RGBA8 mit den vorhandenen Farb-/Alpha-/Framinggrenzen.
+`picross-prepared-background-png2304-v1` behält seine 2304×576-Bedeutung und
+sämtliche bereits zulässigen Farbtypen, tRNS und Interlacing. Exakt validierte
+PNG-Geometrie bestimmt eindeutig die Fertigimport-ID. Bytes bleiben unverändert.
+RI-Eingang/aktive Quellen/Registry/Runtime und Editorrequest behalten ihre
+Feldformen; kein Profilfeld in Assetrefs, keine Save-/Bildrevisionsmigration.
+
+Capability v2 enthält exakt `format,runtime_format,profile_ids,enabled`:
+`format=picross-runtime-background-capability-v2`,
+`runtime_format=picross-runtime-registry-v8`, boolesches enabled und exakt
+`profile_ids=[picross-background-png2304-v1,picross-background-png2304x768-v1]`
+in dieser Reihenfolge. V1 bleibt ausschließlich die 4:1-Zusage aus dem alten
+Vertrag. 2304×768 zusammen mit v1 scheitert an Writer-, Import- und Runtimegrenzen.
+Unbekannte oder widersprüchliche Formen scheitern. V2 true ist erst nach T01–T03
+und unabhängiger HG31-A01 als integrierte Mainfähigkeit zu melden; synthetische
+isolierte Ziele dürfen sie prüfen. Bis zum geprüften Mainmerge bleibt #671
+in der dokumentierten Zwischenphase, ohne neue Produktionsintegration.
+
+Beide Profile verwenden dieselbe sichere horizontale Papierfläche und den
+unteren mittigen Anker aus §13.2. Mit r=4 bzw. r=3:
+Breite=min(sichere Breite,sichere Höhe*r), Höhe=Breite/r. Bei genügend Platz
+hat 3:1 dieselbe Breite und ein Drittel mehr Höhe, sonst vollständigen
+proportionalen Fit. Kategoriezeichnungen bleiben unverändert. Deckkraft 0,48,
+Mipfilterung, passive Eingabe, Capturehierarchie und Besuchspublikation bleiben.
+Geometrie wird aus der frisch validierten Textur des betreffenden Ladebesuchs
+gebunden; alte asynchrone Antworten dürfen keinen neuen Besuch beeinflussen.
+Beide Profile haben elf zusätzliche Mipstufen. Jede ganzzahlig halbierte
+Dimension und die vollständige RGBA-Kette werden geprüft: 7.077.844 bzw.
+9.437.176 Bytes. Die 64-MiB-Grenze wird nicht erhöht.
+
+HG31-T01–T03 und HG31-A01 bleiben die Nachweis-/Reviewgrenze aus #675.
+Synthetic End-to-End bis Editor/RI, Import und beiden PCKs, einmaliger bytegenauer
+Bestandsschutz und echte native/Web-/Editorbedienung sind getrennte Aussagen.
+Headless-/Node-/HTTP-Erfolg ersetzt keine tatsächlich geöffnete Darstellung.
+Revieworiginale liegen ausschließlich auf einem temporären separaten Reviewref,
+binärer Download vor Übergabe geprüft; erhalten bis HG31-A01/Paketabschluss.
 
 ## 1. Geltung und tatsächlicher Unterstützungsstand
 

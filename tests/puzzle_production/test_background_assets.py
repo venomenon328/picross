@@ -1315,5 +1315,40 @@ class BackgroundV2Tests(unittest.TestCase):
         self.assertFalse(png.exists())
 
 
+    def test_hg31_explicit_profile_binding_full_canvas_and_v1_rejection(self):
+        from tools.puzzle_production import background_contract as bc
+        from tools.puzzle_production.editor_image_input import validate_background
+        description = assets.describe(profile_id="picross-background-png2304x768-v1")
+        self.assertEqual(description["profile"], {**PROFILE, "id":"picross-background-png2304x768-v1", "height":768, "fit":"exact"})
+        source = pixels((12, 4))
+        f = BackgroundFixture(self.root / 'hg31', description, image=source)
+        result = assets.derive(f.request, f.source, f.output)
+        self.assertEqual(result['status'], 'derived', result)
+        raw = (f.target / 'background.png').read_bytes()
+        with Image.open(io.BytesIO(raw)) as actual:
+            self.assertEqual(actual.size, (2304,768))
+            self.assertEqual(actual.mode, 'RGBA')
+            self.assertEqual(actual.getbbox(), (0,0,2304,768))
+        self.assertEqual(validate_background(raw)['profile'], 'picross-prepared-background-png2304x768-v1')
+        before = snapshot(f.root)
+        self.assertEqual(assets.verify(f.request, f.source, f.target)['status'], 'verified')
+        self.assertEqual(assets.derive(f.request, f.source, f.output)['status'], 'reused')
+        self.assertEqual(snapshot(f.root), before)
+        wrong = copy.deepcopy(f.request); wrong['profile'] = copy.deepcopy(PROFILE)
+        self.assertEqual(assets.derive(wrong, f.source, f.output)['error']['code'], 'invalid_binding')
+        for field in ('id', 'sha256'):
+            old = copy.deepcopy(f.decision)
+            f.decision['profile'][field] = PROFILE['id'] if field == 'id' else '0'*64
+            f.refresh_decision()
+            self.assertNotIn(assets.derive(f.request, f.source, f.output)['status'], ('derived','reused'))
+            f.decision = old; f.refresh_decision()
+        for size in ((12,3),(12,5)):
+            f.replace_source(image_bytes(pixels(size)))
+            self.assertEqual(assets.derive(f.request, f.source, f.output)['error']['code'], 'invalid_image')
+        wrong = copy.deepcopy(f.request); wrong['format'] = 'picross-background-derive-request-v1'
+        with self.assertRaises(bc.BackgroundError): bc.validate_request(wrong)
+        self.assertEqual(assets.describe(1, profile_id=description['profile']['id'])['error']['code'], 'invalid_request')
+
+
 if __name__ == "__main__":
     unittest.main()

@@ -4,7 +4,7 @@ extends RefCounted
 ## threadless ResourceLoader fallback. Publication stays with the visit owner.
 const SCRIPT_PATH: String = "res://web/background_loader.js"
 const MAX_IMPORT_BYTES: int = 67108864
-const MIPMAP_BYTES: int = 7077844
+var image_size := Vector2i.ZERO
 var bridge: JavaScriptObject
 var path: String = ""
 var initialization_error: String = ""
@@ -43,7 +43,9 @@ func start(resource_path: String) -> String:
 	if bytes.size() != file.get_length(): return "incomplete_texture_import"
 	# PackedByteArray is not a supported outbound JavaScriptBridge argument in
 	# pinned Godot 4.7.2. String conversion is explicit; atob runs in the worker.
-	var error: String = bridge.start(Marshalls.raw_to_base64(bytes))
+	image_size = Vector2i(bytes.decode_u32(8), bytes.decode_u32(12))
+	if not image_size in [Vector2i(2304, 576), Vector2i(2304, 768)]: return "invalid_web_texture_dimensions"
+	var error: String = bridge.start(Marshalls.raw_to_base64(bytes), image_size.x, image_size.y)
 	if not error.is_empty(): return error
 	path = resource_path
 	return ""
@@ -58,8 +60,8 @@ func poll() -> Dictionary:
 	if buffer == null or not JavaScriptBridge.is_js_buffer(buffer):
 		return {"status":"error", "error":"invalid_web_pixel_buffer"}
 	var bytes: PackedByteArray = JavaScriptBridge.js_buffer_to_packed_byte_array(buffer)
-	if bytes.size() != MIPMAP_BYTES: return {"status":"error", "error":"invalid_web_mipmap_bytes"}
-	var image: Image = Image.create_from_data(2304, 576, true, Image.FORMAT_RGBA8, bytes)
+	if int(bridge.width()) != image_size.x or int(bridge.height()) != image_size.y or bytes.size() != (7077844 if image_size.y == 576 else 9437176): return {"status":"error", "error":"invalid_web_mipmap_bytes"}
+	var image: Image = Image.create_from_data(image_size.x, image_size.y, true, Image.FORMAT_RGBA8, bytes)
 	return {"status":"loaded", "texture":ImageTexture.create_from_image(image), "image":image}
 
 func cancel() -> bool:
