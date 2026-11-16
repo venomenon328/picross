@@ -1,0 +1,578 @@
+[
+  {
+    "candidate_id": "P1",
+    "image_revision": "r01",
+    "original": {
+      "file": "candidates/P1-r01.png",
+      "bytes": 2642519,
+      "sha256": "67072db7ee35b4d558927bc98fe6c894f470a53bad608f45f35ee0b4587b4ba1"
+    },
+    "offered": false,
+    "review": {
+      "Q-HG01": {
+        "result": "nicht geprüft",
+        "reason": "Archivierte, nicht zur Auswahl angebotene Vorstufe; kein positives Gesamturteil. Siehe Revisionsprotokoll. Keine Integration dieser Bytes.",
+        "method": "nicht durchgeführt; verworfene Vorstufe",
+        "norm": {
+          "file": "docs/PUZZLE_QUALITY.md",
+          "contract": "1.0",
+          "document_revision": 14,
+          "commit": "a5e751322f68a9cb9686dc66f12c772e921baef7",
+          "sha256": "df7660806de746827b1dc4b9445ecc96276dc6d1f59361d127c4f8c88f028e59"
+        },
+        "actor": "Codex (ausführende KI; Eigenprüfung, kein unabhängiges Review)",
+        "timestamp_utc": "2026-11-16T17:44:52.207Z",
+        "evidence": []
+      },
+      "Q-HG02": {
+        "result": "nicht geprüft",
+        "reason": "Archivierte, nicht zur Auswahl angebotene Vorstufe; kein positives Gesamturteil. Siehe Revisionsprotokoll. Keine Integration dieser Bytes.",
+        "method": "nicht durchgeführt; verworfene Vorstufe",
+        "norm": {
+          "file": "docs/PUZZLE_QUALITY.md",
+          "contract": "1.0",
+          "document_revision": 14,
+          "commit": "a5e751322f68a9cb9686dc66f12c772e921baef7",
+          "sha256": "df7660806de746827b1dc4b9445ecc96276dc6d1f59361d127c4f8c88f028e59"
+        },
+        "actor": "Codex (ausführende KI; Eigenprüfung, kein unabhängiges Review)",
+        "timestamp_utc": "2026-11-16T17:44:52.207Z",
+        "evidence": []
+      },
+      "Q-HG03": {
+        "result": "nicht geprüft",
+        "reason": "Archivierte, nicht zur Auswahl angebotene Vorstufe; kein positives Gesamturteil. Siehe Revisionsprotokoll. Keine Integration dieser Bytes.",
+        "method": "nicht durchgeführt; verworfene Vorstufe",
+        "norm": {
+          "file": "docs/PUZZLE_QUALITY.md",
+          "contract": "1.0",
+          "document_revision": 14,
+          "commit": "a5e751322f68a9cb9686dc66f12c772e921baef7",
+          "sha256": "df7660806de746827b1dc4b9445ecc96276dc6d1f59361d127c4f8c88f028e59"
+        },
+        "actor": "Codex (ausführende KI; Eigenprüfung, kein unabhängiges Review)",
+        "timestamp_utc": "2026-11-16T17:44:52.207Z",
+        "evidence": []
+      },
+      "Q-HG04": {
+        "result": "nicht geprüft",
+        "reason": "Archivierte, nicht zur Auswahl angebotene Vorstufe; kein positives Gesamturteil. Siehe Revisionsprotokoll. Keine Integration dieser Bytes.",
+        "method": "nicht durchgeführt; verworfene Vorstufe",
+        "norm": {
+          "file": "docs/PUZZLE_QUALITY.md",
+          "contract": "1.0",
+          "document_revision": 14,
+          "commit": "a5e751322f68a9cb9686dc66f12c772e921baef7",
+          "sha256": "df7660806de746827b1dc4b9445ecc96276dc6d1f59361d127c4f8c88f028e59"
+        },
+        "actor": "Codex (ausführende KI; Eigenprüfung, kein unabhängiges Review)",
+        "timestamp_utc": "2026-11-16T17:44:52.207Z",
+        "evidence": []
+      }
+    }
+  },
+  {
+    "candidate_id": "P1",
+    "image_revision": "r02",
+    "original": {
+      "file": "candidates/P1-r02.png",
+      "bytes": 1165313,
+      "sha256": "402f5b849402679b727dffa635d84fd1abac85fcb2610e1d6b4336b59e3f8305"
+    },
+    "offered": true,
+    "review": {
+      "Q-HG01": {
+        "result": "erfüllt",
+        "reason": "Geöffnetes Reveal und Kontextbriefing verglichen: Blühender Obstgarten ohne Früchte; kein konkretes Rätselsubjekt, keine Lösungssilhouette, kein Motivname/UI.",
+        "method": "Direkte isolierte Originalsichtung, alpha-komponiert auf Weiß und #bdbdbd in voller Leinwand; Größen-/Hashdiagnose separat.",
+        "norm": {
+          "file": "docs/PUZZLE_QUALITY.md",
+          "contract": "1.0",
+          "document_revision": 14,
+          "commit": "a5e751322f68a9cb9686dc66f12c772e921baef7",
+          "sha256": "df7660806de746827b1dc4b9445ecc96276dc6d1f59361d127c4f8c88f028e59"
+        },
+        "actor": "Codex (ausführende KI; Eigenprüfung, kein unabhängiges Review)",
+        "timestamp_utc": "2026-11-16T17:44:52.207Z",
+        "evidence": [
+          {
+            "file": "candidates/P1-r02.png",
+            "bytes": 1165313,
+            "sha256": "402f5b849402679b727dffa635d84fd1abac85fcb2610e1d6b4336b59e3f8305"
+          }
+        ]
+      },
+      "Q-HG02": {
+        "result": "erfüllt",
+        "reason": "Helle neutralgraue natürliche Bleistiftkonturen und motivgerechte Handschraffur; zurückhaltende Gesamtwirkung bei lesbaren Details, keine glatten digitalen Deckflächen.",
+        "method": "Direkte isolierte Originalsichtung, alpha-komponiert auf Weiß und #bdbdbd in voller Leinwand; Größen-/Hashdiagnose separat.",
+        "norm": {
+          "file": "docs/PUZZLE_QUALITY.md",
+          "contract": "1.0",
+          "document_revision": 14,
+          "commit": "a5e751322f68a9cb9686dc66f12c772e921baef7",
+          "sha256": "df7660806de746827b1dc4b9445ecc96276dc6d1f59361d127c4f8c88f028e59"
+        },
+        "actor": "Codex (ausführende KI; Eigenprüfung, kein unabhängiges Review)",
+        "timestamp_utc": "2026-11-16T17:44:52.207Z",
+        "evidence": [
+          {
+            "file": "candidates/P1-r02.png",
+            "bytes": 1165313,
+            "sha256": "402f5b849402679b727dffa635d84fd1abac85fcb2610e1d6b4336b59e3f8305"
+          }
+        ]
+      },
+      "Q-HG03": {
+        "result": "erfüllt",
+        "reason": "PNG vollständig dekodiert: 2172×724, exakt 3:1. Zusammenhängende native Einzelkomposition, vollständige Breitenwirkung und bewusster Freiraum; kein Padding, Stitching, Stretch, Crop oder Motivverschieben. Gewählte 2304×768-Ableitung noch nicht fällig.",
+        "method": "Direkte isolierte Originalsichtung, alpha-komponiert auf Weiß und #bdbdbd in voller Leinwand; Größen-/Hashdiagnose separat.",
+        "norm": {
+          "file": "docs/PUZZLE_QUALITY.md",
+          "contract": "1.0",
+          "document_revision": 14,
+          "commit": "a5e751322f68a9cb9686dc66f12c772e921baef7",
+          "sha256": "df7660806de746827b1dc4b9445ecc96276dc6d1f59361d127c4f8c88f028e59"
+        },
+        "actor": "Codex (ausführende KI; Eigenprüfung, kein unabhängiges Review)",
+        "timestamp_utc": "2026-11-16T17:44:52.207Z",
+        "evidence": [
+          {
+            "file": "candidates/P1-r02.png",
+            "bytes": 1165313,
+            "sha256": "402f5b849402679b727dffa635d84fd1abac85fcb2610e1d6b4336b59e3f8305"
+          }
+        ]
+      },
+      "Q-HG04": {
+        "result": "erfüllt",
+        "reason": "Tatsächliche RGBA-Bytes isoliert auf Weiß und neutralem Grau alpha-komponiert betrachtet: Außen-/Zwischenräume und offene Strichabstände lassen den Prüfgrund durch; keine sichtbaren weißen Bildflächen, Halos oder Farbflecken. Roh-RGB-Anzeigen ohne korrekte Alphakomposition sind hierfür kein Befund.",
+        "method": "Direkte isolierte Originalsichtung, alpha-komponiert auf Weiß und #bdbdbd in voller Leinwand; Größen-/Hashdiagnose separat.",
+        "norm": {
+          "file": "docs/PUZZLE_QUALITY.md",
+          "contract": "1.0",
+          "document_revision": 14,
+          "commit": "a5e751322f68a9cb9686dc66f12c772e921baef7",
+          "sha256": "df7660806de746827b1dc4b9445ecc96276dc6d1f59361d127c4f8c88f028e59"
+        },
+        "actor": "Codex (ausführende KI; Eigenprüfung, kein unabhängiges Review)",
+        "timestamp_utc": "2026-11-16T17:44:52.207Z",
+        "evidence": [
+          {
+            "file": "candidates/P1-r02.png",
+            "bytes": 1165313,
+            "sha256": "402f5b849402679b727dffa635d84fd1abac85fcb2610e1d6b4336b59e3f8305"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "candidate_id": "P2",
+    "image_revision": "r01",
+    "original": {
+      "file": "candidates/P2-r01.png",
+      "bytes": 1232530,
+      "sha256": "7f94eef982d42a066ac5c567fc1824884abd8396851a2dec2feac1049957d1f1"
+    },
+    "offered": false,
+    "review": {
+      "Q-HG01": {
+        "result": "nicht geprüft",
+        "reason": "Archivierte, nicht zur Auswahl angebotene Vorstufe; kein positives Gesamturteil. Siehe Revisionsprotokoll. Keine Integration dieser Bytes.",
+        "method": "nicht durchgeführt; verworfene Vorstufe",
+        "norm": {
+          "file": "docs/PUZZLE_QUALITY.md",
+          "contract": "1.0",
+          "document_revision": 14,
+          "commit": "a5e751322f68a9cb9686dc66f12c772e921baef7",
+          "sha256": "df7660806de746827b1dc4b9445ecc96276dc6d1f59361d127c4f8c88f028e59"
+        },
+        "actor": "Codex (ausführende KI; Eigenprüfung, kein unabhängiges Review)",
+        "timestamp_utc": "2026-11-16T17:44:52.207Z",
+        "evidence": []
+      },
+      "Q-HG02": {
+        "result": "nicht geprüft",
+        "reason": "Archivierte, nicht zur Auswahl angebotene Vorstufe; kein positives Gesamturteil. Siehe Revisionsprotokoll. Keine Integration dieser Bytes.",
+        "method": "nicht durchgeführt; verworfene Vorstufe",
+        "norm": {
+          "file": "docs/PUZZLE_QUALITY.md",
+          "contract": "1.0",
+          "document_revision": 14,
+          "commit": "a5e751322f68a9cb9686dc66f12c772e921baef7",
+          "sha256": "df7660806de746827b1dc4b9445ecc96276dc6d1f59361d127c4f8c88f028e59"
+        },
+        "actor": "Codex (ausführende KI; Eigenprüfung, kein unabhängiges Review)",
+        "timestamp_utc": "2026-11-16T17:44:52.207Z",
+        "evidence": []
+      },
+      "Q-HG03": {
+        "result": "nicht geprüft",
+        "reason": "Archivierte, nicht zur Auswahl angebotene Vorstufe; kein positives Gesamturteil. Siehe Revisionsprotokoll. Keine Integration dieser Bytes.",
+        "method": "nicht durchgeführt; verworfene Vorstufe",
+        "norm": {
+          "file": "docs/PUZZLE_QUALITY.md",
+          "contract": "1.0",
+          "document_revision": 14,
+          "commit": "a5e751322f68a9cb9686dc66f12c772e921baef7",
+          "sha256": "df7660806de746827b1dc4b9445ecc96276dc6d1f59361d127c4f8c88f028e59"
+        },
+        "actor": "Codex (ausführende KI; Eigenprüfung, kein unabhängiges Review)",
+        "timestamp_utc": "2026-11-16T17:44:52.207Z",
+        "evidence": []
+      },
+      "Q-HG04": {
+        "result": "nicht geprüft",
+        "reason": "Archivierte, nicht zur Auswahl angebotene Vorstufe; kein positives Gesamturteil. Siehe Revisionsprotokoll. Keine Integration dieser Bytes.",
+        "method": "nicht durchgeführt; verworfene Vorstufe",
+        "norm": {
+          "file": "docs/PUZZLE_QUALITY.md",
+          "contract": "1.0",
+          "document_revision": 14,
+          "commit": "a5e751322f68a9cb9686dc66f12c772e921baef7",
+          "sha256": "df7660806de746827b1dc4b9445ecc96276dc6d1f59361d127c4f8c88f028e59"
+        },
+        "actor": "Codex (ausführende KI; Eigenprüfung, kein unabhängiges Review)",
+        "timestamp_utc": "2026-11-16T17:44:52.207Z",
+        "evidence": []
+      }
+    }
+  },
+  {
+    "candidate_id": "P2",
+    "image_revision": "r02",
+    "original": {
+      "file": "candidates/P2-r02.png",
+      "bytes": 1284033,
+      "sha256": "853b4817263c30dc3d548dcb0052f17951854fef918c2aa9291d2038f7ee4ae4"
+    },
+    "offered": false,
+    "review": {
+      "Q-HG01": {
+        "result": "nicht geprüft",
+        "reason": "Archivierte, nicht zur Auswahl angebotene Vorstufe; kein positives Gesamturteil. Siehe Revisionsprotokoll. Keine Integration dieser Bytes.",
+        "method": "nicht durchgeführt; verworfene Vorstufe",
+        "norm": {
+          "file": "docs/PUZZLE_QUALITY.md",
+          "contract": "1.0",
+          "document_revision": 14,
+          "commit": "a5e751322f68a9cb9686dc66f12c772e921baef7",
+          "sha256": "df7660806de746827b1dc4b9445ecc96276dc6d1f59361d127c4f8c88f028e59"
+        },
+        "actor": "Codex (ausführende KI; Eigenprüfung, kein unabhängiges Review)",
+        "timestamp_utc": "2026-11-16T17:44:52.207Z",
+        "evidence": []
+      },
+      "Q-HG02": {
+        "result": "nicht geprüft",
+        "reason": "Archivierte, nicht zur Auswahl angebotene Vorstufe; kein positives Gesamturteil. Siehe Revisionsprotokoll. Keine Integration dieser Bytes.",
+        "method": "nicht durchgeführt; verworfene Vorstufe",
+        "norm": {
+          "file": "docs/PUZZLE_QUALITY.md",
+          "contract": "1.0",
+          "document_revision": 14,
+          "commit": "a5e751322f68a9cb9686dc66f12c772e921baef7",
+          "sha256": "df7660806de746827b1dc4b9445ecc96276dc6d1f59361d127c4f8c88f028e59"
+        },
+        "actor": "Codex (ausführende KI; Eigenprüfung, kein unabhängiges Review)",
+        "timestamp_utc": "2026-11-16T17:44:52.207Z",
+        "evidence": []
+      },
+      "Q-HG03": {
+        "result": "nicht geprüft",
+        "reason": "Archivierte, nicht zur Auswahl angebotene Vorstufe; kein positives Gesamturteil. Siehe Revisionsprotokoll. Keine Integration dieser Bytes.",
+        "method": "nicht durchgeführt; verworfene Vorstufe",
+        "norm": {
+          "file": "docs/PUZZLE_QUALITY.md",
+          "contract": "1.0",
+          "document_revision": 14,
+          "commit": "a5e751322f68a9cb9686dc66f12c772e921baef7",
+          "sha256": "df7660806de746827b1dc4b9445ecc96276dc6d1f59361d127c4f8c88f028e59"
+        },
+        "actor": "Codex (ausführende KI; Eigenprüfung, kein unabhängiges Review)",
+        "timestamp_utc": "2026-11-16T17:44:52.207Z",
+        "evidence": []
+      },
+      "Q-HG04": {
+        "result": "nicht geprüft",
+        "reason": "Archivierte, nicht zur Auswahl angebotene Vorstufe; kein positives Gesamturteil. Siehe Revisionsprotokoll. Keine Integration dieser Bytes.",
+        "method": "nicht durchgeführt; verworfene Vorstufe",
+        "norm": {
+          "file": "docs/PUZZLE_QUALITY.md",
+          "contract": "1.0",
+          "document_revision": 14,
+          "commit": "a5e751322f68a9cb9686dc66f12c772e921baef7",
+          "sha256": "df7660806de746827b1dc4b9445ecc96276dc6d1f59361d127c4f8c88f028e59"
+        },
+        "actor": "Codex (ausführende KI; Eigenprüfung, kein unabhängiges Review)",
+        "timestamp_utc": "2026-11-16T17:44:52.207Z",
+        "evidence": []
+      }
+    }
+  },
+  {
+    "candidate_id": "P2",
+    "image_revision": "r03",
+    "original": {
+      "file": "candidates/P2-r03.png",
+      "bytes": 954230,
+      "sha256": "70504fd1f544808ed66e59933e8c18f936b9170242ced1fa068a8d764f58b687"
+    },
+    "offered": true,
+    "review": {
+      "Q-HG01": {
+        "result": "erfüllt",
+        "reason": "Geöffnetes Reveal und Kontextbriefing verglichen: Pflückleiter und leere Kiste; kein konkretes Rätselsubjekt, keine Lösungssilhouette, kein Motivname/UI.",
+        "method": "Direkte isolierte Originalsichtung, alpha-komponiert auf Weiß und #bdbdbd in voller Leinwand; Größen-/Hashdiagnose separat.",
+        "norm": {
+          "file": "docs/PUZZLE_QUALITY.md",
+          "contract": "1.0",
+          "document_revision": 14,
+          "commit": "a5e751322f68a9cb9686dc66f12c772e921baef7",
+          "sha256": "df7660806de746827b1dc4b9445ecc96276dc6d1f59361d127c4f8c88f028e59"
+        },
+        "actor": "Codex (ausführende KI; Eigenprüfung, kein unabhängiges Review)",
+        "timestamp_utc": "2026-11-16T17:44:52.207Z",
+        "evidence": [
+          {
+            "file": "candidates/P2-r03.png",
+            "bytes": 954230,
+            "sha256": "70504fd1f544808ed66e59933e8c18f936b9170242ced1fa068a8d764f58b687"
+          }
+        ]
+      },
+      "Q-HG02": {
+        "result": "erfüllt",
+        "reason": "Helle neutralgraue natürliche Bleistiftkonturen und motivgerechte Handschraffur; zurückhaltende Gesamtwirkung bei lesbaren Details, keine glatten digitalen Deckflächen.",
+        "method": "Direkte isolierte Originalsichtung, alpha-komponiert auf Weiß und #bdbdbd in voller Leinwand; Größen-/Hashdiagnose separat.",
+        "norm": {
+          "file": "docs/PUZZLE_QUALITY.md",
+          "contract": "1.0",
+          "document_revision": 14,
+          "commit": "a5e751322f68a9cb9686dc66f12c772e921baef7",
+          "sha256": "df7660806de746827b1dc4b9445ecc96276dc6d1f59361d127c4f8c88f028e59"
+        },
+        "actor": "Codex (ausführende KI; Eigenprüfung, kein unabhängiges Review)",
+        "timestamp_utc": "2026-11-16T17:44:52.207Z",
+        "evidence": [
+          {
+            "file": "candidates/P2-r03.png",
+            "bytes": 954230,
+            "sha256": "70504fd1f544808ed66e59933e8c18f936b9170242ced1fa068a8d764f58b687"
+          }
+        ]
+      },
+      "Q-HG03": {
+        "result": "erfüllt",
+        "reason": "PNG vollständig dekodiert: 2172×724, exakt 3:1. Zusammenhängende native Einzelkomposition, vollständige Breitenwirkung und bewusster Freiraum; kein Padding, Stitching, Stretch, Crop oder Motivverschieben. Gewählte 2304×768-Ableitung noch nicht fällig.",
+        "method": "Direkte isolierte Originalsichtung, alpha-komponiert auf Weiß und #bdbdbd in voller Leinwand; Größen-/Hashdiagnose separat.",
+        "norm": {
+          "file": "docs/PUZZLE_QUALITY.md",
+          "contract": "1.0",
+          "document_revision": 14,
+          "commit": "a5e751322f68a9cb9686dc66f12c772e921baef7",
+          "sha256": "df7660806de746827b1dc4b9445ecc96276dc6d1f59361d127c4f8c88f028e59"
+        },
+        "actor": "Codex (ausführende KI; Eigenprüfung, kein unabhängiges Review)",
+        "timestamp_utc": "2026-11-16T17:44:52.207Z",
+        "evidence": [
+          {
+            "file": "candidates/P2-r03.png",
+            "bytes": 954230,
+            "sha256": "70504fd1f544808ed66e59933e8c18f936b9170242ced1fa068a8d764f58b687"
+          }
+        ]
+      },
+      "Q-HG04": {
+        "result": "erfüllt",
+        "reason": "Tatsächliche RGBA-Bytes isoliert auf Weiß und neutralem Grau alpha-komponiert betrachtet: Außen-/Zwischenräume und offene Strichabstände lassen den Prüfgrund durch; keine sichtbaren weißen Bildflächen, Halos oder Farbflecken. Roh-RGB-Anzeigen ohne korrekte Alphakomposition sind hierfür kein Befund.",
+        "method": "Direkte isolierte Originalsichtung, alpha-komponiert auf Weiß und #bdbdbd in voller Leinwand; Größen-/Hashdiagnose separat.",
+        "norm": {
+          "file": "docs/PUZZLE_QUALITY.md",
+          "contract": "1.0",
+          "document_revision": 14,
+          "commit": "a5e751322f68a9cb9686dc66f12c772e921baef7",
+          "sha256": "df7660806de746827b1dc4b9445ecc96276dc6d1f59361d127c4f8c88f028e59"
+        },
+        "actor": "Codex (ausführende KI; Eigenprüfung, kein unabhängiges Review)",
+        "timestamp_utc": "2026-11-16T17:44:52.207Z",
+        "evidence": [
+          {
+            "file": "candidates/P2-r03.png",
+            "bytes": 954230,
+            "sha256": "70504fd1f544808ed66e59933e8c18f936b9170242ced1fa068a8d764f58b687"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "candidate_id": "P3",
+    "image_revision": "r01",
+    "original": {
+      "file": "candidates/P3-r01.png",
+      "bytes": 1728183,
+      "sha256": "96b589b765f2348ef5e9a6c9009ee585db1d773fe5b4be4d88e0abe7dd550371"
+    },
+    "offered": true,
+    "review": {
+      "Q-HG01": {
+        "result": "erfüllt",
+        "reason": "Geöffnetes Reveal und Kontextbriefing verglichen: Gärtnerbank mit Werkzeugen; kein konkretes Rätselsubjekt, keine Lösungssilhouette, kein Motivname/UI.",
+        "method": "Direkte isolierte Originalsichtung, alpha-komponiert auf Weiß und #bdbdbd in voller Leinwand; Größen-/Hashdiagnose separat.",
+        "norm": {
+          "file": "docs/PUZZLE_QUALITY.md",
+          "contract": "1.0",
+          "document_revision": 14,
+          "commit": "a5e751322f68a9cb9686dc66f12c772e921baef7",
+          "sha256": "df7660806de746827b1dc4b9445ecc96276dc6d1f59361d127c4f8c88f028e59"
+        },
+        "actor": "Codex (ausführende KI; Eigenprüfung, kein unabhängiges Review)",
+        "timestamp_utc": "2026-11-16T17:44:52.207Z",
+        "evidence": [
+          {
+            "file": "candidates/P3-r01.png",
+            "bytes": 1728183,
+            "sha256": "96b589b765f2348ef5e9a6c9009ee585db1d773fe5b4be4d88e0abe7dd550371"
+          }
+        ]
+      },
+      "Q-HG02": {
+        "result": "erfüllt",
+        "reason": "Helle neutralgraue natürliche Bleistiftkonturen und motivgerechte Handschraffur; zurückhaltende Gesamtwirkung bei lesbaren Details, keine glatten digitalen Deckflächen.",
+        "method": "Direkte isolierte Originalsichtung, alpha-komponiert auf Weiß und #bdbdbd in voller Leinwand; Größen-/Hashdiagnose separat.",
+        "norm": {
+          "file": "docs/PUZZLE_QUALITY.md",
+          "contract": "1.0",
+          "document_revision": 14,
+          "commit": "a5e751322f68a9cb9686dc66f12c772e921baef7",
+          "sha256": "df7660806de746827b1dc4b9445ecc96276dc6d1f59361d127c4f8c88f028e59"
+        },
+        "actor": "Codex (ausführende KI; Eigenprüfung, kein unabhängiges Review)",
+        "timestamp_utc": "2026-11-16T17:44:52.207Z",
+        "evidence": [
+          {
+            "file": "candidates/P3-r01.png",
+            "bytes": 1728183,
+            "sha256": "96b589b765f2348ef5e9a6c9009ee585db1d773fe5b4be4d88e0abe7dd550371"
+          }
+        ]
+      },
+      "Q-HG03": {
+        "result": "erfüllt",
+        "reason": "PNG vollständig dekodiert: 2172×724, exakt 3:1. Zusammenhängende native Einzelkomposition, vollständige Breitenwirkung und bewusster Freiraum; kein Padding, Stitching, Stretch, Crop oder Motivverschieben. Gewählte 2304×768-Ableitung noch nicht fällig.",
+        "method": "Direkte isolierte Originalsichtung, alpha-komponiert auf Weiß und #bdbdbd in voller Leinwand; Größen-/Hashdiagnose separat.",
+        "norm": {
+          "file": "docs/PUZZLE_QUALITY.md",
+          "contract": "1.0",
+          "document_revision": 14,
+          "commit": "a5e751322f68a9cb9686dc66f12c772e921baef7",
+          "sha256": "df7660806de746827b1dc4b9445ecc96276dc6d1f59361d127c4f8c88f028e59"
+        },
+        "actor": "Codex (ausführende KI; Eigenprüfung, kein unabhängiges Review)",
+        "timestamp_utc": "2026-11-16T17:44:52.207Z",
+        "evidence": [
+          {
+            "file": "candidates/P3-r01.png",
+            "bytes": 1728183,
+            "sha256": "96b589b765f2348ef5e9a6c9009ee585db1d773fe5b4be4d88e0abe7dd550371"
+          }
+        ]
+      },
+      "Q-HG04": {
+        "result": "erfüllt",
+        "reason": "Tatsächliche RGBA-Bytes isoliert auf Weiß und neutralem Grau alpha-komponiert betrachtet: Außen-/Zwischenräume und offene Strichabstände lassen den Prüfgrund durch; keine sichtbaren weißen Bildflächen, Halos oder Farbflecken. Roh-RGB-Anzeigen ohne korrekte Alphakomposition sind hierfür kein Befund.",
+        "method": "Direkte isolierte Originalsichtung, alpha-komponiert auf Weiß und #bdbdbd in voller Leinwand; Größen-/Hashdiagnose separat.",
+        "norm": {
+          "file": "docs/PUZZLE_QUALITY.md",
+          "contract": "1.0",
+          "document_revision": 14,
+          "commit": "a5e751322f68a9cb9686dc66f12c772e921baef7",
+          "sha256": "df7660806de746827b1dc4b9445ecc96276dc6d1f59361d127c4f8c88f028e59"
+        },
+        "actor": "Codex (ausführende KI; Eigenprüfung, kein unabhängiges Review)",
+        "timestamp_utc": "2026-11-16T17:44:52.207Z",
+        "evidence": [
+          {
+            "file": "candidates/P3-r01.png",
+            "bytes": 1728183,
+            "sha256": "96b589b765f2348ef5e9a6c9009ee585db1d773fe5b4be4d88e0abe7dd550371"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "candidate_id": "P3",
+    "image_revision": "r02",
+    "original": {
+      "file": "candidates/P3-r02.png",
+      "bytes": 1049841,
+      "sha256": "2da0a4815b0310fc8f7d9fd0098d17055f403a1431b9da962697694f43e8a219"
+    },
+    "offered": false,
+    "review": {
+      "Q-HG01": {
+        "result": "nicht geprüft",
+        "reason": "Archivierte, nicht zur Auswahl angebotene Vorstufe; kein positives Gesamturteil. Siehe Revisionsprotokoll. Keine Integration dieser Bytes.",
+        "method": "nicht durchgeführt; verworfene Vorstufe",
+        "norm": {
+          "file": "docs/PUZZLE_QUALITY.md",
+          "contract": "1.0",
+          "document_revision": 14,
+          "commit": "a5e751322f68a9cb9686dc66f12c772e921baef7",
+          "sha256": "df7660806de746827b1dc4b9445ecc96276dc6d1f59361d127c4f8c88f028e59"
+        },
+        "actor": "Codex (ausführende KI; Eigenprüfung, kein unabhängiges Review)",
+        "timestamp_utc": "2026-11-16T17:44:52.207Z",
+        "evidence": []
+      },
+      "Q-HG02": {
+        "result": "nicht geprüft",
+        "reason": "Archivierte, nicht zur Auswahl angebotene Vorstufe; kein positives Gesamturteil. Siehe Revisionsprotokoll. Keine Integration dieser Bytes.",
+        "method": "nicht durchgeführt; verworfene Vorstufe",
+        "norm": {
+          "file": "docs/PUZZLE_QUALITY.md",
+          "contract": "1.0",
+          "document_revision": 14,
+          "commit": "a5e751322f68a9cb9686dc66f12c772e921baef7",
+          "sha256": "df7660806de746827b1dc4b9445ecc96276dc6d1f59361d127c4f8c88f028e59"
+        },
+        "actor": "Codex (ausführende KI; Eigenprüfung, kein unabhängiges Review)",
+        "timestamp_utc": "2026-11-16T17:44:52.207Z",
+        "evidence": []
+      },
+      "Q-HG03": {
+        "result": "nicht geprüft",
+        "reason": "Archivierte, nicht zur Auswahl angebotene Vorstufe; kein positives Gesamturteil. Siehe Revisionsprotokoll. Keine Integration dieser Bytes.",
+        "method": "nicht durchgeführt; verworfene Vorstufe",
+        "norm": {
+          "file": "docs/PUZZLE_QUALITY.md",
+          "contract": "1.0",
+          "document_revision": 14,
+          "commit": "a5e751322f68a9cb9686dc66f12c772e921baef7",
+          "sha256": "df7660806de746827b1dc4b9445ecc96276dc6d1f59361d127c4f8c88f028e59"
+        },
+        "actor": "Codex (ausführende KI; Eigenprüfung, kein unabhängiges Review)",
+        "timestamp_utc": "2026-11-16T17:44:52.207Z",
+        "evidence": []
+      },
+      "Q-HG04": {
+        "result": "nicht geprüft",
+        "reason": "Archivierte, nicht zur Auswahl angebotene Vorstufe; kein positives Gesamturteil. Siehe Revisionsprotokoll. Keine Integration dieser Bytes.",
+        "method": "nicht durchgeführt; verworfene Vorstufe",
+        "norm": {
+          "file": "docs/PUZZLE_QUALITY.md",
+          "contract": "1.0",
+          "document_revision": 14,
+          "commit": "a5e751322f68a9cb9686dc66f12c772e921baef7",
+          "sha256": "df7660806de746827b1dc4b9445ecc96276dc6d1f59361d127c4f8c88f028e59"
+        },
+        "actor": "Codex (ausführende KI; Eigenprüfung, kein unabhängiges Review)",
+        "timestamp_utc": "2026-11-16T17:44:52.207Z",
+        "evidence": []
+      }
+    }
+  }
+]
