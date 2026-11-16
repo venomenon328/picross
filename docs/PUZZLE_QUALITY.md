@@ -602,8 +602,9 @@ die eigenständige technische HP-W2-Bildprüfung benötigt selbst keine Lösungs
 Ein Defizit mit gezieltem Korrekturvorschlag benennen; eine positive Dateidiagnose
 darf es nicht verdecken. Der verbindliche Bildrandabschluss H-07 ist keine
 redaktionell akzeptierbare Q-HG03-/Q-HG04-Abweichung; eine bewusste spätere
-Bildwahl kann einen harten Anschnitt nicht als technisch erfüllt ausgeben. Nur eine ausdrückliche Eigentümervorgabe ändert die
-anfängliche Hintergrundkandidatenzahl. Die kleinere Rasterangebotszahl ändert sie nicht.
+Bildwahl kann einen harten Anschnitt nicht als qualifiziert ausgeben.
+Nur eine ausdrückliche Eigentümervorgabe ändert die anfängliche
+Hintergrundkandidatenzahl. Die kleinere Rasterangebotszahl ändert sie nicht.
 
 ### 9.2 Technische Diagnose, Bildentscheidung und Integration
 
