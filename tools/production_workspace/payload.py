@@ -43,6 +43,7 @@ def git(root, *args):
 
 
 PE_SHARED = {
+    '__init__.py',
     'release.py', 'payload.py', 'release_manifest.py', 'update_verifier.py',
     'release_channel.py', 'build_windows.py', 'build_installer.py',
     'verify_installer.py', 'smoke_installer.py', 'install_interlock.py',
