@@ -6,6 +6,8 @@ import re
 from .payload import canonical
 from .release import release, version_tuple
 
+from tools.app_products import PW
+
 REPOSITORY = 'venomenon328/picross'
 FORMAT = 'picross-pw-release-v1'
 SIGNED_FORMAT = 'picross-pw-release-v2'
@@ -41,23 +43,23 @@ def hex_string(value, length):
     return type(value) is str and re.fullmatch('[0-9a-f]{' + str(length) + '}', value) is not None
 
 
-def validate_manifest(value):
+def validate_manifest(value, *, app=PW):
     require(type(value) is dict, 'Invalid release manifest')
-    signed = value.get('format') == SIGNED_FORMAT
+    signed = value.get('format') == app.signed
     shape(value, 'format repository status version tag source_commit payload_fingerprint product_code '
           'upgrade_code assets inspection' + (' platform channel signing_key_id' if signed else ''),
           'Invalid release manifest shape')
-    require(value['format'] in (FORMAT, SIGNED_FORMAT) and value['repository'] == REPOSITORY and value['status'] == 'production',
+    require(value['format'] in (app.provenance, app.signed) and value['repository'] == REPOSITORY and value['status'] == 'production',
             'Foreign or nonproduction manifest')
     if signed:
         require(value['platform'] == 'windows-x64' and value['channel'] == 'stable' and
                 hex_string(value['signing_key_id'], 64), 'Invalid platform/channel/signing key')
     version = version_tuple(value['version'])
-    require(version[:2] == (0, 1) and version > (0, 1, 0) and value['tag'] == 'pw-v' + value['version'],
+    require(version[:2] == app.line and version > version_tuple(app.anchor) and value['tag'] == app.prefix + value['version'],
             'Unsupported published version')
     require(hex_string(value['source_commit'], 40) and hex_string(value['payload_fingerprint'], 64),
             'Invalid source/fingerprint')
-    product = release(version=value['version'])
+    product = release(version=value['version'], app=app)
     require(all(value[k] == product[k] for k in ('product_code', 'upgrade_code')), 'Foreign product identity')
     names = {product['filename'], product['filename'] + '.sha256', 'delivery.json', 'START.txt', 'inputs.json'}
     require(type(value['assets']) is dict and set(value['assets']) == names, 'Incomplete release assets')
@@ -79,13 +81,13 @@ def validate_manifest(value):
     return value
 
 
-def verify_files(manifest, files):
-    validate_manifest(manifest)
+def verify_files(manifest, files, *, app=PW):
+    validate_manifest(manifest, app=app)
     require(set(files) == set(manifest['assets']), 'Unexpected or missing candidate file')
     for name, row in manifest['assets'].items():
         require(type(files[name]) is bytes and len(files[name]) == row['bytes'] and digest(files[name]) == row['sha256'],
                 'Asset hash mismatch: ' + name)
-    product = release(version=manifest['version'])
+    product = release(version=manifest['version'], app=app)
     report = strict_json(files['delivery.json'])
     require(type(report) is dict, 'Invalid delivery report')
     require(all(report[k] == manifest[v] for k, v in (('version', 'version'), ('commit', 'source_commit'),

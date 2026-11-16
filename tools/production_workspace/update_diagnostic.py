@@ -14,12 +14,14 @@ from .payload import canonical
 from .release_manifest import digest, require, strict_json, verify_files
 
 
-def test_identity():
+def test_identity(*, app=None):
+    from tools.app_products import PW
+    app = app or PW
     """Fresh synthetic identity; never a production trust source."""
     private = Ed25519PrivateKey.generate()
     public = private.public_key().public_bytes_raw()
     key_id = digest(public)
-    trust = {'format': 'picross-pw-trust-v1', 'accepted': {key_id: base64.b64encode(public).decode('ascii')},
+    trust = {'format': app.trust, 'accepted': {key_id: base64.b64encode(public).decode('ascii')},
              'blocked': [], 'active_signer': key_id}
     return trust, base64.b64encode(private.private_bytes_raw()).decode('ascii')
 

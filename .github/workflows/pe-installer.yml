@@ -1,0 +1,211 @@
+name: Puzzle editor release
+
+on:
+  workflow_run:
+    workflows: [Package CI]
+    types: [completed]
+    branches: [main]
+  workflow_dispatch:
+
+# Dispatch is ALWAYS diagnostic. Publication additionally needs the separately
+# authorized PE_RELEASE_ENABLED AND PE_UPDATE_SIGNING_ENABLED variables.
+# Production keys are provisioned later, only in the main-only pe-app-release environment.
+permissions:
+  contents: read
+  actions: read
+
+concurrency:
+  group: pe-app-release
+  cancel-in-progress: false
+
+jobs:
+  plan:
+    if: >-
+      github.repository == 'venomenon328/picross' &&
+      (github.event_name == 'workflow_dispatch' ||
+       (github.event.workflow_run.conclusion == 'success' &&
+        github.event.workflow_run.event == 'push' &&
+        github.event.workflow_run.head_branch == 'main' &&
+        github.event.workflow_run.head_repository.full_name == github.repository))
+    runs-on: ubuntu-24.04
+    outputs:
+      changed: ${{ steps.plan.outputs.changed }}
+      version: ${{ steps.plan.outputs.version }}
+      source: ${{ steps.source.outputs.commit }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          ref: ${{ github.event.workflow_run.head_sha || github.sha }}
+          fetch-depth: 0
+          persist-credentials: false
+      - id: source
+        run: echo "commit=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+      - uses: actions/setup-python@83679a892e2d95755f2dac6acb0bfd1e9ac5d548
+        with:
+          python-version: '3.13.14'
+      - name: Pinned signed-authority reader
+        run: >-
+          python -m pip install --only-binary=:all: -r tools/production_workspace/requirements-update.txt
+      - name: Verify main CI, fingerprint and published authority
+        id: plan
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: python -m tools.puzzle_editor.release_channel plan --plan "$RUNNER_TEMP/plan.json"
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: pe-plan
+          path: ${{ runner.temp }}/plan.json
+          retention-days: 7
+          if-no-files-found: error
+
+  installer:
+    needs: plan
+    if: needs.plan.outputs.changed == 'true'
+    runs-on: windows-2025
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          ref: ${{ needs.plan.outputs.source }}
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/download-artifact@634f93cb2916e3fdff6788551b99b062d0335ce0
+        with:
+          name: pe-plan
+          path: ${{ runner.temp }}/pe-plan
+      - uses: actions/setup-python@83679a892e2d95755f2dac6acb0bfd1e9ac5d548
+        with:
+          python-version: '3.13.14'
+          architecture: x64
+      - name: Pinned private build environment
+        shell: pwsh
+        run: |
+          python -m venv "$env:RUNNER_TEMP\pe-env"
+          & "$env:RUNNER_TEMP\pe-env\Scripts\python.exe" -m pip install pip==26.1.2
+          if ($LASTEXITCODE -ne 0) { throw 'pip setup failed' }
+          & "$env:RUNNER_TEMP\pe-env\Scripts\python.exe" -m pip install --only-binary=:all: -r tools/production_workspace/requirements-windows.txt
+          if ($LASTEXITCODE -ne 0) { throw 'Pinned dependency setup failed' }
+      - name: Build and inspect actual MSI bytes without installation
+        shell: pwsh
+        env:
+          PE_VERSION: ${{ needs.plan.outputs.version }}
+          PE_SOURCE: ${{ needs.plan.outputs.source }}
+        run: |
+          $python = "$env:RUNNER_TEMP\pe-env\Scripts\python.exe"
+          & $python -m tools.puzzle_editor.build_installer --output "$env:RUNNER_TEMP\pe-product" --version $env:PE_VERSION
+          if ($LASTEXITCODE -ne 0) { throw 'Installer build failed' }
+          & $python -m tools.puzzle_editor.verify_installer --build "$env:RUNNER_TEMP\pe-product" --output "$env:RUNNER_TEMP\pe-inspection" --expected-commit $env:PE_SOURCE --version $env:PE_VERSION --compare-build
+          if ($LASTEXITCODE -ne 0) { throw 'MSI inspection failed' }
+          & $python -m tools.puzzle_editor.release_channel seal --plan "$env:RUNNER_TEMP\pe-plan\plan.json" --build "$env:RUNNER_TEMP\pe-product" --inspection "$env:RUNNER_TEMP\pe-inspection\result.json"
+          if ($LASTEXITCODE -ne 0) { throw 'Candidate binding failed' }
+          Get-Content "$env:RUNNER_TEMP\pe-product\input-audit.json"
+          Get-Content "$env:RUNNER_TEMP\pe-product\delivery.json"
+          Get-Content "$env:RUNNER_TEMP\pe-inspection\result.json"
+          if ((git status --porcelain)) { throw 'Build changed source checkout' }
+      - name: PE-APP-A T02/T03 frozen and signature diagnosis (no installation or publication)
+        if: github.event_name == 'workflow_dispatch'
+        shell: pwsh
+        run: |
+          & "$env:RUNNER_TEMP\pe-env\Scripts\python.exe" -m tools.puzzle_editor.diagnostic --build "$env:RUNNER_TEMP\pe-product" --output "$env:RUNNER_TEMP\pe-review"
+          if ($LASTEXITCODE -ne 0) { throw 'PE diagnosis failed' }
+      - name: PE technical originals for independent PE-APP-A-A01 review
+        if: github.event_name == 'workflow_dispatch'
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: pe-review-${{ needs.plan.outputs.source }}
+          path: |
+            ${{ runner.temp }}/pe-review/*
+            ${{ runner.temp }}/pe-product/input-audit.json
+            ${{ runner.temp }}/pe-inspection/result.json
+          retention-days: 7
+          if-no-files-found: error
+      - name: Candidate for independent PE-APP-A review and gated publisher
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: Picross-Bestandseditor-${{ needs.plan.outputs.source }}
+          path: |
+            ${{ runner.temp }}/pe-product/*.msi
+            ${{ runner.temp }}/pe-product/*.msi.sha256
+            ${{ runner.temp }}/pe-product/START.txt
+            ${{ runner.temp }}/pe-product/delivery.json
+            ${{ runner.temp }}/pe-product/inputs.json
+            ${{ runner.temp }}/pe-product/manifest.json
+          if-no-files-found: error
+          retention-days: 14
+          compression-level: 0
+
+  publication-gate:
+    needs: [plan, installer]
+    if: >-
+      github.event_name == 'workflow_run' && github.ref == 'refs/heads/main' &&
+      github.repository == 'venomenon328/picross' &&
+      vars.PE_RELEASE_ENABLED == 'true' && vars.PE_UPDATE_SIGNING_ENABLED == 'true'
+    runs-on: ubuntu-24.04
+    outputs:
+      authorized: ${{ steps.authorize.outputs.authorized }}
+    steps:
+      # No environment reference: a disabled/unprovisioned run cannot create it.
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+      - uses: actions/setup-python@83679a892e2d95755f2dac6acb0bfd1e9ac5d548
+        with:
+          python-version: '3.13.14'
+      - name: Pinned signed-authority reader
+        run: >-
+          python -m pip install --only-binary=:all: -r tools/production_workspace/requirements-update.txt
+      - uses: actions/download-artifact@634f93cb2916e3fdff6788551b99b062d0335ce0
+        with:
+          name: pe-plan
+          path: ${{ runner.temp }}/pe-plan
+      - uses: actions/download-artifact@634f93cb2916e3fdff6788551b99b062d0335ce0
+        with:
+          name: Picross-Bestandseditor-${{ needs.plan.outputs.source }}
+          path: ${{ runner.temp }}/pe-product
+      - name: Check source, candidate, provisioned trust and existing main-only environment
+        id: authorize
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PE_RELEASE_ENABLED: ${{ vars.PE_RELEASE_ENABLED }}
+          PE_UPDATE_SIGNING_ENABLED: ${{ vars.PE_UPDATE_SIGNING_ENABLED }}
+        run: python -m tools.puzzle_editor.release_channel authorize --plan "$RUNNER_TEMP/pe-plan/plan.json" --build "$RUNNER_TEMP/pe-product"
+
+  publish:
+    needs: [plan, installer, publication-gate]
+    if: >-
+      github.event_name == 'workflow_run' && github.ref == 'refs/heads/main' &&
+      github.repository == 'venomenon328/picross' &&
+      vars.PE_RELEASE_ENABLED == 'true' && vars.PE_UPDATE_SIGNING_ENABLED == 'true' &&
+      needs.publication-gate.outputs.authorized == 'true'
+    environment: pe-app-release
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: write
+      actions: read
+    steps:
+      # Only default-branch code ever runs with write access. No PR artifacts.
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+      - uses: actions/setup-python@83679a892e2d95755f2dac6acb0bfd1e9ac5d548
+        with:
+          python-version: '3.13.14'
+      - name: Pinned signing environment
+        run: >-
+          python -m pip install --only-binary=:all: -r tools/production_workspace/requirements-update.txt
+      - uses: actions/download-artifact@634f93cb2916e3fdff6788551b99b062d0335ce0
+        with:
+          name: pe-plan
+          path: ${{ runner.temp }}/pe-plan
+      - uses: actions/download-artifact@634f93cb2916e3fdff6788551b99b062d0335ce0
+        with:
+          name: Picross-Bestandseditor-${{ needs.plan.outputs.source }}
+          path: ${{ runner.temp }}/pe-product
+      - name: Recheck source CI, main, authority, draft and every uploaded byte
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PE_RELEASE_ENABLED: ${{ vars.PE_RELEASE_ENABLED }}
+          PE_UPDATE_SIGNING_ENABLED: ${{ vars.PE_UPDATE_SIGNING_ENABLED }}
+          PE_UPDATE_SIGNING_KEY: ${{ secrets.PE_UPDATE_SIGNING_KEY }}
+        run: python -m tools.puzzle_editor.release_channel publish --plan "$RUNNER_TEMP/pe-plan/plan.json" --build "$RUNNER_TEMP/pe-product"

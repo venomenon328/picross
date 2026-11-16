@@ -1,4 +1,4 @@
-# Lokaler Picross-Bestandseditor · PE-EDIT2 0.2.0
+# Lokaler Picross-Bestandseditor · PE-APP-A
 
 Eigenständiges Offlinewerkzeug für bereits registrierte Rätsel. Der
 [Fachvertrag §13](../../docs/PUZZLE_EDITOR.md#13-pe-edit2-gezielte-pflege-statt-vollbestandsprüfung)
@@ -8,9 +8,16 @@ führt K01–K08, T01–T03, unabhängiges Review A01 und persönliche Bedienpro
 
 ## Windowsstart
 
-Das portable ZIP vollständig in einen eigenen Programmordner entpacken und
+Den MSI-Kandidaten installieren: per-user ohne Administrator unter
+`%LOCALAPPDATA%/Programs/PicrossPuzzleEditor`. Startmenü und optionale
+Desktopverknüpfung starten die private Laufzeit. Vor Upgrade oder Deinstallation
+alle PE-Instanzen geordnet beenden, auch mit anderem Checkout/Zustandsordner.
+Ein laufender oder unklarer Zustand sperrt MSI; es gibt keinen Hardkill.
+Checkout, Port, Theme, Inhaltsdateien, portable Ordner und PW bleiben erhalten.
+
+Alternativ das portable Diagnose-ZIP vollständig in einen eigenen Programmordner entpacken und
 `Picross-Bestandseditor.exe` doppelt anklicken. Kein Administrator, Pythonsetup,
-Gitdownload, Installer oder Internet erforderlich. EXE und `_internal` gemeinsam
+Gitdownload oder Internet zur Bedienung erforderlich. EXE und `_internal` gemeinsam
 erhalten. „Ordner wählen“ öffnet ein bestehendes Picross-Gitcheckout; Pfad und
 Port bleiben im Starter sichtbar. „Editor starten“ öffnet den Standardbrowser.
 Bei Portbelegung einen freien anderen Port ausdrücklich wählen. Ein weiterer
@@ -86,12 +93,11 @@ mit ID-Änderungen nicht als gemeinsame atomare Transaktion darstellen.
 
 ## Versionen und Recovery
 
-Der Editor ist kein Migrationswerkzeug. Schreiben verlangt Runtime v8;
-Bild-/Rasterpflege zusätzlich bereits extern migrierte aktuelle Bildquellen.
-Bei Altversionen erscheint ein unverändernder Hinweis auf die
-[Codex-Anweisung #641](https://github.com/venomenon328/picross/issues/641).
-Keine Migration im UI/API, beim Öffnen oder im Hintergrund. Die alten
-Repository-Migrationsbefehle werden nicht mit der portablen App ausgeliefert.
+Der Editor verwendet aktuelle RI-ONE-Quellen: Inhaltsregistry v5, Reveal v5,
+Hintergrund v7 und Runtime v8, ohne Produktionsarchive. Es gibt keine Migration
+im UI/API oder beim Öffnen. Nicht unterstützte Quellen werden unverändert mit
+einem gezielten Fehler abgewiesen. Die externe Bestandsumstellung ist abgeschlossen;
+#641 ist kein allgemeiner Reparaturauftrag.
 
 Normale Editoraktionen prüfen ihre Eingaben und Änderungen, nicht den ganzen
 Bestand oder historische Produktionsbelege. Liste/Metadaten lesen nur die drei
@@ -102,7 +108,9 @@ separate Werkzeuge und werden vom Editor nicht automatisch gestartet.
 Ein offenes Journal sperrt neue Arbeit. „Gebundenen Altstand wiederherstellen“
 stellt nur nachweislich eigene Zustände der betroffenen Dateien wieder her,
 wiederholbar und mit Runtime zuletzt. Bei fremden Bytes bleiben Journal und
-Daten erhalten. Alte Journale behalten ihren expliziten gemeinsamen Recoveryweg.
+Daten erhalten. Aktuelle Editorjournale werden gezielt geprüft. Alte/unklare Journale bleiben
+erhalten und verlangen ihren passenden externen Altweg; keine automatische
+Migration oder Interpretation im aktuellen Editor.
 Request-/Tababbruch beendet keinen Writer. Bei verlorener Browserquittung erst
 neu laden und den tatsächlichen Zustand prüfen, dann gegebenenfalls neu planen.
 Keine freie Restorepfad- oder Löschfunktion.
@@ -114,27 +122,36 @@ offizielles CPython 3.13.14 Windows x64 und eine frische virtuelle Umgebung:
 
 ```powershell
 python -m venv E:\Test\pe-build-env
-E:\Test\pe-build-env\Scripts\python -m pip install -r tools/puzzle_editor/requirements-windows.txt
-E:\Test\pe-build-env\Scripts\python -m tools.puzzle_editor.build_windows --output E:\Test\pe-build
+E:\Test\pe-build-env\Scripts\python -m pip install pip==26.1.2
+E:\Test\pe-build-env\Scripts\python -m pip install --only-binary=:all: -r tools/puzzle_editor/requirements-windows.txt
+E:\Test\pe-build-env\Scripts\python -m tools.puzzle_editor.build_installer --output E:\Test\pe-build --version 0.2.1
+E:\Test\pe-build-env\Scripts\python -m tools.puzzle_editor.verify_installer --build E:\Test\pe-build --output E:\Test\pe-inspection --expected-commit <volle-SHA> --version 0.2.1 --compare-build
 ```
 
-Der Builder verlangt die exakten Pins und Tcl/Tk-Version, prüft Frozen-Module,
-UI und byteidentische Fachquellen einschließlich eingefrorener Methoden.
-Der portable Starter prüft vor Bereitschaft zusätzlich alle Programmdateien
-gegen das vollständige Byte-/Hashinventar; fehlende/geänderte Teile sperren den Start.
-Ausgabe: portable ZIP, `components.json`, vollständiges Hash-/Byteinventar,
-Laufzeit-/Python-/Pillow-/PyInstaller-/Tcl/Tk-Lizenzen und `START.md` im Paket.
-`delivery.json` bindet Commit, Versionen, ZIP-/EXEhash. Keine Signatur, kein
-Releasekanal oder automatisches Update. Der normale Windows-Spielerbuild in
-Package CI ist vom separaten Editorbau und dessen tatsächlichem Start getrennt.
+Der gemeinsame PW-/PE-Bauer prüft exakte Pins, Runtime-/Wheellizenzen,
+reale Analysis-/PYZ-Inputs, aktuelle Editorreader und bytegleiche Methodenquellen.
+`tests` und `za1_fixtures` fehlen im Produkt. Der portable Builder bleibt unter
+`tools.puzzle_editor.build_windows` verfügbar. Das vollständige Inventar wird vor
+Bereitschaft geprüft. MSI, EXE, UI, Komponenten und Delivery verwenden dieselbe
+injizierte Version ohne Quelländerung. 0.2.0 ist nur Portable-Startanker; erster
+MSI-Kandidat 0.2.1. Feste PE-Upgradeidentität, neuer ProductCode je Version;
+Gleichversion und Downgrade sind gesperrt. EXE/MSI haben kein Authenticode.
 
-Für PE-EDIT2 ausgewählt: Projektkern, `tools` und `production.catalog`.
-T01–T03 sind einmalige Datei-/Zeit-, Konflikt-/Recovery- und echte
-Windows-/Browserproben an eigenen Kopien mit 56/1.000 Einträgen. Genau zwei
-UI-Originale (hell/dunkel) und die getestete portable Ausgabe werden dem
-unabhängigen Reviewer für höchstens sieben Tage zugestellt. Kein automatisches
-Spiel-Chromiumprofil. PE-EDIT2-A01 vor Merge und die persönliche PE-B-U01 aus
-#576 vor Release bleiben offen bis zur jeweiligen unabhängigen Abnahme.
+Der eigene Workflow `Puzzle editor release` folgt erfolgreicher Main-Push-CI.
+Tatsächliche Paketinputs bestimmen den Fingerprint; identische Bytes ergeben
+keinen neuen Installer. Nur der gegatete Publisher signiert PE-Metadaten und
+veröffentlicht nach Rückdownloadprüfung unter `pe-vX.Y.Z`. Diagnose-Dispatch
+veröffentlicht nie. Ohne gesonderten Betriebsauftrag und PE-Environment/Flags/
+Signierbereitstellung bleibt Publikation gesperrt. **Kein Selbstupdate-Client in A**;
+dieser folgt in B. Keine private Laufzeit aus dem Datencheckout.
+
+Maßgeblich sind [PE §14](../../docs/PUZZLE_EDITOR.md#14-pe-app-a--feste-windows-produkt--und-releasebindung)
+und [#691 / PE-APP-A](https://github.com/venomenon328/picross/issues/691#umsetzungsvorbereitung-pe-app-a).
+Projektkern plus tools, `evidence.mode=none`; separate einmalige Windows-MSI-/
+Frozen-/Releaseproben T02/T03. Tatsächliche Originale und Ergebnisse stehen im
+Draft-PR. MSI-Inspektion ist keine Installation. Unabhängiges A01 vor Merge,
+reale Windows-11-Installation/Upgrade/Uninstall und Browserbedienung R01/U01 vor
+Release bleiben getrennt. Keine automatische Chromiumprüfung.
 
 ## HG31: explizite Profilwahl
 
