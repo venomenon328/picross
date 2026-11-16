@@ -1,11 +1,15 @@
 {
   "format": "development-ci-plan/v1",
   "issue": "https://github.com/venomenon328/picross/issues/671",
-  "package": "HG-BESTAND-01",
-  "modules": [],
-  "purpose": "Drei tatsächlich ausgewählte neue 3:1-Hintergründe integrieren: Kaktus K4/r01, Japanische Teekanne T5/r01 und Qualle Q4/r01. Eigentümerwahl, aktuelle Regeln, HP-W2-Profil picross-background-png2304x768-v1, PNG-Ausgaben und gezielter Editorimport sind dateigenau belegt.",
-  "omitted": "Keine Zusatzmodule: reine Rätselproduktion mit Hintergrundquellen, Runtime-Daten, PNGs und gesicherter Arbeitsablage. Einmalige Prüfung der neun Originale, der drei gewählten Ableitungen und ihrer exakten Übernahme einschließlich geschützter Bestandswerte außerhalb der CI. Keine Code-, Renderer-, Profil- oder Saveänderung; keine Solver-/Proof-/Ratingwiederholung und kein Playerbau.",
-  "test_changes": [],
+  "package": "RETIRE-NOTICE-COMPAT",
+  "modules": [
+    "production.catalog"
+  ],
+  "purpose": "Gezielten §9-Abschluss nach PE-EDIT2 für selected-Hintergründe ohne künstliche TXT-Notice ermöglichen. Vorhandene Hintergrundnotices, verpflichtende Revealnotices, Mainvergleich, Byteguards und aktive Assets weiter schützen.",
+  "omitted": "Kein voller production.*-Satz, keine Native-/Browsergruppe: nur Abschlussreader, Callbackbindung, Normtext und kleine synthetische Regressionen betroffen. Windows-Paket folgt unverändert der normalen Entwicklungs-Kernpflicht, kein Bild-/Player-Verhaltensanspruch aus den Fachtests.",
+  "test_changes": [
+    "tests/puzzle_production/test_current_completion.py: Regression für fehlende optionale Hintergrund-TXT, nachträglich hinzugefügte fremde TXT und weiterhin zwingende Reveal-TXT; vorhandene Suite weiterhin nutzen."
+  ],
   "core_change": null,
   "evidence": {
     "mode": "none",
