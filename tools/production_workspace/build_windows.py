@@ -177,6 +177,9 @@ def verify_update_payload(app, pyz, audit):
                 'tools.production_workspace.release', 'cryptography.hazmat.primitives.asymmetric.ed25519'}
     if not required <= names or any('tools.production_workspace.' + name in names for name in ('update_diagnostic', 'helper_diagnostic')):
         raise RuntimeError('Frozen Verifier-/Kryptografieinventar fehlt oder enthält den Testadapter.')
+    if 'tools.puzzle_production.za1_fixtures' in names or any(
+            name == 'tests' or name.startswith('tests.') for name in names):
+        raise RuntimeError('Frozen-Payload enthält synthetische Testmodule.')
     observed = set(audit['repository_inputs'])
     sources = {name.replace('.', '/') + '.py' for name in required if name.startswith('tools.')}
     sources |= {'tools/production_workspace/release.json', 'tools/production_workspace/update-trust.json'}
