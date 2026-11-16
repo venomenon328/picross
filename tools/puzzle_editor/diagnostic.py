@@ -212,6 +212,7 @@ def native_ready(state, commit):
 def native_cases(output):
     from tests.puzzle_production.catalog_fixtures import registered
     from . import desktop
+    desktop.load_ui()
     from tools.production_workspace import update_windows as windows, app_updates, update_client as client
     from tools.production_workspace.update_storage import Preferences
     with tempfile.TemporaryDirectory(prefix="native-",dir=output) as folder:
@@ -230,6 +231,7 @@ def native_cases(output):
                   patch.object(app_updates,"production_trust",return_value={"accepted":{"synthetic":{}}}),
                   patch.object(client,"discover",side_effect=discover) as network,
                   patch.object(windows,"prepare") as prepare,
+                  patch.object(desktop.messagebox,"showerror",side_effect=lambda title,message,**kw: (_ for _ in ()).throw(ValueError(title+": "+message))),
                   patch.object(desktop.webbrowser,"open") as browser):
                 window=desktop.Window(state,str(root),0)
                 try:
@@ -269,9 +271,12 @@ def run(build,output):
     require(not output.exists(),'Use a new diagnosis directory');output.mkdir(parents=True)
     delivery=json.loads((build/'delivery.json').read_bytes())
     result={'format':'picross-pe-diagnostic-v1','source_commit':delivery['commit'],
-            'payload_fingerprint':delivery['payload_fingerprint'],'version':delivery['version'],
-            'frozen':frozen(build,output),'signatures':signatures(build,output),'guards':guards(build),
-            'preview_resources':preview_resources(build),'native':native_cases(output)}
+            'payload_fingerprint':delivery['payload_fingerprint'],'version':delivery['version']}
+    for name, operation in (("frozen",lambda:frozen(build,output)),("signatures",lambda:signatures(build,output)),
+                            ("guards",lambda:guards(build)),("preview_resources",lambda:preview_resources(build)),
+                            ("native",lambda:native_cases(output))):
+        print("PE-APP-B diagnosis: "+name,flush=True)
+        result[name]=operation()
     (output/'result.json').write_bytes(canonical(result));print(canonical(result).decode())
     return result
 
