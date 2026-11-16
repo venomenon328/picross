@@ -1,11 +1,19 @@
 {
   "format": "development-ci-plan/v1",
-  "issue": "https://github.com/venomenon328/picross/issues/671",
-  "package": "HG-BESTAND-STIL",
-  "modules": [],
-  "purpose": "Normen für die Neuproduktion aller 62 Rätselhintergründe in 3:1 präzisieren: unverbindliche Höhenverteilung, geringfügig hellerer Graphit und Bestandsschutz bis zur gewählten Ersetzung; aktuelle Quellen-/Revisionsbindung.",
-  "omitted": "Keine Zusatzmodule: ausschließlich Dokumente und Paketplan. Profilkörper, Renderer, Import, Datenformen und Inhaltsdateien unverändert. Tatsächliche Bildqualität wird später an neu erzeugten Kandidaten nach Q-HG02/Q-HG03 beurteilt; keine neue persönliche Buchabnahme.",
-  "test_changes": [],
+  "issue": "https://github.com/venomenon328/picross/issues/677",
+  "package": "PW-INST-FIX",
+  "modules": [
+    "tools"
+  ],
+  "purpose": "PW-INST-FIX K01–K04: PyInstaller-Testfixtureausschluss, geschlossener Fingerprint-/Analysis-/PYZ-Abgleich und gezielte Installerregressionen. Separater nicht veröffentlichender Windows-MSI-Diagnoselauf als einmaliger Integrationsnachweis.",
+  "omitted": "production.*, native.*, preflight, delivery: keine Änderungen an Rätsel-, Spiel-, Engine- oder Webpfaden. Echte Windows-MSI-/Frozen-Prüfung erfolgt als separater manueller PW-Installer-Dispatch und wird nicht als Dauerlast der Package CI übernommen.",
+  "test_changes": [
+    {
+      "path": "tools/test_production_installer.py",
+      "disposition": "change-scoped",
+      "reason": "Sehr kleine existierende Quelle-/Fingerprint-Regression für test-only ZA-1, negative Analysis und den tatsächlich beobachteten Leckpfad; bleibt im bedarfsgewählten tools-Modul."
+    }
+  ],
   "core_change": null,
   "evidence": {
     "mode": "none",
