@@ -161,11 +161,11 @@ führt der beauftragte Akteur aus. Historische Originale werden nicht migriert.
 
 ## PW-B: neue Produktion 0.8.0
 
-Dokumentrevision 7 bindet den [geschlossenen Mehrdateisnapshot](../../docs/PW_B_CONTRACT.md#pw-perf-d--regelquellen-und-snapshotgeneration).
+Dokumentrevision 9 bindet den [geschlossenen Mehrdateisnapshot](../../docs/PW_B_CONTRACT.md#pw-perf-d--regelquellen-und-snapshotgeneration).
 `authoring_rulebook.capture(repository, commit)` liefert die geprüfte Regelbindung
 und ein Dictionary der unveränderten Paketdateibytes. Diese unter den gelieferten
 Pfaden im eigenen source-root ablegen und wie alle Eingänge explizit in `files`
-führen; `handoff.repo_commit=commit`, Request v4, Handoff v5, Dokumentrevision 7.
+führen; `handoff.repo_commit=commit`, Request v4, Handoff v5, Dokumentrevision 9.
 Alte Einzeldatei-Originale bleiben unter ihren bisherigen Generationen lesbar.
 
 Build v4 veröffentlicht Handoff v5/Record v4 und die automatisch geprüfte
@@ -2206,3 +2206,14 @@ python -m tools.puzzle_production.target_adapter register --input <new-output> -
 Der Input muss vor dem Aufruf vollständige aktuelle Daten, unabhängigen Deduktions-
 nachweis, Rechte und echte gebundene Endfreigabe enthalten. Der Export erfindet
 keine Entscheidung. Schritte und Abschluss: [Authoring 5](../../docs/ai-workflows/PUZZLE_AUTHORING_STEP_5.md).
+
+## HG31: explizite Profilwahl
+
+Neue Einzelkompositionen sind exakt 3:1. HP-W2: `describe --profile-id
+picross-background-png2304x768-v1` (in einer Zeile aufrufen), dann dessen
+vollständiges Profil/Hash in Request v2 und Entscheidung binden. Ausgabe
+2304×768 RGBA8; verify prüft dieselbe Bindung. Altes Profil bleibt unverändert.
+Fertigimport erkennt 2304×768 bzw. 2304×576 aus validierten PNG-Bytes und
+übernimmt unverändert. V1-Capability erlaubt ausschließlich das alte Profil.
+[Geschlossener Vertrag](../../docs/PUZZLE_BACKGROUNDS.md#hg31--zwei-geschlossene-bildprofile).
+Keine Kandidatenintegration vor geprüftem Mainmerge oder neue WIP-Migration.

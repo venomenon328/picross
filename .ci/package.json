@@ -1,11 +1,55 @@
 {
   "format": "development-ci-plan/v1",
-  "issue": "https://github.com/venomenon328/picross/issues/673",
-  "package": "HG-KOMPOSITION",
-  "modules": [],
-  "purpose": "Schraffierte Objektfüllungen ausdrücklich zulassen und vollständige 4:1-Kompositionsbreite ohne transparente Seitenbalken im Produktionsregelwerk sichern. Reiner Dokumentdiff; Quellen-/Plankern und semantischer Abgleich genügen.",
-  "omitted": "Keine Code-, Profil-, Schema-, Runtime- oder Bilddatenänderung. Keine tools-/production.*/native.*-Module, kein Player-Build, Chromium, Bildgenerierung oder Kandidaten-Testeinbau. Sichturteile tatsächlicher neuer Bilder bleiben spätere Produktionsarbeit. Authoring 0.8.0/Rev8 bleibt geschlossen.",
-  "test_changes": [],
+  "issue": "https://github.com/venomenon328/picross/issues/675",
+  "package": "HG31",
+  "modules": [
+    "tools",
+    "production.images",
+    "production.adapter",
+    "production.catalog",
+    "native.catalog",
+    "native.export",
+    "delivery"
+  ],
+  "purpose": "HG31-K01â€“K07: explizite Doppelprofile Ã¼ber HP-W2, Editor/RI, native/Webanzeige und Engine-/PCK-Import. Windows-Kerndownload aus native.export wiederverwenden.",
+  "omitted": "production.solver, preflight, native.core/history/completion/adapters/graphics und Browsermatrix: keine Logik-, Save-, Gesten-, Font- oder funktionale LayoutÃ¤nderung. T01 Durchstich, T02 Bestandsschutz und T03 echte native/Web-/Editorbedienung separat; kein Chromiumauftrag.",
+  "test_changes": [
+    {
+      "path": "tests/puzzle_production/test_authoring_workflow.py",
+      "disposition": "change-scoped",
+      "reason": "HG31: geschlossene Doppelprofile und ihre Negativ-/Bestandsgrenzen in der vorhandenen Familie; bei Ablösung des Profils neu entscheiden."
+    },
+    {
+      "path": "tests/puzzle_production/test_background_assets.py",
+      "disposition": "change-scoped",
+      "reason": "HG31: geschlossene Doppelprofile und ihre Negativ-/Bestandsgrenzen in der vorhandenen Familie; bei Ablösung des Profils neu entscheiden."
+    },
+    {
+      "path": "tests/puzzle_production/test_current_integration.py",
+      "disposition": "change-scoped",
+      "reason": "HG31: geschlossene Doppelprofile und ihre Negativ-/Bestandsgrenzen in der vorhandenen Familie; bei Ablösung des Profils neu entscheiden."
+    },
+    {
+      "path": "tests/puzzle_production/test_editor_change.py",
+      "disposition": "change-scoped",
+      "reason": "HG31: geschlossene Doppelprofile und ihre Negativ-/Bestandsgrenzen in der vorhandenen Familie; bei Ablösung des Profils neu entscheiden."
+    },
+    {
+      "path": "game/tests/background_tests.gd",
+      "disposition": "change-scoped",
+      "reason": "HG31: geschlossene Doppelprofile und ihre Negativ-/Bestandsgrenzen in der vorhandenen Familie; bei Ablösung des Profils neu entscheiden."
+    },
+    {
+      "path": "game/tests/content_pack_probe.gd",
+      "disposition": "change-scoped",
+      "reason": "HG31: geschlossene Doppelprofile und ihre Negativ-/Bestandsgrenzen in der vorhandenen Familie; bei Ablösung des Profils neu entscheiden."
+    },
+    {
+      "path": "tools/test_background_import.py",
+      "disposition": "change-scoped",
+      "reason": "HG31: geschlossene Doppelprofile und ihre Negativ-/Bestandsgrenzen in der vorhandenen Familie; bei Ablösung des Profils neu entscheiden."
+    }
+  ],
   "core_change": null,
   "evidence": {
     "mode": "none",

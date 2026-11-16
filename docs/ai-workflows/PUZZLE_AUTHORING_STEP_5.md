@@ -1,6 +1,6 @@
 # Schritt 5: Abschluss und Integration
 
-**Version 0.8.0 · Dokumentrevision 8 · 16.11.2026 · RI-ONE**
+**Version 0.8.0 · Dokumentrevision 9 · 16.11.2026 · RI-ONE**
 
 Pflicht: [gemeinsamer Kern](PUZZLE_AUTHORING.md) vollständig und vollständiger [Bildstil](../PUZZLE_IMAGE_STYLE.md), danach diese Phase. Vorhandene passende Bild-/Rasterbelege verwenden; ihre Produktion nicht wiederholen. Sicherung, Wiederaufnahme, Bildkorrektur und Abschlussausgabe folgen Kern §§6–7.
 

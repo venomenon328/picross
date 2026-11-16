@@ -8,6 +8,8 @@ from .contract import InvalidInput, exact_keys, integer
 from . import catalog_io as io, reveal_source
 
 PROFILE = "picross-prepared-background-png2304-v1"
+PROFILE_3 = "picross-prepared-background-png2304x768-v1"
+PROFILES = {(2304, 576): PROFILE, (2304, 768): PROFILE_3}
 
 
 def validate_reveal(raw, suffix, width=1, height=1):
@@ -56,7 +58,10 @@ def validate_background(raw):
         with Image.open(BytesIO(raw), formats=("PNG",)) as framing:
             framing.verify()
         with Image.open(BytesIO(raw), formats=("PNG",)) as probe:
-            require(probe.size == (2304, 576), "Prepared background must be exactly 2304 x 576")
+            require(probe.size in PROFILES, "Prepared background must be exactly 2304 x 576 or 2304 x 768")
+            profile = PROFILES[probe.size]
+            require(profile == PROFILE or probe.mode == "RGBA" and raw[24] == 8,
+                    "New prepared 2304 x 768 background requires RGBA8")
             require(getattr(probe, "n_frames", 1) == 1, "Animated background is unsupported")
             require(probe.getexif().get(274, 1) == 1, "Prepared background must already be correctly oriented")
             require("icc_profile" not in probe.info or bool(probe.info["icc_profile"]), "Empty PNG ICC profile")
@@ -80,7 +85,7 @@ def validate_background(raw):
             require(metadata["orientation"] == 1 and normalized.tobytes() == pixels.tobytes() and original == raw,
                     "Prepared background would require color/orientation conversion")
         io.tick()
-        return {"profile": PROFILE, **diagnostic, "sha256": io.checksum(raw), "bytes": len(raw)}
+        return {"profile": profile, **diagnostic, "sha256": io.checksum(raw), "bytes": len(raw)}
     except (BackgroundError, OSError, ValueError, SyntaxError) as exc:
         raise InvalidInput("Invalid prepared background: " + str(exc)) from exc
 

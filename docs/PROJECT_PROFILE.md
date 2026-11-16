@@ -1,5 +1,11 @@
 # Projektprofil: picross
 
+**HG31 / #675:** Neue 3:1-Einzelkompositionen und 2304×768 unter eigenem Profil;
+4:1-Bestand und sein Profil bleiben bytegleich. Maßgeblicher geschlossener
+[Profil-/Capability-/Geometrievertrag](PUZZLE_BACKGROUNDS.md#hg31--zwei-geschlossene-bildprofile)
+ersetzt widersprechende aktive Einprofilangaben unten. Keine Inhaltsmigration;
+Mainaktivierung erst nach technischen Nachweisen und unabhängigem HG31-A01.
+
 ## Geltung und Quellen
 
 Repository `venomenon328/picross`, Zielbranch `main`. Vor Entwicklungsarbeit die

@@ -1,5 +1,11 @@
 # ZA-1: Aktueller Integrationseingang und kreative Vorbereitung
 
+**HG31 / #675:** Neue 3:1-Einzelkompositionen und 2304×768 unter eigenem Profil;
+4:1-Bestand und sein Profil bleiben bytegleich. Maßgeblicher geschlossener
+[Profil-/Capability-/Geometrievertrag](PUZZLE_BACKGROUNDS.md#hg31--zwei-geschlossene-bildprofile)
+ersetzt widersprechende aktive Einprofilangaben unten. Keine Inhaltsmigration;
+Mainaktivierung erst nach technischen Nachweisen und unabhängigem HG31-A01.
+
 **RI-ONE · 16.11.2026.** [Paketentscheidung #660](https://github.com/venomenon328/picross/issues/660#umsetzungsvorbereitung-ri-one), [gemeinsamer Sollvertrag](PUZZLE_INTEGRATION_SINGLE_PATH.md) und [RI](PUZZLE_INTEGRATION.md) bestimmen den einen ausführbaren Weg. Die früheren Export-/Registrierungs-/Receiptgenerationen und ihre Zulassungsmatrizen sind abgelöst. Historische Originale bleiben in Git; sie sind kein Integrationsinput.
 
 ## Eingang und Grenzen
