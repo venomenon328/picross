@@ -1,19 +1,11 @@
 {
   "format": "development-ci-plan/v1",
-  "issue": "https://github.com/venomenon328/picross/issues/677",
-  "package": "PW-INST-FIX",
-  "modules": [
-    "tools"
-  ],
-  "purpose": "PW-INST-FIX K01–K04: PyInstaller-Testfixtureausschluss, geschlossener Fingerprint-/Analysis-/PYZ-Abgleich und gezielte Installerregressionen. Separater nicht veröffentlichender Windows-MSI-Diagnoselauf als einmaliger Integrationsnachweis.",
-  "omitted": "production.*, native.*, preflight, delivery: keine Änderungen an Rätsel-, Spiel-, Engine- oder Webpfaden. Echte Windows-MSI-/Frozen-Prüfung erfolgt als separater manueller PW-Installer-Dispatch und wird nicht als Dauerlast der Package CI übernommen.",
-  "test_changes": [
-    {
-      "path": "tools/test_production_installer.py",
-      "disposition": "change-scoped",
-      "reason": "Sehr kleine existierende Quelle-/Fingerprint-Regression für test-only ZA-1, negative Analysis und den tatsächlich beobachteten Leckpfad; bleibt im bedarfsgewählten tools-Modul."
-    }
-  ],
+  "issue": "https://github.com/venomenon328/picross/issues/671",
+  "package": "HG-BESTAND-01",
+  "modules": [],
+  "purpose": "Drei tatsächlich ausgewählte neue 3:1-Hintergründe integrieren: Kaktus K4/r01, Japanische Teekanne T5/r01 und Qualle Q4/r01. Eigentümerwahl, aktuelle Regeln, HP-W2-Profil picross-background-png2304x768-v1, PNG-Ausgaben und gezielter Editorimport sind dateigenau belegt.",
+  "omitted": "Keine Zusatzmodule: reine Rätselproduktion mit Hintergrundquellen, Runtime-Daten, PNGs und gesicherter Arbeitsablage. Einmalige Prüfung der neun Originale, der drei gewählten Ableitungen und ihrer exakten Übernahme einschließlich geschützter Bestandswerte außerhalb der CI. Keine Code-, Renderer-, Profil- oder Saveänderung; keine Solver-/Proof-/Ratingwiederholung und kein Playerbau.",
+  "test_changes": [],
   "core_change": null,
   "evidence": {
     "mode": "none",

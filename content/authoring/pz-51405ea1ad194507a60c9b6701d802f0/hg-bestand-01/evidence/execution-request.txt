@@ -1,0 +1,10 @@
+Repository: venomenon328/picross · Zielbranch: main.
+
+Lies die aktuelle AGENTS.md und die dort für die Hintergrundproduktion gerouteten Pflichtquellen sowie den aktuellen vollständigen Stand von Issue #671.
+
+Setze Paket HG-BESTAND-01 bis zur Kandidatenvorlage um:
+Kaktus, Japanische Teekanne und Qualle, jeweils drei Hintergrundkandidaten.
+
+Verwende die im Issue gebundenen bestehenden Rätsel-IDs und aktuellen Abschlussbilder. Prüfe, sichere und präsentiere die neun Einzelbilder gemäß dem vorbereiteten Paket.
+
+Ende bei der Vorlage zu meiner Auswahl. Noch nicht integrieren oder mergen.

@@ -1,0 +1,4 @@
+Aktuelle Kontextbindung, keine Rekonstruktion einer historischen Revealwahl.
+Issue #671 beauftragt als bestehende Integration ausdrücklich Japanische Teekanne (pz-51405ea1ad194507a60c9b6701d802f0) in der aktuellen Serie. Der Nutzer hat diesen Auftrag in dieser Sitzung ausdrücklich wieder aufgenommen.
+Quellcommit main@91869dad8db9f3b736facc0562bd5e7f0fb628c4; aktuelle Revealdatei game/art/content/japanische_teekanne_001.png; SHA-256 53fe49d243f772215efe018bbd8c8d2376fa265c7be9f3b47452c08904e473b9; 2114210 Bytes; bytegleich zu reference/reveal.png. Kategorie haushalt-alltag.
+Das aktuelle Original wurde zur Kontextprüfung tatsächlich geöffnet. Die vorhandene Integration und Revealabnahme werden nicht wiederholt. Kein historischer Akteur oder Entscheidungszeitpunkt wird erfunden; neue Hintergrundwahl weiterhin offen.

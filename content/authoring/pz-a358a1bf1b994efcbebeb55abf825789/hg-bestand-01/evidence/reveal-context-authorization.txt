@@ -1,0 +1,5 @@
+HG-BESTAND-01 / Kaktus / pz-a358a1bf1b994efcbebeb55abf825789
+
+Die aktuelle Eigentümerbeauftragung (execution-request.txt) setzt den Serienauftrag aus Issue #671 um. Das Rätsel ist auf main@5f620228958e58c7f98fc6c9823ea970f3cb1764 bereits sichtbar integriert. context.reveal bindet unveränderte aktuelle Revealbytes aus game/art/content/kaktus_001.png (SHA-256 21a88817c31f01fd2b62d2001faa07abeefb291737e72050937449b4f0bad139, 1529362 Bytes).
+Diese Bindung erlaubt das aktuelle Reveal als Referenz für Hintergrundkandidaten. Sie rekonstruiert keine frühere Bildwahl, keinen historischen Akteur/Zeitpunkt und ist keine erneute Revealproduktion oder neue Hintergrundwahl.
+Belege: issue-671.json, execution-request.txt und source-bindings.json.
