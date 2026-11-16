@@ -1,0 +1,34 @@
+{
+  "puzzle_id": "pz-2a8481f61e6443bda174bd3da67c",
+  "name": "Brandenburger Tor",
+  "category_id": "gebaeude-bauwerke",
+  "source_commit": "a5e751322f68a9cb9686dc66f12c772e921baef7",
+  "reveal_opened": true,
+  "protected_features": [
+    "Sechs Säulen, fünf Durchgänge, breiter Architrav und Quadriga: nur bestehendes Reveal."
+  ],
+  "excluded_subjects": [
+    "Brandenburger Tor",
+    "Säulenportikus in Torsilhouette",
+    "Quadriga und Pferdegruppe",
+    "Motivname"
+  ],
+  "summary": "Umfeldkontext zu Brandenburger Tor; vorhandene integrierte Revealbytes geöffnet und unverändert gebunden. Die bestehende Rätselabnahme wird nicht als neue Hintergrundwahl ausgegeben.",
+  "offers": [
+    {
+      "id": "G1",
+      "revision": "r01",
+      "description": "Tiergartenbank unter einer Linde"
+    },
+    {
+      "id": "G2",
+      "revision": "r01",
+      "description": "Spreeufer mit Boot"
+    },
+    {
+      "id": "G3",
+      "revision": "r01",
+      "description": "Straßencafé mit Laterne"
+    }
+  ]
+}

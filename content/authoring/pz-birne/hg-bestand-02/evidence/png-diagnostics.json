@@ -1,0 +1,93 @@
+[
+  {
+    "path": "content/authoring/pz-birne/hg-bestand-02/candidates/P1-r01.png",
+    "size": [
+      2172,
+      724
+    ],
+    "mode": "RGBA",
+    "bytes": 2642519,
+    "sha256": "67072db7ee35b4d558927bc98fe6c894f470a53bad608f45f35ee0b4587b4ba1",
+    "alpha_zero": 573841,
+    "alpha_partial": 998687,
+    "alpha_opaque": 0
+  },
+  {
+    "path": "content/authoring/pz-birne/hg-bestand-02/candidates/P1-r02.png",
+    "size": [
+      2172,
+      724
+    ],
+    "mode": "RGBA",
+    "bytes": 1165313,
+    "sha256": "402f5b849402679b727dffa635d84fd1abac85fcb2610e1d6b4336b59e3f8305",
+    "alpha_zero": 1203767,
+    "alpha_partial": 368761,
+    "alpha_opaque": 0
+  },
+  {
+    "path": "content/authoring/pz-birne/hg-bestand-02/candidates/P2-r01.png",
+    "size": [
+      2172,
+      724
+    ],
+    "mode": "RGBA",
+    "bytes": 1232530,
+    "sha256": "7f94eef982d42a066ac5c567fc1824884abd8396851a2dec2feac1049957d1f1",
+    "alpha_zero": 1166246,
+    "alpha_partial": 405196,
+    "alpha_opaque": 1086
+  },
+  {
+    "path": "content/authoring/pz-birne/hg-bestand-02/candidates/P2-r02.png",
+    "size": [
+      2172,
+      724
+    ],
+    "mode": "RGBA",
+    "bytes": 1284033,
+    "sha256": "853b4817263c30dc3d548dcb0052f17951854fef918c2aa9291d2038f7ee4ae4",
+    "alpha_zero": 995821,
+    "alpha_partial": 576501,
+    "alpha_opaque": 206
+  },
+  {
+    "path": "content/authoring/pz-birne/hg-bestand-02/candidates/P2-r03.png",
+    "size": [
+      2172,
+      724
+    ],
+    "mode": "RGBA",
+    "bytes": 954230,
+    "sha256": "70504fd1f544808ed66e59933e8c18f936b9170242ced1fa068a8d764f58b687",
+    "alpha_zero": 1255695,
+    "alpha_partial": 316833,
+    "alpha_opaque": 0
+  },
+  {
+    "path": "content/authoring/pz-birne/hg-bestand-02/candidates/P3-r01.png",
+    "size": [
+      2172,
+      724
+    ],
+    "mode": "RGBA",
+    "bytes": 1728183,
+    "sha256": "96b589b765f2348ef5e9a6c9009ee585db1d773fe5b4be4d88e0abe7dd550371",
+    "alpha_zero": 857822,
+    "alpha_partial": 714706,
+    "alpha_opaque": 0
+  },
+  {
+    "path": "content/authoring/pz-birne/hg-bestand-02/candidates/P3-r02.png",
+    "size": [
+      2172,
+      724
+    ],
+    "mode": "RGBA",
+    "bytes": 1049841,
+    "sha256": "2da0a4815b0310fc8f7d9fd0098d17055f403a1431b9da962697694f43e8a219",
+    "alpha_zero": 1227602,
+    "alpha_partial": 344922,
+    "alpha_opaque": 4
+  }
+]
