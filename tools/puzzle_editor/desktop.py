@@ -123,7 +123,7 @@ class Window:
             if not destroyed: self.window.after(250, self.poll)
 
 
-def main():
+def _main():
     load_ui()
     if getattr(sys, "frozen", False):
         try:
@@ -141,3 +141,14 @@ def main():
     config = Settings(state).read()
     window = Window(state, args.root or config.get("checkout"), args.port if args.port is not None else config.get("port", 0))
     window.window.mainloop()
+
+
+def main():
+    from tools.app_products import PE
+    from tools.production_workspace.install_interlock import InstallInterlock
+    interlock = InstallInterlock(app=PE)
+    try:
+        interlock.acquire()
+        _main()
+    finally:
+        interlock.close()

@@ -72,7 +72,7 @@ class DeliveryTests(unittest.TestCase):
         if mode=='copy':
             source=GitSource(self.repo)
             from tools.puzzle_production.current_delivery import snapshot
-            live=snapshot(lambda n,l:source.read(self.head,n,l),ID)
+            live=snapshot(lambda n,l,**kw:source.read(self.head,n,l,**kw),ID)
             for name in {*live['files'],current_content.REGISTRY,current_content.RUNTIME}:
                 put(self.repo,name,source.read(self.head,name,64*1024*1024))
             if git(self.repo,'status','--porcelain').strip():commit(self.repo)

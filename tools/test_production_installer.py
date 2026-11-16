@@ -159,7 +159,9 @@ class InstallerContractTests(unittest.TestCase):
 
 class MemoryGitHub(channel.GitHub):
     """Synthetic API only; records writes and supports lost upload responses."""
-    def __init__(self):
+    def __init__(self, *, app=None):
+        from tools.app_products import PW
+        self.app = app or PW
         self.source = 'a' * 40
         repo = {'id': channel.REPOSITORY_ID, 'full_name': channel.REPOSITORY}
         self.run = {'workflow_id': 8, 'path': '.github/workflows/ci-modular.yml', 'name': 'Package CI',
@@ -177,10 +179,10 @@ class MemoryGitHub(channel.GitHub):
         query = urllib.parse.parse_qs(parts.query)
         if method != 'GET':
             self.writes.append((method, route))
-        if route == '/environments/pw-app-release':
-            return {'name': 'pw-app-release', 'deployment_branch_policy':
+        if route == '/environments/' + self.app.environment:
+            return {'name': self.app.environment, 'deployment_branch_policy':
                     {'protected_branches': False, 'custom_branch_policies': True}}
-        if route == '/environments/pw-app-release/deployment-branch-policies':
+        if route == '/environments/' + self.app.environment + '/deployment-branch-policies':
             return {'branch_policies': [{'name': 'main', 'type': 'branch'}]}
         if route == '/actions/workflows/ci-modular.yml':
             return {'id': 8}
@@ -242,8 +244,11 @@ class AppReleaseTests(unittest.TestCase):
         files = {name: (self.root / name).read_bytes() for name in manifest['assets']}
         return channel.strict_json(update_verifier._sign(manifest, files, self.secret, self.trust)[0])
 
-    def candidate(self, version='0.1.1', previous=None):
-        product = release(version=version)
+    def candidate(self, version=None, previous=None, *, app=None):
+        from tools.app_products import PW
+        app = app or PW
+        version = version or app.anchor[:-1] + '1'
+        product = release(version=version, app=app)
         rows = [{'file': 'synthetic.py', 'mode': '100644', 'bytes': 1, 'sha256': '0' * 64}]
         inputs = {'format': 'picross-app-inputs-v1', 'sha256': channel.digest(payload.canonical(rows)), 'files': rows}
         planned = {'version': version, 'source_commit': self.api.source, 'run_id': 9, 'run_attempt': 1,
@@ -266,7 +271,7 @@ class AppReleaseTests(unittest.TestCase):
                       'limits': 'Synthetic API regression; no installation.'}
         inspection_file = self.root / 'inspection.json'
         inspection_file.write_bytes(payload.canonical(inspection))
-        manifest = channel.seal(self.root, inspection_file, planned)
+        manifest = channel.seal(self.root, inspection_file, planned, app=app)
         return planned, manifest
 
     def test_first_version_noop_and_monotone_continuation(self):
@@ -380,7 +385,7 @@ class AppReleaseTests(unittest.TestCase):
             with patch.object(update_verifier, 'production_trust', return_value=trust), self.assertRaises(ValueError):
                 self.publish(self.api, self.root, planned, enabled=True)
         original = self.api.request
-        for environment in (None, {'name': 'pw-app-release', 'deployment_branch_policy': None}):
+        for environment in (None, {'name': self.api.app.environment, 'deployment_branch_policy': None}):
             def request(path, **kwargs):
                 return environment if path.endswith('/environments/pw-app-release') else original(path, **kwargs)
             with patch.object(self.api, 'request', side_effect=request), self.assertRaises(ValueError):
@@ -453,7 +458,7 @@ class AppReleaseTests(unittest.TestCase):
         planned, _ = self.candidate()
         original = channel.authority
         calls = []
-        def changed(api):
+        def changed(api, **kwargs):
             calls.append(1)
             return original(api) if len(calls) <= 2 else {'changed': True}
         with patch.object(channel, 'authority', side_effect=changed):
