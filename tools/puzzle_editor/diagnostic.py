@@ -218,6 +218,7 @@ def native_cases(output):
     with tempfile.TemporaryDirectory(prefix="native-",dir=output) as folder:
         home=Path(folder); registered(home/"fixture",stem="native",save_slot="native")
         root=home/"fixture/base"; (root/".git").mkdir(exist_ok=True)
+        temporary=home/"service-temp"; temporary.mkdir()
         identity=SimpleNamespace(commit="a"*40,version="0.2.0",executable=home/"program/editor.exe")
         for mode in ("consent","offline","skip"):
             state=home/mode
@@ -227,7 +228,8 @@ def native_cases(output):
                 entered.set()
                 if mode=="skip": require(release.wait(10),"Native skip hung")
                 raise client.Cancelled() if mode=="skip" else OSError("synthetic offline")
-            with (patch.object(windows,"installation",return_value=identity),
+            with (patch.object(tempfile,"tempdir",str(temporary)),
+                  patch.object(windows,"installation",return_value=identity),
                   patch.object(app_updates,"production_trust",return_value={"accepted":{"synthetic":{}}}),
                   patch.object(client,"discover",side_effect=discover) as network,
                   patch.object(windows,"prepare") as prepare,
