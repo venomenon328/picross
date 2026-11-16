@@ -1,0 +1,5 @@
+Qualle · pz-20ecf7747bbf40828238ec26d1207172 · wasserwelt
+Blau-türkise Qualle mit geripptem gewölbtem Schirm, hellem gewelltem Saum, langen dünnen Tentakeln und breiten gerüschten Mundarmen; aktuelles Reveal tatsächlich geöffnet.
+Geschützt: Quallenschirm, Saum, Tentakel und Mundarme bleiben ausschließlich Reveal; Reveal, Raster, ID, Key, Slot und Metadaten bleiben unverändert
+Ausgeschlossen: Quallen und Quallensilhouetten; Schirmformen mit anhängenden Tentakeln; Oktopusse, Kalmare und Anemonen; Lösungsraster, Motivname und Spielerfortschritt; Schrift, UI, Papierimitation und Wasserzeichen
+Drei frisch gezeichnete inhaltlich unterschiedliche 3:1-Einzelkompositionen mit etwas hellerem neutralgrauem Graphit, sichtbarer Handschraffur und echter Transparenz. Freiraum gehört zur ganzen Leinwand; keine Belegungsquote oder feste U-Form. Kein Padding, Stitching, Stretch, Crop oder Motivverschieben. Gemeinsamer proportionaler Fit und unterer mittiger Anker. Wahl offen; keine Ableitung vor Auswahl.
