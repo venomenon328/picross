@@ -1,0 +1,5 @@
+Artwork: OpenAI native image_gen.imagegen, AI-generated in this Codex session on 2026-11-16. No human visual author is asserted.
+Usage basis: Original context drawings commissioned by the repository owner through the recorded execution request for HG-BESTAND-01. Initial generation used only the saved text prompts, with no external reference images or third-party assets.
+Only Q1-r03 is an AI edit of this session's Q1-r01 to remove white fill. Other final candidates preserve their entire generated canvas pixel-for-pixel; 362 transparent pixels were added on each horizontal side.
+No exclusive-rights claim is made. No additional third-party attribution is required. Existing reveal references retain their existing usage notices and are not regenerated or integrated.
+Tool model and seed were not exposed.

@@ -1,0 +1,5 @@
+HG-BESTAND-01 / Japanische Teekanne / pz-51405ea1ad194507a60c9b6701d802f0
+
+Die aktuelle Eigentümerbeauftragung (execution-request.txt) setzt den Serienauftrag aus Issue #671 um. Das Rätsel ist auf main@5f620228958e58c7f98fc6c9823ea970f3cb1764 bereits sichtbar integriert. context.reveal bindet unveränderte aktuelle Revealbytes aus game/art/content/japanische_teekanne_001.png (SHA-256 53fe49d243f772215efe018bbd8c8d2376fa265c7be9f3b47452c08904e473b9, 2114210 Bytes).
+Diese Bindung erlaubt das aktuelle Reveal als Referenz für Hintergrundkandidaten. Sie rekonstruiert keine frühere Bildwahl, keinen historischen Akteur/Zeitpunkt und ist keine erneute Revealproduktion oder neue Hintergrundwahl.
+Belege: issue-671.json, execution-request.txt und source-bindings.json.

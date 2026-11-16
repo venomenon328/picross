@@ -1,0 +1,4 @@
+Initial production: three distinct ImageGen calls; raw r01 is 2172×724 (3:1).
+Format correction: r02 adds 362 fully transparent pixels left and right, retaining the full original canvas pixel-for-pixel at the lower centered anchor. No crop, resampling, stretching, alpha-bounds fit, per-subject shift or drawing operation.
+No creative correction round used.
+Technical format padding does not consume or reset creative correction budgets. No background selection, none decision, HP-W2 derivation, editor plan/import, integration or merge has occurred.
