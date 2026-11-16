@@ -1,6 +1,6 @@
 # Gemeinsamer Bildstil der Rätselproduktion
 
-**PW2-A · 13.11.2026; Formatpräzisierung HG-FORMAT · 15.11.2026.**
+**PW2-A · 13.11.2026; HG-KOMPOSITION · 16.11.2026 · [#673](https://github.com/venomenon328/picross/issues/673).**
 Diese kurze Norm ist Pflichtlektüre in allen fünf
 Produktionsphasen sowie bei Korrektur und Wiederaufnahme. Sie präzisiert die
 zusammengehörige Bildserie; Ablauf und Quellenbedarf stehen in
@@ -51,9 +51,19 @@ Motivvereinfachung, zufälligen Zusatzpixeln oder zum Füllen freier Zellen.
 
 Eine eigenständige, echte handgezeichnet wirkende Kontextillustration mit hellen
 neutralgrauen Graphitstrichen, lebendigen offenen beziehungsweise nachgezogenen
-Konturen und sparsamer Schraffur. Das Spielpapier soll auch zwischen den Strichen
-durchscheinen. Luftigkeit entsteht durch Gewichtung: tragende Hauptformen,
-zurückgenommene Nebeninformationen, offene Flächen und leichte Striche.
+Konturen und motivgerecht dosierter Schraffur. **Gefüllte Objektflächen sind
+zulässig, auch größere oder zusammenhängende Partien.** Ihre Tonwerte müssen
+sichtbar durch glaubwürdige handgezeichnete Schraffur oder Kreuzschraffur entstehen:
+natürliche Strichführung, leichte Unregelmäßigkeiten und zur Form passende Dichte.
+Eine gefüllte Fläche allein ist kein Ablehnungs- oder Überarbeitungsgrund.
+Glatte digitale Deckflächen oder ein gleichmäßiger Farbauftrag ohne erkennbare
+Graphitzeichnung erfüllen diesen Stil nicht.
+
+Das Spielpapier soll in freien Außen-/Zwischenräumen und zwischen offenen
+Schraffurstrichen durchscheinen; dichtere gezeichnete Objektpartien müssen nicht
+an jeder Stelle transparent sein. Luftigkeit entsteht durch Gewichtung:
+tragende Hauptformen, zurückgenommene Nebeninformationen, bewusst offene Flächen
+und eine insgesamt leichte Zeichnung.
 
 **Einzelobjekte, Objektgruppen und komplexere zusammenhängende Szenen sind
 zulässig.** Zeichnerische Behandlung, Komposition und Lesbarkeit entscheiden,
@@ -61,7 +71,9 @@ nicht Motivsimplizität oder eine maximale Objektanzahl. Keine geometrische
 Ersatzzeichnung, eingebrannte Buchoberfläche/UI, Papierimitation, weißen Kästen,
 gemalten Transparenzraster, Schrift oder Wasserzeichen. Echte PNG-Transparenz in
 Außen- und Zwischenräumen prüfen; ein vorhandener Alphakanal allein genügt nicht.
-Feine Striche erhalten, Säume und deckende Zwischenflächen vermeiden.
+Feine Striche erhalten; Säume und unerwünscht deckende Füllungen freier Außen-
+oder Zwischenräume vermeiden. Die oben erlaubten schraffierten Objektflächen
+bleiben davon getrennt.
 
 Der Kontext gehört zum Motivumfeld, zeigt aber nicht den konkreten zu erratenden
 Gegenstand, dessen Lösungssilhouette, Rasterkopie oder Motivnamen. Keine aus dem
@@ -72,7 +84,15 @@ Motivvorlage und Lösungsraster bleiben verschiedene Freigabegegenstände.
 ## Hintergrundkomposition: die vollständige Leinwand
 
 Gestalterisch maßgeblich und ausgeliefert ist die **vollständige 2304×576-RGBA-
-Leinwand (4:1)**. Transparenter Freiraum ist Teil dieser Komposition. Ein nur
+Leinwand (4:1)**. Ihre Komposition nutzt die volle dafür vorgesehene gemeinsame
+Hintergrundfläche auf dem Buchpapier; die bestehenden Falz-/Randabstände bleiben.
+Entscheidend sind die sichtbare Breitenverteilung und die geplanten seitlichen
+Positionen, nicht allein die Dateibreite. **Ein 4:1-Dateikasten mit zusätzlich
+angehängten transparenten Seitenbalken ist keine Formatkorrektur:** Er darf die
+Zeichnung weder schmaler erscheinen lassen noch zur Mitte verschieben und große
+zusätzliche seitliche Freiräume erzeugen.
+
+Bewusst gestalteter transparenter Freiraum bleibt Teil der Komposition. Ein nur
 rechts gezeichnetes Motiv wird schon rechts auf dieser vollständigen Leinwand
 angelegt und behält seinen linken Leerraum. Das ganze Bild wird über denselben
 proportionalen Fit und unteren mittigen Anker platziert: kein Alpha-Bounds-Zuschnitt,
@@ -88,18 +108,27 @@ entscheiden; volle Höhe bezeichnet stets die Leinwand, nicht einen späteren
 Zuschnitt auf sichtbare Pixel.
 
 Andere native Pixeldimensionen dürfen dieselbe vollständige 4:1-Komposition
-abbilden. Der vorhandene gemeinsame Ableitungsweg liefert 2304×576, ohne kreative
+abbilden, ausdrücklich auch kleinere Originale wie **2048×512**. Eine
+Generatorbreite von 2896 Pixeln ist keine Pflicht; wiederholte 3:1-Ausgaben
+beweisen keine feste KI-Auflösungsgrenze. Die vollständige Zeichnung und ihre
+Strichqualität müssen bei der proportionalen Ableitung erhalten bleiben.
+Der vorhandene gemeinsame Ableitungsweg liefert weiterhin 2304×576, ohne kreative
 Neukomposition oder Beschnitt. Die technische logische Referenz 3072×768 ist keine
 zweite gestalterische Zielfläche. Das feste HP-W2-Profil, seine Rundung,
 Alpha-/Farbbehandlung und der gemeinsame Runtime-Fit bleiben unverändert.
-Die technische Fähigkeit eines Readers, weitere Maße einzulesen, erweitert
-nicht diese gestalterische Vorgabe. Vor der Bildwahl müssen die tatsächlichen
-Kandidatenmaße exakt 4:1 erfüllen; andere native Maße sind andere Auflösungen,
-keine anderen Seitenverhältnisse. Falsche Generatorformate werden nach
+
+3:1-Generatorbilder sind als Rohmaterial zulässig. Vor der Bildwahl müssen die
+tatsächlichen Kandidatenmaße jedoch exakt 4:1 erfüllen und die vollständige
+Komposition die vorgesehene Breite erhalten. Andere Auflösung allein ändert kein
+Seitenverhältnis. Format- und dadurch nötige Kompositionskorrekturen werden nach
 [Schritt 4 §6.3.1](ai-workflows/PUZZLE_AUTHORING_STEP_4.md#631-formatkorrektur-vor-der-bildwahl)
-im laufenden Auftrag ohne zusätzliche Korrekturfreigabe berichtigt. Die dort
-erlaubte transparente Leinwanderweiterung erhält die vollständige Zeichnung;
-auch die korrigierte Gesamtkomposition muss die Stil- und Qualitätsvorgaben erfüllen.
+im laufenden Auftrag ohne zusätzliche Ausführungserlaubnis hergestellt und als
+neue Fassung zur normalen Bildwahl vorgelegt. Nötigenfalls zeichnerisch erweitern
+oder passend neu komponieren; bloßes Seitenpadding, Strecken oder Abschneiden
+gezeichneter beziehungsweise bewusst leerer Bereiche erfüllt den Auftrag nicht.
+Q-HG03 prüft diese Breitenwirkung am Auswahlbild und an der gewählten fertigen
+Ableitung. Ein technisch erfolgreicher Reader-/HP-W2-Lauf ersetzt dieses Urteil
+nicht. Keine Randpixel-, Prozentbelegungs- oder Zwei-Eckenpflicht daraus ableiten.
 
 ## Sichtung, Freigabe und Bestand
 
