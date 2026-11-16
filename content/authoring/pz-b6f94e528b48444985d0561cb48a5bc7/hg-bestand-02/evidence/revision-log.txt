@@ -1,0 +1,4 @@
+Alle Rohoriginale und Korrekturen bleiben unverändert. Aktuelle Auswahlvorlage: A1-r01, A2-r02, A4-r01.
+A3/r01-r03: weiße Objektfüllungen/Restflächen; nach zwei erfolglosen Korrekturen geänderter offener Zeichenplan, Ersatz A4/r01. A2/r03: ungewollte Veränderung des Felsens zur Hütte; verworfen. L1/r01 und P2/r01-r02: sichtbare Weißfüllungen; spätere reine Strichzeichnungen verwendet. Weitere Vorstufen wurden durch die unten im Manifest gebundenen aktuellen Fassungen ersetzt.
+Die vorläufige Diagnose von sechs blockierten aktuellen Fassungen wurde nach korrekter Alpha-Komposition berichtigt: A2/r02, L3/r02, P1/r02 und P3/r01 haben keinen sichtbaren weißen Außen-/Zwischenraumkasten. P2/r03 enthält im nicht sichtbaren RGB-Anteil rote Werte; auf Weiß/Grau sind keine roten Pixel sichtbar. Keine Bildbytes per Skript verändert.
+Es gibt keine Eigentümerwahl, keine Ableitung und keinen Import. Die konkrete Wahl bleibt offen.

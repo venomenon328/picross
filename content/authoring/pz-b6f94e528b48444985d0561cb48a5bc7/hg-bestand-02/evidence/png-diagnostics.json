@@ -1,0 +1,106 @@
+[
+  {
+    "path": "content/authoring/pz-b6f94e528b48444985d0561cb48a5bc7/hg-bestand-02/candidates/A1-r01.png",
+    "size": [
+      2172,
+      724
+    ],
+    "mode": "RGBA",
+    "bytes": 1866081,
+    "sha256": "1d4df1ee192aecdce9ab5e49a26553a0669f8438f7a1da118c3e24637cde3452",
+    "alpha_zero": 702346,
+    "alpha_partial": 870182,
+    "alpha_opaque": 0
+  },
+  {
+    "path": "content/authoring/pz-b6f94e528b48444985d0561cb48a5bc7/hg-bestand-02/candidates/A2-r01.png",
+    "size": [
+      2172,
+      724
+    ],
+    "mode": "RGBA",
+    "bytes": 2443502,
+    "sha256": "6a97da94b14c5d5471ce1cce9991880e4aa46955f975011a7146d3b9f9b36cfe",
+    "alpha_zero": 467824,
+    "alpha_partial": 1104704,
+    "alpha_opaque": 0
+  },
+  {
+    "path": "content/authoring/pz-b6f94e528b48444985d0561cb48a5bc7/hg-bestand-02/candidates/A2-r02.png",
+    "size": [
+      2172,
+      724
+    ],
+    "mode": "RGBA",
+    "bytes": 1143965,
+    "sha256": "a512098ea45f80802221b8e427f89edcbcbcb99c4b3d5cf4f46ca074ce8f1884",
+    "alpha_zero": 1128415,
+    "alpha_partial": 444113,
+    "alpha_opaque": 0
+  },
+  {
+    "path": "content/authoring/pz-b6f94e528b48444985d0561cb48a5bc7/hg-bestand-02/candidates/A2-r03.png",
+    "size": [
+      2172,
+      724
+    ],
+    "mode": "RGBA",
+    "bytes": 1240766,
+    "sha256": "85e1fb744794cab5671d061eded6707c5bb6903bff325a680ae50310a75ea303",
+    "alpha_zero": 1106077,
+    "alpha_partial": 466437,
+    "alpha_opaque": 14
+  },
+  {
+    "path": "content/authoring/pz-b6f94e528b48444985d0561cb48a5bc7/hg-bestand-02/candidates/A3-r01.png",
+    "size": [
+      2172,
+      724
+    ],
+    "mode": "RGBA",
+    "bytes": 2014927,
+    "sha256": "91b947a6f6dd94676aa44e05e6c697e11e55ccf320ff30c791177fa618e21c11",
+    "alpha_zero": 575091,
+    "alpha_partial": 997437,
+    "alpha_opaque": 0
+  },
+  {
+    "path": "content/authoring/pz-b6f94e528b48444985d0561cb48a5bc7/hg-bestand-02/candidates/A3-r02.png",
+    "size": [
+      2172,
+      724
+    ],
+    "mode": "RGBA",
+    "bytes": 1579904,
+    "sha256": "a8a593ce0dce267ac2e21556e741c874b6d8f1187bd0da3f4ef544b02d687fa7",
+    "alpha_zero": 951174,
+    "alpha_partial": 620907,
+    "alpha_opaque": 447
+  },
+  {
+    "path": "content/authoring/pz-b6f94e528b48444985d0561cb48a5bc7/hg-bestand-02/candidates/A3-r03.png",
+    "size": [
+      2172,
+      724
+    ],
+    "mode": "RGBA",
+    "bytes": 1905229,
+    "sha256": "86c2305e54b4c047a77f64aa0ba717992aa28295a7bc729924f0794491d48d48",
+    "alpha_zero": 939742,
+    "alpha_partial": 632641,
+    "alpha_opaque": 145
+  },
+  {
+    "path": "content/authoring/pz-b6f94e528b48444985d0561cb48a5bc7/hg-bestand-02/candidates/A4-r01.png",
+    "size": [
+      2172,
+      724
+    ],
+    "mode": "RGBA",
+    "bytes": 931523,
+    "sha256": "e2e0a41f66a436c04b1e7b9db41ef3b904e0e3a46c6b8cc39623a164bbe52f37",
+    "alpha_zero": 1221498,
+    "alpha_partial": 351030,
+    "alpha_opaque": 0
+  }
+]
