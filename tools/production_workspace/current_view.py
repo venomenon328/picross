@@ -52,7 +52,10 @@ def inspect(source, commit, raw, puzzle_id, *, originals=False):
                'Current-view requires matching 0.8 originals')
     p.bind(record_raw, projection['record'])
     if originals:
-        p.inspect(source, commit, projection)
+        if record['state'] == 'registered':
+            p.registration(source, record)
+        else:
+            p.inspect(source, commit, projection)
     return value
 
 

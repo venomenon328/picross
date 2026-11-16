@@ -111,21 +111,13 @@ def approve(package, destination):
 
 
 def isolated_checkout(root, *, legacy=False):
-    """Create a current writable catalog, or an explicit legacy reader fixture.
-
-    Historical exports remain unchanged. Contemporary mutation tests start at
-    the required PE generation; old wire/recovery tests opt into legacy bytes.
-    """
-    from .content_registry import projection
+    """Synthetic current catalog; legacy files remain static reader fixtures."""
+    from tests.puzzle_production.current_fixtures import checkout
+    from . import current_content as current, categories
+    checkout(root)
     catalog = load_json(ROOT / "tests/puzzle_production/fixtures/catalog/categories.json")
-    registry = load_json(ROOT / "tests/puzzle_production/fixtures/catalog/registry.json")
-    if not legacy:
-        registry.update(format="picross-content-registry-v4", metadata=[], backgrounds=[])
-    for name, value in (("content/categories.json", catalog), ("content/registry.json", registry),
-                        ("game/data/registry.json", projection(registry, catalog, backgrounds={}))):
-        target = root / name
-        target.parent.mkdir(parents=True, exist_ok=True)
-        write_json(target, value)
+    write_json(root / categories.PATH, catalog)
+    write_json(root / current.RUNTIME, {"format": current.RUNTIME_FORMAT, "entries": [], "categories": categories.ordered(catalog)})
     return root
 
 
@@ -161,42 +153,41 @@ def difficulty_for_export(export_dir, *, paired=False):
     return deepcopy(_ratings[key])
 
 
-def rated_registration(export_dir, checkout, *, paired=False, **kwargs):
-    """Synthetic harness convenience: explicitly supply an external 0.3 input."""
+def rated_registration(export_dir, checkout, **kwargs):
     from .content_registry import registration
-    return registration(export_dir, checkout, difficulty=difficulty_for_export(export_dir, paired=paired), **kwargs)
+    return registration(export_dir, checkout, **kwargs)
 
 
-def rated_update(export_dir, checkout, expected, **kwargs):
-    from .content_update import update
-    return update(export_dir, checkout, expected, difficulty=difficulty_for_export(export_dir), **kwargs)
+def rated_update(*args, **kwargs):
+    raise ValueError("Use the separate current editor for raster revisions")
 
 
 def replay(output, checkout=None):
-    from .target_adapter import export, inspect, open_package, verify_export
+    """Four synthetic registrations through the sole current integration core."""
+    from tests.puzzle_production import current_fixtures as fixture
+    from . import current_content as current, target_adapter
     from .content_registry import registration, check_checkout
+    from PIL import Image
+    from io import BytesIO
     output.mkdir(parents=True)
     checkout = isolated_checkout(output / "checkout") if checkout is None else checkout
     reports = []
-    for package in sorted(FIXTURES.iterdir()):
-        if not package.is_dir():
-            continue
-        h = load_json(package / "handoff.json")
-        with open_package(package) as p:
-            blocked = inspect(p)[0]
-        assert blocked["technical"] and not blocked["catalog_ready"]
-        stem = h["puzzle_id"]
-        approval = output / (stem+"-approval.json")
-        approve(package, approval)
-        dest = output / stem
-        export(package, dest, name="TEST ONLY " + stem, revision=1, stem=stem, save_slot="slot_"+stem, approval_path=approval,
-               category_id="voegel" if "color" in stem else "gemuese-pilze-kraeuter",
-               categories_path=checkout / "content/categories.json")
-        registration(dest, checkout, apply=True, difficulty=difficulty_for_export(dest))
-        assert registration(dest, checkout, apply=True)["status"] == "no-op"
-        reports.append(verify_export(dest)[1])
-    check_checkout(checkout, replay=True)
-    write_json(output / "replay.json", {"format": "picross-za1-replay-v1", "accepted": True, "reports": reports})
+    for label, mode in (("direct-mono", "mono"), ("direct-color", "color"), ("repair-mono", "mono"), ("repair-color", "color")):
+        identifier = "pz-test-" + label
+        source = fixture.make(output / (label + "-input"), identifier=identifier, mode=mode, colors=2 if mode=="color" else 1)
+        value = load_json(source / "manifest.json")
+        value["entry"]["save_slot"] = "slot_" + identifier
+        value["entry"]["category_id"] = value["metadata"]["category_id"] = "voegel" if mode=="color" else "gemuese-pilze-kraeuter"
+        image = BytesIO(); Image.new("RGBA", (12,12), (76,145,93,255)).save(image,format="PNG")
+        value["reveal"]["asset"] = fixture.put(source,"reveal.png",image.getvalue())
+        fixture.approve(source,value)
+        dest = output / label
+        target_adapter.export(source,dest)
+        registration(dest,checkout,apply=True)
+        assert registration(dest,checkout,apply=True)["status"] == "no-op"
+        reports.append(target_adapter.verify_export(dest)[1])
+    check_checkout(checkout)
+    write_json(output / "replay.json", {"format":"picross-current-integration-replay-v1","accepted":True,"reports":reports})
     return reports
 
 

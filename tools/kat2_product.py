@@ -79,29 +79,24 @@ def run(root, workspace, output, engine, environment, run_phase, python_phase, h
         saves = workspace / ("kat2-" + ("regular" if mode == "restart" else mode) + "-saves")
         saves.mkdir(exist_ok=mode == "restart")
         if mode == "adapter":
-            from tools.puzzle_production.za1_fixtures import isolated_checkout, make, approve
-            from tools.puzzle_production.target_adapter import export
+            from tools.puzzle_production.za1_fixtures import isolated_checkout
+            from tests.puzzle_production import current_fixtures as fixture
+            from tools.puzzle_production import content_registry, current_content as current, target_adapter
             checkout = project.parent
             isolated_checkout(checkout)
             categories_path = checkout / "content/categories.json"
             categories = json.loads(categories_path.read_text(encoding="utf-8"))
             categories["categories"].append(dict(id="test-only-kat2-extra", name="Zusätzliche Testkategorie mit einer besonders langen deutschen Bezeichnung für die datenbasierte Katalogdarstellung", order=50))
-            write_json(categories_path, categories)
-            # Regenerate the empty-of-new-content projection before normal registration.
-            from tools.puzzle_production.content_registry import projection, registration
-            from tools.puzzle_production.za1_fixtures import difficulty_for_export
-            from tools.puzzle_production.contract import write_json as write_canonical
-            registry = json.loads((checkout / "content/registry.json").read_text(encoding="utf-8"))
-            write_canonical(project / "data/registry.json", projection(registry, categories, checkout, version=7))
-            package = workspace / "kat2-adapter-input"
-            make(package, "pz-test-direct-mono", 4, 3, "mono")
-            approval = workspace / "kat2-adapter-approval.json"
-            approve(package, approval)
-            exported = workspace / "kat2-adapter-export"
-            python_phase("kat2-adapter-export", lambda: export(package, exported, approval_path=approval,
-                name="TEST ONLY Motiv", revision=1, stem="kat2_adapter", save_slot="kat2_adapter",
-                category_id="test-only-kat2-extra", categories_path=categories_path))
-            python_phase("kat2-adapter-register", lambda: registration(exported, checkout, apply=True, difficulty=difficulty_for_export(exported)))
+            write_json(categories_path,categories)
+            content_registry.sync_runtime(checkout)
+            package = fixture.make(workspace/"kat2-adapter-input",identifier="pz-test-direct-mono")
+            value=json.loads((package/"manifest.json").read_bytes())
+            value["entry"]["save_slot"]="kat2_adapter"
+            value["entry"]["category_id"]=value["metadata"]["category_id"]="test-only-kat2-extra"
+            fixture.approve(package,value)
+            exported=workspace/"kat2-adapter-export"
+            python_phase("kat2-adapter-export",lambda:target_adapter.export(package,exported))
+            python_phase("kat2-adapter-register",lambda:content_registry.registration(exported,checkout,apply=True))
             # The legacy T-* geometry fixtures require an explicit historical
             # test catalog. This rejects any edited metadata or real content.
             from tests.puzzle_production.catalog_fixtures import pre_metadata

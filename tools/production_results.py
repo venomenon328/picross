@@ -32,8 +32,7 @@ def files(root, *, staging=False):
         raise ValueError('Linked production evidence')
     return [{'file': p.relative_to(root).as_posix(), 'bytes': p.stat().st_size, 'sha256': checksum(p)}
             for p in sorted(root.rglob('*')) if p.is_file()
-            and p != root / 'production-result.json'
-            and (not staging or not p.is_relative_to(root / 'za1-replay') or p == root / 'za1-replay/replay.json')]
+            and p != root / 'production-result.json']
 
 
 def seconds(value):
@@ -107,15 +106,12 @@ def validate_all(plan, directory, outputs, gate_attempt, source_root=ROOT):
         required |= {'references/' + case + '/' + name for case in contract.REFERENCES for name in (
             'logic.json', 'proof.json', 'result.json', 'fresh-verification.json',
             'solve-metrics.json', 'verify-metrics.json', 'solve.log', 'verify.log')}
-    if 'adapter' in groups:
-        required |= {'za1-replay.log', 'za1-replay/replay.json'}
     if (not isinstance(declared, list) or not declared or declared != files(directory)
             or {r['file'] for r in declared} != required or any(r['bytes'] <= 0 for r in declared)):
         raise ValueError('Missing/empty/changed/duplicate production files')
     count = validate_tests(read(directory / 'tests.json'), groups, source_root)
     integrations = report['integrations']
     names = ['references'] if 'solver' in groups else []
-    names += ['za1-replay'] if 'adapter' in groups else []
     if ([r['name'] for r in integrations] != names
             or any(r['group'] != ('solver' if r['name'] == 'references' else 'adapter')
                    or type(r['exit_code']) is not int or r['exit_code'] != 0 for r in integrations)):
@@ -150,11 +146,5 @@ def validate_all(plan, directory, outputs, gate_attempt, source_root=ROOT):
                         or type(metric['peak_rss_bytes']) is not int
                         or not 0 < metric['peak_rss_bytes'] <= 512 * 1024 * 1024):
                     raise ValueError('Missing or failed reference process measurement')
-    if 'adapter' in groups:
-        replay = read(directory / 'za1-replay/replay.json')
-        ids = ['pz-test-direct-color', 'pz-test-direct-mono', 'pz-test-repair-color', 'pz-test-repair-mono']
-        if (replay.get('accepted') is not True or [r['puzzle_id'] for r in replay['reports']] != ids
-                or any(r.get('catalog_ready') is not True for r in replay['reports'])):
-            raise ValueError('Missing or unsuccessful synthetic ZA-1 integration')
     seconds(report['seconds'])
     return {'groups': groups, 'tests': count, 'attempt': attempt, 'seconds': report['seconds']}

@@ -16,11 +16,8 @@ EXIT_CODES = {"completed": 0, "invalid_input": 2, "incomplete": 3,
               "aborted": 4, "technical_error": 5}
 PHASES = {"register": ("export", "plan", "apply", "reconcile"),
           "background_adopt": ("store", "plan", "adopt", "reconcile")}
-INPUTS = {"register": {"package", "handoff", "record", "approval", "external",
-                       "manual_authorization", "palette_exception", "difficulty"},
-          "background_adopt": {"request", "work"}}
-PARAMETERS = {"register": {"name", "runtime_revision", "stem", "save_slot", "category_id",
-                            "allow_background", "rebind_difficulty"}, "background_adopt": set()}
+INPUTS = {"register": {"current"}, "background_adopt": {"request", "work"}}
+PARAMETERS = {"register": set(), "background_adopt": set()}
 BUDGETS = {"register": {"export_seconds", "plan_seconds", "publication_seconds", "recovery_seconds", "reconcile_seconds"},
            "background_adopt": {"store_seconds", "plan_seconds", "adopt_seconds", "recovery_seconds", "reconcile_seconds"}}
 RESERVATION = set("format number plan_sha256 job_id puzzle_id operation phase ordinal inputs_sha256 tool_sha256 budgets output_dir".split())
@@ -78,7 +75,7 @@ def budgets(value, operation):
 def validate_plan(value):
     value = bio.json_bytes(canonical_bytes(value), PLAN_LIMIT)
     exact_keys(value, {"format", "batch_id", "revision", "previous_plan_sha256", "source_commit", "jobs"})
-    require(value["format"] == PREFIX + "plan-v1", "Unknown integration batch plan")
+    require(value["format"] == PREFIX + "plan-v2", "Unknown integration batch plan")
     name(value["batch_id"])
     integer(value["revision"], 1, 1000000, "plan revision")
     if value["revision"] == 1:
@@ -89,7 +86,7 @@ def validate_plan(value):
     require(isinstance(value["jobs"], list) and 1 <= len(value["jobs"]) <= 32, "Select 1..32 integration jobs")
     identifiers, jobs = set(), set()
     for job in value["jobs"]:
-        exact_keys(job, {"job_id", "puzzle_id", "revision", "operation", "rulebook", "authorization", "inputs",
+        exact_keys(job, {"job_id", "puzzle_id", "revision", "operation", "authorization", "inputs",
                          "parameters", "budgets", "max_attempts"})
         name(job["job_id"])
         puzzle(job["puzzle_id"])
@@ -98,27 +95,13 @@ def validate_plan(value):
         require(isinstance(job["revision"], str) and ap.REVISION.fullmatch(job["revision"]), "Invalid production/background revision")
         operation = job["operation"]
         require(isinstance(operation, str) and operation in PHASES, "Unknown integration operation")
-        rule = exact_keys(job["rulebook"], {"version", "document_revision", "snapshot"})
-        require(rule["version"] in ("0.6.0", "0.7.0", "0.8.0"), "Unsupported rulebook version")
-        integer(rule["document_revision"], 1, 1000000, "rulebook revision")
-        file_ref(rule["snapshot"])
         source_ref(job["authorization"])
         exact_keys(job["inputs"], INPUTS[operation])
         for key, ref in job["inputs"].items():
-            source_ref(ref, directory=key in ("package", "external", "work"))
-            if ref is not None and key in ("external", "work"):
+            source_ref(ref, directory=key in ("current", "work"))
+            if ref is not None and key in ("current", "work"):
                 directory_ref(ref)
         exact_keys(job["parameters"], PARAMETERS[operation])
-        if operation == "register":
-            p = job["parameters"]
-            nonempty(p["name"], 256); nonempty(p["category_id"], 128)
-            integer(p["runtime_revision"], 1, 1000000, "runtime revision")
-            for key in ("stem", "save_slot"):
-                require(isinstance(p[key], str) and ap.STEM.fullmatch(p[key]), "Invalid native stem/save slot")
-            for key in ("allow_background", "rebind_difficulty"):
-                require(type(p[key]) is bool, "Integration option is not a bool")
-        elif job["authorization"] is not None:
-            require(job["authorization"] == job["inputs"]["request"], "Background authorization must be its unchanged request")
         budgets(job["budgets"], operation)
         exact_keys(job["max_attempts"], set(PHASES[operation]))
         for count in job["max_attempts"].values():

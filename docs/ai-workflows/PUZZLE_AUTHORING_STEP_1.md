@@ -1,6 +1,6 @@
 # Schritt 1: Abschlussbilder
 
-**Version 0.8.0 · Dokumentrevision 7 · 15.11.2026 · PW-PERF-D**
+**Version 0.8.0 · Dokumentrevision 8 · 16.11.2026 · RI-ONE**
 
 Pflicht: [gemeinsamer Kern](PUZZLE_AUTHORING.md) vollständig und vollständiger
 [Bildstil](../PUZZLE_IMAGE_STYLE.md), danach diese Phase. Zusätzlich: [Qualität](../PUZZLE_QUALITY.md) §2/§3.1; [Transparenz](../REVEAL_TRANSPARENCY.md) §2.

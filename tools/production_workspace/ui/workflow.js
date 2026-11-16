@@ -152,6 +152,7 @@ const PW = (()=>{
    else if(value.facts.state==='editorially_approved')lines.push('Schritt 5: Die bereits endabgenommene unverÃ¤nderte Lieferung integrieren.');
    else lines.push('Schritt 5: Ich erteile die Endabnahme der gebundenen unverÃ¤nderten Raster-, Reveal- und Hintergrundfassung (gegebenenfalls none) und beauftrage deren Integration.');
   }
+  if(n===5)lines.push('Die ausgewählten finalen Nutzdaten mit explizitem Modus, gültigem Logiknachweis, aktueller Bewertung, Rechten und dieser tatsächlichen Entscheidung als aktuellen RI-ONE-Eingang vorbereiten. Planung, Übernahme und Wiederholung verwenden denselben Kern. Completion bestätigt diese aktuelle Lieferung; beim Mainabschluss eindeutig zugeordnete frühere Phasen und gemeinsame Arbeitsbelege mitführen.');
   const published=value?.facts.published;
   if(n===1&&intent.notes?.trim())lines.push(`Neue/zusÃ¤tzliche Motivhinweise:\n${intent.notes.trim()}`);
   if(n<=2||(n===3&&action==='rework')){

@@ -228,7 +228,7 @@ def _auth_files(refs, reads, *, new_files=None):
 
 
 def _inspect(package_path, record, external, authorizations, binding, history_repo, deadline):
-    from .target_adapter import inspect
+    from .authoring_inspection import inspect_authoring as inspect
     paths = {name: io.safe(external, ref["file"]) if ref is not None else None
              for name, ref in authorizations.items()}
     with ap.open_package(package_path, allow_background=True,
@@ -537,3 +537,13 @@ def finalize_background(request, source_root, output_root, *, history_repo=None)
                 path.rmdir()
             except OSError:
                 pass  # Published or foreign nonempty folders are never removed.
+
+
+def finalize_integration(input_root, output_root):
+    """Publish the selected final input with its existing concrete approval.
+
+    Creative packages remain optional producer work. This handoff consumes only
+    final files, the independent deduction and the actual bound decision.
+    """
+    from .integration_input import export
+    return export(input_root, output_root)

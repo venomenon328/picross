@@ -9,8 +9,7 @@ import zipfile
 from tools.puzzle_production.authoring_package import open_package
 from tools.puzzle_production.contract import InvalidInput, InvalidProof, digest, load_json, write_json
 from tools.puzzle_production.images import file_hash, import_image, raster_image
-from tools.puzzle_production.target_adapter import export, inspect, verify_export
-from tools.puzzle_production.za1_fixtures import rated_registration as registration
+from tools.puzzle_production.authoring_inspection import inspect
 from tools.puzzle_production.za1_fixtures import FIXTURES, ROOT, approve, seal, isolated_checkout
 
 
@@ -90,23 +89,6 @@ class EditedImportAdapterTests(unittest.TestCase):
                categories_path=ROOT / "tests/puzzle_production/fixtures/catalog/categories.json")
         return out
 
-    def test_zip_export_offline_plan_and_register_preserve_originals(self):
-        archive = self.root / "package.zip"
-        with zipfile.ZipFile(archive, "w") as z:
-            for f in self.package.rglob("*"):
-                if f.is_file(): z.write(f, f.relative_to(self.package).as_posix())
-        self.authorize(original_zip=file_hash(archive))
-        original = (self.package / "handoff.json").read_bytes()
-        out = self.export(archive)
-        m, r = verify_export(out)
-        self.assertEqual(m["format"], "picross-target-export-v3")
-        self.assertTrue(r["technical"] and r["catalog_ready"] and r["frame_exception_accepted"])
-        self.assertFalse(r["frame_valid"] or r["frame"]["left"] or r["frame"]["right"])
-        self.assertEqual(r["source"]["changed_cells"], 2)
-        self.assertEqual((out / "input/handoff.json").read_bytes(), original)
-        checkout = isolated_checkout(self.root / "checkout")
-        self.assertEqual(registration(out, checkout)["status"], "planned")
-        self.assertEqual(registration(out, checkout, apply=True)["status"], "registered")
 
     def test_exception_requires_explicit_owner_scope_and_final_approval(self):
         with self.assertRaises(InvalidInput), open_package(self.package): pass

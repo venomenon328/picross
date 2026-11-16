@@ -24,7 +24,7 @@ def binding():
 
 
 def run(groups, directory):
-    # The existing ZA-1 replay binds absolute checkout/source roots.
+    # Keep subprocess output roots absolute.
     directory = directory.absolute()
     directory.mkdir(parents=True, exist_ok=False)
     report = {'format': 'picross-production-result-v1', 'groups': groups,
@@ -39,8 +39,6 @@ def run(groups, directory):
         for group, name, command in (
             ('solver', 'references', [sys.executable, '-m', 'tools.puzzle_production.benchmark',
                                       '--output-dir', str(directory / 'references')]),
-            ('adapter', 'za1-replay', [sys.executable, '-m', 'tools.puzzle_production.za1_fixtures',
-                                      '--output-dir', str(directory / 'za1-replay')]),
         ):
             if group not in groups:
                 continue
@@ -61,7 +59,7 @@ def run(groups, directory):
     finally:
         report['seconds'] = time.perf_counter() - started
         # Only compact reports/logs and independently required proof inputs are
-        # delivered. The synthetic mutable ZA checkout is never an artifact.
+        # delivered. Test fixtures live in temporary directories.
         from production_results import files
         report['files'] = files(directory, staging=True)
         (directory / 'production-result.json').write_text(json.dumps(report, indent=2) + '\n', encoding='utf-8', newline='\n')

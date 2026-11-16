@@ -1,5 +1,18 @@
 # SD2-C · Kompatible Integration und expliziter Produktionsstandard
 
+## RI-ONE · Aktueller Vorrang
+
+Für neue Integration und Recovery gelten [RI](PUZZLE_INTEGRATION.md),
+[ZA-1](ZA1_ADAPTER.md) und [SD](SD_CATALOG.md). Die folgenden früheren
+Export-/Journal-/Receipt-Generationen beschreiben ihre damalige Einführung,
+keinen aktuellen Dispatch. Registry v5 führt den Produktionsmodus ausdrücklich;
+aktuelle Bewertungen binden finale Definition, Logik und eingefrorene Methode.
+Beide Methoden 0.3/0.4 bleiben fachlich unverändert, bestehende aktive Bewertungen
+bleiben bytegleich erhalten. Historische Berichte und Producerstände müssen
+für den aktuellen Reader nicht erreichbar sein. Preview/Adoption und explizite
+Methodenaktivierung bleiben eigene aktuelle Katalogoperationen.
+
+
 **HP-I1b1 · 09.11.2026, Vertrag vor Code:** Der
 [Hintergrundzusatz](#hp-i1b1--erweiterte-quellen-ohne-methodenwechsel) ergänzt
 die aktuellen Plan-/Journal-/Runtimegenerationen; historische C-Verträge und

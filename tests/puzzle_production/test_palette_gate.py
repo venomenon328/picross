@@ -11,7 +11,10 @@ from PIL import Image
 from tools.puzzle_production import images, palette_gate as gate, palette_quality as quality
 from tools.puzzle_production.authoring_package import open_package
 from tools.puzzle_production.contract import Aborted, Budget, InvalidInput, load_json, write_json
-from tools.puzzle_production.target_adapter import inspect, export, verify_export, hashes
+from tools.puzzle_production.authoring_inspection import inspect
+
+def hashes(root):
+    return {p.relative_to(root).as_posix(): images.file_hash(p) for p in root.rglob("*") if p.is_file()}
 from tools.puzzle_production.za1_fixtures import ROOT, approve, make, seal
 
 
@@ -89,12 +92,6 @@ class PaletteGateTests(unittest.TestCase):
         write_json(path, record)
         return path
 
-    def export(self, package, approval, exception=None, output="export", revision=1):
-        out = self.root / output
-        export(package, out, name="TEST ONLY", revision=revision, stem="palette", save_slot="palette",
-               category_id="gemuese-pilze-kraeuter", categories_path=ROOT / "tests/puzzle_production/fixtures/catalog/categories.json",
-               approval_path=approval, palette_exception=exception)
-        return out
 
     def test_positive_requires_actual_visual_record_and_no_flag_shortcut(self):
         p = self.package()
@@ -102,14 +99,10 @@ class PaletteGateTests(unittest.TestCase):
         self.assertEqual(report["palette_gate"]["assessment"]["status"], "positive")
         self.assertFalse(report["technical"])
         approval = self.approve(p)
-        with self.assertRaisesRegex(InvalidInput, "palette"):
-            self.export(p, approval)
-        self.assertFalse((self.root / "export").exists())
+        self.assertFalse(self.inspect(p,approval)["technical"])
         self.review(p)
         approval = self.approve(p)
-        out = self.export(p, approval)
-        manifest, report = verify_export(out)
-        self.assertEqual(manifest["format"], gate.EXPORT)
+        report = self.inspect(p,approval)
         self.assertTrue(report["palette_gate"]["allowed"])
 
     def test_negative_exception_is_complete_external_and_keeps_negative_measurement(self):
@@ -119,16 +112,12 @@ class PaletteGateTests(unittest.TestCase):
         before = hashes(p)
         report = self.inspect(p, approval)
         self.assertEqual(report["palette_gate"]["assessment"]["status"], "negative")
-        with self.assertRaisesRegex(InvalidInput, "palette"):
-            self.export(p, approval)
+        self.assertFalse(report["technical"])
         exception = self.exception(p, approval)
-        out = self.export(p, approval, exception)
-        m, report = verify_export(out)
+        report = self.inspect(p,approval,exception)
         self.assertTrue(report["technical"])
         self.assertEqual(report["palette_gate"]["assessment"]["status"], "negative")
         self.assertEqual(before, hashes(p))
-        self.assertEqual(exception.read_bytes(), (out / gate.EXCEPTION_FILE).read_bytes())
-        self.assertIn(gate.EXCEPTION_FILE, m["files"])
 
     def test_exception_mutations_and_other_hard_gates_cannot_be_overridden(self):
         p = self.package(colors=["#447799", "#487b9d", "#497c9e"])
@@ -169,25 +158,6 @@ class PaletteGateTests(unittest.TestCase):
         self.review(p, "nicht geprüft", True)
         self.assertFalse(self.inspect(p)["technical"])
 
-    def test_forged_export_gate_and_downgrade_fail_in_offline_reader_without_writes(self):
-        p = self.package()
-        self.review(p)
-        out = self.export(p, self.approve(p))
-        original = load_json(out / "manifest.json")
-        for kind in ("missing", "downgrade", "forged", "norm", "source"):
-            m = deepcopy(original)
-            if kind == "missing": del m["palette_gate"]
-            elif kind == "downgrade":
-                m["format"] = "picross-target-export-v2"
-                del m["palette_gate"]
-            elif kind == "forged": m["palette_gate"]["allowed"] = 1
-            elif kind == "norm": m["palette_gate"]["assessment"]["norm"]["document_revision"] = 6
-            else: m["palette_gate"]["binding"]["candidate"]["variant"] = "other"
-            write_json(out / "manifest.json", m)
-            before = hashes(out)
-            with self.subTest(kind=kind), self.assertRaises(InvalidInput):
-                verify_export(out)
-            self.assertEqual(before, hashes(out))
 
     def test_optional_stored_report_is_freshly_verified_not_trusted(self):
         p = self.package()
@@ -227,16 +197,3 @@ class PaletteGateTests(unittest.TestCase):
         with self.assertRaises(Aborted):
             real_early([["ink"]], {"source_id": "test", "palette": [{"id": "ink", "rgb": "#000000"}]}, budget=Budget(0))
         self.assertEqual(real_early([["empty"]], {"source_id": "test", "palette": [{"id": "ink", "rgb": "#000000"}]})["status"], "invalid_input")
-
-    def test_repaired_and_mono_new_generation_and_rulebook_boundary(self):
-        for mode, repaired in (("mono", False), ("color", True)):
-            p = self.package(mode=mode, repaired=repaired, name=mode)
-            if mode == "color": self.review(p)
-            out = self.export(p, self.approve(p), output="export-" + mode)
-            self.assertEqual(verify_export(out)[0]["format"], gate.EXPORT)
-            h = load_json(p / "handoff.json")
-            h["state"] = "content_ready"
-            h["rulebook"]["version"] = "0.5.0"
-            write_json(p / "handoff.json", h)
-            with self.assertRaisesRegex(InvalidInput, "matching versioned snapshot"):
-                self.inspect(p)
