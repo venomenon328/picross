@@ -14,12 +14,6 @@
       "source_commit": "c6c4be5bb19fecc535a9a86c5ee4fa962a2c748e"
     },
     {
-      "file": "editor/driver.py",
-      "bytes": 2216,
-      "sha256": "6b3206726e8247f9e6d54fbf1649062b70b41a2c5abd2b49270e454f65c95c24",
-      "source_commit": "c6c4be5bb19fecc535a9a86c5ee4fa962a2c748e"
-    },
-    {
       "file": "editor/editor-1280x720-768.png",
       "bytes": 147360,
       "sha256": "4c56fede360de452999e6eaffdf9ccfa01353f33c364f7cb28bacbf64481125f",
@@ -142,52 +136,10 @@
       "source_commit": "21ae27c3d2ce6e88852a41765d84c76695d0d8f7"
     },
     {
-      "file": "open-gates/catalog-local-diagnostic.log",
-      "bytes": 36018,
-      "sha256": "2e298728c9e9f85ebea860a83ec6dbaa1fc472a9d37e87276bfcc77df43722dd",
-      "source_commit": "c6c4be5bb19fecc535a9a86c5ee4fa962a2c748e"
-    },
-    {
-      "file": "open-gates/web-startup-diagnostic.log",
-      "bytes": 4849,
-      "sha256": "470aa60bf487c459623cb64401c4caeedf01dc0881c7b584607404534f94e51a",
-      "source_commit": "c6c4be5bb19fecc535a9a86c5ee4fa962a2c748e"
-    },
-    {
       "file": "T01/readback.py",
       "bytes": 2713,
       "sha256": "94ae8c4f8563bae8d97d087286c28f72ab316ddb3d16537cd72aec52baf81de3",
       "source_commit": "21ae27c3d2ce6e88852a41765d84c76695d0d8f7"
-    },
-    {
-      "file": "T01/synthetic-prepared-legacy.png",
-      "bytes": 5246,
-      "sha256": "21bd9095ab40b792cb5fa29b5830cfeb774a637564860ba9ecfb0435ebb7ffed",
-      "source_commit": "21ae27c3d2ce6e88852a41765d84c76695d0d8f7",
-      "dimensions": [
-        2304,
-        576
-      ]
-    },
-    {
-      "file": "T01/synthetic-prepared-new.png",
-      "bytes": 179789,
-      "sha256": "aaab196da0bc24fc9866c2bd22ed691c472e6d153ed2dc41d487c01c9f87ec3a",
-      "source_commit": "21ae27c3d2ce6e88852a41765d84c76695d0d8f7",
-      "dimensions": [
-        2304,
-        768
-      ]
-    },
-    {
-      "file": "T01/synthetic-source-3to1.png",
-      "bytes": 2387,
-      "sha256": "43c97e436d97e971ad9ec05e569a8f4c032a513656838df0dc04304fc663482b",
-      "source_commit": "21ae27c3d2ce6e88852a41765d84c76695d0d8f7",
-      "dimensions": [
-        600,
-        200
-      ]
     },
     {
       "file": "T01/throughput.py",
@@ -226,22 +178,11 @@
       "source_commit": "c6c4be5bb19fecc535a9a86c5ee4fa962a2c748e"
     },
     {
-      "file": "worker/driver.log",
-      "bytes": 954,
-      "sha256": "495c62fff74d9583fdf99cbbaa519a10f9ceb72b3f50fedfb555f5a144c8dbf3",
-      "source_commit": "c6c4be5bb19fecc535a9a86c5ee4fa962a2c748e"
-    },
-    {
-      "file": "worker/driver.py",
-      "bytes": 2105,
-      "sha256": "062a26c6a5707fa618afe586ac3f6fe845f52a09bd0b3ebdcbc609c08eab0f49",
-      "source_commit": "c6c4be5bb19fecc535a9a86c5ee4fa962a2c748e"
-    },
-    {
       "file": "worker/report.json",
       "bytes": 839,
       "sha256": "8c42a95800285c682239d86dad8406985617b0f41d4c3da049b59a7610d56d33",
       "source_commit": "c6c4be5bb19fecc535a9a86c5ee4fa962a2c748e"
     }
-  ]
+  ],
+  "binary_delivery": "Public raw.githubusercontent.com at the immutable review commit: actual HTTP download of every mapped file with byte count/SHA-256 verification, then opening unchanged native PNG files. Small editor originals also render from fetch_file(encoding=base64); large native originals did not render through that text connector route. Use a binary HTTP client + image viewer."
 }
