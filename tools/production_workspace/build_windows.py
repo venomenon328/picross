@@ -21,6 +21,10 @@ from .update_verifier import production_trust
 ROOT = Path(__file__).resolve().parents[2]
 PACKAGE = ROOT / 'tools/production_workspace'
 
+# Broad production-module collection must not freeze ZA-1's synthetic helpers.
+# Those helpers import tests.puzzle_production, which is not app source.
+FROZEN_EXCLUDES = ('tools.puzzle_production.za1_fixtures', 'tests')
+
 
 def sha(path):
     return hashlib.sha256(path.read_bytes()).hexdigest()
@@ -102,6 +106,7 @@ def build(destination, *, version=None):
                     '--distpath', str(destination / 'dist'),
                     '--workpath', str(work / 'pyinstaller'), '--specpath', str(work), '--paths', str(ROOT),
                     '--collect-submodules', 'tools.puzzle_production',
+                    *(arg for name in FROZEN_EXCLUDES for arg in ('--exclude-module', name)),
                     '--hidden-import', 'tools.production_workspace.update_verifier',
                     '--hidden-import', 'cryptography.hazmat.primitives.asymmetric.ed25519',
                     '--hidden-import', '_cffi_backend',
@@ -172,6 +177,9 @@ def verify_update_payload(app, pyz, audit):
                 'tools.production_workspace.release', 'cryptography.hazmat.primitives.asymmetric.ed25519'}
     if not required <= names or any('tools.production_workspace.' + name in names for name in ('update_diagnostic', 'helper_diagnostic')):
         raise RuntimeError('Frozen Verifier-/Kryptografieinventar fehlt oder enthält den Testadapter.')
+    if 'tools.puzzle_production.za1_fixtures' in names or any(
+            name == 'tests' or name.startswith('tests.') for name in names):
+        raise RuntimeError('Frozen-Payload enthält synthetische Testmodule.')
     observed = set(audit['repository_inputs'])
     sources = {name.replace('.', '/') + '.py' for name in required if name.startswith('tools.')}
     sources |= {'tools/production_workspace/release.json', 'tools/production_workspace/update-trust.json'}

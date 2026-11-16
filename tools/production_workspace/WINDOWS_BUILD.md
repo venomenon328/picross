@@ -63,6 +63,10 @@ gegen dieses committete Fingerprintinventar. Der C#-Updatehelfer wird vor PyInst
 mit dem Windows-.NET-Compiler gebaut, gehasht und explizit als Ressource gebündelt. Die isolierte private Umgebung
 liefert die gepinnten Python-/Wheel-/Runtimeinputs. Der Builder bündelt die
 benötigten Reader einschließlich `authoring_workflow`, Pillow, Tcl/Tk, UI und Icon sowie den gemeinsamen Updateverifier;
+synthetische `za1_fixtures` und der gesamte `tests`-Namensraum bleiben aus der
+PyInstaller-Analysis ausgeschlossen und zählen nicht zum Appfingerprint.
+Der echte Analysis-/PYZ-Abgleich weist unerwartete Testmodule weiterhin ab,
+statt diese ins Fingerprintinventar aufzunehmen;
 der Datencheckout hat keine Codeautorität. `components.json` bindet Commit,
 Fingerprint, Architektur, Komponenten und Ressourcenhashes, `inventory.json`
 die übrigen Appdateien. Kein Versprechen bitidentischer EXEs ohne Messung.
