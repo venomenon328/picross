@@ -72,17 +72,22 @@ def private_directory(path):
 
 
 class StateLock:
-    def __init__(self, state):
+    def __init__(self, state, *, app=None):
+        # Standalone PW CMD keeps its source-independent default.
+        self.editor = app is not None and app.key == "pe"
         self.state = Path(state).resolve()
         if any((parent / '.git').exists() for parent in (self.state, *self.state.parents)):
             raise ValueError('Zustandsordner muss außerhalb eines Git-Arbeitsbaums liegen.')
-        self.directory = self.state / '.launcher'
+        self.directory = self.state / ('.updates' if self.editor else '.launcher')
         private_directory(self.directory)
         self.metadata = self.directory / 'instance.json'
         self.file = None
 
     def acquire(self):
         path = self.directory / 'lock'
+        if self.editor:
+            from .update_storage import no_links
+            no_links(path)
         if path.is_symlink():
             raise ValueError('Ungültiger Instanzlock.')
         stream = path.open('a+b')
@@ -103,8 +108,9 @@ class StateLock:
         self.file = stream
         # Acquired OS lock proves the previous owner has ended, irrespective of
         # PID reuse. Stale state is never used to kill or open anything.
-        self.metadata.unlink(missing_ok=True)
-        (self.directory / 'instance.tmp').unlink(missing_ok=True)
+        if not self.editor:
+            self.metadata.unlink(missing_ok=True)
+            (self.directory / 'instance.tmp').unlink(missing_ok=True)
         return True
 
     def publish(self, value):
@@ -129,7 +135,8 @@ class StateLock:
 
     def close(self):
         if self.file:
-            self.metadata.unlink(missing_ok=True)
+            if not self.editor:
+                self.metadata.unlink(missing_ok=True)
             self.file.close()
             self.file = None
 

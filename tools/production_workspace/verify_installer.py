@@ -120,8 +120,8 @@ def verify(build, output, expected_commit, wix_archive=None, compare_build=False
                     payload[relative].read_bytes() == (app.source / name).read_bytes(),
                     'Packaged public trust/product identity mismatch: ' + name)
         production_trust(app=app)
-        if app == PW:
-            helper = payload['_internal/tools/production_workspace/UpdateHelper.exe']
+        if app in (PW, PE):
+            helper = payload['_internal/' + app.package + '/UpdateHelper.exe']
             require(sha(helper) == components['resources']['UpdateHelper.exe'], 'MSI independent helper mismatch')
         require(payload['_internal/' + app.package + '/build.json'].read_bytes() ==
                 payload['components.json'].read_bytes(), 'Frozen build/components identity mismatch')

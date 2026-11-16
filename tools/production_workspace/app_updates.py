@@ -1,4 +1,5 @@
 """One opt-in startup operation, owned by the native GUI and its stop lifecycle."""
+from tools.app_products import PW
 import threading
 import subprocess
 
@@ -8,8 +9,10 @@ from .update_verifier import production_trust
 
 
 class Updates:
-    def __init__(self, runtime):
+    def __init__(self, runtime, *, app=PW):
         self.runtime = runtime
+        self.app = app
+        self.app_args = {} if app == PW else {"app": app}
         self.cancelled = threading.Event()
         # GUI owns choose/start/cancel/take; the worker shares only the short
         # helper-spawn/publication transition. Never hold this over network I/O.
@@ -25,16 +28,16 @@ class Updates:
         self.preferences = None
         self.recovery_attempts = 0
         try:
-            self.identity = windows.installation()
+            self.identity = windows.installation(**self.app_args)
             if runtime.lock.state.is_relative_to(self.identity.executable.parent):
                 raise ValueError('Updatezustand muss außerhalb des installierten Programms liegen.')
             self.preferences = Preferences(runtime.lock.directory)
             self.enabled = self.preferences.read()
-            previous = recover(runtime.lock.directory)
+            previous = recover(runtime.lock.directory, **self.app_args)
             if previous:
                 self.status = previous + ' Nächster automatischer Versuch erst nach erneutem Start.'
                 self.started = True
-            if not production_trust()['accepted']:
+            if not production_trust(**self.app_args)['accepted']:
                 self.status = 'Updatekanal inaktiv: Vertrauensschlüssel fehlt. Erste vertrauenswürdige Version manuell installieren.'
                 self.started = True
         except (ValueError, OSError, KeyError, TypeError):
@@ -65,7 +68,7 @@ class Updates:
                 self.enabled is not True or self.identity is None):
             return False
         self.started = True
-        self.thread = threading.Thread(target=self._run, name='PW-app-update')
+        self.thread = threading.Thread(target=self._run, name=self.app.key.upper()+'-app-update')
         self.thread.start()
         return True
 
@@ -80,13 +83,13 @@ class Updates:
     def _run(self):
         try:
             self.status = 'Signierten App-Updatekanal prüfen …'
-            metadata, assets = client.discover(self.identity.version, self.cancelled, installation=self.identity)
+            metadata, assets = client.discover(self.identity.version, self.cancelled, installation=self.identity, **self.app_args)
             if self.cancelled.is_set():
                 raise client.Cancelled()
             if metadata.version == self.identity.version:
                 # Discovery checked signed publication identity, not MSI/EXE byte
                 # equality. Re-read the actual installed/MSI context before status.
-                if windows.installation() != self.identity:
+                if windows.installation(**self.app_args) != self.identity:
                     raise client.InstallationMismatch('Installed application changed during check')
                 with self.transition:
                     if (self.cancelled.is_set() or self.preferences.read() is not True or
@@ -96,12 +99,12 @@ class Updates:
                 return
             self.stage = Stage(self.runtime.lock.directory)
             self.status = 'Geprüfte neuere Appversion herunterladen …'
-            candidate = client.download(metadata, assets, self.stage, self.cancelled)
+            candidate = client.download(metadata, assets, self.stage, self.cancelled, **self.app_args)
             if self.cancelled.is_set() or self.preferences.read() is not True or self.runtime.stop_requested.is_set():
                 raise client.Cancelled()
             self.status = 'Vollständigen Kandidaten und unabhängigen Updatehelfer prüfen …'
             handoff = windows.prepare(candidate, self.stage, self.identity, self.runtime,
-                                      cancelled=self.cancelled, transition=self.transition)
+                                      cancelled=self.cancelled, transition=self.transition, **self.app_args)
             with self.transition:
                 self.handoff = handoff
                 if self.cancelled.is_set() or self.preferences.read() is not True or self.runtime.stop_requested.is_set():
@@ -143,7 +146,7 @@ class Updates:
             if not self.preferences or self.thread is not None:
                 return
             try:
-                result = recover(self.runtime.lock.directory)
+                result = recover(self.runtime.lock.directory, **self.app_args)
                 if result:
                     self.status = result
             except (OSError, ValueError):
@@ -170,6 +173,6 @@ class Updates:
         if self.handoff and not self.handoff.committed:
             try:
                 self.handoff.process.wait(timeout=5)
-                recover(self.runtime.lock.directory)
+                recover(self.runtime.lock.directory, **self.app_args)
             except (OSError, ValueError, subprocess.TimeoutExpired):
                 pass
