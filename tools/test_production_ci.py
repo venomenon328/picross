@@ -93,9 +93,9 @@ class SelectionTests(unittest.TestCase):
         for path,groups in (('tests/puzzle_production/test_lines.py',['solver']),
                             ('tests/puzzle_production/test_images.py',['images']),
                             ('tests/puzzle_production/test_target_adapter.py',['adapter']),
-                            ('tests/puzzle_production/test_content_update.py',['catalog'])):
+                            ('tests/puzzle_production/test_current_consumers.py',['catalog'])):
             self.assertEqual(classify([path])['production_groups'],groups)
-        paths=['tests/puzzle_production/test_lines.py','tests/puzzle_production/test_content_update.py']
+        paths=['tests/puzzle_production/test_lines.py','tests/puzzle_production/test_current_consumers.py']
         self.assertEqual(classify(paths)['production_groups'],['solver','catalog'])
         for path in ('tools/puzzle_production/contract.py','tools/puzzle_production/new_module.py',
                      '.github/workflows/puzzle-production.yml','tools/ci_scope.py'):

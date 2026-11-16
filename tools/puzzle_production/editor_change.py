@@ -1,7 +1,7 @@
 """PE-EDIT2: selected inputs and prepared bytes, never a catalog certification.
 
-This is the shared API/CLI/desktop edit path. Historical full diagnostics and
-their journals retain their own readers. Nothing here traverses a catalog tree.
+This is the shared API/CLI/desktop edit path. Explicit full diagnostics and
+current metadata operations retain their own readers. Nothing here traverses a catalog tree.
 """
 import base64
 from copy import deepcopy
@@ -26,7 +26,6 @@ LIMIT = 128 * 1024 * 1024
 FILE_LIMIT = 64 * 1024 * 1024
 REVEAL = current_content.REVEAL
 BACKGROUND = current_content.BACKGROUND
-RASTER = "picross-editor-raster-package-v2"
 
 
 _hashes = ContextVar("editor_operation_hashes", default=None)

@@ -32,7 +32,8 @@ def registered(home,*,stem,save_slot,revision=1):
 def pre_metadata(root, *, runtime_version=5):
     """Explicit frozen native-loader fixture, never a content writer."""
     from tools.puzzle_production import current_content as current, catalog_io
-    registry.check_checkout(root)
+    from tools.puzzle_production.content_registry import check_checkout
+    check_checkout(root)
     value = catalog_io.json_bytes((root/current.REGISTRY).read_bytes(),8*1024*1024)
     if any(not e['id'].startswith('pz-test-') for e in value['entries']):
         raise ValueError('Historical runtime fixture requires synthetic IDs')

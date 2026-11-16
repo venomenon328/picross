@@ -26,7 +26,7 @@ der aktuellen A-Basis oder des neuen B-Codes. Deshalb wird A erneut gemessen.
 
 ## Fachnachweise
 
-Das neue [Testmodul](../tests/puzzle_production/test_registration_verification.py)
+Das neue [Testmodul](https://github.com/venomenon328/picross/blob/62401382f58adc2e3d303b19c1ecb1f1dc8a5040/tests/puzzle_production/test_registration_verification.py)
 erweitert kleine unabhängige synthetische Fälle. Ein unveränderliches Export-
 Grundfixture wird isoliert kopiert; keine echten Kataloginputs oder Cachematrix.
 
