@@ -1040,6 +1040,13 @@ Beschädigte, nicht benötigte historische Belege blockieren die Pflege nicht.
 Urheber, Rechte, Quelle, Akteur, Erklärung und Bestätigung entfallen aus neuen
 Editorrequests und aktiven Editorquellen. Keine Platzhalter und keine erzeugten
 Herkunftsnotices. Historische Archive und Bibliothekslizenzen bleiben erhalten.
+Derselbe Grundsatz gilt für den späteren Mainvergleich und §9-Abschluss:
+Ein unter PE-EDIT2 ausgewählter Hintergrund ohne Live-`.txt` ist vollständig;
+der Abschlussreader darf keinen Ersatztext fordern oder erzeugen. Eine
+tatsächlich vorhandene ältere TXT-Datei bleibt hingegen schutzwürdig und
+wird unverändert gegen den bestätigten Mainstand verglichen; auch ihr Fehlen
+wird als aktuelle Abwesenheit geprüft. Reveal-Notices und vorhandene echte
+Rechte-/Lizenzinformationen bleiben unberührt.
 
 ### 13.2 Geschlossener Änderungsplan und kleines Journal
 
