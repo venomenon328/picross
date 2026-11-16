@@ -1,32 +1,32 @@
 {
   "format": "development-ci-plan/v1",
   "issue": "https://github.com/venomenon328/picross/issues/691",
-  "package": "PE-APP-A",
+  "package": "PE-APP-B",
   "modules": [
     "tools"
   ],
-  "purpose": "Getrennter PE-MSI-/signierter Releasekanal mit festen Produktadaptern und aktuellen gebundenen Editorbytes; gemeinsame PW-Bausteine erhalten.",
-  "omitted": "Keine Fachwriter-/Solver-/Spiel-/Renderingänderung: production.*, native.*, preflight, delivery und automatisches Chromium ausgelassen. Einmalige T02/Frozen- und T03-Releaseprobe am echten Windowskandidaten. Installation/Bedienung bleibt R01/U01 vor Release.",
+  "purpose": "Fester PE-Selbstupdateclient mit früher Zustimmung/Startgate, gemeinsamem externem Helfer, vollständigem Drain und authentisiertem nativem Wiederanlauf; PW bleibt kompatibel.",
+  "omitted": "Keine Fachwriter-, Solver-, Datenmigrations-, Spiel- oder Renderingänderung. Genau tools zusätzlich zum Kern und Windows-Spieler; production.*, native.*, preflight, delivery und automatisches Chromium ausgelassen. T02/T03 separat ohne Installation oder Veröffentlichung; R01/U01 später vor Release.",
   "test_changes": [
     {
-      "path": "tools/test_editor_installer.py",
+      "path": "tools/test_app_updates.py",
       "disposition": "change-scoped",
-      "reason": "Kleine PW/PE-Identitäts-, Input-/Analysis-, Signatur-/Release- und Installationsschutzregressionen im gewählten tools-Modul."
+      "reason": "Gemeinsame PW-Suite um feste PE-Kanal-/Identitäts-/Zustimmungs-/Abbruch-/Recoveryfälle erweitern; keine zweite Vollsuite."
     },
     {
-      "path": "tools/test_production_installer.py",
-      "disposition": "change-scoped",
-      "reason": "Bestehende PW-API-/Kandidatfixtures für feste Produktadapter wiederverwenden; bestehende Regressionen erhalten."
+      "path": "tools/production_workspace/helper_diagnostic.py",
+      "disposition": "temporary",
+      "reason": "Vorhandenen synthetischen Durchstich für tatsächliche PE-/PW-Helferbytes verwenden, ohne Installation. Aus Payload ausgeschlossen; Diagnoseoriginale nur sieben Tage für PE-APP-B-A01."
+    },
+    {
+      "path": "tools/production_workspace/packaging/HelperDiagnostic.cs",
+      "disposition": "temporary",
+      "reason": "Echten gemeinsamen Helfer isoliert auf Prozessende, READY/abgebrochenes GO, MSI-Identität und nativen Wiederanlauf prüfen. Kein Testadapter im Produkt."
     },
     {
       "path": "tools/puzzle_editor/diagnostic.py",
       "disposition": "temporary",
-      "reason": "Einmalige PE-APP-A T02/T03 am fixierten Kandidaten, ausdrücklich aus Frozen-Payload und Fingerprint ausgeschlossen. Nach technischer Einführung/Review entfernen; lokale Daten nach Probe bereinigen."
-    },
-    {
-      "path": "tools/test_workspace_deliveries.py",
-      "disposition": "change-scoped",
-      "reason": "Im gewählten tools-Modul reproduzierter Altfehler: Testcallback an den bestehenden optionalen missing-Readerparameter anpassen; keine Fachcodeänderung oder entfernte Abdeckung."
+      "reason": "Einmalige echte native PE-Start-/Offline-/Skip- und IPC-Prüfung im vorhandenen T02/T03-Durchstich; außerhalb der Payload, Originale sieben Tage."
     }
   ],
   "core_change": null,

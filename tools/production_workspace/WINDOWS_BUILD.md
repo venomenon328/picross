@@ -252,3 +252,16 @@ Signaturbelege und die vorhandene B1-/MSI-/Inputdiagnose für sieben Tage. Der
 unveränderte Kandidat bleibt vierzehn Tage. Private Testkeys existieren nur im
 Prüfprozess. T03/APP-B2-R01 und APP-A-R02 erfordern weiterhin einen ausdrücklich
 beauftragten echten Windows-11-Test mit installierten passenden Kandidaten.
+
+
+## PE-APP-B · gemeinsam gepflegter Helfer
+
+Der vorhandene C#-Helfer wird für PE zusätzlich mit `/define:PE` kompiliert.
+Produktname, UpgradeGUID, Versionslinie, Programmpfad, Registry und Zustandsbereich
+sind Compilezeitkonstanten; keine Auswahl im Übergabeauftrag. PW behält seinen
+normalen Build und HTTP-Ready-Vertrag. PE verwendet die native private Pipe aus
+[PE §15](../../docs/PUZZLE_EDITOR.md#15-pe-app-b--startgate-und-sicherer-wiederanlauf).
+Beide Builds inventarisieren und inspizieren ihren tatsächlichen UpdateHelper,
+Client, Trust und Lizenzen. PE sammelt nur die benötigten gemeinsamen Hilfsmodule.
+Der vorhandene synthetische Helferdiagnosetreiber bleibt aus beiden Paketen
+entfernt; reale Installation und Eigentümerprobe bleiben gesonderte Releasegates.

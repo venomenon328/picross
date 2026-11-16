@@ -1,5 +1,6 @@
 """Bounded anonymous public GitHub channel. No installer or browser API here."""
 from io import BytesIO
+from tools.app_products import PW
 import hashlib
 import re
 import threading
@@ -98,7 +99,7 @@ class Transport:
         return buffer.getvalue()
 
 
-def latest_release(transport, cancel, deadline):
+def latest_release(transport, cancel, deadline, *, app=PW):
     candidates, ids = {}, set()
     for page in range(1, PAGE_LIMIT + 1):
         rows = strict_json(transport.read(API + '?per_page=100&page=' + str(page), PAGE_BYTES, cancel, deadline))
@@ -106,9 +107,9 @@ def latest_release(transport, cancel, deadline):
         for row in rows:
             require(type(row) is dict and type(row.get('tag_name')) is str and
                     type(row.get('draft')) is bool and type(row.get('prerelease')) is bool, 'Invalid release row')
-            if row['draft'] or row['prerelease'] or not row['tag_name'].startswith('pw-v0.1.'):
+            if row['draft'] or row['prerelease'] or not row['tag_name'].startswith(app.prefix + '.'.join(map(str, app.line)) + '.'):
                 continue
-            version = row['tag_name'].removeprefix('pw-v')
+            version = row['tag_name'].removeprefix(app.prefix)
             key = version_tuple(version)
             require(key not in candidates and type(row.get('id')) is int and row['id'] > 0 and
                     row['id'] not in ids, 'Ambiguous release authority')
@@ -140,15 +141,16 @@ def release_assets(row):
     return assets
 
 
-def discover(local_version, cancel, *, transport=None, installation=None):
-    return _discover(local_version, cancel, transport or Transport(), verifier.verify_metadata,
-                     installation=installation)
+def discover(local_version, cancel, *, transport=None, installation=None, app=PW):
+    return _discover(local_version, cancel, transport or Transport(),
+                     lambda raw, sig: verifier.verify_metadata(raw, sig, app=app),
+                     installation=installation, app=app)
 
 
-def _discover(local_version, cancel, transport, authenticate, *, installation=None):
+def _discover(local_version, cancel, transport, authenticate, *, installation=None, app=PW):
     """Internal seam used by the excluded synthetic adapter, never user settings."""
     deadline = time.monotonic() + 60
-    row = latest_release(transport, cancel, deadline)
+    row = latest_release(transport, cancel, deadline, app=app)
     assets = release_assets(row)
     for name, limit in (('manifest.json', verifier.MANIFEST_LIMIT), (verifier.SIGNATURE, verifier.SIGNATURE_LIMIT)):
         require(name in assets and assets[name]['size'] <= limit, 'Signed release metadata missing/too large')
@@ -175,12 +177,13 @@ def _discover(local_version, cancel, transport, authenticate, *, installation=No
                 ('product_code', manifest['product_code']), ('upgrade_code', manifest['upgrade_code']))):
             raise InstallationMismatch('Installed identity differs from the signed release')
     else:
-        verifier.assess_update(metadata, local_version)  # Original same/old guard remains intact.
+        verifier.assess_update(metadata, local_version, app=app)  # Original same/old guard remains intact.
     return metadata, assets
 
 
-def download(metadata, assets, stage, cancel, *, transport=None):
-    return _download(metadata, assets, stage, cancel, transport or Transport(), verifier.verify_candidate)
+def download(metadata, assets, stage, cancel, *, transport=None, app=PW):
+    return _download(metadata, assets, stage, cancel, transport or Transport(),
+                     lambda raw, sig, files: verifier.verify_candidate(raw, sig, files, app=app))
 
 
 def _download(metadata, assets, stage, cancel, transport, authenticate):

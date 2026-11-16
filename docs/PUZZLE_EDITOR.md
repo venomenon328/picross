@@ -1228,3 +1228,67 @@ kein Belegcommit im Produktdiff. PE-APP-A-A01 bleibt unabhängiges Vor-Merge-Rev
 Reale nicht erhöhte Windows-11-Installation/Upgrade/Uninstall und Browserbedienung
 bleiben PE-APP-R01/PE-B-U01 vor Release; Selbstupdate und Betriebsstart folgen
 separat. MSI-Inspektion ersetzt diese persönlichen Proben nicht.
+
+
+## 15. PE-APP-B · Startgate und sicherer Wiederanlauf
+
+Vertrag vor konsumierendem Code gemäß [Paketentscheidung #691](https://github.com/venomenon328/picross/issues/691#umsetzungsvorbereitung-pe-app-b--startgate-selbstupdate-und-sicherer-wiederanlauf).
+Der gemeinsame PW-Client, Verifier, private Stage und C#-Helfer verwenden nur
+fest eingebaute PW-/PE-Adapter. PE bleibt auf pe-v0.2.x, eigener MSI-Identität,
+Programmpfad und PE-Trust gebunden; Datencheckout und --state liefern keine
+Programmautorität. PW-Wireformen und sein aktiver Releasebetrieb bleiben erhalten.
+
+Das native Auswahlfenster erscheint zuerst. Eine eigene ausdrückliche Zustimmung
+liegt unter --state/.updates/app-updates.json, mit der geschlossenen Form
+picross-app-update-preference-v1 und ausschließlich format,enabled (Boolean).
+Fehlende oder ungültige Zustimmung erlaubt keinen Netzabruf. Portable, Entwickler,
+Worker und Service führen kein Installationsupdate aus. Nach Zustimmung höchstens
+eine nebenläufige Prüfung vor der ersten Editor-/Browseraufnahme. Pfad und Port
+bleiben bedienbar. Ohne Update fortfahren verwirft diesen Versuch, erhält aber
+das Opt-in. Erst die atomare GUI-Übernahme des READY-Helfers sperrt Skip/Opt-out.
+Ohne Update oder bei Fehlern wird der manuelle Editorstart freigegeben; kein
+Gitrefresh, automatischer Editorstart oder weiterer Versuch in dieser Instanz.
+
+Anonyme HTTPS-, Katalog-, Signatur-, Versions-, Asset-, Byte- und Zeitgrenzen
+entsprechen [PW §7](PRODUCTION_UPDATES.md#7-app-b2--client-übergabe-und-abschluss).
+Signiert bestätigte Gleichversion verlangt erneut dieselbe lokale MSI-/Source-/
+Fingerprintidentität und meldet ausschließlich: Keine neuere Appversion
+veröffentlicht. Keine lokale Manifestautorität aus Kandidatenbytes erfinden.
+Eigene flache Stages, Pending und Ergebnisse liegen ausschließlich in .updates;
+PW-Zustand bleibt getrennt. Fremde Dateien verhindern Bereinigung. Unbestätigte
+Aufträge werden niemals wieder ausgeführt, Fehler nennen den manuellen Weg.
+
+Der gemeinsame Helfer wird mit fester PE-Identität separat kompiliert. Sein
+picross-pe-update-handoff-v1 verwendet die geschlossene PW-Feldmenge plus selection; no_browser
+ist für PE immer true. state_hashes bindet config.json (Hash oder sichere
+Abwesenheit) und .updates/app-updates.json. Die echte Elternprozesshandlebindung,
+Benutzerprüfung, verifizierten Programm-/MSIbytes und noncegebundenes READY/GO
+bleiben Pflicht. PE-Konfiguration samt Checkout, Port und Theme bleibt bytegleich.
+selection ist ein kanonischer ASCII-JSON-String mit genau checkout und port als
+Anzeigestrings (höchstens 8192 bzw. 16 Zeichen). Er erhält auch ungespeicherte
+Auswahl und CLI-Vorgaben, ohne config.json zu schreiben. Änderungen zwischen
+Snapshot und GUI-Übernahme verwerfen den Versuch. GUI-Eingaben beeinflussen
+keine Installationsautorität. Nach READY: Service-/Writer-/HTTP-
+Drain, vollständiger Abschluss eigener Threads und Desktopfinally; erst danach
+GO. Der Helfer wartet zusätzlich auf das echte Ende des alten Prozesses samt
+InstallInterlock. Andere PE-Instanzen und fremde Dateibelegungen sperren MSI.
+Kein Kill, Elevation, erzwungener Reboot oder Update während einer Transaktion.
+
+Erfolg verlangt MSI-Exit 0, neue registrierte Version, neue EXE-Bytes und einen
+neuen authentisierten nativen PE-Start. Eine private zufällige Windows-Pipe
+bindet den vom Helfer selbst gestarteten Prozess mittels echter Client-PID,
+frischer Challenge und HMAC-SHA256 mit ausschließlich vererbtem Einmalgeheimnis.
+Die Antwort bindet pid,commit,state,selection,challenge und den Hash beziehungsweise die
+Abwesenheit von config.json. Antwort erst aus dem laufenden nativen Fenster;
+kein HTTP-Editorstart, PID-/Fensterexistenzorakel oder Browserstart. Pipe und
+Geheimnis sind flüchtig, nicht in Konfiguration, Logs oder Updateaufträgen.
+state ist der SHA256 des UTF-8-Zustandspfads, selection der SHA256 des ASCII-
+Auswahlstrings. Der neue Prozess verwendet denselben --state und erhält selection
+nur über seine private Startumgebung; Theme bleibt aus unveränderter Konfiguration. Fehlende Bestätigung bleibt unconfirmed.
+
+T01 ergänzt kleine gemeinsame tools-Regressionen; T02 prüft tatsächliche PE-/PW-
+Windowskandidaten und Helfer ohne Installation; T03 verwendet echte Kandidaten
+mit synthetischer Signatur/API ohne Veröffentlichung. Die Paketentscheidung
+bestimmt Originalzugang und Fristen. Unabhängiges PE-APP-B-A01 bleibt vor Merge;
+PE-APP-R01 und PE-B-U01 bleiben spätere persönliche Releaseproben. Keine Flags,
+Secrets, Environments, Erstpublikation oder echte Updateinstallation durch B.

@@ -483,3 +483,21 @@ weiterhin einmalig manuell installieren, insbesondere nach 0.1.0 oder leerem Tru
 Technische Grundlagen: [Prozess-Wait](https://learn.microsoft.com/en-us/windows/win32/api/synchapi/nf-synchapi-waitforsingleobject),
 [per-user MSI-Abfrage](https://learn.microsoft.com/en-us/windows/win32/api/msi/nf-msi-msigetproductinfoexw),
 [explizite Handlevererbung](https://docs.python.org/3.13/library/subprocess.html#subprocess.STARTUPINFO).
+
+
+## PE-APP-B · feste zweite Clientidentität
+
+[#691 / PE-APP-B](https://github.com/venomenon328/picross/issues/691#umsetzungsvorbereitung-pe-app-b--startgate-selbstupdate-und-sicherer-wiederanlauf)
+verwendet denselben Client, Stage, Verifier und externen C#-Helfer über feste
+PW-/PE-Adapter. Ohne Adapter bleibt der PW-Einstieg unverändert. PE hat eigene
+0.2.x-Tags, Programm-/MSI-/Trustidentität, .updates-Zustand und einen separat
+kompilierten Helfer; keine freien Produktparameter aus dem Checkout oder Netz.
+PE bestätigt sein natives Fenster über private IPC statt PW-HTTP-Bereitschaft.
+Der geschlossene Vertrag steht in [PE §15](PUZZLE_EDITOR.md#15-pe-app-b--startgate-und-sicherer-wiederanlauf).
+
+Aktueller PW-Betrieb ist gemäß [Abschlussentscheidung #612](https://github.com/venomenon328/picross/issues/612#issuecomment-6878665809)
+aktiv; ältere Inaktiv-Angaben oben beschreiben den damaligen Einführungsstand.
+Gemeinsame Payloadänderungen können nach späterem Mainmerge und erfolgreicher
+Main-CI regulär eine neue PW-Version auslösen. B deaktiviert diesen Betrieb nicht
+und aktiviert weder PE-Publikation noch PE-Secrets/Environments. PE- und PW-
+Diagnosekandidaten werden ohne Installation oder Veröffentlichung geprüft.
