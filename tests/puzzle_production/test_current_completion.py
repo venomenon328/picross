@@ -16,7 +16,7 @@ from tools.production_workspace.sources import GitSource
 class CurrentCompletionTests(unittest.TestCase):
     def setUp(self):
         self.temp=tempfile.TemporaryDirectory();self.addCleanup(self.temp.cleanup)
-        self.work=Path(self.temp.name);self.root=checkout(self.work/'repo');self.source=make(self.work/'input')
+        self.work=Path(self.temp.name);self.root=checkout(self.work/'repo');self.source=make(self.work/'input',background='selected')
         self.git('init','-q','-b','main')
         catalog_integration.integrate(self.source,self.root,apply=True)
         self.rows=[]
