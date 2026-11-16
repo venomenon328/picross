@@ -108,21 +108,7 @@ def source_paths(root, *registries, extra_reports=(), temporary=()):
 
 
 def load_sources(root, registry):
-    records, reports = source_paths(root, registry)
-    # Report validation is structural and byte-bound, never a Git lookup.
-    from .content_update import path_in
-    from .catalog_added_history import validate_plan, record_for
-    loaded = {}
-    for name in reports:
-        raw = rating.read_file(path_in(root, name), REPORT_LIMIT)
-        plan = validate_plan(rating.bytes_json(raw, REPORT_LIMIT))
-        require(raw == canonical_bytes(plan) + b"\n", "Noncanonical added report")
-        require(report_path(plan["run_id"]) == name, "Added report path mismatch")
-        loaded[name] = (raw, plan)
-    for name, record in records.items():
-        evidence = record["provenance"]["evidence"]
-        if evidence:
-            raw, plan = loaded[evidence["path"]]
-            require(hashlib.sha256(raw).hexdigest() == evidence["sha256"] and
-                    record == record_for(plan, record["id"], raw), "Added evidence differs from source record")
-    return {r["id"]: r for r in records.values()}
+    """Current date values do not replay historical report provenance."""
+    from . import catalog_io as io
+    return {e["id"]: validate(io.json_bytes(io.read(root,path(e["id"]),LIMIT),LIMIT),e["id"])
+            for e in registry["entries"]}

@@ -488,98 +488,34 @@ und Katalogprüfungen gehören weiterhin zum nativen zuständigen Einzelaufruf.
 
 ### 8.2 Exakte neue Planformen
 
-Jedes Objekt hat exakt die genannten Schlüssel. Nullable Felder sind vorhanden
-und ausdrücklich `null`. Namen entsprechen `[a-z0-9][a-z0-9_-]{0,63}`;
-`puzzle_id` und Produktions-/Bildrevision folgen dem Authoringvertrag. SHA-256
-hat 64 kleine Hexzeichen, Commit-SHA 40. Plan maximal 2 MiB, Checkpoint/Report/
-einzelner Ledger maximal 16 MiB. Native strengere Grenzen gelten zusätzlich.
-Dateirefs maximal 128 MiB, vollständige Inventare höchstens 512 Dateien und
-512 MiB. Das native Einzeldateilimit von 64 MiB bleibt erhalten; allein das
-deklarierte Original-ZIP im v6-Transport darf nach seiner bestehenden eng
-geprüften Ausnahme bis 128 MiB groß sein. Inventare sind nach `file` sortiert,
-case-eindeutig und vollständig.
+Der aktuelle Plan ist `picross-integration-batch-plan-v2`. Die geschlossene
+äußere Plan-, Job-, Referenz-, Ledger- und Checkpointform wird weiterhin durch
+`integration_batch_contract.py` geprüft. Jeder Job führt eine eigene gebundene
+`authorization`; ein Inputstatus ersetzt keinen Auftrag.
 
-| Objekt | Exakte Schlüssel und Typen |
-| --- | --- |
-| Plan | `format` = `picross-integration-batch-plan-v1`; `batch_id`: Name; `revision`: Integer 1..1000000; `previous_plan_sha256`: Hash/null; `source_commit`: Commit; `jobs`: geordnete Liste 1..32 Jobs |
-| Job | `job_id`: Name; `puzzle_id`: pz-ID; `revision`: Produktions-/Bildrevision; `operation`: `register`/`background_adopt`; `rulebook`: Regelbindung; `authorization`: FileRef/null; `inputs`: artspezifisch; `parameters`: artspezifisch; `budgets`: artspezifisch; `max_attempts`: artspezifisch |
-| Regelbindung | `version`: `0.6.0`/`0.7.0`/`0.8.0`; `document_revision`: Integer 1..1000000; `snapshot`: FileRef |
-| FileRef | `file`: relativer Pfad; `sha256`: Hash; `bytes`: Integer 0..134217728 |
-| DirectoryRef | `directory`: relativer Pfad oder `.`; `files`: vollständige Liste FileRef relativ zu diesem Verzeichnis |
+- `register`: `inputs` enthält exakt `current`, eine inventarisierte Referenz auf
+  den finalen Inputordner nach ZA-1. `parameters` ist `{}`. Die Phasen bleiben
+  `export`, `plan`, `apply`, `reconcile`; alle benutzen denselben aktuellen Kern.
+- `background_adopt`: `inputs` enthält exakt `request` und `work`, den aktuellen
+  Editorrequest v2 und seine ausgewählten Dateien. `parameters` ist `{}`.
+  `store`, `plan`, `adopt`, `reconcile` bleiben separate Editoroperationen.
+  `store` kopiert nur die expliziten aktuellen Arbeitsdateien in den Batchoutput,
+  keine neuen historischen Authoringpakete.
 
-Eine pz-ID kommt genau einmal in der gesamten Auswahl vor, auch über beide
-Jobarten. `job_id` ist ebenfalls eindeutig. Revision 1 hat keinen Vorgänger;
-ein Nachfolgeplan hat genau Revision +1 und die SHA-256 der vorherigen vollständigen
-Datei einschließlich End-LF. Initialer Plan und neue Planrevision nennen den
-tatsächlichen Werkzeug-HEAD. Beim unveränderten Resume bleibt dessen bekannte
-ursprüngliche Commitprovenienz erhalten. Ein Commit ist weder Katalogsnapshot
-noch Wiederverwendungsbeweis. Der Regeltext muss seine deklarierte Version/
-Dokumentrevision tatsächlich tragen; native zulässige historische Regeln werden
-nicht durch einen aktuellen Text ersetzt. Der Runner verändert keine Originale.
-
-| Art | Exakte `inputs` | Exakte `parameters` |
-| --- | --- | --- |
-| `register` | `package`: FileRef/DirectoryRef/null; `handoff,record,approval,manual_authorization,palette_exception,difficulty`: FileRef/null; `external`: DirectoryRef/null | `name`: nichtleerer Text bis 256 Zeichen; `runtime_revision`: Integer 1..1000000; `stem,save_slot`: native Stem-Kennung; `category_id`: nichtleerer Text bis 128 Zeichen; `allow_background,rebind_difficulty`: echte Bool |
-| `background_adopt` | `request`: FileRef/null; `work`: DirectoryRef/null | exakt `{}` |
-
-Ein Paketverzeichnis bindet alle Originale durch sein Inventar, eine Paketdatei
-das unveränderte ZIP. `handoff`/`record` sind nur für tatsächlich separat vorhandene
-Originale gesetzt; der Runner fordert keinen künstlichen Authoring-Store.
-Interne Handoffs/Endabnahmen behalten ihre native Bedeutung. `external` bindet
-genau die explizite äußere Wurzel samt vollständigem Inventar. Keine Ausgabe-Refs,
-Globs oder noch unbekannten Ergebnisse anderer Jobs. Difficulty bleibt die echte
-geprüfte Eingangsdatei; null ist ausschließlich für einen fachlich bestätigten
-historischen identischen No-op zulässig, nicht für ein neues Rating.
-
-Für `register` bezeichnet `authorization` einen unveränderten ausdrücklich
-vorbereiteten Integrationsauftrag mit Format `picross-integration-order-v1` und
-exakt `format,operation,puzzle_id,revision,actor,timestamp_utc,statement,evidence,test_only`.
-`operation` ist `register`, ID/Revision sind gleich dem Job; `actor,statement`
-sind nichtleere Texte bis 4096 Zeichen, `timestamp_utc` ein nativer UTC-Zeitstempel,
-`evidence` ein FileRef unter dem Quellenroot auf die tatsächliche ursprüngliche
-Auftragserklärung; `test_only` ist Bool und muss zur Produktion passen.
-Die Dateiform transportiert eine bereits erklärte Befugnis; sie erteilt sich
-nicht selbst eine, und wird vom Runner niemals erstellt/ergänzt. Sie ersetzt
-auch keine native Endabnahme. Synthetische Fixtures markieren alle Erklärungen
-ausdrücklich `test_only` und behaupten keine reale Eigentümerfreigabe.
-
-Bei `background_adopt` ist `authorization` exakt derselbe FileRef wie `request`:
-der unveränderte native `picross-background-adoption-request-v1` enthält seinen
-eigenen passenden Bildänderungsauftrag, Zielsource und Revision; seine
-Hintergrundrefs binden Auswahl/none, Herkunft und Q-HG der tatsächlichen
-Arbeitsdateien. BA-B dupliziert diese Angaben nicht in einem editierbaren
-zweiten Objekt. `work` bindet das vollständige zu speichernde Arbeitsverzeichnis
-einschließlich Originalrecord; Root-/Recordbedeutungen prüft der native Reader.
+Veraltete Plan-/Inputformen werden abgewiesen. Es gibt keine Kompatibilitäts-
+oder Migrationszusage für bestehende Batch-WIP. Neue Aufträge bewahren explizite
+Identität, Quelleninventar, Budgets, Werkzeugbindung und unveränderliche Buchführung.
 
 ### 8.3 Budgets und feste Einzelaufrufe
 
-| Art | Exakte `budgets` | Exakte `max_attempts` |
-| --- | --- | --- |
-| `register` | `export_seconds,plan_seconds,reconcile_seconds` jeweils 300; `publication_seconds,recovery_seconds` getrennte endliche positive Zahlen bis 86400, regulär jeweils 1800 | `export,plan,apply,reconcile`: je Integer 1..100 |
-| `background_adopt` | `store_seconds,plan_seconds,adopt_seconds,recovery_seconds,reconcile_seconds` jeweils 300 | `store,plan,adopt,reconcile`: je Integer 1..100 |
-
-Die unveränderte Warnschwelle der Registrierung ist 300 s. Die beiden expliziten
-Registrierungswerte werden nur beim mutierenden Einzelaufruf als die vorhandenen
-Overrides übergeben. Kein äußerer Gesamtdeadline über diesen Aufruf kürzt dessen
-separaten Recoveryrahmen. Bildplan/-adoption/-recovery bleiben je 300 s; keine
-Registrierungsdefaults für Bildoperationen. BA-B startet keinen Workerprozess:
-der OS-Lock und alle synchronen Fachaufrufe gehören demselben CLI-Prozess. Harte
-Beendigung hinterlässt dadurch keinen unabhängig weiterlaufenden Batchworker.
-Native kooperative Abbruch-/Budget- und automatische Rollbackpfade bleiben erhalten.
-
-`register`: `target_adapter.export` prüft seine Ein-/Ausgaben vollständig, danach
-unmittelbar `content_registry.registration(apply=False)`, danach genau ein
-`registration(apply=True)` mit denselben gebundenen Eingängen. Kein routinemäßiges
-zusätzliches inspect/verify-export. Zweiter Job plant nach dem ersten Erfolg.
-Der Apply-Aufruf plant intern selbst erneut; BA-B behauptet keine zusätzliche
-atomare Snapshotbindung zwischen diesen getrennten nativen Aufrufen. Ein nativer
-Konflikt stoppt ohne automatische Neuplanung/Mutation. Ein vollständig frischer
-Plan-No-op kann den Job ohne mutierenden Wiederholungsaufruf abschließen.
-
-`background_adopt`: natives `store` auf Originalrequest/Dateien, danach frisches
-`plan`, danach `adopt` mit genau diesem erhaltenen vollständigen Planbundle.
-Store-No-op ist keine Ziel-/Auswahlfreigabe. Keine Raster-/Revealersetzung,
-Legacy-Erstnachrüstung, neue Analyse, Modell-API oder zusätzliche Buchsicht.
+Die vorhandenen endlichen Jobbudgets bleiben getrennt: `export_seconds`,
+`plan_seconds`, `publication_seconds`, `recovery_seconds`, `reconcile_seconds`
+für Registrierung; `store_seconds`, `plan_seconds`, `adopt_seconds`,
+`recovery_seconds`, `reconcile_seconds` für den separaten Hintergrundeditor.
+Publikation und Recovery nutzen eigene Budgets nach RI. Die Batchausführung
+startet keine zusätzliche Lösungsfindung und keinen historischen Full-Checkout-
+Replay. Jeder Wiederanlauf prüft aktuelle Eingaben, Auftrag, Werkzeugbindung und
+erreichtes ausgewähltes Ziel neu. Eine alte Erfolgsmeldung genügt nicht.
 
 ### 8.4 Lock, Auftragslinie und dauerhafte Formen
 
@@ -712,7 +648,7 @@ native Recovery, dann frisches Resume. Kein Locklöschen als Reparatur.
    einmal über `catalog_transaction.capture` vollständig frisch gelesen; für jeden
    Job zuvor getrennte endliche Abgleicherlaubnis reservieren. Danach den aktuellen
    Registryeintrag und jobbezogene Source-/Request-/Revision-/PNG-/Notice- oder
-   Register-/Receiptbytes gegen die tatsächlich gebuchte `reached`-Bindung prüfen.
+   aktuelle Register-/Livebytes gegen die tatsächlich gebuchte `reached`-Bindung prüfen.
    Der Gesamtsnapshot ist nur im Prozess verwendbar; kein serialisierter RI-Kontext.
    Dieser `reconciled`-Abgleich ist kein gelockerter nativer Bild-No-op.
 
@@ -786,11 +722,12 @@ oder Gesamtabschluss von #491 durch die Implementierungslieferung.
 
 ## PW-PERF-D · Snapshotverbrauch
 
-BA-A behält lokale 0.6/0.7-Eingänge. Einzeldateisnapshots werden gegen ihre
-ursprünglichen Gitbytes am Plan-source_commit geprüft, falls der aktuelle Router
-abweicht; keine Neubindung alter Pakete. BA-B nimmt zusätzlich Handoff v5/Record v4
-nach [PW-B](PW_B_CONTRACT.md#pw-perf-d--regelquellen-und-snapshotgeneration) an.
-Seine äußere Regelbindung bleibt version/document_revision/snapshot des gemeinsamen
-Kerns; die Originalmetadaten müssen dessen Hash und Revision treffen. Die gesamte
-neue Quellenmenge wird vor Reservierung und nativ vor Export geprüft. Neue
-Regeldateien gehören ausdrücklich zur tatsächlichen Werkzeugbindung beider Adapter.
+RI-ONE ersetzt die frühere mehrgenerationige Integrations-/Receiptstrecke.
+Maßgeblich sind [RI](PUZZLE_INTEGRATION.md), [ZA-1](ZA1_ADAPTER.md) und
+[RI-ONE](PUZZLE_INTEGRATION_SINGLE_PATH.md). Erstregistrierung verwendet genau
+`picross-integration-input-v1`, Registry v5, Revealquelle v5 und Hintergrundquelle
+v7; Runtime v8 bleibt unverändert. Die aktuelle Quelle bindet Identität und
+Livebytes, keine Produktionsarchive, Producer- oder Regelbuch-Allowlist.
+Bild-, Raster-, Metadaten- und Hintergrundrevisionen bleiben eigene Operationen
+nach [PE §13](PUZZLE_EDITOR.md#13-pe-edit2-gezielte-pflege-statt-vollbestandsprüfung).
+Historische Formbeispiele dieses Dokuments erteilen keine aktuelle Schreibbefugnis.

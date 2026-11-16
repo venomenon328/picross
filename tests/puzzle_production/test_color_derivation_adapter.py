@@ -9,8 +9,7 @@ import zipfile
 from tools.puzzle_production.authoring_package import open_package
 from tools.puzzle_production.contract import InvalidInput, InvalidProof, digest, load_json, write_json
 from tools.puzzle_production.images import file_hash, import_image, raster_image
-from tools.puzzle_production.target_adapter import export, inspect, verify_export
-from tools.puzzle_production.za1_fixtures import rated_registration as registration
+from tools.puzzle_production.authoring_inspection import inspect
 from tools.puzzle_production.za1_fixtures import FIXTURES, ROOT, make, approve, seal, isolated_checkout
 
 
@@ -89,41 +88,7 @@ class ColorDerivationTests(unittest.TestCase):
         with open_package(self.p, allow_manual_review=True) as p:
             return inspect(p, self.approval if approval else None, manual_authorization=self.auth)[0]
 
-    def test_eight_color_fixed_chain_exports_and_registers(self):
-        self.prepare(8)
-        self.assertTrue(self.inspect()["technical"])
-        out=self.root/"eight-export"
-        export(self.p,out,name="TEST ONLY",revision=1,stem="eight_chain",save_slot="eight_chain",
-               approval_path=self.approval,manual_authorization=self.auth,category_id="voegel",
-               categories_path=ROOT/"tests/puzzle_production/fixtures/catalog/categories.json")
-        manifest,report=verify_export(out)
-        definition=load_json(out/manifest["definition"])
-        self.assertEqual(len(definition["palette"]),8)
-        self.assertEqual(set(v for row in definition["solution"] for v in row)-{0},set(range(1,9)))
-        checkout=isolated_checkout(self.root/"eight-checkout")
-        self.assertEqual(registration(out,checkout,apply=True)["status"],"registered")
 
-    def test_zip_export_offline_registration_preserves_original_review(self):
-        archive = self.root / "package.zip"
-        with zipfile.ZipFile(archive, "w") as z:
-            for f in self.p.rglob("*"):
-                if f.is_file(): z.write(f, f.relative_to(self.p).as_posix())
-        self.authorize(file_hash(archive))
-        before = (self.p / "handoff.json").read_bytes()
-        out = self.root / "export"
-        export(archive, out, name="TEST ONLY", revision=1, stem="color_chain", save_slot="color_chain",
-               approval_path=self.approval, manual_authorization=self.auth, category_id="voegel",
-               categories_path=ROOT / "tests/puzzle_production/fixtures/catalog/categories.json")
-        manifest, report = verify_export(out)
-        self.assertEqual(manifest["format"], "picross-target-export-v3")
-        self.assertTrue(report["technical"] and report["catalog_ready"] and report["late_motif_acceptance"])
-        self.assertEqual(report["original_motif_gate"], "pending")
-        self.assertEqual(report["source"]["changed_cells"], 2)
-        self.assertEqual(len(report["source"]["chain"]), 2)
-        self.assertEqual((out / "input/handoff.json").read_bytes(), before)
-        checkout = isolated_checkout(self.root / "checkout")
-        self.assertEqual(registration(out, checkout)["status"], "planned")
-        self.assertEqual(registration(out, checkout, apply=True)["status"], "registered")
 
     def test_explicit_auth_final_acceptance_and_all_other_gates_required(self):
         with self.assertRaises(InvalidInput), open_package(self.p): pass

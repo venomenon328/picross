@@ -7,12 +7,12 @@ import sys
 import tempfile
 import unittest
 
-from tools.puzzle_production import certification, repair, target_adapter
+from tools.puzzle_production import certification, repair
+from tools.puzzle_production import authoring_inspection as target_adapter
 from tools.puzzle_production.authoring_package import open_package
 from tools.puzzle_production.contract import Budget, InvalidInput, InvalidProof, digest, load_json, validate_logic, write_json
 from tools.puzzle_production.images import import_image, inspect_candidate, file_hash, raster_image, logic_from_matrix
 from tools.puzzle_production.za1_fixtures import make, seal, approve, isolated_checkout, ROOT
-from tools.puzzle_production.za1_fixtures import rated_registration as registration
 from tools.puzzle_production.content_registry import check_checkout
 from test_paired import MONO, COLOR, wire
 
@@ -83,27 +83,16 @@ class PairedProductionTests(unittest.TestCase):
         self.addCleanup(temp.cleanup)
         self.root = Path(temp.name)
 
-    def export_and_register(self, p, name="run", auth=None, approval=None):
+    def inspect_approved(self, p, name="run", auth=None, approval=None):
         approval = approval or self.root / (name + "-approval.json")
         if not approval.exists():
             approve(p, approval)
-        out = self.root / (name + "-export")
-        target_adapter.export(p, out, name="TEST ONLY", revision=1, stem="paired_test", save_slot="paired_test",
-            approval_path=approval, manual_authorization=auth, category_id="voegel",
-            categories_path=ROOT / "tests/puzzle_production/fixtures/catalog/categories.json")
-        manifest, report = target_adapter.verify_export(out)
-        self.assertEqual(manifest["format"], "picross-target-export-v4")
-        self.assertTrue(report["technical"] and report["catalog_ready"])
-        self.assertIn("paired_verifier.py", report["tool"]["modules"])
-        checkout = isolated_checkout(self.root / (name + "-checkout"))
-        before = (checkout / "content/registry.json").read_bytes()
-        self.assertEqual(registration(out, checkout, paired=True)["status"], "planned")
-        self.assertEqual((checkout / "content/registry.json").read_bytes(), before)
-        self.assertEqual(registration(out, checkout, paired=True, apply=True)["status"], "registered")
-        check_checkout(checkout, replay=True)
-        return out, report
+        with open_package(p, allow_manual_review=auth is not None) as opened:
+            report = target_adapter.inspect(opened, approval, manual_authorization=auth)[0]
+        self.assertTrue(report["technical"] and report["editorial_approved"])
+        return None, report
 
-    def test_import_repair_export_and_registration_mono_color(self):
+    def test_import_repair_approved_quality_mono_color(self):
         for color, repaired in ((False, False), (True, False), (False, True), (True, True)):
             name = f"{color}-{repaired}"
             p = self.root / name
@@ -113,9 +102,7 @@ class PairedProductionTests(unittest.TestCase):
             self.assertTrue(report["technical"])
             self.assertFalse(report["editorial_approved"])
             self.assertTrue(report["deduction"]["assessment"]["r4_required"])
-            with self.assertRaisesRegex(InvalidInput, "final_editorial"):
-                target_adapter.export(p, self.root / "blocked", name="TEST", revision=1, stem="test", save_slot="test")
-            _, report = self.export_and_register(p, name)
+            _, report = self.inspect_approved(p, name)
             self.assertEqual(report["difficulty"]["level"], "L5")
 
     def test_false_necessity_old_rulebook_and_profile_downgrades(self):
@@ -305,7 +292,7 @@ class PairedProductionTests(unittest.TestCase):
         difficulty(p, h, h["candidate"]["proof"])
         seal(p, h)
         case.authorize()
-        _, report = self.export_and_register(p, "manual", case.auth, case.approval)
+        _, report = self.inspect_approved(p, "manual", case.auth, case.approval)
         self.assertFalse(report["deduction"]["assessment"]["r4_required"])
         d = load_json(p / "difficulty.json")
         d["rule_families"]["R4"] = "Unjustified use of a stronger solver"
@@ -332,7 +319,7 @@ class PairedProductionTests(unittest.TestCase):
         write_json(p / "edit-record.json", plan)
         seal(p, h)
         case.authorize()
-        _, report = self.export_and_register(p, "edited", case.auth, case.approval)
+        _, report = self.inspect_approved(p, "edited", case.auth, case.approval)
         self.assertTrue(report["frame_exception_accepted"])
         self.assertFalse(report["frame_valid"])
 
@@ -369,7 +356,7 @@ class PairedProductionTests(unittest.TestCase):
             difficulty(p, h, h["candidate"]["proof"])
             seal(p, h)
             case.authorize()
-            _, report = self.export_and_register(p, cls.__name__, case.auth, case.approval)
+            _, report = self.inspect_approved(p, cls.__name__, case.auth, case.approval)
             self.assertEqual(report["source"]["changed_cells"], 2)
             self.assertEqual(report["late_motif_acceptance"], cls == ColorDerivationTests)
             plan = load_json(p / "plan-0.json")

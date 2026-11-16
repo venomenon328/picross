@@ -188,11 +188,6 @@ def plan(root, operations, *, _snapshot=None):
     return _plan(root, snapshot, after, target, expanded, "metadata")
 
 
-def plan_migration(root):
-    from .editor_migration import plan_metadata_migration
-    return plan_metadata_migration(root)
-
-
 @io.bounded
 def apply(root, value, *, fail_step=None):
     """Revalidate a reviewed plan and publish through the existing guarded writer."""
@@ -200,8 +195,7 @@ def apply(root, value, *, fail_step=None):
     _unlocked(root)
     value = io.json_bytes(_bytes(value), PLAN_LIMIT)
     exact_keys(value, {"format", "operation", "operations", "changes", "files", "journal"})
-    require(value["format"] in (PLAN_FORMAT, IMAGE_PLAN_FORMAT) and
-            value["operation"] in (("metadata",) if value["format"] == IMAGE_PLAN_FORMAT else ("metadata", "metadata-migration")),
+    require(value["format"] == IMAGE_PLAN_FORMAT and value["operation"] == "metadata",
             "Unsupported metadata plan")
     journal = value["journal"]
     formats = tx.IMAGE_FORMATS if value["format"] == IMAGE_PLAN_FORMAT else tx.PE_FORMATS

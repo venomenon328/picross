@@ -107,23 +107,14 @@ def source_inventory(root: Path) -> dict:
     registry = io.json_bytes(io.read(root, "content/registry.json", 8 * 1024 * 1024), 8 * 1024 * 1024)
     background.source_paths(root, registry)
     indexed = background.index(registry)
-    modern = registry["format"] in (catalog.BACKGROUND_FORMAT, catalog.METADATA_FORMAT)
-    formats = {catalog.FORMAT: tuple("picross-runtime-registry-v" + str(v) for v in (2, 3, 4, 5)),
-               catalog.BACKGROUND_FORMAT: (background.RUNTIME_FORMAT,),
-               catalog.METADATA_FORMAT: (catalog.METADATA_RUNTIME_FORMAT, catalog.IMAGE_RUNTIME_FORMAT)}
-    if runtime["format"] not in formats.get(registry["format"], ()):
-        raise ValueError("Background runtime/source generation differs")
+    if registry["format"] != catalog.FORMAT or runtime["format"] != catalog.IMAGE_RUNTIME_FORMAT:
+        raise ValueError("Current background catalog/runtime required")
     texts = {name: io.read(root, name, background.LIMIT, missing=True)
              for name in background.text_names(registry)}
     projected = background.projection(registry, texts)
     sources = {identifier: io.json_bytes(texts[ref["file"]], background.LIMIT)
                for identifier, ref in indexed.items()}
-    if runtime["format"] != catalog.IMAGE_RUNTIME_FORMAT and any(source["format"] == background.EDITOR_FORMAT for source in sources.values()):
-        raise ValueError("Background v5 source requires runtime v8")
-    background.capability(root, required=registry["format"] == catalog.BACKGROUND_FORMAT or
-                          any(row["status"] in ("selected", "none") for row in projected.values()))
-    if runtime["format"] != catalog.IMAGE_RUNTIME_FORMAT and any(row["status"] == "standard" for row in projected.values()):
-        raise ValueError("Background standard preference requires runtime v8")
+    background.capability(root, required=any(row["status"] in ("selected", "none") for row in projected.values()))
     entries = runtime["entries"]
     if len(entries) != len(projected) or {e["id"] for e in entries} != set(projected):
         raise ValueError("Background runtime/source IDs differ")
@@ -131,7 +122,7 @@ def source_inventory(root: Path) -> dict:
     for entry in entries:
         identifier = entry["id"]
         expected = projected[identifier]
-        if modern and entry.get("background") != expected or not modern and "background" in entry:
+        if entry.get("background") != expected:
             raise ValueError("Background runtime projection is stale: " + identifier)
         if expected["status"] != "selected":
             continue
@@ -139,21 +130,14 @@ def source_inventory(root: Path) -> dict:
         # and closed source schema. The notice is not repeated in runtime data.
         source = sources[identifier]
         active = background.current(source)
-        # PE §13.3 v6 sources contain only current technical image bindings.
-        # Preserve an existing historical TXT, without inventing a new notice
-        # or making provenance a requirement of an ordinary editor import.
-        slim = source["format"] == "picross-catalog-background-v6"
-        if slim:
-            notice_name = background.notice_path(identifier)
-            notice_raw = io.read(root, notice_name, 65536, missing=True)
-            notice = background.ref(notice_name, notice_raw) if notice_raw is not None else None
-        else:
-            notice = active["notice"]
+        # Current technical source; preserve any existing rights notice.
+        notice_name = background.notice_path(identifier)
+        notice_raw = io.read(root, notice_name, 65536, missing=True)
+        notice = background.ref(notice_name, notice_raw) if notice_raw is not None else None
         row = dict(id=identifier, image_revision=expected["image_revision"], asset=expected["asset"],
                    notice={**notice, "file": notice["file"].removeprefix("game/")} if notice else None)
         image = _read_bound(game, row["asset"])
-        prepared = slim or source["format"] == background.EDITOR_FORMAT and active["authority"]["kind"] == "manual"
-        _png_image_format(image, row["asset"]["file"], prepared=prepared)
+        _png_image_format(image, row["asset"]["file"], prepared=True)
         if row["notice"]: _read_bound(game, row["notice"])
         assets.append(row)
     wanted = {ref["file"] for row in assets for ref in _refs(row)}

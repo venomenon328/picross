@@ -7,8 +7,7 @@ import unittest
 from tools.puzzle_production.authoring_package import open_package
 from tools.puzzle_production.contract import InvalidInput, InvalidProof, digest, load_json, write_json
 from tools.puzzle_production.images import file_hash, import_image, raster_image
-from tools.puzzle_production.target_adapter import export, inspect, verify_export
-from tools.puzzle_production.za1_fixtures import rated_registration as registration
+from tools.puzzle_production.authoring_inspection import inspect
 from tools.puzzle_production.za1_fixtures import ROOT, make, seal, approve, isolated_checkout
 
 
@@ -106,17 +105,6 @@ class StalledColorTests(unittest.TestCase):
         with open_package(self.p, allow_manual_review=True) as p:
             return inspect(p, self.approval if approval else None, manual_authorization=self.auth)[0]
 
-    def test_ambiguous_base_fixed_correction_exports_and_registers(self):
-        self.prepare()
-        out = self.root / "export"
-        export(self.p, out, name="TEST ONLY", revision=1, stem="stalled_color", save_slot="stalled_color",
-               approval_path=self.approval, manual_authorization=self.auth, category_id="voegel",
-               categories_path=ROOT / "tests/puzzle_production/fixtures/catalog/categories.json")
-        _, report = verify_export(out)
-        self.assertEqual(report["source"]["base_deduction"], {"status": "stalled", "proof_verified": True, "certified": False})
-        self.assertTrue(report["technical"] and report["catalog_ready"])
-        self.assertEqual(report["source"]["changed_cells"], 1)
-        self.assertEqual(registration(out, isolated_checkout(self.root / "checkout"), apply=True)["status"], "registered")
 
     def test_paired_base_requires_both_independent_fixed_points(self):
         self.prepare(paired=True)

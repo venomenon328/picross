@@ -1,5 +1,12 @@
 # AT · Transparente Abschlussbilder
 
+**RI-ONE: aktueller Integrationsstand.** Die technischen Integrations-, Quellen-
+und Recoveryformen folgen [RI](PUZZLE_INTEGRATION.md) und [ZA-1](ZA1_ADAPTER.md).
+Frühere generationsbezogene Einführungsabschnitte sind dafür historisch; sie
+stellen keinen zweiten Integrationsweg bereit. Bildqualität, kreative Auswahl,
+PNG/SVG und explizite Freigaben bleiben verbindlich.
+
+
 **PE / #576 · PE-A1 integriert, PE-A2 zur Umsetzung beauftragt:**
 Der [Bestandseditor](PUZZLE_EDITOR.md#8-pe-a2-geschlossener-bild--und-präferenzvertrag) ergänzt
 einen manuellen Dateiimport ohne Bildbearbeitung und ohne KI-Zwischenschritt.
@@ -186,162 +193,23 @@ ersetzt diese Entscheidung nicht.
 
 ## 4. Gemeinsamer technischer Vertrag für AT-A
 
-### 4.1 Eigener Weg und kompatible Quellenprüfung
+RI-ONE ersetzt die frühere mehrgenerationige Integrations-/Receiptstrecke.
+Maßgeblich sind [RI](PUZZLE_INTEGRATION.md), [ZA-1](ZA1_ADAPTER.md) und
+[RI-ONE](PUZZLE_INTEGRATION_SINGLE_PATH.md). Erstregistrierung verwendet genau
+`picross-integration-input-v1`, Registry v5, Revealquelle v5 und Hintergrundquelle
+v7; Runtime v8 bleibt unverändert. Die aktuelle Quelle bindet Identität und
+Livebytes, keine Produktionsarchive, Producer- oder Regelbuch-Allowlist.
+Bild-, Raster-, Metadaten- und Hintergrundrevisionen bleiben eigene Operationen
+nach [PE §13](PUZZLE_EDITOR.md#13-pe-edit2-gezielte-pflege-statt-vollbestandsprüfung).
+Historische Formbeispiele dieses Dokuments erteilen keine aktuelle Schreibbefugnis.
 
-Der bestehende [Katalogintegrator](../tools/puzzle_production/catalog_integration.py)
-erlaubt im Rasterupdate nur identische Revealbytes und verlangt eine höhere
-Puzzle-Runtime-Revision. AT-A ergänzt einen eigenen Weg für reine Bildrevisionen.
-Er macht weder den bestehenden Rasterupdatevertrag permissiver noch gibt er
-einen direkten Austausch außerhalb der kontrollierten Übernahme frei.
-
-Die konkrete Umsetzung benötigt eine gemeinsame Quellenprüfung. Registrierung,
-Rasterupdate, Sync, Bewertungs-/Added-Übernahme, Prüfen, Export, Bereinigung und
-Recovery müssen den aktiven freigegebenen Bildstand konsistent verstehen und
-erhalten. Ein späteres Rasterupdate darf eine aktive AT-Bildfassung nicht still
-verwerfen oder auf das historische Bild zurücksetzen; der kombinierte neue
-Quellstand benötigt wieder eine vollständige gültige Bindung.
-
-Gültige Altstände ohne AT-Bildrevision bleiben während AT-A prüfbar und nutzbar.
-Der Transparenzstandard für neue beziehungsweise ausdrücklich bearbeitete Bilder
-wird nicht als rückwirkende globale Sperre aller noch nicht umgestellten Assets
-eingeführt. Fehlende AT-Metadaten eines legitimen Altstands und vorhandene defekte,
-unvollständige oder widersprüchliche Revisionsdaten sind verschieden: Letztere
-stoppen die Operation, ohne stillen Rückfall auf historische Werte.
-
-Bestehende exakte Registry-/Receipt-/Journalformate behalten ihre Feldmengen und
-Grenzen. Bereits gesperrte Altjournale bleiben gesperrt. Zusätzliche Felder oder
-Operationen brauchen einen ausdrücklich versionierten Vertrag. Eine neue
-Runtime-Registryversion ist nur bei tatsächlicher Änderung ihres Schemas nötig;
-die reine neue Bilddatei rechtfertigt keine allgemeine Datenmigration.
-
-### 4.2 Vorschau, binäre Ersetzung und Wiederherstellung
-
-Eine Vorschau bindet den erwarteten Ausgangsstand und zeigt genau die betroffenen
-IDs, Pfade, alten/neuen Hashes, Freigaben und geplanten Schreiboperationen.
-Vollständige Vorprüfung erfolgt vor jeder Übernahme. Sperre und erneuter
-Quellenvergleich verhindern Übernahme eines veralteten Plans oder einer
-zwischenzeitlich konkurrierend geänderten Datei. Fremde Quellen werden nicht
-automatisch repariert, überschrieben oder als eigener No-op ausgegeben.
-
-Der [gemeinsame Journalweg](../tools/puzzle_production/catalog_transaction.py)
-führt bisherige Bilddateien als unveränderte `retained`-Bytes; `old/new` enthält
-UTF-8-Texte und `additions` neue Dateien. Binäre Ersetzung am gleichen Bildpfad
-braucht deshalb einen ausdrücklichen versionierten Erweiterungsvertrag mit
-gesicherten Altbytes, Staging und Hashbindung. PNG-Bytes dürfen weder als UTF-8
-in das Textjournal geschoben noch als scheinbare Neuanlage an einem vorhandenen
-Pfad behandelt werden.
-
-Eine zusammenhängend geplante Übernahme bleibt als Gesamtheit konsistent:
-Bildbytes und aktive Bindung werden vollständig übernommen oder auf den
-vorherigen gültigen Zustand zurückgeführt. Das gilt bei Schreibfehler,
-Unterbrechung und erneutem Recoveryaufruf. Gesicherte Altbytes und Journal werden
-nicht vor erfolgreichem Abschluss entfernt; widersprüchliche Recoveryquellen
-stoppen, statt fremde Daten zu überschreiben. Keine Mischung aus alter Freigabe
-und neuen Bildbytes oder umgekehrt.
-
-Nur der vollständig passende eigene Zielstand gilt bei identischer Wiederholung
-als No-op: keine Byte-, Revisions- oder Zeitstempeländerung, kein Rewrite und kein
-neues Journal. Fehlende Dateien, ungeprüfte Metadaten oder ein lediglich ähnlich
-aussehendes Bild erfüllen diesen Zustand nicht.
-
-### 4.3 P01 · Abgeschlossener technischer Sollvertrag
-
-P01-D01–D07 schließen die technischen Kernfragen vor AT-A-Codeänderungen.
-Die folgenden Formate/Befehle sind verbindlicher **Sollstand**, noch keine
-ausführbare Implementierung. Paketfolge und Produktentscheidungen bleiben gleich.
-
-| Entscheidung | Zuständige vollständige Konkretisierung |
-| --- | --- |
-| P01-D01 | [ZA-1, aktive Quelle und Freigabe](ZA1_ADAPTER.md#at-p01-d01--geschlossene-aktive-bildquelle): `content/reveals/<pz-ID>.json`, `picross-catalog-reveal-v1`, geschlossene Hülle, Herkunft/Notices/Freigaben, Hash-/Revisions-/Limitregeln. |
-| P01-D02 | [Kategorien, gemeinsame Auflösung](CATEGORIES.md#at-p01-d02--namensraum-und-eine-gemeinsame-auflösung): gesamter sicherer Namensraum, getrennte historische/aktive Bild-/Noticeprüfung, eine Auflösung in sämtlichen Folgeoperationen; Inhalts-v2/Runtime-v4/Saves unverändert. |
-| P01-D03 | [ZA-1, Rebind](ZA1_ADAPTER.md#at-p01-d03--rebind-und-erhaltene-herkunft): stabiler Exportanker, Cleanup ohne Revisionsänderung, historischer Register-No-op und späterer Rasterupdate mit aktivem Bild und separater append-only Definitionsbindung. |
-| P01-D04 | [Werkzeuganleitung, CLI und Plan](../tools/puzzle_production/README.md#at-p01-d04--cli-für-bildrevisionen): eigener `catalog_reveal plan/adopt`, explizite IDs, geschlossene Anfrage/Plan/Ergebnisformate, vollständiger Snapshot, No-op/Exit/Größenregeln. |
-| P01-D05 | [Transaktionen, Generationen](SD_CATALOG.md#at-p01-d05--generationen-und-vollständige-mengen): registration-v5/update-v4/metadata-v2/reveal-adoption-v1, vollständige T/K-/Deltamengen, Base64-Binärersatz, begrenzter Reader, 24-/128-MiB-Grenzen und Altformatmatrix. |
-| P01-D06 | [Phasen und Recovery](SD_CATALOG.md#at-p01-d06--phasen-und-temporäre-eigentümerschaft): vollständiger dauerhafter Lock vor Mutation, P0–P6/R0–R2, Temp-/Fremdbytebesitz, wiederholbarer Rollback bis unmittelbar gültigem Checkout. |
-| P01-D07 | Nachfolgende konkrete Prüfzuordnung und [CI-Policy](CI_POLICY.md): feste synthetische Regressionen/Artefakte, native Windows-/Chromiumwege, enge spätere Inhalts-CI-Freigabe. |
-
-Neue SD-Berichte v3 und Added-Pläne v2 binden AT in ihren Snapshots, ohne alte
-Reports umzuschreiben. Ihre exakten Versionen und zulässigen gemeinsamen Deltas
-stehen in [Kategorien](CATEGORIES.md). Kein anderer Sidecar-/Runtime-/Savewechsel.
-Eine Bildadoption erhöht weder Difficulty- noch Puzzle-Revision und setzt kein
-neues Hinzugefügt-Datum. Die ursprüngliche Exportbindung bleibt auch beim
-Wechsel vom vollständigen Export zum kompakten Receipt stabil.
-
-P01 liefert Dokumentvalidator, vollständigen Diffcheck, kurzen tatsächlichen
-Docs-/Werkzeugpfad und `ci-required` am neuen Head/Test-Merge; Nachweise und die
-getrennten Dokumentprüfschritte stehen im PR. Der frühere fehlgeschlagene Run
-39173842929 und frühere Dokumentreview bleiben an ihren alten Head gebunden.
-P01-A01–A07 und deren aktueller Erfüllungsstand werden im Issue geführt.
-Integration von #257 und kurze Aktualitätsprüfung bleiben vor späterem
-AT-A-Implementierungsstart erforderlich. P01 selbst beginnt AT-A/AT-B nicht,
-erteilt keinen Merge und keine neue Bildfreigabe.
-
-### 4.4 Synthetisches vollständiges Datenbeispiel
-
-Das folgende **Dokumentbeispiel** baut eine vollständige erste AT-Hülle aus
-einem künstlichen gültigen normalisierten Herkunftseintrag vor Cleanup.
-`a…a`, `b…b`, `c…c`
-bezeichnen hier angenommene externe Blatt-/Altbild-/Neubild-Dateihashes;
-sie behaupten keine gelieferten Bilddateien oder realen Freigaben. Alle inneren
-Ketten-/Notice-/Recordhashes sind dagegen vollständig aus den gezeigten Werten
-berechenbar. Keine Repositorydatei wird durch das Beispiel geschrieben.
-`test_only=true` bindet ausschließlich synthetische Freigaben und ist im echten
-Katalog ausgeschlossen. Der vor Cleanup angelegte Record bleibt bei Cleanup
-bytegleich, weil der Exportanker derselbe ist; `receipt=null` bleibt unverändert.
-
-```python
-import hashlib, json
-def H(value):
-    return hashlib.sha256(json.dumps(value, sort_keys=True, separators=(',', ':'),
-        ensure_ascii=False, allow_nan=False).encode('utf-8')).hexdigest()
-def seal(value, key):
-    return dict(value, **{key: H(value)})
-notice = {'text': 'Synthetic author; test use only.\n',
-          'sha256': hashlib.sha256(b'Synthetic author; test use only.\n').hexdigest()}
-entry = {'id': 'pz-at-example', 'key': 'pz-at-example', 'save_slot': 'at_example',
-    'definition': 'data/content/at_example.json', 'reveal': 'art/content/at_example.png',
-    'visible': True, 'category_id': 'test', 'production': {
-        'package': 'content/packages/pz-at-example/r01', 'package_sha256': 'd'*64,
-        'revision': 'r01', 'width': 1, 'height': 1, 'mode': 'mono', 'difficulty': {},
-        'status': 'registered', 'blockers': [], 'test_only': True,
-        'definition_sha256': 'a'*64, 'reveal_sha256': 'b'*64}}
-binding = seal({'binding_revision': 1, 'runtime_revision': 1, 'entry': entry, 'notice': notice,
-    'previous_binding_hash': None}, 'binding_hash')
-approval = {'format': 'picross-reveal-approval-v1', 'id': 'pz-at-example',
-    'image_revision': 1, 'definition_sha256': 'a'*64,
-    'previous_reveal_sha256': 'b'*64, 'reveal_sha256': 'c'*64,
-    'notice_sha256': notice['sha256'], 'actor': 'Synthetic fixture',
-    'timestamp_utc': '2026-10-19T10:00:00Z', 'statement': 'Synthetic test decision.',
-    'checks': {'reveal_approved': True, 'motif_raster_consistent': True,
-               'final_editorial_approved': True}, 'test_only': True}
-image = seal({'image_revision': 1, 'binding_hash': binding['binding_hash'],
-    'previous_reveal_sha256': 'b'*64, 'reveal_sha256': 'c'*64, 'notice': notice,
-    'approval': approval, 'provenance': {'author': 'Synthetic author',
-        'usage_basis': 'Test use only', 'source': 'Independent synthetic fixture',
-        'changes': 'Transparent exterior and inner opening'}}, 'revision_hash')
-record = seal({'format': 'picross-catalog-reveal-v1', 'id': 'pz-at-example',
-    'record_revision': 1, 'identity': {'key': 'pz-at-example',
-        'save_slot': 'at_example', 'definition': 'game/data/content/at_example.json',
-        'reveal': 'game/art/content/at_example.png',
-        'notice': 'game/art/content/at_example.txt'},
-    'origin': {'entry': entry, 'runtime_revision': 1, 'notice': notice, 'receipt': None},
-    'bindings': [binding], 'revisions': [image],
-    'current': {'binding_revision': 1, 'image_revision': 1}}, 'record_hash')
-```
-
-Kontrollwerte dieses Beispiels: `binding_hash`
-`d5eacda804427375d6cf7636cfb11b567897671eaafd865d9c7ae3398db01c56`,
-`revision_hash` `6c220a066a9a0ba73f3de5b2063447b874964ee12d104a3da3d81f5d47822af2`,
-`record_hash` `ababd7c48d2439251e7d7c5ccc78018967b4fff60e0e8c5aed841e4fecbd18a1`.
-
-Bei zweiter Bildrevision bleibt `binding` gleich, der neue Vorgängerhash ist
-`c…c`, Bildrevision/Recordrevision werden 2. Bei anschließendem Rasterupdate
-mit weiterhin genau diesen aktiven Bildbytes wird stattdessen `bindings[1]`
-angehängt: neue Export-/Definitionsbytes und höhere Runtime-Revision,
-`previous_binding_hash=bindings[0].binding_hash`; `current.binding_revision=2`,
-Bildrevision bleibt 2, Recordrevision wird 3. Alte `origin/revisions` bleiben
-identisch. Eine erneute erste Adoption aus ihrem alten Plan ist nach diesen
-Folgeschritten stale; direkt nach ihrer eigenen Übernahme ist sie echter No-op.
+Der aktuelle Editor prüft den vollständigen ausgewählten Bildplan einschließlich
+Vorher-/Nachherbytes, Rechtehinweis und ausdrücklicher Entscheidung. Das Reveal
+bleibt PNG oder SVG gemäß §2. Reine Bildänderungen verändern weder Raster,
+Schwierigkeitsbewertung, Speicherslot noch Hinzugefügt-Datum. Aktuelle Quellen
+führen Bild-/Recordrevision und Identitätsbindung; ein Bildplan besitzt keine
+Abhängigkeit von einem früheren Produktionspaket. Recovery prüft die aktuelle
+Journalgeneration und alle gebundenen Zielbytes, bevor es eigene Daten entfernt.
 
 ## 5. Pakete und Abnahme
 
@@ -462,48 +330,60 @@ vorgenommen.
 
 ## HP-I1c · Versionierte aktuelle Hintergrundbindung
 
-Der vor konsumierendem Code festgelegte geschlossene
-[HP-I1c-Vertrag §12](PUZZLE_BACKGROUNDS.md#12-hp-i1c--aktuelle-raster-revealbindung)
-ergänzt die früheren Hintergrundziel-Sperren gezielt: Source v3 erhält ihren
-vollständigen v1/v2-Ausgangsstand und bindet chronologisch aktuelle Definition,
-Runtime-Revision und effektiven AT-Reveal. Rasterupdate erhält die aktuelle
-Bildentscheidung; Revealadoption erhält Raster-/Saveidentität. Hintergrundwechsel
-bleibt der eigene Writer. V5 ist kein none-Downgrade; v6-Update verlangt exakt
-dieselben Bild-/Entscheidungsdaten. Keine Legacy-Erstnachrüstung.
+RI-ONE ersetzt die frühere mehrgenerationige Integrations-/Receiptstrecke.
+Maßgeblich sind [RI](PUZZLE_INTEGRATION.md), [ZA-1](ZA1_ADAPTER.md) und
+[RI-ONE](PUZZLE_INTEGRATION_SINGLE_PATH.md). Erstregistrierung verwendet genau
+`picross-integration-input-v1`, Registry v5, Revealquelle v5 und Hintergrundquelle
+v7; Runtime v8 bleibt unverändert. Die aktuelle Quelle bindet Identität und
+Livebytes, keine Produktionsarchive, Producer- oder Regelbuch-Allowlist.
+Bild-, Raster-, Metadaten- und Hintergrundrevisionen bleiben eigene Operationen
+nach [PE §13](PUZZLE_EDITOR.md#13-pe-edit2-gezielte-pflege-statt-vollbestandsprüfung).
+Historische Formbeispiele dieses Dokuments erteilen keine aktuelle Schreibbefugnis.
 
-Neu sind ausschließlich Updatejournal v7, Revealjournal v4, Hintergrundjournal v2,
-AT-Source v2, Revealplan v4 und Hintergrundplan v2 mit den in §12 exakt definierten
-Feldern/Versionsgrenzen. Vorige Formen bleiben streng geschlossen. Registry v3,
-Runtime v6 und Receipt v2 bleiben unverändert. Aktive Bytes, historische erste
-Freigabe und normalisierter aktueller Exportanker werden getrennt geprüft, auch
-nach Retirement und bei ursprünglicher Registerwiederholung. Budgets, vollständige
-T/K-/Namespaceguards, frische Prüfung unter Lock, Runtime zuletzt und Recovery
-bleiben erhalten. Echte Capability bleibt false; nur isolierte synthetische
-test_only-Ziele verwenden true. Keine Authoring-/Sheet-Formatänderung.
+Der aktuelle Editor prüft den vollständigen ausgewählten Bildplan einschließlich
+Vorher-/Nachherbytes, Rechtehinweis und ausdrücklicher Entscheidung. Das Reveal
+bleibt PNG oder SVG gemäß §2. Reine Bildänderungen verändern weder Raster,
+Schwierigkeitsbewertung, Speicherslot noch Hinzugefügt-Datum. Aktuelle Quellen
+führen Bild-/Recordrevision und Identitätsbindung; ein Bildplan besitzt keine
+Abhängigkeit von einem früheren Produktionspaket. Recovery prüft die aktuelle
+Journalgeneration und alle gebundenen Zielbytes, bevor es eigene Daten entfernt.
 
 ## PW-PERF-B · Begrenzte Erstregistrierungsprüfung
 
-Für Erstregistrierung auf v4/v8 gilt ausschließlich die neue geschlossene
-[v10-Semantik](PUZZLE_INTEGRATION.md). Gemeinsame Indizes, neue Produktion samt Freigaben/Proof,
-abhängige Quellen und Schreibziele bleiben vollständig gebunden. Unbeteiligte
-alte Paket-/Liveasset-/Sidecardateien werden nicht gelesen oder als intakt
-bestätigt; ihre Defekte erkennt der zuständige Reader oder ein expliziter
-Gesamtaudit. P0/P2 prüfen neue Quellen und freie/eigene Ziele, P5/P6 die neue
-Publikation, R0/R2 eigene Zwischenstände und alte Indizes. Alte Journalgenerationen
-und andere Writer behalten ihre bisherigen Prüfverträge. Keine Garantie gegen
-nichtkooperierendes ABA-/OS-Racing; keine Änderung menschlicher Freigaben.
+RI-ONE ersetzt die frühere mehrgenerationige Integrations-/Receiptstrecke.
+Maßgeblich sind [RI](PUZZLE_INTEGRATION.md), [ZA-1](ZA1_ADAPTER.md) und
+[RI-ONE](PUZZLE_INTEGRATION_SINGLE_PATH.md). Erstregistrierung verwendet genau
+`picross-integration-input-v1`, Registry v5, Revealquelle v5 und Hintergrundquelle
+v7; Runtime v8 bleibt unverändert. Die aktuelle Quelle bindet Identität und
+Livebytes, keine Produktionsarchive, Producer- oder Regelbuch-Allowlist.
+Bild-, Raster-, Metadaten- und Hintergrundrevisionen bleiben eigene Operationen
+nach [PE §13](PUZZLE_EDITOR.md#13-pe-edit2-gezielte-pflege-statt-vollbestandsprüfung).
+Historische Formbeispiele dieses Dokuments erteilen keine aktuelle Schreibbefugnis.
 
+Der aktuelle Editor prüft den vollständigen ausgewählten Bildplan einschließlich
+Vorher-/Nachherbytes, Rechtehinweis und ausdrücklicher Entscheidung. Das Reveal
+bleibt PNG oder SVG gemäß §2. Reine Bildänderungen verändern weder Raster,
+Schwierigkeitsbewertung, Speicherslot noch Hinzugefügt-Datum. Aktuelle Quellen
+führen Bild-/Recordrevision und Identitätsbindung; ein Bildplan besitzt keine
+Abhängigkeit von einem früheren Produktionspaket. Recovery prüft die aktuelle
+Journalgeneration und alle gebundenen Zielbytes, bevor es eigene Daten entfernt.
 
 ## PW-PERF-E · Gezielter Abschluss aktueller Quellen
 
-Für `retire-production` gilt der geschlossene [Receipt-v4- und Prüfvertrag](ZA1_ADAPTER.md#pw-perf-e--ausgewählter-produktionsabschluss-und-receipt-v4).
-Aktuelle Background v6 (selected/none/standard) und Reveal v4 (PNG/SVG) werden
-an binding/current geprüft, ohne erfundenen initial-Ursprung. Aktive
-Editorrasterpakete v1/v2 bleiben vollständige aktive Autorität. Alte Receipts
-v1/v2/v3 bleiben unverändert. V4 erhält Originalexport, Rechte und tatsächlichen
-Main-/Quellcommit getrennt; Sonderimportquellen werden je ID ausdrücklich mit
-`--source-commit ID SHA` gebunden. Keine erneute Endfreigabe oder Completion.
-Nur ausgewählte Abhängigkeiten werden gelesen, keine fremden Paket-/Bildbäume.
-Alle Preflights vor erster Löschung, gezielter Abschlussreadback, frischer
-Byte-/mtime-No-op und ehrliche Teilfehlerreste sind verbindlich. Dieses
-Werkzeugpaket beauftragt keine reale Bereinigung; sie braucht einen separaten Auftrag.
+RI-ONE ersetzt die frühere mehrgenerationige Integrations-/Receiptstrecke.
+Maßgeblich sind [RI](PUZZLE_INTEGRATION.md), [ZA-1](ZA1_ADAPTER.md) und
+[RI-ONE](PUZZLE_INTEGRATION_SINGLE_PATH.md). Erstregistrierung verwendet genau
+`picross-integration-input-v1`, Registry v5, Revealquelle v5 und Hintergrundquelle
+v7; Runtime v8 bleibt unverändert. Die aktuelle Quelle bindet Identität und
+Livebytes, keine Produktionsarchive, Producer- oder Regelbuch-Allowlist.
+Bild-, Raster-, Metadaten- und Hintergrundrevisionen bleiben eigene Operationen
+nach [PE §13](PUZZLE_EDITOR.md#13-pe-edit2-gezielte-pflege-statt-vollbestandsprüfung).
+Historische Formbeispiele dieses Dokuments erteilen keine aktuelle Schreibbefugnis.
+
+Der aktuelle Editor prüft den vollständigen ausgewählten Bildplan einschließlich
+Vorher-/Nachherbytes, Rechtehinweis und ausdrücklicher Entscheidung. Das Reveal
+bleibt PNG oder SVG gemäß §2. Reine Bildänderungen verändern weder Raster,
+Schwierigkeitsbewertung, Speicherslot noch Hinzugefügt-Datum. Aktuelle Quellen
+führen Bild-/Recordrevision und Identitätsbindung; ein Bildplan besitzt keine
+Abhängigkeit von einem früheren Produktionspaket. Recovery prüft die aktuelle
+Journalgeneration und alle gebundenen Zielbytes, bevor es eigene Daten entfernt.
