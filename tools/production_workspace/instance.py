@@ -1,5 +1,4 @@
 """Per-state OS lock and challenge-authenticated, closed lifecycle protocol."""
-from tools.app_products import PW
 import hashlib
 import hmac
 import http.client
@@ -73,19 +72,20 @@ def private_directory(path):
 
 
 class StateLock:
-    def __init__(self, state, *, app=PW):
-        self.app = app
+    def __init__(self, state, *, app=None):
+        # Standalone PW CMD keeps its source-independent default.
+        self.editor = app is not None and app.key == "pe"
         self.state = Path(state).resolve()
         if any((parent / '.git').exists() for parent in (self.state, *self.state.parents)):
             raise ValueError('Zustandsordner muss außerhalb eines Git-Arbeitsbaums liegen.')
-        self.directory = self.state / ('.launcher' if app == PW else '.updates')
+        self.directory = self.state / ('.updates' if self.editor else '.launcher')
         private_directory(self.directory)
         self.metadata = self.directory / 'instance.json'
         self.file = None
 
     def acquire(self):
         path = self.directory / 'lock'
-        if self.app != PW:
+        if self.editor:
             from .update_storage import no_links
             no_links(path)
         if path.is_symlink():
@@ -108,7 +108,7 @@ class StateLock:
         self.file = stream
         # Acquired OS lock proves the previous owner has ended, irrespective of
         # PID reuse. Stale state is never used to kill or open anything.
-        if self.app == PW:
+        if not self.editor:
             self.metadata.unlink(missing_ok=True)
             (self.directory / 'instance.tmp').unlink(missing_ok=True)
         return True
@@ -135,7 +135,7 @@ class StateLock:
 
     def close(self):
         if self.file:
-            if self.app == PW:
+            if not self.editor:
                 self.metadata.unlink(missing_ok=True)
             self.file.close()
             self.file = None

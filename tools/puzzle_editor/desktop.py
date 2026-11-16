@@ -96,6 +96,8 @@ class Window:
         self.start_button.configure(state="disabled" if blocked or self.service else "normal")
         self.browser_button.configure(state="normal" if self.service and not blocked else "disabled")
         self.skip_button.configure(state="normal" if self.updates.waiting and not self.updates.handoff and not self.closing else "disabled")
+        for control in (self.entry, self.choose, self.port_entry):
+            control.configure(state="disabled" if self.service or self.closing or self.updates.handoff else "normal")
         for button in self.update_buttons:
             button.configure(state="disabled" if self.updates.handoff or self.closing else "normal")
 
@@ -120,6 +122,7 @@ class Window:
             root = io.external(self.path.get())
             if self.state.is_relative_to(root) or root.is_relative_to(self.state):
                 raise ValueError("Einstellungen müssen außerhalb des Inhaltscheckouts liegen.")
+            if getattr(self, "updates", None): self.updates.skip()  # First manual start ends this startup attempt.
             self.service = Service(root, state=self.state)
             try: self.service.bind(int(value))
             except OSError:

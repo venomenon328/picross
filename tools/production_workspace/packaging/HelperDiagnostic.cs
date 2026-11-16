@@ -11,6 +11,7 @@ using System.Web.Script.Serialization;
 
 class HelperDiagnostic {
     static Type Helper;
+    static string Phase="arguments";
     static object Call(string method, params object[] args) {
         return Helper.GetMethod(method,BindingFlags.Static|BindingFlags.NonPublic).Invoke(null,args);
     }
@@ -54,10 +55,12 @@ class HelperDiagnostic {
             }
             Need(args.Length==11); bool editor=args[8]=="pe";
             Load(args[0]);
+            Phase="MSI identity";
             Call("MsiIdentity",args[1],args[2],args[3],args[4]);
             Reject("MsiIdentity",args[1],"0.1.65535",args[3],args[4]);
             Reject("MsiIdentity",args[1],args[2],Guid.Empty.ToString().ToUpperInvariant(),args[4]);
             Reject("Installed",Guid.Empty.ToString().ToUpperInvariant(),args[2]);
+            Phase="version and product";
             string line=editor?"0.2.":"0.1.";
             foreach(string value in new[]{line+"01",editor?"0.1.1":"0.2.1",line+"65536",line+"1.1"}) Reject("VersionOf",value);
             Need((string)Call("ProductCode",args[2])==args[3]);
@@ -65,10 +68,12 @@ class HelperDiagnostic {
             try { File.WriteAllText(bad,"Not an MSI"); Reject("MsiIdentity",bad,args[2],args[3],args[4]); }
             finally { File.Delete(bad); }
             Reject("Parent",IntPtr.Zero,new Dictionary<string,object>());
+            Phase="restart context";
             var restart=(ProcessStartInfo)Call("RestartInfo",@"C:\synthetic state\Übung",true);
             Need(!restart.UseShellExecute && restart.EnvironmentVariables["PYINSTALLER_RESET_ENVIRONMENT"]=="1" &&
                  restart.Arguments=="--state \"C:\\synthetic state\\Übung\""+(editor?"":" --no-browser"));
             Reject("RestartInfo","C:\\bad\" --injected",false);
+            Phase="actual parent exit";
             var info=new ProcessStartInfo(Assembly.GetExecutingAssembly().Location,"child") {
                 UseShellExecute=false,CreateNoWindow=true,RedirectStandardInput=true,RedirectStandardOutput=true };
             using(var child=Process.Start(info)) {
@@ -81,6 +86,7 @@ class HelperDiagnostic {
                     Need(waiting.Wait(5000)); child.WaitForExit(); Need(child.ExitCode==0);
                 } finally { child.StandardInput.Close(); child.WaitForExit(5000); }
             }
+            Phase="READY/GO/EOF";
             foreach(string command in new[]{"", "GO wrong\n", "GO "+new string('a',48)+"\n"}) {
                 var start=new ProcessStartInfo(Assembly.GetExecutingAssembly().Location,"handshake "+(string)Call("Quote",args[0])+" "+new string('a',48)) {
                     UseShellExecute=false,CreateNoWindow=true,RedirectStandardInput=true,RedirectStandardOutput=true };
@@ -91,13 +97,16 @@ class HelperDiagnostic {
                     Need(child.StandardOutput.ReadLine()==(command=="GO "+new string('a',48)+"\n"?"GO-accepted":"cancelled"));
                 }
             }
+            Phase="unbound input rejection";
             foreach(string input in new[]{"{}\n","{\"format\":\"foreign\"}\n",""}) {
                 using(var child=Process.Start(new ProcessStartInfo(args[0]) {UseShellExecute=false,CreateNoWindow=true,
                         RedirectStandardInput=true,RedirectStandardOutput=true})) {
-                    child.StandardInput.Write(input); child.StandardInput.Close();
+                    try { child.StandardInput.Write(input); child.StandardInput.Close(); }
+                    catch(IOException) { } // Immediate refusal may close the pipe before the write.
                     Need(child.WaitForExit(5000)); Need(child.ExitCode==2 && child.StandardOutput.ReadToEnd()=="");
                 }
             }
+            Phase="authenticated restart";
             if(editor) {
                 Call("RunningMarker"); Native(args);
             } else using(var runtime=Process.GetProcessById(Int32.Parse(args[7])))
@@ -112,6 +121,6 @@ class HelperDiagnostic {
                 {"actual_process_exit_released_wait",true},{"unbound_helper_inputs_rejected",true},
                 {"installer_executed",false},{"limits","Reflection into exact built helper; isolated child process. No installed-app or Windows-11 lifecycle claim."}}));
             return 0;
-        } catch(Exception e) { Console.Error.WriteLine(e.ToString()); return 2; }
+        } catch(Exception e) { Console.Error.WriteLine(Phase+": "+e.ToString()); return 2; }
     }
 }

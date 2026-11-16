@@ -86,6 +86,8 @@ class Controller:
             self.runtime.error = error
             if self.updates and self.updates.thread:
                 self.updates.thread.join()
+            if self.handoff and self.handoff.selection != self.runtime.selection:
+                self.runtime.error = error = "Auswahl nach Helferübernahme verändert; kein GO."
             if self.handoff and error is None:
                 self.runtime.stopped.set()
                 self.handoff.commit(self.runtime)
