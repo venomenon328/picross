@@ -21,6 +21,10 @@ from .update_verifier import production_trust
 ROOT = Path(__file__).resolve().parents[2]
 PACKAGE = ROOT / 'tools/production_workspace'
 
+# Broad production-module collection must not freeze ZA-1's synthetic helpers.
+# Those helpers import tests.puzzle_production, which is not app source.
+FROZEN_EXCLUDES = ('tools.puzzle_production.za1_fixtures', 'tests')
+
 
 def sha(path):
     return hashlib.sha256(path.read_bytes()).hexdigest()
@@ -102,6 +106,7 @@ def build(destination, *, version=None):
                     '--distpath', str(destination / 'dist'),
                     '--workpath', str(work / 'pyinstaller'), '--specpath', str(work), '--paths', str(ROOT),
                     '--collect-submodules', 'tools.puzzle_production',
+                    *(arg for name in FROZEN_EXCLUDES for arg in ('--exclude-module', name)),
                     '--hidden-import', 'tools.production_workspace.update_verifier',
                     '--hidden-import', 'cryptography.hazmat.primitives.asymmetric.ed25519',
                     '--hidden-import', '_cffi_backend',
