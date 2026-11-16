@@ -1,0 +1,436 @@
+{
+  "source_head": "21ae27c3d2ce6e88852a41765d84c76695d0d8f7",
+  "base": "ffa02800cc88ddee566d33e94826c187f347442d",
+  "environment": {
+    "os": "win32",
+    "python": "3.13.14 (tags/v3.13.14:fd17997, Jun 10 2026, 13:03:48) [MSC v.1944 64 bit (AMD64)]",
+    "pillow": "12.3.0",
+    "templates": {
+      "version.txt": "38885c88f75abbc797a1db7559719800279a00cfb9fa8b2e2868a7f6f84bad2e",
+      "windows_debug_x86_64.exe": "51498b72b3a237f882ebd7d1787f06a4bc1eaf0572daab93837adcfd3cfdc107",
+      "windows_debug_x86_64_console.exe": "5514c7645ee897a01f540d3cf22ede5badf92394521a08bfab66a54d7369e6e6",
+      "web_nothreads_debug.zip": "08962aefef811b603541d7951ac67ef00413aad2d978855183c28adee98f626a"
+    }
+  },
+  "T01": {
+    "consumer_paths": {
+      "hp_derive_verify_reuse": true,
+      "prepared": true,
+      "current_editor_plan_apply_readback_noop": true,
+      "separate_RI_plan_apply_readback_noop": true,
+      "cases": [
+        "selected 2304x768",
+        "selected 2304x576",
+        "standard",
+        "none"
+      ],
+      "new_source_png_sha256": "43c97e436d97e971ad9ec05e569a8f4c032a513656838df0dc04304fc663482b",
+      "new_prepared_png_sha256": "aaab196da0bc24fc9866c2bd22ed691c472e6d153ed2dc41d487c01c9f87ec3a"
+    },
+    "engine-import": {
+      "exit": 0,
+      "seconds": 13.498
+    },
+    "actual_import": {
+      "format": "picross-background-import-v1",
+      "registry_sha256": "871d71d4c4801f8b126bb82110b5f54ec373e636f1861fb8caeb8db09f7a916d",
+      "images": [
+        {
+          "id": "pz-hg31-legacy",
+          "image_revision": 1,
+          "asset": {
+            "bytes": 5246,
+            "file": "art/backgrounds/pz-hg31-legacy.png",
+            "sha256": "21bd9095ab40b792cb5fa29b5830cfeb774a637564860ba9ecfb0435ebb7ffed"
+          },
+          "notice": {
+            "file": "art/backgrounds/pz-hg31-legacy.txt",
+            "sha256": "c7e82a0319721d8f1d215194ffecd5970a4a96a681577617b6138434f40cf86b",
+            "bytes": 61
+          },
+          "import_config_sha256": "3626c30c64304aebab1997346ea7b3166dd4df59e8edcf09909fb21a7f03a07b",
+          "imported": {
+            "file": ".godot/imported/pz-hg31-legacy.png-ed95043ec81f960363e10f7e3497eb03.ctex",
+            "bytes": 676,
+            "sha256": "4f11b50ec877608cbeff87dda092792f4c192b7e0039c1bed2180fb476e8a7c8",
+            "mipmap_count": 11,
+            "codec": "lossless-webp"
+          }
+        },
+        {
+          "id": "pz-hg31-new",
+          "image_revision": 1,
+          "asset": {
+            "bytes": 179789,
+            "file": "art/backgrounds/pz-hg31-new.png",
+            "sha256": "aaab196da0bc24fc9866c2bd22ed691c472e6d153ed2dc41d487c01c9f87ec3a"
+          },
+          "notice": {
+            "file": "art/backgrounds/pz-hg31-new.txt",
+            "sha256": "c7e82a0319721d8f1d215194ffecd5970a4a96a681577617b6138434f40cf86b",
+            "bytes": 61
+          },
+          "import_config_sha256": "9ec921ab0bc916924bfffc98c3178ad32658aeda35ac01c7290e90f13c62db75",
+          "imported": {
+            "file": ".godot/imported/pz-hg31-new.png-7c9d0d5f05d21959a916266a817d7b18.ctex",
+            "bytes": 150582,
+            "sha256": "f4fa494944035aa244d4ae7689344bac9254b8375683b8d5f193dfb883f2d734",
+            "mipmap_count": 11,
+            "codec": "lossless-webp"
+          }
+        }
+      ],
+      "source_bytes": 185035,
+      "imported_bytes": 151258
+    },
+    "windows-export": {
+      "exit": 0,
+      "seconds": 6.978
+    },
+    "windows-PCK": {
+      "exit": 0,
+      "seconds": 1.758
+    },
+    "web-export": {
+      "exit": 0,
+      "seconds": 4.642
+    },
+    "web-PCK": {
+      "exit": 0,
+      "target": "web"
+    },
+    "files": {
+      "exports/web/index.apple-touch-icon.png": {
+        "bytes": 11944,
+        "sha256": "01d4f63e525941e06ce74f5187dad030d20a8d52a07ce365ae4e94af97a3b1f5"
+      },
+      "exports/web/index.audio.position.worklet.js": {
+        "bytes": 2973,
+        "sha256": "be33985bc7160d6bf9646f259cd86b259cd67b02ccb297ee5c44f8ac84327bc8"
+      },
+      "exports/web/index.audio.worklet.js": {
+        "bytes": 7298,
+        "sha256": "5b476a9c9ce642c0ee4256436d1bc31d9c38f868aca0f9a8e2a57c18d2dec2a3"
+      },
+      "exports/web/index.html": {
+        "bytes": 6337,
+        "sha256": "a8d007d3763e413fe874bcb7788bc5aa181c0cceebe63edb765449beff05d2e1"
+      },
+      "exports/web/index.icon.png": {
+        "bytes": 5700,
+        "sha256": "ad3c35ad0facf487c618204bd98db543034fc95224eadc7f08c7a9ff38d5b3b5"
+      },
+      "exports/web/index.js": {
+        "bytes": 315645,
+        "sha256": "ffc3898b59fba6f5af0c02f76e5ee526cc061e65c7d2d6f4f98186876cea15c4"
+      },
+      "exports/web/index.pck": {
+        "bytes": 24345272,
+        "sha256": "ffffe3b95d902f5e1b2fa3c7c9172bf321e57ec8a8fbcad3936969a562961a27"
+      },
+      "exports/web/index.png": {
+        "bytes": 21443,
+        "sha256": "3cb4495c0b98dfbe4b663cbf2b6836473572339beb66d902367893162a70be0e"
+      },
+      "exports/web/index.wasm": {
+        "bytes": 37902138,
+        "sha256": "11ea19645368f8e73cf337b59cfd7ceeb4ebb51f7a3bbf77d1a5c3ddfedbc522"
+      },
+      "exports/windows/picross-p1.console.exe": {
+        "bytes": 50176,
+        "sha256": "4713fefc9bbe042da13a38724297710e810bcda3166dfa405c3efecf8db3cdec"
+      },
+      "exports/windows/picross-p1.exe": {
+        "bytes": 103035904,
+        "sha256": "5543ab4b6fb453c5dbe7f4effa0aad7f1cc06d73c12e8436adfc9fb266ac34ee"
+      },
+      "exports/windows/picross-p1.pck": {
+        "bytes": 24335160,
+        "sha256": "a1ea04a8eb3a96efb3d2feb58a96b37d3c22152e620e5719f068b317e0701253"
+      }
+    },
+    "windows-lossless-pixels": {
+      "format": "picross-background-pack-v1",
+      "images": [
+        {
+          "asset": {
+            "bytes": 5246.0,
+            "file": "art/backgrounds/pz-hg31-legacy.png",
+            "sha256": "21bd9095ab40b792cb5fa29b5830cfeb774a637564860ba9ecfb0435ebb7ffed"
+          },
+          "base_rgba_sha256": "454cf41a907c6d94d923d9deacb3f79e71041fe89e0238006cd6012447658de8",
+          "decoded_base_bytes": 5308416,
+          "decoded_with_mips_bytes": 7077844,
+          "id": "pz-hg31-legacy",
+          "image_revision": 1.0,
+          "imported_bytes": 676,
+          "mipmap_count": 11,
+          "notice_sha256": "c7e82a0319721d8f1d215194ffecd5970a4a96a681577617b6138434f40cf86b",
+          "remap": "res://.godot/imported/pz-hg31-legacy.png-ed95043ec81f960363e10f7e3497eb03.ctex"
+        },
+        {
+          "asset": {
+            "bytes": 179789.0,
+            "file": "art/backgrounds/pz-hg31-new.png",
+            "sha256": "aaab196da0bc24fc9866c2bd22ed691c472e6d153ed2dc41d487c01c9f87ec3a"
+          },
+          "base_rgba_sha256": "c5140dcaf74956064afd8a35e886d1f6ff3791bb8fd65a9023f21439c4f0b6e2",
+          "decoded_base_bytes": 7077888,
+          "decoded_with_mips_bytes": 9437176,
+          "id": "pz-hg31-new",
+          "image_revision": 1.0,
+          "imported_bytes": 150582,
+          "mipmap_count": 11,
+          "notice_sha256": "c7e82a0319721d8f1d215194ffecd5970a4a96a681577617b6138434f40cf86b",
+          "remap": "res://.godot/imported/pz-hg31-new.png-7c9d0d5f05d21959a916266a817d7b18.ctex"
+        }
+      ],
+      "imported_inventory": [
+        "pz-hg31-legacy.png-ed95043ec81f960363e10f7e3497eb03.ctex",
+        "pz-hg31-new.png-7c9d0d5f05d21959a916266a817d7b18.ctex"
+      ],
+      "inventory": [
+        "pz-hg31-legacy.png",
+        "pz-hg31-legacy.txt",
+        "pz-hg31-new.png",
+        "pz-hg31-new.txt"
+      ],
+      "target": "windows"
+    },
+    "web-lossless-pixels": {
+      "format": "picross-background-pack-v1",
+      "images": [
+        {
+          "asset": {
+            "bytes": 5246.0,
+            "file": "art/backgrounds/pz-hg31-legacy.png",
+            "sha256": "21bd9095ab40b792cb5fa29b5830cfeb774a637564860ba9ecfb0435ebb7ffed"
+          },
+          "base_rgba_sha256": "454cf41a907c6d94d923d9deacb3f79e71041fe89e0238006cd6012447658de8",
+          "decoded_base_bytes": 5308416,
+          "decoded_with_mips_bytes": 7077844,
+          "id": "pz-hg31-legacy",
+          "image_revision": 1.0,
+          "imported_bytes": 676,
+          "mipmap_count": 11,
+          "notice_sha256": "c7e82a0319721d8f1d215194ffecd5970a4a96a681577617b6138434f40cf86b",
+          "remap": "res://.godot/imported/pz-hg31-legacy.png-ed95043ec81f960363e10f7e3497eb03.ctex"
+        },
+        {
+          "asset": {
+            "bytes": 179789.0,
+            "file": "art/backgrounds/pz-hg31-new.png",
+            "sha256": "aaab196da0bc24fc9866c2bd22ed691c472e6d153ed2dc41d487c01c9f87ec3a"
+          },
+          "base_rgba_sha256": "c5140dcaf74956064afd8a35e886d1f6ff3791bb8fd65a9023f21439c4f0b6e2",
+          "decoded_base_bytes": 7077888,
+          "decoded_with_mips_bytes": 9437176,
+          "id": "pz-hg31-new",
+          "image_revision": 1.0,
+          "imported_bytes": 150582,
+          "mipmap_count": 11,
+          "notice_sha256": "c7e82a0319721d8f1d215194ffecd5970a4a96a681577617b6138434f40cf86b",
+          "remap": "res://.godot/imported/pz-hg31-new.png-7c9d0d5f05d21959a916266a817d7b18.ctex"
+        }
+      ],
+      "imported_inventory": [
+        "pz-hg31-legacy.png-ed95043ec81f960363e10f7e3497eb03.ctex",
+        "pz-hg31-new.png-7c9d0d5f05d21959a916266a817d7b18.ctex"
+      ],
+      "inventory": [
+        "pz-hg31-legacy.png",
+        "pz-hg31-legacy.txt",
+        "pz-hg31-new.png",
+        "pz-hg31-new.txt"
+      ],
+      "target": "web"
+    }
+  },
+  "T02": {
+    "protected_files": 482,
+    "changed": [],
+    "method": "git-object byte comparison of all content, runtime data, background and reveal assets; capability separately permitted; no real solver/analysis",
+    "selected_count": 9,
+    "selected": [
+      {
+        "id": "pz-birne",
+        "image_revision": 1,
+        "asset": {
+          "bytes": 486658,
+          "file": "art/backgrounds/pz-birne.png",
+          "sha256": "fc59684a00e38145de8d496ff863fde5997c42dc844c112e526013e3b17171c9"
+        },
+        "notice": {
+          "file": "art/backgrounds/pz-birne.txt",
+          "sha256": "8c34c7a604af506cbc9b41c5838dc87fa12c58fa567752eda472000930c2b1ae",
+          "bytes": 438
+        }
+      },
+      {
+        "id": "pz-erdbeere",
+        "image_revision": 1,
+        "asset": {
+          "bytes": 569682,
+          "file": "art/backgrounds/pz-erdbeere.png",
+          "sha256": "0f1d7bec08c5e9ae7af48b8dca73074711b5f284d7d4f62d3bf57c1d2e9ba8a2"
+        },
+        "notice": {
+          "file": "art/backgrounds/pz-erdbeere.txt",
+          "sha256": "9162a14990c5027f5b3e45db4e0f2c6a7c22b9bfef43f008c7e4ffcf5543f48a",
+          "bytes": 432
+        }
+      },
+      {
+        "id": "pz-fliegenpilz",
+        "image_revision": 1,
+        "asset": {
+          "bytes": 610336,
+          "file": "art/backgrounds/pz-fliegenpilz.png",
+          "sha256": "a937d68149a2828d19e7295de6d9069da9314dede967a133547f77831536b91f"
+        },
+        "notice": {
+          "file": "art/backgrounds/pz-fliegenpilz.txt",
+          "sha256": "3592758ee341ac446498592620e33054e1b505ac85a6fb0079c66cd678a8edd3",
+          "bytes": 394
+        }
+      },
+      {
+        "id": "pz-libelle",
+        "image_revision": 1,
+        "asset": {
+          "bytes": 222517,
+          "file": "art/backgrounds/pz-libelle.png",
+          "sha256": "50c0f65ae90143aa9484f57a1fa4e5b34e135b2f7b8d6acc487becfcc4b9cbd1"
+        },
+        "notice": {
+          "file": "art/backgrounds/pz-libelle.txt",
+          "sha256": "03145905e29353a89d8f8b177c60bdb3ca38a13e9e1e3979fa2433264f5883ff",
+          "bytes": 441
+        }
+      },
+      {
+        "id": "pz-marienkaefer",
+        "image_revision": 1,
+        "asset": {
+          "bytes": 629568,
+          "file": "art/backgrounds/pz-marienkaefer.png",
+          "sha256": "45f3c8fc69985c0f80e29e77b8557b9ada0c7c3987faac39873399c35e914107"
+        },
+        "notice": {
+          "file": "art/backgrounds/pz-marienkaefer.txt",
+          "sha256": "6c586320aad16cabc2b271e0a40cbfa9326c81742f77858023bc27e01eae6d3f",
+          "bytes": 416
+        }
+      },
+      {
+        "id": "pz-radieschen",
+        "image_revision": 1,
+        "asset": {
+          "bytes": 361385,
+          "file": "art/backgrounds/pz-radieschen.png",
+          "sha256": "eed3a1e4fef0b28e793107b819ca8b926aef4e4cf1997227136de6a06338414c"
+        },
+        "notice": {
+          "file": "art/backgrounds/pz-radieschen.txt",
+          "sha256": "3ae08ebc0dadedfa140d2958a414552374689bc4a5ca65449a1c14a6e4390bd9",
+          "bytes": 414
+        }
+      },
+      {
+        "id": "pz-schluessel",
+        "image_revision": 1,
+        "asset": {
+          "bytes": 430896,
+          "file": "art/backgrounds/pz-schluessel.png",
+          "sha256": "2bad530c3d8a3410295af7f5080409ebec93e994ae73605d4f7cad44fac83dab"
+        },
+        "notice": {
+          "file": "art/backgrounds/pz-schluessel.txt",
+          "sha256": "7165a6b53a469464166e41db8a8bd3f24cfa74d3804abbd77c4120a2e23648bf",
+          "bytes": 411
+        }
+      },
+      {
+        "id": "pz-schnecke",
+        "image_revision": 1,
+        "asset": {
+          "bytes": 364886,
+          "file": "art/backgrounds/pz-schnecke.png",
+          "sha256": "bdae55236241fe144202c64e99ebc15b4fcf881507e68e706c364b0580c5a73b"
+        },
+        "notice": {
+          "file": "art/backgrounds/pz-schnecke.txt",
+          "sha256": "dfe91bb43f2fe05eea516e9b1cb70d501499208b372b34034be86569918ce91e",
+          "bytes": 396
+        }
+      },
+      {
+        "id": "pz-zitrone",
+        "image_revision": 1,
+        "asset": {
+          "bytes": 442113,
+          "file": "art/backgrounds/pz-zitrone.png",
+          "sha256": "1f41b9a85756d295ea47de163fb9767b3922d66b5ecec0a98d3d4e5f744d6853"
+        },
+        "notice": {
+          "file": "art/backgrounds/pz-zitrone.txt",
+          "sha256": "43a9056fffd43e98e2d84fe689fc3c51991ebc311dcd003403a55920896e1641",
+          "bytes": 365
+        }
+      }
+    ],
+    "end_protected_files": 482,
+    "end_byte_comparison": "passed"
+  },
+  "current_head": "c6c4be5bb19fecc535a9a86c5ee4fa962a2c748e",
+  "scope_equivalence": {
+    "from": "21ae27c3d2ce6e88852a41765d84c76695d0d8f7",
+    "to": "c6c4be5bb19fecc535a9a86c5ee4fa962a2c748e",
+    "changed_paths": [
+      ".ci/package.json",
+      "tools/kat2_product.py",
+      "tools/puzzle_editor/ui/app.js"
+    ],
+    "statement": "HP/editor Python/RI/import/native/Web worker and actual export code are byte-identical to the T01 source head; subsequent changes repair catalog harness naming/UTF-8 text and CI lifecycle metadata. Final editor captures bind the final head."
+  },
+  "profiles": [
+    {
+      "profile": {
+        "id": "picross-background-png2304-v1",
+        "width": 2304,
+        "height": 576,
+        "format": "PNG",
+        "mode": "RGBA",
+        "fit": "contain",
+        "anchor": "bottom-center",
+        "upscale": true,
+        "resample": "pillow-rgba-premultiplied-lanczos",
+        "color_space": "sRGB",
+        "transparent_rgb": "zero",
+        "png_compress_level": 9,
+        "png_optimize": false,
+        "metadata": "sRGB-only"
+      },
+      "sha256": "ba5e7f5634e9625ef2d54b90d10bb88e5ef7bc67608d086a543c7e85770b62ff"
+    },
+    {
+      "profile": {
+        "id": "picross-background-png2304x768-v1",
+        "width": 2304,
+        "height": 768,
+        "format": "PNG",
+        "mode": "RGBA",
+        "fit": "exact",
+        "anchor": "bottom-center",
+        "upscale": true,
+        "resample": "pillow-rgba-premultiplied-lanczos",
+        "color_space": "sRGB",
+        "transparent_rgb": "zero",
+        "png_compress_level": 9,
+        "png_optimize": false,
+        "metadata": "sRGB-only"
+      },
+      "sha256": "aaa5d79ec1936ea3b6d76622da95ba77652bf1fe2df7a49071d194a07cce7cff"
+    }
+  ]
+}

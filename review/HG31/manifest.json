@@ -1,0 +1,247 @@
+{
+  "format": "hg31-review-originals-v1",
+  "product_head": "c6c4be5bb19fecc535a9a86c5ee4fa962a2c748e",
+  "base_commit": "ffa02800cc88ddee566d33e94826c187f347442d",
+  "test_merge": "1a3e2a18ece06a1c38edd2afb0a7ff7639fb7bbf",
+  "purpose": "Independent ChatGPT review A01; partial T03 originals and T01/T02 technical evidence; keep outside product PR diff",
+  "retention": "Keep remote review ref until A01 and package closure; reassess on 2026-11-23 if still open, then explicit cleanup under WORKSPACE. No automatic permanent evidence archive.",
+  "T03_status": "PARTIAL: native 1920x1080/UI100+125 and editor composition only. Remaining native matrix/interaction not completed; user prohibits local mouse/focus tests for now. Full Web book startup not proven. Real Firefox worker decoding passes separately.",
+  "files": [
+    {
+      "file": ".gitattributes",
+      "bytes": 8,
+      "sha256": "705fd4d6451a31d36b3df7de96f83f30ac976c9b4a6d1e51671d8e2f33e2d0da",
+      "source_commit": "c6c4be5bb19fecc535a9a86c5ee4fa962a2c748e"
+    },
+    {
+      "file": "editor/driver.py",
+      "bytes": 2216,
+      "sha256": "6b3206726e8247f9e6d54fbf1649062b70b41a2c5abd2b49270e454f65c95c24",
+      "source_commit": "c6c4be5bb19fecc535a9a86c5ee4fa962a2c748e"
+    },
+    {
+      "file": "editor/editor-1280x720-768.png",
+      "bytes": 147360,
+      "sha256": "4c56fede360de452999e6eaffdf9ccfa01353f33c364f7cb28bacbf64481125f",
+      "source_commit": "c6c4be5bb19fecc535a9a86c5ee4fa962a2c748e",
+      "dimensions": [
+        418,
+        340
+      ]
+    },
+    {
+      "file": "editor/editor-1920x1080-576.png",
+      "bytes": 276382,
+      "sha256": "35389e356dc985c4b5e3f81be157cdc1435c82ce3a0215c81b32fe2981181274",
+      "source_commit": "c6c4be5bb19fecc535a9a86c5ee4fa962a2c748e",
+      "dimensions": [
+        628,
+        340
+      ]
+    },
+    {
+      "file": "editor/editor-1920x1080-768.png",
+      "bytes": 287742,
+      "sha256": "d508c247c6274fa232a92aa3a07b1fc1ed036c2a145b9bf6edd791e0b27c25ea",
+      "source_commit": "c6c4be5bb19fecc535a9a86c5ee4fa962a2c748e",
+      "dimensions": [
+        628,
+        340
+      ]
+    },
+    {
+      "file": "editor/protocol.json",
+      "bytes": 2300,
+      "sha256": "8028dc3816ae60823ccf3bc4dc5524c1109da4ae411a8a31f66e47de98e264d3",
+      "source_commit": "c6c4be5bb19fecc535a9a86c5ee4fa962a2c748e"
+    },
+    {
+      "file": "K01.json",
+      "bytes": 4071,
+      "sha256": "6b73b3bb0038a2fa430ac0869312870f7bff15754c0fcb6e12625f92a4919492",
+      "source_commit": "c6c4be5bb19fecc535a9a86c5ee4fa962a2c748e"
+    },
+    {
+      "file": "native/driver-result.log",
+      "bytes": 1955,
+      "sha256": "bac8d8c17e801c10074652bbbbf71e588f59c5c632a340e1f937c983f41275f0",
+      "source_commit": "21ae27c3d2ce6e88852a41765d84c76695d0d8f7"
+    },
+    {
+      "file": "native/driver.py",
+      "bytes": 6042,
+      "sha256": "3387a4930306ae13a27b9a737ca65be12d701d7018912543b43588c73b26a0bc",
+      "source_commit": "21ae27c3d2ce6e88852a41765d84c76695d0d8f7"
+    },
+    {
+      "file": "native/input-observation.jsonl",
+      "bytes": 911537,
+      "sha256": "512c3544c9d78fea4d1ea0fc87fa3197df81d723db64cf75e177509b22dff9ea",
+      "source_commit": "21ae27c3d2ce6e88852a41765d84c76695d0d8f7"
+    },
+    {
+      "file": "native/native-legacy-1920x1080-ui100.png",
+      "bytes": 1547342,
+      "sha256": "4ea49b7d213cfd762cf3c9b93f11c175ec49121a1290fd5ffe2c0cd30faae7cc",
+      "source_commit": "21ae27c3d2ce6e88852a41765d84c76695d0d8f7",
+      "dimensions": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "file": "native/native-legacy-1920x1080-ui125.png",
+      "bytes": 1554153,
+      "sha256": "47917b78729121bb18d3950c050bc6ae3d7171ce1bf39a3b44c61d42bf36e46f",
+      "source_commit": "21ae27c3d2ce6e88852a41765d84c76695d0d8f7",
+      "dimensions": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "file": "native/native-new-1920x1080-ui100.png",
+      "bytes": 1579980,
+      "sha256": "551b4d523d1cd14e74046ab8e6483e578f22b1ff982c43c13e8cebe79d198457",
+      "source_commit": "21ae27c3d2ce6e88852a41765d84c76695d0d8f7",
+      "dimensions": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "file": "native/native-new-1920x1080-ui125.png",
+      "bytes": 1586915,
+      "sha256": "a64d955d6cfc0734021a60b098d4b43faab16b31f7304ea3dbfa076e86fcd65c",
+      "source_commit": "21ae27c3d2ce6e88852a41765d84c76695d0d8f7",
+      "dimensions": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "file": "native/native-settings-before-scale.png",
+      "bytes": 1605782,
+      "sha256": "6b0deb1d0318b57aa25ddb0f2cca3f142057847b70a95ee73264542b6989d878",
+      "source_commit": "21ae27c3d2ce6e88852a41765d84c76695d0d8f7",
+      "dimensions": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "file": "native/observer.gd",
+      "bytes": 6466,
+      "sha256": "996df1793bfafb186b2a14a337bbca1c7c5fa775a3342ead2eb8d2678c623004",
+      "source_commit": "21ae27c3d2ce6e88852a41765d84c76695d0d8f7"
+    },
+    {
+      "file": "native/protocol.json",
+      "bytes": 37021,
+      "sha256": "0edac5fd31a80d03652babc40acc8519f4ea2114a8ea8669ab6be8db5384a5fe",
+      "source_commit": "21ae27c3d2ce6e88852a41765d84c76695d0d8f7"
+    },
+    {
+      "file": "open-gates/catalog-local-diagnostic.log",
+      "bytes": 36018,
+      "sha256": "2e298728c9e9f85ebea860a83ec6dbaa1fc472a9d37e87276bfcc77df43722dd",
+      "source_commit": "c6c4be5bb19fecc535a9a86c5ee4fa962a2c748e"
+    },
+    {
+      "file": "open-gates/web-startup-diagnostic.log",
+      "bytes": 4849,
+      "sha256": "470aa60bf487c459623cb64401c4caeedf01dc0881c7b584607404534f94e51a",
+      "source_commit": "c6c4be5bb19fecc535a9a86c5ee4fa962a2c748e"
+    },
+    {
+      "file": "T01/readback.py",
+      "bytes": 2713,
+      "sha256": "94ae8c4f8563bae8d97d087286c28f72ab316ddb3d16537cd72aec52baf81de3",
+      "source_commit": "21ae27c3d2ce6e88852a41765d84c76695d0d8f7"
+    },
+    {
+      "file": "T01/synthetic-prepared-legacy.png",
+      "bytes": 5246,
+      "sha256": "21bd9095ab40b792cb5fa29b5830cfeb774a637564860ba9ecfb0435ebb7ffed",
+      "source_commit": "21ae27c3d2ce6e88852a41765d84c76695d0d8f7",
+      "dimensions": [
+        2304,
+        576
+      ]
+    },
+    {
+      "file": "T01/synthetic-prepared-new.png",
+      "bytes": 179789,
+      "sha256": "aaab196da0bc24fc9866c2bd22ed691c472e6d153ed2dc41d487c01c9f87ec3a",
+      "source_commit": "21ae27c3d2ce6e88852a41765d84c76695d0d8f7",
+      "dimensions": [
+        2304,
+        768
+      ]
+    },
+    {
+      "file": "T01/synthetic-source-3to1.png",
+      "bytes": 2387,
+      "sha256": "43c97e436d97e971ad9ec05e569a8f4c032a513656838df0dc04304fc663482b",
+      "source_commit": "21ae27c3d2ce6e88852a41765d84c76695d0d8f7",
+      "dimensions": [
+        600,
+        200
+      ]
+    },
+    {
+      "file": "T01/throughput.py",
+      "bytes": 7102,
+      "sha256": "9fb26008fbb099de7c4042a97228e4a3a9bf5492978a2059ebcd2f73f600c6a7",
+      "source_commit": "21ae27c3d2ce6e88852a41765d84c76695d0d8f7"
+    },
+    {
+      "file": "T01/web-pack.json",
+      "bytes": 1588,
+      "sha256": "9993e535a61303bbe0eea6e835733c5cd131f302974f2a8a97db4ba5c51667da",
+      "source_commit": "21ae27c3d2ce6e88852a41765d84c76695d0d8f7"
+    },
+    {
+      "file": "T01/web-PCK-pixels.log",
+      "bytes": 100,
+      "sha256": "593c08e98f7bad47979b15bb1fdae5c364558455f66b7706000c1661fa8dbd5e",
+      "source_commit": "21ae27c3d2ce6e88852a41765d84c76695d0d8f7"
+    },
+    {
+      "file": "T01/windows-pack.json",
+      "bytes": 1592,
+      "sha256": "ea10ca70abece4796d455549482af2b0ddd5928d0a516e5e75623bb720e37e5c",
+      "source_commit": "21ae27c3d2ce6e88852a41765d84c76695d0d8f7"
+    },
+    {
+      "file": "T01/windows-PCK-pixels.log",
+      "bytes": 100,
+      "sha256": "593c08e98f7bad47979b15bb1fdae5c364558455f66b7706000c1661fa8dbd5e",
+      "source_commit": "21ae27c3d2ce6e88852a41765d84c76695d0d8f7"
+    },
+    {
+      "file": "technical.json",
+      "bytes": 15767,
+      "sha256": "3adbef5f2089b1b4cd96739b2fd2488c7f4779545debde8b96bee3734f7d5b02",
+      "source_commit": "c6c4be5bb19fecc535a9a86c5ee4fa962a2c748e"
+    },
+    {
+      "file": "worker/driver.log",
+      "bytes": 954,
+      "sha256": "495c62fff74d9583fdf99cbbaa519a10f9ceb72b3f50fedfb555f5a144c8dbf3",
+      "source_commit": "c6c4be5bb19fecc535a9a86c5ee4fa962a2c748e"
+    },
+    {
+      "file": "worker/driver.py",
+      "bytes": 2105,
+      "sha256": "062a26c6a5707fa618afe586ac3f6fe845f52a09bd0b3ebdcbc609c08eab0f49",
+      "source_commit": "c6c4be5bb19fecc535a9a86c5ee4fa962a2c748e"
+    },
+    {
+      "file": "worker/report.json",
+      "bytes": 839,
+      "sha256": "8c42a95800285c682239d86dad8406985617b0f41d4c3da049b59a7610d56d33",
+      "source_commit": "c6c4be5bb19fecc535a9a86c5ee4fa962a2c748e"
+    }
+  ]
+}

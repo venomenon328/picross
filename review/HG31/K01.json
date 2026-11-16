@@ -1,0 +1,103 @@
+{
+  "source_ref": "content/hg-bestand-01",
+  "source_commit": "8f83c9ac091fb42fe5be10de9fc1d2e2a55362e3",
+  "original": {
+    "file": "original/Q1-r03.png",
+    "bytes": 827810,
+    "sha256": "b6def395245b771dfd785b5521ede74969439be1f552e94a84075c2d10954d19",
+    "dimensions": [
+      2172,
+      724
+    ]
+  },
+  "offer_generation": [
+    {
+      "id": "Q1",
+      "generation": {
+        "model": null,
+        "parameters": [
+          {
+            "name": "transparent_background",
+            "value": true
+          }
+        ],
+        "prompt": {
+          "bytes": 1162,
+          "file": "prompts/Q1-r03.txt",
+          "sha256": "d9b4ce4da19ffd6a1e57d086a2c12a1735aaff26cb0a4013f19b2f9ce1eb416c"
+        },
+        "seed": null,
+        "tool": "image_gen.imagegen",
+        "unknown": [
+          {
+            "field": "model",
+            "reason": "not_exposed"
+          },
+          {
+            "field": "seed",
+            "reason": "not_exposed"
+          }
+        ]
+      },
+      "provenance": {
+        "attribution": null,
+        "author": "OpenAI native ImageGen (AI-generated; no human visual author asserted)",
+        "evidence": [
+          {
+            "bytes": 810,
+            "file": "evidence/provenance.txt",
+            "sha256": "83c9c75b5ffa51eb3c2a6ded9f2ba74f6c0d6059bd3dcec04d7f3c1135fe5f86"
+          },
+          {
+            "bytes": 597,
+            "file": "evidence/execution-request.txt",
+            "sha256": "95da2a8746adc37f9f7cfbc5e3648a905cda4d082b28e6af8784fad9a8da72a5"
+          }
+        ],
+        "rights_status": "resolved",
+        "source": "Native image_gen.imagegen in the user-authorized HG-BESTAND-01 session, 2026-11-16; transparency edit of this session original; complete canvas padded pixel-for-pixel to 4:1",
+        "usage_basis": "Original project generation commissioned by the repository owner for Issue #671; no external reference assets and no exclusive-rights claim."
+      }
+    }
+  ],
+  "review": {
+    "Q-HG03": {
+      "actor": "Codex",
+      "evidence": [
+        {
+          "bytes": 827810,
+          "file": "original/Q1-r03.png",
+          "sha256": "b6def395245b771dfd785b5521ede74969439be1f552e94a84075c2d10954d19"
+        }
+      ],
+      "method": "PNG-IHDR und vollständige PNG-Dekodierung mit pngjs; pixelweiser RGBA-Vergleich nach transparenter Leinwanderweiterung; isolierte Gesamtsichtung.",
+      "norm": {
+        "commit": "5f620228958e58c7f98fc6c9823ea970f3cb1764",
+        "contract": "1.0",
+        "document_revision": 11,
+        "file": "docs/PUZZLE_QUALITY.md",
+        "sha256": "b31d20ce179329eb835fa7a2d61f8ac9212d01d8e74807608688280230db9823"
+      },
+      "reason": "Tatsächliche PNG-Maße 2172×724 ergeben 3:1. Vor Auswahl ist pixelgleiche transparente Leinwanderweiterung nach Schritt 4 §6.3.1 erforderlich.",
+      "result": "nicht erfüllt",
+      "timestamp_utc": "2026-11-16T09:48:17.771Z"
+    }
+  },
+  "current_tool_schema": {
+    "tool": "image_gen.imagegen",
+    "parameters": [
+      "prompt",
+      "transparent_background",
+      "referenced_image_paths",
+      "num_last_images_to_include"
+    ],
+    "size_model_seed": "not exposed"
+  },
+  "method": "one bounded read of saved offer/review, PNG IHDR and currently exposed tool schema; no image generation, no parameter experiment",
+  "conclusion": "Saved generator path exposes a transparent background request and an actual 3:1 original. Backend/model/seed remain unexposed; a general API 3:1 hint is not proof of a wrapper hard limit.",
+  "sources": [
+    "https://github.com/venomenon328/picross/blob/8f83c9ac091fb42fe5be10de9fc1d2e2a55362e3/content/authoring/pz-20ecf7747bbf40828238ec26d1207172/hg-bestand-01/work/bg-offer-r03.json",
+    "https://github.com/venomenon328/picross/blob/8f83c9ac091fb42fe5be10de9fc1d2e2a55362e3/content/authoring/pz-20ecf7747bbf40828238ec26d1207172/hg-bestand-01/evidence/Q1-r03-review.json"
+  ],
+  "remote_readback": "Both immutable text records reread through GitHub connector; archived PNG hash/dimensions agree with the remote review record."
+}
