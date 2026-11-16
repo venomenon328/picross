@@ -76,6 +76,8 @@ wird dabei bytegleich geprüft, ihre Abwesenheit ebenso. Keine künstliche
 Textdatei, rückwirkende Herkunftserklärung oder zusätzliche Abschlussformalität.
 Die weiterhin erforderliche Reveal-Notice sowie tatsächlich vorhandene
 Rechte-/Lizenztexte bleiben geschützt. Dieser Kompatibilitätsgrundsatz hebt
-keine Fremdarbeits-, Main-, Byte- oder Recoveryguards auf. Der Pointer entfällt nur, wenn er exakt auf eine ausgewählte abgeschlossene Revision zeigt; neue/offene Arbeit und fremde Bytes bleiben. Unbekannte Dateien innerhalb ausgewählter Arbeit blockieren vor Löschung. Teilentfernung ist ehrlich zu melden und anhand desselben Mainankers wiederholbar; vollständige Wiederholung ist schreibfreier No-op. Keine neue historische Dauerakte.
+keine Fremdarbeits-, Main-, Byte- oder Recoveryguards auf.
+
+Der Pointer entfällt nur, wenn er exakt auf eine ausgewählte abgeschlossene Revision zeigt; neue/offene Arbeit und fremde Bytes bleiben. Unbekannte Dateien innerhalb ausgewählter Arbeit blockieren vor Löschung. Teilentfernung ist ehrlich zu melden und anhand desselben Mainankers wiederholbar; vollständige Wiederholung ist schreibfreier No-op. Keine neue historische Dauerakte.
 
 Eigenständige aktuelle Bild-/Rasteränderungen verwenden den gezielten Editor. Deren ausgewählte abgeschlossene Arbeitsdateien können nach tatsächlichem Mainnachweis über denselben ausgewählten Abschlussweg bereinigt werden; bestehende aktuelle Rechte und Bilder bleiben. Alte `retire-reveal-production`-/`retire-background-production`-Receiptpfade sind abgelöst.
