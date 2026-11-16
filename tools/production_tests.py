@@ -140,7 +140,7 @@ def run_tests(groups, directory):
     timer = OperationTimer()
     # Measure complete calls (including aliases imported by tests), without
     # changing behavior or suppressing source validation. No stored outcomes.
-    from tools.puzzle_production import target_adapter, content_registry, images
+    from tools.puzzle_production import current_registration, target_adapter, content_registry, images
     from tools.puzzle_production import catalog_io, catalog_transaction, catalog_publication
     from tools.puzzle_production import za1_fixtures
     suite_started = time.perf_counter()
@@ -166,8 +166,8 @@ def run_tests(groups, directory):
                              (images, 'import_image'), (shutil, 'copytree'),
                              (catalog_io, 'safe'), (catalog_io, 'read'),
                              (catalog_transaction, 'capture'), (catalog_transaction, 'prepare'),
-                             (catalog_publication, 'guard'), (catalog_publication, 'execute'),
-                             (catalog_publication, 'recover'), (za1_fixtures, 'make')):
+                             (current_registration, 'write'), (current_registration, 'execute'),
+                             (current_registration, 'recover'), (za1_fixtures, 'make')):
             original = getattr(module, name)
             counted = timer.wrap(original, name)
             # Also observe aliases bound while the measured modules were

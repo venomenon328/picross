@@ -21,16 +21,8 @@ def hashed(raw):
 
 def source_hashes(snapshot, plan_format=None):
     from . import catalog_transaction as tx
-    if plan_format is None:
-        plan_format = IMAGE_FORMAT if tx.image_generation(snapshot) else FORMAT
-    require((plan_format == IMAGE_FORMAT) == tx.image_generation(snapshot),
-            "Added plan generation differs from the current image projection")
-    if plan_format == IMAGE_FORMAT:
-        return tx.image_snapshot(snapshot)["sources"]
-    if plan_format != FORMAT: snapshot = tx.pre_background_snapshot(snapshot)
-    if plan_format not in (FORMAT, SD2_FORMAT): snapshot = tx.pre_sd2_snapshot(snapshot)
-    if plan_format == LEGACY_FORMAT: snapshot = tx.historical_snapshot(snapshot)
-    return {**snapshot["retained"], **{n: hashed(b) for n, b in snapshot["texts"].items()}}
+    require(plan_format in (None,IMAGE_FORMAT), "Use a current added-date plan")
+    return tx.image_snapshot(snapshot)["sources"]
 
 
 def validate_plan(plan):
@@ -68,13 +60,7 @@ def validate_plan(plan):
             from . import content_registry as cr, categories
             registry = rating.bytes_json(e["content"].encode(), added.REPORT_LIMIT)
             catalog = rating.bytes_json(integration["categories"].encode(), 131072)
-            production = {"format": registry.get("format"), "entries": [r for r in registry.get("entries", []) if r.get("production") is not None]}
-            if registry.get("format") in (cr.BACKGROUND_FORMAT, cr.METADATA_FORMAT):
-                require(plan["format"] in (IMAGE_FORMAT, FORMAT), "Old added plan cannot bind a background registry")
-                production["backgrounds"] = registry.get("backgrounds")
-            if registry.get("format") == cr.METADATA_FORMAT:
-                production["metadata"] = registry.get("metadata")
-            cr.validate(production, catalog)
+            production = cr.validate(registry,catalog)
             runtime = rating.bytes_json(integration["runtime"].encode(), added.REPORT_LIMIT)
             versions = ("picross-runtime-registry-v2", "picross-runtime-registry-v3", "picross-runtime-registry-v4") + (("picross-runtime-registry-v5",) if plan["format"] in METHOD_FORMATS else ())
             if plan["format"] in (IMAGE_FORMAT, FORMAT): versions += ("picross-runtime-registry-v6", cr.METADATA_RUNTIME_FORMAT)
@@ -88,11 +74,11 @@ def validate_plan(plan):
             metadata = cr.current_metadata(production, catalog) if production["format"] == cr.METADATA_FORMAT else {}
             for identifier, bindings in integration["bindings"].items():
                 require(identifier in by_id, "Foreign snapshot binding")
-                row = by_id[identifier]; p = row["production"]
-                require(bindings == {p["package"] + "/manifest.json": p["package_sha256"],
-                                    "game/" + row["definition"]: p["definition_sha256"], "game/" + row["reveal"]: p["reveal_sha256"]} and
-                        _playable_binding(runtime_ids.get(identifier, {}), row, metadata.get(identifier)),
-                        "Invalid historical playable binding")
+                row = by_id[identifier]
+                projected=runtime_ids.get(identifier,{})
+                require(set(bindings)=={"game/"+row["definition"],"game/"+projected["reveal"]} and
+                        _playable_binding(projected,row,metadata.get(identifier)),"Invalid current playable binding")
+                for checksum in bindings.values():sha(checksum)
         elif e["kind"] == "direct":
             receipt = exact_keys(rating.bytes_json(e["content"].encode(), added.LIMIT), {"id", "event", "success", "registered_at"})
             rating.identity(receipt["id"])
@@ -257,14 +243,9 @@ def plan(root, run, base, *, repository=None, direct=()):
         if raw is None or cats is None or runtime_raw is None: return set()
         registry = rating.bytes_json(raw, 8 * 1024 * 1024)
         if registry.get("format") not in (cr.FORMAT, cr.BACKGROUND_FORMAT, cr.METADATA_FORMAT): return set()
-        # Retired F-xx prototype entries had a null production field. Validate
-        # the categorized production subset without executing historical code.
-        production = {"format": registry["format"], "entries": [e for e in registry["entries"] if e.get("production") is not None]}
-        if registry["format"] in (cr.BACKGROUND_FORMAT, cr.METADATA_FORMAT): production["backgrounds"] = registry.get("backgrounds")
-        if registry["format"] == cr.METADATA_FORMAT: production["metadata"] = registry.get("metadata")
-        catalog = rating.bytes_json(cats, 131072)
-        cr.validate(production, catalog)
-        metadata = cr.current_metadata(production, catalog) if production["format"] == cr.METADATA_FORMAT else {}
+        catalog = rating.bytes_json(cats,131072)
+        production = cr.validate(registry,catalog)
+        metadata = cr.current_metadata(production,catalog)
         runtime = rating.bytes_json(runtime_raw, 8 * 1024 * 1024)
         require(runtime.get("format") in ("picross-runtime-registry-v2", "picross-runtime-registry-v3", "picross-runtime-registry-v4", "picross-runtime-registry-v5", "picross-runtime-registry-v6", cr.METADATA_RUNTIME_FORMAT, "picross-runtime-registry-v8") and
                 (runtime.get("format") in (cr.METADATA_RUNTIME_FORMAT, "picross-runtime-registry-v8")) == (production["format"] == cr.METADATA_FORMAT),
@@ -278,10 +259,8 @@ def plan(root, run, base, *, repository=None, direct=()):
             if entry["id"] not in wanted or not entry["visible"]: continue
             projected = runtime_ids.get(entry["id"], {})
             if not _playable_binding(projected, entry, metadata.get(entry["id"])): continue
-            p = entry["production"]
-            paths = {p["package"] + "/manifest.json": p["package_sha256"],
-                     "game/" + entry["definition"]: p["definition_sha256"], "game/" + entry["reveal"]: p["reveal_sha256"]}
-            if not all(hashed(show(commit, n)) == h for n, h in paths.items()): continue
+            paths={name:hashed(show(commit,name)) for name in ("game/"+entry["definition"],"game/"+projected["reveal"])}
+            if any(h is None for h in paths.values()):continue
             bindings[entry["id"]] = paths
             found.add(entry["id"])
         if found:

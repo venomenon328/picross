@@ -4,7 +4,7 @@ from copy import deepcopy
 from pathlib import Path
 import os
 import ctypes
-from . import catalog_io as io, catalog_transaction as tx, registration_dependencies as dep
+from . import catalog_io as io, catalog_transaction as tx
 from . import content_registry as cr, categories, reveal_source as reveal, catalog_background as bg
 from . import catalog_added as added, catalog_publication as publication
 from .authoring_package import require
@@ -127,37 +127,10 @@ def operation(root):
 
 
 def capture(root, ids):
-    io._retirement_reads.get().pending()
-    shared = {n: tx.read(root, n) for n in dep.SHARED}
-    runtime = dep.parse(shared[cr.RUNTIME])
-    # v7 and v8 have identical closed fields; only the effective reveal semantics
-    # differ. Validate the shared index without opening any other ID's sources.
-    original_format = runtime['format']
-    require(original_format in (cr.METADATA_RUNTIME_FORMAT, cr.IMAGE_RUNTIME_FORMAT), 'Retirement requires runtime v7/v8')
-    runtime['format'] = cr.IMAGE_RUNTIME_FORMAT
-    check = {**shared, cr.RUNTIME: canonical_bytes(runtime)+b'\n'}
-    registry, catalog, _ = dep.indices(check)
-    require(set(ids) <= {e['id'] for e in registry['entries']}, 'Unknown production ID')
-    one = deepcopy(registry)
-    for key in ('entries','metadata','backgrounds'): one[key] = [r for r in registry[key] if r['id'] in ids]
-    texts = {n: tx.read(root,n) for n in tx.text_names(one)}
-    for entry in one['entries']:
-        resolved = reveal.resolve(root,entry,catalog)
-        bg.load(root,registry,entry)
-        # Check both image alternatives, even when there is no active record.
-        for candidate in tx.image_candidates(dep.selected(registry,entry)):
-            if candidate not in {resolved['effective_reveal_ref']['file'], bg.asset_path(entry['id'])}:
-                require(io.read(root,candidate,32*1024*1024,missing=True) is None, 'Inactive image present: '+candidate)
-        raw = texts[added.path(entry['id'])]
-        if raw is not None:
-            record = added.validate(dep.parse(raw),entry['id'])
-            evidence = record['provenance']['evidence']
-            if evidence is not None:
-                from .catalog_added_history import validate_plan, record_for
-                report = io.read(root,evidence['path'],added.REPORT_LIMIT)
-                plan = validate_plan(dep.parse(report,added.REPORT_LIMIT))
-                require(io.checksum(report)==evidence['sha256'] and record_for(plan,entry['id'],report)==record, 'Added evidence differs')
-    expected = dep.parse(tx.projection({n:b.decode() if b is not None else None for n,b in texts.items()},one,version=8 if original_format==cr.IMAGE_RUNTIME_FORMAT else 7))
-    actual = dep.parse(shared[cr.RUNTIME])
-    require(expected['entries']==[r for r in actual['entries'] if r['id'] in ids], 'Selected runtime projection differs')
-    return {'registry':registry,'texts':texts,'retained':{},'namespaces':{}}
+    from .current_registration import Snapshot
+    snapshots=[Snapshot(root,identifier) for identifier in ids]
+    texts={}
+    for snapshot in snapshots:
+        require(snapshot.delivery is not None,"Unknown selected delivery")
+        texts.update(snapshot.raw)
+    return {"registry":snapshots[0].registry,"texts":texts,"retained":{},"namespaces":{}}

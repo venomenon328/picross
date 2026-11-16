@@ -374,85 +374,30 @@ def _shallow_recovery_fields(raw):
             return None
 
 
-def _early_registration(raw, *, staged=False):
-    """Promote only a recognized closed registration format/operation pair."""
-    from . import catalog_transaction as tx
-    if not isinstance(raw, bytes) or len(raw) > tx.LIMIT:
-        return False
-    fields = _shallow_recovery_fields(raw)
-    if fields is None:
-        return False
-    fmt = fields.get("format")
-    modern = tx.registration_route({"format": fmt, "operation": "registration"}) is not None
-    previous = fmt in (tx.PREVIOUS_FORMATS["registration"], tx.LEGACY_FORMATS["registration"])
-    if staged and not modern:
-        return False
-    if modern or previous:
-        keys = {"format", "operation", "old", "new", "retained", "additions", "report_run"}
-        if modern:
-            keys.add("replacements")
-        return (set(fields) == keys and fields["operation"] == "registration"
-                and all(fields[n] == "{" for n in ("old", "new", "retained", "additions"))
-                and fields["report_run"] == "n"
-                and (not modern or fields["replacements"] == "{"))
-    if fmt == "picross-registration-journal-v2" and not staged:
-        return (set(fields) == {"format", "targets", "files", "old", "new", "categories"}
-                and fields["targets"] == "[" and fields["categories"] == '"'
-                and all(fields[n] == "{" for n in ("files", "old", "new")))
-    return False
-
-
 def classify(root, *, on_registration=None):
-    """Read original bounded bytes; do not trust a free-standing operation tag."""
-    from . import catalog_io as io, catalog_transaction as tx, catalog_publication as pub
-    raw = pub.read_journal(root)
-    staged = raw is None
-    name = None
-    if staged:
-        remnants = pub.staging(root)
-        require(len(remnants) == 1, "Missing/ambiguous journal staging; preserve files")
-        name = remnants[0]
-        raw = pub.read_journal(root, name)
-    d = current.get()
-    if d:
-        d.outcome = "recovery-required"
-        d.journal_state = {"journal": "staging-unvalidated" if staged else "present-unvalidated", "lock": "absent" if staged else "present"}
-    # Select the registration deadline before the potentially long complete JSON
-    # decoding/validation. A mismatched or incomplete operation never gets it.
-    # An early match changes only the clock, not the authority of journal bytes.
-    if on_registration is not None and _early_registration(raw, staged=staged):
-        if not staged or name == "content/.registration-journal-" + io.checksum(raw) + ".tmp":
-            on_registration()
-    j = io.json_bytes(raw, pub.LIMIT)
-    require(isinstance(j, dict), "Invalid recovery journal")
-    fmt = j.get("format")
-    if fmt == "picross-registration-journal-v2" and not staged:
-        exact_keys(j, {"format", "targets", "files", "old", "new", "categories"})
-        require(isinstance(j["targets"], list) and len(j["targets"]) == 4 and
-                all(isinstance(j[k], dict) for k in ("files", "old", "new")) and
-                isinstance(j["categories"], str), "Invalid registration v2 journal")
-        require(all(isinstance(v, str) for v in j["targets"]) and
-                all(set(j[side]) == {tx.REGISTRY, tx.RUNTIME} and all(isinstance(v, str) for v in j[side].values())
-                    for side in ("old", "new")), "Invalid registration v2 indexes")
-        op = "registration"
-    elif fmt == "picross-content-update-journal-v1" and not staged:
-        # The historical decoder still enforces its complete closed schema.
-        op = "update"
+    """Classify only current operation journals; their writers validate content."""
+    from . import catalog_io as io, catalog_publication as pub, current_registration as registration
+    from . import catalog_transaction as tx, editor_change
+    names = [registration.LOCK] if io.safe(root,registration.LOCK).exists() else pub.staging(root)
+    require(len(names) == 1, "Missing/ambiguous current journal")
+    name = names[0]
+    raw = pub.read_journal(root,name)
+    if raw.startswith(pub.EDITOR_PREFIX):
+        op = "editor-change"
     else:
-        maps = (tx.DEPENDENCY_FORMATS, tx.IMAGE_FORMATS, tx.PE_FORMATS, tx.REBIND_FORMATS, tx.BACKGROUND_FORMATS, tx.FORMATS, tx.AT_FORMATS, tx.PREVIOUS_FORMATS, tx.LEGACY_FORMATS)
-        op = j.get("operation")
-        require(isinstance(op, str) and any(m.get(op) == fmt for m in maps), "Unsupported recovery journal format/operation")
-        exact_keys(j, {"format", "operation", "old", "new", "retained", "additions", "report_run"} |
-                   ({"replacements"} if tx.modern(j) else set()))
-        require(all(isinstance(j[k], dict) for k in ("old", "new", "retained", "additions")), "Invalid recovery journal maps")
-    if staged:
-        require(tx.modern(j) and raw == pub.journal_bytes(j) and
-                name == "content/.registration-journal-" + io.checksum(raw) + ".tmp", "Incomplete/foreign journal staging")
+        value = io.json_bytes(raw,pub.LIMIT)
+        if value.get("format") == registration.FORMAT:
+            if on_registration is not None: on_registration()
+            registration.validate(value)
+            op = "registration"
+        else:
+            tx.validate_journal(root,value)
+            op = value["operation"]
     d = current.get()
     if d:
-        d.operation_class = op + "-recovery"
-        d.journal_state = {"journal": "complete-staging" if staged else "present", "lock": "absent" if staged else "present"}
-    return op, raw, name
+        d.operation_class = op+"-recovery"
+        d.journal_state = {"journal":"present", "lock":"present" if name == registration.LOCK else "absent"}
+    return op,raw,name
 
 
 def report_target(path, excluded):

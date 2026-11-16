@@ -1009,8 +1009,9 @@ getrennt; ein technischer Erfolg schließt #576 nicht.
 Vor konsumierendem Code festgelegt am 14.11.2026 gemäß
 [#640](https://github.com/venomenon328/picross/issues/640). Dieser Abschnitt
 ersetzt für den normalen Editorweg die widersprechenden Anforderungen in
-§§6–9, 11 und 12 ausdrücklich. Alte gespeicherte Generationen behalten ihren
-eigenen expliziten Recoveryweg; neue Pläne verwenden ausschließlich diese Form.
+§§6–9, 11 und 12 ausdrücklich. RI-ONE ersetzt die damalige Quellen-/Recoverykompatibilität: aktuelle Registry v5,
+Reveal v5 und Hintergrund v7; alte Journale müssen vor Umstellung abgeschlossen sein.
+Neue Pläne verwenden ausschließlich den aktuellen gezielten Weg.
 
 ### 13.1 Lese- und Prüfgrenze
 
@@ -1019,9 +1020,9 @@ zusätzlich die ausgewählte Definition und ihre kleinen aktuellen Bildreferenze
 sichtbare Bilder werden bedarfsweise geladen. Keine rekursive Inventur, keine
 Pakete, historischen Freigaben oder unbeteiligten Einzeldateien, auch nicht im
 Hintergrund. Name/Kategorie/Kategorienpflege benötigen ausschließlich die drei
-Indizes. Runtime v7 wird nur lesend erkannt; Schreiben verlangt Runtime v8.
-Es gibt keine Migration in UI, Dienst, Worker oder portablem Paket. Die
-externe Anweisung steht in [#641](https://github.com/venomenon328/picross/issues/641).
+Indizes. Lesen und Schreiben verlangen den aktuellen Katalog mit Runtime v8.
+Es gibt keine Migration in UI, Dienst, Worker oder portablem Paket. Die einmalige Bestandsüberführung gehört zum RI-ONE-Produktdiff; kein
+dauerhafter Legacyimporter wird installiert.
 Die unveränderten Runtimezeilen werden übernommen, nicht aus allen Definitionen
 rekonstruiert. Suche und Sortierung laufen ausschließlich im Browserspeicher.
 
@@ -1055,11 +1056,10 @@ kanonisch mit abschließendem LF. Hashes sind SHA-256, Ganzzahlen keine bools.
 Plan und entpacktes Journal sind auf 128 MiB begrenzt; einzelne Seiten auf
 64 MiB, importierte Bilder weiterhin auf 32 MiB. Physisch speichert allein das
 neue Journal die ASCII-Kennung `PICROSS-EDITOR-CHANGE-JOURNAL-V1` plus LF und
-einen RFC-1950/zlib-Strom (Level 6) seines kanonischen JSON mit `format` zuerst.
+einen RFC-1950/zlib-Strom (Level 6) seines kanonischen JSON mit kanonischer Schlüsselsortierung.
 Der Reader begrenzt bereits die Dekompression, verlangt genau einen vollständigen
 Strom ohne Nachlauf und prüft die kanonische Rekodierung. Das vermeidet erneutes
-Lesen der Base64-Vergrößerung der betroffenen Bildbytes; alte Journale behalten
-unverändert ihre Kodierung und expliziten Reader.
+Lesen der Base64-Vergrößerung der betroffenen Bildbytes; alte Journale werden nicht mehr als aktuelle Recoveryeingänge zugelassen.
 
 | Form | Exakte Felder |
 | --- | --- |
@@ -1108,47 +1108,23 @@ wird zuletzt zurückgestellt. Ein verlorener Browserabschluss allein löst keine
 Recovery aus; frischer Readback entscheidet zwischen erledigt und offen.
 Die gemeinsamen Recoverydispatches erkennen diese Generation ausdrücklich.
 
-### 13.3 Aktive Quellen und Kompatibilität
+### 13.3 Aktive Quellen
 
-Die neue aktive Quellgeneration muss durch die externe Bestandsmigration
-#641-M2 vorbereitet sein. Bild-/Rasterwriter verlangen bereits Reveal v4 und
-Hintergrund v6, auch für die Standardpräferenz; keine bedarfsgesteuerte
-Konvertierung einzelner Altquellen. Metadatenpflege auf Runtime v8 bleibt von
-historischen Quellen unabhängig. Anzeige liest aktuelle technische Referenzen
-alter Quellen ohne neue Herkunftspflicht. #641-M1/M2 bleiben externe
-Integrationsabhängigkeiten und werden durch dieses Codepaket nicht ausgeführt.
+Registry v5, Reveal v5 und Hintergrund v7 folgen exakt [RI](PUZZLE_INTEGRATION.md).
+`binding` enthält nur `identity` mit Key, Slot, aktuellem Definitionsref und
+Runtime-Revision. Keine eingebettete Entry-Produktion, kein `origin`, kein
+Paket-/Receiptanker. Namen, Kategorien und expliziter Mono-/Color-Modus kommen
+aus der aktuellen Autorität. PNG/SVG und selected/none/standard bleiben erhalten;
+Bildrevisionen erhöhen nur die tatsächliche aktuelle Bildrevision.
 
-| Quelle | Geschlossene Form |
-| --- | --- |
-| Reveal v4, `content/reveals/<id>.json` | `format,id,record_revision,binding,current,record_hash`; format `picross-catalog-reveal-v4`. |
-| Hintergrund v6, `content/backgrounds/<id>.json` | Dieselben Felder; format `picross-catalog-background-v6`. |
-| `binding` | `entry,identity` mit der technischen aktuellen Entry-/Definitionszuordnung aus §8.1; keine Herkunftskette und kein `origin`. |
-| Reveal `current` | `image_revision,asset`; asset ist der Ref der unveränderten importierten PNG-/SVG-Bytes am bisherigen technischen Stamm. |
-| Hintergrund `current` | `image_revision,status,asset`; standard/none mit asset null, selected mit Ref auf das feste eigene PNG. |
-| `record_hash` | Kanonischer Hash der übrigen Felder. Revisionszähler 1…1.000.000; Bildzähler nur bei tatsächlicher Bild-/Präferenzänderung erhöhen. |
-
-Alte Quellen werden für die normale Anzeige aus ihrer aktuellen technischen
-Referenz gelesen, ohne ihre Herkunft erneut zu reproduzieren. Unbenutzte alte
-beschreibende Werte sind keine Eingabepflicht. Gemeinsame Resolver, Projektion,
-Folgeproduktion und CLI erhalten die neuen aktuellen Bilder und Präferenzen;
-alte Produktionsarchive dürfen sie nicht zurücksetzen. Eine reguläre neue
-Produktion behält ihre eigenen Freigabe-/Exportprüfungen.
+Der Editor führt keine automatische Migration aus. Runtime-/Rätselrevision,
+Slots, Bewertung und Datum bleiben bei Bild-/Metadatenpflege gleich. Rasteränderung
+verwendet das vorhandene Analyzer-/Proofverfahren für die betroffene neue Logik;
+aktuelle Bildquellen werden an die neue Definition gebunden. Proof und gegebenenfalls
+Baseline liegen im privaten Plan/Journaleingang, kein neues dauerhaftes Rasterpaket.
+Unabhängige Verifikation bleibt vor Apply Pflicht; Recovery analysiert nicht neu.
 
 ### 13.4 Oberfläche, Einstellungen und Nachweise
-
-Rasteränderungen verwenden `picross-editor-raster-package-v2` mit exakt
-`format,id,revision,previous,definition,quality,files,package_hash`.
-`previous` enthält den technischen bisherigen `{entry,identity}`-Anker,
-`definition` den Ref auf `definition.json`, `quality` die bestehenden vier
-Felder `method,checked,proof,baseline`. `files` bindet ausschließlich
-`definition.json`, `previous-definition.json`, `proof.json`, gegebenenfalls
-`baseline.json` und die tatsächlich neu erzeugten `analysis/`-Dateien.
-Keine Entscheidung, Herkunft, Notice oder kopierte historische Produktion.
-Revision ist `editor-<neue Runtime-Revision>`, Paketort wie bisher unter der ID.
-Die geänderte aktive Difficultyquelle und genau diese neuen Paketdateien sind
-zusätzliche erlaubte Rasterziele. Unabhängige Prüfung erfolgt bei Vorbereitung;
-Apply prüft die gebundenen Bytes. Explizite Altdiagnose darf den Vorgängeranker
-auflösen, normale Editoraktionen niemals.
 
 Die Liste rendert nur sichtbare Zeilen plus kleinen Puffer, besitzt eine eigene
 Scrollfläche und feste Suche/Kategorie/Sortierung (Name A–Z, Z–A, Kategorie/Name).
@@ -1179,16 +1155,9 @@ mit Produkthead und konkretem Ablaufdatum von höchstens sieben Tagen zugestellt
 PE-EDIT2-A01 vor Merge und persönliche PE-B-U01 bleiben getrennte Abnahmen.
 
 
-## PW-PERF-E · Gezielter Abschluss aktueller Quellen
+## RI-ONE · Abschluss aktueller Quellen
 
-Für `retire-production` gilt der geschlossene [Receipt-v4- und Prüfvertrag](ZA1_ADAPTER.md#pw-perf-e--ausgewählter-produktionsabschluss-und-receipt-v4).
-Aktuelle Background v6 (selected/none/standard) und Reveal v4 (PNG/SVG) werden
-an binding/current geprüft, ohne erfundenen initial-Ursprung. Aktive
-Editorrasterpakete v1/v2 bleiben vollständige aktive Autorität. Alte Receipts
-v1/v2/v3 bleiben unverändert. V4 erhält Originalexport, Rechte und tatsächlichen
-Main-/Quellcommit getrennt; Sonderimportquellen werden je ID ausdrücklich mit
-`--source-commit ID SHA` gebunden. Keine erneute Endfreigabe oder Completion.
-Nur ausgewählte Abhängigkeiten werden gelesen, keine fremden Paket-/Bildbäume.
-Alle Preflights vor erster Löschung, gezielter Abschlussreadback, frischer
-Byte-/mtime-No-op und ehrliche Teilfehlerreste sind verbindlich. Dieses
-Werkzeugpaket beauftragt keine reale Bereinigung; sie braucht einen separaten Auftrag.
+Für ausgewählte abgeschlossene Arbeit gilt [Authoring Schritt 5 §9](ai-workflows/PUZZLE_AUTHORING_STEP_5.md#9-produktionsabschluss-und-bereinigung).
+Aktuelle Definitionen, Bilder, Notices, Ratings und Datumsdaten bleiben erhalten.
+Kein neuer Receipt und kein Nachproduzieren entfernter Originale. Fachlich eigenständige
+Bild-/Rasteränderungen bleiben eigene ausdrückliche Änderungsaufträge.

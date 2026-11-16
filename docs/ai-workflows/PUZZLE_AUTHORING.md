@@ -1,6 +1,6 @@
 # Picross: Produktionsregeln
 
-**Version 0.8.0 · Dokumentrevision 7 · 15.11.2026 · PW-PERF-D**
+**Version 0.8.0 · Dokumentrevision 8 · 16.11.2026 · RI-ONE**
 
 ## 1. Einstieg und Befugnisse
 
@@ -35,14 +35,15 @@ Vor technischer Benutzung zusätzlich Referenz lesen:
 | Feste Korrektur/RP-5 | [FIXED_RASTER](../FIXED_RASTER.md) bzw. Tool-README RP-5; Schritt 3 §4.4 und benutzter Ableitungsvertrag |
 | Difficulty/Rebind | [SD2-Integration](../SD2_INTEGRATION.md), Tool-README SD2-C/SD2-B; Analyse-/Bewertungsvertrag nach tatsächlichem Befehl |
 | Hintergrundableitung | [Hintergrund](../PUZZLE_BACKGROUNDS.md) §4, Tool-README HP-W2; nur gewähltes Original |
-| Export/Plan/Register/Recovery | [RI](../PUZZLE_INTEGRATION.md), generationsbezogenes [ZA-1](../ZA1_ADAPTER.md), entsprechende CLI-Anleitung, Schritt 5 §8 |
+| Export/Plan/Register/Recovery | [RI](../PUZZLE_INTEGRATION.md), aktuelles [ZA-1](../ZA1_ADAPTER.md), entsprechende CLI-Anleitung, Schritt 5 §8 |
 | Retirement/Bildrevision | Schritt 5 §9 und dort gerouteter revisionsgenauer Zielvertrag |
 
 [Tool-README](../../tools/puzzle_production/README.md), PW/ZA-1/Produktion,
 Produktdefinition/Gestaltung und historische Lieferberichte nicht pauschal voll lesen.
 Felder/Grenzen nie erraten; fehlende Quellen/Widersprüche blockieren nur
-abhängige Operationen. Historische 0.6/0.7-/versiegelte Rev6-Originale samt Formen/
-Freigaben bleiben bytegleich, keine WIP-Migration. Neue Rev7-Snapshots:
+abhängige Operationen. Vorhandene Arbeitsoriginale und Freigaben bleiben bytegleich. Alt-WIP ist kein
+Kompatibilitätsziel; keine automatische WIP-Migration. Integration benutzt
+ausschließlich den aktuellen Eingang nach RI-ONE. Neue Rev8-Snapshots:
 [PW-B](../PW_B_CONTRACT.md#pw-perf-d--regelquellen-und-snapshotgeneration).
 Regeln/Stil/Fachquellen vom selben vollen Quellcommit lesen. Separate Entwicklung
 an Regeln/Werkzeugen/Spiel/CI folgt vollständig AGENTS.

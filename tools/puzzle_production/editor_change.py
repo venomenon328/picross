@@ -1,7 +1,7 @@
 """PE-EDIT2: selected inputs and prepared bytes, never a catalog certification.
 
-This is the shared API/CLI/desktop edit path. Historical full diagnostics and
-their journals retain their own readers. Nothing here traverses a catalog tree.
+This is the shared API/CLI/desktop edit path. Explicit full diagnostics and
+current metadata operations retain their own readers. Nothing here traverses a catalog tree.
 """
 import base64
 from copy import deepcopy
@@ -13,7 +13,7 @@ from functools import wraps
 
 from .authoring_package import require, relative, sha
 from .contract import canonical_bytes, digest, exact_keys, integer
-from . import catalog_io as io, categories, content_registry as registry
+from . import catalog_io as io, categories, content_registry as registry, current_content
 from . import catalog_publication as publication, catalog_metadata as metadata
 from . import catalog_background as bg, editor_raster as raster, catalog_rating as rating, catalog_method
 
@@ -24,9 +24,8 @@ STAGE = "content/.editor-change-journal.tmp"
 INDEXES = (registry.REGISTRY, categories.PATH, registry.RUNTIME)
 LIMIT = 128 * 1024 * 1024
 FILE_LIMIT = 64 * 1024 * 1024
-REVEAL = "picross-catalog-reveal-v4"
-BACKGROUND = "picross-catalog-background-v6"
-RASTER = "picross-editor-raster-package-v2"
+REVEAL = current_content.REVEAL
+BACKGROUND = current_content.BACKGROUND
 
 
 _hashes = ContextVar("editor_operation_hashes", default=None)
@@ -85,32 +84,8 @@ def pending(root):
 
 
 def validate_index(value, cats):
-    """Current index shape and foreign keys; no historical rating acceptance."""
-    exact_keys(value, {"format", "entries", "metadata", "backgrounds"})
-    registry.require_current(value)
-    categories.validate(cats)
-    cat_ids = {c["id"] for c in cats["categories"]}
-    require(isinstance(value["entries"], list) and len(value["entries"]) <= 10000 and
-            isinstance(value["metadata"], list) and len(value["metadata"]) == len(value["entries"]), "Invalid current index size")
-    seen = {k: set() for k in ("id", "save_slot", "definition", "reveal")}
-    ids = []
-    for entry, meta in zip(value["entries"], value["metadata"]):
-        exact_keys(entry, {"id", "key", "save_slot", "definition", "reveal", "visible", "production", "category_id"})
-        require(isinstance(entry["id"], str) and registry.ID.fullmatch(entry["id"]) and entry["key"] == entry["id"] and
-                type(entry["visible"]) is bool and isinstance(entry["production"], dict), "Invalid index identity")
-        for key in seen:
-            require(isinstance(entry[key], str) and entry[key].casefold() not in seen[key], "Index identity collision")
-            seen[key].add(entry[key].casefold())
-        relative(entry["definition"]); relative(entry["reveal"])
-        require(entry["definition"].startswith("data/content/") and entry["definition"].endswith(".json") and
-                entry["reveal"].startswith("art/content/") and entry["reveal"].endswith((".png", ".svg")), "Invalid index resource")
-        exact_keys(meta, {"id", "name", "category_id"})
-        require(meta["id"] == entry["id"] and meta["category_id"] in cat_ids, "Invalid current metadata binding")
-        registry.validate_name(meta["name"])
-        ids.append(entry["id"])
-    require(ids == sorted(ids), "Unsorted current index")
-    bg.index(value)
-    return value
+    return current_content.validate(value, cats)
+
 
 
 class Inputs:
@@ -185,57 +160,19 @@ def slim(value): return isinstance(value, dict) and value.get("format") in (REVE
 
 
 def technical_entry(entry):
-    exact_keys(entry, {"id", "key", "save_slot", "definition", "reveal", "visible", "production", "category_id"})
-    rating.identity(entry["id"])
-    require(entry["key"] == entry["id"] and isinstance(entry["save_slot"], str) and registry.STEM.fullmatch(entry["save_slot"]) and
-            type(entry["visible"]) is bool, "Invalid selected identity")
-    for key, prefix, suffixes in (("definition", "data/content/", (".json",)), ("reveal", "art/content/", (".png", ".svg"))):
-        relative(entry[key]); require(entry[key].startswith(prefix) and entry[key].endswith(suffixes), "Invalid selected resource path")
-    production = entry["production"]
-    require(isinstance(production, dict) and production.get("mode") in ("mono", "color"), "Invalid selected production mode")
-    relative(production["package"])
-    require(production["package"].startswith("content/packages/"), "Invalid selected package reference")
-    for key in ("definition_sha256", "reveal_sha256", "package_sha256"): sha(production[key])
-    for key in ("width", "height"): integer(production[key], 1, 50, "selected "+key)
-    # Historical editorial estimates/descriptions are opaque retained values.
+    current_content.entries([entry])
     return entry
 
 
+
 def validate_binding(value, identifier):
-    exact_keys(value, {"entry", "identity"})
-    entry = technical_entry(value["entry"])
-    identity = exact_keys(value["identity"], {"key", "save_slot", "definition", "runtime_revision"})
-    require(entry["id"] == identifier and all(identity[k] == entry[k] for k in ("key", "save_slot")), "Current identity differs")
-    bg._ref(identity["definition"], name="game/"+entry["definition"], limit=2*1024*1024)
-    require(identity["definition"]["sha256"] == entry["production"]["definition_sha256"], "Current definition hash differs")
-    integer(identity["runtime_revision"], 1, 1000000, "runtime revision")
-    return value
+    return current_content.validate_binding(value, identifier)
+
 
 
 def validate_source(value, entry=None):
-    exact_keys(value, {"format", "id", "record_revision", "binding", "current", "record_hash"})
-    require(slim(value), "Unsupported current editor source")
-    rating.identity(value["id"])
-    validate_binding(value["binding"], value["id"])
-    if entry is not None:
-        expected = deepcopy(entry)
-        expected["production"]["package_sha256"] = value["binding"]["entry"]["production"]["package_sha256"]
-        require(value["binding"]["entry"] == expected, "Stale editor source binding")
-    integer(value["record_revision"], 1, 1000000, "record revision")
-    current = value["current"]
-    exact_keys(current, {"image_revision", "asset"} | ({"status"} if value["format"] == BACKGROUND else set()))
-    integer(current["image_revision"], 1, 1000000, "image revision")
-    if value["format"] == BACKGROUND:
-        require(current["status"] in ("standard", "selected", "none"), "Invalid background preference")
-        if current["status"] != "selected": require(current["asset"] is None, "Image-free preference has asset")
-        else: bg._ref(current["asset"], name=bg.asset_path(value["id"]), limit=32*1024*1024)
-    else:
-        e = value["binding"]["entry"]
-        allowed = {Path("game/"+e["reveal"]).with_suffix(s).as_posix() for s in (".png", ".svg")}
-        bg._ref(current["asset"], limit=32*1024*1024)
-        require(current["asset"]["file"] in allowed, "Foreign reveal path")
-    require(value["record_hash"] == digest({k: v for k, v in value.items() if k != "record_hash"}), "Source hash differs")
-    return value
+    return current_content.validate_source(value, entry)
+
 
 
 def source(inputs, entry, kind):
@@ -267,7 +204,6 @@ def detail(root, identifier, expected=None):
     entry, row = selected(value, runtime, identifier)
     raw = inputs.read("game/"+entry["definition"], 2*1024*1024)
     definition = parsed_definition(raw)[0]
-    require(checksum(raw) == entry["production"]["definition_sha256"], "Selected definition changed")
     reveal, background = source(inputs, entry, "reveal"), source(inputs, entry, "background")
     result = {"id": identifier, "entry": entry, "metadata": next(e for e in value["metadata"] if e["id"] == identifier),
               "reveal": reveal, "background": background, "runtime": row}
@@ -294,12 +230,9 @@ def _summary(value, runtime, identifier):
 
 
 def _record(entry, definition_raw, previous, kind, current):
-    revision = previous.get("record_revision", 0) if isinstance(previous, dict) else 0
-    value = {"format": REVEAL if kind == "reveal" else BACKGROUND, "id": entry["id"],
-             "record_revision": revision+1, "binding": {"entry": deepcopy(entry), "identity": identity(entry, definition_raw)},
-             "current": current}
-    value["record_hash"] = digest(value)
-    return validate_source(value, entry)
+    return current_content.source(entry, definition_raw, current, kind,
+                                  record_revision=previous["record_revision"]+1)
+
 
 
 @catalog_method.bound_validation
@@ -339,7 +272,6 @@ def plan(root, request, *, uploads=None, work=None, expected=None, expected_defi
         definition_raw = inputs.read("game/"+entry["definition"], 2*1024*1024)
         definition = parsed_definition(definition_raw)[0]
         require(expected_definition is None or checksum(definition_raw) == expected_definition, "Selected raster changed; reload")
-        require(checksum(definition_raw) == entry["production"]["definition_sha256"], "Selected definition differs from index")
         target_entry, target_row = selected(target, target_runtime, identifier)
         if request["text"] is not None:
             matrix = raster.parse(request["text"], definition["palette"])
@@ -350,15 +282,8 @@ def plan(root, request, *, uploads=None, work=None, expected=None, expected_defi
                 work = io.external(work)
                 require(not work.is_relative_to(inputs.root), "Raster workspace must be outside checkout")
                 quality, package = _prepare_raster(inputs, entry, definition_raw, new_definition, request["profile"], Path(work))
-                prefix = "content/packages/"+identifier+"/editor-"+str(new_definition["revision"])
-                for name, raw in package.items():
-                    require(inputs.read(prefix+"/"+name, missing=True) is None, "New raster package path occupied")
-                    put(prefix+"/"+name, raw)
                 definition_raw = encoded(new_definition)
                 put("game/"+entry["definition"], definition_raw)
-                target_entry["production"].update(package=prefix, package_sha256=checksum(package["manifest.json"]),
-                    revision="editor-"+str(new_definition["revision"]), definition_sha256=checksum(definition_raw),
-                    width=new_definition["width"], height=new_definition["height"])
                 rating_path = rating.path(identifier)
                 previous_rating = inputs.json(rating_path, 1024*1024, missing=True)
                 active = rating.active_record(quality["checked"], previous_rating)
@@ -454,6 +379,7 @@ def _prepare_raster(inputs, entry, previous, definition, profile, work):
     from .verifier import verify
     from .contract import Budget
     require(profile in ("line", "paired"), "Invalid deduction profile")
+    work.mkdir(parents=True, exist_ok=True)
     directory = work/"raster"; directory.mkdir()
     raw = encoded(definition)
     files = {"definition.json": raw, "previous-definition.json": previous}
@@ -471,7 +397,7 @@ def _prepare_raster(inputs, entry, previous, definition, profile, work):
     for name, data in files.items(): (directory/name).write_bytes(data)
     method = catalog_method.current(catalog_method.from_bytes(inputs.read(catalog_method.PATH, 65536, missing=True)))["method"]
     checked = catalog_analysis.analyze_single(directory/"definition.json", directory/"analysis",
-        production_mode=entry["production"]["mode"], method=method,
+        production_mode=entry["mode"], method=method,
         proof=directory/"proof.json" if baseline is not None else None,
         baseline=directory/"baseline.json" if baseline is not None else None)
     quality = {"method": method, "checked": checked, "proof": ref("proof.json", files["proof.json"]),
@@ -479,18 +405,13 @@ def _prepare_raster(inputs, entry, previous, definition, profile, work):
     # Traversal is confined to this operation's newly generated proof output.
     for path in (directory/"analysis").rglob("*"):
         if path.is_file(): files[path.relative_to(directory).as_posix()] = path.read_bytes()
-    manifest = {"format": RASTER, "id": entry["id"], "revision": "editor-"+str(definition["revision"]),
-        "previous": {"entry": entry, "identity": identity(entry, previous)},
-        "definition": ref("definition.json", raw), "quality": quality,
-        "files": {name: checksum(data) for name, data in files.items()}}
-    manifest["package_hash"] = digest(manifest)
-    files["manifest.json"] = encoded(manifest)
+    quality.update(proof_data=proof, baseline_data=baseline)
     return quality, files
 
 
 def validate(value, *, journal=False):
-    keys = {"format", "action", "id", "entry", "reads", "changes"}
-    exact_keys(value, keys if journal else keys | {"before", "after", "quality", "plan_hash"})
+    keys = {"format", "action", "id", "entry", "reads", "changes", "quality"}
+    exact_keys(value, keys if journal else keys | {"before", "after", "plan_hash"})
     require(value["format"] == (JOURNAL if journal else PLAN), "Unsupported change format")
     require(value["action"] in ("metadata", "images", "raster"), "Invalid editor action")
     if not journal:
@@ -505,7 +426,6 @@ def validate(value, *, journal=False):
         require(entry is not None, "Puzzle action requires ID")
         allowed |= {"game/"+entry["definition"], "content/reveals/"+identifier+".json", bg.path(identifier), bg.asset_path(identifier), bg.CAPABILITY}
         allowed |= {Path("game/"+entry["reveal"]).with_suffix(s).as_posix() for s in (".png", ".svg")}
-    package_prefix = "content/packages/"+identifier+"/editor-" if identifier else ""
     if value["action"] == "raster":
         from .catalog_method import PATH
         allowed |= {rating.path(identifier), PATH}
@@ -513,10 +433,8 @@ def validate(value, *, journal=False):
     require(set(INDEXES) <= set(value["reads"]), "Missing index conflict bindings")
     for name, expected_hash in value["reads"].items():
         relative(name)
-        package = value["action"] == "raster" and bool(re.fullmatch(re.escape(package_prefix)+r"[1-9][0-9]{0,6}/(?:manifest\.json|definition\.json|previous-definition\.json|proof\.json|baseline\.json|analysis/[a-z0-9/.-]+)", name))
-        require(name in allowed or package, "Unrelated editor input: "+name)
+        require(name in allowed, "Unrelated editor input: "+name)
         if expected_hash is not None: sha(expected_hash)
-        if package: require(expected_hash is None and name in value["changes"], "Historical package input forbidden")
     sides = {}
     for name, pair in value["changes"].items():
         require(name in value["reads"], "Unbound change target")
@@ -544,15 +462,7 @@ def validate_targets(value, sides, actual):
     if action != "metadata":
         require(actual[categories.PATH] == target[categories.PATH], "Puzzle edit changes category definitions")
     require([e["id"] for e in before["entries"]] == [e["id"] for e in after["entries"]], "Editor cannot create/remove puzzle IDs")
-    for old, new in zip(before["entries"], after["entries"]):
-        if action != "raster" or old["id"] != identifier:
-            require(old == new, "Editor changes unrelated production entry")
-        else:
-            require(old == value["entry"], "Plan entry differs from current index")
-            require(all(old[k] == new[k] for k in old if k != "production"), "Raster changes fixed identity")
-            mutable = {"package", "package_sha256", "revision", "definition_sha256", "width", "height"}
-            require({k: v for k, v in old["production"].items() if k not in mutable} ==
-                    {k: v for k, v in new["production"].items() if k not in mutable}, "Raster changes unrelated production metadata")
+    require(before["entries"] == after["entries"], "Editor changes fixed current identity")
     if action == "metadata":
         require(before["backgrounds"] == after["backgrounds"], "Metadata changes image sources")
     else:
@@ -600,7 +510,6 @@ def validate_targets(value, sides, actual):
             else:
                 require(current == ref(name, new_raw), "Image bytes lack exact current binding")
         definition_raw = target[definition_path]
-        require(checksum(definition_raw) == entry["production"]["definition_sha256"], "New definition/index binding differs")
         for kind in ("reveal", "background"):
             name = "content/"+("reveals" if kind == "reveal" else "backgrounds")+"/"+identifier+".json"
             if name not in sides: continue
@@ -623,13 +532,14 @@ def validate_targets(value, sides, actual):
         if definition_path in sides:
             old_def, new_def = (io.json_bytes(raw, 2*1024*1024) for raw in sides[definition_path])
             require(new_def == raster.definition(old_def, new_def["solution"]) and new_def["revision"] == old_def["revision"]+1, "Invalid raster delta")
-            prefix = entry["production"]["package"]
-            manifest = raster.validate(io.json_bytes(target[prefix+"/manifest.json"], 1024*1024), definition_raw)
-            require(checksum(target[prefix+"/manifest.json"]) == entry["production"]["package_sha256"] and
-                    manifest["previous"] == {"entry": value["entry"], "identity": identity(value["entry"], actual[definition_path])}, "New raster predecessor differs")
-            require({n.removeprefix(prefix+"/") for n in sides if n.startswith("content/packages/")} == set(manifest["files"])|{"manifest.json"}, "New raster inventory differs")
-            for name, expected_hash in manifest["files"].items():
-                require(checksum(target[prefix+"/"+name]) == expected_hash, "New raster file differs")
+            from .verifier import verify
+            from .contract import Budget
+            evidence = value["quality"]
+            require(isinstance(evidence, dict), "Raster proof missing")
+            proof = evidence["proof_data"]
+            checked = verify(parsed_definition(definition_raw)[1], proof, Budget())
+            require(checked["certified"], "Raster proof incomplete")
+            raster.check_end(new_def, proof)
             active = rating.validate(io.json_bytes(target[rating.path(identifier)], 1024*1024), definition_bytes=definition_raw)
             require(row["difficulty"] == rating.project(active), "New difficulty projection differs")
     return target
@@ -674,7 +584,7 @@ def apply(root, value):
             require(checksum(actual[name]) == expected_hash, "Relevant input changed: "+name)
         require(not pending(root), "Publication started during no-op readback")
         return {"status": "noop", "files": [], **readback(actual, value["id"])}
-    journal = {k: deepcopy(value[k]) for k in ("action", "id", "entry", "reads", "changes")}
+    journal = {k: deepcopy(value[k]) for k in ("action", "id", "entry", "reads", "changes", "quality")}
     journal["format"] = JOURNAL
     raw = publication.journal_bytes(journal)
     journal_hash = checksum(raw)

@@ -210,38 +210,49 @@ def _automatic(operation, directory):
     return raw
 
 
-def complete(root, record_path, commit):
+def complete(root, record_path, commit, *, current_input):
     """Close only authoring metadata after an existing committed registration."""
     from tools.puzzle_production import authoring_builder as builder
     from .sources import INDEX, check_commit, production_path, git
     production_path(record_path); check_commit(commit)
     root = io.external(root)
+    from tools.puzzle_production import catalog_integration, integration_input, current_delivery
+    incoming = integration_input.Input(current_input)
+    ap.require(catalog_integration.reached(current_input, root), 'Selected final input is not currently registered')
     ap.require(git(root, 'merge-base', 'HEAD', commit).decode().strip() == commit, 'Registration is not in current history')
     with builder.writer(builder.git_root(root) / 'authoring-builder.lock'):
         from . import current_view
         source = LocalSource(root)
         before_raw = source.read(None, record_path)
         before = p.parse(before_raw)
+        ap.require(before['puzzle_id'] == incoming.entry['id'], 'Completion input belongs to another job')
+        actual = current_delivery.snapshot(lambda name,limit:source.read(None,name,limit), before['puzzle_id'])
+        committed = current_delivery.snapshot(lambda name,limit:source.read(commit,name,limit), before['puzzle_id'])
+        ap.require(current_delivery.same(actual,committed), 'Commit does not contain the selected current delivery')
         view_before = current_view.observe(root, before['puzzle_id'])
         ap.require(before['format'] in ('picross-authoring-record-v3', 'picross-authoring-record-v4') and
                    before['state'] in ('editorially_approved', 'registered'), 'Completion requires actual final approval')
         after = deepcopy(before)
         if before['state'] != 'registered':
-            binding = {'operation': 'register', 'commit': commit}
-            for key, name in (('manifest', f"content/packages/{before['puzzle_id']}/{before['revision']}/manifest.json"),
-                              ('registry', 'content/registry.json'), ('runtime', 'game/data/registry.json')):
-                raw = source.read(commit, name, 8 * JSON_LIMIT)
-                binding[key] = {'file': name, 'sha256': io.checksum(raw), 'bytes': len(raw)}
+            from tools.puzzle_production import current_delivery
+            binding = {"operation": "register", "commit": commit,
+                       "result": current_delivery.snapshot(lambda name,limit:source.read(commit,name,limit),before["puzzle_id"])}
             after.update(state='registered', integration=binding, blockers=[],
                          next_step='5 · Lokal registriert; unabhängiges Review und Git-/Mainabschluss prüfen')
         ap.require(after['integration']['commit'] == commit, 'Completion belongs to another registration')
         p.registration(source, after)
         directory = record_path.rsplit('/', 1)[0]
-        index = builder.index_value(source.read(None, INDEX, 8 * JSON_LIMIT))
         after_raw = p.data(after)
-        projection = automatic(root, directory, root / directory, index, overlay={record_path: after_raw})
         projection_path = directory + '/workspace.json'
         previous = source.read(None, projection_path)
+        proposed = p.validate(p.parse(previous))
+        for ref in [proposed['record'], *(o['record'] for o in proposed['offers'])]:
+            if ref['commit'] is None and ref['file'] == record_path:
+                ap.require(ref['sha256'] in (io.checksum(before_raw),io.checksum(after_raw)),
+                           'Projection belongs to another current record')
+                ref.update(sha256=io.checksum(after_raw),bytes=len(after_raw))
+        projection = p.data(proposed)
+        incoming.recheck()
         # A restart may find the new record with the old derived view. Only its
         # own record references can be rebound; other foreign view bytes stop.
         old_view, new_view = p.parse(previous), p.parse(projection)
@@ -276,6 +287,7 @@ def main(argv=None):
     group.add_argument('--complete-record')
     group.add_argument('--current-view', nargs=2, metavar=('PUZZLE_ID', 'REVISION'))
     parser.add_argument('--integration-commit')
+    parser.add_argument('--input', type=Path)
     parser.add_argument('--repository', required=True, type=Path)
     args = parser.parse_args(argv)
     try:
@@ -284,7 +296,8 @@ def main(argv=None):
             ap.require(args.integration_commit is None, 'Integration commit only belongs to completion')
             result = handoff(args.repository, *args.current_view)
         elif args.complete_record:
-            result = complete(args.repository, args.complete_record, args.integration_commit)
+            ap.require(args.input is not None, 'Completion requires the selected current input')
+            result = complete(args.repository, args.complete_record, args.integration_commit, current_input=args.input)
         else:
             ap.require(args.integration_commit is None, 'Integration commit only belongs to completion')
             raw = io.read(args.request.absolute().parent, args.request.name, JSON_LIMIT)

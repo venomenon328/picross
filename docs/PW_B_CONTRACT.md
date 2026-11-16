@@ -58,7 +58,8 @@ Für bestehende WIP gibt es keinen Konvertierungs- oder UI-Kompatibilitätsauftr
 | `picross-production-presentation-v2` / `picross-production-presentation-request-v2` | Dieselben Felder und Grenzen wie v1, ausschließlich aktuelle v4-/v3-Arbeitsstände; `background_review` zulässig. |
 
 Inventar v1, Index v1, Hintergrundarbeit/-entscheidung/-ableitung v1,
-Endfreigabe v2, Export v6, Registry/Runtime und Recovery bleiben unverändert.
+Endfreigabe v2 bleibt kreativ unverändert. Integration, Registry und Recovery
+folgen RI-ONE; Runtime v8 bleibt unverändert.
 Die Exportprüfung bindet die neue Originalgeneration ausdrücklich und prüft
 weiterhin alle tatsächlichen Inhalts-, Paletten-, Bild- und Freigabebytes.
 
@@ -182,13 +183,10 @@ Git-`producer` bleibt getrennt vom Bildkern aus `background_render.py` und
 `image_normalization.py`. Alle Consumer prüfen v1 und v2 generationsgenau;
 keine Neusiegelung alter Originale oder Erweiterung von #645.
 
-Export v6 prüft Original und tatsächliches Staging jeweils vollständig. Zwischen
-beiden ersetzt ausschließlich der eigene unveränderte, byte-/pfadgebundene
-Aufrufkontext die redundante volle Pending-Inspektion. Ein geschlossener Vergleich
-der geschriebenen Pending-Dateimenge samt Bytes/Manifest und frischen Identitäten
-bleibt Pflicht. Inspection, Hashliste, Methoden, Freigaben, Notices, Kategorien und
-vollständige Readbacks bleiben gebunden. Vor Publikation werden Quellen und Ziel
-frisch geprüft. Separates verify-export beginnt immer eine vollständige Prüfung.
+Der aktuelle Export prüft den vollständigen finalen Input und die tatsächlich
+kopierten Stagingbytes. Vor Publikation werden Quelle und Ziel frisch geprüft.
+Separates `verify-export --input` beginnt eine vollständige aktuelle Prüfung;
+keine Originalpakete oder historischen Producer werden zugelassen oder benötigt.
 
 Der Finalizer darf zwei Projektionen aus einem vollständig geprüften gemeinsamen
 Paket-/Record-/Quellkontext ableiten. Nur ein geschlossenes Delta der bereits
@@ -200,17 +198,16 @@ Keine Befunde über Aufrufe, Ziele oder Locks hinweg weiterverwenden.
 
 ## PW-PERF-D · Regelquellen und Snapshotgeneration
 
-Authoring 0.8.0 Dokumentrevision 7 ändert ausschließlich Quellenorganisation und
-Snapshotbindung. Neue geschlossene Generationen: Buildrequest v4, Handoff v5,
+Authoring 0.8.0 Dokumentrevision 8 führt die aktuellen Integrationsbefehle und Quellen nach RI-ONE ein. Neue geschlossene Generationen: Buildrequest v4, Handoff v5,
 Record v4, Buildresult v4. Ihre Felder entsprechen v3/v4/v3/v3; allein rulebook
 hat die folgende neue Form. Producer dispatcht nach Request, Reader nach Handoff/
 Record. Gemischte Generationen sind Fehler. Phasen, zwölf Gates, Freigaben,
 Inventar v1, Inhaltsinspektion v2, Projektion v2, Finalizerrequest/-result v2 und
-Export v6 behalten ihre fachliche Semantik und nehmen die neue Originalgeneration
-explizit an. Kein unsupported WIP-Migrationsanspruch.
+Die kreativen Formen behalten ihre fachliche Semantik. Die Integration nimmt
+ausschließlich den finalen aktuellen Input nach RI-ONE an. Kein unsupported WIP-Migrationsanspruch.
 
 rulebook enthält exakt `format,version,document_revision,source_commit,sources`:
-format `picross-authoring-rulebook-v2`, version `0.8.0`, document_revision 7,
+format `picross-authoring-rulebook-v2`, version `0.8.0`, document_revision 8,
 source_commit volle Git-SHA identisch zum handoff.repo_commit. sources ist eine
 lexikografisch nach path sortierte Liste; je Eintrag exakt `path,file,sha256,bytes`.
 path ist der kanonische Repositorypfad, file exakt `rulebook/` + path; SHA-256 und
@@ -245,9 +242,8 @@ rulebook exakt `{version,file,sha256}` und ihre damaligen Header/Hashes. Keine
 Ersatzdatei, Neubindung, Änderung oder Neuversiegelung alter Originale. BA-A bleibt
 bei seinen lokalen 0.6/0.7-Eingängen; eine alte 0.6-Snapshotidentität wird gegen
 ihren gebundenen Gitursprung statt gegen den heute anders organisierten Router
-geprüft. BA-B bindet bei neuen Originalen den vollständigen rulebook-v2-Satz und
-prüft ihn nativ; die äußere Batchregel nennt als snapshot den gemeinsamen Kern
-mit passender Version/Revision. Die Package-/Batch-Werkzeugbindungen führen die
+geprüft. BA-B bindet den finalen aktuellen Integrationsinput und einen eigenständigen
+Auftrag; der Integrator verlangt keine Regelbuchherkunft. Die Package-/Batch-Werkzeugbindungen führen die
 acht aktuellen Regelquellen mit. Keine Erweiterung von Writerrechten oder Budgets.
 
 Die abgeleitete Palettenbindung übernimmt bei Handoff v5 das vollständige geprüfte
@@ -258,12 +254,12 @@ v1 gehört ausschließlich zu alten Originalen, v2 ausschließlich zu Handoff v5
 Negative Paarbefunde, echte Endfreigabe, sämtliche übrigen Bindungen und visuelle
 Q-R04/Q-H01/Q-H02-Gates bleiben unverändert. Keine neue Farbmetrik oder Ausnahmebefugnis.
 
-Rev7 ist ausschließlich über die neue Generation zulässig. Ein alter 0.8-Handoff/
-Request/Record darf keinen Rev7-Einstieg als vermeintlich vollständigen einzelnen
+Rev8 ist ausschließlich über die neue Generation zulässig. Ein alter 0.8-Handoff/
+Request/Record darf keinen Rev8-Einstieg als vermeintlich vollständigen einzelnen
 Snapshot annehmen; für alte 0.8-Formen sind nur damalige Revisionen bis 6 zulässig.
 Ein Wechsel des Versionslabels kann keine fehlenden neuen Quellen legitimieren.
 
 Historische Ansichtsprojektionen behalten ihre frühere reine Datei-/Inventarbindung;
 die neue Header-/Revisionsprüfung wird ihnen nicht nachträglich auferlegt. Der
-Ansichtsreader weist jedoch eine ausdrücklich deklarierte Rev7 unter alter Form
+Ansichtsreader weist jedoch eine ausdrücklich deklarierte Rev8 unter alter Form
 zurück. Neue Ansichten prüfen alle neuen Quellen und Header vollständig.

@@ -12,8 +12,7 @@ from tools.puzzle_production.contract import Budget, InvalidInput, InvalidProof,
 from tools.puzzle_production.images import file_hash, logic_from_matrix
 from tools.puzzle_production.solver import solve
 from tools.puzzle_production.verifier import verify
-from tools.puzzle_production.target_adapter import export, inspect, verify_export, MANUAL_FORMAT
-from tools.puzzle_production.za1_fixtures import rated_registration as registration
+from tools.puzzle_production.authoring_inspection import inspect
 from tools.puzzle_production.content_registry import check_checkout
 from tools.puzzle_production.za1_fixtures import FIXTURES, ROOT, approve, seal, isolated_checkout
 
@@ -91,29 +90,7 @@ class ManualAdapterTests(unittest.TestCase):
         with open_package(self.package, allow_manual_review=True) as package:
             return inspect(package, self.approval, manual_authorization=self.auth)[0]
 
-    def export(self):
-        out = self.root / "export"
-        export(self.package, out, name="TEST ONLY", revision=1, stem="manual_test", save_slot="manual_test",
-               approval_path=self.approval, manual_authorization=self.auth, category_id="voegel",
-               categories_path=ROOT / "tests/puzzle_production/fixtures/catalog/categories.json")
-        return out
 
-    def test_export_offline_recheck_plan_and_synthetic_registration(self):
-        original_handoff = (self.package / "handoff.json").read_bytes()
-        out = self.export()
-        m, report = verify_export(out)
-        self.assertEqual(m["format"], MANUAL_FORMAT)
-        self.assertTrue(report["technical"] and report["catalog_ready"])
-        self.assertEqual(report["source"]["kind"], "manual")
-        self.assertEqual((out / "input/handoff.json").read_bytes(), original_handoff)
-        self.assertEqual(file_hash(out / m["reveal"]), report["selection"]["reveal"]["sha256"])
-        checkout = isolated_checkout(self.root / "checkout")
-        before = (checkout / "content/registry.json").read_bytes()
-        self.assertEqual(registration(out, checkout)["status"], "planned")
-        self.assertEqual((checkout / "content/registry.json").read_bytes(), before)
-        self.assertEqual(registration(out, checkout, apply=True)["status"], "registered")
-        self.assertEqual(registration(out, checkout, apply=True)["status"], "no-op")
-        check_checkout(checkout, replay=True)
 
     def test_manual_source_needs_explicit_exact_authorization(self):
         with self.assertRaises(InvalidInput), open_package(self.package):
@@ -163,31 +140,7 @@ class ManualAdapterTests(unittest.TestCase):
         with self.assertRaises(InvalidInput):
             self.inspect()
 
-    def test_cli_inspect_export_verify_and_plan(self):
-        out = self.root / "cli-export"
-        checkout = isolated_checkout(self.root / "checkout")
-        common = ["--input", str(self.package), "--approval", str(self.approval), "--manual-authorization", str(self.auth)]
-        calls = [("inspect", common), ("export", common + ["--name", "TEST ONLY", "--runtime-revision", "1", "--stem", "manual_cli",
-                  "--save-slot", "manual_cli", "--category-id", "voegel", "--categories", str(checkout / "content/categories.json"), "--output-dir", str(out)]),
-                 ("verify-export", ["--export", str(out)]), ("plan", ["--export", str(out), "--checkout", str(checkout)])]
-        for command, args in calls:
-            if command == "plan":
-                from tools.puzzle_production.za1_fixtures import difficulty_for_export
-                checked = self.root / "checked.json"
-                write_json(checked,difficulty_for_export(out))
-                args += ["--difficulty",str(checked)]
-            run = subprocess.run([sys.executable, "-B", "-m", "tools.puzzle_production.target_adapter", command, *args],
-                                 cwd=ROOT, capture_output=True, text=True, timeout=60)
-            self.assertEqual(run.returncode, 0, run.stdout + run.stderr)
 
-    def test_rehashed_export_cannot_forge_runtime_matrix(self):
-        out = self.export(); m = load_json(out / "manifest.json")
-        data = load_json(out / m["definition"])
-        data["solution"][0][0] = 1
-        write_json(out / m["definition"], data)
-        m["files"][m["definition"]] = file_hash(out / m["definition"])
-        write_json(out / "manifest.json", m)
-        with self.assertRaises(InvalidInput): verify_export(out)
 
     def test_owner_evidence_and_completed_production_are_required(self):
         owner_path = self.root / "owner-override.json"

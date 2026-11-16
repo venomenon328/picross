@@ -96,14 +96,6 @@ def read_ref(root, value):
     return raw
 
 
-def reveal_input(root, value, entry):
-    from .target_adapter import validate_reveal
-    raw = read_ref(root, value)
-    path = io.safe(root, value["file"])
-    require(path.suffix in (".png", ".svg"), "Prepared reveal requires PNG or bounded SVG")
-    validate_reveal(path, entry["production"]["width"], entry["production"]["height"])
-    require(read_ref(root, value) == raw, "Reveal changed during validation")
-    return raw
 
 
 def background_input(root, value):

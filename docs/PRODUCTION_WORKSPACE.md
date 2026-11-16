@@ -699,68 +699,28 @@ Browserprobe dienen nur PW2-B-T01/A01 im Liefer-PR, nicht einer Dauergalerie.
 
 ## PW2-C · aktive Lieferungen und bestätigter Abschluss
 
-Maßgeblich ist die [Paketentscheidung PW2-C](https://github.com/venomenon328/picross/issues/626#issuecomment-6862546388).
-Die aktive Liste blendet eine konkrete Lieferung erst aus, wenn ihre ID,
-Lieferrevision und Original-/Integrationsbindungen mit einem frisch bestätigten
-Commit des konfigurierten Remote-Refs `main` übereinstimmen. `registered`, gleiche
-ID, PR-Status oder Commitabstammung allein genügen nicht. Ein normaler Merge,
-Squash oder unveränderte Sammelübernahme wird anhand derselben Lieferbelege
-erkannt. Spätere unabhängige Ergänzungen der Gesamtregistries ändern die
-Zuordnung einer weiterhin identischen Lieferzeile nicht.
+Die Liste bestätigt abgeschlossene Lieferungen anhand der tatsächlichen aktuellen
+Registry, Runtime und Livebytes am bestätigten `origin/main`. Ein unveränderter
+abgeschlossener Stand bleibt auch in alten Branchkopien ausgeblendet; ein alter
+Integrationshinweis allein genügt nicht. Dabei werden keine historischen ZIPs,
+Receipts oder Provenienzen geöffnet. Noch benötigte frühere Phasen desselben
+abgeschlossenen Vorgangs werden über unveränderte Record-/Projektionsbytes am
+bestätigten Integrationscommit erkannt.
 
-Der begrenzte Leser verwendet Metadaten des vollständigen Exports oder der
-vorhandenen kompakten `picross-integrated-content-v1/v2/v3`-Belege. Nach Retirement
-bindet die aktive Produktion den Receipthash; der darin erhaltene ursprüngliche
-Exporthash bleibt davon verschieden. Raster-, Reveal- und Hintergrundbezüge
-gehören zur Zuordnung. ZIPs, Bilddaten und Solver-/Proofläufe werden für diese
-Listenentscheidung nicht geöffnet oder ausgeführt.
-Die aktive Reveal-v4-/Hintergrund-v6-Form wird mit dem reinen vorhandenen
-Quellenvalidator geprüft: Identität und aktuelles Bild beziehungsweise
-Hintergrundstatus müssen zur Runtime passen. Da der Validator den Paketanker
-normalisiert, erlaubt der Listenleser ausdrücklich nur den bewiesenen
-Originalexporthash O oder den tatsächlichen Receipthash R. O und R bleiben
-verschieden. Zusätzlich gelten nur exakte kleine historische Quellmetadaten am
-bereits gebundenen Integrationscommit als abgeschlossene Altbindung; belegte
-Abwesenheit ist kein fehlgeschlagener Abruf. Legacyformen bleiben lesbar.
+Ausdrücklich neu übergebene Frühphasen, neue Bild-/Rasterarbeit, abweichende
+Livebytes, fehlende Mainbestätigung und defekte Ansichtsbindungen bleiben sichtbar.
+Es gibt keine Rangfolge nach numerischen Revisionen. Der explizite aktuelle
+Ansichtsverweis hat Vorrang vor der Vermutung, eine frühe Phase sei erledigt.
 
-Identische Record-/Projektionsbelege teilen innerhalb des Listenlaufs den
-historischen Liefernachweis; jede konkrete Quelle behält ihre Originalprüfung.
-Alle eingelesenen Lieferungen werden bis zum Ende abgeglichen, auch mehr als 32.
-Die früher begrenzte Gesamtzahl entfällt; bestehende Pfad-/Byte-/Cachegrenzen
-bleiben erhalten. Fehlende Belege und Fehler erscheinen konkret unter
-`completion.unresolved` und in der Fehleranzeige; betroffene Quellen bleiben offen.
-`completion.complete=false` kennzeichnet einen unvollständigen/unklaren Lauf.
-
-Die Zuordnung erfolgt pro konkreter Quelle vor der Motivgruppierung. Identische
-lokale/Remote-Kopien sowie nachweislich zugehörige ältere Record-/Projektionsstände
-verschwinden gemeinsam. Für ältere Schritte zählt ihre tatsächliche Bindung am
-expliziten historischen Lieferstand, keine Revisionssortierung oder Branchfolge.
-Neue Revisionen, abweichende Bytes, spätere Reveal-/Hintergrundarbeit und fehlende
-oder widersprüchliche Belege bleiben sichtbar, auch unter derselben Rätsel-ID.
-Der Abgleich löscht keine Daten oder Refs und erzeugt keinen Completionbeleg.
-
-Die Bestätigung umfasst den tatsächlichen Mainref im gebundenen Quellenstand.
-Ein lokaler `main`, ein alter Cache oder ein erfolgreiches Refresh nur anderer
-Refs genügt nicht. Eine bewusst ohne `main` konfigurierte Refwahl wird nicht
-erweitert. Bei fehlendem, offline gebliebenem oder unlesbarem Mainbezug bleiben
-betroffene Quellen sichtbar; die Liste erklärt die fehlende Bestätigung.
-Ein Mainwechsel wird auch bei unverändertem Produktionscommit neu ausgewertet.
-Die Statusabfrage startet weiterhin keinen Gitlauf.
-
-Passive Suche erhält die geöffnete Quelle, ihre Bilder und ungesendete Eingaben.
-Erst „Neueren Stand laden“ übernimmt den gefilterten Listenstand und erklärt den
-bestätigten Entfall. Verbleibende offene Arbeit derselben ID bleibt anwählbar;
-andernfalls folgt eine andere offene Produktion oder der leere aktive Zustand.
-Eigene Motivtexte bleiben getrennt gespeichert und ausdrücklich erreichbar;
-Appstart und Übernehmen einer leeren Liste öffnen keinen gespeicherten Text. Die internen
-Listenfelder unter `completion` geben Mainbestätigung, Quellenbindung und
-Ausblendungsumfang an; sie sind Ansichtsdaten, keine neuen Originalschemas.
-
-Kleine synthetische Regressionen liegen im ausgewählten `tools`-Modul. PW2-C-T01
-liefert einmalig den lesenden Praxisabgleich der drei #622-Lieferungen sowie die
-echte Browserprobe mit unveränderten Original-PNGs. Quellen, Produkt-Head,
-Liefer-/Prüfstand und das unabhängige Vor-Merge-Gate PW2-C-A01 stehen im Liefer-PR.
-Es entsteht keine dauerhafte Browsermatrix oder Sammlung realer Produktionsdaten.
+`projector.complete --input <current-input>` nutzt denselben erreichten aktuellen
+Integrationszustand wie Plan/Write/No-op. Danach entfernt `retire` nur nachweislich
+integrierte, ausdrücklich zugeordnete Arbeit: automatische registrierte Revisionen,
+explizite frühere Revisionen und explizite gemeinsame Arbeitsverzeichnisse.
+Die Prüfung verlangt einen bestätigten Mainstand und identische Gitbytes; fremde
+oder wiederaufgenommene Daten blockieren. Der aktuelle Pointer wird mit entfernt,
+wenn er genau auf die entfernte Arbeit verweist. Keine Abschlussreceipt,
+Zählerfortschreibung oder neue Bild-/Rasterfreigabe. Einzelheiten und Befehle in
+[Authoring Schritt 5](ai-workflows/PUZZLE_AUTHORING_STEP_5.md).
 
 ## 9. Paketgrenze PW-A
 
@@ -835,16 +795,15 @@ Zugriffs- und Autoritätsgrenzen nicht.
 
 ## PW-PERF-B · Begrenzte Erstregistrierungsprüfung
 
-Für Erstregistrierung auf v4/v8 gilt ausschließlich die neue geschlossene
-[v10-Semantik](PUZZLE_INTEGRATION.md). Gemeinsame Indizes, neue Produktion samt Freigaben/Proof,
-abhängige Quellen und Schreibziele bleiben vollständig gebunden. Unbeteiligte
-alte Paket-/Liveasset-/Sidecardateien werden nicht gelesen oder als intakt
-bestätigt; ihre Defekte erkennt der zuständige Reader oder ein expliziter
-Gesamtaudit. P0/P2 prüfen neue Quellen und freie/eigene Ziele, P5/P6 die neue
-Publikation, R0/R2 eigene Zwischenstände und alte Indizes. Alte Journalgenerationen
-und andere Writer behalten ihre bisherigen Prüfverträge. Keine Garantie gegen
-nichtkooperierendes ABA-/OS-Racing; keine Änderung menschlicher Freigaben.
-
+RI-ONE ersetzt die frühere mehrgenerationige Integrations-/Receiptstrecke.
+Maßgeblich sind [RI](PUZZLE_INTEGRATION.md), [ZA-1](ZA1_ADAPTER.md) und
+[RI-ONE](PUZZLE_INTEGRATION_SINGLE_PATH.md). Erstregistrierung verwendet genau
+`picross-integration-input-v1`, Registry v5, Revealquelle v5 und Hintergrundquelle
+v7; Runtime v8 bleibt unverändert. Die aktuelle Quelle bindet Identität und
+Livebytes, keine Produktionsarchive, Producer- oder Regelbuch-Allowlist.
+Bild-, Raster-, Metadaten- und Hintergrundrevisionen bleiben eigene Operationen
+nach [PE §13](PUZZLE_EDITOR.md#13-pe-edit2-gezielte-pflege-statt-vollbestandsprüfung).
+Historische Formbeispiele dieses Dokuments erteilen keine aktuelle Schreibbefugnis.
 
 ## PW-PERF-C · aufrufgebundene Prüfung und Hintergrund v2
 

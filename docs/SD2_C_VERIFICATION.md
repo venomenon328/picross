@@ -28,7 +28,7 @@ Deployment. Historische A-/B-Nachweise werden weder ersetzt noch als C-Pass gez�
 ## 2. Prüfzuordnung C01–C06
 
 Die neuen Fälle in
-[test_sd2_catalog.py](../tests/puzzle_production/test_sd2_catalog.py)
+[test_sd2_catalog.py](https://github.com/venomenon328/picross/blob/4e23e644f3457362e02b75f78fdb575a99265494/tests/puzzle_production/test_sd2_catalog.py)
 verwenden feste unabhängige Testdefinitionen, kleine bereits synthetische
 ZA-1-Pakete, isolierte Checkouts und eigens erzeugte Test-Git-Historien.
 Es gibt keine aus echten Katalogrätseln abgeleiteten Fixtures. Analysatoren und
@@ -49,7 +49,7 @@ Zusätzliche spezifische Belege:
   denselben vollständigen Proof bei abgebrochener Baseline. Nur der erste Fall
   erhält L5; der zweite bleibt `r4_necessity_unproven`, ohne aktive Ersatzstufe.
   Ein unvollständiger Linienfixpunkt bleibt ebenfalls offen.
-- [test_reveal_recovery.py](../tests/puzzle_production/test_reveal_recovery.py)
+- [test_reveal_recovery.py](https://github.com/venomenon328/picross/blob/4e23e644f3457362e02b75f78fdb575a99265494/tests/puzzle_production/test_reveal_recovery.py)
   konstruiert echte alte Feldmengen und Runtimegenerationen, einschließlich AT,
   statt neue Felder unter alten Versionsnamen zu akzeptieren. Neue C-Rollbacks
   erhalten gültige alte Runtimebytes; alte Recoverygenerationen behalten ihr

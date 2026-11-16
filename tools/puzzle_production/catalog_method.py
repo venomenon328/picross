@@ -137,15 +137,8 @@ def current(record):
 
 def source_hashes(snapshot, plan_format=None):
     from . import catalog_transaction as tx
-    if plan_format is None:
-        plan_format = IMAGE_PLAN if tx.image_generation(snapshot) else PLAN
-    require((plan_format == IMAGE_PLAN) == tx.image_generation(snapshot),
-            "Activation plan generation differs from the current image projection")
-    if plan_format == IMAGE_PLAN:
-        return tx.image_snapshot(snapshot)["sources"]
-    if plan_format == LEGACY_PLAN:
-        snapshot = tx.pre_background_snapshot(snapshot)
-    return {**snapshot["retained"], **{n: io.checksum(raw) for n, raw in snapshot["texts"].items()}}
+    require(plan_format in (None,IMAGE_PLAN), "Use a current activation plan")
+    return tx.image_snapshot(snapshot)["sources"]
 
 
 def validate_plan(value):

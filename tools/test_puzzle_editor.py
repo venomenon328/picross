@@ -14,7 +14,7 @@ from tools.puzzle_production.contract import write_json
 def fixture(root):
     (root/".git").mkdir(parents=True)
     write_json(root/"content/categories.json", {"format": "picross-categories-v1", "categories": []})
-    write_json(root/"content/registry.json", {"format": "picross-content-registry-v4", "entries": [], "metadata": [], "backgrounds": []})
+    write_json(root/"content/registry.json", {"format": "picross-content-registry-v5", "entries": [], "metadata": [], "backgrounds": []})
     write_json(root/"game/data/registry.json", {"format": "picross-runtime-registry-v8", "categories": [], "entries": []})
     return root
 
@@ -171,9 +171,8 @@ class EditorHTTPTests(unittest.TestCase):
         value = json.loads(path.read_bytes()); value["format"] = "picross-runtime-registry-v7"
         write_json(path, value)
         before = {p: (p.read_bytes(), p.stat().st_mtime_ns) for p in self.root.rglob("*") if p.is_file()}
-        listing = json.loads(self.call(API+"catalog")[1])
-        self.assertTrue(listing["migration_required"])
-        self.assertGreaterEqual(self.call(API+"migration", {"snapshot": listing["snapshot"]})[0], 400)
+        self.assertGreaterEqual(self.call(API+"catalog")[0],400)
+        self.assertGreaterEqual(self.call(API+"migration", {"snapshot": "unsupported"})[0], 400)
         self.assertEqual(before, {p: (p.read_bytes(), p.stat().st_mtime_ns) for p in before})
 
     def test_theme_persists_across_new_port_without_worker_or_content_write(self):
