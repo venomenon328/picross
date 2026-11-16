@@ -41,7 +41,7 @@ Bestehende Inhalts-, Proof-, Paletten-, Bild-, Freigabe- und Integrationsgaranti
 bleiben erhalten. Der Dienst bleibt lesend; Veröffentlichung und Gitabschluss
 führt der beauftragte Akteur aus. Historische Originale werden nicht migriert.
 
-**Vertrag 1.0 · Dokumentrevision 17 · 16.11.2026 · HG-KOMPOSITION / [#673](https://github.com/venomenon328/picross/issues/673); HP-W2-COMPAT-1 / #645; HP-W1/HP-W2 / #560; PB-H / #489; HP-I1a/HP-I1b1/HP-I1b2/HP-I1c/HP-I2 / #561; MJ-A/MJ-B / #490; BA-A/BA-B / #491; PE-A2 / #576**
+**Vertrag 1.0 · Dokumentrevision 18 · 16.11.2026 · HG-BESTAND / [#671](https://github.com/venomenon328/picross/issues/671); HG-KOMPOSITION / [#673](https://github.com/venomenon328/picross/issues/673); HP-W2-COMPAT-1 / #645; HP-W1/HP-W2 / #560; PB-H / #489; HP-I1a/HP-I1b1/HP-I1b2/HP-I1c/HP-I2 / #561; MJ-A/MJ-B / #490; BA-A/BA-B / #491; PE-A2 / #576**
 
 
 ## HG31 · zwei geschlossene Bildprofile
@@ -52,7 +52,14 @@ in §§1–4, 6, 13–14 und den aktuellen RI-Abschnitten. Historische Belege bl
 unverändert. Neue Kandidaten sind durchgehende Einzelbilder exakt 3:1;
 Originalmaße dürfen variieren (etwa 2172×724). Drei verschiedene Angebote und
 persönliche Bildwahl bleiben. Keine Halbbildmontage, Seitenstreifen, Crop,
-Stretch oder Motivverschiebung. Alte gewählte 4:1-Bilder bleiben bytegleich.
+Stretch oder Motivverschiebung. Aktive 4:1-Bilder bleiben bis zur ausdrücklich
+gewählten und integrierten Ersetzung bytegleich unter ihrem bisherigen Profil.
+Beauftragte Bestandsrevisionen entstehen in 3:1; [#671](https://github.com/venomenon328/picross/issues/671)
+umfasst auch alle bereits vorhandenen individuellen Hintergründe seiner Kohorte.
+Historische Originale und Freigaben werden nicht umgeschrieben. Die zusätzliche
+Höhe und die etwas hellere Graphitwirkung folgen dem [Bildstil](PUZZLE_IMAGE_STYLE.md):
+Höhenverteilung als unverbindliche Gestaltungsrichtung, ohne feste Mittel-/
+Seitenbelegung oder zusätzliche Ausnahmefreigabe.
 
 Das neue vollständige HP-W2-Profil lautet exakt:
 
@@ -104,10 +111,12 @@ Capability v2 enthält exakt `format,runtime_format,profile_ids,enabled`:
 `profile_ids=[picross-background-png2304-v1,picross-background-png2304x768-v1]`
 in dieser Reihenfolge. V1 bleibt ausschließlich die 4:1-Zusage aus dem alten
 Vertrag. 2304×768 zusammen mit v1 scheitert an Writer-, Import- und Runtimegrenzen.
-Unbekannte oder widersprüchliche Formen scheitern. V2 true ist erst nach T01–T03
-und unabhängiger HG31-A01 als integrierte Mainfähigkeit zu melden; synthetische
-isolierte Ziele dürfen sie prüfen. Bis zum geprüften Mainmerge bleibt #671
-in der dokumentierten Zwischenphase, ohne neue Produktionsintegration.
+Unbekannte oder widersprüchliche Formen scheitern. Die Unterstützung beider
+Profile ist seit [PR #676](https://github.com/venomenon328/picross/pull/676) auf main
+integriert; der technische Zwischenhalt von #671 ist beendet. Den tatsächlichen
+Einführungsnachweis und die ausdrücklich erlassenen Vor-Merge-Gates A01/A02 hält
+[der HG31-Abschluss](https://github.com/venomenon328/picross/issues/675#issuecomment-6919304397)
+fest. Ein Nachweisverzicht gilt nicht nachträglich als bestandene Prüfung.
 
 Beide Profile verwenden dieselbe sichere horizontale Papierfläche und den
 unteren mittigen Anker aus §13.2. Mit r=4 bzw. r=3:
@@ -121,7 +130,9 @@ Beide Profile haben elf zusätzliche Mipstufen. Jede ganzzahlig halbierte
 Dimension und die vollständige RGBA-Kette werden geprüft: 7.077.844 bzw.
 9.437.176 Bytes. Die 64-MiB-Grenze wird nicht erhöht.
 
-HG31-T01–T03 und HG31-A01 bleiben die Nachweis-/Reviewgrenze aus #675.
+HG31-T01–T03 und HG31-A01 bezeichnen die damaligen Einführungsnachweise aus #675;
+ihren tatsächlichen Abschluss einschließlich der Nachweisverzichte dokumentiert
+der oben verlinkte Paketabschluss. Sie eröffnen kein neues Gate je Bildserie.
 Synthetic End-to-End bis Editor/RI, Import und beiden PCKs, einmaliger bytegenauer
 Bestandsschutz und echte native/Web-/Editorbedienung sind getrennte Aussagen.
 Headless-/Node-/HTTP-Erfolg ersetzt keine tatsächlich geöffnete Darstellung.
@@ -202,6 +213,10 @@ Dateien, Revisionen und Freigabegegenstände.
 
 Standard sind echte ImageGen-Zeichnungen mit hellen neutralgrauen Graphitstrichen,
 offenen beziehungsweise nachgezogenen Konturen und motivgerechter Schraffur.
+Die neuen Zeichnungen erhalten eine insgesamt geringfügig hellere, zurückhaltende
+Bleistiftwirkung nach dem [Bildstil](PUZZLE_IMAGE_STYLE.md); feine Striche und die
+zeichnerische Struktur bleiben erkennbar. Kein numerischer Helligkeits-/Alphawert
+und keine Änderung der Runtime-Deckkraft.
 Gefüllte Objektflächen sind ausdrücklich erlaubt, auch größere zusammenhängende
 Partien, sofern sie sichtbar realistisch handschraffiert wirken. Natürliche
 Strichführung/Kreuzschraffur und passende Dichte beurteilen; die bloße Existenz
@@ -211,16 +226,14 @@ offenen Schraffurstrichen durchscheinen; dichtere gezeichnete Objektpartien sind
 kein Verstoß gegen diese Transparenzregel. Eingebrannte Buchflächen, UI, weiße
 Bildkästen, Schrift und Wasserzeichen sind ausgeschlossen.
 
-Die vollständige transparente 4:1-Komposition nutzt die gesamte gemeinsame
-nutzbare Hintergrundfläche auf dem Buchpapier mit den vorhandenen Falz-/
-Randabständen. Sichtbare Breitenverteilung und geplante seitliche Positionen
-prüfen, nicht nur Dateimaße. Bloße transparente Seitenbalken, die die Zeichnung
-verschmälern/zur Mitte verschieben, sind keine Formatlösung. Durchgehende luftige,
-bewusst rechtsbetonte, U-/Halb-U-Kompositionen oder eine niedrigere Mitte bleiben
-zulässig; bewusst gestalteten Freiraum erhalten. Keine Pflicht zu zwei Ecken,
-belegten Randpixeln oder einer Prozentbelegung und keine individuellen Positions-,
-Crop- oder Maskenparameter. Kleinere echte 4:1-Originale sind zulässig; die
-Ausgabe bleibt 2304×576. Korrektur vor Auswahl folgt
+Neue vollständige transparente Einzelkompositionen folgen dem 3:1-Profil im
+[HG31-Vertrag](#hg31--zwei-geschlossene-bildprofile) und dem aktuellen
+[Bildstil](PUZZLE_IMAGE_STYLE.md#hintergrundkomposition-die-vollständige-leinwand).
+Die gemeinsame sichere Papierbreite mit Falz-/Randabständen und bewusstem Freiraum
+bleibt erhalten. Die zusätzliche Höhe ist kein Belegungsziel; niedrigere/luftigere
+Mitte und nicht vollhohe Seiten sind unverbindliche Gestaltungsrichtungen, keine
+festen Höhenquoten oder Ablehnungsgründe für passende andere Kompositionen.
+Keine individuellen Positions-, Crop- oder Maskenparameter. Korrektur vor Auswahl folgt
 [Schritt 4 §6.3.1](ai-workflows/PUZZLE_AUTHORING_STEP_4.md#631-formatkorrektur-vor-der-bildwahl),
 die isolierte Prüfung [Q-HG02–Q-HG04](PUZZLE_QUALITY.md#91-isolierte-visuelle-beurteilung).
 
