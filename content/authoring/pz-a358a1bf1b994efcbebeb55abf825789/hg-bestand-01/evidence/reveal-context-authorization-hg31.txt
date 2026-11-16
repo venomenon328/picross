@@ -1,4 +1,0 @@
-Aktuelle Kontextbindung, keine Rekonstruktion einer historischen Revealwahl.
-Issue #671 beauftragt als bestehende Integration ausdrücklich Kaktus (pz-a358a1bf1b994efcbebeb55abf825789) in der aktuellen Serie. Der Nutzer hat diesen Auftrag in dieser Sitzung ausdrücklich wieder aufgenommen.
-Quellcommit main@91869dad8db9f3b736facc0562bd5e7f0fb628c4; aktuelle Revealdatei game/art/content/kaktus_001.png; SHA-256 21a88817c31f01fd2b62d2001faa07abeefb291737e72050937449b4f0bad139; 1529362 Bytes; bytegleich zu reference/reveal.png. Kategorie blumen-pflanzen.
-Das aktuelle Original wurde zur Kontextprüfung tatsächlich geöffnet. Die vorhandene Integration und Revealabnahme werden nicht wiederholt. Kein historischer Akteur oder Entscheidungszeitpunkt wird erfunden; neue Hintergrundwahl weiterhin offen.

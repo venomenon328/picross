@@ -1,5 +1,0 @@
-HG-BESTAND-01 / Qualle / pz-20ecf7747bbf40828238ec26d1207172
-
-Die aktuelle Eigentümerbeauftragung (execution-request.txt) setzt den Serienauftrag aus Issue #671 um. Das Rätsel ist auf main@5f620228958e58c7f98fc6c9823ea970f3cb1764 bereits sichtbar integriert. context.reveal bindet unveränderte aktuelle Revealbytes aus game/art/content/qualle_001.png (SHA-256 91a20121593a44b0f7c41c2db6a1025a62f3c89f9c40927f2cb52ceb8513e29d, 1516666 Bytes).
-Diese Bindung erlaubt das aktuelle Reveal als Referenz für Hintergrundkandidaten. Sie rekonstruiert keine frühere Bildwahl, keinen historischen Akteur/Zeitpunkt und ist keine erneute Revealproduktion oder neue Hintergrundwahl.
-Belege: issue-671.json, execution-request.txt und source-bindings.json.

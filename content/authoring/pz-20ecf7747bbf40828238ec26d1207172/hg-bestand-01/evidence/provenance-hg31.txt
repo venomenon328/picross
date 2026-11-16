@@ -1,3 +1,0 @@
-Neun neue Einzelzeichnungen dieser Sitzung mit dem eingebauten image_gen.imagegen, transparent_background=true; nur die gespeicherten Textprompts wurden als Generierungseingang verwendet. Keine Fremdassets und keine alten Bilder als Generierungseingang.
-Auftragsgrundlage: Eigentümerauftrag für das eigene Repository, aktuelles Issue #671 und die aktuelle Ausführungsnachricht. Nutzung als projektbezogene KI-Illustration autorisiert; keine ausschließlichen Rechte oder menschliche Urheberschaft behauptet. Keine zusätzliche Fremdattribution erforderlich.
-Toolname und übergebener Transparenzparameter sind bekannt; Modell, Seed und interne Backendparameter sind nicht exponiert. Ausgabe bytegleich gesichert; keine deterministische Wiedererzeugbarkeit behauptet.
