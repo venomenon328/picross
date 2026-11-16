@@ -150,12 +150,14 @@ def authority(api, *, app=PW):
 
 
 def next_version(inputs, previous, *, app=PW):
-    require(release(app=app)['version'] == app.anchor, 'The release start anchor must remain 0.1.0')
+    require(release(app=app)['version'] == app.anchor, 'The release start anchor must remain ' + app.anchor)
+    if previous:
+        require(version_tuple(previous['manifest']['version'])[:2] == app.line, 'Foreign version authority')
     if previous and previous['manifest']['payload_fingerprint'] == inputs['sha256']:
         return None
     current = previous['manifest']['version'] if previous else release(app=app)['version']
     major, minor, patch = version_tuple(current)
-    require((major, minor) == app.line and patch < 65535, '0.1.x publication line exhausted')
+    require((major, minor) == app.line and patch < 65535, 'Application publication line exhausted')
     return f'{major}.{minor}.{patch + 1}'
 
 

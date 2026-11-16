@@ -3,7 +3,6 @@
 Excluded from PYZ and method data. No real content, installation or publication.
 """
 import argparse
-import base64
 from io import BytesIO
 import json
 import os
@@ -52,6 +51,7 @@ def frozen(build, output):
             value=json.loads(result.read_bytes());calls.append({'action':action,'error':value['error']})
             require(bool(value['error'])==expected_error,'Unexpected frozen result: '+str(value['error']))
             return value['result']
+        unrelated=root/'game/data/content/unrelated.json'; unrelated.write_bytes(b'not a selected definition')
         identifier=json.loads((root/'content/registry.json').read_bytes())['entries'][0]['id']
         def snapshot():
             return edit.token({name:(root/name).read_bytes() for name in edit.INDEXES})
@@ -59,7 +59,14 @@ def frozen(build, output):
         def plan(**changes):
             request={'id':identifier,'metadata':None,'text':None,'profile':None,'reveal':None,'background':None,**changes}
             return call('plan',{'request':request,'uploads':uploads,'catalog_snapshot':snapshot()})
-        def apply(value): return call('apply',{'plan_hash':value['plan_hash']})
+        def apply(value):
+            before={p.relative_to(root).as_posix():(p.read_bytes(),p.stat().st_mtime_ns) for p in root.rglob('*') if p.is_file()}
+            result=call('apply',{'plan_hash':value['plan_hash']})
+            for name,previous in before.items():
+                if name not in value['files']:
+                    p=root/name
+                    require(p.exists() and (p.read_bytes(),p.stat().st_mtime_ns)==previous,'Unrelated bytes/mtime changed: '+name)
+            return result
         uploads={}
         try:
             original=detail();require(original['raster']['revision']==1,'Unexpected initial revision')
@@ -67,6 +74,14 @@ def frozen(build, output):
             before={p.relative_to(root).as_posix():(p.read_bytes(),p.stat().st_mtime_ns) for p in root.rglob('*') if p.is_file()}
             require(apply(plan(metadata={'name':'Frozen PE','category_id':'voegel'}))['status']=='noop','Metadata noop failed')
             require(before=={p.relative_to(root).as_posix():(p.read_bytes(),p.stat().st_mtime_ns) for p in root.rglob('*') if p.is_file()},'Noop changed bytes/mtime')
+            stream=BytesIO();Image.new('RGBA',(128,128),(20,60,90,128)).save(stream,format='PNG');reveal=stream.getvalue()
+            (work/'reveal.png').write_bytes(reveal)
+            checked=call('validate_upload',{'file':'reveal.png','kind':'reveal'})
+            uploads={'reveal':{'file':'reveal.png','sha256':checked['sha256']}}
+            apply(plan(reveal={'upload':'reveal'}))
+            current=detail()
+            require((root/'game'/current['detail']['reveal']['file']).read_bytes()==reveal,'Reveal import changed bytes')
+            uploads={}
             for height in (576,768):
                 image=Image.new('RGBA',(2304,height),(0,0,0,0));image.putpixel((30,height-30),(60,60,60,128))
                 stream=BytesIO();image.save(stream,format='PNG');raw=stream.getvalue()
@@ -96,7 +111,7 @@ def frozen(build, output):
                 process.stdin.write(b'stop\n');process.stdin.flush();process.stdin.close()
                 process.wait(timeout=30)
         require(process.returncode==0,'Frozen worker did not stop cleanly')
-        return {'calls':calls,'reader_metadata_noop':True,'both_profiles_byte_equal':True,
+        return {'calls':calls,'reader_metadata_noop':True,'reveal_byte_equal':True,'unrelated_bytes_mtimes_preserved':True,'both_profiles_byte_equal':True,
                 'capability_boundary':True,'optional_txt_absent':True,'raster_revision':2,
                 'limits':'Actual frozen worker; browser rendering and personal Windows installation remain R01/U01.'}
 
@@ -116,10 +131,9 @@ def signatures(build, output):
         except ValueError: pass
         else: raise ValueError('Negative signature case accepted')
     api=MemoryGitHub(app=PE);api.source=provenance['source_commit'];api.run['head_sha']=api.source
-    plan={'source_commit':api.source,'run_id':9,'run_attempt':1,'version':provenance['version'],
-          'payload_fingerprint':provenance['payload_fingerprint'],'authority':None,'diagnostic':False,
-          'trust_sha256':channel.digest(canonical(trust))}
     with patch.object(verifier,'production_trust',return_value=trust):
+        plan=channel.plan(api,Path(__file__).resolve().parents[2],api.source,9,app=PE)
+        require(plan['payload_fingerprint']==provenance['payload_fingerprint'],'Plan differs from real build')
         api.fail_upload='START.txt'
         try: channel.publish(api,build,plan,enabled=True,signing_enabled=True,secret=secret,app=PE)
         except RuntimeError: pass
@@ -142,13 +156,33 @@ def guards(build):
     guard=build/'work/Guard.exe'
     def invoke(): return subprocess.run([str(guard),str(target)],creationflags=subprocess.CREATE_NO_WINDOW).returncode
     require(invoke()==0,'Unoccupied PE guard failed')
-    a,b=InstallInterlock(app=PE),InstallInterlock(app=PW)
+    a,b,c=InstallInterlock(app=PE),InstallInterlock(app=PW),InstallInterlock(app=PE)
     try:
         b.acquire();require(invoke()==0,'PE guard incorrectly blocks on PW')
         a.acquire();require(invoke()==2,'PE guard accepted a running PE')
-        a.close();require(invoke()==0,'PE guard did not release')
-    finally: a.close();b.close()
+        c.acquire();a.close();require(invoke()==2,'Other PE instance lost protection')
+        c.close();require(invoke()==0,'PE guard did not release')
+    finally: a.close();b.close();c.close()
     return {'actual_guard_running_pe_refused':True,'parallel_pw_allowed':True,'no_installation':True}
+
+
+def preview_resources(build):
+    image=build/'dist'/PE.executable/'_internal'
+    paper=image/'game/book/paper.png'
+    with Image.open(paper) as raster:
+        raster.load();require(raster.width>0 and raster.height>0,'Missing paper pixels')
+    config=json.loads((image/'game/book/paper.json').read_bytes())
+    margins=list((image/'game/art/drawing/margins').glob('*'))
+    require(config and margins,'Missing preview configuration/margins')
+    decoded=[]
+    for path in margins:
+        if path.suffix=='.png':
+            with Image.open(path) as raster: raster.load()
+            decoded.append(path.name)
+    for name in ('index.html','app.js','style.css'):
+        require((image/'tools/puzzle_editor/ui'/name).stat().st_size>0,'Missing preview UI')
+    return {'paper_decoded':True,'margin_pngs_decoded':decoded,'ui_present':True,
+            'limits':'Technical resource checks only; actual browser appearance remains R01/U01.'}
 
 
 def run(build,output):
@@ -156,7 +190,8 @@ def run(build,output):
     delivery=json.loads((build/'delivery.json').read_bytes())
     result={'format':'picross-pe-diagnostic-v1','source_commit':delivery['commit'],
             'payload_fingerprint':delivery['payload_fingerprint'],'version':delivery['version'],
-            'frozen':frozen(build,output),'signatures':signatures(build,output),'guards':guards(build)}
+            'frozen':frozen(build,output),'signatures':signatures(build,output),'guards':guards(build),
+            'preview_resources':preview_resources(build)}
     (output/'result.json').write_bytes(canonical(result));print(canonical(result).decode())
     return result
 
