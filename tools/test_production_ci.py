@@ -61,11 +61,7 @@ def fixture(plan, directory):
         write(directory/'references/benchmark.json',dict(accepted=True, source_head=plan['source_head'],
             base_commit=plan['base_commit'], checkout_commit=plan['tested_checkout'],cases=cases))
         write(directory/'references.log',{'synthetic':True})
-    if 'adapter' in groups:
-        integrations.append(dict(name='za1-replay',group='adapter',exit_code=0,seconds=0))
-        write(directory/'za1-replay/replay.json',dict(accepted=True,reports=[dict(puzzle_id='pz-test-'+name,catalog_ready=True)
-            for name in ('direct-color','direct-mono','repair-color','repair-mono')]))
-        write(directory/'za1-replay.log', {'synthetic':True})
+
     binding={k:plan[k] for k in ('source_head','base_commit','tested_checkout','run_id','run_attempt')}
     report=dict(format='picross-production-result-v1',accepted=True,tests_accepted=True,source_unchanged=True,groups=groups,
                 expected=contract.coverage(groups),binding={**binding,'selection_attempt':plan['run_attempt'],'git_status':''},
@@ -97,9 +93,9 @@ class SelectionTests(unittest.TestCase):
         for path,groups in (('tests/puzzle_production/test_lines.py',['solver']),
                             ('tests/puzzle_production/test_images.py',['images']),
                             ('tests/puzzle_production/test_target_adapter.py',['adapter']),
-                            ('tests/puzzle_production/test_content_update.py',['catalog'])):
+                            ('tests/puzzle_production/test_current_consumers.py',['catalog'])):
             self.assertEqual(classify([path])['production_groups'],groups)
-        paths=['tests/puzzle_production/test_lines.py','tests/puzzle_production/test_content_update.py']
+        paths=['tests/puzzle_production/test_lines.py','tests/puzzle_production/test_current_consumers.py']
         self.assertEqual(classify(paths)['production_groups'],['solver','catalog'])
         for path in ('tools/puzzle_production/contract.py','tools/puzzle_production/new_module.py',
                      '.github/workflows/puzzle-production.yml','tools/ci_scope.py'):
@@ -145,7 +141,6 @@ class EvidenceTests(unittest.TestCase):
                     self.assertEqual(name, 'production')
                     directory = Path(args[-1])
                     report = fixture(binding, directory)
-                    write(directory/'za1-replay/internal-checkout/content/registry.json', {'synthetic': True})
                     report['files'] = files(directory, staging=True)
                     write(directory/'production-result.json', report)
                     if mutation == 'changed': (directory/'tests.log').write_bytes(b'changed')
@@ -161,12 +156,12 @@ class EvidenceTests(unittest.TestCase):
                 self.assertFalse((root/'out/diagnostics').exists())
                 self.assertFalse(list(root.glob('picross-ci-*')))
 
-    def test_relative_output_becomes_absolute_for_checkout_replay(self):
+    def test_relative_output_becomes_absolute_without_historical_replay(self):
         import os
         import production_ci
         from types import SimpleNamespace
         # Exercise the orchestration boundary without producing a full catalog.
-        # The actual four-package replay remains mandatory in adapter CI.
+        # Current integration cases are part of the selected test inventory.
         with tempfile.TemporaryDirectory(dir=Path.cwd()) as temporary:
             relative = Path(temporary).relative_to(Path.cwd()) / 'output'
             with patch.object(production_ci, 'binding', return_value={}), \
@@ -177,9 +172,7 @@ class EvidenceTests(unittest.TestCase):
             self.assertTrue(report['accepted'])
             output = tests.call_args.args[1]
             self.assertTrue(output.is_absolute())
-            command = process.call_args.args[0]
-            self.assertEqual(command[2], 'tools.puzzle_production.za1_fixtures')
-            self.assertEqual(Path(command[-1]), output / 'za1-replay')
+            process.assert_not_called()
             self.assertTrue((output / 'production-result.json').is_file())
 
     def test_selected_tests_integrations_bytes_and_attempts_are_required(self):
@@ -211,7 +204,7 @@ class EvidenceTests(unittest.TestCase):
                 write(directory/'production-result.json',{**report,'files':files(directory)})
                 with self.assertRaises(ValueError):validate_all(plan,directory,outputs,'2')
             write(reference,original);write(directory/'production-result.json',report)
-            for name in ('za1-replay/unbound.txt','references/production-result.json'):
+            for name in ('unbound/current.txt','references/production-result.json'):
                 target=directory/name;target.parent.mkdir(parents=True,exist_ok=True);target.write_bytes(b'unbound')
                 with self.assertRaises(ValueError):validate_all(plan,directory,outputs,'2')
                 target.unlink()

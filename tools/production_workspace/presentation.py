@@ -115,33 +115,15 @@ def bind(raw, ref):
 
 
 def registration(source, record):
-    """Read an actual committed registration receipt, without running a catalog writer."""
-    value = exact_keys(record['integration'], {'operation', 'commit', 'manifest', 'registry', 'runtime'})
-    ap.require(value['operation'] == 'register', 'Unbekannter Abschluss.')
-    check_commit(value['commit'])
-    directory = f"content/packages/{record['puzzle_id']}/{record['revision']}"
-    loaded = {}
-    for key, name in (('manifest', directory + '/manifest.json'), ('registry', 'content/registry.json'),
-                      ('runtime', 'game/data/registry.json')):
-        ref = exact_keys(value[key], {'file', 'sha256', 'bytes'})
-        ap.require(ref['file'] == name, 'Nichtkanonischer Registrierungsbeleg.')
-        ap.sha(ref['sha256']); integer(ref['bytes'], 1, 8 * JSON_LIMIT, 'Registrierungsbeleggröße')
-        loaded[key] = parse(bind(source.read(value['commit'], name, 8 * JSON_LIMIT), ref), 8 * JSON_LIMIT)
-    m = loaded['manifest']
-    ap.require(m.get('format') == 'picross-target-export-v6' and m.get('definition_id') == record['puzzle_id'] and
-               m.get('package_revision') == record['revision'] and m.get('editorial_approved') is True and
-               m.get('technical') is True and m['input']['original_package']['sha256'] == record['package']['sha256'] and
-               m['input']['original_package']['bytes'] == record['package']['bytes'] and
-               m['approval_sha256'] == record['final_editorial_approval']['sha256'], 'Registrierung gehört nicht zur freigegebenen Lieferung.')
-    rows = [e for e in loaded['registry']['entries'] if e['id'] == record['puzzle_id']]
-    runtime = [e for e in loaded['runtime']['entries'] if e['id'] == record['puzzle_id']]
-    ap.require(len(rows) == len(runtime) == 1, 'Registrierung oder Runtimeeintrag fehlt.')
-    entry = rows[0]; production = entry['production']
-    ap.require(production['status'] == 'registered' and production['blockers'] == [] and
-               production['package'] == directory and production['revision'] == record['revision'] and
-               production['package_sha256'] == value['manifest']['sha256'] and
-               all(runtime[0][k] == entry[k] for k in ('id', 'definition', 'reveal', 'save_slot')),
-               'Registrierung und Runtimezuordnung unterscheiden sich.')
+    """Confirm the actual selected current result, without package evidence."""
+    from tools.puzzle_production import current_delivery
+    value=record["integration"]
+    ap.require(isinstance(value,dict) and value.get("operation")=="register","Unbekannter Abschluss.")
+    check_commit(value["commit"])
+    actual=current_delivery.snapshot(lambda name,limit:source.read(value["commit"],name,limit),record["puzzle_id"])
+    if "result" in value:
+        exact_keys(value,{"operation","commit","result"})
+        ap.require(current_delivery.same(actual,value["result"]),"Aktuelle Lieferung unterscheidet sich.")
     return value
 
 

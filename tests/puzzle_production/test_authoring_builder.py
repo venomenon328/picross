@@ -17,7 +17,7 @@ from tools.puzzle_production import authoring_build_contract as bc
 from tools.puzzle_production.authoring_package import file_hash, open_package
 from tools.puzzle_production.contract import Aborted, load_json, write_json
 from tools.puzzle_production.za1_fixtures import make, FIXTURES
-from tools.puzzle_production.target_adapter import inspect
+from tools.puzzle_production.authoring_inspection import inspect_authoring as inspect
 from tests.puzzle_production.background_fixtures import BackgroundFixture, file_ref, put
 
 
@@ -640,13 +640,6 @@ class AuthoringBuilderTests(unittest.TestCase):
         result = self.run_build()
         self.assertIn('motif: human decision pending', result['record']['blockers'])
 
-    def test_legacy_sealed_packages_remain_readable(self):
-        # Select a fixed synthetic fixture by its authoring phase, no real content.
-        legacy = next(p for p in sorted(FIXTURES.iterdir()) if p.is_dir())
-        with open_package(legacy) as package:
-            report = inspect(package)[0]
-        self.assertTrue(report['technical'])
-        self.assertFalse(report['editorial_approved'])
 
     def test_cli_result_and_duplicate_json_rejection(self):
         request = self.root / 'request.json'

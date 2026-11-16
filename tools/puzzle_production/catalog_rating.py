@@ -103,6 +103,7 @@ def fields(value):
 
 
 def method(value):
+    if value.get("format") == "picross-current-difficulty-v1": return value["method"]
     from .sd2_catalog_rating import FORMAT as SD2, CHECKED as SD2_CHECKED
     from .catalog_method import NEW
     return NEW if value["format"] in (SD2, SD2_CHECKED) else METHOD_ID
@@ -302,6 +303,9 @@ def _rating(rating, compact, identifier):
 
 
 def validate(value, *, active=True, definition_bytes=None, production_mode=None):
+    if value.get("format") == "picross-current-difficulty-v1":
+        from .current_rating import validate as current
+        return current(value,definition_bytes=definition_bytes,production_mode=production_mode)
     from . import sd2_catalog_rating as sd2
     if isinstance(value, dict) and value.get("format") in (sd2.FORMAT, sd2.CHECKED):
         return sd2.validate(value, active=active, definition_bytes=definition_bytes, production_mode=production_mode)
@@ -352,7 +356,7 @@ def validate(value, *, active=True, definition_bytes=None, production_mode=None)
 
 def project(value):
     from . import sd2_catalog_rating as sd2
-    if value["format"] in (sd2.FORMAT, sd2.CHECKED): return sd2.project(value)
+    if method(value) == "picross-difficulty-0.4": return sd2.project(value)
     r = value["rating"]["result"]
     require(r["status"] == "rated", "Cannot project incomplete rating")
     level = "L" + str(r["level"])
@@ -406,26 +410,20 @@ def rebind_checked(value, raw, *, production_mode):
     require(value["current_source"]["id"] == current["id"] and value["logic_binding"] == logic, "Rebind changes logic or target matrix")
     new = deepcopy(value)
     new["current_source"] = current
-    new.pop("checked_hash")
-    return validate(hashed(new, "checked_hash"), active=False, definition_bytes=raw)
+    field = "record_hash" if new["format"] == "picross-current-difficulty-v1" else "checked_hash"
+    new.pop(field)
+    return validate(hashed(new,field),active=False,definition_bytes=raw)
 
 
 def active_record(checked, previous=None, *, report=None, kind="analysis"):
-    from . import sd2_catalog_rating as sd2
-    validate(checked, active=False)
-    require(checked["rating"]["result"]["status"] == "rated", "New integration requires a complete rating")
-    if previous is not None:
-        validate(previous)
-        if fields(previous) == fields(checked) and all(previous[k] == checked[k] for k in fields(checked)): return previous
-    value = {"format": sd2.FORMAT if checked["format"] == sd2.CHECKED else FORMAT if checked["format"] == CHECKED else LEGACY_FORMAT,
-             "rating_revision": 1 if previous is None else previous["rating_revision"] + 1,
-             **{k: deepcopy(checked[k]) for k in fields(checked)}, "adoption": {
-                 "kind": kind, "previous_record_hash": previous["record_hash"] if previous else None,
-                 **{k: deepcopy(checked[k]) for k in ("analysis_report_hash", "verification_hash", "tool")}, "report": report}}
-    return validate(hashed(value, "record_hash"))
+    from . import current_rating
+    value = checked if checked.get("format") == current_rating.FORMAT else current_rating.from_checked(checked)
+    return current_rating.active(value,previous)
 
 
 def checked_from_active(value):
+    if value.get("format") == "picross-current-difficulty-v1":
+        return deepcopy(validate(value))
     from . import sd2_catalog_rating as sd2
     validate(value)
     return validate(hashed({"format": sd2.CHECKED if value["format"] == sd2.FORMAT else CHECKED if value["format"] == FORMAT else LEGACY_CHECKED,
@@ -471,15 +469,7 @@ def source_paths(root, *registries, temporary=()):
 
 
 def load_sources(root, registry):
-    from .content_update import path_in
-    present = source_paths(root, registry)
-    records = {}
-    for entry in registry["entries"]:
-        target = path_in(root, path(entry["id"]))
-        if path(entry["id"]) in present:
-            require(target.is_file(), "Difficulty source must be a regular file")
-            raw = path_in(root, "game/" + entry["definition"]).read_bytes()
-            require(hashlib.sha256(raw).hexdigest() == entry["production"]["definition_sha256"], "Definition differs from registry")
-            records[entry["id"]] = validate(bytes_json(read_file(target)), definition_bytes=raw,
-                                            production_mode=entry["production"]["mode"])
-    return records
+    from . import catalog_io as io
+    return {e["id"]: validate(io.json_bytes(io.read(root,path(e["id"]),LIMIT),LIMIT),
+                             definition_bytes=io.read(root,"game/"+e["definition"],2*1024*1024),production_mode=e["mode"])
+            for e in registry["entries"]}

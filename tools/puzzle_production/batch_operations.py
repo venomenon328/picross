@@ -90,8 +90,8 @@ _ANALYSIS = _IMAGES | {
 }
 _BACKGROUND = {"background_assets", "background_contract", "background_io", "image_normalization"}
 _BUILDER = _ANALYSIS | _BACKGROUND | {
-    "authoring_builder", "authoring_build_contract", "background_package", "repair", "accepted_raster",
-    "manual_derivation", "color_derivation", "catalog_background", "background_rebind", "reveal_source",
+    "authoring_builder", "authoring_inspection", "image_validation", "authoring_build_contract", "background_package", "repair", "accepted_raster",
+    "manual_derivation", "color_derivation", "catalog_background", "reveal_source", "current_content", "integration_input", "current_registration", "current_rating",
 }
 _COMMON_NORMS = ("docs/PRODUCTION_BATCH.md",)
 _METHOD_FILES = ("content/difficulty-method.json", "tools/puzzle_production/sd2_method_0_4.json",

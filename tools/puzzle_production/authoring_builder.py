@@ -172,7 +172,7 @@ def verify_zip(path, expected, handoff_raw, request, deadline, *, history_repo=N
 def inspect_zip(path, external, state, deadline, *, allow_background=False, history_repo=None):
     if state != 'content_ready' and not (allow_background and state in ('raster_ready', 'background_review')):
         return None
-    from .target_adapter import inspect
+    from .authoring_inspection import inspect_authoring as inspect
     options = ({'allow_background': True, 'history_repo': history_repo,
                 'external_root': path.parent} if allow_background else {})
     with ap.open_package(path, allow_manual_review='manual-authorization.json' in external, **options) as package:
@@ -452,6 +452,9 @@ def main(argv=None):
             super().error(message)
     parser = FinalizerParser(description=__doc__)
     sub = parser.add_subparsers(dest='command', required=True)
+    current = sub.add_parser('prepare-integration')
+    current.add_argument('--input', type=Path, required=True)
+    current.add_argument('--output-dir', type=Path, required=True)
     command = sub.add_parser('build')
     for option in ('request', 'source-root', 'output-root'):
         command.add_argument('--' + option, type=Path, required=True)
@@ -469,6 +472,11 @@ def main(argv=None):
         return 2
     request = None
     try:
+        if args.command == 'prepare-integration':
+            from .authoring_finalization import finalize_integration
+            result = finalize_integration(args.input, args.output_dir)
+            print(canonical_bytes(result).decode('utf-8'))
+            return 0
         path = io.external(args.request)
         request = io.json_bytes(io.read(path.parent, path.name, 8 * 1024 * 1024), 8 * 1024 * 1024)
         if args.command == 'finalize-background':

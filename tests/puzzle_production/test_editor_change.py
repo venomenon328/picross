@@ -19,22 +19,7 @@ from tools.puzzle_production.contract import write_json, digest
 
 
 def current_fixture(root):
-    value = json.loads((root/registry.REGISTRY).read_bytes())
-    runtime = json.loads((root/registry.RUNTIME).read_bytes())
-    runtime['format'] = registry.IMAGE_RUNTIME_FORMAT
-    for entry, row in zip(value['entries'], runtime['entries']):
-        definition = (root/'game'/entry['definition']).read_bytes()
-        reveal = edit._record(entry, definition, None, 'reveal', {
-            'image_revision': 1, 'asset': bg.ref('game/'+row['reveal'], (root/'game'/row['reveal']).read_bytes())})
-        background = {'image_revision': 1, 'status': 'standard', 'asset': None}
-        record = edit._record(entry, definition, None, 'background', background)
-        write_json(root/('content/reveals/'+entry['id']+'.json'), reveal)
-        write_json(root/bg.path(entry['id']), record)
-        value['backgrounds'].append({'id': entry['id'], 'source': bg.ref(bg.path(entry['id']), edit.encoded(record))})
-        row['background'] = background
-    write_json(root/registry.REGISTRY, value)
-    write_json(root/registry.RUNTIME, runtime)
-    return value['entries'][0]
+    return json.loads((root/registry.REGISTRY).read_bytes())["entries"][0]
 
 
 class EditorChangeTests(unittest.TestCase):
@@ -131,14 +116,6 @@ class EditorChangeTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, 'Unrelated'): edit.apply(self.root, plan)
         self.assertFalse((self.root/'game/saves').exists())
 
-    def test_legacy_runtime_is_read_only_without_migration_route(self):
-        path = self.root/registry.RUNTIME
-        value = json.loads(path.read_bytes()); value['format'] = registry.METADATA_RUNTIME_FORMAT
-        write_json(path, value)
-        before = self.snapshot()
-        self.assertTrue(edit.listing(self.root)['migration_required'])
-        with self.assertRaisesRegex(ValueError, 'external migration'): self.metadata_plan()
-        self.assertEqual(before, self.snapshot())
 
     def test_same_matrix_needs_no_solver_or_sources(self):
         detail = edit.detail(self.root, self.entry['id'])
@@ -172,30 +149,12 @@ class EditorChangeTests(unittest.TestCase):
             self.assertIsNotNone(plan['quality'])
             edit.apply(self.root, plan)
         self.assertLessEqual(len(streams), 4)
-        registry.check_checkout(self.root, replay=True)
+        registry.check_checkout(self.root)
         before = self.snapshot()
-        self.assertEqual(registry.registration(Path(self.fixture.name)/"export", self.root, apply=True)["status"], "no-op")
+        with self.assertRaisesRegex(ValueError,"Occupied ID"):
+            registry.registration(Path(self.fixture.name)/"export", self.root, apply=True)
         self.assertEqual(before, self.snapshot())
 
-    def test_standard_production_update_preserves_current_preferences(self):
-        from tools.puzzle_production.za1_fixtures import FIXTURES, seal, approve, rated_update
-        from tools.puzzle_production.target_adapter import export
-        package = self.home/'new-production'
-        shutil.copytree(FIXTURES/'direct-mono', package)
-        handoff = json.loads((package/'handoff.json').read_bytes())
-        handoff['revision'] = 'r02'; seal(package, handoff)
-        approval = self.home/'approval.json'; approve(package, approval)
-        output = self.home/'export'
-        export(package, output, name='NEW PRODUCTION NAME', revision=2, stem='edit2', save_slot='edit2',
-               approval_path=approval, category_id='voegel', categories_path=self.root/'content/categories.json')
-        edit.apply(self.root, self.metadata_plan())
-        old_reveal = json.loads((self.root/('content/reveals/'+self.entry['id']+'.json')).read_bytes())['current']
-        old_background = json.loads((self.root/bg.path(self.entry['id'])).read_bytes())['current']
-        rated_update(output, self.root, self.entry['production']['definition_sha256'], apply=True)
-        self.assertEqual(edit.listing(self.root)['entries'][0]['name'], 'Neuer Name')
-        self.assertEqual(json.loads((self.root/('content/reveals/'+self.entry['id']+'.json')).read_bytes())['current'], old_reveal)
-        self.assertEqual(json.loads((self.root/bg.path(self.entry['id'])).read_bytes())['current'], old_background)
-        registry.check_checkout(self.root)
 
     def test_lost_ack_is_a_new_noop_without_new_revision(self):
         request = self.request(metadata={'name': 'Neuer Name', 'category_id': 'voegel'})

@@ -23,7 +23,7 @@ def shape(rule, handoff_format, repo_commit, revision=None):
         return False
     exact_keys(rule, {'format', 'version', 'document_revision', 'source_commit', 'sources'})
     ap.require(rule['format'] == FORMAT and rule['version'] == '0.8.0' and
-               type(rule['document_revision']) is int and rule['document_revision'] == 7,
+               type(rule['document_revision']) is int and rule['document_revision'] == 8,
                'Unsupported rulebook generation/document revision')
     ap.require(isinstance(repo_commit, str) and re.fullmatch(r'[0-9a-f]{40}', repo_commit) and
                rule['source_commit'] == repo_commit, 'Rulebook source commit differs from producer')
@@ -65,7 +65,7 @@ def validate(rule, handoff_format, repo_commit, read, revision=None, *, history_
         ap.require(len(raw) == item['bytes'] and io.checksum(raw) == item['sha256'],
                    'Rulebook source bytes/hash mismatch: ' + item['path'])
         if '/ai-workflows/' in item['path']:
-            ap.require(re.search(rb'^\*\*Version 0\.8\.0 \xc2\xb7 Dokumentrevision 7 \xc2\xb7', raw, re.M),
+            ap.require(re.search(rb'^\*\*Version 0\.8\.0 \xc2\xb7 Dokumentrevision 8 \xc2\xb7', raw, re.M),
                        'Rulebook source header/document revision mismatch')
         if source is not None:
             ap.require(read_git(source, rule['source_commit'], item['path']) == raw,
@@ -82,12 +82,12 @@ def capture(repository, commit):
     check_commit(commit)
     git(repository, 'merge-base', '--is-ancestor', commit, 'HEAD')
     payload = {'rulebook/' + path: read_git(repository, commit, path) for path in PATHS}
-    rule = {'format': FORMAT, 'version': '0.8.0', 'document_revision': 7,
+    rule = {'format': FORMAT, 'version': '0.8.0', 'document_revision': 8,
             'source_commit': commit, 'sources': [
                 {'path': path, 'file': 'rulebook/' + path,
                  'sha256': io.checksum(payload['rulebook/' + path]), 'bytes': len(payload['rulebook/' + path])}
                 for path in PATHS]}
-    validate(rule, HANDOFF, commit, payload.__getitem__, 7)
+    validate(rule, HANDOFF, commit, payload.__getitem__, 8)
     return rule, payload
 
 

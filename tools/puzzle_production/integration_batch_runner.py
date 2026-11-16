@@ -18,7 +18,7 @@ import time
 import zipfile
 
 from . import batch_io as bio, catalog_io as io, catalog_publication as publication
-from . import catalog_transaction as tx, background_request as requests
+from . import catalog_transaction as tx
 from . import integration_batch_contract as bc
 from . import integration_batch_operations as operations
 from . import operation_diagnostics as diagnostic
@@ -71,82 +71,35 @@ def _ref(ref, source):
 def _metadata(job, source):
     """Cheap identity/authority checks; the native export still checks proofs."""
     inputs = job["inputs"]
-    if job["operation"] == "background_adopt":
-        if inputs["request"] is None:
-            return
-        request_path, raw = _file(inputs["request"], source)
-        request = requests.validate(bio.json_bytes(raw, requests.LIMIT))
-        bio.require(request["puzzle_id"] == job["puzzle_id"] and request["revision"] == job["revision"],
-                    "Background request differs from selected identity/revision")
-        work = _ref(inputs["work"], source)
-        if work is not None:
-            requests.payload(work, request, raw, record_present=(work / "record.json").exists())
-        return
     order = None
     if job["authorization"] is not None:
         _, raw = _file(job["authorization"], source)
         order = bc.order(bio.json_bytes(raw), job)
         _file(order["evidence"], source)
-    package = _ref(inputs["package"], source)
-    if package is None:
+    if job["operation"] == "background_adopt":
+        if inputs["request"] is None:
+            return
+        request_path,raw=_file(inputs["request"],source)
+        from . import editor_cli
+        request=bio.json_bytes(raw,256*1024)
+        bio.require(request["format"]==editor_cli.REQUEST and request["id"]==job["puzzle_id"] and
+                    request["text"] is None and request["background"] is not None,"Current background request differs")
+        work=_ref(inputs["work"],source)
+        bio.require(work is None or request_path.is_relative_to(work),"Request must belong to selected work")
         return
-    if package.is_dir():
-        handoff_raw = bio.read(io.safe(package, "handoff.json"))
-    else:
-        try:
-            with zipfile.ZipFile(BytesIO(bio.read(package, bio.MAX_FILE))) as archive:
-                names = [item.filename for item in archive.infolist() if not item.is_dir()]
-                # Preserve ZA-1's optional single enclosing ZIP directory. This
-                # reads metadata only; native open_files still checks the complete
-                # ZIP namespace, types, decoded sizes and CRC before publication.
-                roots = {name.split("/")[0] for name in names}
-                entry = "handoff.json" if "handoff.json" in names else next(iter(roots)) + "/handoff.json" if len(roots) == 1 else None
-                bio.require(entry is not None and names.count(entry) == 1, "Package needs one native handoff.json under its single root")
-                info = archive.getinfo(entry)
-                bio.require(info.file_size <= bio.MAX_JSON, "Package handoff exceeds bounded JSON")
-                handoff_raw = archive.read(info)
-        except Aborted:
-            raise
-        except (zipfile.BadZipFile, RuntimeError, NotImplementedError, EOFError) as exc:
-            raise InvalidInput("Malformed original package ZIP: " + str(exc)[:1024]) from exc
-    handoff = bio.json_bytes(handoff_raw)
-    bio.require(isinstance(handoff, dict) and handoff.get("puzzle_id") == job["puzzle_id"] and
-                handoff.get("revision") == job["revision"], "Package identity/revision differs from selected job")
-    if inputs["handoff"] is not None:
-        bio.require(_file(inputs["handoff"], source)[1] == handoff_raw, "Separate handoff is not the original package handoff")
+
+    current = _ref(inputs["current"], source)
+    if current is None:
+        return
+    from .integration_input import Input
+    incoming = Input(current)
+    bio.require(incoming.entry["id"] == job["puzzle_id"], "Current input belongs to another ID")
     if order is not None:
-        bio.require(order["test_only"] == handoff.get("test_only", False), "Integration order test scope differs from package")
-    if inputs["approval"] is not None:
-        approval = bio.json_bytes(_file(inputs["approval"], source)[1])
-        bio.require(isinstance(approval, dict) and all(approval.get(k) == job[k] for k in ("puzzle_id", "revision")),
-                    "Declared final approval covers another identity/revision")
-    if inputs["record"] is not None:
-        record = bio.json_bytes(_file(inputs["record"], source)[1])
-        bio.require(isinstance(record, dict) and record.get("format") in ("picross-authoring-record-v1", "picross-authoring-record-v2", "picross-authoring-record-v3", "picross-authoring-record-v4") and
-                    all(record.get(k) == job[k] for k in ("puzzle_id", "revision")), "Declared authoring record covers another original")
-    rule = handoff.get("rulebook", {})
-    bio.require(isinstance(rule, dict), "Package rulebook must be an object")
-    if handoff.get('format') == 'picross-authoring-handoff-v5':
-        from . import authoring_rulebook as rules, authoring_package as ap
-        rules.shape(rule, handoff['format'], handoff['repo_commit'], job['rulebook']['document_revision'])
-        with ap.open_files(package) as (root, _, _):
-            rules.validate(rule, handoff['format'], handoff['repo_commit'],
-                           lambda name: bio.read(io.safe(root, name)), job['rulebook']['document_revision'])
-    # Historical native forms remain native. If a package declares these
-    # current authoring versions, its original rule snapshot must agree.
-    if rule.get("version") in ("0.6.0", "0.7.0", "0.8.0"):
-        bio.require(rule["version"] == job["rulebook"]["version"] and
-                    (next(item['sha256'] for item in rule['sources'] if item['path'] == 'docs/ai-workflows/PUZZLE_AUTHORING.md')
-                     if handoff.get('format') == 'picross-authoring-handoff-v5' else rule.get('sha256')) == job["rulebook"]["snapshot"]["sha256"],
-                    "Package rulebook differs from the actual batch snapshot")
-    return handoff
+        bio.require(order["test_only"] == incoming.value["test_only"], "Order scope differs")
+    return incoming.value
 
 
 def _check_job(job, source):
-    rule = job["rulebook"]
-    _, raw = _file(rule["snapshot"], source)
-    pattern = rb"(?m)^\*\*Version " + re.escape(rule["version"].encode()) + rb" \xc2\xb7 Dokumentrevision " + str(rule["document_revision"]).encode() + rb" \xc2\xb7"
-    bio.require(re.search(pattern, raw), "Rulebook original version/document revision mismatch")
     _ref(job["authorization"], source)
     for ref in job["inputs"].values():
         _ref(ref, source)
@@ -502,7 +455,7 @@ def _writer_barriers(cp, plan):
 def _success(phase, operation, native):
     if not isinstance(native, dict): return False
     status = native.get("status")
-    if phase == "export": return str(native.get("format", "")).startswith("picross-target-export-v")
+    if phase == "export": return status == "exported"
     if phase == "store": return status in ("stored", "no-op")
     if phase == "plan": return status in ("planned", "no-op")
     if operation == "register":
@@ -644,8 +597,6 @@ def _reconcile_completed(ledger, plan, source, repo, target, tool):
         started = time.monotonic(); native = None; current = None; error = None; failure = "blocked"
         try:
             with diagnostic.observe(diagnostics), io.budget(300):
-                if index == 0:
-                    snapshot = tx.capture(target)  # Exactly one full current catalog read for this group.
                 current = operations.reached(target, job["puzzle_id"], snapshot=snapshot)
                 bio.require(current == view["reached"], "stale: reached job target changed after its historical success")
                 _check_job(job, source)
@@ -676,17 +627,12 @@ def _execute_job(ledger, job, view, source, repo, target, history, tool, *, resu
                     next_step="Provide the already declared matching original order in an explicit successor plan")
         return
     inputs = job["inputs"]
-    required = ("package",) if job["operation"] == "register" else ("request", "work")
+    required = ("current",) if job["operation"] == "register" else ("request", "work")
     if any(inputs[key] is None for key in required):
         view.update(status="waiting_input", reason="Missing prepared original input",
                     next_step="Provide the complete unchanged native original through a successor plan")
         return
-    if job["operation"] == "register" and inputs["approval"] is None:
-        handoff = _metadata(job, source)
-        if handoff.get("final_editorial_approval") is None:
-            view.update(status="waiting_human", reason="Missing actual final editorial approval",
-                        next_step="Provide the original matching final approval; no export or integration before that declaration")
-            return
+
     history_attempts = _line_attempts(ledger.cp, job)
     if job["operation"] == "register":
         export = _latest(history_attempts, "export", successful=True)

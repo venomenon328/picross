@@ -118,3 +118,10 @@ eine getrennte interaktive Desktop-/Schmalfenster-/Offline-/Refreshprobe. Deren
 tatsächlicher Stand und unabhängiges Review stehen am konkreten B-PR-Head.
 HTTP-/Node-Controllerprüfungen ersetzen keine Browserdarstellung. Keine automatische
 Chromium-CI, keine zusätzlichen allgemeinen Bild- oder Produktionsfreigaben.
+
+## RI-ONE · Aktueller Abschluss
+
+Registrierte Ansichten werden über aktuelle Definition, Registry, Runtime und
+Livebytes bestätigt. Completion erhält den finalen aktuellen Input ausdrücklich
+per `--input`; historische Produktionsarchive sind keine Abschlussvoraussetzung.
+Die Main- und Wiederaufnahmegrenzen folgen [PW2-C](PRODUCTION_WORKSPACE.md#pw2-c--aktive-lieferungen-und-bestätigter-abschluss).

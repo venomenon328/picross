@@ -6,8 +6,7 @@ import zipfile
 from tools.puzzle_production.authoring_package import open_package
 from tools.puzzle_production.contract import InvalidInput, InvalidProof, load_json, write_json
 from tools.puzzle_production.images import file_hash, import_image, raster_image
-from tools.puzzle_production.target_adapter import export, inspect, verify_export
-from tools.puzzle_production.za1_fixtures import rated_registration as registration
+from tools.puzzle_production.authoring_inspection import inspect
 from tools.puzzle_production.za1_fixtures import ROOT, approve, seal, isolated_checkout
 import test_color_derivation_adapter as color_fixture
 
@@ -73,27 +72,6 @@ class ApprovedColorTests(unittest.TestCase):
         with open_package(self.p, allow_manual_review=True) as p:
             return inspect(p, self.approval if approval else None, manual_authorization=self.auth)[0]
 
-    def test_original_motif_zip_export_and_offline_registration(self):
-        archive = self.root / "package.zip"
-        with zipfile.ZipFile(archive, "w") as z:
-            for f in self.p.rglob("*"):
-                if f.is_file(): z.write(f, f.relative_to(self.p).as_posix())
-        self.authorize(file_hash(archive))
-        original_handoff = (self.p / "handoff.json").read_bytes()
-        out = self.root / "export"
-        export(archive, out, name="TEST ONLY", revision=1, stem="approved_color", save_slot="approved_color",
-               approval_path=self.approval, manual_authorization=self.auth, category_id="voegel",
-               categories_path=ROOT / "tests/puzzle_production/fixtures/catalog/categories.json")
-        manifest, report = verify_export(out)
-        self.assertEqual(manifest["format"], "picross-target-export-v3")
-        self.assertTrue(report["technical"] and report["catalog_ready"])
-        self.assertFalse(report["late_motif_acceptance"])
-        self.assertEqual(report["original_motif_gate"], "pass")
-        self.assertEqual(report["source"]["changed_cells"], 2)
-        self.assertEqual((out / "input/handoff.json").read_bytes(), original_handoff)
-        checkout = isolated_checkout(self.root / "checkout")
-        self.assertEqual(registration(out, checkout)["status"], "planned")
-        self.assertEqual(registration(out, checkout, apply=True)["status"], "registered")
 
     def test_motif_and_all_content_gates_stay_required(self):
         with self.assertRaisesRegex(InvalidInput, "requires bound final approval"): self.inspect(False)

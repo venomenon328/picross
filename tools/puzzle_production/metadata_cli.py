@@ -14,14 +14,14 @@ from . import editor_change as edit
 def parser():
     root = argparse.ArgumentParser(description="Read and explicitly edit existing puzzle metadata and categories")
     commands = root.add_subparsers(dest="command", required=True)
-    for name in ("view", "plan", "plan-migration", "apply", "recover"):
+    for name in ("view", "plan", "apply", "recover"):
         command = commands.add_parser(name)
         command.add_argument("--target-root", required=True)
         if name == "plan":
             command.add_argument("--operations", required=True, help="JSON array of explicit metadata/category operations")
         if name == "apply":
             command.add_argument("--plan", required=True, help="Previously reviewed metadata plan JSON")
-        if name in ("view", "plan", "plan-migration"):
+        if name in ("view", "plan"):
             command.add_argument("--output", help="New UTF-8 JSON file outside the target checkout; otherwise stdout")
     return root
 
@@ -39,8 +39,6 @@ def main(argv=None):
             result = edit.listing(args.target_root)
         elif args.command == "plan":
             result = edit.plan(args.target_root, {"id": None, "metadata": _input(args.operations), "text": None, "profile": None, "reveal": None, "background": None})
-        elif args.command == "plan-migration":
-            result = metadata.plan_migration(args.target_root)
         elif args.command == "apply":
             value = _input(args.plan)
             result = edit.apply(args.target_root, value) if value["format"] == edit.PLAN else metadata.apply(args.target_root, value)

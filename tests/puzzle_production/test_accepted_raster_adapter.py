@@ -9,8 +9,8 @@ import zipfile
 from tools.puzzle_production.authoring_package import open_package
 from tools.puzzle_production.contract import InvalidInput, InvalidProof, load_json, write_json
 from tools.puzzle_production.images import file_hash, import_image
-from tools.puzzle_production.target_adapter import export, inspect, verify_export
-from tools.puzzle_production.za1_fixtures import ROOT, make, seal, approve, isolated_checkout, rated_registration
+from tools.puzzle_production.authoring_inspection import inspect
+from tools.puzzle_production.za1_fixtures import ROOT, make, seal, approve, isolated_checkout
 
 
 class AcceptedRasterTests(unittest.TestCase):
@@ -62,24 +62,6 @@ class AcceptedRasterTests(unittest.TestCase):
                approval_path=self.approval, manual_authorization=self.auth, category_id="voegel",
                categories_path=ROOT / "tests/puzzle_production/fixtures/catalog/categories.json")
 
-    def test_zip_offline_export_registration_preserves_sealed_history(self):
-        archive = self.root / "package.zip"
-        with zipfile.ZipFile(archive, "w") as z:
-            for f in self.p.rglob("*"):
-                if f.is_file(): z.write(f, f.relative_to(self.p).as_posix())
-        before = (self.p / "handoff.json").read_bytes(); self.authorize(file_hash(archive))
-        out = self.root / "export"; self.export(archive, out); manifest, report = verify_export(out)
-        self.assertEqual(manifest["format"], "picross-target-export-v3")
-        self.assertTrue(report["technical"] and report["catalog_ready"] and report["late_motif_acceptance"])
-        self.assertEqual(report["original_motif_gate"], "pending")
-        self.assertEqual((out / "input/handoff.json").read_bytes(), before)
-        for name in ("reference/reveal-approval.json", "reference/reveals/reveal.provenance.json"):
-            self.assertEqual((out / "input" / name).read_bytes(), (self.p / name).read_bytes())
-        self.assertEqual((out / "runtime/art/content/accepted_mono.png").read_bytes(),
-                         (self.p / "reference/reveals/reveal.png").read_bytes())
-        checkout = isolated_checkout(self.root / "checkout")
-        self.assertEqual(rated_registration(out, checkout)["status"], "planned")
-        self.assertEqual(rated_registration(out, checkout, apply=True)["status"], "registered")
 
     def test_explicit_auth_final_approval_and_all_other_gates_required(self):
         with self.assertRaises(InvalidInput), open_package(self.p): pass
@@ -128,21 +110,6 @@ class AcceptedRasterTests(unittest.TestCase):
         write_json(self.p / "motifs/source.provenance.json", p); seal(self.p, h); self.authorize()
         with self.assertRaisesRegex(InvalidInput, "exact mono RGB pixels"): self.inspect()
 
-    def test_paired_v4_and_profile_binding(self):
-        bundle = self.p / "production/import"
-        self.assertTrue(bundle.resolve().is_relative_to(self.root.resolve())); shutil.rmtree(bundle)
-        import_image(self.p / "motifs/source.png", self.p / "design.json", bundle, profile="paired-lines-mono")
-        h = load_json(self.p / "handoff.json"); h["candidate"]["certification"] = load_json(bundle / "manifest.json")["certification"]
-        (self.p / "rulebook.md").write_text("**Version 0.5.0 · synthetic test only**\n", encoding="utf-8")
-        h["rulebook"] = {"version": "0.5.0", "file": "rulebook.md", "sha256": file_hash(self.p / "rulebook.md")}
-        proof = load_json(bundle / "area-proof.json"); d = load_json(self.p / "difficulty.json")
-        d.update(method="picross-difficulty-0.2", profile_hash=proof["profile_hash"], evidence="production/import/area-assessment.json")
-        write_json(self.p / "difficulty.json", d); seal(self.p, h); self.authorize()
-        out = self.root / "paired-export"; self.export(self.p, out); manifest, report = verify_export(out)
-        self.assertEqual(manifest["format"], "picross-target-export-v4")
-        self.assertIn("accepted_raster.py", report["tool"]["modules"])
-        h["candidate"]["certification"]["max_pair_work"] += 1; seal(self.p, h); self.authorize()
-        with self.assertRaisesRegex(InvalidInput, "profile binding"): self.inspect()
 
 
 if __name__ == "__main__": unittest.main()

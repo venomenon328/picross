@@ -1,45 +1,41 @@
-"""Durable publication and repeatable recovery, shared by all catalog writers.
-
-The journal is the only backup authority. Forward guards require the exact
-phase reached by this process; recovery accepts only fully verified own states.
-"""
+"""Durable filesystem primitives shared by the current operation writers."""
+NORMAL_LIMIT = 128 * 1024 * 1024
+LIMIT = NORMAL_LIMIT
+EDITOR_PREFIX = b"PICROSS-EDITOR-CHANGE-JOURNAL-V1\n"
+PREFIXES = ()
 import base64
+
 from copy import deepcopy
+
 import ctypes
+
 import io as streams
+
 import os
+
 from pathlib import Path
+
 import re
+
 import tempfile
+
 from contextlib import contextmanager
+
 from types import SimpleNamespace
 
 from .authoring_package import require, sha
+
 from .contract import canonical_bytes, exact_keys, integer, Aborted, InvalidInput
+
 from . import catalog_io as io, reveal_source as reveal
+
 from . import operation_diagnostics as diagnostic
-
-PREFIX = b'{"format":"picross-reveal-adoption-journal-v1",'
-BACKGROUND_FORMAT = "picross-background-adoption-journal-v1"
-BINARY_FORMATS = ("picross-reveal-adoption-journal-v1", "picross-reveal-adoption-journal-v2",
-                  "picross-reveal-adoption-journal-v3", "picross-reveal-adoption-journal-v4",
-                  "picross-reveal-adoption-journal-v5", "picross-background-adoption-journal-v3",
-                  "picross-background-adoption-journal-v2", BACKGROUND_FORMAT,
-                  "picross-reveal-adoption-journal-v6", "picross-background-adoption-journal-v4",
-                  "picross-editor-images-journal-v1", "picross-editor-raster-journal-v1",
-                  "picross-editor-change-journal-v1")
-PREFIXES = tuple(b'{"format":' + canonical_bytes(value) + b',' for value in BINARY_FORMATS)
-NORMAL_LIMIT = 24 * 1024 * 1024
-LIMIT = 128 * 1024 * 1024
-EDITOR_PREFIX = b"PICROSS-EDITOR-CHANGE-JOURNAL-V1\n"
-
 
 def staging(root):
     directory = io.safe(root, "content")
     return sorted(p.relative_to(root).as_posix() for p in directory.iterdir()
                   if (p.name.startswith(".registration-journal-") and p.name.endswith(".tmp"))
                   or p.name == ".editor-change-journal.tmp")
-
 
 def read_journal(root, name="content/.registration-pending.json"):
     p = io.safe(root, name)
@@ -56,21 +52,8 @@ def read_journal(root, name="content/.registration-pending.json"):
         require(raw == active.journal_raw, "Journal changed after recovery classification")
     return raw
 
-
-def journal_bytes(j):
-    raw = b'{"format":' + canonical_bytes(j["format"]) + b"," + canonical_bytes({k: v for k, v in j.items() if k != "format"})[1:] + b"\n"
-    limit = LIMIT if j["format"] in BINARY_FORMATS else NORMAL_LIMIT
-    if j["format"] == "picross-editor-raster-journal-v1" and not j["replacements"]: limit = NORMAL_LIMIT
-    if len(raw) > limit: raise Aborted("resource_limit: transaction journal exceeds byte limit")
-    if j["format"] == "picross-editor-change-journal-v1":
-        import zlib
-        raw = EDITOR_PREFIX + zlib.compress(raw, level=6)
-    return raw
-
-
 def binary(raw):
     return {"sha256": io.checksum(raw), "bytes": len(raw), "base64": base64.b64encode(raw).decode("ascii")}
-
 
 def binary_shape(value):
     exact_keys(value, {"sha256", "bytes", "base64"})
@@ -78,7 +61,6 @@ def binary_shape(value):
     integer(value["bytes"], 1, reveal.IMAGE_LIMIT, "binary byte count")
     require(isinstance(value["base64"], str) and len(value["base64"]) == 4 * ((value["bytes"] + 2) // 3) and
             len(value["base64"]) <= 44739244, "Invalid Base64 encoded length")
-
 
 def binary_chunks(value):
     binary_shape(value)
@@ -92,29 +74,10 @@ def binary_chunks(value):
         require(base64.b64encode(raw).decode("ascii") == encoded, "Noncanonical Base64")
         yield raw
 
-
 def decode_binary(value):
     raw = b"".join(binary_chunks(value))
     require(len(raw) == value["bytes"] and io.checksum(raw) == value["sha256"], "Binary journal hash/size differs")
     return raw
-
-
-def nullable_binaries(j):
-    return (j.get("format") in (BACKGROUND_FORMAT, "picross-background-adoption-journal-v2", "picross-background-adoption-journal-v3",
-                               "picross-background-adoption-journal-v4") and j.get("operation") == "background-adoption" or
-            j.get("format") == "picross-editor-images-journal-v1" and j.get("operation") == "editor-images" or
-            j.get("format") == "picross-reveal-adoption-journal-v6" and j.get("operation") == "reveal-adoption" or
-            j.get("format") == "picross-editor-raster-journal-v1" and j.get("operation") == "editor-raster")
-
-
-def binary_hash(value):
-    return value["sha256"] if value is not None else None
-
-
-def replacement_hash(root, name, j):
-    # Missing is an actual state only in the new closed nullable generation.
-    return io.checksum(io.read(root, name, reveal.IMAGE_LIMIT, missing=nullable_binaries(j)))
-
 
 def _validate_background_image(path):
     """Check an actual HP-W2 output, independently of its declared metadata."""
@@ -141,74 +104,6 @@ def _validate_background_image(path):
     except (BackgroundError, OSError, ValueError, SyntaxError) as exc:
         raise InvalidInput("Invalid background journal image: " + str(exc)) from exc
 
-
-def validate_replacements(j, registry):
-    from . import catalog_transaction as tx
-    replacements = j["replacements"]
-    require(isinstance(replacements, dict), "Invalid replacement map")
-    if tx.images(j):
-        from .editor_image_input import validate_background
-        candidates = {name: e for e in registry["entries"] for name in tx.image_candidates({"entries": [e]})}
-        if j["operation"] not in ("editor-images", "editor-raster", "reveal-adoption", "background-adoption"):
-            require(not replacements, "This image journal cannot replace binaries")
-            return
-        require(set(replacements) <= set(candidates), "Unbound image replacement path")
-        total = 0
-        from .target_adapter import validate_reveal
-        with tempfile.TemporaryDirectory(prefix="pe-image-check-") as directory:
-            for name, pair in replacements.items():
-                exact_keys(pair, {"old", "new"})
-                require(binary_hash(pair["old"]) != binary_hash(pair["new"]), "Unchanged binary replacement")
-                for value in pair.values():
-                    if value is None: continue
-                    binary_shape(value)
-                    total += value["bytes"]
-                    if total > 96 * 1024 * 1024: raise Aborted("resource_limit: replacements exceed 96 MiB")
-                    raw = decode_binary(value)
-                    if name.startswith("game/art/backgrounds/"):
-                        validate_background(raw)
-                    else:
-                        path = Path(directory) / ("image" + Path(name).suffix)
-                        path.write_bytes(raw)
-                        entry = candidates[name]
-                        validate_reveal(path, entry["production"]["width"], entry["production"]["height"])
-        return
-    backgrounds = nullable_binaries(j)
-    if j["operation"] != "reveal-adoption" and not backgrounds:
-        require(not replacements, "This journal cannot replace binaries")
-        return
-    if backgrounds:
-        from . import catalog_background as background
-        entries = {background.asset_path(e["id"]): e for e in registry["entries"]
-                   if e["id"] in background.index(registry)}
-        require(len(replacements) <= 1 and set(replacements) <= set(entries), "Invalid background replacement paths")
-    else:
-        entries = {"game/" + e["reveal"]: e for e in registry["entries"]}
-        require(replacements and set(replacements) <= set(entries), "Invalid reveal replacement paths")
-    total = 0
-    for name, pair in replacements.items():
-        exact_keys(pair, {"old", "new"})
-        for value in pair.values():
-            if value is None and backgrounds: continue
-            binary_shape(value)
-            total += value["bytes"]
-        require(binary_hash(pair["old"]) != binary_hash(pair["new"]), "Binary replacement is unchanged or both sides are null")
-    if total > 96 * 1024 * 1024: raise Aborted("resource_limit: replacements exceed 96 MiB")
-    from .target_adapter import validate_reveal
-    with tempfile.TemporaryDirectory(prefix="at-image-check-") as directory:
-        for name, pair in replacements.items():
-            p = Path(directory) / ("image" + Path(name).suffix)
-            entry = entries[name]
-            for value in pair.values():
-                if value is None: continue
-                with p.open("wb") as stream:
-                    for block in binary_chunks(value): stream.write(block)
-                require(p.stat().st_size == value["bytes"] and io.file_hash(p.parent, p.name, reveal.IMAGE_LIMIT) == value["sha256"], "Binary backup binding differs")
-                if backgrounds: _validate_background_image(p)
-                else: validate_reveal(p, entry["production"]["width"], entry["production"]["height"])
-
-
-@diagnostic.measured("Directory durability", "directory_flushes")
 def sync_directory(path):
     """Flush the directory entry, including on the actual Windows filesystem."""
     if os.name == "nt":
@@ -228,7 +123,6 @@ def sync_directory(path):
         try: os.fsync(fd)
         finally: os.close(fd)
 
-
 def rename(source, target, *, replace):
     if os.name == "nt":
         from ctypes import wintypes as w
@@ -246,7 +140,6 @@ def rename(source, target, *, replace):
             raise OSError(ctypes.get_errno(), "Atomic no-replace rename failed", str(target))
     sync_directory(target.parent)
 
-
 def durable_parents(root, name):
     target = io.safe(root, name)
     missing, p = [], target.parent
@@ -257,479 +150,9 @@ def durable_parents(root, name):
         sync_directory(p.parent)
     return io.safe(root, name)
 
-
-def restore_runtime(j, registry):
-    from . import catalog_transaction as tx
-    return tx.restore_runtime(j, registry)
-
-
-def inventory(j, raw, *, restore=None):
-    names = sorted(set(j["additions"]) | set(j.get("replacements", {})) |
-                   {n for n in j["old"] if j["old"][n] != j["new"][n]} |
-                   {"game/data/registry.json"})
-    # Runtime is only a write target if publication or recovery actually differs.
-    from . import catalog_transaction as tx
-    if restore is None:
-        before = io.json_bytes(j["old"][tx.REGISTRY].encode(), 8 * 1024 * 1024)
-        restore = restore_runtime(j, before)
-    if j["old"][tx.RUNTIME] == j["new"][tx.RUNTIME] == restore: names.remove(tx.RUNTIME)
-    journal_hash = io.checksum(raw)
-    return {n: (Path(n).parent / (".registration-" + journal_hash + "-" + str(i) + ".tmp")).as_posix()
-            for i, n in enumerate(names)}
-
-
-def temp_candidates(j, name, additions=None, *, restore=None, limit=64 * 1024 * 1024):
-    from . import catalog_transaction as tx
-    if name in j.get("replacements", {}):
-        for v in j['replacements'][name].values():
-            if v is not None: yield decode_binary(v)
-        return
-    if name in j["old"]:
-        values = [v.encode() for v in (j["old"][name], j["new"][name]) if v is not None]
-        if name == tx.RUNTIME and j["operation"] != "reveal-adoption":
-            if restore is None:
-                before = io.json_bytes(j["old"][tx.REGISTRY].encode(), 8 * 1024 * 1024)
-                restore = restore_runtime(j, before)
-            values.append(restore.encode())
-        yield from values
-    elif additions and name in additions:
-        yield io.read(additions[name].parent, additions[name].name, limit)
-
-
-def check_temps(root, j, raw, *, additions=None, temps=None, restore=None):
-    from . import catalog_transaction as tx
-    temps = inventory(j, raw, restore=restore) if temps is None else temps
-    present = set()
-    for name, temporary in temps.items():
-        limit = tx.file_limit(root, name, j)
-        data = io.read(root, temporary, limit, missing=True)
-        if data is None: continue
-        if name in j.get('replacements',{}) or name in j['old'] or additions and name in additions:
-            require(any(candidate.startswith(data) for candidate in temp_candidates(j,name,additions,restore=restore,limit=limit)), "Foreign transaction temporary bytes: " + temporary)
-        else:
-            # Interrupted package additions have no backup bytes in the journal;
-            # only complete, hash-bound temporaries are recoverable.
-            require(io.checksum(data) == j["additions"][name], "Unverifiable package temporary: " + temporary)
-        present.add(temporary)
-    return present
-
-
-class _JournalView:
-    """Prepare only immutable journal data, never observations of the checkout."""
-
-    def __init__(self, j, raw):
-        from . import catalog_transaction as tx
-        self.j = deepcopy(j)
-        require(journal_bytes(self.j) == raw, "Journal view differs")
-        self.registries = [io.json_bytes(self.j[s][tx.REGISTRY].encode(), 8 * 1024 * 1024)
-                           for s in ("old", "new")]
-        self.restore = restore_runtime(self.j, self.registries[0])
-        self.temps = inventory(self.j, raw, restore=self.restore)
-
-
-@diagnostic.measured("Guards", "guards")
-def guard(root, j, *, raw=None, expected=None, old_only=False, additions=None, _view=None):
-    from . import catalog_transaction as tx, catalog_rating as rating, catalog_added as added
-    from . import catalog_method
-    if j.get("format") == tx.DEPENDENCY_FORMATS["registration"]:
-        from .registration_dependencies import guard as dependency_guard
-        return dependency_guard(root, j, raw=raw, expected=expected, old_only=old_only, additions=additions, _view=_view)
-    default = catalog_method.load(root)
-    require(tx.sd2(j) or default is None, "Legacy journal cannot bind production default")
-    raw = journal_bytes(j) if raw is None else raw
-    view = _JournalView(j, raw) if _view is None else _view
-    j, registries = view.j, view.registries
-    if not tx.background(j):
-        tx.require_legacy_background(root, *registries, runtimes=(j["old"][tx.RUNTIME], j["new"][tx.RUNTIME]))
-    if not old_only: require(read_journal(root) == raw, "Journal changed; preserve all transaction files")
-    temps = check_temps(root, j, raw, additions=additions, temps=view.temps, restore=view.restore)
-    require(not old_only or not temps, "Transaction temporary already exists")
-    reveal.source_paths(root, *registries, temporary=temps)
-    rating.source_paths(root, *registries, temporary=temps)
-    reports = {n for n in j["retained"] if n.startswith(added.ROOT + "/reports/")}
-    if j["operation"] == "added-adoption": reports |= tx.report_names(j["report_run"], j["operation"])
-    added.source_paths(root, *registries, extra_reports=reports, temporary=temps)
-    if tx.background(j):
-        from . import catalog_background as background
-        sources, assets = background.source_paths(root, *registries, temporary=temps)
-        bound_backgrounds = {n for side in ("old", "new") for n, value in j[side].items() if value is not None}
-        bound_backgrounds |= set(j["retained"]) | set(j["additions"]) | set(j["replacements"])
-        require(sources | assets <= bound_backgrounds, "Unbound background file; preserve journal")
-    if tx.images(j):
-        actual = tx.reveal_assets(root, *registries, temporary=temps)
-        bound = set(j["retained"]) | set(j["additions"]) | set(j["replacements"])
-        bound |= {name for side in ("old", "new") for name, value in j[side].items() if value is not None}
-        require(actual <= bound, "Unbound alternate reveal appeared; preserve journal")
-        # Negative candidate expectations are derived, never supplied by a plan.
-        for name in set().union(*(tx.image_candidates(registry) for registry in registries)) - bound:
-            require(not io.safe(root, name).exists(), "Unexpected inactive image: " + name)
-    allowed_sd = {n for n in j["retained"] if n.startswith("content/difficulty/reports/")} | tx.report_names(j["report_run"], j["operation"])
-    sd = io.safe(root, "content/difficulty/reports")
-    if sd.exists():
-        require(all(p.relative_to(root).as_posix() in allowed_sd | temps for p in sd.rglob("*") if p.is_file()), "Foreign difficulty report appeared")
-    for n, old in j["old"].items():
-        current = tx.read(root, n)
-        candidates = [old]
-        if not old_only:
-            candidates.append(j["new"][n])
-            if n == tx.RUNTIME and j["operation"] != "reveal-adoption": candidates.append(view.restore)
-        require(current in [v.encode() if v is not None else None for v in candidates], "Transaction target changed; preserve journal: " + n)
-        if expected is not None: require(io.checksum(current) == expected[n], "Transaction phase changed: " + n)
-    for n, pair in j.get("replacements", {}).items():
-        checksum = replacement_hash(root, n, j)
-        require(checksum in ([binary_hash(pair["old"])] if old_only else [binary_hash(v) for v in pair.values()]),
-                "Foreign/missing binary; preserve journal: " + n)
-        if expected is not None: require(checksum == expected[n], "Binary publication phase changed: " + n)
-    for n, h in j["retained"].items():
-        require(tx.file_hash(root, n, j) == h, "Retained source changed; preserve journal: " + n)
-    for n, h in j["additions"].items():
-        data = io.read(root, n, tx.file_limit(root, n, j), missing=True)
-        require(data is None if old_only else data is None or io.checksum(data) == h, "Foreign addition; preserve journal: " + n)
-        if expected is not None: require(io.checksum(data) == expected[n], "Addition publication phase changed: " + n)
-    packages = {e["production"]["package"] for r in registries for e in r["entries"]}
-    packages |= {"/".join(name.split("/")[:4]) for name in j["retained"] if name.startswith("content/packages/")}
-    allowed_packages = set(j["retained"]) | set(j["additions"]) | temps
-    for name in packages:
-        p = io.safe(root, name)
-        if p.exists():
-            for child in p.rglob("*"):
-                n = child.relative_to(root).as_posix()
-                child = io.safe(root, n)
-                require(not child.is_file() or n in allowed_packages, "Transaction package changed; unexpected file: " + n)
-    return temps
-
-
-def checkpoint(phase, name=None):
-    """Fault boundary for process-based tests; inert in production."""
-
-
-def _checkpoint(phase, name=None):
-    checkpoint(phase, name)
-    diagnostic.boundary(phase, name)
-
-
-@diagnostic.measured("File durability", "file_fsyncs")
-def fsync(fd):
-    os.fsync(fd)
-
-
-@contextmanager
-def addition_temporary(path):
-    """Package hashes cannot prove arbitrary partial bytes after a hard kill.
-
-    Keep incomplete package bytes OS-owned: delete-on-close on Windows, unnamed
-    O_TMPFILE on Linux. Only complete, flushed bytes survive under the journal's
-    deterministic name. Image/text replacements still retain their exact prefixes.
-    """
-    if os.name=='nt':
-        import msvcrt
-        from ctypes import wintypes as w
-        k=ctypes.WinDLL('kernel32',use_last_error=True)
-        k.CreateFileW.argtypes=[w.LPCWSTR,w.DWORD,w.DWORD,w.LPVOID,w.DWORD,w.DWORD,w.HANDLE]
-        k.CreateFileW.restype=w.HANDLE
-        k.SetFileInformationByHandle.argtypes=[w.HANDLE,ctypes.c_int,w.LPVOID,w.DWORD]
-        handle=k.CreateFileW(str(path),0xC0010000,7,None,1,0x04200100,None)
-        if handle==w.HANDLE(-1).value:raise ctypes.WinError(ctypes.get_last_error())
-        fd=msvcrt.open_osfhandle(handle,os.O_RDWR|os.O_BINARY)
-        def keep():
-            flags=w.DWORD(8)  # FileDispositionInfoEx: clear only the on-close bit.
-            if not k.SetFileInformationByHandle(handle,21,ctypes.byref(flags),4):raise ctypes.WinError(ctypes.get_last_error())
-    else:
-        require(hasattr(os,'O_TMPFILE'),'Recoverable package temporary unavailable')
-        fd=os.open(path.parent,os.O_RDWR|os.O_TMPFILE,0o644)
-        def keep():
-            libc=ctypes.CDLL(None,use_errno=True)
-            libc.linkat.argtypes=[ctypes.c_int,ctypes.c_char_p,ctypes.c_int,ctypes.c_char_p,ctypes.c_int]
-            if libc.linkat(-100,os.fsencode('/proc/self/fd/'+str(fd)),-100,os.fsencode(path),0x400):
-                raise OSError(ctypes.get_errno(),'Complete package temporary publication failed',str(path))
-    with os.fdopen(fd,'w+b') as stream:
-        yield stream,keep
-
-
-def addition_preflight(root, temps):
-    # Exercise support on every actual target directory before publishing a lock
-    # or active file. These exclusive empty probes are removed before P0.
-    for temporary in sorted(set(temps)):
-        path=durable_parents(root,temporary)
-        require(not path.exists(),'Transaction temporary already exists')
-        with addition_temporary(path) as (stream,keep):
-            stream.flush();fsync(stream.fileno());keep()
-        require(io.read(root,temporary,0)==b'','Package temporary probe changed')
-        path.unlink();sync_directory(path.parent)
-
-
-def write(root, name, data, temporary, guard_fn, *, package_addition=False, replace=None, limit=64 * 1024 * 1024):
-    target = durable_parents(root, name)
-    if data is None:
-        guard_fn()
-        io.safe(root, name).unlink(missing_ok=True)
-        sync_directory(target.parent)
-        return
-    tmp = io.safe(root, temporary)
-    if package_addition:
-        with addition_temporary(tmp) as (stream,keep):
-            for offset in range(0,len(data),io.CHUNK):
-                io.tick();stream.write(data[offset:offset+io.CHUNK]);_checkpoint('temp-prefix',name)
-            stream.flush();fsync(stream.fileno());stream.seek(0)
-            for offset in range(0,len(data),io.CHUNK):
-                io.tick();require(stream.read(io.CHUNK)==data[offset:offset+io.CHUNK],'Package temporary readback differs')
-            keep()
-        require(io.read(root,temporary,limit)==data,'Complete package temporary differs')
-        _checkpoint('temp-complete',name);guard_fn()
-        rename(io.safe(root,temporary),io.safe(root,name),replace=False)
-        diagnostic.count("published_files", work="published: " + name)
-        diagnostic.count("published_bytes", len(data))
-        return
-    fd = os.open(tmp, os.O_WRONLY | os.O_CREAT | os.O_EXCL | getattr(os, "O_BINARY", 0) | getattr(os, "O_NOFOLLOW", 0), 0o644)
-    with os.fdopen(fd, "wb") as stream:
-        for offset in range(0, len(data), io.CHUNK):
-            io.tick(); stream.write(data[offset:offset + io.CHUNK])
-            _checkpoint("temp-prefix", name)
-        stream.flush(); fsync(stream.fileno())
-    require(io.read(root, temporary, 64 * 1024 * 1024) == data, "Temporary readback differs")
-    _checkpoint("temp-complete", name)
-    guard_fn()
-    target = io.safe(root, name)
-    # Explicit phase policy for RI-C: a new text target must stay no-replace
-    # even if a non-cooperating writer appears after the last guard. Historical
-    # callers retain their existing policy unless they explicitly opt in.
-    rename(io.safe(root, temporary), target, replace=target.exists() if replace is None else replace)
-    diagnostic.count("published_files", work="published: " + name)
-    diagnostic.count("published_bytes", len(data))
-
-
-def cleanup_temps(root, j, raw, guard_fn, *, view):
-    for temporary in sorted(check_temps(root, j, raw, temps=view.temps, restore=view.restore)):
-        guard_fn()
-        target = io.safe(root, temporary)
-        target.unlink(); sync_directory(target.parent)
-
-
-def execute(root, j, additions=None, *, fail_step=None, under_lock=None,
-            publication_seconds=None, recovery_seconds=None, source_check=None, _verification=None):
-    diagnostic.seconds(publication_seconds)
-    diagnostic.seconds(recovery_seconds)
-    from . import catalog_transaction as tx
-    require(isinstance(j, dict), "Invalid catalog journal")
-    require(source_check is None or nullable_binaries(j) and callable(source_check),
-            "Source recheck requires background adoption")
-    registration = tx.registration_route(j) is not None
-    require(registration or publication_seconds is None and recovery_seconds is None,
-            "RI-A overrides require a new registration")
-    if registration:
-        with diagnostic.operation("Publication", 1800 if publication_seconds is None else publication_seconds,
-                                  "registration-default" if publication_seconds is None else "override",
-                                  recovery_seconds=recovery_seconds):
-            return _execute(root, j, additions, fail_step=fail_step, under_lock=under_lock, _verification=_verification)
-    require(_verification is None, "Verification context requires registration")
-    with io.budget(300):
-        return _execute(root, j, additions, fail_step=fail_step, under_lock=under_lock, source_check=source_check)
-
-
-def _execute(root, j, additions=None, *, fail_step=None, under_lock=None, source_check=None, _verification=None):
-    from . import registration_publication as phased
-    if phased.supports(j):
-        return phased.execute(root, j, additions or {}, fail_step=fail_step,
-                              under_lock=under_lock, verification=_verification)
-    from . import catalog_transaction as tx
-    from .content_registry import check_checkout
-    additions = additions or {}
-    if _verification is not None:
-        from .registration_verification import require_context
-        require_context(_verification)
-    diagnostic.begin_segment("P0")
-    tx.validate_journal(root, j, before_write=True)
-    if nullable_binaries(j):
-        tx._stage_check(root, j["new"], j["retained"], additions,
-                        replacements={name: pair["new"] for name, pair in j["replacements"].items()}, journal=j)
-    raw = journal_bytes(j)
-    view = _JournalView(j, raw)
-    j, temps = view.j, view.temps
-    require(not staging(root) and read_journal(root) is None, "Interrupted registration: recovery required")
-    # Exercise the actual directory durability primitive before active mutation.
-    for n in {tx.LOCK, *temps}:
-        p = io.safe(root, n).parent
-        while not p.exists(): p = p.parent
-        sync_directory(p)
-    if os.name != "nt": require(hasattr(ctypes.CDLL(None), "renameat2"), "Atomic no-replace rename unavailable")
-    addition_preflight(root,[temps[n] for n in j['additions']])
-    if _verification is not None: _verification.writer(root, j, additions)
-    if source_check is not None: source_check()
-    _checkpoint("P0")
-    diagnostic.begin_segment("P1")
-    stage_name = "content/.registration-journal-" + io.checksum(raw) + ".tmp"
-    stage = io.safe(root, stage_name)
-    with stage.open("xb") as stream:
-        if diagnostic.current.get():
-            diagnostic.current.get().outcome = "recovery-required"
-            diagnostic.current.get().journal_state = {"journal": "staging-incomplete", "lock": "absent"}
-        for offset in range(0, len(raw), io.CHUNK):
-            stream.write(raw[offset:offset + io.CHUNK]); _checkpoint("journal-prefix")
-        stream.flush(); fsync(stream.fileno())
-    require(read_journal(root, stage_name) == raw, "Journal staging readback differs")
-    if diagnostic.current.get():
-        diagnostic.current.get().journal_state["journal"] = "staging-complete"
-    _checkpoint("journal-complete")
-    rename(stage, io.safe(root, tx.LOCK), replace=False)
-    if diagnostic.current.get():
-        diagnostic.current.get().journal_state = {"journal": "present", "lock": "present"}
-        diagnostic.current.get().outcome = "recovery-required"
-    _checkpoint("P1")
-    diagnostic.begin_segment("P2")
-    expected = {n: io.checksum(v.encode() if v is not None else None) for n, v in j["old"].items()}
-    expected.update({n: binary_hash(pair["old"]) for n, pair in j["replacements"].items()})
-    expected.update({n: None for n in j["additions"]})
-    guard_fn = lambda: guard(root, j, raw=raw, expected=expected, additions=additions, _view=view)
-    # A failed P2 foreign-source guard preserves the published journal.
-    guard_fn()
-    try:
-        if source_check is not None: source_check()
-        if under_lock: under_lock()
-        _checkpoint("P2")
-        diagnostic.begin_segment("P3")
-        for i, n in enumerate(sorted(j["additions"])):
-            guard_fn()
-            if _verification is not None: _verification.addition(n, additions[n])
-            limit = tx.file_limit(root, n, j)
-            data = io.read(additions[n].parent, additions[n].name, limit)
-            require(io.checksum(data) == j["additions"][n], "Staged package changed")
-            write(root, n, data, temps[n], guard_fn,package_addition=True,limit=limit)
-            expected[n] = io.checksum(data)
-            _checkpoint("P3", n)
-            if i == 0 and fail_step == "crash": raise InterruptedError("Injected registration interruption")
-            if i == 0 and fail_step == "files": raise OSError("Injected registration interruption")
-        for n, pair in sorted(j["replacements"].items()):
-            guard_fn()
-            data = decode_binary(pair["new"]) if pair["new"] is not None else None
-            write(root, n, data, temps[n], guard_fn,
-                  replace=pair["old"] is not None if nullable_binaries(j) else None)
-            expected[n] = binary_hash(pair["new"]); _checkpoint("P3", n)
-        if fail_step == "crash-package": raise InterruptedError("Injected update crash after package")
-        if j["operation"] == "registration":
-            from .target_adapter import verify_export
-            before, after = (io.json_bytes(j[s][tx.REGISTRY].encode(), 8 * 1024 * 1024) for s in ("old", "new"))
-            package = tx._delta(j, before, after)
-            if _verification is None: verify_export(io.safe(root, package))
-            else: _verification.written(root, package, raw)
-        diagnostic.begin_segment("P4")
-        names = sorted(n for n in j["new"] if n != tx.RUNTIME and j["old"][n] != j["new"][n])
-        if j["old"][tx.RUNTIME] != j["new"][tx.RUNTIME]: names.append(tx.RUNTIME)
-        for n in names:
-            if n == tx.RUNTIME: diagnostic.begin_segment("P5")
-            guard_fn()
-            data = j["new"][n].encode() if j["new"][n] is not None else None
-            write(root, n, data, temps[n], guard_fn,
-                  replace=j["old"][n] is not None if nullable_binaries(j) else None)
-            expected[n] = io.checksum(data)
-            _checkpoint("P5" if n == tx.RUNTIME else "P4", n)
-            if fail_step == "crash-" + n or n == tx.REGISTRY and fail_step == "crash-index" or n == tx.RUNTIME and fail_step == "crash-runtime": raise InterruptedError("Injected transaction interruption: " + n)
-            if fail_step == n or n == tx.REGISTRY and fail_step == "index": raise OSError("Injected update failure: " + n)
-        if tx.RUNTIME not in names:
-            diagnostic.begin_segment("P5")
-            # P5 still has a boundary when the projection is byte-identical.
-            # Keep interruption coverage without manufacturing a runtime write.
-            _checkpoint("P5", tx.RUNTIME)
-            if fail_step in ("crash-"+tx.RUNTIME,"crash-runtime"): raise InterruptedError("Injected transaction interruption: "+tx.RUNTIME)
-            if fail_step == tx.RUNTIME: raise OSError("Injected update failure: "+tx.RUNTIME)
-        guard_fn(); check_checkout(root, replay=j['operation']=='registration', pending_journal=raw,
-                                   **({"_verification": _verification} if _verification is not None else {})); guard_fn()
-        diagnostic.begin_segment("P6")
-        cleanup_temps(root, j, raw, guard_fn, view=view)
-        _checkpoint("P6"); guard_fn()
-        io.safe(root, tx.LOCK).unlink(); sync_directory(root / "content")
-        diagnostic.durable("completed")
-    except InterruptedError:
-        raise
-    except BaseException as original:
-        # A separate recovery budget is deliberately independent of the expired
-        # forward budget, and foreign data still blocks before rollback writes.
-        token = io._deadline.set(None)
-        forward = diagnostic.frame.get()
-        if forward is not None: forward.next_segment()
-        recovery_seconds = forward.recovery_seconds if forward is not None and forward.kind == "Publication" else None
-        operation_token = diagnostic.frame.set(None)
-        try:
-            from .content_registry import recover as classified_recover
-            classified_recover(root, recovery_seconds=recovery_seconds)
-        except BaseException as recovery_error:
-            if isinstance(original, (Aborted, KeyboardInterrupt)):
-                raise original from recovery_error
-            raise
-        finally:
-            diagnostic.frame.reset(operation_token)
-            io._deadline.reset(token)
-        raise
-
-
-def recover(root):
-    if diagnostic.frame.get() is None or diagnostic.frame.get().kind != "Recovery":
-        from .content_registry import recover as classified_recover
-        return classified_recover(root)
-    from . import catalog_transaction as tx
-    from .content_registry import check_checkout
-    raw = read_journal(root)
-    if raw is None:
-        remnants = staging(root)
-        require(len(remnants) == 1, "Missing/ambiguous journal staging; preserve files")
-        raw = read_journal(root, remnants[0])
-        j = io.json_bytes(raw, LIMIT)
-        require(tx.modern(j) and raw == journal_bytes(j) and remnants[0] == "content/.registration-journal-" + io.checksum(raw) + ".tmp", "Incomplete/foreign journal staging")
-        from . import registration_publication as phased
-        if phased.supports(j):
-            return phased.recover(root, j, raw, staged=remnants[0])
-        tx.validate_journal(root, j, before_write=True)
-        guard(root, j, raw=raw, old_only=True)
-        require(read_journal(root) is None and read_journal(root, remnants[0]) == raw, "Journal appeared/changed during staging recovery")
-        diagnostic.begin_segment("R2")
-        io.safe(root, remnants[0]).unlink(); sync_directory(root / "content")
-        diagnostic.durable("rolled-back")
-        return {"status": "rolled-back", "registered": False}
-    j = io.json_bytes(raw, LIMIT)
-    require(tx.modern(j) and raw == journal_bytes(j), "Noncanonical transaction journal")
-    from . import registration_publication as phased
-    if phased.supports(j):
-        return phased.recover(root, j, raw)
-    _, runtime = tx.validate_journal(root, j)
-    view = _JournalView(j, raw)
-    j = view.j
-    guard_fn = lambda: guard(root, j, raw=raw, _view=view)
-    guard_fn(); _checkpoint("R0")
-    diagnostic.begin_segment("R1")
-    cleanup_temps(root, j, raw, guard_fn, view=view)
-    temps = view.temps
-    for n, pair in sorted(j["replacements"].items()):
-        current = replacement_hash(root, n, j)
-        if current != binary_hash(pair["old"]):
-            guard_fn()
-            data = decode_binary(pair["old"]) if pair["old"] is not None else None
-            write(root, n, data, temps[n], guard_fn,
-                  replace=current is not None if nullable_binaries(j) else None)
-        _checkpoint("R1-binary", n)
-    for n in sorted(j["old"]):
-        if n == tx.RUNTIME: continue
-        data = j["old"][n].encode() if j["old"][n] is not None else None
-        current = tx.read(root, n)
-        if current != data:
-            guard_fn()
-            write(root, n, data, temps[n], guard_fn,
-                  replace=current is not None if nullable_binaries(j) else None)
-        _checkpoint("R1-text", n)
-    for n in sorted(j["additions"], reverse=True):
-        target = io.safe(root, n)
-        if target.exists():
-            guard_fn()
-            io.safe(root, n).unlink(); sync_directory(target.parent)
-        _checkpoint("R1-addition", n)
-    guard_fn()
-    if tx.read(root, tx.RUNTIME) != runtime.encode(): write(root, tx.RUNTIME, runtime.encode(), temps[tx.RUNTIME], guard_fn)
-    _checkpoint("R1-runtime")
-    diagnostic.begin_segment("R2")
-    guard_fn(); check_checkout(root, pending_journal=raw); guard_fn()
-    require(all(tx.read(root, n) == (v.encode() if v is not None else None) for n, v in {**j["old"], tx.RUNTIME: runtime}.items()) and
-            all(replacement_hash(root, n, j) == binary_hash(pair["old"]) for n, pair in j["replacements"].items()) and
-            all(not io.safe(root, n).exists() for n in j["additions"]), "Recovery goal differs")
-    cleanup_temps(root, j, raw, guard_fn, view=view)
-    _checkpoint("R2"); guard_fn()
-    io.safe(root, tx.LOCK).unlink(); sync_directory(root / "content")
-    diagnostic.durable("rolled-back")
-    return {"status": "rolled-back", "registered": False}
+def journal_bytes(value):
+    import zlib
+    require(value["format"] == "picross-editor-change-journal-v1", "Use the current operation writer")
+    raw = canonical_bytes(value) + b"\n"
+    require(len(raw) <= LIMIT, "Editor journal exceeds 128 MiB")
+    return EDITOR_PREFIX + zlib.compress(raw, level=6)

@@ -61,15 +61,10 @@ class DifficultyTests(unittest.TestCase):
             changed = deepcopy(raw); changed[field] = value
             with self.subTest(field=field), self.assertRaises(InvalidInput): project(changed)
 
-    def test_writer_and_registry_validator_share_contract(self):
-        root = Path(__file__).resolve().parents[1]/"tests/puzzle_production/fixtures/catalog"
-        registry, catalog = load_json(root/"validation.json"), load_json(root/"categories.json")
-        runtime = projection(registry, catalog)
-        self.assertEqual(runtime["format"], "picross-runtime-registry-v5")
-        self.assertTrue(all(len(e) == 9 and e["difficulty"] is None and e["added_at"] is None for e in runtime["entries"]))
-        registry["entries"][0]["production"]["difficulty"] = assessment()
-        validate(registry, catalog)
-        self.assertEqual(projection(registry, catalog)["entries"][0]["difficulty"]["level"], "L3")
-        registry["entries"][0]["production"]["difficulty"]["level"] = "L6"
-        for action in (validate, projection):
-            with self.assertRaises(InvalidInput): action(registry, catalog)
+    def test_current_projection_requires_explicit_current_values(self):
+        root=Path(__file__).resolve().parents[1]/"tests/puzzle_production/fixtures/catalog"
+        registry,catalog=load_json(root/"validation.json"),load_json(root/"categories.json")
+        validate(registry,catalog)
+        with self.assertRaisesRegex(InvalidInput,"complete current data"):
+            projection(registry,catalog)
+        self.assertTrue(all("production" not in e and e["mode"]=="mono" for e in registry["entries"]))

@@ -62,7 +62,7 @@ def write_new(path, data):
 
 def candidate(design, matrix, logic, identifier, revision):
     from .images import validate_design, logic_from_matrix
-    from .target_adapter import definition
+    from .authoring_inspection import definition
     from .contract import validate_logic
     design = validate_design(design)
     puzzle = validate_logic(logic)
@@ -221,7 +221,7 @@ def preview(root, output, run, source_commit, *, ids=None, all_entries=False, ch
         prior_raw = snapshot["texts"][rating.path(identifier)]
         prior = rating.validate(rating.bytes_json(prior_raw), definition_bytes=raw) if prior_raw is not None else None
         row = {"id": identifier, "current_source": None, "logic_binding": None,
-               "old": rating.project(prior) if prior else catalog_difficulty.project(e["production"]["difficulty"]),
+               "old": rating.project(prior) if prior else None,
                "proposed": None, "status": "invalid_input", "reason": None, "rating_hash": None, "checked_hash": None,
                "previous_record_hash": prior["record_hash"] if prior else None,
                "previous_rating_revision": prior["rating_revision"] if prior else None, "assessment": None}
@@ -231,15 +231,15 @@ def preview(root, output, run, source_commit, *, ids=None, all_entries=False, ch
                 require(identifier in checked_inputs, "Missing checked input for selected ID")
                 value = checked_inputs[identifier]
                 value = load_json(safe_external(value), rating.LIMIT) if isinstance(value, Path) else value
-                rating.validate(value, active=False, definition_bytes=raw, production_mode=e["production"]["mode"])
-                require(value.get("production_mode") == e["production"]["mode"], "Preview requires mode-bound analysis")
+                rating.validate(value, active=False, definition_bytes=raw, production_mode=e["mode"])
+                require(value.get("production_mode") == e["mode"], "Preview requires mode-bound analysis")
                 require(rating.method(value) == method, "Checked input differs from selected method")
             else:
                 source = output / "inputs" / (identifier + ".json")
                 write_new(source, raw)
                 pair = (r4_inputs or {}).get(identifier, (None, None))
                 value = analyze_single(source, output / "bundles" / identifier,
-                    production_mode=e["production"]["mode"], method=method,
+                    production_mode=e["mode"], method=method,
                     budget=AnalysisBudget(**(limits or {})), verify_budget=AnalysisBudget(**(verify_limits or {})), baseline=pair[0], proof=pair[1])
             write_new(output / "checked" / (identifier + ".json"), rating.encoded(value))
             result = value["rating"]["result"]
@@ -262,17 +262,8 @@ def preview(root, output, run, source_commit, *, ids=None, all_entries=False, ch
 
 
 def source_hashes(snapshot, report_format=None):
-    if report_format is None:
-        report_format = IMAGE_FORMAT if tx.image_generation(snapshot) else FORMAT
-    require((report_format == IMAGE_FORMAT) == tx.image_generation(snapshot),
-            "Difficulty report generation differs from the current image projection")
-    if report_format == IMAGE_FORMAT:
-        return tx.image_snapshot(snapshot)["sources"]
-    if report_format != FORMAT: snapshot = tx.pre_background_snapshot(snapshot)
-    if report_format not in (FORMAT, SD2_FORMAT): snapshot = tx.pre_sd2_snapshot(snapshot)
-    if report_format not in (FORMAT, SD2_FORMAT, AT_FORMAT): snapshot = tx.historical_snapshot(snapshot)
-    return {**snapshot["retained"], **{n: hashlib.sha256(raw).hexdigest() if raw is not None else None
-            for n, raw in snapshot["texts"].items() if n not in (tx.REGISTRY, tx.RUNTIME, "content/categories.json")}}
+    require(report_format in (None,IMAGE_FORMAT), "Use a current difficulty preview")
+    return tx.image_snapshot(snapshot)["sources"]
 
 
 def check_repeat(report, snapshot):
@@ -295,13 +286,11 @@ def check_repeat(report, snapshot):
             active = rating.validate(rating.bytes_json(snapshot["texts"][name]))
             changed = current[name] != r["sources"][name] if modern else active["record_hash"] != row["previous_record_hash"]
             if changed:
-                require(active["adoption"]["report"] == {"run_id": report["run_id"], "result_hash": report["result_hash"]} and
-                        active["adoption"]["previous_record_hash"] == row["previous_record_hash"] and
-                        (not modern or active["rating_revision"] == (row["previous_rating_revision"] or 0) + 1) and
-                        active["adoption"]["kind"] == "analysis" and
-                        snapshot["texts"][name] == rating.encoded(active) and
-                        rating.checked_from_active(active)["checked_hash"] == row["checked_hash"],
-                        "Active rating changed since preview/adoption")
+                require(active["rating_revision"] == (row["previous_rating_revision"] or 0)+1 and
+                        active["rating"]["rating_hash"] == row["rating_hash"] and
+                        rating.project(active) == row["proposed"] and
+                        snapshot["texts"][name] == rating.encoded(active),
+                        "Active current rating changed since adoption")
                 if modern: current[name] = r["sources"][name]
         projections[row["id"]]["difficulty"] = row["old"]
     candidates = [runtime]
@@ -351,7 +340,7 @@ def adopt(root, workspace, *, apply=False, fail_step=None):
         p = safe_external(workspace / "checked" / (row["id"] + ".json"))
         externals[p] = rating.read_file(p)
         checked = rating.validate(rating.bytes_json(externals[p]), active=False, definition_bytes=raw)
-        rating.validate(checked, active=False, production_mode=e["production"]["mode"])
+        rating.validate(checked, active=False, production_mode=e["mode"])
         require(checked["checked_hash"] == row["checked_hash"] and checked["rating"]["rating_hash"] == row["rating_hash"] and
                 rating.project(checked) == row["proposed"], "Checked preview input changed")
         if report["format"] in METHOD_FORMATS:

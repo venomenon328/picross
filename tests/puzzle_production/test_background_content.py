@@ -1,3 +1,4 @@
+import hashlib
 """Synthetic PB-H read-only content admission; no real assets or catalog writes."""
 from copy import deepcopy
 from pathlib import Path
@@ -11,7 +12,7 @@ import zipfile
 from PIL import Image
 
 from tools.puzzle_production import background_assets as assets, background_package, certification, images
-from tools.puzzle_production import palette_gate, target_adapter as adapter
+from tools.puzzle_production import palette_gate, authoring_inspection as adapter
 from tools.puzzle_production.authoring_package import file_hash, open_package
 from tools.puzzle_production.contract import Budget, InvalidInput, InvalidProof, load_json, validate_logic, write_json
 from tools.puzzle_production.za1_fixtures import ROOT, approve, isolated_checkout, make, seal
@@ -157,7 +158,7 @@ class BackgroundContentTests(unittest.TestCase):
         target = self.content()
         self.background(target)
         archive = self.archive(target)
-        before = adapter.hashes(target), archive.read_bytes()
+        before = hashes(target), archive.read_bytes()
         report = self.inspect(archive)
         self.assertEqual(report["format"], adapter.BACKGROUND_INSPECTION)
         self.assertTrue(report["technical"])
@@ -165,7 +166,7 @@ class BackgroundContentTests(unittest.TestCase):
         self.assertEqual((report["background"]["status"], report["background"]["ready"]), ("offered", False))
         self.assertTrue(any(b.startswith("background_choice:") for b in report["blockers"]))
         self.assertFalse(report["catalog_ready"] or report["integration_ready"] or report["editorial_approved"])
-        self.assertEqual(before, (adapter.hashes(target), archive.read_bytes()))
+        self.assertEqual(before, (hashes(target), archive.read_bytes()))
         with self.assertRaisesRegex(InvalidInput, "explicit read-only"), open_package(archive):
             pass
         with open_package(archive, allow_background=True) as package:
@@ -302,12 +303,12 @@ class BackgroundContentTests(unittest.TestCase):
             archive = self.archive(target, choice + ".zip")
             approval = self.approval(target, archive, name=choice + "-approval.json")
             original = load_json(approval)
-            before = adapter.hashes(target), archive.read_bytes(), approval.read_bytes()
+            before = hashes(target), archive.read_bytes(), approval.read_bytes()
             report = self.inspect(archive, approval)
             self.assertTrue(report["technical"] and report["editorial_approved"])
             self.assertEqual(report["effective_state"], "editorially_approved")
             self.assertFalse(report["catalog_ready"] or report["integration_ready"])
-            self.assertEqual(before, (adapter.hashes(target), archive.read_bytes(), approval.read_bytes()))
+            self.assertEqual(before, (hashes(target), archive.read_bytes(), approval.read_bytes()))
             for mutate in (lambda a: a.update(original_zip_sha256="0" * 64),
                            lambda a: a.update(handoff_sha256="0" * 64),
                            lambda a: a.update(inventory_sha256="0" * 64),
@@ -358,10 +359,10 @@ class BackgroundContentTests(unittest.TestCase):
         with open_package(archive, allow_background=True) as package:
             background = background_package.validate_external(package.root, h, binding, external_root=fixture.root)
         approval = self.approval(target, archive, background=background)
-        before = archive.read_bytes(), adapter.hashes(fixture.root)
+        before = archive.read_bytes(), hashes(fixture.root)
         report = self.inspect(archive, approval, external=fixture.root)
         self.assertEqual((report["original_state"], report["effective_state"]), ("raster_ready", "editorially_approved"))
-        self.assertEqual(before, (archive.read_bytes(), adapter.hashes(fixture.root)))
+        self.assertEqual(before, (archive.read_bytes(), hashes(fixture.root)))
         with self.assertRaisesRegex(InvalidInput, "external_root"):
             self.inspect(archive, approval)
 
@@ -406,38 +407,11 @@ class BackgroundContentTests(unittest.TestCase):
         with self.assertRaisesRegex(InvalidInput, "content gate"):
             self.inspect(target, manual=case.auth)
 
-    def test_old_export_verify_and_registry_entry_cannot_admit_v3_inputs(self):
-        target = self.content()
-        h = load_json(target / "handoff.json")
-        (target / "rulebook.md").write_text("**Version 0.6.0 · TEST ONLY**\n", encoding="utf-8")
-        h["rulebook"] = {"version": "0.6.0", "file": "rulebook.md", "sha256": file_hash(target / "rulebook.md")}
-        seal(target, h)
-        approval = self.root / "old-approval.json"
-        approve(target, approval)
-        output = self.root / "old-export"
-        options = {"name": "TEST ONLY", "revision": 1, "stem": "background_test", "save_slot": "background_test",
-                   "category_id": "voegel", "categories_path": ROOT / "tests/puzzle_production/fixtures/catalog/categories.json"}
-        adapter.export(target, output, approval_path=approval, **options)
-        self.background(target)
-        with self.assertRaisesRegex(InvalidInput, "explicit read-only"):
-            adapter.export(target, self.root / "forbidden-export", **options)
-        self.assertFalse((self.root / "forbidden-export").exists())
-        shutil.rmtree(output / "input")
-        shutil.copytree(target, output / "input")
-        manifest = load_json(output / "manifest.json")
-        manifest["files"] = {k: v for k, v in adapter.hashes(output).items() if k != "manifest.json"}
-        write_json(output / "manifest.json", manifest)
-        before = adapter.hashes(output)
-        with self.assertRaisesRegex(InvalidInput, "explicit read-only"):
-            adapter.verify_export(output)
-        from tools.puzzle_production.content_registry import registration
-        checkout = isolated_checkout(self.root / "checkout")
-        checkout_before = adapter.hashes(checkout)
-        with self.assertRaises(InvalidInput):
-            registration(output, checkout, apply=True)
-        self.assertEqual(checkout_before, adapter.hashes(checkout))
-        self.assertEqual(before, adapter.hashes(output))
 
 
 if __name__ == "__main__":
     unittest.main()
+
+
+def hashes(root):
+    return {p.relative_to(root).as_posix(): hashlib.sha256(p.read_bytes()).hexdigest() for p in root.rglob("*") if p.is_file()}
