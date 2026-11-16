@@ -92,12 +92,14 @@ class HelperDiagnostic {
                 var start=new ProcessStartInfo(Assembly.GetExecutingAssembly().Location,"handshake "+(string)Call("Quote",args[0])+" "+new string('a',48)) {
                     UseShellExecute=false,CreateNoWindow=true,RedirectStandardInput=true,RedirectStandardOutput=true };
                 using(var child=Process.Start(start)) {
-                    Need(child.StandardOutput.ReadLine()=="READY "+new string('a',48));
+                    string ready=child.StandardOutput.ReadLine();
+                    if(ready!="READY "+new string('a',48)) throw new Exception("READY bytes: "+BitConverter.ToString(Encoding.UTF8.GetBytes(ready??"<EOF>")));
                     byte[] bytes=Encoding.ASCII.GetBytes(command);
                     child.StandardInput.BaseStream.Write(bytes,0,bytes.Length); child.StandardInput.BaseStream.Flush();
                     child.StandardInput.Close();
                     Need(child.WaitForExit(5000) && child.ExitCode==0);
-                    Need(child.StandardOutput.ReadLine()==(command=="GO "+new string('a',48)+"\n"?"GO-accepted":"cancelled"));
+                    string actual=child.StandardOutput.ReadLine(), expected=command=="GO "+new string('a',48)+"\n"?"GO-accepted":"cancelled";
+                    if(actual!=expected) throw new Exception("GO expected "+expected+" got "+actual);
                 }
             }
             Phase="unbound input rejection";
