@@ -13,3 +13,9 @@ Unveränderlicher Bildcommit: `d0240785d34d1351e90e4d9602cce312a2379ea0`; alle d
 Aktuelles angebotenes Manifest: [work/bg-offer-r02.json](work/bg-offer-r02.json), Revision bg02. Die frühere pending-Aufzeichnung bg01 bleibt erhalten. Herkunft, echte Prompts, Quellen-/Revealbindung, Q-HG01–04 und Korrekturhistorie liegen im selben Arbeitsverzeichnis.
 
 Keine Auswahl, keine HP-W2-Ableitung und keine Integration erklärt. Weiterarbeit nach tatsächlicher Auswahl aller fünf Rätsel gemäß Dauerauftrag in Issue #671.
+
+## Tatsächliche Auswahl und lokale Übernahme
+
+Eigentümerwahl im Chat: „S1, C1, V2, D2, H1“. Für dieses Rätsel: **V2/r01**; [Entscheidung d01](decisions/d01.json) bindet exakt Manifest bg02 und Originalbytes. [HP-W2 d01](derived/d01/derivation.json): ausdrücklich `picross-background-png2304x768-v1`, derive und verify erfolgreich. Fertige Ausgabe isoliert auf Grau einschließlich aller vier Kanten gesichtet (H-07).
+
+Serieller frischer Editorplan und Apply übernehmen die fertigen Bytes unverändert. Quellen-/Runtime-/Registrybindung und Schutzwerte geprüft, Wiederholungsplan leer. Dies dokumentiert lokale Integration; Mainmerge und Produktionsabschluss werden erst am bestätigten Stand gemeldet.
