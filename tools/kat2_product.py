@@ -80,7 +80,7 @@ def run(root, workspace, output, engine, environment, run_phase, python_phase, h
         saves.mkdir(exist_ok=mode == "restart")
         if mode == "adapter":
             from tools.puzzle_production.za1_fixtures import isolated_checkout
-            from tests.puzzle_production import current_fixtures as fixture
+            from tests.puzzle_production import current_fixtures as current_fixture
             from tools.puzzle_production import content_registry, current_content as current, target_adapter
             checkout = project.parent
             isolated_checkout(checkout)
@@ -89,11 +89,11 @@ def run(root, workspace, output, engine, environment, run_phase, python_phase, h
             categories["categories"].append(dict(id="test-only-kat2-extra", name="Zusätzliche Testkategorie mit einer besonders langen deutschen Bezeichnung für die datenbasierte Katalogdarstellung", order=50))
             write_json(categories_path,categories)
             content_registry.sync_runtime(checkout)
-            package = fixture.make(workspace/"kat2-adapter-input",identifier="pz-test-direct-mono")
+            package = current_fixture.make(workspace/"kat2-adapter-input",identifier="pz-test-direct-mono")
             value=json.loads((package/"manifest.json").read_bytes())
             value["entry"]["save_slot"]="kat2_adapter"
             value["entry"]["category_id"]=value["metadata"]["category_id"]="test-only-kat2-extra"
-            fixture.approve(package,value)
+            current_fixture.approve(package,value)
             exported=workspace/"kat2-adapter-export"
             python_phase("kat2-adapter-export",lambda:target_adapter.export(package,exported))
             python_phase("kat2-adapter-register",lambda:content_registry.registration(exported,checkout,apply=True))

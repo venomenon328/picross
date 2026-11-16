@@ -242,9 +242,54 @@ func lifecycle_cases() -> void:
 	source.free()
 	capture.free()
 
+func hg31_cases() -> void:
+	var v1 := {"format":"picross-runtime-background-capability-v1", "runtime_format":"picross-runtime-registry-v6", "profile_id":"picross-background-png2304-v1", "enabled":true}
+	var v2 := {"format":"picross-runtime-background-capability-v2", "runtime_format":"picross-runtime-registry-v8", "profile_ids":Registry.BACKGROUND_PROFILES.duplicate(), "enabled":true}
+	check(Registry.validate_capability(registry(entry()), v2, true).is_empty(), "HG31 closed v2 capability")
+	for bad: Dictionary in [{}, {"format":"unknown"}, {"format":v2.format,"runtime_format":v2.runtime_format,"profile_ids":[],"enabled":true}, {"format":v2.format,"runtime_format":v2.runtime_format,"profile_ids":v2.profile_ids,"enabled":1}]:
+		check(not Registry.validate_capability(registry(entry()), bad, true).is_empty(), "HG31 rejects unknown capability " + str(bad))
+	var extra: Dictionary = v2.duplicate(true)
+	extra["profile_id"] = v1.profile_id
+	check(not Registry.validate_capability(registry(entry()), extra, true).is_empty(), "HG31 rejects extra capability fields")
+	extra = v2.duplicate(true)
+	extra.profile_ids.reverse()
+	check(not Registry.validate_capability(registry(entry()), extra, true).is_empty(), "HG31 profile order is closed")
+	check(Background.mipmap_bytes(Vector2i(2304,576)) == 7077844 and Background.mipmap_bytes(Vector2i(2304,768)) == 9437176, "HG31 complete RGBA mip byte counts")
+	for scale: float in [1.0,1.25]:
+		for size: Vector2 in [Vector2(1280,720),Vector2(1920,1080),Vector2(2560,1440),Vector2(3840,2160)]:
+			var paper := Rect2(Vector2.ZERO,size*Vector2(1,1.5))
+			var old: Rect2 = Background.placement(paper,size,scale,4.0)
+			var new: Rect2 = Background.placement(paper,size,scale,3.0)
+			check(is_equal_approx(new.size.x,new.size.y*3.0) and is_equal_approx(old.size.x,new.size.x) and is_equal_approx(new.size.y,old.size.y*4.0/3.0) and new.end.y == old.end.y and new.get_center().x == old.get_center().x,"HG31 same width and bottom anchor with one third more height " + str(size) + "/" + str(scale))
+	var tight: Rect2 = Background.placement(Rect2(0,0,2000,150),Vector2(2000,150),1.0,3.0)
+	check(tight.has_area() and tight.size.x < 1800 and is_equal_approx(tight.size.x,3.0*tight.size.y),"HG31 whole composition fits height bottleneck")
+	var image: Image = Image.create(2304,768,false,Image.FORMAT_RGBA8)
+	image.fill(Color(0.3,0.3,0.3,0.5));image.set_pixel(0,0,Color.TRANSPARENT);image.generate_mipmaps()
+	var texture: ImageTexture = ImageTexture.create_from_image(image)
+	var ink = Background.new()
+	var loader := ControlledLoader.new()
+	ink.backend = loader
+	var old_profiles: Array = Registry.background_profiles.duplicate()
+	Registry.background_profiles = Registry.capability_profiles(v1)
+	ink.begin_visit(entry(),101);loader.finish(texture);ink.publish(101)
+	check(ink.state == "omitted" and ink.diagnostic == "unsupported_texture_profile", "HG31 v1 rejects actual 2304x768 runtime texture")
+	Registry.background_profiles = Registry.capability_profiles(v2)
+	ink.begin_visit(entry(),102);loader.finish(texture);ink.publish(102)
+	check(ink.state == "visible" and ink.snapshot().image_size == Vector2i(2304,768),"HG31 v2 accepts new runtime geometry")
+	ink.begin_visit(entry("pz-background-b"),103)
+	ink.begin_visit(entry(),104)
+	loader.finish(texture);ink._process(0)
+	check(ink.ready_texture == null and ink.snapshot().image_size == Vector2i(2304,576),"HG31 stale 3:1 cannot publish its geometry into new visit")
+	var legacy: Image = Image.create(2304,576,false,Image.FORMAT_RGBA8)
+	legacy.fill(Color(0.3,0.3,0.3,0.5));legacy.generate_mipmaps()
+	loader.finish(ImageTexture.create_from_image(legacy));ink.publish(104)
+	check(ink.state == "visible" and ink.snapshot().image_size == Vector2i(2304,576),"HG31 profile switch returns to 4:1 without stale geometry")
+	ink.free();Registry.background_profiles = old_profiles
+
 func run() -> void:
 	reader_cases()
 	lifecycle_cases()
+	hg31_cases()
 	if failures.is_empty():
 		print("BACKGROUND_TESTS_OK " + JSON.stringify({"checks":checks}))
 		quit(0)

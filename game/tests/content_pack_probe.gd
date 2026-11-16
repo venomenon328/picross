@@ -53,7 +53,8 @@ func backgrounds() -> void:
 		if decoded == null:
 			check(false, "PCK background decoded pixels " + entry.id)
 			continue
-		check(texture.get_size() == Vector2(2304,576) and decoded.get_size() == Vector2i(2304,576), "PCK background PNG2304 dimensions " + entry.id)
+		var size: Vector2i = decoded.get_size()
+		check(size in [Vector2i(2304,576), Vector2i(2304,768)] and texture.get_size() == Vector2(size) and Registry.texture_profile(size) in Registry.background_profiles, "PCK background supported dimensions/capability " + entry.id)
 		var imported_bytes: PackedByteArray = FileAccess.get_file_as_bytes(imported)
 		check(imported_bytes.size() >= 52 and decoded.get_format() == imported_bytes.decode_u32(48) and decoded.get_format() in [Image.FORMAT_LA8, Image.FORMAT_RGBA8], "PCK background format matches actual imported LA8/RGBA8 " + entry.id)
 		check(decoded.has_mipmaps() and decoded.get_mipmap_count() == 11, "PCK background full mipmaps " + entry.id)
@@ -61,6 +62,13 @@ func backgrounds() -> void:
 		# compressed texture are unchanged, including native grayscale-alpha.
 		decoded.convert(Image.FORMAT_RGBA8)
 		var total_bytes: int = decoded.get_data().size()
+		var expected_bytes: int = 0
+		var mip_size: Vector2i = size
+		for level: int in range(12):
+			check(decoded.get_mipmap_offset(level) == expected_bytes, "PCK background mip offset " + entry.id + "/" + str(level))
+			expected_bytes += mip_size.x * mip_size.y * 4
+			mip_size = Vector2i(maxi(1, mip_size.x >> 1), maxi(1, mip_size.y >> 1))
+		check(total_bytes == expected_bytes, "PCK background complete mip buffer " + entry.id)
 		var mipmaps: int = decoded.get_mipmap_count()
 		decoded.clear_mipmaps()
 		var base: PackedByteArray = decoded.get_data()

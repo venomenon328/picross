@@ -198,7 +198,7 @@ Keine Befunde über Aufrufe, Ziele oder Locks hinweg weiterverwenden.
 
 ## PW-PERF-D · Regelquellen und Snapshotgeneration
 
-Authoring 0.8.0 Dokumentrevision 8 führt die aktuellen Integrationsbefehle und Quellen nach RI-ONE ein. Neue geschlossene Generationen: Buildrequest v4, Handoff v5,
+Authoring 0.8.0 Dokumentrevision 9 führt die aktuellen Integrationsbefehle und Quellen nach RI-ONE ein. Neue geschlossene Generationen: Buildrequest v4, Handoff v5,
 Record v4, Buildresult v4. Ihre Felder entsprechen v3/v4/v3/v3; allein rulebook
 hat die folgende neue Form. Producer dispatcht nach Request, Reader nach Handoff/
 Record. Gemischte Generationen sind Fehler. Phasen, zwölf Gates, Freigaben,
@@ -207,7 +207,7 @@ Die kreativen Formen behalten ihre fachliche Semantik. Die Integration nimmt
 ausschließlich den finalen aktuellen Input nach RI-ONE an. Kein unsupported WIP-Migrationsanspruch.
 
 rulebook enthält exakt `format,version,document_revision,source_commit,sources`:
-format `picross-authoring-rulebook-v2`, version `0.8.0`, document_revision 8,
+format `picross-authoring-rulebook-v2`, version `0.8.0`, document_revision 9,
 source_commit volle Git-SHA identisch zum handoff.repo_commit. sources ist eine
 lexikografisch nach path sortierte Liste; je Eintrag exakt `path,file,sha256,bytes`.
 path ist der kanonische Repositorypfad, file exakt `rulebook/` + path; SHA-256 und
@@ -254,12 +254,19 @@ v1 gehört ausschließlich zu alten Originalen, v2 ausschließlich zu Handoff v5
 Negative Paarbefunde, echte Endfreigabe, sämtliche übrigen Bindungen und visuelle
 Q-R04/Q-H01/Q-H02-Gates bleiben unverändert. Keine neue Farbmetrik oder Ausnahmebefugnis.
 
-Rev8 ist ausschließlich über die neue Generation zulässig. Ein alter 0.8-Handoff/
-Request/Record darf keinen Rev8-Einstieg als vermeintlich vollständigen einzelnen
+Rev9 ist ausschließlich über die neue Generation zulässig. Ein alter 0.8-Handoff/
+Request/Record darf keinen Rev9-Einstieg als vermeintlich vollständigen einzelnen
 Snapshot annehmen; für alte 0.8-Formen sind nur damalige Revisionen bis 6 zulässig.
 Ein Wechsel des Versionslabels kann keine fehlenden neuen Quellen legitimieren.
 
 Historische Ansichtsprojektionen behalten ihre frühere reine Datei-/Inventarbindung;
 die neue Header-/Revisionsprüfung wird ihnen nicht nachträglich auferlegt. Der
-Ansichtsreader weist jedoch eine ausdrücklich deklarierte Rev8 unter alter Form
+Ansichtsreader weist jedoch eine ausdrücklich deklarierte Rev9 unter alter Form
 zurück. Neue Ansichten prüfen alle neuen Quellen und Header vollständig.
+
+HG31 erweitert ausschließlich die geschlossenen HP-W2-v2-Profilwerte nach
+[Hintergrund](PUZZLE_BACKGROUNDS.md#hg31--zwei-geschlossene-bildprofile).
+Die Snapshotmenge bleibt exakt acht Dateien, alle sechs Authoringheader Rev9,
+Qualität 1.0/Rev14. Die Stilpräzisierung aus [#671](https://github.com/venomenon328/picross/issues/671)
+bleibt über den tatsächlichen Quellcommit und die vollständigen Dateibytes gebunden;
+sie führt keine neue Authoringgeneration ein. Historische Originale werden nicht neu versiegelt.
