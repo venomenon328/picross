@@ -119,6 +119,8 @@ public static class UpdateHelper {
         Need(task.Wait(timeout)); return task.Result;
     }
     static bool ReadyGo(string nonce) {
+        // Exact wire bytes also on Windows with UTF-8 as the active code page.
+        Console.OutputEncoding=new UTF8Encoding(false);
         Console.Out.NewLine="\n"; Console.WriteLine("READY "+nonce); Console.Out.Flush();
         return BoundedLine(80,1800000)=="GO "+nonce;
     }
