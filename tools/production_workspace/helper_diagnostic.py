@@ -87,6 +87,7 @@ def run(build, output, *, app=PW):
         state = root / 'Zustand ü'
         lock = StateLock(state, app=app); require(lock.acquire(), 'Synthetic state locked')
         runtime = None
+        marker = None
         try:
             if app == PW:
                 configure(repository, state, refs=['main'], launcher=True)
@@ -100,15 +101,17 @@ def run(build, output, *, app=PW):
                 # The native restarted process acquires this same real global marker.
                 from .install_interlock import InstallInterlock
                 marker = InstallInterlock(app=PE); marker.acquire()
+            environment = {**os.environ, 'PYTHONPATH': str(Path(sys.prefix) / 'Lib/site-packages')}
             result = subprocess.run([str(driver), str(detached), str(build / identity['filename']), product['version'],
                                      product['product_code'], product['upgrade_code'], str(state), product['source_commit'],
-                                     str(os.getpid()), app.key, sys.executable, str(Path(__file__).resolve().parents[2])], check=True, capture_output=True, timeout=60)
+                                     str(os.getpid()), app.key, sys._base_executable, str(Path(__file__).resolve().parents[2])], env=environment, capture_output=True, timeout=90)
+            require(result.returncode == 0, result.stderr.decode('utf-8', errors='replace'))
             helper_result = strict_json(result.stdout)
         finally:
             if runtime and runtime.thread:
                 runtime.request_stop(); require(runtime.stopped.wait(10) and not runtime.error, 'Diagnostic drain incomplete')
             lock.close()
-            if app == PE: marker.close()
+            if marker: marker.close()
     try:
         verifier.verify_metadata(raw, signature, app=app)
     except ValueError:

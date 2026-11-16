@@ -838,5 +838,23 @@ class EditorUpdateTests(unittest.TestCase):
             with self.assertRaises(ValueError): selection_data(value)
 
 
+    def test_first_editor_start_and_late_selection_change_cannot_install(self):
+        controller=self.controller(False)
+        with patch.object(client,"discover") as network:
+            controller.skip()  # Same release called by the first manual editor start.
+            controller.choose(True)
+            network.assert_not_called()
+            self.assertTrue(controller.updates.preferences.read())
+        controller.finish()
+        controller=self.controller()
+        handoff=Mock(committed=False,selection=controller.runtime.selection)
+        controller.updates.thread=Mock(); controller.updates.thread.is_alive.return_value=False
+        controller.updates.handoff=handoff
+        self.assertIs(controller.poll(),handoff)
+        controller.select({"checkout":"late","port":"12"})
+        controller.finish()
+        handoff.commit.assert_not_called(); handoff.abort.assert_called()
+
+
 if __name__ == '__main__':
     unittest.main()
