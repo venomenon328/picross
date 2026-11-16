@@ -1,10 +1,10 @@
 {
   "format": "development-ci-plan/v1",
   "issue": "https://github.com/venomenon328/picross/issues/671",
-  "package": "HG-BESTAND-02-INTEGRATION",
+  "package": "HG-BESTAND-02-ABSCHLUSS",
   "modules": [],
-  "purpose": "Eigentümerwahl A1/r01, L3/r02, N2/r01, P1/r02 und G3/r01 für Ankh, Balut, Banane, Birne und Brandenburger Tor als fünf neue 2304×768-Hintergründe übernehmen; Auswahl und zugeordnete Arbeitsbelege für den anschließenden §9-Abschluss sichern.",
-  "omitted": "Reine Hintergrund-Inhaltsgruppe aus #671. Explizite HP-W2-Ableitung/verify, isolierte Sichtung, gezielter Editor-plan/apply, Byte-Readback, fünf No-op-Pläne und Schutzwertvergleich lokal. Keine Logik-/Codeänderung; daher keine Solver-/Proof-/Ratingwiederholung, keine Zusatzmodule und kein Playerbau. Selbstprüfung; separate unabhängige Reviewrunde durch Eigentümerentscheidung entfallen.",
+  "purpose": "Enger Produktionsabschluss nach Schritt 5 §9: genau 211 abgeschlossene HG-BESTAND-02-Arbeitsdateien für Ankh, Balut, Banane, Birne und Brandenburger Tor nach bestätigter Integration cfe11d8063226e2f93d1d378b8196f46a1a27140 entfernen. Aktive Bilder, aktuelle Quellen, echte Nutzungsangaben und Rätseldaten bleiben bytegleich.",
+  "omitted": "Reine Produktionsbereinigung mit eigenem aktuellem Paketplan, modules=[] und evidence.mode=none. retire-production verwendete den bestätigten Mainanker und fünf ausdrücklich zugeordnete ID-relative Arbeitsordner; Wiederholung no-op. Alle 1664 übrigen Dateien vor Planänderung bytegleich, darunter die fünf aktiven PNGs, Registry, Runtime, Reveals und Arbeitsindex. Keine Code-, Test-, Regel- oder gemeinsamen Spielassetänderungen; kein Playerbau und keine zusätzliche Fachtestsuite.",
   "test_changes": [],
   "core_change": null,
   "evidence": {
