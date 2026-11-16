@@ -1,0 +1,254 @@
+{
+  "base": "62401382f58adc2e3d303b19c1ecb1f1dc8a5040",
+  "product_source_head": "ff828466405af3278e447f7de27b61e6ab13a496",
+  "environment": {
+    "python": "3.13.14",
+    "pillow": "12.3.0",
+    "platform": "Windows 11, same machine and interpreter"
+  },
+  "cases": [
+    {
+      "case": "mono",
+      "before_seconds": {
+        "export": 0.367126900004223,
+        "plan": 1.126439500018023,
+        "write": 17.81587489999947,
+        "completion": 2.613920000003418
+      },
+      "after_seconds": {
+        "export": 0.11974709999049082,
+        "plan": 0.12595250000595115,
+        "write": 1.160966700001154,
+        "completion": 0.5421367000089958
+      },
+      "before_total": 21.923361300025135,
+      "after_total": 1.948803000006592,
+      "unchanged_runtime_fields": {
+        "category_id": true,
+        "definition": true,
+        "difficulty": true,
+        "id": true,
+        "key": true,
+        "name": true,
+        "reveal": true,
+        "save_slot": true,
+        "visible": true
+      }
+    },
+    {
+      "case": "one-color",
+      "before_seconds": {
+        "export": 0.40189760000794195,
+        "plan": 1.2809173999994528,
+        "write": 18.079267099994468,
+        "completion": 2.5074118999764323
+      },
+      "after_seconds": {
+        "export": 0.11856050000642426,
+        "plan": 0.12386749999132007,
+        "write": 1.1470367000147235,
+        "completion": 0.5412605000019539
+      },
+      "before_total": 22.269493999978295,
+      "after_total": 1.9307252000144217,
+      "unchanged_runtime_fields": {
+        "category_id": true,
+        "definition": true,
+        "difficulty": true,
+        "id": true,
+        "key": true,
+        "name": true,
+        "reveal": true,
+        "save_slot": true,
+        "visible": true
+      }
+    }
+  ],
+  "limits": [
+    "Single observation per synthetic input, not a speed guarantee.",
+    "Both target catalogs start empty; observed unrelated archive reads are zero in both runs. T01 separately traps unrelated archives on current plan/write/no-op/batch/resume.",
+    "Fixture production, difficulty analysis and proof normalization outside timed calls. Current verifier still checks the final proof.",
+    "Old legacy-standard background is represented by explicit standard in current input. Added timestamps differ because registration happens at different times."
+  ],
+  "file_accesses": {
+    "before": {
+      "events": 16637,
+      "unique_paths": 756,
+      "by_phase": [
+        {
+          "phase": "mono/completion",
+          "event": "open",
+          "count": 162
+        },
+        {
+          "phase": "mono/completion",
+          "event": "os.scandir",
+          "count": 121
+        },
+        {
+          "phase": "mono/export",
+          "event": "open",
+          "count": 315
+        },
+        {
+          "phase": "mono/export",
+          "event": "os.scandir",
+          "count": 86
+        },
+        {
+          "phase": "mono/plan",
+          "event": "open",
+          "count": 670
+        },
+        {
+          "phase": "mono/plan",
+          "event": "os.listdir",
+          "count": 1
+        },
+        {
+          "phase": "mono/plan",
+          "event": "os.scandir",
+          "count": 114
+        },
+        {
+          "phase": "mono/write",
+          "event": "open",
+          "count": 4661
+        },
+        {
+          "phase": "mono/write",
+          "event": "os.scandir",
+          "count": 2199
+        },
+        {
+          "phase": "one-color/completion",
+          "event": "open",
+          "count": 156
+        },
+        {
+          "phase": "one-color/completion",
+          "event": "os.scandir",
+          "count": 121
+        },
+        {
+          "phase": "one-color/export",
+          "event": "open",
+          "count": 312
+        },
+        {
+          "phase": "one-color/export",
+          "event": "os.scandir",
+          "count": 86
+        },
+        {
+          "phase": "one-color/plan",
+          "event": "open",
+          "count": 664
+        },
+        {
+          "phase": "one-color/plan",
+          "event": "os.scandir",
+          "count": 114
+        },
+        {
+          "phase": "one-color/write",
+          "event": "open",
+          "count": 4656
+        },
+        {
+          "phase": "one-color/write",
+          "event": "os.scandir",
+          "count": 2199
+        }
+      ],
+      "unrelated_archive_reads_observed": 0
+    },
+    "after": {
+      "events": 2639,
+      "unique_paths": 117,
+      "by_phase": [
+        {
+          "phase": "mono/completion",
+          "event": "open",
+          "count": 86
+        },
+        {
+          "phase": "mono/completion",
+          "event": "os.scandir",
+          "count": 2
+        },
+        {
+          "phase": "mono/export",
+          "event": "open",
+          "count": 124
+        },
+        {
+          "phase": "mono/export",
+          "event": "os.scandir",
+          "count": 1
+        },
+        {
+          "phase": "mono/plan",
+          "event": "open",
+          "count": 139
+        },
+        {
+          "phase": "mono/plan",
+          "event": "os.scandir",
+          "count": 3
+        },
+        {
+          "phase": "mono/write",
+          "event": "open",
+          "count": 960
+        },
+        {
+          "phase": "mono/write",
+          "event": "os.scandir",
+          "count": 5
+        },
+        {
+          "phase": "one-color/completion",
+          "event": "open",
+          "count": 86
+        },
+        {
+          "phase": "one-color/completion",
+          "event": "os.scandir",
+          "count": 2
+        },
+        {
+          "phase": "one-color/export",
+          "event": "open",
+          "count": 124
+        },
+        {
+          "phase": "one-color/export",
+          "event": "os.scandir",
+          "count": 1
+        },
+        {
+          "phase": "one-color/plan",
+          "event": "open",
+          "count": 138
+        },
+        {
+          "phase": "one-color/plan",
+          "event": "os.scandir",
+          "count": 3
+        },
+        {
+          "phase": "one-color/write",
+          "event": "open",
+          "count": 960
+        },
+        {
+          "phase": "one-color/write",
+          "event": "os.scandir",
+          "count": 5
+        }
+      ],
+      "unrelated_archive_reads_observed": 0
+    }
+  }
+}

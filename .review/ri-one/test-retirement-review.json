@@ -1,0 +1,582 @@
+[
+  {
+    "path": "tests/puzzle_production/test_background_adoption_readonly.py",
+    "reason": "Old background adoption work bundles and completed receipts; current no-op plus separate editor operation tested in current consumers.",
+    "cases": [
+      "test_old_valid_state_rejects_without_writer_and_regular_adopt_remains_available",
+      "test_complete_selected_and_none_targets_have_exact_native_noop_without_writes",
+      "test_native_work_bundle_and_pending_transaction_guards_remain_mandatory",
+      "test_target_changed_back_to_old_during_replay_cannot_start_an_adoption",
+      "test_readonly_option_is_an_explicit_boolean"
+    ],
+    "base": "62401382f58adc2e3d303b19c1ecb1f1dc8a5040",
+    "restorable": true
+  },
+  {
+    "path": "tests/puzzle_production/test_background_catalog_boundary.py",
+    "reason": "v6 target-generation and forged legacy dispatch; current capability and current input checked in current integration.",
+    "cases": [
+      "test_unavailable_target_rejects_v6_before_catalog_capture_or_full_replay",
+      "test_unavailable_target_cli_plan_register_and_update_reject_before_mutation",
+      "test_direct_export_entry_cannot_discard_background_binding",
+      "test_forged_v6_catalog_header_is_rejected_by_quick_full_and_sync_apis",
+      "test_forged_v6_catalog_header_is_rejected_by_check_and_sync_cli",
+      "test_retirement_apis_and_cli_reject_forged_v6_before_deleting_sources"
+    ],
+    "base": "62401382f58adc2e3d303b19c1ecb1f1dc8a5040",
+    "restorable": true
+  },
+  {
+    "path": "tests/puzzle_production/test_background_change.py",
+    "reason": "Old immutable image work family, store and origin contexts; separate current editor image operation has editor/current-consumer tests.",
+    "cases": [
+      "test_selected_none_selected_and_further_revision_keep_identity_receipt_and_exact_noop",
+      "test_none_to_selected_and_none_to_none_rejection",
+      "test_closed_work_record_inventory_roots_and_types",
+      "test_work_extra_file_alias_missing_authorization_and_stale_index_are_rejected",
+      "test_plan_hash_does_not_authorize_forged_text_or_incomplete_bundle",
+      "test_capability_missing_false_invalid_and_changed_plan_stop_before_mutation",
+      "test_changed_work_after_lock_is_detected_before_active_mutation",
+      "test_missing_work_cannot_publish_and_noop_after_removal_requires_main_proof",
+      "test_store_explicit_immutable_family_noop_and_conflict_preserve_other_rows",
+      "test_published_plan_fsync_failure_reports_actual_owned_remaining_path",
+      "test_published_work_fsync_failure_reports_partial_publication_without_index_row",
+      "test_cli_actual_plan_adopt_and_duplicate_option_error"
+    ],
+    "base": "62401382f58adc2e3d303b19c1ecb1f1dc8a5040",
+    "restorable": true
+  },
+  {
+    "path": "tests/puzzle_production/test_background_change_consumers.py",
+    "reason": "Old v2/v6 image source generation cross-product; current consumers exercise image, method, rating and date.",
+    "cases": [
+      "test_rating_added_method_and_sync_keep_background_and_bind_new_plan_generations",
+      "test_legacy_raster_update_and_reveal_adoption_keep_background_bytes",
+      "test_background_target_requires_authorized_current_bindings",
+      "test_capability_byte_change_stales_each_new_saved_plan_before_writes",
+      "test_saved_v2_reveal_plan_allows_false_capability_but_never_acquires_background_scope",
+      "test_new_source_revision_stales_all_existing_metadata_and_legacy_reveal_plans"
+    ],
+    "base": "62401382f58adc2e3d303b19c1ecb1f1dc8a5040",
+    "restorable": true
+  },
+  {
+    "path": "tests/puzzle_production/test_background_change_retirement.py",
+    "reason": "Receipt/history based image retirement; current completion covers selected multi-phase deletion and foreign preservation.",
+    "cases": [
+      "test_current_cleanup_and_post_cleanup_plan_noop_preserve_active_bytes",
+      "test_superseded_cleanup_keeps_newer_open_work_and_never_fetches_old_images",
+      "test_original_cleanup_preserves_changed_source_and_independent_work",
+      "test_planned_only_main_record_and_unmerged_main_argument_never_authorize_cleanup",
+      "test_historical_source_without_its_actual_live_output_is_not_adoption_proof",
+      "test_full_batch_and_foreign_work_are_preflighted_before_any_deletion",
+      "test_equal_revision_with_another_adoption_is_not_a_successor",
+      "test_partial_io_failure_reports_remaining_paths_and_keeps_active_bytes",
+      "test_late_foreign_index_is_preserved_and_reported_as_partial_failure",
+      "test_authoring_writer_lock_blocks_cleanup_before_any_deletion",
+      "test_late_foreign_empty_directory_is_preserved",
+      "test_cli_dispatch_uses_explicit_revision_and_main_commit"
+    ],
+    "base": "62401382f58adc2e3d303b19c1ecb1f1dc8a5040",
+    "restorable": true
+  },
+  {
+    "path": "tests/puzzle_production/test_background_change_transactions.py",
+    "reason": "Historical nullable binary journal versions; editor change retains binary transaction tests.",
+    "cases": [
+      "test_new_format_validates_actual_add_replace_delete_pngs",
+      "test_nulls_equal_sides_wrong_targets_and_old_formats_are_closed",
+      "test_metadata_dimensions_crc_and_hash_cannot_stand_in_for_png_validation",
+      "test_base64_padding_only_at_end_even_when_hash_and_length_match",
+      "test_only_explicit_binary_wire_prefix_gets_larger_journal_limit",
+      "test_all_transitions_commit_runtime_last_and_preserve_unrelated_sources",
+      "test_every_forward_phase_and_repeated_recovery_restore_exact_old_bytes",
+      "test_foreign_bytes_or_missing_nonnullable_binary_preserve_pending_state",
+      "test_rollback_uses_current_v2_image_and_preserves_full_original_package",
+      "test_add_and_restore_never_replace_a_late_foreign_file",
+      "test_work_callback_and_300_second_budget_fail_before_mutation",
+      "test_process_kill_and_rekill_recover_both_nullable_directions"
+    ],
+    "base": "62401382f58adc2e3d303b19c1ecb1f1dc8a5040",
+    "restorable": true
+  },
+  {
+    "path": "tests/puzzle_production/test_background_source.py",
+    "reason": "v2 retained origin authority; current source has identity and active image only.",
+    "cases": [
+      "test_real_selected_and_none_work_keep_initial_receipt_and_project_current",
+      "test_compact_v2_rejects_forged_origin_target_current_and_authority_shapes",
+      "test_rehashed_foreign_context_cannot_replace_retained_real_authority",
+      "test_none_change_requires_retained_context_even_with_a_real_candidate_waiver"
+    ],
+    "base": "62401382f58adc2e3d303b19c1ecb1f1dc8a5040",
+    "restorable": true
+  },
+  {
+    "path": "tests/puzzle_production/test_background_consumers.py",
+    "reason": "Historical source/rating compatibility combinations; current consumers replace this contract.",
+    "cases": [
+      "test_rating_added_method_and_sync_keep_background_and_bind_new_plan_generations",
+      "test_legacy_raster_update_and_reveal_adoption_keep_background_bytes",
+      "test_background_target_requires_authorized_current_bindings",
+      "test_capability_byte_change_stales_each_new_saved_plan_before_writes",
+      "test_saved_v2_reveal_plan_allows_false_capability_but_never_acquires_background_scope"
+    ],
+    "base": "62401382f58adc2e3d303b19c1ecb1f1dc8a5040",
+    "restorable": true
+  },
+  {
+    "path": "tests/puzzle_production/test_background_rebind.py",
+    "reason": "v6 package-preserving rebind combinations; separate editor current tests retain raster/reveal/background meaning.",
+    "cases": [
+      "test_v6_update_preserves_exact_choice_and_rejects_combined_change",
+      "test_explicit_none_v1_and_v2_allow_both_rebind_operations",
+      "test_selected_raster_reveal_background_order_and_noops",
+      "test_none_receipt_background_reveal_raster_and_retirement",
+      "test_current_metadata_survives_category_changing_source_v4_and_retirement",
+      "test_reveal_journal_rollback_foreign_bytes_and_old_scope",
+      "test_rehashed_source_history_and_mixed_mutation_are_rejected",
+      "test_update_journal_recovery_and_rebind_stale_saved_plans",
+      "test_reveal_plan_rechecked_under_lock_and_receipt_stales_noop"
+    ],
+    "base": "62401382f58adc2e3d303b19c1ecb1f1dc8a5040",
+    "restorable": true
+  },
+  {
+    "path": "tests/puzzle_production/test_background_retirement.py",
+    "reason": "Receipt/current source generation retirement; current completion has main-bound result and byte preservation.",
+    "cases": [
+      "test_selected_and_none_keep_source_runtime_rights_and_exact_noop",
+      "test_live_source_index_asset_notice_and_main_changes_block_before_deletion",
+      "test_open_or_unknown_authoring_siblings_block_even_when_on_main",
+      "test_staged_source_and_unknown_package_file_block_before_deletion",
+      "test_receipt_v1_downgrade_origin_change_and_source_change_are_rejected",
+      "test_partial_io_error_reports_actual_remaining_work_without_success",
+      "test_foreign_changes_after_preflight_are_preserved_before_replacement"
+    ],
+    "base": "62401382f58adc2e3d303b19c1ecb1f1dc8a5040",
+    "restorable": true
+  },
+  {
+    "path": "tests/puzzle_production/test_background_transactions.py",
+    "reason": "Historical v6/v8/v10 production-package transactions; current integration tests current journals and capability.",
+    "cases": [
+      "test_selected_none_sources_and_phased_publication",
+      "test_capability_change_at_every_global_boundary_preserves_state",
+      "test_none_and_foreign_background_namespace_cannot_hide_unbound_bytes",
+      "test_package_source_and_runtime_interruptions_have_repeatable_rollback",
+      "test_new_staging_recovery_binds_capability_and_keeps_foreign_bytes",
+      "test_existing_background_png_is_a_retained_authority",
+      "test_ri_b_binds_background_addition_and_exact_zip_limit_through_writer",
+      "test_historical_v6_journal_accepts_only_inactive_false_capability",
+      "test_only_exact_declared_original_gets_128_mib_inventory_allowance"
+    ],
+    "base": "62401382f58adc2e3d303b19c1ecb1f1dc8a5040",
+    "restorable": true
+  },
+  {
+    "path": "tests/puzzle_production/test_catalog_added.py",
+    "reason": "Legacy registry/journal date generations; current direct date values preserved and current consumers tested.",
+    "cases": [
+      "test_read_only_registration_plan_then_timestamp_and_repeat_noop",
+      "test_strict_dates_schema_namespace_and_no_fallback",
+      "test_historical_plan_separate_apply_durable_provenance_and_exact_repeat",
+      "test_history_accepts_current_metadata_with_deleted_origin_category",
+      "test_historical_crash_recovery_foreign_guard_and_stale_plan",
+      "test_retained_metadata_in_new_plan_and_repeat_planning",
+      "test_direct_priority_conflict_and_never_visible_unknown",
+      "test_legacy_v3_journal_recovers_directly_to_v4",
+      "test_missing_unknown_survives_sync_without_clock"
+    ],
+    "base": "62401382f58adc2e3d303b19c1ecb1f1dc8a5040",
+    "restorable": true
+  },
+  {
+    "path": "tests/puzzle_production/test_catalog_background.py",
+    "reason": "Original archive/source background integration variants; current integration tests selected/none/standard.",
+    "cases": [
+      "test_selected_and_none_real_plan_registration_and_repeat_preserve_originals",
+      "test_closed_source_rejects_type_identity_rights_and_proof_binding_changes",
+      "test_first_background_preserves_existing_legacy_entry_and_projects_legacy",
+      "test_none_live_files_and_changed_source_cannot_fall_back_to_legacy",
+      "test_late_external_selection_has_the_same_compact_authority",
+      "test_runtime_capability_is_active_with_unchanged_strict_shape",
+      "test_single_outer_zip_root_keeps_the_original_package_paths"
+    ],
+    "base": "62401382f58adc2e3d303b19c1ecb1f1dc8a5040",
+    "restorable": true
+  },
+  {
+    "path": "tests/puzzle_production/test_catalog_integration.py",
+    "reason": "Producer-bound rating imports and old catalog registration; current input and current rating consumer tests.",
+    "cases": [
+      "test_priority_no_fallback_and_unchanged_original_sources",
+      "test_new_registration_requires_checked_complete_input_before_mutation",
+      "test_prepared_journal_bounds_repeated_projection_and_preserves_live_guards",
+      "test_recovery_rechecks_foreign_source_after_unchanged_target",
+      "test_nested_schema_types_hashes_and_source_attacks",
+      "test_candidate_remapping_matches_final_export_before_editorial_approval",
+      "test_rebind_preserves_original_rating_source_and_no_op_revision",
+      "test_full_import_rejects_corrupt_bundle_and_remapped_proof_mismatch",
+      "test_repeat_from_runtime_only_has_same_rating_identity",
+      "test_explicit_multiple_ids_keeps_unrated_and_error_rows",
+      "test_stalled_and_budget_abort_remain_unrated_never_five",
+      "test_report_adoption_preserves_definitions_manifests_saves_and_noop",
+      "test_report_keeps_missing_input_and_existing_rating",
+      "test_preview_selection_and_stale_adoption_reject_before_mutation",
+      "test_adoption_crashes_recover_every_publication_phase_without_sync",
+      "test_recovery_preserves_foreign_sidecar_report_and_journal",
+      "test_sync_recovery_from_stale_runtime_is_immediately_valid",
+      "test_recovery_can_resume_its_own_interruption",
+      "test_work_paths_and_sidecar_aliases_are_rejected",
+      "test_cli_requires_explicit_selection_and_supports_checked_plan"
+    ],
+    "base": "62401382f58adc2e3d303b19c1ecb1f1dc8a5040",
+    "restorable": true
+  },
+  {
+    "path": "tests/puzzle_production/test_catalog_metadata.py",
+    "reason": "Migration and old full-index generations; editor/current consumers test current metadata and category changes.",
+    "cases": [
+      "test_view_resolves_current_metadata_without_definition_image_or_proof_reads",
+      "test_view_rejects_pending_publication_and_racing_indexes",
+      "test_strict_metadata_table_has_no_historical_fallback",
+      "test_plan_is_read_only_and_edit_changes_only_registry_projection",
+      "test_repeated_identical_edit_and_empty_plan_preserve_bytes_and_mtimes",
+      "test_noop_rejects_publication_appearing_after_final_source_guard",
+      "test_real_cli_plan_apply_and_invalid_request_preserve_source_bytes",
+      "test_category_creation_rename_assignment_and_empty_deletion",
+      "test_occupied_category_requires_other_target_and_preserves_historical_origin",
+      "test_migration_is_explicit_lossless_and_idempotent",
+      "test_legacy_mutations_stop_with_migration_instruction",
+      "test_stale_plan_preserves_foreign_sources_and_unknown_namespace",
+      "test_edit_after_planning_makes_first_plan_stale",
+      "test_migration_and_combined_category_delete_recover_without_mixed_state",
+      "test_foreign_recovery_target_and_tampered_plan_are_not_overwritten",
+      "test_category_and_puzzle_value_boundaries_reject_before_mutation"
+    ],
+    "base": "62401382f58adc2e3d303b19c1ecb1f1dc8a5040",
+    "restorable": true
+  },
+  {
+    "path": "tests/puzzle_production/test_catalog_reveal.py",
+    "reason": "Legacy source work/adoption generations; current editor tests current reveal operation.",
+    "cases": [
+      "test_first_second_revision_readonly_plan_historical_noop_and_mtimes",
+      "test_image_adoption_and_recovery_do_not_upgrade_valid_v2_or_v3_runtime",
+      "test_approval_notice_and_plan_tampering_rejected_without_mutation",
+      "test_unregistered_namespace_and_hardlinks_block_all_entrypoints",
+      "test_strict_json_boundaries",
+      "test_first_after_cleanup_and_later_revision_keep_receipt_and_export_anchor",
+      "test_revision_retirement_preserves_active_bytes_sibling_and_exact_noop",
+      "test_revision_retirement_also_leaves_full_original_package_unchanged",
+      "test_revision_retirement_rejects_unstaged_chmod_without_any_mutation",
+      "test_revision_retirement_rejects_foreign_stale_partial_and_unmerged_sources_before_mutation",
+      "test_cleanup_after_revision_keeps_record_bytes_and_stales_saved_plan",
+      "test_raster_rebind_retains_active_image_notice_approvals_and_added",
+      "test_full_snapshot_binds_unselected_package_files_and_absence",
+      "test_record_approval_notice_types_and_boundaries",
+      "test_linked_checkout_root_is_not_silently_resolved",
+      "test_sd_added_and_sync_preserve_at_and_invalidate_old_plans"
+    ],
+    "base": "62401382f58adc2e3d303b19c1ecb1f1dc8a5040",
+    "restorable": true
+  },
+  {
+    "path": "tests/puzzle_production/test_catalog_review.py",
+    "reason": "Historical report adoption generation matrix; current consumers test current preview/adoption and rollback.",
+    "cases": [
+      "test_r1_01_mode_change_cannot_rebind_active_rating",
+      "test_r1_02_orphan_is_not_missing_with_legacy_fallback",
+      "test_r1_03_repeated_adoption_after_category_sync_is_stale",
+      "test_namespace_rejects_misplaced_and_unknown_sources_at_every_entry",
+      "test_orphan_appearing_during_transaction_blocks_recovery_and_keeps_bytes",
+      "test_real_repeat_is_read_only_after_changed_projection_and_with_reports",
+      "test_context_is_explicit_and_legacy_cannot_acquire_a_mode_by_rebind",
+      "test_repeated_adoption_after_valid_registry_sync_is_stale",
+      "test_standalone_cli_requires_mode_and_rejects_switch_before_output",
+      "test_legacy_report_requires_migration_but_bound_recovery_and_noops_remain",
+      "test_namespace_rejects_links_without_following_them"
+    ],
+    "base": "62401382f58adc2e3d303b19c1ecb1f1dc8a5040",
+    "restorable": true
+  },
+  {
+    "path": "tests/puzzle_production/test_categories_adapter.py",
+    "reason": "Historical export snapshot category authority; current input and metadata tests validate current categories.",
+    "cases": [
+      "test_extra_category_two_inputs_and_name_change_without_code_lists",
+      "test_missing_unknown_multiple_and_conflicting_export_category",
+      "test_tampered_category_snapshot_and_reference_fail_before_mutation",
+      "test_current_target_category_required_and_stale_projection_blocks",
+      "test_direct_registry_edit_cannot_override_bound_category",
+      "test_frozen_v1_replays_and_new_export_preserves_sealed_approval_bytes",
+      "test_rollback_crash_recovery_and_old_journal_block",
+      "test_category_source_races_and_recovery_preserve_foreign_edits",
+      "test_cli_category_input_report_and_no_default",
+      "test_category_change_after_either_index_write_preserves_journal_until_resolved"
+    ],
+    "base": "62401382f58adc2e3d303b19c1ecb1f1dc8a5040",
+    "restorable": true
+  },
+  {
+    "path": "tests/puzzle_production/test_content_update.py",
+    "reason": "Re-registration as old export update; current editor raster change replaces that removed entry point.",
+    "cases": [
+      "test_fixture_copies_are_isolated_in_both_directions",
+      "test_plan_is_read_only_and_update_preserves_identity_old_package_other_entry_and_saves",
+      "test_changed_logic_requires_new_rating_and_metadata_rebind_preserves_original",
+      "test_prepared_update_preserves_metadata_after_original_category_deletion",
+      "test_rejects_stale_revision_slot_category_reveal_and_occupied_package_without_writes",
+      "test_normal_failures_restore_exact_old_bytes",
+      "test_crash_recovery_restores_updated_definition_and_indices",
+      "test_foreign_changes_block_recovery_before_any_mutation",
+      "test_update_from_completed_compact_receipt",
+      "test_recovery_rejects_tampered_notice_backup_without_mutation"
+    ],
+    "base": "62401382f58adc2e3d303b19c1ecb1f1dc8a5040",
+    "restorable": true
+  },
+  {
+    "path": "tests/puzzle_production/test_catalog_images.py",
+    "reason": "Migration from legacy image sources and old image editor path; current editor tests current sources.",
+    "cases": [
+      "test_view_and_explicit_migration_are_read_only_lossless_and_noop",
+      "test_detail_reads_only_current_indices_and_selected_definition_sources",
+      "test_migration_crash_before_with_and_after_journal_rolls_back_and_replans",
+      "test_manual_edit_requires_explicit_runtime_migration",
+      "test_combined_format_roundtrip_uses_detached_input_and_preserves_identity",
+      "test_legacy_first_preferences_all_transitions_and_selected_replacement",
+      "test_stale_metadata_and_inactive_reveal_absence_are_not_overwritten",
+      "test_closed_bundle_rejects_modified_bytes_extras_and_rehashed_preview",
+      "test_repeat_rejects_rehashed_old_previews_and_another_bound_decision",
+      "test_repeat_migration_rejects_fabricated_old_runtime_and_v7_editor_sources",
+      "test_repeated_background_transitions_keep_ref_only_notices_valid",
+      "test_pending_publication_blocks_view_plan_and_noop_apply",
+      "test_invalid_requests_and_prepared_inputs_fail_before_mutation",
+      "test_binary_create_remove_replace_and_combined_publication_roll_back",
+      "test_recovery_preserves_foreign_binary_and_its_pending_journal",
+      "test_fresh_path_checks_reject_new_links_case_aliases_and_hardlinks",
+      "test_json_reuse_is_exact_bounded_detached_and_ends_with_operation",
+      "test_method_reuse_reopens_all_bound_inputs_and_detects_equal_mtime_change"
+    ],
+    "base": "62401382f58adc2e3d303b19c1ecb1f1dc8a5040",
+    "restorable": true
+  },
+  {
+    "path": "tests/puzzle_production/test_catalog_raster.py",
+    "reason": "Old original package-preserving raster writer; current editor tests raster revision and proof.",
+    "cases": [
+      "test_text_errors_positions_and_clues",
+      "test_logical_noop_is_byte_mtime_identical_and_never_analyzes",
+      "test_checked_dimension_change_and_combined_metadata_image",
+      "test_raster_preserves_manual_images_and_historical_registration",
+      "test_stale_and_unprovable_edit_do_not_mutate_checkout",
+      "test_interrupted_definition_publication_rolls_back",
+      "test_verified_manual_retirement_keeps_live_proof_and_sync"
+    ],
+    "base": "62401382f58adc2e3d303b19c1ecb1f1dc8a5040",
+    "restorable": true
+  },
+  {
+    "path": "tests/puzzle_production/test_editor_image_source.py",
+    "reason": "Old origin forms and image migration admission; current source validation and editor tests replace this.",
+    "cases": [
+      "test_format_switch_preserves_receipt_definition_origin_and_true_noop",
+      "test_closed_sources_reject_rehashed_wrong_bindings_and_manual_claims",
+      "test_legacy_background_all_transitions_keep_actual_production_receipt",
+      "test_explicit_standard_needs_no_enabled_capability_and_broken_capability_is_error",
+      "test_manual_then_real_at_then_raster_rebind_retains_adoption_definition",
+      "test_notice_is_exact_bounded_and_does_not_invent_a_time",
+      "test_productive_promotion_preserves_real_hp_source_and_old_adoption",
+      "test_old_background_at_prefix_remains_real_after_manual_format_switch",
+      "test_productive_svg_retirement_and_batch_bind_the_actual_active_file"
+    ],
+    "base": "62401382f58adc2e3d303b19c1ecb1f1dc8a5040",
+    "restorable": true
+  },
+  {
+    "path": "tests/puzzle_production/test_retirement_current.py",
+    "reason": "v4 receipt compaction and legacy namespace checks; current completion deletes explicit associated work with no receipt.",
+    "cases": [
+      "test_explicit_completed_phases_preserve_live_sources_and_repeat_without_archives",
+      "test_completed_phase_selection_is_required_and_explicit",
+      "test_completed_selection_rejects_foreign_unknown_alias_and_overlapping_paths",
+      "test_completed_selections_require_original_main_bytes_rows_and_file_sets",
+      "test_cli_retires_explicit_completed_phases_and_work",
+      "test_current_preferences_png_svg_original_anchor_and_noop",
+      "test_v6_original_rights_and_distinct_import_source",
+      "test_unrelated_file_reads_and_inventories_are_forbidden",
+      "test_missing_rights_open_unindexed_staged_and_current_main_block",
+      "test_same_mtime_changes_and_partial_delete_are_not_hidden",
+      "test_editor_raster_v2_is_live_authority_and_not_compacted",
+      "test_unknown_main_and_global_identity_collision_block_all_ids",
+      "test_current_source_revision_and_hash_bindings_are_checked"
+    ],
+    "base": "62401382f58adc2e3d303b19c1ecb1f1dc8a5040",
+    "restorable": true
+  },
+  {
+    "path": "tests/puzzle_production/test_integrated_content.py",
+    "reason": "Historical receipt creation on completion; current completion tests actual main delivery and protected data.",
+    "cases": [
+      "test_lifecycle",
+      "test_unmerged_bytes_block_before_deletion",
+      "test_deleted_input_blocks_before_deletion",
+      "test_staged_work_blocks_even_if_worktree_matches_main",
+      "test_receipt_runtime_notice_and_metadata_tampering"
+    ],
+    "base": "62401382f58adc2e3d303b19c1ecb1f1dc8a5040",
+    "restorable": true
+  },
+  {
+    "path": "tests/puzzle_production/test_integration_batch.py",
+    "reason": "v1 legacy export/rating/bg-store integration route; current v2 actual run/resume tested.",
+    "cases": [
+      "test_two_real_registrations_plan_sequentially_and_final_resume_is_readonly",
+      "test_booked_background_before_later_register_uses_one_current_snapshot",
+      "test_unbooked_native_registration_is_confirmed_without_a_second_apply",
+      "test_missing_optional_inputs_and_decisions_remain_explicit_before_writers",
+      "test_all_declared_originals_are_checked_before_the_first_writer",
+      "test_closed_forms_reject_invalid_json_identity_paths_and_budgets_without_writes",
+      "test_native_staging_and_pending_require_separate_recovery_before_resume",
+      "test_successful_prefix_survives_a_later_native_collision",
+      "test_partial_native_store_preserves_foreign_bytes_and_stops_later_jobs",
+      "test_successor_cannot_overtake_or_remove_unbooked_real_background_publication",
+      "test_successor_cannot_remove_a_real_partial_store_with_remaining_paths",
+      "test_consumed_apply_cannot_be_refilled_by_rename_or_another_workroot"
+    ],
+    "base": "62401382f58adc2e3d303b19c1ecb1f1dc8a5040",
+    "restorable": true
+  },
+  {
+    "path": "tests/puzzle_production/test_integration_batch_guards.py",
+    "reason": "Old export bundle/generation transport fixtures; current input and actual batch run/resume tested; current ledger guards remain in implementation.",
+    "cases": [
+      "test_transport_corruption_is_a_closed_error_including_unhashable_values",
+      "test_checkout_lock_excludes_different_workroots_and_unsafe_aliases",
+      "test_safe_shared_tool_target_roots_and_unsafe_source_hardlinks",
+      "test_unbooked_foreign_export_is_preserved_and_fresh_export_spends_own_allowance",
+      "test_unanchored_forged_adopt_result_never_certifies_the_old_target",
+      "test_result_anchor_crash_inside_a_prereserved_group_uses_fresh_readers",
+      "test_successor_checkpoint_crash_finishes_only_the_unexecuted_plan_transition",
+      "test_external_anchor_rejects_byte_changed_and_truncated_result_history",
+      "test_changed_reached_target_retains_historical_success_without_any_repair",
+      "test_register_apply_preserves_separate_native_budget_frames"
+    ],
+    "base": "62401382f58adc2e3d303b19c1ecb1f1dc8a5040",
+    "restorable": true
+  },
+  {
+    "path": "tests/puzzle_production/test_ke_recovery.py",
+    "reason": "Recovery generations v1-v4 and old rating hulls are explicitly removed.",
+    "cases": [
+      "test_active_at_source_blocks_frozen_registration_and_update",
+      "test_unbound_difficulty_blocks_exact_legacy_journals_without_mutation",
+      "test_orphan_difficulty_blocks_legacy_recovery_before_mutation",
+      "test_legacy_registration_early_and_advanced_and_real_update",
+      "test_each_recovery_resumes_after_its_own_v3_write",
+      "test_rejects_versions_noncanonical_and_foreign_bytes_before_any_write",
+      "test_own_intermediate_does_not_authorize_a_foreign_v3_projection"
+    ],
+    "base": "62401382f58adc2e3d303b19c1ecb1f1dc8a5040",
+    "restorable": true
+  },
+  {
+    "path": "tests/puzzle_production/test_reveal_recovery.py",
+    "reason": "Historical registration/update/metadata recovery generation matrix removed; current and editor recovery retained.",
+    "cases": [
+      "test_all_forward_phases_and_repeated_recovery_preserve_original_bytes",
+      "test_foreign_binary_text_lock_and_temp_block_before_rollback_mutation",
+      "test_hard_kill_and_rekill_use_real_processes_and_same_journal",
+      "test_multiple_ids_every_binary_text_and_recovery_boundary",
+      "test_partial_journal_and_foreign_phase_are_preserved",
+      "test_pre_at_registration_generations_keep_exact_wire_contracts",
+      "test_pre_at_update_generations_restore_exact_old_package_and_source",
+      "test_metadata_generations_keep_exact_wire_contracts",
+      "test_journal_dispatch_and_base64_canonicality",
+      "test_exact_limit_dispatch_before_json_decode_and_large_binary_chunks",
+      "test_two_real_png_sides_at_32_mib_and_aggregate_limit_before_decode",
+      "test_cli_memory_abort_and_nested_plan_types_have_controlled_status",
+      "test_invalid_registry_types_stop_before_namespace_or_package_access",
+      "test_real_kill_cannot_leave_unverifiable_package_prefix"
+    ],
+    "base": "62401382f58adc2e3d303b19c1ecb1f1dc8a5040",
+    "restorable": true
+  },
+  {
+    "path": "tests/puzzle_production/test_sd2_catalog.py",
+    "reason": "Historical method/report/export source matrices; current consumers cover method activation, both ratings, direct reads and rollback; rating algorithms unchanged.",
+    "cases": [
+      "test_checked_import_is_closed_and_keeps_frozen_result",
+      "test_nested_negative_data_and_old_envelopes_are_closed",
+      "test_preview_adoption_mixed_history_noop_bytes_and_timestamps",
+      "test_rebind_retains_analysis_and_rejects_mode_matrix_and_identity",
+      "test_aborted_attempt_preserves_active_rating_and_records_reason",
+      "test_activation_is_explicit_stale_safe_and_exact_repeat",
+      "test_active_method_controls_new_registration_but_not_historical_values",
+      "test_new_source_invalidates_preview_before_mutation_and_noop",
+      "test_adoption_and_activation_rollback_resume_and_foreign_guard",
+      "test_legacy_report_cannot_claim_sd2_and_old_recovery_stays_closed",
+      "test_cli_candidate_import_rebind_new_production_and_explicit_all_preview",
+      "test_at_added_and_cleanup_preserve_mixed_authorities_without_analysis",
+      "test_default_path_alias_invalid_data_and_work_output_are_fail_closed",
+      "test_added_history_adoption_binds_sd2_and_default",
+      "test_historical_metadata_rebind_then_new_logic_mixed_catalog_and_recovery",
+      "test_old_sync_rejects_v5_but_retains_opaque_stale_recovery",
+      "test_oversized_definition_stops_before_analysis_output",
+      "test_required_r4_import_and_unproved_prefix_stay_distinct",
+      "test_exact_runtime_method_matrix_and_all_five_labels",
+      "test_both_method_hashes_remain_pinned"
+    ],
+    "base": "62401382f58adc2e3d303b19c1ecb1f1dc8a5040",
+    "restorable": true
+  },
+  {
+    "path": "tests/puzzle_production/test_registration_verification.py",
+    "reason": "Old producer replay/context admission removed; current independent proof and source freshness tests.",
+    "cases": [
+      "test_positive_two_full_checks_and_phased_guards_plan_noop",
+      "test_staging_bytes_approval_inventory_and_same_byte_exchange",
+      "test_source_journal_method_and_external_pass_cannot_reuse",
+      "test_lifetime_process_thread_copy_and_failed_replay",
+      "test_checked_source_exchange_and_written_package_readback",
+      "test_error_abort_and_crash_recovery_never_use_context"
+    ],
+    "base": "62401382f58adc2e3d303b19c1ecb1f1dc8a5040",
+    "restorable": true
+  },
+  {
+    "path": "tests/puzzle_production/test_registration_publication.py",
+    "reason": "v1-v10 generations and production-package publication removed; current journal, fresh dependencies, runtime-last and recovery tests.",
+    "cases": [
+      "test_every_full_boundary_preserves_foreign_bytes_and_exact_phase",
+      "test_target_temp_staging_parent_and_phase_changes_stop_locally",
+      "test_guards_are_outside_file_loops_runtime_last_and_recovery_independent",
+      "test_valid_but_wrong_phase_bytes_and_changed_staged_source",
+      "test_new_text_race_remains_atomic_no_replace",
+      "test_valid_empty_rollback_namespaces_do_not_block_next_registration",
+      "test_interruptions_staging_and_repeated_recovery",
+      "test_controlled_deadlines_at_stage_lock_file_and_commit_boundaries",
+      "test_recovery_foreign_global_and_local_bytes_never_get_relabelled",
+      "test_real_kill_then_rekill_and_signal_keep_same_recoverable_journal",
+      "test_current_and_legacy_dispatch_is_explicit",
+      "test_new_registration_replays_only_new_export_and_guards_old_bytes",
+      "test_all_text_and_retained_authorities_and_absences_are_fresh",
+      "test_complete_namespaces_and_actual_freeze_sources",
+      "test_generated_v10_mixed_slim_sources_no_old_replay_and_noop",
+      "test_none_current_choice_and_empty_transport_exception_are_precise",
+      "test_package_runtime_and_staging_recover_v10_with_fresh_conflict_guards",
+      "test_unknown_generation_rejects_and_unrelated_damage_is_not_certified",
+      "test_new_input_and_unknown_empty_directory_reject_without_mutation",
+      "test_every_declared_registration_generation_has_an_explicit_route",
+      "test_unrelated_files_have_zero_reads_hashes_decodes_and_no_catalog_copy",
+      "test_historical_v9_recovery_remains_full_and_separate",
+      "test_closed_index_delta_and_new_target_collisions",
+      "test_v10_foreign_phase_temp_parent_and_source_are_preserved",
+      "test_new_background_package_on_v8_ignores_unrelated_background_files"
+    ],
+    "base": "62401382f58adc2e3d303b19c1ecb1f1dc8a5040",
+    "restorable": true
+  }
+]

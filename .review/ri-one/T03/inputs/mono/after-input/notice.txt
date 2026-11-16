@@ -1,0 +1,3 @@
+Production ID: pz-ri-one-mono
+Artwork: Test fixture code
+Usage basis: Repository-owned synthetic test pixels; not a catalog asset

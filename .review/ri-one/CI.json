@@ -1,0 +1,621 @@
+{
+  "conclusion": "success",
+  "createdAt": "2026-11-16T02:17:30Z",
+  "databaseId": 43791259380,
+  "headSha": "ff828466405af3278e447f7de27b61e6ab13a496",
+  "jobs": [
+    {
+      "completedAt": "2026-11-16T02:17:47Z",
+      "conclusion": "success",
+      "databaseId": 133049968066,
+      "name": "docs",
+      "startedAt": "2026-11-16T02:17:33Z",
+      "status": "completed",
+      "steps": [
+        {
+          "completedAt": "2026-11-16T02:17:34Z",
+          "conclusion": "success",
+          "name": "Set up job",
+          "number": 1,
+          "startedAt": "2026-11-16T02:17:33Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-11-16T02:17:34Z",
+          "conclusion": "success",
+          "name": "Start soft CI clock",
+          "number": 2,
+          "startedAt": "2026-11-16T02:17:34Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-11-16T02:17:44Z",
+          "conclusion": "success",
+          "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "number": 3,
+          "startedAt": "2026-11-16T02:17:34Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-11-16T02:17:44Z",
+          "conclusion": "success",
+          "name": "Validate this package and its test lifecycle",
+          "number": 4,
+          "startedAt": "2026-11-16T02:17:44Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-11-16T02:17:45Z",
+          "conclusion": "success",
+          "name": "Small core contract regression",
+          "number": 5,
+          "startedAt": "2026-11-16T02:17:44Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-11-16T02:17:45Z",
+          "conclusion": "success",
+          "name": "Document and source integrity",
+          "number": 6,
+          "startedAt": "2026-11-16T02:17:45Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-11-16T02:17:46Z",
+          "conclusion": "success",
+          "name": "Reject generated archive classes without size caps",
+          "number": 7,
+          "startedAt": "2026-11-16T02:17:45Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-11-16T02:17:46Z",
+          "conclusion": "success",
+          "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "number": 14,
+          "startedAt": "2026-11-16T02:17:46Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-11-16T02:17:46Z",
+          "conclusion": "success",
+          "name": "Complete job",
+          "number": 15,
+          "startedAt": "2026-11-16T02:17:46Z",
+          "status": "completed"
+        }
+      ],
+      "url": "https://github.com/venomenon328/picross/actions/runs/43791259380/job/133049968066"
+    },
+    {
+      "completedAt": "2026-11-16T02:19:04Z",
+      "conclusion": "success",
+      "databaseId": 133050060050,
+      "name": "verify (player)",
+      "startedAt": "2026-11-16T02:17:49Z",
+      "status": "completed",
+      "steps": [
+        {
+          "completedAt": "2026-11-16T02:17:51Z",
+          "conclusion": "success",
+          "name": "Set up job",
+          "number": 1,
+          "startedAt": "2026-11-16T02:17:50Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-11-16T02:17:51Z",
+          "conclusion": "success",
+          "name": "Require actual successful core checks",
+          "number": 2,
+          "startedAt": "2026-11-16T02:17:51Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-11-16T02:18:01Z",
+          "conclusion": "success",
+          "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "number": 3,
+          "startedAt": "2026-11-16T02:17:51Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-11-16T02:18:01Z",
+          "conclusion": "success",
+          "name": "Resolve the same source-bound module selection",
+          "number": 4,
+          "startedAt": "2026-11-16T02:18:01Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-11-16T02:18:13Z",
+          "conclusion": "success",
+          "name": "Restore verified official toolchain archives",
+          "number": 5,
+          "startedAt": "2026-11-16T02:18:01Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-11-16T02:18:17Z",
+          "conclusion": "success",
+          "name": "Install image dependency only for selected modules",
+          "number": 6,
+          "startedAt": "2026-11-16T02:18:13Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-11-16T02:18:17Z",
+          "conclusion": "skipped",
+          "name": "Install pinned cryptography only for selected tools regressions",
+          "number": 7,
+          "startedAt": "2026-11-16T02:18:17Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-11-16T02:18:17Z",
+          "conclusion": "skipped",
+          "name": "Install SSH tooling only for delivery verification",
+          "number": 8,
+          "startedAt": "2026-11-16T02:18:17Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-11-16T02:18:55Z",
+          "conclusion": "success",
+          "name": "Build Windows when required, run modules and verify originals",
+          "number": 9,
+          "startedAt": "2026-11-16T02:18:17Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-11-16T02:18:55Z",
+          "conclusion": "skipped",
+          "name": "Save verified official archives",
+          "number": 10,
+          "startedAt": "2026-11-16T02:18:55Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-11-16T02:19:03Z",
+          "conclusion": "success",
+          "name": "Upload the playable Windows application",
+          "number": 11,
+          "startedAt": "2026-11-16T02:18:55Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-11-16T02:19:03Z",
+          "conclusion": "skipped",
+          "name": "Upload only requested and unexpired review or failure evidence",
+          "number": 12,
+          "startedAt": "2026-11-16T02:19:03Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-11-16T02:19:03Z",
+          "conclusion": "success",
+          "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "number": 24,
+          "startedAt": "2026-11-16T02:19:03Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-11-16T02:19:03Z",
+          "conclusion": "success",
+          "name": "Complete job",
+          "number": 25,
+          "startedAt": "2026-11-16T02:19:03Z",
+          "status": "completed"
+        }
+      ],
+      "url": "https://github.com/venomenon328/picross/actions/runs/43791259380/job/133050060050"
+    },
+    {
+      "completedAt": "2026-11-16T02:18:22Z",
+      "conclusion": "success",
+      "databaseId": 133050060067,
+      "name": "verify (production.catalog)",
+      "startedAt": "2026-11-16T02:17:50Z",
+      "status": "completed",
+      "steps": [
+        {
+          "completedAt": "2026-11-16T02:17:53Z",
+          "conclusion": "success",
+          "name": "Set up job",
+          "number": 1,
+          "startedAt": "2026-11-16T02:17:51Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-11-16T02:17:54Z",
+          "conclusion": "success",
+          "name": "Require actual successful core checks",
+          "number": 2,
+          "startedAt": "2026-11-16T02:17:53Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-11-16T02:18:09Z",
+          "conclusion": "success",
+          "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "number": 3,
+          "startedAt": "2026-11-16T02:17:54Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-11-16T02:18:09Z",
+          "conclusion": "success",
+          "name": "Resolve the same source-bound module selection",
+          "number": 4,
+          "startedAt": "2026-11-16T02:18:09Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-11-16T02:18:09Z",
+          "conclusion": "skipped",
+          "name": "Restore verified official toolchain archives",
+          "number": 5,
+          "startedAt": "2026-11-16T02:18:09Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-11-16T02:18:13Z",
+          "conclusion": "success",
+          "name": "Install image dependency only for selected modules",
+          "number": 6,
+          "startedAt": "2026-11-16T02:18:09Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-11-16T02:18:13Z",
+          "conclusion": "skipped",
+          "name": "Install pinned cryptography only for selected tools regressions",
+          "number": 7,
+          "startedAt": "2026-11-16T02:18:13Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-11-16T02:18:13Z",
+          "conclusion": "skipped",
+          "name": "Install SSH tooling only for delivery verification",
+          "number": 8,
+          "startedAt": "2026-11-16T02:18:13Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-11-16T02:18:19Z",
+          "conclusion": "success",
+          "name": "Build Windows when required, run modules and verify originals",
+          "number": 9,
+          "startedAt": "2026-11-16T02:18:13Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-11-16T02:18:19Z",
+          "conclusion": "skipped",
+          "name": "Save verified official archives",
+          "number": 10,
+          "startedAt": "2026-11-16T02:18:19Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-11-16T02:18:19Z",
+          "conclusion": "skipped",
+          "name": "Upload the playable Windows application",
+          "number": 11,
+          "startedAt": "2026-11-16T02:18:19Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-11-16T02:18:19Z",
+          "conclusion": "skipped",
+          "name": "Upload only requested and unexpired review or failure evidence",
+          "number": 12,
+          "startedAt": "2026-11-16T02:18:19Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-11-16T02:18:19Z",
+          "conclusion": "success",
+          "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "number": 24,
+          "startedAt": "2026-11-16T02:18:19Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-11-16T02:18:19Z",
+          "conclusion": "success",
+          "name": "Complete job",
+          "number": 25,
+          "startedAt": "2026-11-16T02:18:19Z",
+          "status": "completed"
+        }
+      ],
+      "url": "https://github.com/venomenon328/picross/actions/runs/43791259380/job/133050060067"
+    },
+    {
+      "completedAt": "2026-11-16T02:19:22Z",
+      "conclusion": "success",
+      "databaseId": 133050060110,
+      "name": "verify (tools)",
+      "startedAt": "2026-11-16T02:17:50Z",
+      "status": "completed",
+      "steps": [
+        {
+          "completedAt": "2026-11-16T02:17:52Z",
+          "conclusion": "success",
+          "name": "Set up job",
+          "number": 1,
+          "startedAt": "2026-11-16T02:17:50Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-11-16T02:17:52Z",
+          "conclusion": "success",
+          "name": "Require actual successful core checks",
+          "number": 2,
+          "startedAt": "2026-11-16T02:17:52Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-11-16T02:18:03Z",
+          "conclusion": "success",
+          "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "number": 3,
+          "startedAt": "2026-11-16T02:17:52Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-11-16T02:18:03Z",
+          "conclusion": "success",
+          "name": "Resolve the same source-bound module selection",
+          "number": 4,
+          "startedAt": "2026-11-16T02:18:03Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-11-16T02:18:03Z",
+          "conclusion": "skipped",
+          "name": "Restore verified official toolchain archives",
+          "number": 5,
+          "startedAt": "2026-11-16T02:18:03Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-11-16T02:18:07Z",
+          "conclusion": "success",
+          "name": "Install image dependency only for selected modules",
+          "number": 6,
+          "startedAt": "2026-11-16T02:18:03Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-11-16T02:18:09Z",
+          "conclusion": "success",
+          "name": "Install pinned cryptography only for selected tools regressions",
+          "number": 7,
+          "startedAt": "2026-11-16T02:18:07Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-11-16T02:18:09Z",
+          "conclusion": "skipped",
+          "name": "Install SSH tooling only for delivery verification",
+          "number": 8,
+          "startedAt": "2026-11-16T02:18:09Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-11-16T02:19:20Z",
+          "conclusion": "success",
+          "name": "Build Windows when required, run modules and verify originals",
+          "number": 9,
+          "startedAt": "2026-11-16T02:18:09Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-11-16T02:19:20Z",
+          "conclusion": "skipped",
+          "name": "Save verified official archives",
+          "number": 10,
+          "startedAt": "2026-11-16T02:19:20Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-11-16T02:19:20Z",
+          "conclusion": "skipped",
+          "name": "Upload the playable Windows application",
+          "number": 11,
+          "startedAt": "2026-11-16T02:19:20Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-11-16T02:19:20Z",
+          "conclusion": "skipped",
+          "name": "Upload only requested and unexpired review or failure evidence",
+          "number": 12,
+          "startedAt": "2026-11-16T02:19:20Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-11-16T02:19:20Z",
+          "conclusion": "success",
+          "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "number": 24,
+          "startedAt": "2026-11-16T02:19:20Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-11-16T02:19:20Z",
+          "conclusion": "success",
+          "name": "Complete job",
+          "number": 25,
+          "startedAt": "2026-11-16T02:19:20Z",
+          "status": "completed"
+        }
+      ],
+      "url": "https://github.com/venomenon328/picross/actions/runs/43791259380/job/133050060110"
+    },
+    {
+      "completedAt": "2026-11-16T02:20:03Z",
+      "conclusion": "success",
+      "databaseId": 133050060340,
+      "name": "verify (production.adapter)",
+      "startedAt": "2026-11-16T02:17:49Z",
+      "status": "completed",
+      "steps": [
+        {
+          "completedAt": "2026-11-16T02:17:51Z",
+          "conclusion": "success",
+          "name": "Set up job",
+          "number": 1,
+          "startedAt": "2026-11-16T02:17:50Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-11-16T02:17:51Z",
+          "conclusion": "success",
+          "name": "Require actual successful core checks",
+          "number": 2,
+          "startedAt": "2026-11-16T02:17:51Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-11-16T02:17:59Z",
+          "conclusion": "success",
+          "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "number": 3,
+          "startedAt": "2026-11-16T02:17:51Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-11-16T02:18:00Z",
+          "conclusion": "success",
+          "name": "Resolve the same source-bound module selection",
+          "number": 4,
+          "startedAt": "2026-11-16T02:17:59Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-11-16T02:18:00Z",
+          "conclusion": "skipped",
+          "name": "Restore verified official toolchain archives",
+          "number": 5,
+          "startedAt": "2026-11-16T02:18:00Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-11-16T02:18:04Z",
+          "conclusion": "success",
+          "name": "Install image dependency only for selected modules",
+          "number": 6,
+          "startedAt": "2026-11-16T02:18:00Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-11-16T02:18:04Z",
+          "conclusion": "skipped",
+          "name": "Install pinned cryptography only for selected tools regressions",
+          "number": 7,
+          "startedAt": "2026-11-16T02:18:04Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-11-16T02:18:04Z",
+          "conclusion": "skipped",
+          "name": "Install SSH tooling only for delivery verification",
+          "number": 8,
+          "startedAt": "2026-11-16T02:18:04Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-11-16T02:20:02Z",
+          "conclusion": "success",
+          "name": "Build Windows when required, run modules and verify originals",
+          "number": 9,
+          "startedAt": "2026-11-16T02:18:04Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-11-16T02:20:02Z",
+          "conclusion": "skipped",
+          "name": "Save verified official archives",
+          "number": 10,
+          "startedAt": "2026-11-16T02:20:02Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-11-16T02:20:02Z",
+          "conclusion": "skipped",
+          "name": "Upload the playable Windows application",
+          "number": 11,
+          "startedAt": "2026-11-16T02:20:02Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-11-16T02:20:02Z",
+          "conclusion": "skipped",
+          "name": "Upload only requested and unexpired review or failure evidence",
+          "number": 12,
+          "startedAt": "2026-11-16T02:20:02Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-11-16T02:20:02Z",
+          "conclusion": "success",
+          "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "number": 24,
+          "startedAt": "2026-11-16T02:20:02Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-11-16T02:20:02Z",
+          "conclusion": "success",
+          "name": "Complete job",
+          "number": 25,
+          "startedAt": "2026-11-16T02:20:02Z",
+          "status": "completed"
+        }
+      ],
+      "url": "https://github.com/venomenon328/picross/actions/runs/43791259380/job/133050060340"
+    },
+    {
+      "completedAt": "2026-11-16T02:20:11Z",
+      "conclusion": "success",
+      "databaseId": 133050794982,
+      "name": "ci-required",
+      "startedAt": "2026-11-16T02:20:06Z",
+      "status": "completed",
+      "steps": [
+        {
+          "completedAt": "2026-11-16T02:20:07Z",
+          "conclusion": "success",
+          "name": "Set up job",
+          "number": 1,
+          "startedAt": "2026-11-16T02:20:07Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-11-16T02:20:09Z",
+          "conclusion": "success",
+          "name": "Require the core and every requested source-bound execution part",
+          "number": 2,
+          "startedAt": "2026-11-16T02:20:07Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-11-16T02:20:09Z",
+          "conclusion": "success",
+          "name": "Complete job",
+          "number": 3,
+          "startedAt": "2026-11-16T02:20:09Z",
+          "status": "completed"
+        }
+      ],
+      "url": "https://github.com/venomenon328/picross/actions/runs/43791259380/job/133050794982"
+    }
+  ],
+  "status": "completed",
+  "updatedAt": "2026-11-16T02:20:12Z",
+  "url": "https://github.com/venomenon328/picross/actions/runs/43791259380"
+}

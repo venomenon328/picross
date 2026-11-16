@@ -1,0 +1,4039 @@
+{
+  "status": "no-op",
+  "entries": 62,
+  "source_head": "ff828466405af3278e447f7de27b61e6ab13a496",
+  "seconds": 30.522640400013188,
+  "all_bytes_and_mtimes_equal": true,
+  "files": {
+    "content/categories.json": {
+      "sha256": "1f07150672b22cafba0b08175acb4130377edd6d096dd29bccbc5ea7f723cd70",
+      "mtime_ns": 1794787533017541500,
+      "bytes": 1312
+    },
+    "content/difficulty-method.json": {
+      "sha256": "215f544dc4e6b02fa7fa87031d9d6db8a95f32cc38dfd5c68c98476510aea8a2",
+      "mtime_ns": 1794787533017541500,
+      "bytes": 365
+    },
+    "content/registry.json": {
+      "sha256": "179c7c09b3d94ec1028ca4e6fadf640cf47ac62caa2e155e4eca6d1ad5b10c35",
+      "mtime_ns": 1794793326206826300,
+      "bytes": 34706
+    },
+    "game/export_presets.cfg": {
+      "sha256": "5fdc7f81a2ebfacf09dcae5bfa7bb8d3494b259c7f712a35f657a577acf41822",
+      "mtime_ns": 1794787534152647200,
+      "bytes": 1723
+    },
+    "game/main.tscn": {
+      "sha256": "e34634142aa3fa66ef903dc9de7517daa7735a1e50df47d1238795e725ac3d6e",
+      "mtime_ns": 1794787534214347500,
+      "bytes": 159
+    },
+    "game/project.godot": {
+      "sha256": "cd1a917360eddb036d317a29bec78b8cf54eff92b6eb5eb2f8cf7bc1b9dba8bc",
+      "mtime_ns": 1794787534228548500,
+      "bytes": 439
+    },
+    "game/README.md": {
+      "sha256": "a3d62710b188fb4456154d05c5f8c7ffdd583a3db30311da6004cfa42e2f631b",
+      "mtime_ns": 1794787533523359300,
+      "bytes": 36533
+    },
+    "game/book/binding.gd": {
+      "sha256": "794991d7088657c31d274a60ef1c595b688ebaf3efa3a552fa2715c484a1f76b",
+      "mtime_ns": 1794787534065395300,
+      "bytes": 7640
+    },
+    "game/book/catalog.gd": {
+      "sha256": "98fecddb58a2736b71ffdfc0ec5a1694e0094759c3eb9b1f28f2115f851866e3",
+      "mtime_ns": 1794787534065903800,
+      "bytes": 8831
+    },
+    "game/book/content.gd": {
+      "sha256": "8122ad9c76e06aa48962b4818030eade909f399383b7dbac2f94f6ceaa6d0ec5",
+      "mtime_ns": 1794787534066411600,
+      "bytes": 17884
+    },
+    "game/book/fold.gdshaderinc": {
+      "sha256": "07f65313990ce5be2b2d0d19342d4f0d1f3512c0ed50e62b8c36a173ad43acfd",
+      "mtime_ns": 1794787534066926700,
+      "bytes": 830
+    },
+    "game/book/information.gd": {
+      "sha256": "afe5165936518bc5724aa69061871aaf5ecc9ca2ecd0e4baaab4a760a4888b62",
+      "mtime_ns": 1794787534067441400,
+      "bytes": 5498
+    },
+    "game/book/information_routes.gd": {
+      "sha256": "3826dcf7ad91a8b8afaf66e9c9fe83b157488ecb89755f2acffa38395e1eccef",
+      "mtime_ns": 1794787534067441400,
+      "bytes": 9189
+    },
+    "game/book/leather.json": {
+      "sha256": "e24de01610422872733237041fead2bf7cd06a30ef361a4568f0b1db5d63cbf4",
+      "mtime_ns": 1794787534068445900,
+      "bytes": 1992
+    },
+    "game/book/leather.png": {
+      "sha256": "58372a4329973e3ad308fde17ab5bc77148d7f724e55671e540bb5344f8e0f41",
+      "mtime_ns": 1794787534085642400,
+      "bytes": 4089216
+    },
+    "game/book/leather.png.import": {
+      "sha256": "6fa76d3a270ac361b4719d1d46731785b467bb0534091a05f0708ecd243540df",
+      "mtime_ns": 1794787534086670700,
+      "bytes": 929
+    },
+    "game/book/main.gd": {
+      "sha256": "a09ded9778f7a0c2f2648072ea01c8115510f982361c6986f8da7026ce81551d",
+      "mtime_ns": 1794787534086670700,
+      "bytes": 19227
+    },
+    "game/book/marginalia.gd": {
+      "sha256": "d8d70813308c624befa0cf26e45bffd79f52f0161f4836a8135c7f0a40542913",
+      "mtime_ns": 1794787534088206400,
+      "bytes": 4169
+    },
+    "game/book/material.gdshader": {
+      "sha256": "320da479e53e2f0346fbaa618f70143d1965c6e7735aa7c4be16bcb02e1e3595",
+      "mtime_ns": 1794787534088719600,
+      "bytes": 2217
+    },
+    "game/book/page.gdshader": {
+      "sha256": "378fa58cb3928aa1f25a12523e6b56148845429fd0fc0ef99149923c8f10fa27",
+      "mtime_ns": 1794787534089232700,
+      "bytes": 3114
+    },
+    "game/book/paper.json": {
+      "sha256": "4b03745631543dadf1be83021e64b7fba6dcfe63befb829b143849e7ed386986",
+      "mtime_ns": 1794787534089232700,
+      "bytes": 2000
+    },
+    "game/book/paper.png": {
+      "sha256": "1af9f61957619d7cea98b69021688b0b78997d84baf93698c9f02dcbb866362f",
+      "mtime_ns": 1794787534100555100,
+      "bytes": 2564246
+    },
+    "game/book/paper.png.import": {
+      "sha256": "795991150e809dd08a0b97f0595afd323393f1da9c54bf5746070c68d2e54f28",
+      "mtime_ns": 1794787534101067900,
+      "bytes": 541
+    },
+    "game/book/puzzle_background.gd": {
+      "sha256": "9710d04cf9ea4571555c686069de9cd86fb8ffd02d667606b5402e36d5f64d44",
+      "mtime_ns": 1794787534101581500,
+      "bytes": 6190
+    },
+    "game/book/puzzle_background_loader.gd": {
+      "sha256": "03846eb85579a6e3adc3546c7a4e5cb18df5a862c423d9c8f37b79f82e2bd513",
+      "mtime_ns": 1794787534101581500,
+      "bytes": 1543
+    },
+    "game/book/puzzle_background_web.gd": {
+      "sha256": "376d32c355b67eb982e316d95647feba5dc476cb525e4c48fe97496642d56f90",
+      "mtime_ns": 1794787534102588300,
+      "bytes": 3425
+    },
+    "game/book/surface.gd": {
+      "sha256": "075bdbe28745ae518a61fdd499a5134fef965a6071b6729474ffc08ae9cd6953",
+      "mtime_ns": 1794787534102588300,
+      "bytes": 422
+    },
+    "game/book/table.json": {
+      "sha256": "854e5483aa1c43036fc5ee53432f839573dc51ad74c3a84154366a444fe41827",
+      "mtime_ns": 1794787534103753000,
+      "bytes": 2587
+    },
+    "game/book/table.png": {
+      "sha256": "5b02fe08710efb47df7b23307f460035aebaa3fa411e846b4a06558cc79678da",
+      "mtime_ns": 1794787534116370600,
+      "bytes": 3203044
+    },
+    "game/book/table.png.import": {
+      "sha256": "53c06887843f622e44f706aab91d2f88aa5970873245521e6127909a2eee6584",
+      "mtime_ns": 1794787534117392600,
+      "bytes": 922
+    },
+    "game/data/background-capability.json": {
+      "sha256": "255c88ff3975f17daabb3452bae9e0a31e62a9d0540df36e0c2d3d44b6219630",
+      "mtime_ns": 1794787534117904100,
+      "bytes": 161
+    },
+    "game/data/registry.json": {
+      "sha256": "ccce1c5d6d91dc33d1392a8698ea358b3826c1ed0d072e2e53e2e51038560879",
+      "mtime_ns": 1794787534152647200,
+      "bytes": 35538
+    },
+    "game/full_view_study/catalog.gd": {
+      "sha256": "82da9ba8f98c30f30d5fc83b4e7ba9d1a481dd8290ca44d718a39c276b226e37",
+      "mtime_ns": 1794787534212749500,
+      "bytes": 1509
+    },
+    "game/full_view_study/catalog.json": {
+      "sha256": "88a539c2383c32c1950a62d00bba05ad9c2eea2323508e9cb38db2f3376e0ddc",
+      "mtime_ns": 1794787534213834300,
+      "bytes": 1385
+    },
+    "game/full_view_study/save_store.gd": {
+      "sha256": "66381bfcac622212340000ef4dfc36aa8b9855d5a535e478caab1ee0bace3442",
+      "mtime_ns": 1794787534214347500,
+      "bytes": 297
+    },
+    "game/model/catalog_difficulty.gd": {
+      "sha256": "7a77b61b294f38791c3c2eca8d0a9da371f676337eb72119ea3d7d9f9a7a0c1b",
+      "mtime_ns": 1794787534218493800,
+      "bytes": 3346
+    },
+    "game/model/catalog_filter.gd": {
+      "sha256": "6b38fade717e5aab93b71894d8ea1857e53915127424186cd9ac288668158a06",
+      "mtime_ns": 1794787534218493800,
+      "bytes": 2541
+    },
+    "game/model/catalog_preference.gd": {
+      "sha256": "8163543ea9d07dfc5127590889fa5a48a59214e010d78b1df09bd590f7a7f480",
+      "mtime_ns": 1794787534219499900,
+      "bytes": 2391
+    },
+    "game/model/clue_completion.gd": {
+      "sha256": "874cf7b849d3652bbafce9b45a331150450cc24d668488c4e25d83dc63634eda",
+      "mtime_ns": 1794787534219499900,
+      "bytes": 3264
+    },
+    "game/model/content_registry.gd": {
+      "sha256": "af6ab864b355780e0542e1d21fd6edd39fa77d58b4a84317d08828344a892b82",
+      "mtime_ns": 1794787534220655700,
+      "bytes": 13217
+    },
+    "game/model/definition.gd": {
+      "sha256": "3ce0736ff3141396421cc76800c9a3bf3130a216deee4ec1fe5cc555c4281e4a",
+      "mtime_ns": 1794787534221168500,
+      "bytes": 5937
+    },
+    "game/model/definition.gd.uid": {
+      "sha256": "ad57995cf9d546751255d1e371f1efb939ff077f48663e2eb02a812b0f60c672",
+      "mtime_ns": 1794787534221690100,
+      "bytes": 19
+    },
+    "game/model/display_policy.gd": {
+      "sha256": "4caa61bde17e081e9cca3084cb894b34c8bbd86f70f6e74cd351a5eb009ca531",
+      "mtime_ns": 1794787534221690100,
+      "bytes": 1462
+    },
+    "game/model/display_preference.gd": {
+      "sha256": "b7cba47f4ffa59bba9d6289860d98fc908fb4c9779a193dc0bb73f988571adfa",
+      "mtime_ns": 1794787534222697200,
+      "bytes": 4079
+    },
+    "game/model/gesture.gd": {
+      "sha256": "1677342eeed02a1b9ddf1f4547d2e998d3949c299a71b3c3d5293bf978781801",
+      "mtime_ns": 1794787534222697200,
+      "bytes": 2858
+    },
+    "game/model/gesture.gd.uid": {
+      "sha256": "2be64cf1a1948b6d5c1d52351b6523ccbbf083c20b085373f3b964a161b6dcf2",
+      "mtime_ns": 1794787534222697200,
+      "bytes": 20
+    },
+    "game/model/player.gd": {
+      "sha256": "659d52a100d81017bcbd2cf3e2b2323c16d69a4551b6cf60836bfe9b35b2a82b",
+      "mtime_ns": 1794787534224079800,
+      "bytes": 1310
+    },
+    "game/model/player.gd.uid": {
+      "sha256": "2500998e632d89f8512ea99e1ac30857b43bf219ac87405785b443d5422a6c05",
+      "mtime_ns": 1794787534224731600,
+      "bytes": 20
+    },
+    "game/model/recent_puzzle.gd": {
+      "sha256": "109010bb97cd7abaf812ed6694b056d715d5bdb7e45ad97b838ea7de2bd21d5d",
+      "mtime_ns": 1794787534224731600,
+      "bytes": 8085
+    },
+    "game/model/save_revision.gd": {
+      "sha256": "9d8e93de9fd1900d17bd6ce7f28d1e99585252aaca321d5513e9ab24f43474ff",
+      "mtime_ns": 1794787534225751900,
+      "bytes": 11305
+    },
+    "game/model/save_store.gd": {
+      "sha256": "63c56063e95fffa5a334fb3cbd8bdb0ccf69307987f59c87a8900a89cf35a83d",
+      "mtime_ns": 1794787534226268500,
+      "bytes": 16419
+    },
+    "game/model/session.gd": {
+      "sha256": "dc1768a610cf4de0e89a0c0ecd4290e76e71b91b80e5b5c613761339ad9b5e71",
+      "mtime_ns": 1794787534226268500,
+      "bytes": 2145
+    },
+    "game/model/session.gd.uid": {
+      "sha256": "45e5ca01873d8cb081b065fe6c949a7e4948fa341f43f70a7ac8d196aee3a55e",
+      "mtime_ns": 1794787534227272900,
+      "bytes": 20
+    },
+    "game/model/web_storage.gd": {
+      "sha256": "12fda08a95a0db5869a8fc33f02b18311bc9b1251b7a04649b9d8d43077ce9ef",
+      "mtime_ns": 1794787534227272900,
+      "bytes": 575
+    },
+    "game/study/board.gd": {
+      "sha256": "485f1d66a24ac4e832f5429946c9f6181535230a789a2dce1b3af726ac41fa22",
+      "mtime_ns": 1794787534228548500,
+      "bytes": 1509
+    },
+    "game/study/fonts.gd": {
+      "sha256": "fdeb3c877e8d56a58b8444a27d2693acd7311270d5431a69f9aab99ac37bae9d",
+      "mtime_ns": 1794787534229553100,
+      "bytes": 2955
+    },
+    "game/study/main.gd": {
+      "sha256": "a95e65301571d08367b72f295a1dcf16ec295c77ad8a91e86d81549382a2de93",
+      "mtime_ns": 1794787534232554600,
+      "bytes": 5115
+    },
+    "game/study/main.tscn": {
+      "sha256": "c798b35c95cf8dcf5c795c6606e546e0185f5b0a8e2e6e7fdb81bc60b193abe4",
+      "mtime_ns": 1794787534232554600,
+      "bytes": 275
+    },
+    "game/study/marks.gd": {
+      "sha256": "322d611d9106818bba180f58c20c4832458e33370454bb2ff516d561ec065388",
+      "mtime_ns": 1794787534233664600,
+      "bytes": 106
+    },
+    "game/study/numerals.gd": {
+      "sha256": "22c77476e2073a9f1c9b3cd064944a3df61774ab4e4257a7296f3e93a1682ae8",
+      "mtime_ns": 1794787534234176900,
+      "bytes": 1135
+    },
+    "game/study/samples.gd": {
+      "sha256": "b625521ba868108cd414f4598f87985462795e43a762974fba4c360aebaadebe",
+      "mtime_ns": 1794787534234690600,
+      "bytes": 700
+    },
+    "game/tests/at_alpha.gd": {
+      "sha256": "54cd70337e3da465ede2269e9331baeb31fc4d58a3875675e582d962049e2fdf",
+      "mtime_ns": 1794787534235714700,
+      "bytes": 3093
+    },
+    "game/tests/at_pack.gd": {
+      "sha256": "c4ec6cbd21bd99b959a23def8ba8bbde1a584fb22602b50dec574f730065827a",
+      "mtime_ns": 1794787534236226200,
+      "bytes": 5268
+    },
+    "game/tests/background_tests.gd": {
+      "sha256": "34a9c4c0878f0be1a35a0b66250f95f95af62c91f322586d162a08cf0b9f76d5",
+      "mtime_ns": 1794787534236736800,
+      "bytes": 14126
+    },
+    "game/tests/book-save-v1.json": {
+      "sha256": "50f34f73bc607713071a8f1c9d0137ae1311ea43aa959bd46ec239c57fcf95ea",
+      "mtime_ns": 1794787534236736800,
+      "bytes": 6920
+    },
+    "game/tests/book_fixture.gd": {
+      "sha256": "c4b8211d64341d48cb63c2b9ed6ffef2431e4d9f09d1a41958d504fd56d4a197",
+      "mtime_ns": 1794787534237757200,
+      "bytes": 2363
+    },
+    "game/tests/book_integration.gd": {
+      "sha256": "5db60f3a540d7ea3a83213587e6e071234cb31611aee22651fc9943d0d9064bb",
+      "mtime_ns": 1794787534238276000,
+      "bytes": 11926
+    },
+    "game/tests/book_windows_observer.gd": {
+      "sha256": "729fabc62cacbf1215efc2e5d045f17b7e9c116ea88439ed6bbcd33e4099c5eb",
+      "mtime_ns": 1794787534238276000,
+      "bytes": 5788
+    },
+    "game/tests/capture.gd": {
+      "sha256": "1931684ad956c0fbc3c03e45e34bbebedcd20657fa89f583daa664a02d3121eb",
+      "mtime_ns": 1794787534239282100,
+      "bytes": 27949
+    },
+    "game/tests/capture.gd.uid": {
+      "sha256": "9dd390b63d9476c7a4e3b10af8dcbb9dce919199a553166579b6d5ce53a79eba",
+      "mtime_ns": 1794787534239282100,
+      "bytes": 20
+    },
+    "game/tests/catalog_filter_cases.gd": {
+      "sha256": "42ed151659f5e13fed3e2238f007562a87f7f99fe8a876e6644b4c9777da3464",
+      "mtime_ns": 1794787534240609100,
+      "bytes": 13183
+    },
+    "game/tests/catalog_layout_cases.gd": {
+      "sha256": "ab7e391d538a0d78a4a3ec4391f9e91f390355d2250d2f8eae5ac42419fa764e",
+      "mtime_ns": 1794787534241122300,
+      "bytes": 8813
+    },
+    "game/tests/completion_cases.gd": {
+      "sha256": "a23eae7d48b8cef9fcb66557ae91dbde1059306f337b136a9f0a479caa0a7e61",
+      "mtime_ns": 1794787534241634300,
+      "bytes": 10482
+    },
+    "game/tests/content_pack_probe.gd": {
+      "sha256": "8487161b473b4bd846c50dcfc3459da1555e9b39362c0c39b4b3142196502de1",
+      "mtime_ns": 1794787534241634300,
+      "bytes": 13715
+    },
+    "game/tests/current_visual_cases.gd": {
+      "sha256": "93582821a027cd4e576582ae617f477f8548580c5a9c9ee72b2f0f642e2de416",
+      "mtime_ns": 1794787534242639500,
+      "bytes": 293
+    },
+    "game/tests/display_cases.gd": {
+      "sha256": "8bb1aa4543e0cfc117f73e37542e632d562dd50986f694727390a3649bb797a0",
+      "mtime_ns": 1794787534242639500,
+      "bytes": 16462
+    },
+    "game/tests/ea_pack.gd": {
+      "sha256": "a93187c269367c8595f06d4549d47c86727eb9115eca4e0649365e86cea99cf6",
+      "mtime_ns": 1794787534244087100,
+      "bytes": 5022
+    },
+    "game/tests/ea_probe.gd": {
+      "sha256": "ab1d462a841e0697b47f94d4a029e57cd10cc187f753a036d4292f85e7acceb8",
+      "mtime_ns": 1794787534244610300,
+      "bytes": 14256
+    },
+    "game/tests/g1_cases.gd": {
+      "sha256": "af6a201c037cf3c79d25052fd6e8e2bd2ba32e8b573556b8460f25bb99a4ef48",
+      "mtime_ns": 1794787534248704000,
+      "bytes": 9843
+    },
+    "game/tests/gp48_cases.gd": {
+      "sha256": "faa63fe21979cbb7718852281275e7ed57bfa2b284f2e2d2709d5a5266513ed6",
+      "mtime_ns": 1794787534249708600,
+      "bytes": 6752
+    },
+    "game/tests/h1_capture.gd": {
+      "sha256": "d58f0b21fef823b2df3082dcdb7d32d4022535f8e19ac3846239ebf844b5caa8",
+      "mtime_ns": 1794787534249708600,
+      "bytes": 6200
+    },
+    "game/tests/h1_cases.gd": {
+      "sha256": "babad8445e2a13eec30cfe3f63ac24da66aa67b3646c84a1b696337de697e442",
+      "mtime_ns": 1794787534250756400,
+      "bytes": 19073
+    },
+    "game/tests/hc92_metrics.gd": {
+      "sha256": "1dd91170b0341e4810524039eac155d05759919dc24086e89284af6436670cfe",
+      "mtime_ns": 1794787534251269500,
+      "bytes": 2105
+    },
+    "game/tests/hc92_pack.gd": {
+      "sha256": "32f10c3b17f8c070b3a8e76c878d0798244ba814e81b4c3e62364d1de54ea591",
+      "mtime_ns": 1794787534251269500,
+      "bytes": 1721
+    },
+    "game/tests/help_cases.gd": {
+      "sha256": "612125fdaab37275be50a348e7dfb06ea36352df0f228cff01aab85526f4d299",
+      "mtime_ns": 1794787534252274300,
+      "bytes": 3539
+    },
+    "game/tests/help_native.gd": {
+      "sha256": "393b1a43cff55acbcea8ce3c2698f728ce7d5358c353035f7cfccf3d5f38b7d8",
+      "mtime_ns": 1794787534252274300,
+      "bytes": 9461
+    },
+    "game/tests/hf149_probe.gd": {
+      "sha256": "d87a9ae27edd0c4565745b32a11b54eb911d3e3ae6599826df693f2b504f5104",
+      "mtime_ns": 1794787534253334100,
+      "bytes": 15227
+    },
+    "game/tests/hn192_probe.gd": {
+      "sha256": "5fa2b7b8a1039c7fefcff579f4c91c26597614c5521d6910d3364948b3d7878c",
+      "mtime_ns": 1794787534253849700,
+      "bytes": 16029
+    },
+    "game/tests/hs186_capture.gd": {
+      "sha256": "57408f132b49eb546d6f85faf54908d0b1538a67843c7a483e7003c05122044a",
+      "mtime_ns": 1794787534254366400,
+      "bytes": 6377
+    },
+    "game/tests/hs186_cases.gd": {
+      "sha256": "132a780b23bb6ca9e7aa5b302d9946b0b1d775887050e38d11df9e61d1fcdf60",
+      "mtime_ns": 1794787534254366400,
+      "bytes": 3756
+    },
+    "game/tests/hz_b_cases.gd": {
+      "sha256": "67772f7bc58d75a0ea38ae939cb2ecc3326769954656e76c73070dc6289107af",
+      "mtime_ns": 1794787534254366400,
+      "bytes": 3169
+    },
+    "game/tests/hz_cases.gd": {
+      "sha256": "42df1cb0466a9579d88652c0f667f3141b5abaed327385734714acd754dca991",
+      "mtime_ns": 1794787534256512800,
+      "bytes": 4431
+    },
+    "game/tests/hz_c_cases.gd": {
+      "sha256": "d4d200b64cc6634b18c0c5fbcb89d6a47f4a30681f71eb44a61f309e49bb15b8",
+      "mtime_ns": 1794787534255850700,
+      "bytes": 2557
+    },
+    "game/tests/hz_c_sample.gd": {
+      "sha256": "1344c6f82c89d91e0ec936644f8c605f3cfd4203a7fdd9e2cf23674d97d73041",
+      "mtime_ns": 1794787534256512800,
+      "bytes": 2514
+    },
+    "game/tests/hz_pack.gd": {
+      "sha256": "bb3e9a06024ac874401113e9a5ea5ec256a8d6533896cd87218689f3d33ec04d",
+      "mtime_ns": 1794787534257518300,
+      "bytes": 7503
+    },
+    "game/tests/kat1_cases.gd": {
+      "sha256": "999df9d3c3d80417c9276c753fe914646aee9ef3d5cf8a12aa6ec91246617031",
+      "mtime_ns": 1794787534257518300,
+      "bytes": 5006
+    },
+    "game/tests/kat1_save_seed.gd": {
+      "sha256": "b5bc655c1582fe1ca46198067dd359c891cee15e005433e887f2ae1fd0f7a80c",
+      "mtime_ns": 1794787534258621700,
+      "bytes": 1214
+    },
+    "game/tests/kat2_cases.gd": {
+      "sha256": "2f21befaa37322924b6676c9b9ef9ddb9bf5dd77b74504031bed7b54e5839652",
+      "mtime_ns": 1794787534258621700,
+      "bytes": 1436
+    },
+    "game/tests/kat2_probe.gd": {
+      "sha256": "390902406c590de57c0c01e6d4f3b15fc996f1583878b254628f1eb32a2ca07e",
+      "mtime_ns": 1794787534259628100,
+      "bytes": 89349
+    },
+    "game/tests/ke_cases.gd": {
+      "sha256": "65a043d96cf09357f6794ea006a13d31011030face19ac28f3a839a6bdc55ab2",
+      "mtime_ns": 1794787534260802700,
+      "bytes": 4483
+    },
+    "game/tests/ku_b_cases.gd": {
+      "sha256": "5153597539375e87de6c48aa53b51ed875200ece07ee2f3399009826c974ce5d",
+      "mtime_ns": 1794787534261317500,
+      "bytes": 9019
+    },
+    "game/tests/marginalia_cases.gd": {
+      "sha256": "081dc7dd97572940c9dd6258a27e0aa4696ab37f94bad06220367f61602e07bf",
+      "mtime_ns": 1794787534261317500,
+      "bytes": 3882
+    },
+    "game/tests/multicolor_cases.gd": {
+      "sha256": "2812c87103aca192a0a6ef3c9c247f3fae246ea2094fcfc8acd9a80ff27aa553",
+      "mtime_ns": 1794787534261317500,
+      "bytes": 4952
+    },
+    "game/tests/native_png.gd": {
+      "sha256": "170fff6422adcd56520515c5825907e5e1d4810e65899e21c910e3ddb2c7f9ce",
+      "mtime_ns": 1794787534262323800,
+      "bytes": 707
+    },
+    "game/tests/native_png_cases.gd": {
+      "sha256": "0930ca26ec883d60fb003f74f4ea9ea96dea903c0b55dc99bdb49479826a741c",
+      "mtime_ns": 1794787534262323800,
+      "bytes": 1412
+    },
+    "game/tests/navigation_cases.gd": {
+      "sha256": "7f5338a7ff7c131d357277cb4d1c785e148aea46d69e7f8dcea090c22e2ed4c0",
+      "mtime_ns": 1794787534263367600,
+      "bytes": 10457
+    },
+    "game/tests/p12_cases.gd": {
+      "sha256": "09530fca4cf8c4cb455bca2e38fd55dc0ea7b7192e6255a9a40e8f76c4c153a4",
+      "mtime_ns": 1794787534263883300,
+      "bytes": 64894
+    },
+    "game/tests/p13_cases.gd": {
+      "sha256": "4c15ab5cd1232f070ee1c46afcf64ab8f8599f85445d05999f62b3b138e13a8f",
+      "mtime_ns": 1794787534264396800,
+      "bytes": 20945
+    },
+    "game/tests/p13_roundtrip.gd": {
+      "sha256": "0c7099f92e1e05871fdfcfd8ce2b0b9e5f170384a216a4ff2ab1406b7fbff513",
+      "mtime_ns": 1794787534264396800,
+      "bytes": 7383
+    },
+    "game/tests/p14_cases.gd": {
+      "sha256": "2b0f9a6c687ad5c2925c7c1a7595a3f209f0e8d21c92406eb6a1f9cdf1d61174",
+      "mtime_ns": 1794787534265463100,
+      "bytes": 1612
+    },
+    "game/tests/p14_integration.gd": {
+      "sha256": "5a98c48f50f871b7d3063cf75b54155849398c320c85bbbb35db29bed098b22d",
+      "mtime_ns": 1794787534266499300,
+      "bytes": 5515
+    },
+    "game/tests/p14_profile.gd": {
+      "sha256": "0432f10ead05c92c421042e291efd5787748b68f192564a4b36991dad76a6146",
+      "mtime_ns": 1794787534266499300,
+      "bytes": 1609
+    },
+    "game/tests/perf_b_cases.gd": {
+      "sha256": "bf73fe9c759ca3ca5ac50bb1ce6a794051356229473711f03164fd05bd1ec16d",
+      "mtime_ns": 1794787534267505900,
+      "bytes": 1587
+    },
+    "game/tests/perf_b_probe.gd": {
+      "sha256": "239f223ea864c9b4fdd838755ae35efb5bd35d8a43a80117becf36aa18c8cb69",
+      "mtime_ns": 1794787534268610700,
+      "bytes": 15096
+    },
+    "game/tests/pe_a1_cases.gd": {
+      "sha256": "cdd94753f178b27d3f6334e20ce3f55924e1c56b6697f3365c14198b683d92db",
+      "mtime_ns": 1794787534267505900,
+      "bytes": 19597
+    },
+    "game/tests/recent_cases.gd": {
+      "sha256": "32a23c96243b03c3eb5ee708bc993efab9e15267f3295c415c6abcfcb8c54de4",
+      "mtime_ns": 1794787534268610700,
+      "bytes": 14936
+    },
+    "game/tests/rp3_capture.gd": {
+      "sha256": "cbc9829fa609321ab380318e1f6e6dcbdb3325fb014d3631f3b24259ff6663cf",
+      "mtime_ns": 1794787534269616300,
+      "bytes": 2319
+    },
+    "game/tests/rp3_probe.gd": {
+      "sha256": "fc51f6e0cee58189cecfbad7092577274a7f7c11d9766e012df3070ca546823e",
+      "mtime_ns": 1794787534269616300,
+      "bytes": 6613
+    },
+    "game/tests/rp6_capture.gd": {
+      "sha256": "61224370c5f1032316240fdadcb61b8808e6ba89ef3458cfec9c529f0800fb92",
+      "mtime_ns": 1794787534269616300,
+      "bytes": 10941
+    },
+    "game/tests/rp6_probe.gd": {
+      "sha256": "dc6467135bae9362ba60f021acfd59869ec7086348a93d1352edaeb034fd5f08",
+      "mtime_ns": 1794787534270976500,
+      "bytes": 10939
+    },
+    "game/tests/run_tests.gd": {
+      "sha256": "e895fdc3dfffa16a92004303b31cd553f82b245a480e9256149e194c3b54fc7c",
+      "mtime_ns": 1794787534271558600,
+      "bytes": 19709
+    },
+    "game/tests/run_tests.gd.uid": {
+      "sha256": "9cfa6d0c583a5db8c35b0af676db0b0a39a1a3de20aa87cb0623a7472d2a45fb",
+      "mtime_ns": 1794787534271558600,
+      "bytes": 20
+    },
+    "game/tests/scrollbar_cases.gd": {
+      "sha256": "6bd9c4efc8e1a84a08accc5b8cbc4bde462e810cf52f2b15a301485c2c77381d",
+      "mtime_ns": 1794787534272564200,
+      "bytes": 12124
+    },
+    "game/tests/sd2_c_cases.gd": {
+      "sha256": "6d8dc28f265400f803256f695f8097abf6bbc8b7bc68536f74113afa43613d7e",
+      "mtime_ns": 1794787534272564200,
+      "bytes": 4306
+    },
+    "game/tests/view_title_cases.gd": {
+      "sha256": "3ee91d5bcb711ee37cb02b096490e6fa68efcd1476e9b537b5f10c2c0a85918a",
+      "mtime_ns": 1794787534273735900,
+      "bytes": 11334
+    },
+    "game/tests/vs1_e1_cases.gd": {
+      "sha256": "dee61588583cc7a0a7f6112a3dcc2058b8b72a017d20a156ebbdb5870456dffd",
+      "mtime_ns": 1794787534273735900,
+      "bytes": 3974
+    },
+    "game/tests/vs2_gf1_tests.gd": {
+      "sha256": "f1017e323827e93fbdc87c35b02c16055a61ae4cb299e11078acb9143275e973",
+      "mtime_ns": 1794787534274740100,
+      "bytes": 8146
+    },
+    "game/tests/vs2_h1_cases.gd": {
+      "sha256": "0897c1e643724c5c25a53164641fd6f7da324b59fab7c1d284abe5293b39716b",
+      "mtime_ns": 1794787534275243400,
+      "bytes": 1402
+    },
+    "game/tests/vs2_measurements.gd": {
+      "sha256": "33c1ee3c8b7c3527f0985c4ac1d2d9670caa35078f39b24247e991d8371e58a6",
+      "mtime_ns": 1794787534275746800,
+      "bytes": 6131
+    },
+    "game/tests/vs2_roundtrip.gd": {
+      "sha256": "b5ff6aa6bb1850c17a4342dc3c16afa2d702ef73a2d9032365203b41875bea72",
+      "mtime_ns": 1794787534275746800,
+      "bytes": 8129
+    },
+    "game/tests/vs2_scene.gd": {
+      "sha256": "635dc0443811f8122e54fb24160b718b2ff7d5c874a91a80f986169220306e56",
+      "mtime_ns": 1794787534276750700,
+      "bytes": 540
+    },
+    "game/tests/vs2_tests.gd": {
+      "sha256": "cd3783acc5100e9ae9715d724e76dc40bfd81693d241744f2ce350bd3d888175",
+      "mtime_ns": 1794787534276750700,
+      "bytes": 18394
+    },
+    "game/tests/vs2_v1_cases.gd": {
+      "sha256": "b5299bfc15219c5cb6682d24080d346abbeca5a8cadc43891fd4dec69c66eb0c",
+      "mtime_ns": 1794787534277840500,
+      "bytes": 11107
+    },
+    "game/tests/vs2_v2_cases.gd": {
+      "sha256": "a5fa1caa7a02d43145fc1c64dcee4b58eeea8915f443522903619793c3c11c9f",
+      "mtime_ns": 1794787534278355500,
+      "bytes": 2754
+    },
+    "game/tests/vs2_v2_tests.gd": {
+      "sha256": "4b85d410762f0fa53de333a27ba2b706bcff6dea45e28c9edfc4192139df64ed",
+      "mtime_ns": 1794787534278355500,
+      "bytes": 12561
+    },
+    "game/tests/vs2_v3_tests.gd": {
+      "sha256": "de4e02608abb48a29686f6c5ca7700cd15f8e033ffa073cb7fe4a3ab6b376391",
+      "mtime_ns": 1794787534279870500,
+      "bytes": 25514
+    },
+    "game/tests/vs2_window.gd": {
+      "sha256": "b739ce0ccfc13dbc14c5739e6320a219dc18c60ae59d66426bcf12ab8c3eb42c",
+      "mtime_ns": 1794787534280374100,
+      "bytes": 8972
+    },
+    "game/tests/z2-demo.json": {
+      "sha256": "39c745344e9ba79995a7d41ec1fc6745ef7927b80aa586036eaa0c5ce70a7703",
+      "mtime_ns": 1794787534280904200,
+      "bytes": 35805
+    },
+    "game/tests/z2_cases.gd": {
+      "sha256": "b1532d65eca7547a01f9303c4215bd5a4d7deceaa356c56692d93308764bfd66",
+      "mtime_ns": 1794787534281419800,
+      "bytes": 11379
+    },
+    "game/tests/za1_probe.gd": {
+      "sha256": "fb85e2760827b325a824b156f0e0f0f6d020ad51d3dd0d1c5ea9dbe437a3efa8",
+      "mtime_ns": 1794787534281419800,
+      "bytes": 7302
+    },
+    "game/tests/za1_save_cases.gd": {
+      "sha256": "a927a1f3d239616e7f17b77bd8bec0e8946e8f6efa55bac2226420729e6e0360",
+      "mtime_ns": 1794787534282424800,
+      "bytes": 750
+    },
+    "game/tests/zr_cases.gd": {
+      "sha256": "7c73250e1f67c46b246e8b936e908205e875f54d8caef802dd90b8c7f0967877",
+      "mtime_ns": 1794787534282424800,
+      "bytes": 9538
+    },
+    "game/tests/zr_windows_probe.gd": {
+      "sha256": "d387e875381baa237fe8f489d2df931f74a823d899df1da5a7a271494512389f",
+      "mtime_ns": 1794787534283451900,
+      "bytes": 1587
+    },
+    "game/tests/zs1_capture.gd": {
+      "sha256": "d15456f37eecb57194a720796ad87462b8291164cef6f36a36c345a126620ea5",
+      "mtime_ns": 1794787534283451900,
+      "bytes": 18391
+    },
+    "game/tests/zs1_tests.gd": {
+      "sha256": "57b34f9da81a3e353d0ad52fd238cfb3faec214f7285686318ed5b6111b362b5",
+      "mtime_ns": 1794787534284457600,
+      "bytes": 11432
+    },
+    "game/tests/zs2_capture.gd": {
+      "sha256": "d4b9b22d560547d74a2957f3e71a14566b9f687e43b0a70c43a8a08c16713772",
+      "mtime_ns": 1794787534284457600,
+      "bytes": 9458
+    },
+    "game/tests/zs2_numerals.gd": {
+      "sha256": "aa9bbe0f7e2fe761860475ee2ec6c47e8936b42415788c131aea67f44ac80051",
+      "mtime_ns": 1794787534285720300,
+      "bytes": 1147
+    },
+    "game/tests/zs2_rework_cases.gd": {
+      "sha256": "85485805681b0380d25643cd50fa812cff62ac13d84acbf8045f4c9c72ea50d5",
+      "mtime_ns": 1794787534285720300,
+      "bytes": 13503
+    },
+    "game/tests/zs2_tests.gd": {
+      "sha256": "d40dac4b71f85da92629e65c1bdc9cc277ac6db89ad592800d96c88715da3cd2",
+      "mtime_ns": 1794787534286726500,
+      "bytes": 6800
+    },
+    "game/tests/zv50_cases.gd": {
+      "sha256": "242446fdb6c14764846c047c8aeb4c66812da658566cbfdca422d6c563fffd93",
+      "mtime_ns": 1794787534286726500,
+      "bytes": 2800
+    },
+    "game/ui/atlas_marks.gd": {
+      "sha256": "e1a15a6a9cc3041dd77ad5eb6194f1531719df9cdd5b4e239711f18c523ef39c",
+      "mtime_ns": 1794787534288393100,
+      "bytes": 10789
+    },
+    "game/ui/atlas_mask.gdshader": {
+      "sha256": "b27c6ffee9cce0296df633a349a1aa286975541ef801923710c465a8c6dd73b6",
+      "mtime_ns": 1794787534288905800,
+      "bytes": 297
+    },
+    "game/ui/board.gd": {
+      "sha256": "0a754f2c2479bc2663f617b60f7cec5bccf7384ba02bcf9a8e4be9a15fabd5e0",
+      "mtime_ns": 1794787534289418200,
+      "bytes": 44159
+    },
+    "game/ui/board.gd.uid": {
+      "sha256": "38ca46d9148fc5d6a317bf4f60f2ec8cb34312205580dab4eca80bacb7424ebd",
+      "mtime_ns": 1794787534289929300,
+      "bytes": 20
+    },
+    "game/ui/book_button.gd": {
+      "sha256": "257b7dc17db5e8b2a7404739da5d445af06361d7bf15a70a92fa93f230b4a992",
+      "mtime_ns": 1794787534290441300,
+      "bytes": 6997
+    },
+    "game/ui/book_choice.gd": {
+      "sha256": "ee773f5b55139ff0f8da09aea42477c13cd6cf27737e2439b4196383e9c09789",
+      "mtime_ns": 1794787534290950700,
+      "bytes": 2597
+    },
+    "game/ui/book_controls.gd": {
+      "sha256": "42249df81041e5314b8a2f24b7f570125567313ea94cdb3b997665b60fe4cf85",
+      "mtime_ns": 1794787534291463800,
+      "bytes": 6706
+    },
+    "game/ui/book_style.gd": {
+      "sha256": "08cf9ba620da29d3c7dac300288394c9b464dd0f24441a7062f67e6efe40e82c",
+      "mtime_ns": 1794787534291975200,
+      "bytes": 3158
+    },
+    "game/ui/book_surface.gd": {
+      "sha256": "8f45dd174fd7b7526d769082a20434af234e2182dc3abb865f86689a56a9e5c7",
+      "mtime_ns": 1794787534292486500,
+      "bytes": 1938
+    },
+    "game/ui/book_tooltip.gd": {
+      "sha256": "7abea08121abf45db2d1c7a8d1bc14a77d53ac81eddd12fadbb79f4fd7eb08a7",
+      "mtime_ns": 1794787534292999100,
+      "bytes": 1485
+    },
+    "game/ui/book_tooltip.gd.uid": {
+      "sha256": "64d4c0eb50a14e21a905f993c55777e38c106153737a8afee87979c5c8ba88a8",
+      "mtime_ns": 1794787534293516300,
+      "bytes": 20
+    },
+    "game/ui/catalog.gd": {
+      "sha256": "243ac02b501b4f64285dd4b68ebe653e42d7125feb80acf84b091da5ac94b7c9",
+      "mtime_ns": 1794787534294543400,
+      "bytes": 26014
+    },
+    "game/ui/catalog_card.gd": {
+      "sha256": "a9d85e5a00a972bb5992ac04920bc798ca8668692df5617bd4cbd33fab105a1d",
+      "mtime_ns": 1794787534295054000,
+      "bytes": 15193
+    },
+    "game/ui/catalog_filters.gd": {
+      "sha256": "05d4983e8a10c6a82eb5c1675337607adaac5cb5f37245223568315fa2562714",
+      "mtime_ns": 1794787534295567200,
+      "bytes": 9279
+    },
+    "game/ui/catalog_grid.gd": {
+      "sha256": "eb731dad2446763cbe3e494d9cfa247438439bc3131ef2f642878aa6a1852922",
+      "mtime_ns": 1794787534296120000,
+      "bytes": 1800
+    },
+    "game/ui/catalog_ink.gd": {
+      "sha256": "6d71d747e1517c507d1043fb42b116dc3be926ff6f49311be8e85a8180dd76de",
+      "mtime_ns": 1794787534296632100,
+      "bytes": 5476
+    },
+    "game/ui/catalog_tip.gd": {
+      "sha256": "df7d0d4ccc1d403eaaf1ecf7a75ae3625401e5df9ca6fc4103686dff7237d40e",
+      "mtime_ns": 1794787534297144100,
+      "bytes": 1110
+    },
+    "game/ui/cell_atlas.gd": {
+      "sha256": "85e3bbda8383facd87f43385cc3b7e1baf64fbb9256da5bc887c7f9fec5b2f4d",
+      "mtime_ns": 1794787534297656300,
+      "bytes": 1594
+    },
+    "game/ui/chalkboard_board.gd": {
+      "sha256": "dec8801adaf93eb3eda7b0ad8fc133108ae5641a1778011add4da5704dd244ad",
+      "mtime_ns": 1794787534298167600,
+      "bytes": 1132
+    },
+    "game/ui/clue_font.tres": {
+      "sha256": "38cee56c272ba1d875528d844e4882231a92477de69f67c3a43058da4e5600c6",
+      "mtime_ns": 1794787534298684400,
+      "bytes": 211
+    },
+    "game/ui/clue_layout.gd": {
+      "sha256": "960d29e4254cea067aafed888332cceb3d31b323b60d601c82b69b714a2c0b45",
+      "mtime_ns": 1794787534299194800,
+      "bytes": 4711
+    },
+    "game/ui/clue_overlay.gd": {
+      "sha256": "c3d6a5579c6412c1f5d57db105fffd4acef6b0dc29377a32e275af3e09e48be6",
+      "mtime_ns": 1794787534299705100,
+      "bytes": 4679
+    },
+    "game/ui/clue_typography.gd": {
+      "sha256": "e92e75d7928d6d1ada7357693d5a12f366dbbc05a22c0749379f08d51662cc5c",
+      "mtime_ns": 1794787534300217900,
+      "bytes": 6943
+    },
+    "game/ui/completion.gd": {
+      "sha256": "a085b1f3f56f275b229571991674e3cdbfffeb437fce69e0cab03e9aeb1c4b79",
+      "mtime_ns": 1794787534300733100,
+      "bytes": 7043
+    },
+    "game/ui/completion_switch.gd": {
+      "sha256": "d8ee9ce55f69e0ec21bcf1b19612e1964da7b79446a215d727fef44bc791fd0d",
+      "mtime_ns": 1794787534301247000,
+      "bytes": 3247
+    },
+    "game/ui/display_backend.gd": {
+      "sha256": "b2cf5230770279d20d5b049a59a238160a0929c95c0269f4e1db9849b1423ee3",
+      "mtime_ns": 1794787534301759000,
+      "bytes": 3777
+    },
+    "game/ui/display_controller.gd": {
+      "sha256": "679ceb6dcca81c9796e9550bb8c2850c2c42d9853a299c72b08974717f30c363",
+      "mtime_ns": 1794787534302273200,
+      "bytes": 4747
+    },
+    "game/ui/display_settings.gd": {
+      "sha256": "3e752e1c96b420acfb7d56ccd4cab927f45298aca9fb4b2ab36045765062c5aa",
+      "mtime_ns": 1794787534302273200,
+      "bytes": 5876
+    },
+    "game/ui/drawing_board.gd": {
+      "sha256": "cf43e86369f3d12c6d592aea92c600940660c362f914ac1b232aba15e9364c0c",
+      "mtime_ns": 1794787534303279500,
+      "bytes": 6137
+    },
+    "game/ui/drawing_font.gd": {
+      "sha256": "7f32268ba4cac9a530fbe5a6d63f8a3c53c769fff281803f9fb104aabaed8cfc",
+      "mtime_ns": 1794787534303279500,
+      "bytes": 1377
+    },
+    "game/ui/full_view_board.gd": {
+      "sha256": "0839118703b65c96349e7f15d1560c59e68e4100ebb0b620e05a17c548213347",
+      "mtime_ns": 1794787534304369100,
+      "bytes": 24360
+    },
+    "game/ui/gesture_counter.gd": {
+      "sha256": "d27ac9a2178b2a457c875881c268caf22e661829385497c01598c37b0b082b4e",
+      "mtime_ns": 1794787534304369100,
+      "bytes": 2145
+    },
+    "game/ui/grid_view.gd": {
+      "sha256": "5b4c29e2e2c8291834d2169f9281d97bfeac212284fb85a817aae4bcdf25a946",
+      "mtime_ns": 1794787534305373000,
+      "bytes": 1706
+    },
+    "game/ui/grid_view.gd.uid": {
+      "sha256": "03b5fd62156f71f00b885b1831e02f5bfddee5eeb9074bdeb35f6b2eb914779e",
+      "mtime_ns": 1794787534305373000,
+      "bytes": 20
+    },
+    "game/ui/help_chapter_button.gd": {
+      "sha256": "c12af06a49833567a46016ab433611f3281578feb3ae22d97c3422ecb37771ef",
+      "mtime_ns": 1794787534306612600,
+      "bytes": 745
+    },
+    "game/ui/help_example.gd": {
+      "sha256": "66d330615fd850c1e6f87f0c3376df64d2d951ad944f5036a9cfa089ba664cab",
+      "mtime_ns": 1794787534306612600,
+      "bytes": 4856
+    },
+    "game/ui/help_examples.gd": {
+      "sha256": "279178332e170398f2d4218aa19d3d462f62f866a598dbde7f8096f88c227bf1",
+      "mtime_ns": 1794787534307636100,
+      "bytes": 1613
+    },
+    "game/ui/help_panel.gd": {
+      "sha256": "01565d1b5e6c60b9bdba40edab780ec728c39aacc2260f23fb661b95bbf6ab34",
+      "mtime_ns": 1794787534308147000,
+      "bytes": 20475
+    },
+    "game/ui/main.gd": {
+      "sha256": "56629617a00039cab2ccd33c0f7c5e429603c31e8b0602a84d98f80b195f2175",
+      "mtime_ns": 1794787534308661300,
+      "bytes": 52869
+    },
+    "game/ui/main.gd.uid": {
+      "sha256": "f3366c26faa9aa9d58ee709bbff30487bdf006c95f905f8adb640d0dda7c9ea1",
+      "mtime_ns": 1794787534309666000,
+      "bytes": 20
+    },
+    "game/ui/miniature.gd": {
+      "sha256": "ec84abc6768176ea95a99d4266c90c633db0006978d340d125bc6eceb8e768bf",
+      "mtime_ns": 1794787534310171200,
+      "bytes": 1679
+    },
+    "game/ui/miniature.gd.uid": {
+      "sha256": "ff633e10515b33fb83ada86117ea6a9914d5199ca02e9ae974c5e457fa659952",
+      "mtime_ns": 1794787534310674800,
+      "bytes": 19
+    },
+    "game/ui/pencil_marks.gd": {
+      "sha256": "bec00db704685bea4028b23fba0f3374f659041154cba20f5a85c9f203846947",
+      "mtime_ns": 1794787534311188400,
+      "bytes": 11267
+    },
+    "game/ui/recent_panel.gd": {
+      "sha256": "83e62520b64258bff9bff0b488071851144170f01b27337090aea2fe50216729",
+      "mtime_ns": 1794787534311699600,
+      "bytes": 2903
+    },
+    "game/ui/reveal.gd": {
+      "sha256": "03f14a741db55de0a9ca4582396830e43680f52b790cf1c2b50e9c3d8223c392",
+      "mtime_ns": 1794787534311699600,
+      "bytes": 2937
+    },
+    "game/ui/reveal.gd.uid": {
+      "sha256": "4e2b7c26bfdba5c254d18e11693f06d7daefc9b4b43ee875eaf260fdc01cab3e",
+      "mtime_ns": 1794787534312742800,
+      "bytes": 20
+    },
+    "game/ui/scribble.gd": {
+      "sha256": "33ee9d5f1497a9c6eea3c65d80e10861fe5c147e562982c24cac68c9d07dbc6a",
+      "mtime_ns": 1794787534312742800,
+      "bytes": 2518
+    },
+    "game/ui/scrollbar_style.gd": {
+      "sha256": "b457de4773685d7e726727a1857aec6ac987a24f583b7ae9ffe8c917521744b8",
+      "mtime_ns": 1794787534313772200,
+      "bytes": 4417
+    },
+    "game/ui/settings_field.gd": {
+      "sha256": "7f20b88bb9179b0ed14e84aba66ff96122af40d5711446448d9f65edeab032de",
+      "mtime_ns": 1794787534313772200,
+      "bytes": 1616
+    },
+    "game/ui/settings_group.gd": {
+      "sha256": "3f36351a2bb5eda8d06f29c643b84a483fd8bb2941c38678b8274c0ac1dfdbbd",
+      "mtime_ns": 1794787534314300800,
+      "bytes": 2962
+    },
+    "game/ui/settings_help.gd": {
+      "sha256": "6cc314aba5f7f073b5e2a2987691eb73e4cd0d18d1b0d1b264954ac64e414049",
+      "mtime_ns": 1794787534315309400,
+      "bytes": 1523
+    },
+    "game/ui/ui_text.gd": {
+      "sha256": "86447bef28871f2e80228ed5011f9d54e3895921e7ab4c0b04cdda3c6fbcc46b",
+      "mtime_ns": 1794787534315309400,
+      "bytes": 6379
+    },
+    "game/ui/view_title.gd": {
+      "sha256": "762c490be07d6d487d92cb606b931c3012abf5f123aa4b6e76806b3f7eb1dd3a",
+      "mtime_ns": 1794787534316368400,
+      "bytes": 2486
+    },
+    "game/web/background_loader.js": {
+      "sha256": "a47bec9133a564f0c6e3fd563bac5fa5e204c6aa88683c4392013823ceeb637b",
+      "mtime_ns": 1794787534317879800,
+      "bytes": 9505
+    },
+    "game/web/shell.html": {
+      "sha256": "be935d40c482b3f776a74eee226482e30d7f3e89a688690a12b91c4f0ee7f129",
+      "mtime_ns": 1794787534318383800,
+      "bytes": 6094
+    },
+    "game/web/storage.js": {
+      "sha256": "fccb7f3570d1b7f923de583de187859d2719a569b792ffd7453e4cc3c2b2b406",
+      "mtime_ns": 1794787534318383800,
+      "bytes": 4716
+    },
+    "game/tests/fixtures/ke-reveal.svg": {
+      "sha256": "c72845f41556f1ee77e124583880d53fa4986e18b31c281d9cc8891ee04b3be9",
+      "mtime_ns": 1794787534248704000,
+      "bytes": 699
+    },
+    "game/tests/fixtures/kat1/f01.json": {
+      "sha256": "2341c850fd914dc5defab8c8181c20d34d3a4fefa6eefc2dc93fb7e24bbd43ab",
+      "mtime_ns": 1794787534246651800,
+      "bytes": 2435
+    },
+    "game/tests/fixtures/kat1/f02.json": {
+      "sha256": "11c6583356bdc4a03c9fbbd754d0d66f012619c848da54ad1cd2a80dfe92521e",
+      "mtime_ns": 1794787534247674100,
+      "bytes": 60748
+    },
+    "game/tests/fixtures/kat1/provenance.json": {
+      "sha256": "5d58555058002ed8e6b5707669a336bdcdd36c9af8d55ade920121fee9f20028",
+      "mtime_ns": 1794787534248189500,
+      "bytes": 596
+    },
+    "game/tests/fixtures/kat1/definitions/f01.json": {
+      "sha256": "4cb13e7d2de777e463b75b60f6e336d4fcf1ae4cab3fb6dd6de2b7218a43954a",
+      "mtime_ns": 1794787534246091000,
+      "bytes": 3394
+    },
+    "game/tests/fixtures/kat1/definitions/f02.json": {
+      "sha256": "0c9884102866c16d73e8a27ffd7bdcd186a30cdfa3596bfae42bc800fb5794f7",
+      "mtime_ns": 1794787534246651800,
+      "bytes": 14096
+    },
+    "game/study/fonts/BaksoDaging-Regular.ttf": {
+      "sha256": "56372bf12a6e4fa47a655ff9b2c4cc73172ddd387b3a047093d3e637d081790e",
+      "mtime_ns": 1794787534231025300,
+      "bytes": 128924
+    },
+    "game/study/fonts/Chalkboard-Regular.ttf": {
+      "sha256": "163d5acb0c4cc2f54a603501836fda2dcdd1d09579a8d1f790ab882d86175c4d",
+      "mtime_ns": 1794787534231548900,
+      "bytes": 21976
+    },
+    "game/study/fonts/NOTICES.md": {
+      "sha256": "f5a66716a6f8077b231f02f1c7466380a3b25197226c5969d5b271d09662b62e",
+      "mtime_ns": 1794787534231548900,
+      "bytes": 1865
+    },
+    "game/full_view_study/cases/vs01/definition.json": {
+      "sha256": "9bf3f35847d8bb48705ba646f791aca2c620603377246a8550c3cef6d87921d4",
+      "mtime_ns": 1794787534153797500,
+      "bytes": 3329
+    },
+    "game/full_view_study/cases/vs01/reveal.svg": {
+      "sha256": "602b5fa22cec2255292e209afb0a64c1d696aa5cd711c9d4b21044263bf1b15a",
+      "mtime_ns": 1794787534155320500,
+      "bytes": 2231
+    },
+    "game/full_view_study/cases/vs02/definition.json": {
+      "sha256": "98dcfb6613e63b7ea620ec6c5b55e7c17e0beebaedb23e7a4456f35ab2ac714c",
+      "mtime_ns": 1794787534155320500,
+      "bytes": 10930
+    },
+    "game/full_view_study/cases/vs02/reveal.png": {
+      "sha256": "5017066bf077dbfede6009d160a6986218dfe4a5795a2027b9aeec0160b7d96b",
+      "mtime_ns": 1794787534157334000,
+      "bytes": 887395
+    },
+    "game/full_view_study/cases/vs03/definition.json": {
+      "sha256": "a77478dcc7f0234295b1aedf7efe01fa61aae89b25e638bd82f68cdd0964c447",
+      "mtime_ns": 1794787534158340000,
+      "bytes": 5942
+    },
+    "game/full_view_study/cases/vs03/reveal.png": {
+      "sha256": "15f3b3a8baf09daf71aa9eb956e1d7ad2c11df323dce52eed763bc84eb96fa86",
+      "mtime_ns": 1794787534164455700,
+      "bytes": 1070515
+    },
+    "game/full_view_study/cases/vs04/definition.json": {
+      "sha256": "ff8bdff7a01cd90e8b7e747bdfa7dfbe475ba088942f139fb2bd5c88e969ae67",
+      "mtime_ns": 1794787534165476600,
+      "bytes": 19542
+    },
+    "game/full_view_study/cases/vs04/reveal.png": {
+      "sha256": "b45d414e3651de6fba7c4eb5e1fc2b139759a8b386846ca43af237e7346f46c1",
+      "mtime_ns": 1794787534172640400,
+      "bytes": 1502311
+    },
+    "game/full_view_study/cases/vs05/definition.json": {
+      "sha256": "d90809038f40b56368daca4d53462aa86a591284c3221b9b4be4f43747be66ae",
+      "mtime_ns": 1794787534172640400,
+      "bytes": 5978
+    },
+    "game/full_view_study/cases/vs05/reveal.png": {
+      "sha256": "d08850f3c7293aacf397e21e19390e2ff7dadb98d16fe55cca16addb1a96c8cc",
+      "mtime_ns": 1794787534174976100,
+      "bytes": 791046
+    },
+    "game/full_view_study/cases/vs06/definition.json": {
+      "sha256": "3d028440b7611ecaa49c5652267ba1e23ba4d4f06e6a26f15501d98e940c8b16",
+      "mtime_ns": 1794787534175490000,
+      "bytes": 19578
+    },
+    "game/full_view_study/cases/vs06/reveal.png": {
+      "sha256": "b418af1099308d9f9a9940f1a104dcbda496dada3ff7e3c976f243e2e4e70121",
+      "mtime_ns": 1794787534178676200,
+      "bytes": 1293077
+    },
+    "game/full_view_study/cases/vs07/definition.json": {
+      "sha256": "de023a2a602e91f16d3059d45084787996577885290b0e45c8ee68750d510d7e",
+      "mtime_ns": 1794787534181771000,
+      "bytes": 5632
+    },
+    "game/full_view_study/cases/vs07/reveal.png": {
+      "sha256": "91304a15c6f2f6106b7169d224422da7c781cb630d7b6b1e727cf85fef47ec2d",
+      "mtime_ns": 1794787534184369000,
+      "bytes": 1415599
+    },
+    "game/full_view_study/cases/vs08/definition.json": {
+      "sha256": "edd7f6a616fac2dd29150036a2cee105af0508aedb7e3d3e3351c6aa6f87f4df",
+      "mtime_ns": 1794787534191357100,
+      "bytes": 14523
+    },
+    "game/full_view_study/cases/vs08/reveal.png": {
+      "sha256": "50493120121531a15cdc6352a85efc2b08ac6b12793b22740f3fdfa468bf0562",
+      "mtime_ns": 1794787534193449200,
+      "bytes": 942363
+    },
+    "game/full_view_study/cases/vs09/definition.json": {
+      "sha256": "cb36a6b20d7ec024bea47370165bcee7662293663655cf4d18d288388608b560",
+      "mtime_ns": 1794787534194579400,
+      "bytes": 7100
+    },
+    "game/full_view_study/cases/vs09/reveal.png": {
+      "sha256": "15f3b3a8baf09daf71aa9eb956e1d7ad2c11df323dce52eed763bc84eb96fa86",
+      "mtime_ns": 1794787534203658500,
+      "bytes": 1070515
+    },
+    "game/full_view_study/cases/vs10/definition.json": {
+      "sha256": "2674efa16321ade17005abc9a50798c82574b3805feba4c36b1b4851f4899c7e",
+      "mtime_ns": 1794787534204663500,
+      "bytes": 23371
+    },
+    "game/full_view_study/cases/vs10/reveal.png": {
+      "sha256": "b45d414e3651de6fba7c4eb5e1fc2b139759a8b386846ca43af237e7346f46c1",
+      "mtime_ns": 1794787534211744600,
+      "bytes": 1502311
+    },
+    "game/data/content/ankh_001.json": {
+      "sha256": "4313e75f67f9644c98986a2c2298b4400ab0ab27a9a7005a32254be99a2116fb",
+      "mtime_ns": 1794787534118926300,
+      "bytes": 1565
+    },
+    "game/data/content/balut.json": {
+      "sha256": "5fb93ef0aa65d32fc3910538b6824898a264669d9381d3b99834eece1753de1e",
+      "mtime_ns": 1794787534119512300,
+      "bytes": 13641
+    },
+    "game/data/content/banane_001.json": {
+      "sha256": "9469e7af01face9b7db111a2c82603fe9c846891c88ac8a03325d9bd7ac6cf82",
+      "mtime_ns": 1794787534120026400,
+      "bytes": 1729
+    },
+    "game/data/content/bierglas_001.json": {
+      "sha256": "d7c7bb015690d099f321528469d85487bc72ea963e186838717bafc8ffe859a0",
+      "mtime_ns": 1794787534120536800,
+      "bytes": 4845
+    },
+    "game/data/content/birne_001.json": {
+      "sha256": "ca31a64958a40a3614e2e5483cbeb2c6146e6125e1f8821be00124524b86a730",
+      "mtime_ns": 1794787534121051100,
+      "bytes": 2017
+    },
+    "game/data/content/brandenburger_tor_001.json": {
+      "sha256": "9021e828087d070457210b75dccdbf35fb01f2dde4be739eee3dd433ff29f831",
+      "mtime_ns": 1794787534122084800,
+      "bytes": 6483
+    },
+    "game/data/content/buntspecht_001.json": {
+      "sha256": "1f222523cd4bdff6bfc5440922f61788b529a25a28f90689b6c9c64f3012fef3",
+      "mtime_ns": 1794787534122598500,
+      "bytes": 9513
+    },
+    "game/data/content/carabao_kopf_001.json": {
+      "sha256": "61c4a6d8e76237dbf5dafa7ec24693fe96a8ddc8680b5dc51b8513d4feeb53ff",
+      "mtime_ns": 1794787534123110600,
+      "bytes": 6996
+    },
+    "game/data/content/cau_vang_001.json": {
+      "sha256": "3c31e1c59b314962e90ecc63fe0bbb43e576ec9a178bbcc6bd6ca11a8c7a6322",
+      "mtime_ns": 1794787534123623100,
+      "bytes": 12801
+    },
+    "game/data/content/chicken_adobo.json": {
+      "sha256": "086c6f920897ac76d7c496f12ec5cb74fa555d34ec120083573e40af556bb204",
+      "mtime_ns": 1794787534124137600,
+      "bytes": 11042
+    },
+    "game/data/content/chocolate_hills_001.json": {
+      "sha256": "460a11ea9cfc6e0a5b84afe324683496e25489664cbb3cc60085f6db4058bffc",
+      "mtime_ns": 1794787534124651000,
+      "bytes": 8302
+    },
+    "game/data/content/chupacabra_001.json": {
+      "sha256": "7c697f5015681b6e31c9873a93f053b19bdad9a9704c55a7ff6602007a817451",
+      "mtime_ns": 1794787534125164100,
+      "bytes": 13206
+    },
+    "game/data/content/drachenfrucht_001.json": {
+      "sha256": "16a02e1c6236eec15e8dd9ecb1d5ab9617ae2276d9990888028d42af90d14897",
+      "mtime_ns": 1794787534125676500,
+      "bytes": 7191
+    },
+    "game/data/content/efeutute_001.json": {
+      "sha256": "b4bd247eeb6825c922a9d6d736e30e5ee043d9e04e7eef0531c064c04734a821",
+      "mtime_ns": 1794787534126190600,
+      "bytes": 18394
+    },
+    "game/data/content/erbse_001.json": {
+      "sha256": "f85c48639bfdff08bf36a087767c4fc6a67932da187ec708c1a61e184987f3c0",
+      "mtime_ns": 1794787534126703800,
+      "bytes": 5688
+    },
+    "game/data/content/erdbeere_001.json": {
+      "sha256": "6ffdb921524ebb322784777747a80ef3cee88e36845be7ec817d2da33aea0325",
+      "mtime_ns": 1794787534127218200,
+      "bytes": 3708
+    },
+    "game/data/content/fledermaus_001.json": {
+      "sha256": "4788451616c9d9cb54ede29e4546de4670a85c18fdf4bf6893bdf772bd638222",
+      "mtime_ns": 1794787534128247000,
+      "bytes": 2497
+    },
+    "game/data/content/fliegenpilz_001.json": {
+      "sha256": "3879d629c5470f944883e4673ddeaf10c5b473aaf57ffcda82d6e6b867f6b243",
+      "mtime_ns": 1794787534128765100,
+      "bytes": 3354
+    },
+    "game/data/content/game_boy_001.json": {
+      "sha256": "fbb2bddb7034e7975242f7581815b4bdbef08db84022f61053b3303c87020162",
+      "mtime_ns": 1794787534129277000,
+      "bytes": 8425
+    },
+    "game/data/content/gecko_001.json": {
+      "sha256": "aed678373d87e89a2b00b15c27b38ba6a8321a5960f1cf03c7a989e54c54ff14",
+      "mtime_ns": 1794787534129277000,
+      "bytes": 2645
+    },
+    "game/data/content/giraffe_001.json": {
+      "sha256": "90ac8dfd3a149ee8d82e0d86cb4e81902d978a3d96e73b1e8f667a71776c2f7b",
+      "mtime_ns": 1794787534130282200,
+      "bytes": 4693
+    },
+    "game/data/content/hamburger_001.json": {
+      "sha256": "5ce8a8f5dd6c7bb286120a79dc4cf6ff543e31530b058d0802cd0dd52ab48f23",
+      "mtime_ns": 1794787534130787900,
+      "bytes": 4554
+    },
+    "game/data/content/ho_chi_minh_001.json": {
+      "sha256": "3bcde54a01d96e81529e41ac358157523f0aa113b84c1c9fdc15d43002d19523",
+      "mtime_ns": 1794787534131292000,
+      "bytes": 22568
+    },
+    "game/data/content/huhn_419437f5.json": {
+      "sha256": "6d7db2b23a5281701fbd1bfd98b53ab6f79db670a4c7bee212c36e9d35b31b9d",
+      "mtime_ns": 1794787534131292000,
+      "bytes": 5102
+    },
+    "game/data/content/ingwer_001.json": {
+      "sha256": "14dbbf1dc064d9674a96b964100267213bca3535ecf6e1bef9d083ce8ac6200f",
+      "mtime_ns": 1794787534132296600,
+      "bytes": 2787
+    },
+    "game/data/content/japanische_teekanne_001.json": {
+      "sha256": "05b8abcdfcfb478ca19538e2b8132a91ce364ffb52fa5699605f8a00741b253a",
+      "mtime_ns": 1794787534132296600,
+      "bytes": 4106
+    },
+    "game/data/content/jinja_001.json": {
+      "sha256": "199cd5da7524731358cccbb798f18d1af1696dd7b83266399dc45af998232f11",
+      "mtime_ns": 1794787534133381800,
+      "bytes": 14988
+    },
+    "game/data/content/jose_rizal_001.json": {
+      "sha256": "2006da0fe28a5cd75cb116b9b9a768cad0d690932e55ca76a81156703004778d",
+      "mtime_ns": 1794787534133381800,
+      "bytes": 16475
+    },
+    "game/data/content/kaktus_001.json": {
+      "sha256": "705a3cee777b1ab7a00e41b7d7fee5118906c1916bc4f3d55c97a1401e110938",
+      "mtime_ns": 1794787534134389200,
+      "bytes": 2296
+    },
+    "game/data/content/klauenhammer_001.json": {
+      "sha256": "c8fcc68f6db40fee1c335d6fb126056f27bf3cc9db86a5fd277c4832e11e7ec9",
+      "mtime_ns": 1794787534134894700,
+      "bytes": 4162
+    },
+    "game/data/content/knoblauch_001.json": {
+      "sha256": "c5d5685f0bf4810ea2208aad43170fd9484fbb9c1d198f03edba07a9f858a63a",
+      "mtime_ns": 1794787534135412300,
+      "bytes": 8680
+    },
+    "game/data/content/koboldmaki_001.json": {
+      "sha256": "271b5a94009850972df72eaa81c0aefa26dbccd62c1389ea28413183c5159383",
+      "mtime_ns": 1794787534135412300,
+      "bytes": 11316
+    },
+    "game/data/content/koelner_dom_001.json": {
+      "sha256": "a21ecffd4b751ed71b97768eb8afa1f96331dc1fb193ccfdf85eeb7797314ef7",
+      "mtime_ns": 1794787534136419700,
+      "bytes": 9112
+    },
+    "game/data/content/kolibri_001.json": {
+      "sha256": "6c3525419f9ca193efd72bab11b9d6ca85fc7ba09507c65388d21921db291592",
+      "mtime_ns": 1794787534136419700,
+      "bytes": 5433
+    },
+    "game/data/content/lemmy_kilmister_001.json": {
+      "sha256": "f4c103bbf31b427476b6847af8875508c647e6f54b620d0824e3f0b498c8a5d7",
+      "mtime_ns": 1794787534136419700,
+      "bytes": 17244
+    },
+    "game/data/content/libelle_001.json": {
+      "sha256": "04cce3352980a321a893939709244fc58878c7139a9fc3c1fea4f18a05548716",
+      "mtime_ns": 1794787534137871600,
+      "bytes": 2415
+    },
+    "game/data/content/marienkaefer_001.json": {
+      "sha256": "491896044bcc34960e9af15b9c4476f0ad4cb853518ec5611eba041f57a87ebf",
+      "mtime_ns": 1794787534138902500,
+      "bytes": 5309
+    },
+    "game/data/content/marie_curie_001.json": {
+      "sha256": "8c37e04c51dfdc512d81a626148de77d051448ca9ffcd695ceb4858477bb0c42",
+      "mtime_ns": 1794787534138389500,
+      "bytes": 12200
+    },
+    "game/data/content/om_001.json": {
+      "sha256": "2021497d6e79578feca61b836986280a54f33e7a91eac06dfe6c970567068912",
+      "mtime_ns": 1794787534139413600,
+      "bytes": 5461
+    },
+    "game/data/content/pentagramm_001.json": {
+      "sha256": "913b58b617b2cc5ee77473285107b08e353b258eab0f2911c402f27af3eb5691",
+      "mtime_ns": 1794787534139413600,
+      "bytes": 4395
+    },
+    "game/data/content/petronas_towers_001.json": {
+      "sha256": "d1fc6f8943b166f57a4b1f9aca9ae0da49e5dc912b260cce147151325d5b7ea0",
+      "mtime_ns": 1794787534140435900,
+      "bytes": 9886
+    },
+    "game/data/content/pfirsich_001.json": {
+      "sha256": "6f755f67359f46015b8bc2eee79849c87d2d46e3a041c91234b3fb09f4bfdd4b",
+      "mtime_ns": 1794787534140952600,
+      "bytes": 9203
+    },
+    "game/data/content/qualle_001.json": {
+      "sha256": "a448459fff3831dc86759fb1686ac402f3533e6a603e8ed77c7ddf5f616da0a3",
+      "mtime_ns": 1794787534141469200,
+      "bytes": 6125
+    },
+    "game/data/content/radieschen_001.json": {
+      "sha256": "dec54b05fea3314f7ed9786cb065c977e0d4f87e66f14ed6ad12734ea762bf09",
+      "mtime_ns": 1794787534142477900,
+      "bytes": 3554
+    },
+    "game/data/content/regenbogen_001.json": {
+      "sha256": "1764ba7f716719d8432adbc82bab09c947c053df5ec77766dd78521997b91429",
+      "mtime_ns": 1794787534142477900,
+      "bytes": 14192
+    },
+    "game/data/content/regenwurm_001.json": {
+      "sha256": "bfbb38c63bc7bd3e45f10b4ce052d5fb7db6a7304143b907dc7e3ecf538bf6ba",
+      "mtime_ns": 1794787534142477900,
+      "bytes": 4436
+    },
+    "game/data/content/rote_nelke_001.json": {
+      "sha256": "f54a0ec597198a25a77677d0cde321bea69ad1ecaff934ad0b9236edd82b2556",
+      "mtime_ns": 1794787534143907800,
+      "bytes": 11221
+    },
+    "game/data/content/schachspringer_001.json": {
+      "sha256": "ed95c0b9ded61132a972402ad3aa04e3c7204549f2337c0fd7941273ac5ad1f2",
+      "mtime_ns": 1794787534144432200,
+      "bytes": 3998
+    },
+    "game/data/content/schluessel_001.json": {
+      "sha256": "e1b86c98967ebe80842088f792f4e5c95d1d514887e984ec9a4e4bf4e35a2ec1",
+      "mtime_ns": 1794787534144432200,
+      "bytes": 1749
+    },
+    "game/data/content/schnecke_001.json": {
+      "sha256": "4dd31af626da130e466e2c1c8335a30e3279de7dedb062792ce1e6a2e1e940bf",
+      "mtime_ns": 1794787534145437700,
+      "bytes": 2382
+    },
+    "game/data/content/seepferdchen_001.json": {
+      "sha256": "5b082e81bb5f3da5f6d459eee804188fdefdb3c6c6878f76c93bf63c206047db",
+      "mtime_ns": 1794787534145437700,
+      "bytes": 2767
+    },
+    "game/data/content/sega_game_gear_001.json": {
+      "sha256": "f3eac70daa0319d5f421706d86f1004e1847a256dd0596f7a4a544fce3493ea9",
+      "mtime_ns": 1794787534146541100,
+      "bytes": 7024
+    },
+    "game/data/content/silbermoewe_001.json": {
+      "sha256": "d99ec3feb7a9facc8964531eed14523f84589a3ac1e22391e2f7cead8ccdb45f",
+      "mtime_ns": 1794787534146541100,
+      "bytes": 6956
+    },
+    "game/data/content/sonnenblume_001.json": {
+      "sha256": "74d87421e6da602ea868a27429333bfd3019fd78ef234263e61e53167db8a0bf",
+      "mtime_ns": 1794787534147547000,
+      "bytes": 9967
+    },
+    "game/data/content/stirnlappenbasilisk_001.json": {
+      "sha256": "0c13e049c23fbc0a58b3251a5644950045101fc3d3bcf36b4d2e0cc8194190e6",
+      "mtime_ns": 1794787534148051800,
+      "bytes": 11050
+    },
+    "game/data/content/tomate_001.json": {
+      "sha256": "d79ede152529b7977b826391ed373ab6fa9c39c4217a3b38a1800c00db5f1d7a",
+      "mtime_ns": 1794787534148556200,
+      "bytes": 2151
+    },
+    "game/data/content/torii_001.json": {
+      "sha256": "1b5ab3b03fdbc0673b6cb86b61d3d32a676361f0efa73f87b04734c85f6d71ad",
+      "mtime_ns": 1794787534148556200,
+      "bytes": 2767
+    },
+    "game/data/content/warnemuende_001.json": {
+      "sha256": "885e498fdc6c9674b584b8c8cd1e35b7dc92a8ef1335e152bbff08f847b32937",
+      "mtime_ns": 1794787534149562700,
+      "bytes": 11496
+    },
+    "game/data/content/webcam_001.json": {
+      "sha256": "d744f65d7eac8f72c8b7f721af1625767ed20cc553d803a3fd437962bdc569af",
+      "mtime_ns": 1794787534149562700,
+      "bytes": 7184
+    },
+    "game/data/content/windspiel_001.json": {
+      "sha256": "c590aa9ba963a98f2c53819c9313925e4a3b54bcb7360ea41b86d39037351155",
+      "mtime_ns": 1794787534150614400,
+      "bytes": 3252
+    },
+    "game/data/content/yin_yang_001.json": {
+      "sha256": "ac3c241cf208ae5f696a717bbd39cc3293f8396c4cb2bedc11efa8c17a6cf226",
+      "mtime_ns": 1794787534151131400,
+      "bytes": 4246
+    },
+    "game/data/content/zitrone_001.json": {
+      "sha256": "175562a872c96082d4256abf510ccbbceea991bf68869def17153c4d1a364e6d",
+      "mtime_ns": 1794787534151641900,
+      "bytes": 1952
+    },
+    "game/art/backgrounds/pz-birne.png": {
+      "sha256": "fc59684a00e38145de8d496ff863fde5997c42dc844c112e526013e3b17171c9",
+      "mtime_ns": 1794787533526421000,
+      "bytes": 486658
+    },
+    "game/art/backgrounds/pz-birne.txt": {
+      "sha256": "8c34c7a604af506cbc9b41c5838dc87fa12c58fa567752eda472000930c2b1ae",
+      "mtime_ns": 1794787533526421000,
+      "bytes": 438
+    },
+    "game/art/backgrounds/pz-erdbeere.png": {
+      "sha256": "0f1d7bec08c5e9ae7af48b8dca73074711b5f284d7d4f62d3bf57c1d2e9ba8a2",
+      "mtime_ns": 1794787533529539300,
+      "bytes": 569682
+    },
+    "game/art/backgrounds/pz-erdbeere.txt": {
+      "sha256": "9162a14990c5027f5b3e45db4e0f2c6a7c22b9bfef43f008c7e4ffcf5543f48a",
+      "mtime_ns": 1794787533529539300,
+      "bytes": 432
+    },
+    "game/art/backgrounds/pz-fliegenpilz.png": {
+      "sha256": "a937d68149a2828d19e7295de6d9069da9314dede967a133547f77831536b91f",
+      "mtime_ns": 1794787533533375700,
+      "bytes": 610336
+    },
+    "game/art/backgrounds/pz-fliegenpilz.txt": {
+      "sha256": "3592758ee341ac446498592620e33054e1b505ac85a6fb0079c66cd678a8edd3",
+      "mtime_ns": 1794787533533375700,
+      "bytes": 394
+    },
+    "game/art/backgrounds/pz-libelle.png": {
+      "sha256": "50c0f65ae90143aa9484f57a1fa4e5b34e135b2f7b8d6acc487becfcc4b9cbd1",
+      "mtime_ns": 1794787533535411800,
+      "bytes": 222517
+    },
+    "game/art/backgrounds/pz-libelle.txt": {
+      "sha256": "03145905e29353a89d8f8b177c60bdb3ca38a13e9e1e3979fa2433264f5883ff",
+      "mtime_ns": 1794787533535411800,
+      "bytes": 441
+    },
+    "game/art/backgrounds/pz-marienkaefer.png": {
+      "sha256": "45f3c8fc69985c0f80e29e77b8557b9ada0c7c3987faac39873399c35e914107",
+      "mtime_ns": 1794787533538470800,
+      "bytes": 629568
+    },
+    "game/art/backgrounds/pz-marienkaefer.txt": {
+      "sha256": "6c586320aad16cabc2b271e0a40cbfa9326c81742f77858023bc27e01eae6d3f",
+      "mtime_ns": 1794787533538470800,
+      "bytes": 416
+    },
+    "game/art/backgrounds/pz-radieschen.png": {
+      "sha256": "eed3a1e4fef0b28e793107b819ca8b926aef4e4cf1997227136de6a06338414c",
+      "mtime_ns": 1794787533541060000,
+      "bytes": 361385
+    },
+    "game/art/backgrounds/pz-radieschen.txt": {
+      "sha256": "3ae08ebc0dadedfa140d2958a414552374689bc4a5ca65449a1c14a6e4390bd9",
+      "mtime_ns": 1794787533541571000,
+      "bytes": 414
+    },
+    "game/art/backgrounds/pz-schluessel.png": {
+      "sha256": "2bad530c3d8a3410295af7f5080409ebec93e994ae73605d4f7cad44fac83dab",
+      "mtime_ns": 1794787533543621500,
+      "bytes": 430896
+    },
+    "game/art/backgrounds/pz-schluessel.txt": {
+      "sha256": "7165a6b53a469464166e41db8a8bd3f24cfa74d3804abbd77c4120a2e23648bf",
+      "mtime_ns": 1794787533544627400,
+      "bytes": 411
+    },
+    "game/art/backgrounds/pz-schnecke.png": {
+      "sha256": "bdae55236241fe144202c64e99ebc15b4fcf881507e68e706c364b0580c5a73b",
+      "mtime_ns": 1794787533546657700,
+      "bytes": 364886
+    },
+    "game/art/backgrounds/pz-schnecke.txt": {
+      "sha256": "dfe91bb43f2fe05eea516e9b1cb70d501499208b372b34034be86569918ce91e",
+      "mtime_ns": 1794787533547771900,
+      "bytes": 396
+    },
+    "game/art/backgrounds/pz-zitrone.png": {
+      "sha256": "1f41b9a85756d295ea47de163fb9767b3922d66b5ecec0a98d3d4e5f744d6853",
+      "mtime_ns": 1794787533549794700,
+      "bytes": 442113
+    },
+    "game/art/backgrounds/pz-zitrone.txt": {
+      "sha256": "43a9056fffd43e98e2d84fe689fc3c51991ebc311dcd003403a55920896e1641",
+      "mtime_ns": 1794787533550298900,
+      "bytes": 365
+    },
+    "game/art/book/arrow-down.svg": {
+      "sha256": "f6868d894d866440bd3fe64a0c5913c62952fb50f0db8fc2392332ccde131215",
+      "mtime_ns": 1794787533558740700,
+      "bytes": 329
+    },
+    "game/art/book/arrow-left.svg": {
+      "sha256": "f704e6e5da545690dd02da2b629097dd9f71330e5338a063481fab6f1e1519ca",
+      "mtime_ns": 1794787533559746200,
+      "bytes": 333
+    },
+    "game/art/book/arrow-right.svg": {
+      "sha256": "ca7c8a9d00d033509c00181d7a33125cf88a63c9fa102a8b808de428b9bbc63c",
+      "mtime_ns": 1794787533559746200,
+      "bytes": 331
+    },
+    "game/art/book/arrow-up.svg": {
+      "sha256": "4dab3c772d0024ff839b71ee95a3e282e354750ffe1271e5b40abc57423f93bb",
+      "mtime_ns": 1794787533559746200,
+      "bytes": 331
+    },
+    "game/art/book/bp2-a-inventarband.png": {
+      "sha256": "957c2eab39b2334825fb159287b9d36a17b77fff1c628ea88110f2cfb5f7a71a",
+      "mtime_ns": 1794787533564853800,
+      "bytes": 4090532
+    },
+    "game/art/book/check-empty.svg": {
+      "sha256": "5effbb3665f6354ebccc97e4b7fea39ebc683340a3a0244e95140d862370df6f",
+      "mtime_ns": 1794787533566386000,
+      "bytes": 171
+    },
+    "game/art/book/check.svg": {
+      "sha256": "fe8a40a258f556f8afd52840b7ca0ce12296bf83ee751f0bf3540deff52225f0",
+      "mtime_ns": 1794787533566386000,
+      "bytes": 302
+    },
+    "game/art/book/checkbox-checked.svg": {
+      "sha256": "9baa482570478e355e5aae74090e5e1163dedfba3f9c82153f2aaf0c0cbfc703",
+      "mtime_ns": 1794787533566386000,
+      "bytes": 384
+    },
+    "game/art/book/checkbox-empty.svg": {
+      "sha256": "216c631f76b4a499672da877807b249ae8ccd969a1b70194d3ea056ec8c52ec8",
+      "mtime_ns": 1794787533567390900,
+      "bytes": 340
+    },
+    "game/art/book/chevron-down.svg": {
+      "sha256": "7147bbc61e9eeb2b2a97c7d66d11768d56664bc186810ecc01691114b4f44fa2",
+      "mtime_ns": 1794787533567390900,
+      "bytes": 306
+    },
+    "game/art/book/chevron-up.svg": {
+      "sha256": "b08a67fe48933274bececb92819f32dc8aee5e3a7dfa59facc54d8e9f0896e65",
+      "mtime_ns": 1794787533568437000,
+      "bytes": 309
+    },
+    "game/art/book/erase.svg": {
+      "sha256": "96685a23e7a1b93964c6d87649a2e8c2c2399513b07afceed57951140467ddbd",
+      "mtime_ns": 1794787533568437000,
+      "bytes": 359
+    },
+    "game/art/book/fill.svg": {
+      "sha256": "1adb0f8deeec7913d541f8b5bd2de3e5494a39c1abf32e293a325445528df8c6",
+      "mtime_ns": 1794787533569443200,
+      "bytes": 385
+    },
+    "game/art/book/frame-palette.png": {
+      "sha256": "9ac25082d5bba17f5ec6dfc847fe3882d41d398f019349bb3db3677af8b76e42",
+      "mtime_ns": 1794787533569443200,
+      "bytes": 36240
+    },
+    "game/art/book/frame-palette.png.import": {
+      "sha256": "0977b9fa05aea5251e4ed715f272627dfa652b0c79b575090aa78a78a4dcdeea",
+      "mtime_ns": 1794787533570690700,
+      "bytes": 953
+    },
+    "game/art/book/frame-preview.png": {
+      "sha256": "9187f1b1796aa3d8ef0603e01f82fde347f40fdcb5d0e3c66cc22e42657f12dd",
+      "mtime_ns": 1794787533571206800,
+      "bytes": 60733
+    },
+    "game/art/book/frame-preview.png.import": {
+      "sha256": "7f8950cfdcebbb8f56ecd46e11772402f26adffc226a1f21aec5c0c8e1a8b8b7",
+      "mtime_ns": 1794787533571720600,
+      "bytes": 953
+    },
+    "game/art/book/frame-tools.png": {
+      "sha256": "d2155c30234045ec0e178322be5bdcd381c03516ca850e9152ebb64da557196d",
+      "mtime_ns": 1794787533572726600,
+      "bytes": 63920
+    },
+    "game/art/book/frame-tools.png.import": {
+      "sha256": "d7081cbd7e5b9754f8cf9b8437bbaefdd6de1d5885dde05cd0e4b93f52ef055a",
+      "mtime_ns": 1794787533572726600,
+      "bytes": 947
+    },
+    "game/art/book/frames.json": {
+      "sha256": "0fcf84d17c01943cba6a86b342023b35926d05f862c8110cf6dcfd813234de3d",
+      "mtime_ns": 1794787533572726600,
+      "bytes": 1668
+    },
+    "game/art/book/Fraunces-OFL.txt": {
+      "sha256": "6732d6cc72c5d09292ff754dc1f39d9ea14918f74e87a17afa3f00a5120c3d48",
+      "mtime_ns": 1794787533551330800,
+      "bytes": 4390
+    },
+    "game/art/book/Fraunces.ttf": {
+      "sha256": "177ff6c0f14e5550a3c624247cd1189611d4eb65d000b14944c63d967958abbb",
+      "mtime_ns": 1794787533553343400,
+      "bytes": 360440
+    },
+    "game/art/book/help.svg": {
+      "sha256": "085ffa6e6b32cf8fe39e88a3ced2d94fb8395e8be0d03ccc064d5d8f6ce5572a",
+      "mtime_ns": 1794787533573805900,
+      "bytes": 338
+    },
+    "game/art/book/HZ-B-284-NOTICE.txt": {
+      "sha256": "f0e05321cfc9bbfebaf689e3993b0a84fc41dffc52ab233df360cd5f619046ff",
+      "mtime_ns": 1794787533553343400,
+      "bytes": 1530
+    },
+    "game/art/book/icons.json": {
+      "sha256": "6d9131df6b423a94be598cd0e66aa42774a16d6333e1c995372395935f2aac56",
+      "mtime_ns": 1794787533574331400,
+      "bytes": 5409
+    },
+    "game/art/book/KB-168-NOTICE.txt": {
+      "sha256": "5a34a51eb0e99c969029cfeba719847344384441c6f83cbd82b5abd7ffece51b",
+      "mtime_ns": 1794787533554350500,
+      "bytes": 632
+    },
+    "game/art/book/manifest.json": {
+      "sha256": "565469cec4c2c7b6858895c06b7a9fd3c9329416d4108d58d13b3c467531b582",
+      "mtime_ns": 1794787533574331400,
+      "bytes": 5637
+    },
+    "game/art/book/menu.svg": {
+      "sha256": "4dd71216041aeac0e2afd861516e715aa6b65ee0da696202dab854c65c5477dc",
+      "mtime_ns": 1794787533575356100,
+      "bytes": 603
+    },
+    "game/art/book/minus.svg": {
+      "sha256": "f230479b7b56e4d31671955e504731d15115261068f46e4b699a15132dc8b6c4",
+      "mtime_ns": 1794787533575877400,
+      "bytes": 287
+    },
+    "game/art/book/nav-album.svg": {
+      "sha256": "e59589030c0436baa93786b05711552eb3d104e021cf9f30ebd2c107daa2b290",
+      "mtime_ns": 1794787533576390600,
+      "bytes": 400
+    },
+    "game/art/book/nav-information.svg": {
+      "sha256": "ca7c8a9d00d033509c00181d7a33125cf88a63c9fa102a8b808de428b9bbc63c",
+      "mtime_ns": 1794787533576390600,
+      "bytes": 331
+    },
+    "game/art/book/nav-work.svg": {
+      "sha256": "f704e6e5da545690dd02da2b629097dd9f71330e5338a063481fab6f1e1519ca",
+      "mtime_ns": 1794787533577395900,
+      "bytes": 333
+    },
+    "game/art/book/play.svg": {
+      "sha256": "d57c49d4aa6787dfaa9b5b80e264361da47c8d553def8bf923d891e374d685f4",
+      "mtime_ns": 1794787533577899500,
+      "bytes": 326
+    },
+    "game/art/book/PlexSans-OFL.txt": {
+      "sha256": "d741e57d5f865e294df801f96b7b5161a88b211df65887e4358d271c9fc5fb4f",
+      "mtime_ns": 1794787533554350500,
+      "bytes": 4362
+    },
+    "game/art/book/PlexSans.ttf": {
+      "sha256": "3b031aa4216174205bd8471f88a49b91f093169e9e87bd5262242bc5967fe2e3",
+      "mtime_ns": 1794787533557430400,
+      "bytes": 537244
+    },
+    "game/art/book/plus.svg": {
+      "sha256": "78aad8146fe68d64f3033789e0f7240c6fd83738bd172bee900202b8b4c242f0",
+      "mtime_ns": 1794787533578403400,
+      "bytes": 318
+    },
+    "game/art/book/quit.svg": {
+      "sha256": "e73c034c8322dbcbe337d443cbd1b0f2b0c8640c4295c47ba288a04748253a04",
+      "mtime_ns": 1794787533578403400,
+      "bytes": 338
+    },
+    "game/art/book/redo.svg": {
+      "sha256": "dda374601aba386dde33078f08fe8da1168c15b4137000cdb18792d3818063d4",
+      "mtime_ns": 1794787533579409700,
+      "bytes": 371
+    },
+    "game/art/book/reset.svg": {
+      "sha256": "ae593cdbb3f9601f91a5a37dc6b9fda1965e22965674626aeec7ec36cc381bdf",
+      "mtime_ns": 1794787533579915000,
+      "bytes": 380
+    },
+    "game/art/book/scroll-down.svg": {
+      "sha256": "3f1c4ef4315eeebd791072b66bde923967039814d6509834197f677deaccc195",
+      "mtime_ns": 1794787533580420500,
+      "bytes": 354
+    },
+    "game/art/book/scroll-left.svg": {
+      "sha256": "7b37135357121116fd4da10b066b96e5cc7f9cbc89051d423a8b4c47811261b2",
+      "mtime_ns": 1794787533580935400,
+      "bytes": 360
+    },
+    "game/art/book/scroll-right.svg": {
+      "sha256": "5a53c57e13be59797da7ccadc9234c7a67187550e92b9453374f194592cdf0a7",
+      "mtime_ns": 1794787533581452400,
+      "bytes": 354
+    },
+    "game/art/book/scroll-up.svg": {
+      "sha256": "68f910f2f460a8f17acd05a21925986f72f059c06374f78d4f2cab0838f88830",
+      "mtime_ns": 1794787533581452400,
+      "bytes": 360
+    },
+    "game/art/book/Sidebar-NOTICES.txt": {
+      "sha256": "f484eb2b0d3f7e9690d9cb144c808b0ee68263fa262b03bea4a4b2a0b50e483d",
+      "mtime_ns": 1794787533558740700,
+      "bytes": 560
+    },
+    "game/art/book/undo.svg": {
+      "sha256": "aa3746dce70beb30fe9f08ae04dc1f1742ce2ca841c8bfab79e42cf45859d9f2",
+      "mtime_ns": 1794787533582456800,
+      "bytes": 370
+    },
+    "game/art/cells/fill-large.png": {
+      "sha256": "29ff8c8a7492d38155a58d5926ec9ec9b2c8e0e67652c1e2d614860e4d01d5f8",
+      "mtime_ns": 1794787533583647000,
+      "bytes": 87328
+    },
+    "game/art/cells/fill-large.png.import": {
+      "sha256": "11a231ece1c40419d53548cfe43f6c50f6892153fbe3fb3a9442e9cda170fbbe",
+      "mtime_ns": 1794787533583647000,
+      "bytes": 542
+    },
+    "game/art/cells/fill-medium.png": {
+      "sha256": "0f7223a09690d5985a2e6f79d1fec07eb152bde836f910f24c61b945511cf37d",
+      "mtime_ns": 1794787533584653600,
+      "bytes": 62134
+    },
+    "game/art/cells/fill-medium.png.import": {
+      "sha256": "8b0c6487f7e93693cef2f4cbc1353546569d8d6809fbba14c041fc7c7d7c03a0",
+      "mtime_ns": 1794787533585158500,
+      "bytes": 545
+    },
+    "game/art/cells/fill-small.png": {
+      "sha256": "5e1dc76ef5eb9769dd61bf49ff6aba6e68ad99ccfd1247b69715404542ac595a",
+      "mtime_ns": 1794787533585663100,
+      "bytes": 11462
+    },
+    "game/art/cells/fill-small.png.import": {
+      "sha256": "794d2cdd301be9677b858b26376b8ad19a5477d0e0228684ff0158a610e992a6",
+      "mtime_ns": 1794787533586669100,
+      "bytes": 542
+    },
+    "game/art/cells/x-large.png": {
+      "sha256": "a8efa25ece483d2574dbd8d1cca627416f37b47b6ec39cb1d0cbe0c2853cff07",
+      "mtime_ns": 1794787533587678500,
+      "bytes": 64030
+    },
+    "game/art/cells/x-large.png.import": {
+      "sha256": "dfb63e41d1e599aa4a348f739b215ece1865e3cbc0c5fd4b7f6aa9f6335001ff",
+      "mtime_ns": 1794787533588188800,
+      "bytes": 533
+    },
+    "game/art/cells/x-medium.png": {
+      "sha256": "0fb1e0797bc4b86fe120bab358fb3e309bf6a4c08baff0d61669952183c93bb9",
+      "mtime_ns": 1794787533588701200,
+      "bytes": 72180
+    },
+    "game/art/cells/x-medium.png.import": {
+      "sha256": "a34ab033f89922d0252e1f7ddd3cb099e5bbc8c1ce3b816a0ecf7cbebbc7ee27",
+      "mtime_ns": 1794787533588701200,
+      "bytes": 536
+    },
+    "game/art/cells/x-small.png": {
+      "sha256": "4546d2c57eda98c21057a73668697224d16c066f159a83ed6364c3058112ecf8",
+      "mtime_ns": 1794787533590231900,
+      "bytes": 29069
+    },
+    "game/art/cells/x-small.png.import": {
+      "sha256": "41760004eb51656db7d5c937e3f1b0e6d1e27f324dafb9fee1b0e62d92aee14f",
+      "mtime_ns": 1794787533590741500,
+      "bytes": 533
+    },
+    "game/art/content/ankh_001.png": {
+      "sha256": "ae6a6719f21111c623a32130bd2e31ed44a61343ab95c90bc73052d64c336360",
+      "mtime_ns": 1794787533593269800,
+      "bytes": 1869133
+    },
+    "game/art/content/ankh_001.txt": {
+      "sha256": "38df5afd4ba8cb2dd9860f440debf06007b4320a33a2894ddeddf9047402f919",
+      "mtime_ns": 1794787533594277500,
+      "bytes": 305
+    },
+    "game/art/content/balut.png": {
+      "sha256": "f157ea64818caf859ad50cbf5ede92e0c7091f1f57ab1c7f1f7dbdb108025669",
+      "mtime_ns": 1794787533601453000,
+      "bytes": 2035886
+    },
+    "game/art/content/balut.txt": {
+      "sha256": "e5b4ada52ef1677c8868bfdbb201d71838031e53c0cce30a22ada32fc5de738a",
+      "mtime_ns": 1794787533602458300,
+      "bytes": 259
+    },
+    "game/art/content/banane_001.png": {
+      "sha256": "af8ed145889d410fe5d49e9e44bc01765dafadecb9e8e1f6ec026fdac06b65b8",
+      "mtime_ns": 1794787533606602000,
+      "bytes": 1037502
+    },
+    "game/art/content/banane_001.txt": {
+      "sha256": "f0bf031adf97f38c7eaa682bf29be07eed8ec7d3aa6bdd21d5aa65868b32e27c",
+      "mtime_ns": 1794787533608197200,
+      "bytes": 278
+    },
+    "game/art/content/bierglas_001.png": {
+      "sha256": "d0f0bc903adee507fedb5dbbfcf1d9dba5475395661c52cde78aef77a982b609",
+      "mtime_ns": 1794787533615497600,
+      "bytes": 1784163
+    },
+    "game/art/content/bierglas_001.txt": {
+      "sha256": "171e9f4bcbc88bd2e07666b1059dd4b561d104b10a481172c129371109ab5f81",
+      "mtime_ns": 1794787533615497600,
+      "bytes": 510
+    },
+    "game/art/content/birne_001.png": {
+      "sha256": "c3554f13119addaf9735b4127c1a27095b2045ef45e671a20233a847b6ea54d4",
+      "mtime_ns": 1794787533622537000,
+      "bytes": 1684666
+    },
+    "game/art/content/birne_001.txt": {
+      "sha256": "c45823beafc679d3ded62af16a91c25e176b6bf4c3bcfd0c961383a881520161",
+      "mtime_ns": 1794787533623047400,
+      "bytes": 320
+    },
+    "game/art/content/brandenburger_tor_001.png": {
+      "sha256": "496479ab0cd2b214560f5f9f18ea6067ac21b91aab76af48874282aacd63af48",
+      "mtime_ns": 1794787533626690000,
+      "bytes": 1978700
+    },
+    "game/art/content/brandenburger_tor_001.txt": {
+      "sha256": "9635cf0e0aacf673bfeafc169abfcfa2e8599a44c4339db05e8e0ab4053bf6fc",
+      "mtime_ns": 1794787533627204700,
+      "bytes": 395
+    },
+    "game/art/content/buntspecht_001.png": {
+      "sha256": "611cf52c2f087f8e1d18c7e79b23c4508a9e54e63d2669348750f0b22405caf8",
+      "mtime_ns": 1794787533630274100,
+      "bytes": 2301738
+    },
+    "game/art/content/buntspecht_001.txt": {
+      "sha256": "1ce26fdc485edb609176de79440b4840dc5217d27fc915530e0faa0362bb754b",
+      "mtime_ns": 1794787533631280600,
+      "bytes": 501
+    },
+    "game/art/content/carabao_kopf_001.png": {
+      "sha256": "9754af1c084e389f84b06690d6b6a286846fd1e7149e1a62b8ade7146c5c3a39",
+      "mtime_ns": 1794787533634449000,
+      "bytes": 2381274
+    },
+    "game/art/content/carabao_kopf_001.txt": {
+      "sha256": "6335e00106a583ccc9b29d127b95da1487875cf0823db7795c941c5a7cdaa1e8",
+      "mtime_ns": 1794787533635477600,
+      "bytes": 476
+    },
+    "game/art/content/cau_vang_001.png": {
+      "sha256": "b88c7dee737be9f5ee20c4793c6c47cb600dd9c9fa92f2eea599abdc93f93dbb",
+      "mtime_ns": 1794787533642404000,
+      "bytes": 2022326
+    },
+    "game/art/content/cau_vang_001.txt": {
+      "sha256": "b71c53f4583491fc37983af35bac07fb5fc2d977411491b904b0c083ef1fe5b4",
+      "mtime_ns": 1794787533643411400,
+      "bytes": 286
+    },
+    "game/art/content/chicken_adobo.png": {
+      "sha256": "d321cb52a6bcda782bba0829d2a7fa5eaeb91f7672807fd12ff6fec92d5113ce",
+      "mtime_ns": 1794787533649679600,
+      "bytes": 2535758
+    },
+    "game/art/content/chicken_adobo.txt": {
+      "sha256": "b79cd6114519cda6132407d4942055a05a046e777157ca99ccbb9037eb9b58b0",
+      "mtime_ns": 1794787533649679600,
+      "bytes": 328
+    },
+    "game/art/content/chocolate_hills_001.png": {
+      "sha256": "37006bfe03d3800da227acfe8c210868c00e66bb27710f14c17c1c07af1b8a81",
+      "mtime_ns": 1794787533653713300,
+      "bytes": 2487600
+    },
+    "game/art/content/chocolate_hills_001.txt": {
+      "sha256": "5c59430d7f3a78a59e4a6583d9da734cd4bba9d5b3d5e39fd51d04017721ddeb",
+      "mtime_ns": 1794787533654719100,
+      "bytes": 243
+    },
+    "game/art/content/chupacabra_001.png": {
+      "sha256": "d89938b8a221b221384d4e3d3bb80dd3691ab4de244689538f8b896d026c0f4c",
+      "mtime_ns": 1794787533661590800,
+      "bytes": 1661548
+    },
+    "game/art/content/chupacabra_001.txt": {
+      "sha256": "31c15b84644934e1d5e0b4c9fe20930f6787af614917303b58c72d996927dae5",
+      "mtime_ns": 1794787533662099200,
+      "bytes": 248
+    },
+    "game/art/content/drachenfrucht_001.png": {
+      "sha256": "5c0b9e57e2a66edfcdd223d72718383c62b205766eb59247bac0a290aaa81070",
+      "mtime_ns": 1794787533670281300,
+      "bytes": 2049368
+    },
+    "game/art/content/drachenfrucht_001.txt": {
+      "sha256": "5e83fa4c8469d77519bb9520f017b2bb6438ad8201b6b3d0c48df765cc0dd13a",
+      "mtime_ns": 1794787533671385300,
+      "bytes": 243
+    },
+    "game/art/content/efeutute_001.png": {
+      "sha256": "bed1a08639a5a3dc4308c5f804b8ff78174b1bf115c17347ba477b400257e313",
+      "mtime_ns": 1794787533676424800,
+      "bytes": 1841491
+    },
+    "game/art/content/efeutute_001.txt": {
+      "sha256": "1af11873c5deb9540ac73ec0904db636bdce257d9fa0a0e2f69201e65f01b5a1",
+      "mtime_ns": 1794787533677599800,
+      "bytes": 452
+    },
+    "game/art/content/erbse_001.png": {
+      "sha256": "f0765f22be4b3fd740d8dc40df0962df7a1e9c23de6ea9069db8f68163b836d8",
+      "mtime_ns": 1794787533683707300,
+      "bytes": 1200197
+    },
+    "game/art/content/erbse_001.txt": {
+      "sha256": "3c100bb0e5505277357d7edbbb8f5626d7351cf99722a3e9865c22078ae8c7cb",
+      "mtime_ns": 1794787533684223100,
+      "bytes": 464
+    },
+    "game/art/content/erdbeere_001.png": {
+      "sha256": "cc202e928cc2f64a8c78a02e56fac3c9e61103c1973ebae64c98d16ffbac1809",
+      "mtime_ns": 1794787533690297700,
+      "bytes": 1666798
+    },
+    "game/art/content/erdbeere_001.txt": {
+      "sha256": "f353b801762c61066ae83094c5ce02e898155fcb68ef76cfe7a2206aecf368e7",
+      "mtime_ns": 1794787533691306100,
+      "bytes": 399
+    },
+    "game/art/content/fledermaus_001.png": {
+      "sha256": "7f433913a79a5e25e3fec423a2c05eeab675bb76b386cc09d05b7f0f2901c27c",
+      "mtime_ns": 1794787533696388500,
+      "bytes": 1222174
+    },
+    "game/art/content/fledermaus_001.txt": {
+      "sha256": "a70ca13b24f7a854ef94f65472a53a0772e66d822ec8cd416498958e71624afe",
+      "mtime_ns": 1794787533697409400,
+      "bytes": 331
+    },
+    "game/art/content/fliegenpilz_001.png": {
+      "sha256": "e18b0894bed89ca950289554ffe3944b739efdbe8eeb3c9b64303ed1b6f26db9",
+      "mtime_ns": 1794787533702597000,
+      "bytes": 1381425
+    },
+    "game/art/content/fliegenpilz_001.txt": {
+      "sha256": "440f167cca4d566324d97b7b2e30456bc5d8ab66bce80305be8c7d1bdcce904f",
+      "mtime_ns": 1794787533702597000,
+      "bytes": 305
+    },
+    "game/art/content/game_boy_001.png": {
+      "sha256": "8dd70cb680ca3ee6993d1ddc15be11965e94ccbb271157938de21d987b13352c",
+      "mtime_ns": 1794787533705474300,
+      "bytes": 1980394
+    },
+    "game/art/content/game_boy_001.txt": {
+      "sha256": "915d97330c23d323b977b9cb8a40a30e9128fbcd868b8809e9b3898685907fac",
+      "mtime_ns": 1794787533706913200,
+      "bytes": 340
+    },
+    "game/art/content/gecko_001.png": {
+      "sha256": "df663428366ba6a0802d28934bf1a0ee4dfb76ae32c9200e89057a7434dfb45b",
+      "mtime_ns": 1794787533711532100,
+      "bytes": 1044090
+    },
+    "game/art/content/gecko_001.txt": {
+      "sha256": "bcbfc2d9664d044fd39ecef9611aeae4ddd0f4fcc3bde55a741002d73a340a71",
+      "mtime_ns": 1794787533711532100,
+      "bytes": 437
+    },
+    "game/art/content/giraffe_001.png": {
+      "sha256": "1c047af76afe3862377047299624019487fc80ffbaa7bf8993f498b4b4120ee1",
+      "mtime_ns": 1794787533714686100,
+      "bytes": 1829142
+    },
+    "game/art/content/giraffe_001.txt": {
+      "sha256": "b8f8a0c5d205d5571bc3bd4f2f16a543fb9997b4ee0e0559bc231a245b2acc7d",
+      "mtime_ns": 1794787533714686100,
+      "bytes": 475
+    },
+    "game/art/content/hamburger_001.png": {
+      "sha256": "5260b0701ae62bb130cdd09c876ec5b5a83d956c65cc9e5546fb393251939517",
+      "mtime_ns": 1794787533723949200,
+      "bytes": 2183606
+    },
+    "game/art/content/hamburger_001.txt": {
+      "sha256": "f4139f038dd14791a397e0e6a6cdcce416ab712beb844b3c0e6a3ff5dc487c42",
+      "mtime_ns": 1794787533724461500,
+      "bytes": 466
+    },
+    "game/art/content/ho_chi_minh_001.png": {
+      "sha256": "1f5ba4ca6d8d366fa53bb98ada40d24466e90c5655b45a03c8f9a32f7f7fc8af",
+      "mtime_ns": 1794787533731639500,
+      "bytes": 1615316
+    },
+    "game/art/content/ho_chi_minh_001.txt": {
+      "sha256": "b38fe5940cde8a119abf831aee8e8c8bd25b0658d435a326da20a7bc06384f8d",
+      "mtime_ns": 1794787533732648100,
+      "bytes": 420
+    },
+    "game/art/content/huhn_419437f5.png": {
+      "sha256": "2672b5a69ca8b35bb78a0360860cbd415e285c5ba5c113c2867153b7e17c7328",
+      "mtime_ns": 1794787533738982000,
+      "bytes": 1401062
+    },
+    "game/art/content/huhn_419437f5.txt": {
+      "sha256": "431561faccd5b765b7c7524e445773518a36e371c233f5e254a7556da531f60b",
+      "mtime_ns": 1794787533739492900,
+      "bytes": 217
+    },
+    "game/art/content/ingwer_001.png": {
+      "sha256": "286186c60a9390c60cb829b119ea9fbf32abe5462bb7c58ac9a2e3872523431f",
+      "mtime_ns": 1794787533745389700,
+      "bytes": 1468177
+    },
+    "game/art/content/ingwer_001.txt": {
+      "sha256": "08511a49a16946d8403416d659cace21ef8375b8ce656be8fb988b4e9aa51f57",
+      "mtime_ns": 1794787533746399200,
+      "bytes": 437
+    },
+    "game/art/content/japanische_teekanne_001.png": {
+      "sha256": "53fe49d243f772215efe018bbd8c8d2376fa265c7be9f3b47452c08904e473b9",
+      "mtime_ns": 1794787533749443500,
+      "bytes": 2114210
+    },
+    "game/art/content/japanische_teekanne_001.txt": {
+      "sha256": "45da036f2b454ba66496c799302505575bff3a204e068ef0390cf64f149a4596",
+      "mtime_ns": 1794787533750466800,
+      "bytes": 455
+    },
+    "game/art/content/jinja_001.png": {
+      "sha256": "0154da8f3bbb63fb10b71b2181abd7e420204bfb548e643b2304341a10af661d",
+      "mtime_ns": 1794787533753548000,
+      "bytes": 2595936
+    },
+    "game/art/content/jinja_001.txt": {
+      "sha256": "1a31e358b7cf5b13cb8a4b8a5ee5eaba78d353b4e6ff27ff8841209c83aa01d7",
+      "mtime_ns": 1794787533754553700,
+      "bytes": 210
+    },
+    "game/art/content/jose_rizal_001.png": {
+      "sha256": "ca042226c76c485abd2e89aae1fed574787e393a5faf69e058bd3fca223f911d",
+      "mtime_ns": 1794787533763326400,
+      "bytes": 2017899
+    },
+    "game/art/content/jose_rizal_001.txt": {
+      "sha256": "a529a375b50607c7e88252d817763e0df40d0ed7547ad3262c545867f7b777ef",
+      "mtime_ns": 1794787533764377500,
+      "bytes": 232
+    },
+    "game/art/content/kaktus_001.png": {
+      "sha256": "21a88817c31f01fd2b62d2001faa07abeefb291737e72050937449b4f0bad139",
+      "mtime_ns": 1794787533770957800,
+      "bytes": 1529362
+    },
+    "game/art/content/kaktus_001.txt": {
+      "sha256": "87b4bce89ba47e705206dec06d594b6d0cb8649fa1594a2b2a76cf83a5090922",
+      "mtime_ns": 1794787533771467300,
+      "bytes": 475
+    },
+    "game/art/content/klauenhammer_001.png": {
+      "sha256": "925da2e259f1f7eb9f697747d7926b9e3c0e1e63d12ed7cd46c3832588f80568",
+      "mtime_ns": 1794787533773518600,
+      "bytes": 1660480
+    },
+    "game/art/content/klauenhammer_001.txt": {
+      "sha256": "8080a789dc8af81a8f1d66add36220c963399b3b906532960d4fb07ed631280a",
+      "mtime_ns": 1794787533774525700,
+      "bytes": 303
+    },
+    "game/art/content/knoblauch_001.png": {
+      "sha256": "0d6bf175396e5afae00269e667f8a0351513b5829aa6a8180526053b34c8ebdc",
+      "mtime_ns": 1794787533781270700,
+      "bytes": 1481354
+    },
+    "game/art/content/knoblauch_001.txt": {
+      "sha256": "634ac440b54cb9453f18c20c23774a3f7dc563461591f5c334da5158c76cc217",
+      "mtime_ns": 1794787533781270700,
+      "bytes": 451
+    },
+    "game/art/content/koboldmaki_001.png": {
+      "sha256": "47712f05e7a2e3e0bbc7255f35af9d2407f52d50d0432ea4915be2370a9417ae",
+      "mtime_ns": 1794787533785038300,
+      "bytes": 1971254
+    },
+    "game/art/content/koboldmaki_001.txt": {
+      "sha256": "fa42d59651cdb8de1ee8d64898ffc64e2a8bd5836a35b8df005500f7618b28a1",
+      "mtime_ns": 1794787533785540900,
+      "bytes": 393
+    },
+    "game/art/content/koelner_dom_001.png": {
+      "sha256": "5b5b97ec7bdf1965d38f65fe70e5cd51396e7c99454ae1a1390095dfb46e738e",
+      "mtime_ns": 1794787533789668300,
+      "bytes": 2741813
+    },
+    "game/art/content/koelner_dom_001.txt": {
+      "sha256": "5f4b68c6d0d2d14eee716d7fa34c58949bc87c678a94f72927c653ff569ddfbe",
+      "mtime_ns": 1794787533790685000,
+      "bytes": 459
+    },
+    "game/art/content/kolibri_001.png": {
+      "sha256": "0afea62b0d1580edf84654ed327988383ab7ac4c872ae5f425e92f6a2907bb60",
+      "mtime_ns": 1794787533794727600,
+      "bytes": 1241679
+    },
+    "game/art/content/kolibri_001.txt": {
+      "sha256": "48d3820757b68eee96884b5efb3b095928b2faaa99cbaab8ba265139cbb53852",
+      "mtime_ns": 1794787533796014500,
+      "bytes": 588
+    },
+    "game/art/content/lemmy_kilmister_001.png": {
+      "sha256": "d55d58cf043788e9e7b343921871acc3ab3111b3f3a0d082d092bd2449e9ecad",
+      "mtime_ns": 1794787533805581200,
+      "bytes": 2429910
+    },
+    "game/art/content/lemmy_kilmister_001.txt": {
+      "sha256": "e1b055c293d0510c15773fa6e0413d43a933ca80c1ecd82c32bff9fc780be2ce",
+      "mtime_ns": 1794787533806586500,
+      "bytes": 332
+    },
+    "game/art/content/libelle_001.png": {
+      "sha256": "fa9115bf5ba8ad8bce8af8f19c5b5d50578e5f388692adc3c14ccc0d89a5b4da",
+      "mtime_ns": 1794787533820607900,
+      "bytes": 1345641
+    },
+    "game/art/content/libelle_001.txt": {
+      "sha256": "c2db03a29f7ae92586b30f1ead255636f6f194015fd19392da123a585374487b",
+      "mtime_ns": 1794787533821122600,
+      "bytes": 251
+    },
+    "game/art/content/marienkaefer_001.png": {
+      "sha256": "9ea7f3248efc6d95de6f947c692ee9142d63c7bbe9689fbe57e560c00c662270",
+      "mtime_ns": 1794787533832432100,
+      "bytes": 1799222
+    },
+    "game/art/content/marienkaefer_001.txt": {
+      "sha256": "fbbf798e2651ff9cd15ca8b03c2dd23133e5de124bdb1009e37dc9754bcf2e6a",
+      "mtime_ns": 1794787533833438200,
+      "bytes": 312
+    },
+    "game/art/content/marie_curie_001.png": {
+      "sha256": "6e45b1af156ae97217989d0dca99da60891ac765b7819fa0aab5f430f2a4c75b",
+      "mtime_ns": 1794787533824757600,
+      "bytes": 1917222
+    },
+    "game/art/content/marie_curie_001.txt": {
+      "sha256": "33e3d971444f75be2bc3ca5634b953633acaf7c01fd561aedb60c636dff38032",
+      "mtime_ns": 1794787533825267800,
+      "bytes": 478
+    },
+    "game/art/content/om_001.png": {
+      "sha256": "3ce9799443da21c46dc63754670f3fb89ec3822ca267c26c27d1e4cb4ce3387e",
+      "mtime_ns": 1794787533838561900,
+      "bytes": 1369591
+    },
+    "game/art/content/om_001.txt": {
+      "sha256": "fd93c6f43e52b9b707e7c534e303c9b9c36250b79dc295a6d163bb2546c3975a",
+      "mtime_ns": 1794787533839566900,
+      "bytes": 349
+    },
+    "game/art/content/pentagramm_001.png": {
+      "sha256": "d98d365128e3146657440f35645fea55d95aa23bd74efd7038d240e1026db12d",
+      "mtime_ns": 1794787533845400600,
+      "bytes": 1594419
+    },
+    "game/art/content/pentagramm_001.txt": {
+      "sha256": "4d2c5ed5d9c1c4549fe0f0f04af89fd001a56b7e75b6d70295b1151ba3f9a713",
+      "mtime_ns": 1794787533846405900,
+      "bytes": 223
+    },
+    "game/art/content/petronas_towers_001.png": {
+      "sha256": "b51083a47a82936189f9b991d2462940c39c78293e6721bc1411dcf1067c8e8e",
+      "mtime_ns": 1794787533850318000,
+      "bytes": 2607585
+    },
+    "game/art/content/petronas_towers_001.txt": {
+      "sha256": "9f495c439e6d210ee6616ea0c308cda71e7a35a8d3a18cdc31ef70dfe19c1e45",
+      "mtime_ns": 1794787533851324000,
+      "bytes": 285
+    },
+    "game/art/content/pfirsich_001.png": {
+      "sha256": "3706d19818ea7a61cbfcb95402554113d247f1063a2e2ca83e0cf5fe0c2f3cbe",
+      "mtime_ns": 1794787533857514600,
+      "bytes": 1308501
+    },
+    "game/art/content/pfirsich_001.txt": {
+      "sha256": "755a65b04b4851cd2bbcb650fd2be4fbdf24f0a12b72d940827de156961379d5",
+      "mtime_ns": 1794787533858538300,
+      "bytes": 451
+    },
+    "game/art/content/qualle_001.png": {
+      "sha256": "91a20121593a44b0f7c41c2db6a1025a62f3c89f9c40927f2cb52ceb8513e29d",
+      "mtime_ns": 1794787533864710200,
+      "bytes": 1516666
+    },
+    "game/art/content/qualle_001.txt": {
+      "sha256": "1c348a48831e9e951640954af0f2289c5735f43e78b90f89aadf174575a8a0e7",
+      "mtime_ns": 1794787533865228100,
+      "bytes": 265
+    },
+    "game/art/content/radieschen_001.png": {
+      "sha256": "f3c460b6e585ae1ee9a56957511c88b22679d1d8281a0047898fe4592794e3f2",
+      "mtime_ns": 1794787533871406300,
+      "bytes": 1679029
+    },
+    "game/art/content/radieschen_001.txt": {
+      "sha256": "15f06ab17c4b13cd7569d48a6841605b46e8f0fa97a73002670714cbaef0579f",
+      "mtime_ns": 1794787533872411700,
+      "bytes": 312
+    },
+    "game/art/content/regenbogen_001.png": {
+      "sha256": "68943d92c0e4bc8ace14708b1a6f6dcfb46fb7d437bf9f4bcca8c91bc132d88c",
+      "mtime_ns": 1794787533878356800,
+      "bytes": 1602098
+    },
+    "game/art/content/regenbogen_001.txt": {
+      "sha256": "20dc7ab114612ad370bb19e74f98dffc9106c7f7e0d60ffea4bc6480121a1e24",
+      "mtime_ns": 1794787533879361600,
+      "bytes": 303
+    },
+    "game/art/content/regenwurm_001.png": {
+      "sha256": "7e2e4f65553be736d5ceb599d66a63f3f742d1f06feb07d76e4958c0330aa52c",
+      "mtime_ns": 1794787533882460400,
+      "bytes": 928504
+    },
+    "game/art/content/regenwurm_001.txt": {
+      "sha256": "00422523b3c3225b29ee8abe22041a1df5aa5acbd191481fe93db37434765b33",
+      "mtime_ns": 1794787533884304200,
+      "bytes": 467
+    },
+    "game/art/content/rote_nelke_001.png": {
+      "sha256": "c30cc030c4b4621ccedb3a5fff9b00be1fc07a54f03b35cf3d4de0e494a29232",
+      "mtime_ns": 1794787533889405600,
+      "bytes": 1349321
+    },
+    "game/art/content/rote_nelke_001.txt": {
+      "sha256": "1595a66efeef23e016740f5b2682f11ff15bd86a6f51718a113aaec7a719303d",
+      "mtime_ns": 1794787533890506000,
+      "bytes": 387
+    },
+    "game/art/content/schachspringer_001.png": {
+      "sha256": "869792beac0b2bf7d6f64ad73453b75bfdb90641105ac21d37d6fcebf21cb93c",
+      "mtime_ns": 1794787533895600800,
+      "bytes": 1230760
+    },
+    "game/art/content/schachspringer_001.txt": {
+      "sha256": "5004aff052e1b4d401a6aef7685c46667eabe8ddd1a67b16a1348f2aae6c5131",
+      "mtime_ns": 1794787533896606200,
+      "bytes": 547
+    },
+    "game/art/content/schluessel_001.png": {
+      "sha256": "d7287673cd05a172c2deda3b1d93ebc993a8979ec828b945709f769f567344cf",
+      "mtime_ns": 1794787533901312900,
+      "bytes": 1296425
+    },
+    "game/art/content/schluessel_001.txt": {
+      "sha256": "fa1a68797f6160068f33ee45bc671f294f128a83e795a6e1fa39b9a86ee8464a",
+      "mtime_ns": 1794787533902377100,
+      "bytes": 374
+    },
+    "game/art/content/schnecke_001.png": {
+      "sha256": "022a3b29113a1cd837fef05df12682154f8984d918f6a879ddf042765cb0373e",
+      "mtime_ns": 1794787533908730700,
+      "bytes": 1779203
+    },
+    "game/art/content/schnecke_001.txt": {
+      "sha256": "24e36d732fb99d207778bb64ba148ec580e6bbea0274735b43636af8383b3a9c",
+      "mtime_ns": 1794787533909756100,
+      "bytes": 368
+    },
+    "game/art/content/seepferdchen_001.png": {
+      "sha256": "dac1d788f3f143d9dde976f7dc7b8fd02099eea872f759872b0ee58b1360937c",
+      "mtime_ns": 1794787533913385500,
+      "bytes": 2163481
+    },
+    "game/art/content/seepferdchen_001.txt": {
+      "sha256": "e8c4a50868147654635e7adbf988e03d87c4201c5437e2cbffc6b34bb891c0b8",
+      "mtime_ns": 1794787533913385500,
+      "bytes": 289
+    },
+    "game/art/content/sega_game_gear_001.png": {
+      "sha256": "e875ff4f7fd543a477e0269fe0d2ef0bd635fd3ac929e8363174edf47ec9ba4a",
+      "mtime_ns": 1794787533923645600,
+      "bytes": 1924767
+    },
+    "game/art/content/sega_game_gear_001.txt": {
+      "sha256": "a1d7bd7bcadf4c17626ea6523ef34c9f61a934454b7705006beca2c5ea5195e2",
+      "mtime_ns": 1794787533923645600,
+      "bytes": 258
+    },
+    "game/art/content/silbermoewe_001.png": {
+      "sha256": "03211f56cc6070575b4c9be740eb739a039891664f00ed711c74a2ffad6d68c0",
+      "mtime_ns": 1794787533926707300,
+      "bytes": 1829533
+    },
+    "game/art/content/silbermoewe_001.txt": {
+      "sha256": "75be5177c8ba76996f8f900adf2bc135c9092fd3a60cde58597e5346d4528323",
+      "mtime_ns": 1794787533928308700,
+      "bytes": 264
+    },
+    "game/art/content/sonnenblume_001.png": {
+      "sha256": "952719722a6fc542b025441a90ab3e876a2a38dbcd8313060e0c1a57db074ebd",
+      "mtime_ns": 1794787533934433600,
+      "bytes": 1979782
+    },
+    "game/art/content/sonnenblume_001.txt": {
+      "sha256": "3b9a25031934d20164a4e8d89f29a2eeede429dccf0617bca7beac1be2cad63d",
+      "mtime_ns": 1794787533934940900,
+      "bytes": 274
+    },
+    "game/art/content/stirnlappenbasilisk_001.png": {
+      "sha256": "1a66386a87d6303dbc68131170333d847496e18b48e6ba236f4577d2ddcebb24",
+      "mtime_ns": 1794787533939470900,
+      "bytes": 1122126
+    },
+    "game/art/content/stirnlappenbasilisk_001.txt": {
+      "sha256": "cb456ab8e51823839afa87542fef502a1b8cd47dcd96fe1b3aa13d9687b27d22",
+      "mtime_ns": 1794787533939982600,
+      "bytes": 559
+    },
+    "game/art/content/tomate_001.png": {
+      "sha256": "853f8cfd9dd984dd244e0093e7f83719f9285c8ffcc3df61585fabb301e34e74",
+      "mtime_ns": 1794787533947519000,
+      "bytes": 2020576
+    },
+    "game/art/content/tomate_001.txt": {
+      "sha256": "78ce1d4e62ba9812bb66b70e3b74641224612c1528c5eefb6d56f1d217dc318b",
+      "mtime_ns": 1794787533948529300,
+      "bytes": 266
+    },
+    "game/art/content/torii_001.png": {
+      "sha256": "3f68fdcfee77d780c4fd6de4693795fc680b86b98bbb201c54045a0e151dd167",
+      "mtime_ns": 1794787533952632600,
+      "bytes": 918609
+    },
+    "game/art/content/torii_001.txt": {
+      "sha256": "6a73c278f2483e4d29c8ead18e74f4b8f386886de8ef0ece967b6b5866c072c6",
+      "mtime_ns": 1794787533953660100,
+      "bytes": 208
+    },
+    "game/art/content/warnemuende_001.png": {
+      "sha256": "c8300e88d06a79457dbfcb40460521c7fd2cf4b9d2a8c1a2d2de6bfffde8231e",
+      "mtime_ns": 1794787533963648100,
+      "bytes": 2194120
+    },
+    "game/art/content/warnemuende_001.txt": {
+      "sha256": "40814a994edc1403c266b73b50dd15330a54e34559195a82aa713af4fc6bf8cf",
+      "mtime_ns": 1794787533963648100,
+      "bytes": 411
+    },
+    "game/art/content/webcam_001.png": {
+      "sha256": "12f53a2adb863ccb0fe19445c50d603bbcff4ebb2dbeb64f30b6f36e5b1948e8",
+      "mtime_ns": 1794787533971779600,
+      "bytes": 1667919
+    },
+    "game/art/content/webcam_001.txt": {
+      "sha256": "81a79077d07d5b66639a9b352e2500eb5289e02d3a4457eac3578a7f3252c1bc",
+      "mtime_ns": 1794787533972292200,
+      "bytes": 202
+    },
+    "game/art/content/windspiel_001.png": {
+      "sha256": "7eb95ed3144950bb3e9235cee17736fef6ed6a8505abddf615cccfb253e44a72",
+      "mtime_ns": 1794787533975822500,
+      "bytes": 1703793
+    },
+    "game/art/content/windspiel_001.txt": {
+      "sha256": "e19ca36c8ca41e06de224655dd72e64ee11e87ec4bf33da47956ab4871d13145",
+      "mtime_ns": 1794787533976327400,
+      "bytes": 418
+    },
+    "game/art/content/yin_yang_001.png": {
+      "sha256": "a3c192f26e416d4ce4fadf273239d181dda581cfc415bcd869ec1a65518b61fe",
+      "mtime_ns": 1794787533985453500,
+      "bytes": 2210166
+    },
+    "game/art/content/yin_yang_001.txt": {
+      "sha256": "6f6ccc513b1f5ac9d3201b38e10c6592218cce272bb39be82e0d798becb0f678",
+      "mtime_ns": 1794787533986458500,
+      "bytes": 501
+    },
+    "game/art/content/zitrone_001.png": {
+      "sha256": "02f09d8240bc4d82d84c3ec63ea27d1836dcd8447fd4133b35dc753e34dc15b8",
+      "mtime_ns": 1794787533993392200,
+      "bytes": 1696812
+    },
+    "game/art/content/zitrone_001.txt": {
+      "sha256": "8742e36f027709fd963799ba12e982f1b2306360bf23fc6b95414195cc650ccf",
+      "mtime_ns": 1794787533993392200,
+      "bytes": 291
+    },
+    "game/art/drawing/Bakso-NOTICES.md": {
+      "sha256": "37deab48d0390bbd34d5971cb5a43664e9578f8f0effa1066a94a3c96497e3e9",
+      "mtime_ns": 1794787533994901400,
+      "bytes": 1389
+    },
+    "game/art/drawing/BaksoDaging-Regular.ttf": {
+      "sha256": "56372bf12a6e4fa47a655ff9b2c4cc73172ddd387b3a047093d3e637d081790e",
+      "mtime_ns": 1794787533995405800,
+      "bytes": 128924
+    },
+    "game/art/drawing/Chalkboard-Regular.ttf": {
+      "sha256": "163d5acb0c4cc2f54a603501836fda2dcdd1d09579a8d1f790ab882d86175c4d",
+      "mtime_ns": 1794787533996413200,
+      "bytes": 21976
+    },
+    "game/art/drawing/DelightCoffee-NOTICES.md": {
+      "sha256": "b443284305899d2b14bcc4852cc088b883b4cb78ab2dc8b8f0c6856c108cc3e8",
+      "mtime_ns": 1794787533996413200,
+      "bytes": 2087
+    },
+    "game/art/drawing/DelightCoffee-Regular.ttf": {
+      "sha256": "4031afdb556558ffdecd48488fd1ae7eee857e804f4622ac5154cc7bb0c4cb23",
+      "mtime_ns": 1794787533997760200,
+      "bytes": 32268
+    },
+    "game/art/drawing/NOTICES.md": {
+      "sha256": "c126113cc639c597f5fefdb1cecb33e6666c0a4f814c416ecfb6d2ae84394862",
+      "mtime_ns": 1794787533998275400,
+      "bytes": 1168
+    },
+    "game/art/drawing/Pangolin-Regular.ttf": {
+      "sha256": "a48db64eadc589c2e9f14a4ba79eed82a438c7f620f929dd19e352c20b2a922e",
+      "mtime_ns": 1794787534000307500,
+      "bytes": 589884
+    },
+    "game/art/drawing/TidyHand.ttf": {
+      "sha256": "9eacc0d857ab9decbc34b0dab150641ba5b5a9560a8d163b6494dd5babbcdfd6",
+      "mtime_ns": 1794787534001345200,
+      "bytes": 31056
+    },
+    "game/art/drawing/delight-coffee/More Info.txt": {
+      "sha256": "b6a4bf8aa33a02a4f1cbbf5335db113bfad3e3171e9d733c2c1a4356b48a3da0",
+      "mtime_ns": 1794787534002350400,
+      "bytes": 419
+    },
+    "game/art/drawing/delight-coffee/Read Me.pdf": {
+      "sha256": "a57f6f06a94723d5e1b274a5dfbbd2ca0f4c660894dbefd0cae28037a9e6c405",
+      "mtime_ns": 1794787534004867000,
+      "bytes": 536273
+    },
+    "game/art/drawing/margins/help_left.png": {
+      "sha256": "879c30e29f25cf6d64e692ab3858f5a8e61c0c1ad1ca2d99827ebf6f5a85c738",
+      "mtime_ns": 1794787534008396100,
+      "bytes": 518528
+    },
+    "game/art/drawing/margins/help_left.png.import": {
+      "sha256": "d9118ad7eb6201ac4c4ccac651a045fda131ae1291d239e4256a5d754e1f1c48",
+      "mtime_ns": 1794787534008396100,
+      "bytes": 950
+    },
+    "game/art/drawing/margins/help_right.png": {
+      "sha256": "4d425a0b0ee52cb441c15b6a23025a03fce9149fc0f09a58e83d003a8f4562d7",
+      "mtime_ns": 1794787534014697500,
+      "bytes": 1359623
+    },
+    "game/art/drawing/margins/help_right.png.import": {
+      "sha256": "7d8beb24c049e7cfe5ebfa4d28161ca792eea151c3fe75a40a8720538d111540",
+      "mtime_ns": 1794787534015848000,
+      "bytes": 953
+    },
+    "game/art/drawing/margins/nature_left.png": {
+      "sha256": "8c4b2517b7f3b15555c7a39bee27588bce386426ca9017a2a4ed691c67e68aba",
+      "mtime_ns": 1794787534020635900,
+      "bytes": 914022
+    },
+    "game/art/drawing/margins/nature_left.png.import": {
+      "sha256": "f20b5412ef493eaa9f5c1288a459ca7927c032a8450b4b5d3ab75ee7400403df",
+      "mtime_ns": 1794787534021149800,
+      "bytes": 956
+    },
+    "game/art/drawing/margins/nature_right.png": {
+      "sha256": "a7f6cf74752fa1c43b20e55f31934167df7179b6af4f93fa5c41f79fb64857ac",
+      "mtime_ns": 1794787534028934600,
+      "bytes": 1648717
+    },
+    "game/art/drawing/margins/nature_right.png.import": {
+      "sha256": "af5621c36f0b1fca3452425585b41fb6a59288eae16ae5ab19d10b6cd056d83e",
+      "mtime_ns": 1794787534029441400,
+      "bytes": 959
+    },
+    "game/art/drawing/margins/NOTICE.txt": {
+      "sha256": "539f16ef05bf70593d60d9ec76182d55d6deafce209d7834eb7abb10468337a9",
+      "mtime_ns": 1794787534005371200,
+      "bytes": 296
+    },
+    "game/art/drawing/margins/provenance.json": {
+      "sha256": "9db56bafb27d2f52055fdda8b66200bf3af929d8461682fe6aad3504f175b51b",
+      "mtime_ns": 1794787534029955900,
+      "bytes": 10300
+    },
+    "game/art/drawing/margins/water_left.png": {
+      "sha256": "6f6e356e09874466f38a8e2e09367b60f31101d58e2f85a3db818db12ab9f0c4",
+      "mtime_ns": 1794787534033548800,
+      "bytes": 710420
+    },
+    "game/art/drawing/margins/water_left.png.import": {
+      "sha256": "eae1f6fbbc4840b7c2976a6a175967352df3639a08efbb98dd1facdf486a8572",
+      "mtime_ns": 1794787534034061800,
+      "bytes": 952
+    },
+    "game/art/drawing/margins/water_right.png": {
+      "sha256": "cc720e94e0a9bd0af55d44aa4ca813982ce92bb28e8eb9554c0210146fd5de20",
+      "mtime_ns": 1794787534040264200,
+      "bytes": 1297261
+    },
+    "game/art/drawing/margins/water_right.png.import": {
+      "sha256": "a532cc65dcd08ac825f3e77834058266df017f5dfeacc758275e6bd6fd7b98a2",
+      "mtime_ns": 1794787534040776700,
+      "bytes": 956
+    },
+    "game/art/drawing/pangolin/NOTICE.txt": {
+      "sha256": "29406bb05fb950bd9c33a2d4233afcf767ea41325f11b4dee8e946471f6c2091",
+      "mtime_ns": 1794787534041289000,
+      "bytes": 1087
+    },
+    "game/art/drawing/pangolin/OFL.txt": {
+      "sha256": "414e35e9875605ea0dfe549a6bdad6d1f1f3d5427c97af2060213adb6709484c",
+      "mtime_ns": 1794787534042296500,
+      "bytes": 4483
+    },
+    "game/art/drawing/tidy-hand/NOTICE.txt": {
+      "sha256": "a1b09d2948f7c583bb1ed921a45b06fb313bb510a7746f87f0b6c1e7aa5e7e57",
+      "mtime_ns": 1794787534042296500,
+      "bytes": 948
+    },
+    "game/art/drawing/view_titles/catalog.png": {
+      "sha256": "0931abd9e2b67211b6895575f7ab157d10547348d62d2e99c4ba067ee4772cc4",
+      "mtime_ns": 1794787534051188400,
+      "bytes": 1814749
+    },
+    "game/art/drawing/view_titles/catalog.png.import": {
+      "sha256": "89a477a1e3170edaae9e338aef57901a887389ae195af4c99a5df6b323a39f27",
+      "mtime_ns": 1794787534051708200,
+      "bytes": 948
+    },
+    "game/art/drawing/view_titles/help.png": {
+      "sha256": "5ae830d1fe70007c67ed04570c034b446a3007c8ec78676cc335875bf3f8e87a",
+      "mtime_ns": 1794787534055671300,
+      "bytes": 2500745
+    },
+    "game/art/drawing/view_titles/help.png.import": {
+      "sha256": "02f0a5f8a063d30f5d8a6a332922b067514d6e066f2106f75a9e21bf6b27880c",
+      "mtime_ns": 1794787534056699900,
+      "bytes": 939
+    },
+    "game/art/drawing/view_titles/manifest.json": {
+      "sha256": "a7bdb114ae3cd37b77b962385aab924fe00dcac7af966f3e720189895c878c93",
+      "mtime_ns": 1794787534057212400,
+      "bytes": 2485
+    },
+    "game/art/drawing/view_titles/NOTICE.txt": {
+      "sha256": "cc5f1eaa31f20a84038f910b54e8dd3098091f8a5f18fcfbc673ff8532cbf947",
+      "mtime_ns": 1794787534043528800,
+      "bytes": 1995
+    },
+    "game/art/drawing/view_titles/provenance.json": {
+      "sha256": "cb2054a9f302c22c8533f20a4f5a78ff6c904384157746151acb802175aeb89b",
+      "mtime_ns": 1794787534057724100,
+      "bytes": 16981
+    },
+    "game/art/drawing/view_titles/settings.png": {
+      "sha256": "d4c84fbe95279c51e1a07df9511e3482b3d65591942d1849655c2ef8dc452c75",
+      "mtime_ns": 1794787534063885100,
+      "bytes": 1427565
+    },
+    "game/art/drawing/view_titles/settings.png.import": {
+      "sha256": "f2ce2a5101ad352b466c1fc7ced1bc874becfec01522c26e9420532d44ce06a7",
+      "mtime_ns": 1794787534064389000,
+      "bytes": 951
+    },
+    "content/added/pz-00f37200bcee4d548e2c910ce551d077.json": {
+      "sha256": "52be4a8970ce4493ff9c49eae3eb19cde9806de80660780d6f07356b31674e6c",
+      "mtime_ns": 1794787532884545000,
+      "bytes": 291
+    },
+    "content/added/pz-023b50b44d1c4698a6e17e65b6ea4337.json": {
+      "sha256": "eff0fa0309b2cd98038eba9e2af039a442e4a9e91b567e724e35f54d95386169",
+      "mtime_ns": 1794787532885552800,
+      "bytes": 601
+    },
+    "content/added/pz-0e0cbecdf3204063b6d008ab7ce92141.json": {
+      "sha256": "863a53319627b3768861ef4cae87e143e10f7c72d8df5c54702c483aae4e5c07",
+      "mtime_ns": 1794787532885552800,
+      "bytes": 291
+    },
+    "content/added/pz-1b7bf32b1fa140918c0692c90d998752.json": {
+      "sha256": "28f446e997ad8e52a0f2de0e8b8e285b47097140550e581188a9bd07358ab245",
+      "mtime_ns": 1794787532885552800,
+      "bytes": 291
+    },
+    "content/added/pz-1e9cdac1f83a49d5982f93ded09e58de.json": {
+      "sha256": "fea7a9f2279e1466ab7eee3705eb05ea28e9eae05e5683a3a975613bd778c71a",
+      "mtime_ns": 1794787532886994900,
+      "bytes": 291
+    },
+    "content/added/pz-20219e14dbe242689b9ef06297828f34.json": {
+      "sha256": "2c1bfd57e8f1f2d547e73888261c97efce8b7c370cbef184d2331f2c7e45cc4b",
+      "mtime_ns": 1794787532887526200,
+      "bytes": 601
+    },
+    "content/added/pz-20ecf7747bbf40828238ec26d1207172.json": {
+      "sha256": "6f63bcad7057336c06145e63c7b506919f9a9637f08d351c7efb64bf67e41776",
+      "mtime_ns": 1794787532888039000,
+      "bytes": 291
+    },
+    "content/added/pz-22969714393847e697e8169a8b688efd.json": {
+      "sha256": "0c130b968c702266bb9da051b6e4d0dfe11684919f6af74249a8bcbc2d95e902",
+      "mtime_ns": 1794787532888550200,
+      "bytes": 291
+    },
+    "content/added/pz-25d245061b0c49c190788de8e5d0e45b.json": {
+      "sha256": "e34e723befddcd482b965ccb7a5d9be8de4cf63dc19c65095a202622a886c1a2",
+      "mtime_ns": 1794787532888550200,
+      "bytes": 601
+    },
+    "content/added/pz-2a8481f61e6443bda174bd3da67c.json": {
+      "sha256": "5d4ac27000a864bbf0639c26b99a7d2d9264dea52024224270b273cbb1d8473c",
+      "mtime_ns": 1794787532889558300,
+      "bytes": 597
+    },
+    "content/added/pz-3a744ae1b7cb4d38b0ac29d030ef.json": {
+      "sha256": "8cd1da177b76be6a4469a5dda47995a19d644d28e3694fb287b16ecf78ca5c77",
+      "mtime_ns": 1794787532889558300,
+      "bytes": 597
+    },
+    "content/added/pz-3e97c042f0bf474e8608a84ea034c246.json": {
+      "sha256": "b2ee89ecc2643bbceea12017bedc4b01ab03c2dd19837c2b57843fcd00697553",
+      "mtime_ns": 1794787532890062700,
+      "bytes": 601
+    },
+    "content/added/pz-419437f56aba4603bf7a84bf0b624ba5.json": {
+      "sha256": "4aa04837fa703ea11b28cd8f390d23d963c94151104478d17a638f9076eba8da",
+      "mtime_ns": 1794787532890566700,
+      "bytes": 291
+    },
+    "content/added/pz-49a9e539419b48119e8f5f506fcf6dc7.json": {
+      "sha256": "aeb369fe5b3f44fcbb5c9b3dcc3d6c4d6265e4f3c91e3256e1ffcc2a2173c786",
+      "mtime_ns": 1794787532891077100,
+      "bytes": 291
+    },
+    "content/added/pz-51405ea1ad194507a60c9b6701d802f0.json": {
+      "sha256": "155c00e3ff1e047ea29457226a74064eba3142c1cc6673ef8dba223e631be0d4",
+      "mtime_ns": 1794787532891592000,
+      "bytes": 601
+    },
+    "content/added/pz-5ad1e06e19ab475baebc582d4999daa5.json": {
+      "sha256": "1580f6d14be1ed6ad2091035e325c3bd149152eb3012eb712ff5ebfd1ef2c857",
+      "mtime_ns": 1794787532891592000,
+      "bytes": 601
+    },
+    "content/added/pz-5f5a379b5abb4c979ee23f807aec9418.json": {
+      "sha256": "bdfb1979882e2e464d84ea27bf2a87b6457fe3b4b0117ea1028254a84cb549de",
+      "mtime_ns": 1794787532892598500,
+      "bytes": 291
+    },
+    "content/added/pz-6d980b0285604e22b8ecfce205aa008b.json": {
+      "sha256": "73d37348f295198f06f10430451fa34f42dc416091967431ef924cd59a3b76ac",
+      "mtime_ns": 1794787532892598500,
+      "bytes": 291
+    },
+    "content/added/pz-72561c715dd741f9b0082c7ad24802c1.json": {
+      "sha256": "f02dc346f000e150f11589c308d86596b8a3d476158a9f4005034aa4ef902487",
+      "mtime_ns": 1794787532892598500,
+      "bytes": 601
+    },
+    "content/added/pz-72eb9b188896440c8a9a833e803835ec.json": {
+      "sha256": "98e6196a502d56ca9215d259173da96dabc26fa3a03013b9fda5466c29a00092",
+      "mtime_ns": 1794787532893963400,
+      "bytes": 601
+    },
+    "content/added/pz-7635c2e042e349fc90ad9ae55681de0f.json": {
+      "sha256": "3f7465cf910b99e6f4eb61a8871e05d71c941b8d53eec2fc00914c5701c26c38",
+      "mtime_ns": 1794787532894476900,
+      "bytes": 291
+    },
+    "content/added/pz-7ec3dcd94bf84e698691ef4b5839.json": {
+      "sha256": "cfa65c34762dc66da8ccbe21e8d527b4861549adbb96151e5bb3e6808ad547c4",
+      "mtime_ns": 1794787532894476900,
+      "bytes": 597
+    },
+    "content/added/pz-82758295d5d34284bbae2716f64f.json": {
+      "sha256": "67a6b26d0e8064dd3a6d3d4b274ad2e0f06e9e4d4e9fb918d346201d920e0ec2",
+      "mtime_ns": 1794787532894476900,
+      "bytes": 597
+    },
+    "content/added/pz-86d1d588a88a46e6ac1285f0097afbca.json": {
+      "sha256": "af556375fe5307553736c3250e909423fd849cb36e394a502490a47afd25aa67",
+      "mtime_ns": 1794787532895482600,
+      "bytes": 291
+    },
+    "content/added/pz-87bf2975c82540a399a3d0c7fa180a25.json": {
+      "sha256": "ed42bf8eeb4f55b532e5ea5b31f71aad5a557a09b804370810d564e64ebd906b",
+      "mtime_ns": 1794787532895482600,
+      "bytes": 291
+    },
+    "content/added/pz-8ea7f3dacdcc428a9fcff7a735bc.json": {
+      "sha256": "5d335332238191b8b310eea400cb883b0a3172863ea981fd66ffbe06aa6d20eb",
+      "mtime_ns": 1794787532896759000,
+      "bytes": 597
+    },
+    "content/added/pz-8ecddf77e80c4543bf4ec714fe3d.json": {
+      "sha256": "3b1afbdca9655b270733c7fd3d3fb7014032cd8610dcd3f5aec3c6b6499a502c",
+      "mtime_ns": 1794787532897291100,
+      "bytes": 597
+    },
+    "content/added/pz-985d36c1634644fbb2c8a0bf7de3aa9f.json": {
+      "sha256": "a292630e08d46ab2478547e18d54b593b582f45e99ae18f8750e7f28f7210630",
+      "mtime_ns": 1794787532897291100,
+      "bytes": 601
+    },
+    "content/added/pz-9a79befc7a834e2d9d5896a477328962.json": {
+      "sha256": "933a7eb767fba44636ec5b6f5ca3bae78722dca22323a9cc398f1f1fd4bea5eb",
+      "mtime_ns": 1794787532897291100,
+      "bytes": 601
+    },
+    "content/added/pz-9be288b9b5104da88fc8464184647ae7.json": {
+      "sha256": "a562d66565032f2bb284f307edc223d72fbb419327c6a2a9eb0f49022bafd941",
+      "mtime_ns": 1794787532898297400,
+      "bytes": 291
+    },
+    "content/added/pz-9d08697a30c749258b742ac979de9def.json": {
+      "sha256": "0bf41d2afbebc53dc5a0ad69ead6412b383049c70bde8b253130c613eb9546c4",
+      "mtime_ns": 1794787532899308100,
+      "bytes": 291
+    },
+    "content/added/pz-9f7c59054ebb4f3f861e2bce3034320e.json": {
+      "sha256": "683d8e49032b2e402098298f127052862a5f49b4c8e7caaf4f2686c5f4ae2c86",
+      "mtime_ns": 1794787532899308100,
+      "bytes": 291
+    },
+    "content/added/pz-a13368590b744814915eb722f5b2c5f2.json": {
+      "sha256": "128493f0c99bef3b97adc421f2c4982a08821897abb872da9b978c3f59dc10c5",
+      "mtime_ns": 1794787532899308100,
+      "bytes": 291
+    },
+    "content/added/pz-a358a1bf1b994efcbebeb55abf825789.json": {
+      "sha256": "45dd95191a49b841634a02d7127862e9ca8560ca2a82a61b535e567fcad79db7",
+      "mtime_ns": 1794787532900314900,
+      "bytes": 601
+    },
+    "content/added/pz-ad7164c2302a42e5953f6779a1c7.json": {
+      "sha256": "44fb8409c566b98ef408aee697df81839e8525964aead416f003307aa4501b0f",
+      "mtime_ns": 1794787532900819400,
+      "bytes": 597
+    },
+    "content/added/pz-b180c25084a34b019f35ad2244f03c24.json": {
+      "sha256": "8d031332bcd8bc31db06b2bc527e694d42ecd72f2f7f890bc98861566b5173df",
+      "mtime_ns": 1794787532901334400,
+      "bytes": 291
+    },
+    "content/added/pz-b19a0ccbe3164e1c8fd97267e57dd454.json": {
+      "sha256": "277d2cade41b088741c648b9d3c9c50b02738244467b356f44c5fcc6bdcacca5",
+      "mtime_ns": 1794787532901848300,
+      "bytes": 291
+    },
+    "content/added/pz-b3368aea28ac4a11bf09e0dc9c48.json": {
+      "sha256": "8a0ff5bf67d1a6da3b866b5b5a49f82fe8384f1ee77b52f6ce4f2dcc5b9cb841",
+      "mtime_ns": 1794787532902358900,
+      "bytes": 597
+    },
+    "content/added/pz-b5e2302bf71445c09caac76bbc2a7075.json": {
+      "sha256": "5067955b40761501408a763ea0fa5a69f47d89e2e1b4b584ccd2b8916bb0a49b",
+      "mtime_ns": 1794787532902869800,
+      "bytes": 601
+    },
+    "content/added/pz-b6f94e528b48444985d0561cb48a5bc7.json": {
+      "sha256": "c8e68b819f4e3c4d2d25b00a47e149505f9458e73f4b0e5e9758637083fbfae9",
+      "mtime_ns": 1794787532903377900,
+      "bytes": 291
+    },
+    "content/added/pz-bd2783fcd3eb428c933d15259961cfcd.json": {
+      "sha256": "6a0662e6a38a77ef5081ca31b04f3ecf333dd7b9e5d2ad46c4937d2134cc5ce9",
+      "mtime_ns": 1794787532903377900,
+      "bytes": 291
+    },
+    "content/added/pz-birne.json": {
+      "sha256": "8b6c261586fd702e612dc852c85932553e9bbda0695e56ee9c0dad49161d9901",
+      "mtime_ns": 1794787532903889500,
+      "bytes": 264
+    },
+    "content/added/pz-c71563f1b8c940de998afdd62f09.json": {
+      "sha256": "d29befb1ad9a6be330074094d307a7658eca2f7db544c4b2721d1b498c9a3352",
+      "mtime_ns": 1794787532904400300,
+      "bytes": 597
+    },
+    "content/added/pz-d2d41fd0fc604172a7586f7f41c55320.json": {
+      "sha256": "36c5c15b1dbd9449431ea55260848cb17697ecf2988eb0bebdfc46acb23eb26a",
+      "mtime_ns": 1794787532904918700,
+      "bytes": 291
+    },
+    "content/added/pz-d6cb06cb41854b1da84f0ba2f043aa14.json": {
+      "sha256": "d56fd40306bc4f0e67db7080a87355ae988e8b7d0ebb268a55274db2008d1812",
+      "mtime_ns": 1794787532905431200,
+      "bytes": 291
+    },
+    "content/added/pz-d7e68d1138a3448c8b2a4b07e8632350.json": {
+      "sha256": "df1a31e65aed4068a6645ebd5a75c9103c0081b9d7122f88990e522a087f80ec",
+      "mtime_ns": 1794787532905947800,
+      "bytes": 601
+    },
+    "content/added/pz-d829eb9b83e94f9c9357ee5ab9c9e359.json": {
+      "sha256": "2a7ce374c9ffc499efcebdd0de3fe9ef86eab89cc10c5ffac4d2c173857cf05d",
+      "mtime_ns": 1794787532906462200,
+      "bytes": 601
+    },
+    "content/added/pz-dad34b8331914c909e8ded79491dac94.json": {
+      "sha256": "326020c919201d7263df298d7b15352a3065c561bdd9497ca43667db1a86561b",
+      "mtime_ns": 1794787532906979200,
+      "bytes": 291
+    },
+    "content/added/pz-dbbebc72556d4f0c9a37ab69275480e9.json": {
+      "sha256": "3628639888c7b44cc6ba26c2de0a526bd04bdf0a47cf709ce4693e301156d766",
+      "mtime_ns": 1794787532907493800,
+      "bytes": 601
+    },
+    "content/added/pz-dbcf38395b9f4dda86c8b3d6cdae1f2c.json": {
+      "sha256": "7abde41253cb0de1073f61d4059cbd107e736dd65e42ffed8bdeb4b9f0a64023",
+      "mtime_ns": 1794787532908006700,
+      "bytes": 291
+    },
+    "content/added/pz-e2e5092925ce4821a9219be7816b5931.json": {
+      "sha256": "abf75230e7a42acd822d609976cbd07cb1b3a202a281286744e71bd438215506",
+      "mtime_ns": 1794787532908006700,
+      "bytes": 291
+    },
+    "content/added/pz-e45e2e0d67a34f6aa8368f477454.json": {
+      "sha256": "5648d3b9e69c0565e2ec4b961c03c80e6b90c866bf3dac27572e015ddf90e01e",
+      "mtime_ns": 1794787532908517800,
+      "bytes": 597
+    },
+    "content/added/pz-eedd1fe72af54714908d5b5aff34.json": {
+      "sha256": "ea2f38ec41500291d0c3a2bcce6df9a3fa9b61aa7176ecbe32f1f22daadad823",
+      "mtime_ns": 1794787532909033100,
+      "bytes": 597
+    },
+    "content/added/pz-erdbeere.json": {
+      "sha256": "c1e34fce66a7b567683fd1c023b8d3028cac269a114139411779f3fdb34aee92",
+      "mtime_ns": 1794787532909542300,
+      "bytes": 267
+    },
+    "content/added/pz-f68e79ef419a4322b68d06817b39330d.json": {
+      "sha256": "da5b4c5a51ca7f0cbbf86e3369f0d527480d3fde60424b4189fd196ab2ab2b2f",
+      "mtime_ns": 1794787532910054300,
+      "bytes": 291
+    },
+    "content/added/pz-fliegenpilz.json": {
+      "sha256": "142cb4a0236be375ac2c8cef19c8b508aa7bceca7e1becbf94e9ba1bb83d0f9c",
+      "mtime_ns": 1794787532910563700,
+      "bytes": 270
+    },
+    "content/added/pz-libelle.json": {
+      "sha256": "734c2b8fbf544107810b2fea37c2900ec9e4d99d42fc8a6527d7256f62c28965",
+      "mtime_ns": 1794787532911077500,
+      "bytes": 266
+    },
+    "content/added/pz-marienkaefer.json": {
+      "sha256": "a43b2fab37e478a15ea51f1a1fb009c22b3494b0baa75ffae80f84de8b13a578",
+      "mtime_ns": 1794787532911077500,
+      "bytes": 271
+    },
+    "content/added/pz-radieschen.json": {
+      "sha256": "b9d8eec7d9b46ef056733a2bbe7286f600bff14b0c288a8b7dd6d39edcdef6de",
+      "mtime_ns": 1794787532911590200,
+      "bytes": 269
+    },
+    "content/added/pz-schluessel.json": {
+      "sha256": "aa11f32f338a265a9879b1f85ef236b009cb98919b539485ab329e00af69953a",
+      "mtime_ns": 1794787532912104200,
+      "bytes": 269
+    },
+    "content/added/pz-schnecke.json": {
+      "sha256": "4e70ee10106f568d91da16b1a29d5b5a52e98371231d2ccd6b5e7753d25307ec",
+      "mtime_ns": 1794787532912623300,
+      "bytes": 267
+    },
+    "content/added/pz-zitrone.json": {
+      "sha256": "a3b60864be45b501f91a30a1c331eef9c9c47544ea2ba01d519e3d5b7674fc62",
+      "mtime_ns": 1794787532913136000,
+      "bytes": 266
+    },
+    "content/authoring/index.json": {
+      "sha256": "25ad0e4973998106f14cf4962edcef97c95dbdb7ac5546410969a929af3da809",
+      "mtime_ns": 1794787532918420700,
+      "bytes": 652
+    },
+    "content/authoring/README.md": {
+      "sha256": "4470119eddb2169c645dab687195637622934dbc08ae66faeb628ab50d1482f9",
+      "mtime_ns": 1794787532917286200,
+      "bytes": 5266
+    },
+    "content/backgrounds/pz-00f37200bcee4d548e2c910ce551d077.json": {
+      "sha256": "225b4c98213a2aa11d5409d33fa1430e7c544417076f859351bd0483ebbb5889",
+      "mtime_ns": 1794793326101352200,
+      "bytes": 527
+    },
+    "content/backgrounds/pz-023b50b44d1c4698a6e17e65b6ea4337.json": {
+      "sha256": "bba407ae280262e819a9c69c1a811a5bae983e2f4f6ef0fdc3d83c776fb41ab9",
+      "mtime_ns": 1794793326102357700,
+      "bytes": 524
+    },
+    "content/backgrounds/pz-0e0cbecdf3204063b6d008ab7ce92141.json": {
+      "sha256": "dd8a8350949a9508772c56716eb9cdd87b1066a022adb7f7c9f9626202da61f5",
+      "mtime_ns": 1794793326103356300,
+      "bytes": 504
+    },
+    "content/backgrounds/pz-1b7bf32b1fa140918c0692c90d998752.json": {
+      "sha256": "aeaa3e574ee32923c62721034f01baaa2fead30c4231224af05b3a1efc183f01",
+      "mtime_ns": 1794793326105356400,
+      "bytes": 522
+    },
+    "content/backgrounds/pz-1e9cdac1f83a49d5982f93ded09e58de.json": {
+      "sha256": "043f86f801bb7457c8a25a2dc614c94a354bff21102ed818d50fddb57c7fecd3",
+      "mtime_ns": 1794793326107363500,
+      "bytes": 521
+    },
+    "content/backgrounds/pz-20219e14dbe242689b9ef06297828f34.json": {
+      "sha256": "d2f667f04bb13abc8363a618e7a82d967a2949fa990100e947c8bdb70f20255a",
+      "mtime_ns": 1794793326111355900,
+      "bytes": 519
+    },
+    "content/backgrounds/pz-20ecf7747bbf40828238ec26d1207172.json": {
+      "sha256": "3207f99d3c7bda6ea15cb1b4dd5ea8ca27397e92090b27d13de4afb3aa214054",
+      "mtime_ns": 1794793326112353400,
+      "bytes": 513
+    },
+    "content/backgrounds/pz-22969714393847e697e8169a8b688efd.json": {
+      "sha256": "8d4806161eae4e491d7476f853926a1b034911a3016b21866c98ff3ad34add22",
+      "mtime_ns": 1794793326113354700,
+      "bytes": 525
+    },
+    "content/backgrounds/pz-25d245061b0c49c190788de8e5d0e45b.json": {
+      "sha256": "fedd60a10ca78c259c4ab6c92efc411d820ec2860a10f4e89bcd3be78b13edd2",
+      "mtime_ns": 1794793326114352500,
+      "bytes": 515
+    },
+    "content/backgrounds/pz-2a8481f61e6443bda174bd3da67c.json": {
+      "sha256": "d559672c90380dac60b950c11eae7ac73baedf6eb349d5fb202864cd716f53ab",
+      "mtime_ns": 1794793326115354200,
+      "bytes": 527
+    },
+    "content/backgrounds/pz-3a744ae1b7cb4d38b0ac29d030ef.json": {
+      "sha256": "e90498346dc5a3fd2dd9ab49a8c8d08b0d0035d65fe1402ce7d08d12d5c2cec1",
+      "mtime_ns": 1794793326116354800,
+      "bytes": 511
+    },
+    "content/backgrounds/pz-3e97c042f0bf474e8608a84ea034c246.json": {
+      "sha256": "2a5a97a11a2cc8328850c18d6c956d7fde8dfb768bbfce4dd8c4cc26b387b7de",
+      "mtime_ns": 1794793326118363200,
+      "bytes": 517
+    },
+    "content/backgrounds/pz-419437f56aba4603bf7a84bf0b624ba5.json": {
+      "sha256": "e164caef6633a587ddcf9692be44945c114cda1474b9289132da2ea102f9b887",
+      "mtime_ns": 1794793326121362300,
+      "bytes": 519
+    },
+    "content/backgrounds/pz-49a9e539419b48119e8f5f506fcf6dc7.json": {
+      "sha256": "2d1f7f52ce367b9c8cf47768f5b435d2892d981facc03f670e8c47fd0652cac9",
+      "mtime_ns": 1794793326123353400,
+      "bytes": 513
+    },
+    "content/backgrounds/pz-51405ea1ad194507a60c9b6701d802f0.json": {
+      "sha256": "765cc66bf202adf661284b01dbf656efcccf3df6b5d9cb0eb4b9d65548533c87",
+      "mtime_ns": 1794793326124354500,
+      "bytes": 539
+    },
+    "content/backgrounds/pz-5ad1e06e19ab475baebc582d4999daa5.json": {
+      "sha256": "f545e31f4df620e122edc450215badfe4aaf729204bb3bdf0e402bc5fe4100e5",
+      "mtime_ns": 1794793326126354000,
+      "bytes": 511
+    },
+    "content/backgrounds/pz-5f5a379b5abb4c979ee23f807aec9418.json": {
+      "sha256": "5aafced97bf043fbd72893e597650ecd68127b9ddb7d09dc6421af6b0014d5ce",
+      "mtime_ns": 1794793326127354500,
+      "bytes": 531
+    },
+    "content/backgrounds/pz-6d980b0285604e22b8ecfce205aa008b.json": {
+      "sha256": "b4ab4c1ca97acbf32394be2fa66da11a5a7554efe4f76b5b51b057f0b9145178",
+      "mtime_ns": 1794793326128355000,
+      "bytes": 513
+    },
+    "content/backgrounds/pz-72561c715dd741f9b0082c7ad24802c1.json": {
+      "sha256": "8d1ba03293fddc16fcee34a0f725bea83255726d1ec697960eeb4a3429b9314f",
+      "mtime_ns": 1794793326129354100,
+      "bytes": 517
+    },
+    "content/backgrounds/pz-72eb9b188896440c8a9a833e803835ec.json": {
+      "sha256": "3dd05ec4c590a5d978d0ff6d4b63867422f9212e56598897284d09538d1f5a23",
+      "mtime_ns": 1794793326131360600,
+      "bytes": 522
+    },
+    "content/backgrounds/pz-7635c2e042e349fc90ad9ae55681de0f.json": {
+      "sha256": "04a4f310658f6eae08f30da7199b67a61e9e5f5c54a0aa35e0b11e352ea50bcb",
+      "mtime_ns": 1794793326135365600,
+      "bytes": 525
+    },
+    "content/backgrounds/pz-7ec3dcd94bf84e698691ef4b5839.json": {
+      "sha256": "c126f2e7f19e22e2c8e13166406635c07a5075dc7e7aa1546f6c02cdb23603fb",
+      "mtime_ns": 1794793326136362900,
+      "bytes": 503
+    },
+    "content/backgrounds/pz-82758295d5d34284bbae2716f64f.json": {
+      "sha256": "9782e057c2f88b4ab505b91c5ace5319624fd6ea895a35810eb37f097b1166f2",
+      "mtime_ns": 1794793326137354400,
+      "bytes": 521
+    },
+    "content/backgrounds/pz-86d1d588a88a46e6ac1285f0097afbca.json": {
+      "sha256": "2e63672b65518553d611cd77616b8707335f1c14b9bfa5db76ae66a431809334",
+      "mtime_ns": 1794793326139353800,
+      "bytes": 518
+    },
+    "content/backgrounds/pz-87bf2975c82540a399a3d0c7fa180a25.json": {
+      "sha256": "b8ad2dc5b3a77e2a65c7f1eef9c4b6c5b80535c0622ad6c7dc8e5807aa6019f3",
+      "mtime_ns": 1794793326140355300,
+      "bytes": 505
+    },
+    "content/backgrounds/pz-8ea7f3dacdcc428a9fcff7a735bc.json": {
+      "sha256": "ca29381e755dabdc65fd1609464a5267f720c6a4e26203e2ed51ca5659e8c097",
+      "mtime_ns": 1794793326141357000,
+      "bytes": 510
+    },
+    "content/backgrounds/pz-8ecddf77e80c4543bf4ec714fe3d.json": {
+      "sha256": "9a993035314b197c5c37109ed90ca69aeb35e5871d9bb4fb01f5c933e4656462",
+      "mtime_ns": 1794793326143354800,
+      "bytes": 516
+    },
+    "content/backgrounds/pz-985d36c1634644fbb2c8a0bf7de3aa9f.json": {
+      "sha256": "a296171b825592350745862fc17eaf6d7704918a2ffca6ebd07f9ade109c418f",
+      "mtime_ns": 1794793326145363300,
+      "bytes": 513
+    },
+    "content/backgrounds/pz-9a79befc7a834e2d9d5896a477328962.json": {
+      "sha256": "4e07fbd477a71f74a68c275482953168d05eba078eb9faf83c95966718cfcd44",
+      "mtime_ns": 1794793326148361000,
+      "bytes": 521
+    },
+    "content/backgrounds/pz-9be288b9b5104da88fc8464184647ae7.json": {
+      "sha256": "3ee5c2ccf8f5f3af11098397b11955c31825fe685b41630afc64a50a7aa6b903",
+      "mtime_ns": 1794793326150354400,
+      "bytes": 517
+    },
+    "content/backgrounds/pz-9d08697a30c749258b742ac979de9def.json": {
+      "sha256": "af33598e9838480508185335b5c48fb52b0db82fa4266d5f0306109deb2129e8",
+      "mtime_ns": 1794793326151354700,
+      "bytes": 531
+    },
+    "content/backgrounds/pz-9f7c59054ebb4f3f861e2bce3034320e.json": {
+      "sha256": "c0591d7ecc0e659121c4e5e6f3356099000b8f2534c8199a947e610935609140",
+      "mtime_ns": 1794793326152355200,
+      "bytes": 529
+    },
+    "content/backgrounds/pz-a13368590b744814915eb722f5b2c5f2.json": {
+      "sha256": "8da04f769d2306a9c6d53652429f0b32189eddb55b4bf64cd683e0de4d0a54e5",
+      "mtime_ns": 1794793326154355800,
+      "bytes": 523
+    },
+    "content/backgrounds/pz-a358a1bf1b994efcbebeb55abf825789.json": {
+      "sha256": "6909a5897f43b0ced258fc51e03f5312642b94b0ec4895aecb3aa9edc7a7c007",
+      "mtime_ns": 1794793326155356100,
+      "bytes": 513
+    },
+    "content/backgrounds/pz-ad7164c2302a42e5953f6779a1c7.json": {
+      "sha256": "2720be7e6a4d8202996eed63706b014404d97890891c5e1f5f48e69d35698434",
+      "mtime_ns": 1794793326156355500,
+      "bytes": 509
+    },
+    "content/backgrounds/pz-b180c25084a34b019f35ad2244f03c24.json": {
+      "sha256": "316dbe73de4d02d7d9cd5418c65e563c759d747fdf3c01f900fd896617e62c2f",
+      "mtime_ns": 1794793326160388700,
+      "bytes": 522
+    },
+    "content/backgrounds/pz-b19a0ccbe3164e1c8fd97267e57dd454.json": {
+      "sha256": "28b3f0d2dce8fd1ad88b28e0a2d94a54c42ff6ec1f2eea5faee8d73dd6447749",
+      "mtime_ns": 1794793326162379200,
+      "bytes": 521
+    },
+    "content/backgrounds/pz-b3368aea28ac4a11bf09e0dc9c48.json": {
+      "sha256": "2c807d2e5bbcb4a5984f7cc76ab75f895f6fb2a0530ba85b8af9b71442b3328e",
+      "mtime_ns": 1794793326163378900,
+      "bytes": 511
+    },
+    "content/backgrounds/pz-b5e2302bf71445c09caac76bbc2a7075.json": {
+      "sha256": "c6425e6fc50013f8b6dd3cc9fed31de8ae103166f6bf0147bb5744dcdc2f9fa7",
+      "mtime_ns": 1794793326165378700,
+      "bytes": 525
+    },
+    "content/backgrounds/pz-b6f94e528b48444985d0561cb48a5bc7.json": {
+      "sha256": "64371be8043b4bc4c22cb7c1a529556c017527ff17732e9c13502534ada6a3bb",
+      "mtime_ns": 1794793326166380700,
+      "bytes": 509
+    },
+    "content/backgrounds/pz-bd2783fcd3eb428c933d15259961cfcd.json": {
+      "sha256": "2aacc7256c41d057f73a6e658c9c2eb428ab601c400ce456328620096655fc4f",
+      "mtime_ns": 1794793326168378700,
+      "bytes": 523
+    },
+    "content/backgrounds/pz-birne.json": {
+      "sha256": "9854b9dee76b2d1fa623258b742e5274638fee5717d006229cbd5cccd0a799e6",
+      "mtime_ns": 1794793326169378000,
+      "bytes": 588
+    },
+    "content/backgrounds/pz-c71563f1b8c940de998afdd62f09.json": {
+      "sha256": "5af0a5760a2a8adea80f4e78ca21d6409cba61d7f1ebd73aada49840ca556926",
+      "mtime_ns": 1794793326173392700,
+      "bytes": 532
+    },
+    "content/backgrounds/pz-d2d41fd0fc604172a7586f7f41c55320.json": {
+      "sha256": "903898bb7439a2b697fff3f8be3e1cde5ae8ddd51ec430df34c228ae56f1981c",
+      "mtime_ns": 1794793326174388700,
+      "bytes": 532
+    },
+    "content/backgrounds/pz-d6cb06cb41854b1da84f0ba2f043aa14.json": {
+      "sha256": "d4d24378d911077a5bca3287923a8aa9ca21ab5ced03c13bd63ae1455c638f54",
+      "mtime_ns": 1794793326176826000,
+      "bytes": 512
+    },
+    "content/backgrounds/pz-d7e68d1138a3448c8b2a4b07e8632350.json": {
+      "sha256": "9eff34eb2f04290d3eaca62327843d2277c5d64d53142615b7adc6d0173d3c61",
+      "mtime_ns": 1794793326177827000,
+      "bytes": 522
+    },
+    "content/backgrounds/pz-d829eb9b83e94f9c9357ee5ab9c9e359.json": {
+      "sha256": "7c49e200c6d1828e15a182f5bdfca89af30c77ce5e5d2d3341bf832d908f8a8e",
+      "mtime_ns": 1794793326178825400,
+      "bytes": 524
+    },
+    "content/backgrounds/pz-dad34b8331914c909e8ded79491dac94.json": {
+      "sha256": "36721d4f84d0f3575d427b83d04f4a97febf3236a00ca087d302aee05383225f",
+      "mtime_ns": 1794793326180826200,
+      "bytes": 522
+    },
+    "content/backgrounds/pz-dbbebc72556d4f0c9a37ab69275480e9.json": {
+      "sha256": "6cf3247750d617edd4c7370794125515d1bc7ee7b6ebddab2ad8494534510f48",
+      "mtime_ns": 1794793326181826100,
+      "bytes": 515
+    },
+    "content/backgrounds/pz-dbcf38395b9f4dda86c8b3d6cdae1f2c.json": {
+      "sha256": "1ab408022dd5010fde9217ebbb4c7d83be50bf3e3417899dff864c5b3c3a2633",
+      "mtime_ns": 1794793326184835600,
+      "bytes": 520
+    },
+    "content/backgrounds/pz-e2e5092925ce4821a9219be7816b5931.json": {
+      "sha256": "50a18197b9ced4f5bcf4310f1932813fd877dea2635e6dc356a650c98e602f8f",
+      "mtime_ns": 1794793326187825700,
+      "bytes": 513
+    },
+    "content/backgrounds/pz-e45e2e0d67a34f6aa8368f477454.json": {
+      "sha256": "57a7542e5f061d932ae2337d5101ef8a6cbabbc0d4c48e9ae6aea4f02efd58e7",
+      "mtime_ns": 1794793326188825500,
+      "bytes": 515
+    },
+    "content/backgrounds/pz-eedd1fe72af54714908d5b5aff34.json": {
+      "sha256": "c4ae95fdef35f4ef9a6c7bc0b0001f9ae85faf45f18830bedc306ab4c9a295d6",
+      "mtime_ns": 1794793326189825200,
+      "bytes": 511
+    },
+    "content/backgrounds/pz-erdbeere.json": {
+      "sha256": "96cc7b883cd1a935ca94652fbe909548b352bbf818fdbadc179a9b7929a5ddc2",
+      "mtime_ns": 1794793326190826000,
+      "bytes": 603
+    },
+    "content/backgrounds/pz-f68e79ef419a4322b68d06817b39330d.json": {
+      "sha256": "9dd0e22f2f7659e0ac93b2d52cea78903ca9ed3bd112cd6ab8830e86e147029d",
+      "mtime_ns": 1794793326191826100,
+      "bytes": 511
+    },
+    "content/backgrounds/pz-fliegenpilz.json": {
+      "sha256": "868bd328427ad441c98a4ced26f84aafac1841003ab7d44d314023d1eb705135",
+      "mtime_ns": 1794793326193824900,
+      "bytes": 618
+    },
+    "content/backgrounds/pz-libelle.json": {
+      "sha256": "366b3d6dcb3a64d701ae68490e6ff01060b1ad5dfc1854ec1d099c0648cb353a",
+      "mtime_ns": 1794793326194825600,
+      "bytes": 598
+    },
+    "content/backgrounds/pz-marienkaefer.json": {
+      "sha256": "f911a9ea87e60f82073a600b39eb5adbd8ee4bbe5c792ba24581b6d42704d50c",
+      "mtime_ns": 1794793326201825300,
+      "bytes": 623
+    },
+    "content/backgrounds/pz-radieschen.json": {
+      "sha256": "8760934ba4ae92a2b8ec60f405cdd9a221dbdbcd29abc7da2c3edb680d5e9821",
+      "mtime_ns": 1794793326202825600,
+      "bytes": 613
+    },
+    "content/backgrounds/pz-schluessel.json": {
+      "sha256": "d87829e3231dd9ca8d43b00fce009192d8de4bd190f42a63f02da933476d9132",
+      "mtime_ns": 1794793326203826000,
+      "bytes": 613
+    },
+    "content/backgrounds/pz-schnecke.json": {
+      "sha256": "d4e5db42ca22b4530289529fd5dca27b1afd15002d4aa18d4693248a23de0b09",
+      "mtime_ns": 1794793326204826200,
+      "bytes": 603
+    },
+    "content/backgrounds/pz-zitrone.json": {
+      "sha256": "1c6d5876fb50f8ebf24080f00020e6ed03ee8f9f15f60404ea21ddce264b61d9",
+      "mtime_ns": 1794793326205826600,
+      "bytes": 598
+    },
+    "content/reveals/pz-00f37200bcee4d548e2c910ce551d077.json": {
+      "sha256": "c55be2f69f737114831cca10c15af19367c06931a8ed04d5194b492a4cc720ee",
+      "mtime_ns": 1794793326100352200,
+      "bytes": 640
+    },
+    "content/reveals/pz-023b50b44d1c4698a6e17e65b6ea4337.json": {
+      "sha256": "e2dd6880e97675cce92b3bb966b97b6fd3fa67411c673ff9f6040f0b1c2aba2e",
+      "mtime_ns": 1794793326101352200,
+      "bytes": 635
+    },
+    "content/reveals/pz-0e0cbecdf3204063b6d008ab7ce92141.json": {
+      "sha256": "1efea420a2739e71403b4f3334358d5ce21d931c77d59c2b93e38c89b9615e4f",
+      "mtime_ns": 1794793326103356300,
+      "bytes": 605
+    },
+    "content/reveals/pz-1b7bf32b1fa140918c0692c90d998752.json": {
+      "sha256": "bf0003ae0d05c045d368bad9cc567d59c250c8025be8b0d7f57b43853d17c8b9",
+      "mtime_ns": 1794793326104354600,
+      "bytes": 632
+    },
+    "content/reveals/pz-1e9cdac1f83a49d5982f93ded09e58de.json": {
+      "sha256": "6a9faa802e0649c1515d58f9f4d3c402d3413169d0720397dc5a0cc735e9c7d0",
+      "mtime_ns": 1794793326105356400,
+      "bytes": 631
+    },
+    "content/reveals/pz-20219e14dbe242689b9ef06297828f34.json": {
+      "sha256": "612acd7c1ef635d11ded7f6ac65579e717b61ebb32524a00caeb24510093d860",
+      "mtime_ns": 1794793326109366000,
+      "bytes": 628
+    },
+    "content/reveals/pz-20ecf7747bbf40828238ec26d1207172.json": {
+      "sha256": "d7656b9fbc7f53dbb582f5aca5723dda182e90a7097f4c5b0dfd8d998c49f1b9",
+      "mtime_ns": 1794793326111355900,
+      "bytes": 619
+    },
+    "content/reveals/pz-22969714393847e697e8169a8b688efd.json": {
+      "sha256": "9f64c8fb887ee6e66058259c0d82d283a9cc12110c26a0f025e22701db0bce7b",
+      "mtime_ns": 1794793326112353400,
+      "bytes": 637
+    },
+    "content/reveals/pz-25d245061b0c49c190788de8e5d0e45b.json": {
+      "sha256": "3a69773edc99f4ea61bd800f5e544151ae11af5a12f4ca98da01e75e7452a639",
+      "mtime_ns": 1794793326113354700,
+      "bytes": 622
+    },
+    "content/reveals/pz-2a8481f61e6443bda174bd3da67c.json": {
+      "sha256": "f313d51bfac859910579e04d4b63f8e3504d2d6dae6ad9d245879a82efa512e4",
+      "mtime_ns": 1794793326114352500,
+      "bytes": 644
+    },
+    "content/reveals/pz-3a744ae1b7cb4d38b0ac29d030ef.json": {
+      "sha256": "a0ef8da47f707b14c0dae4031838307d02471e3dbc3888fb412ed6d7474b50bf",
+      "mtime_ns": 1794793326116354800,
+      "bytes": 620
+    },
+    "content/reveals/pz-3e97c042f0bf474e8608a84ea034c246.json": {
+      "sha256": "e51c18f54c74568d23fdac39e8eeca699ddd71410c4aeb14f833461f2b496f14",
+      "mtime_ns": 1794793326117354000,
+      "bytes": 625
+    },
+    "content/reveals/pz-419437f56aba4603bf7a84bf0b624ba5.json": {
+      "sha256": "8cf8f37217e0d6a179f4077e0a2381277a0118ed255c0dcacd9df241c3c3301b",
+      "mtime_ns": 1794793326119362500,
+      "bytes": 628
+    },
+    "content/reveals/pz-49a9e539419b48119e8f5f506fcf6dc7.json": {
+      "sha256": "a42e00f1375b256f59625619ab4f0c82a781af3df30398ed855afb93482bac3d",
+      "mtime_ns": 1794793326123353400,
+      "bytes": 619
+    },
+    "content/reveals/pz-51405ea1ad194507a60c9b6701d802f0.json": {
+      "sha256": "602c9c83bb154e10a5cfd6381b8d83c9330bd998c6a3c49b6c493b4f933e0d4e",
+      "mtime_ns": 1794793326124354500,
+      "bytes": 658
+    },
+    "content/reveals/pz-5ad1e06e19ab475baebc582d4999daa5.json": {
+      "sha256": "cab6609bfa2ba49541328f7d663c73c772613ffff06dcbdae66737fb02ba334e",
+      "mtime_ns": 1794793326125354900,
+      "bytes": 616
+    },
+    "content/reveals/pz-5f5a379b5abb4c979ee23f807aec9418.json": {
+      "sha256": "1c6f61c366add3ef5ada86d562a0c4796bd79e585878183e6b1e4196da3b5f6b",
+      "mtime_ns": 1794793326126354000,
+      "bytes": 646
+    },
+    "content/reveals/pz-6d980b0285604e22b8ecfce205aa008b.json": {
+      "sha256": "8c7d4c86e0a677ddf17f359a3605723fc2f51e6ff422a5a7f54c8c55bd2fc96d",
+      "mtime_ns": 1794793326127354500,
+      "bytes": 619
+    },
+    "content/reveals/pz-72561c715dd741f9b0082c7ad24802c1.json": {
+      "sha256": "848831d7f3ee9666d6aeb7fea072598ddfccf8430542fbc9ad13c209312dacd6",
+      "mtime_ns": 1794793326129354100,
+      "bytes": 625
+    },
+    "content/reveals/pz-72eb9b188896440c8a9a833e803835ec.json": {
+      "sha256": "961da7ac7325f1ea688b0c24303a1513958797ef9dd277e82f88a70dfdb8df61",
+      "mtime_ns": 1794793326130353700,
+      "bytes": 632
+    },
+    "content/reveals/pz-7635c2e042e349fc90ad9ae55681de0f.json": {
+      "sha256": "946c725333b22d4eb81037825a92eebd82441451d55691de21ab92f86fa8a0d9",
+      "mtime_ns": 1794793326133363100,
+      "bytes": 637
+    },
+    "content/reveals/pz-7ec3dcd94bf84e698691ef4b5839.json": {
+      "sha256": "fca9049f1f00aad1f800e2fa2e0d05e943d236ec93deeb945d85573bfa712e34",
+      "mtime_ns": 1794793326136362900,
+      "bytes": 608
+    },
+    "content/reveals/pz-82758295d5d34284bbae2716f64f.json": {
+      "sha256": "85c28496387d3a6bdfd83050ac34a1a3d26843ecd59be65fc62f861a10451ec9",
+      "mtime_ns": 1794793326137354400,
+      "bytes": 635
+    },
+    "content/reveals/pz-86d1d588a88a46e6ac1285f0097afbca.json": {
+      "sha256": "c9da79a153af2ff8eaac426c39c2072e5af7c58e605e13ca12ffc68ded4e61bf",
+      "mtime_ns": 1794793326138356200,
+      "bytes": 626
+    },
+    "content/reveals/pz-87bf2975c82540a399a3d0c7fa180a25.json": {
+      "sha256": "f47f8eeab688c2ac7aff303b31915625007be65287cb3ce53d6afb6000e4e558",
+      "mtime_ns": 1794793326139353800,
+      "bytes": 607
+    },
+    "content/reveals/pz-8ea7f3dacdcc428a9fcff7a735bc.json": {
+      "sha256": "b961cc6b61bbd4fee92968e4ba1bbbb55377b2906869fd7ebab18aa46896b8a1",
+      "mtime_ns": 1794793326141357000,
+      "bytes": 618
+    },
+    "content/reveals/pz-8ecddf77e80c4543bf4ec714fe3d.json": {
+      "sha256": "4bb170c07fe075e317328417a195761be28f8a30a0b11238eee4fe25e04bcb16",
+      "mtime_ns": 1794793326142355400,
+      "bytes": 627
+    },
+    "content/reveals/pz-985d36c1634644fbb2c8a0bf7de3aa9f.json": {
+      "sha256": "5ad897e644ac4a7294540403f713dfd4d18eda170b8cebb519d16607b1310db2",
+      "mtime_ns": 1794793326144365000,
+      "bytes": 619
+    },
+    "content/reveals/pz-9a79befc7a834e2d9d5896a477328962.json": {
+      "sha256": "a98a4802dcbbeb15c597e3a5c2395dd4be8fd7adb1f3a988985b35bb9c5b92f9",
+      "mtime_ns": 1794793326147364100,
+      "bytes": 631
+    },
+    "content/reveals/pz-9be288b9b5104da88fc8464184647ae7.json": {
+      "sha256": "7751e1be354166f9af6a70c684f16db9f807284a93adeec25414bd2a65041d7c",
+      "mtime_ns": 1794793326149356400,
+      "bytes": 625
+    },
+    "content/reveals/pz-9d08697a30c749258b742ac979de9def.json": {
+      "sha256": "1f63f116fc066193502d01dc6c32ad139577bb9e1ccbf679fc7bd9bddabcbc1e",
+      "mtime_ns": 1794793326150354400,
+      "bytes": 646
+    },
+    "content/reveals/pz-9f7c59054ebb4f3f861e2bce3034320e.json": {
+      "sha256": "aa495482595550c90a80a2e9a6837a6cfbf9318c1012d62c621bd0681d966559",
+      "mtime_ns": 1794793326152355200,
+      "bytes": 643
+    },
+    "content/reveals/pz-a13368590b744814915eb722f5b2c5f2.json": {
+      "sha256": "f0c6becedc25076eaa371e8d30bac6fc9fe9fcb9425f348cfbf35e5ac2c51c3e",
+      "mtime_ns": 1794793326153354700,
+      "bytes": 634
+    },
+    "content/reveals/pz-a358a1bf1b994efcbebeb55abf825789.json": {
+      "sha256": "7cf7b795a3b5eb462cceef4bd0352099b2e5ee3d993ee7b881d26837cb7137ee",
+      "mtime_ns": 1794793326154355800,
+      "bytes": 619
+    },
+    "content/reveals/pz-ad7164c2302a42e5953f6779a1c7.json": {
+      "sha256": "7b07fd794d17467862944ebdbb00d9b1bcd6b6de96b88b542a07131a66b3d0e4",
+      "mtime_ns": 1794793326156355500,
+      "bytes": 617
+    },
+    "content/reveals/pz-b180c25084a34b019f35ad2244f03c24.json": {
+      "sha256": "c4a9a311d8f955312b73d8eb8a9928b4e65a04650a7e7edaa5c1ea575e28e025",
+      "mtime_ns": 1794793326158363800,
+      "bytes": 632
+    },
+    "content/reveals/pz-b19a0ccbe3164e1c8fd97267e57dd454.json": {
+      "sha256": "f57c7a32f39d428a18155f8a694df59c5e21e28d89ca3b1edd40ea4780056c5a",
+      "mtime_ns": 1794793326161391400,
+      "bytes": 631
+    },
+    "content/reveals/pz-b3368aea28ac4a11bf09e0dc9c48.json": {
+      "sha256": "c6633cba12bd47e6ed97dfd7ff85cc39223db354f5488a1c3575a5be8016526d",
+      "mtime_ns": 1794793326163378900,
+      "bytes": 620
+    },
+    "content/reveals/pz-b5e2302bf71445c09caac76bbc2a7075.json": {
+      "sha256": "65cf752f5cac8df78f8b4b52b52f022a9b9bc76d002b590a7d2efaabcca0b688",
+      "mtime_ns": 1794793326164378500,
+      "bytes": 637
+    },
+    "content/reveals/pz-b6f94e528b48444985d0561cb48a5bc7.json": {
+      "sha256": "0b1fcab2f6da0664946500dac9e93e124b1a37843e70e4e40bec34db5256bc6b",
+      "mtime_ns": 1794793326166380700,
+      "bytes": 613
+    },
+    "content/reveals/pz-bd2783fcd3eb428c933d15259961cfcd.json": {
+      "sha256": "3f0f920d1bf4d21bf118830dedf6a251899477cca754097d3cd4ea529cadbc62",
+      "mtime_ns": 1794793326167377700,
+      "bytes": 634
+    },
+    "content/reveals/pz-birne.json": {
+      "sha256": "61cc00569828980449a4bbc3446200968866cd4932c041eed959d69e681562cb",
+      "mtime_ns": 1794793326168378700,
+      "bytes": 562
+    },
+    "content/reveals/pz-c71563f1b8c940de998afdd62f09.json": {
+      "sha256": "f369b138cda59297c151216121ce957d3d5965363d5563854358821bec467f8f",
+      "mtime_ns": 1794793326171390300,
+      "bytes": 651
+    },
+    "content/reveals/pz-d2d41fd0fc604172a7586f7f41c55320.json": {
+      "sha256": "d455610f908612942432381108d5c08f26453aabc0e0fd1b898b6d0a460345eb",
+      "mtime_ns": 1794793326174388700,
+      "bytes": 647
+    },
+    "content/reveals/pz-d6cb06cb41854b1da84f0ba2f043aa14.json": {
+      "sha256": "0fd1d5ca2c32080da86877857f4c5e5f09a4a073c7d52a621faa621d38f283e7",
+      "mtime_ns": 1794793326175825100,
+      "bytes": 617
+    },
+    "content/reveals/pz-d7e68d1138a3448c8b2a4b07e8632350.json": {
+      "sha256": "287294a875585e9eda27f1cdb514e1c7695a0ae9ee0253204807378fe51e8ff2",
+      "mtime_ns": 1794793326176826000,
+      "bytes": 632
+    },
+    "content/reveals/pz-d829eb9b83e94f9c9357ee5ab9c9e359.json": {
+      "sha256": "3b1402550867b547438ef603df463a37e6af5aaeb7f59027e530b5a7ea8bd52a",
+      "mtime_ns": 1794793326178825400,
+      "bytes": 635
+    },
+    "content/reveals/pz-dad34b8331914c909e8ded79491dac94.json": {
+      "sha256": "3a8111b5dba9cab083dcffb00d34fd2a7a117502e9e73cc223868bf547515853",
+      "mtime_ns": 1794793326179826100,
+      "bytes": 632
+    },
+    "content/reveals/pz-dbbebc72556d4f0c9a37ab69275480e9.json": {
+      "sha256": "bd846fe65b2ba5d20455eda9ade25af5a111bf131f09d2afbc7b27ab6333800e",
+      "mtime_ns": 1794793326180826200,
+      "bytes": 622
+    },
+    "content/reveals/pz-dbcf38395b9f4dda86c8b3d6cdae1f2c.json": {
+      "sha256": "afd19e8a9ef911cf990da7ef774ba76accd5da0a77659b352734f36d16ddca08",
+      "mtime_ns": 1794793326182834300,
+      "bytes": 629
+    },
+    "content/reveals/pz-e2e5092925ce4821a9219be7816b5931.json": {
+      "sha256": "fbb8096f73307d4ba820c384b91ad61c48d7e21699c7345fc1f2234e2a73d72c",
+      "mtime_ns": 1794793326185831500,
+      "bytes": 619
+    },
+    "content/reveals/pz-e45e2e0d67a34f6aa8368f477454.json": {
+      "sha256": "8f2927ef055692b8c5801a87b7ffb3a712915227d784bc58e797473934eb1d65",
+      "mtime_ns": 1794793326187825700,
+      "bytes": 626
+    },
+    "content/reveals/pz-eedd1fe72af54714908d5b5aff34.json": {
+      "sha256": "12583a2fadbc15b55f689635d6000b3937d59061691aa29cfe513cc68db955be",
+      "mtime_ns": 1794793326188825500,
+      "bytes": 619
+    },
+    "content/reveals/pz-erdbeere.json": {
+      "sha256": "33ef6b28ce962eb9182ec50230f9d3a6a37767c2f0176249722aa73e1c15d984",
+      "mtime_ns": 1794793326190826000,
+      "bytes": 577
+    },
+    "content/reveals/pz-f68e79ef419a4322b68d06817b39330d.json": {
+      "sha256": "8d8e17202ab0383cd2ad28e5275c435d063ba24798b1fd8b85095f6b0355c684",
+      "mtime_ns": 1794793326191826100,
+      "bytes": 615
+    },
+    "content/reveals/pz-fliegenpilz.json": {
+      "sha256": "ea2a018b883e88fcc8f7b24b875331d3160c786292bcdc5633324bc12da57cf5",
+      "mtime_ns": 1794793326192825900,
+      "bytes": 592
+    },
+    "content/reveals/pz-libelle.json": {
+      "sha256": "22209f05ea02815de31afcc3dd8702ff858134f21be8ed998f50a7fab40392de",
+      "mtime_ns": 1794793326193824900,
+      "bytes": 572
+    },
+    "content/reveals/pz-marienkaefer.json": {
+      "sha256": "2907b111d481b3ccf5ed43b42e639fb88b0d3d81c18c4c06d46792314db481c9",
+      "mtime_ns": 1794793326200825800,
+      "bytes": 597
+    },
+    "content/reveals/pz-radieschen.json": {
+      "sha256": "cf59a1a6041f93dd621fc68d421ea4733b9d9000ac384945b13620ab14a3f419",
+      "mtime_ns": 1794793326201825300,
+      "bytes": 587
+    },
+    "content/reveals/pz-schluessel.json": {
+      "sha256": "36a01c24d46c20410339d1a775d07258f596085fa0e9eff86821de2b57a20d5d",
+      "mtime_ns": 1794793326202825600,
+      "bytes": 587
+    },
+    "content/reveals/pz-schnecke.json": {
+      "sha256": "bf81a3836b0399b3285dc9dcbf3e9c931aa6f7f28d158b571db4f28d68f8eff9",
+      "mtime_ns": 1794793326204826200,
+      "bytes": 577
+    },
+    "content/reveals/pz-zitrone.json": {
+      "sha256": "7dd992e2c4c813c3f521b1fea59af27f775d4ecea60947c22457d68d5e1ec976",
+      "mtime_ns": 1794793326205826600,
+      "bytes": 572
+    },
+    "content/packages/pz-d829eb9b83e94f9c9357ee5ab9c9e359/r05/manifest.json": {
+      "sha256": "8b5546e8db37f258ccffb25d5e1ee9cd53e88f1230d29cd2e9a38eaa37f0a145",
+      "mtime_ns": 1794787533134317300,
+      "bytes": 2807
+    },
+    "content/packages/pz-8ecddf77e80c4543bf4ec714fe3d/r05/manifest.json": {
+      "sha256": "5614ccdbfbf16fa295745bad2f20183cb5f5b4d39b3ed384b93808e5e2deb511",
+      "mtime_ns": 1794787533109313300,
+      "bytes": 2174
+    },
+    "content/difficulty/pz-00f37200bcee4d548e2c910ce551d077/rating.json": {
+      "sha256": "24c7af17f72032db8f21d0dea46588cce4e0f479abd9adc3da52e1c2094d54e6",
+      "mtime_ns": 1794787533018549600,
+      "bytes": 4100
+    },
+    "content/difficulty/pz-023b50b44d1c4698a6e17e65b6ea4337/rating.json": {
+      "sha256": "0b38b896f59abd52ff71d92c356a28d8d72b861e353df80fe77d067d50989ca9",
+      "mtime_ns": 1794787533019781200,
+      "bytes": 4132
+    },
+    "content/difficulty/pz-0e0cbecdf3204063b6d008ab7ce92141/rating.json": {
+      "sha256": "f5006018ec0609c55f2fc34dc744b05f2dbb8cbf3d2b533445f8dcd91c372393",
+      "mtime_ns": 1794787533020303800,
+      "bytes": 3986
+    },
+    "content/difficulty/pz-1b7bf32b1fa140918c0692c90d998752/rating.json": {
+      "sha256": "ab7b17b5c4d2d42a74876d070d747cd7fba524ddf56f1541379791970c8677bc",
+      "mtime_ns": 1794787533021308700,
+      "bytes": 4130
+    },
+    "content/difficulty/pz-1e9cdac1f83a49d5982f93ded09e58de/rating.json": {
+      "sha256": "e89b2934f19095e54405911062d946329365bc3302a2b347f33a52d342850b55",
+      "mtime_ns": 1794787533022405300,
+      "bytes": 4088
+    },
+    "content/difficulty/pz-20219e14dbe242689b9ef06297828f34/rating.json": {
+      "sha256": "fc0547b985536996d727be88cabf4bef66fda4494e4909ade5efe0e141647758",
+      "mtime_ns": 1794787533023412700,
+      "bytes": 4068
+    },
+    "content/difficulty/pz-20ecf7747bbf40828238ec26d1207172/rating.json": {
+      "sha256": "7f9081ea81be730a66ac44340cad77e7dea079e6e83c164c03b95794f2930054",
+      "mtime_ns": 1794787533024590900,
+      "bytes": 4469
+    },
+    "content/difficulty/pz-22969714393847e697e8169a8b688efd/rating.json": {
+      "sha256": "735dd16d0c09ef3c0d6df7bd14099a491865e2caed740176d665febb1326fd46",
+      "mtime_ns": 1794787533024590900,
+      "bytes": 3931
+    },
+    "content/difficulty/pz-25d245061b0c49c190788de8e5d0e45b/rating.json": {
+      "sha256": "1d2ef336341f50a3cbe35b0205276ebd0e3390d0c3fdf5722e6cc5c92cfcd0d3",
+      "mtime_ns": 1794787533025596500,
+      "bytes": 4150
+    },
+    "content/difficulty/pz-2a8481f61e6443bda174bd3da67c/rating.json": {
+      "sha256": "49a4f30ca75767c7e8652b860d77b7ec0300c0429bf1aee2b627c32412ee98a5",
+      "mtime_ns": 1794787533026981900,
+      "bytes": 4126
+    },
+    "content/difficulty/pz-3a744ae1b7cb4d38b0ac29d030ef/rating.json": {
+      "sha256": "08f5596abf74f0a47ca8b9846fed38a8aec439d92d41d12a3d678eedbd686539",
+      "mtime_ns": 1794787533027503500,
+      "bytes": 4182
+    },
+    "content/difficulty/pz-3e97c042f0bf474e8608a84ea034c246/rating.json": {
+      "sha256": "96d150ddd9cd0eb7eacfdf39e66aca490ef13a5b8c5c6daae58a643c0e2e06e9",
+      "mtime_ns": 1794787533028509800,
+      "bytes": 4136
+    },
+    "content/difficulty/pz-419437f56aba4603bf7a84bf0b624ba5/rating.json": {
+      "sha256": "260f30a24b37f8f04dc79aee28c83386a99294fbfa03c2c3784744150af64ef8",
+      "mtime_ns": 1794787533028509800,
+      "bytes": 3954
+    },
+    "content/difficulty/pz-49a9e539419b48119e8f5f506fcf6dc7/rating.json": {
+      "sha256": "5aa7de2bfe0268c9f7d3387268916ad115ff9a102d2ab8dedf6928554ef25150",
+      "mtime_ns": 1794787533030372700,
+      "bytes": 4052
+    },
+    "content/difficulty/pz-51405ea1ad194507a60c9b6701d802f0/rating.json": {
+      "sha256": "0e419e0ba16d79d1220d930fe630142f51a8e9e2cc9a652e9b526a885ca8aa44",
+      "mtime_ns": 1794787533031401800,
+      "bytes": 4156
+    },
+    "content/difficulty/pz-5ad1e06e19ab475baebc582d4999daa5/rating.json": {
+      "sha256": "7ce60140dd5bd38e5fb676331e7a02f8c3c0510da13fd9e508083544e634b39a",
+      "mtime_ns": 1794787533031401800,
+      "bytes": 4069
+    },
+    "content/difficulty/pz-5f5a379b5abb4c979ee23f807aec9418/rating.json": {
+      "sha256": "358303be3697d87b8d49f2fa8d7549fcac90916820051454ed2cc62d08acfde2",
+      "mtime_ns": 1794787533032407200,
+      "bytes": 3894
+    },
+    "content/difficulty/pz-6d980b0285604e22b8ecfce205aa008b/rating.json": {
+      "sha256": "4b85af2f7ecf166b72b92582cf6fea2522d9f21962f26cc27622a1d60045ea49",
+      "mtime_ns": 1794787533033739100,
+      "bytes": 4037
+    },
+    "content/difficulty/pz-72561c715dd741f9b0082c7ad24802c1/rating.json": {
+      "sha256": "135638ff9685c77ac90447c67b8a4240be7666e4f5c0ed70fb78dad79bda99ac",
+      "mtime_ns": 1794787533035247900,
+      "bytes": 4087
+    },
+    "content/difficulty/pz-72eb9b188896440c8a9a833e803835ec/rating.json": {
+      "sha256": "cb176868d5d5b8a3533076b2cfd4444079fd57ddf07d6983678629d8daeaa070",
+      "mtime_ns": 1794787533035247900,
+      "bytes": 4075
+    },
+    "content/difficulty/pz-7635c2e042e349fc90ad9ae55681de0f/rating.json": {
+      "sha256": "70de247a13587514bc79bb5dd26c0f527e83c6b8398158ae14f68565c821c4c5",
+      "mtime_ns": 1794787533036253000,
+      "bytes": 4078
+    },
+    "content/difficulty/pz-7ec3dcd94bf84e698691ef4b5839/rating.json": {
+      "sha256": "cc679314239d6b6461e083de5f43bfe6fe634cdb74a296d895ef510fec067477",
+      "mtime_ns": 1794787533037285300,
+      "bytes": 4089
+    },
+    "content/difficulty/pz-82758295d5d34284bbae2716f64f/rating.json": {
+      "sha256": "73e0a735fe6fb120e385e28ace1ca07f86eeca352c6cb5885284d12cef3e59c0",
+      "mtime_ns": 1794787533038290600,
+      "bytes": 4157
+    },
+    "content/difficulty/pz-86d1d588a88a46e6ac1285f0097afbca/rating.json": {
+      "sha256": "0d54401e7d5cbfbd473421dab18df2fa63a8703c7ffd03e6e71fe527afa425d0",
+      "mtime_ns": 1794787533039359900,
+      "bytes": 4103
+    },
+    "content/difficulty/pz-87bf2975c82540a399a3d0c7fa180a25/rating.json": {
+      "sha256": "3d42087db6f3981c951a6e1e5b5a54fa813898b3f40f5e431573cfc1514c48e7",
+      "mtime_ns": 1794787533039359900,
+      "bytes": 4598
+    },
+    "content/difficulty/pz-8ea7f3dacdcc428a9fcff7a735bc/rating.json": {
+      "sha256": "280644dc846503369171e8ab2438f70ab9fc082733cf37a65ef1a3de591ce207",
+      "mtime_ns": 1794787533040966700,
+      "bytes": 4112
+    },
+    "content/difficulty/pz-8ecddf77e80c4543bf4ec714fe3d/rating.json": {
+      "sha256": "be3408d4d63317027356bb534590bfcdb87c30229f2400b03be07abc72b7c178",
+      "mtime_ns": 1794787533041478600,
+      "bytes": 4088
+    },
+    "content/difficulty/pz-985d36c1634644fbb2c8a0bf7de3aa9f/rating.json": {
+      "sha256": "3eafa47daf7063cb0627e05840e35adccd3ad49467d2138a230e1557b66c0f09",
+      "mtime_ns": 1794787533042483800,
+      "bytes": 4116
+    },
+    "content/difficulty/pz-9a79befc7a834e2d9d5896a477328962/rating.json": {
+      "sha256": "9582fca58bdb84390bf073b4992a69550c2d4cf0731766c74e114040c452a368",
+      "mtime_ns": 1794787533043492600,
+      "bytes": 4110
+    },
+    "content/difficulty/pz-9be288b9b5104da88fc8464184647ae7/rating.json": {
+      "sha256": "d7dfde658fbf75d69006d744d48cb38486cb6824f25a679bdb107a72955c8d79",
+      "mtime_ns": 1794787533044498900,
+      "bytes": 4594
+    },
+    "content/difficulty/pz-9d08697a30c749258b742ac979de9def/rating.json": {
+      "sha256": "fd8b67929952ce504cb6bc3aa40898dce9546d13d5e3f609e4541e27de680a58",
+      "mtime_ns": 1794787533044498900,
+      "bytes": 4176
+    },
+    "content/difficulty/pz-9f7c59054ebb4f3f861e2bce3034320e/rating.json": {
+      "sha256": "3efd11b41675291c099a587c9a767f34d4e10ae3b3570441828b9038555c4133",
+      "mtime_ns": 1794787533045630400,
+      "bytes": 4136
+    },
+    "content/difficulty/pz-a13368590b744814915eb722f5b2c5f2/rating.json": {
+      "sha256": "9fdd5ea81d61d774523b74a77a785e360945a8939ab2e0138465baca3bdadca3",
+      "mtime_ns": 1794787533046636500,
+      "bytes": 4142
+    },
+    "content/difficulty/pz-a358a1bf1b994efcbebeb55abf825789/rating.json": {
+      "sha256": "6e9cbbebcd57e7c374bc6edb7608a280b78e7fb73033a14aaf27679b347fac59",
+      "mtime_ns": 1794787533047145000,
+      "bytes": 4053
+    },
+    "content/difficulty/pz-ad7164c2302a42e5953f6779a1c7/rating.json": {
+      "sha256": "652aaf0a456d6ef109f0d84e4ef2e16efe4e2d61d0bbf5755bad82ce2b5b06b7",
+      "mtime_ns": 1794787533048160200,
+      "bytes": 4138
+    },
+    "content/difficulty/pz-b180c25084a34b019f35ad2244f03c24/rating.json": {
+      "sha256": "45bae2d5e0d28f253f71371c6abb1855bfb1aa590cc856bd25365d4b9d91b3ac",
+      "mtime_ns": 1794787533048671200,
+      "bytes": 4230
+    },
+    "content/difficulty/pz-b19a0ccbe3164e1c8fd97267e57dd454/rating.json": {
+      "sha256": "418cf4bdf43a14332b005deaa34911fc09aed51d45d6b7b188dce5f88307267b",
+      "mtime_ns": 1794787533049694000,
+      "bytes": 3877
+    },
+    "content/difficulty/pz-b3368aea28ac4a11bf09e0dc9c48/rating.json": {
+      "sha256": "bd0fc8479567657c301dd791996933a7573ab78863a8e39090b50c6f5e207533",
+      "mtime_ns": 1794787533050739500,
+      "bytes": 4086
+    },
+    "content/difficulty/pz-b5e2302bf71445c09caac76bbc2a7075/rating.json": {
+      "sha256": "fa23431bfd3584c69c4a28560fc241147d77ef6e99a2f970415b4f0c5b99f75e",
+      "mtime_ns": 1794787533051257400,
+      "bytes": 4145
+    },
+    "content/difficulty/pz-b6f94e528b48444985d0561cb48a5bc7/rating.json": {
+      "sha256": "8a9bb5346097c16ec59c1e3a766931bb957187378fb391dd7c32d1193ff6f2c5",
+      "mtime_ns": 1794787533052265200,
+      "bytes": 4019
+    },
+    "content/difficulty/pz-bd2783fcd3eb428c933d15259961cfcd/rating.json": {
+      "sha256": "31ddb06601631545706e903e4a684e393efd080a403a20b957cc111d3b570ce3",
+      "mtime_ns": 1794787533053372800,
+      "bytes": 4174
+    },
+    "content/difficulty/pz-birne/rating.json": {
+      "sha256": "f5a773c05c9153652cee2e2bbf6548de9ffa571e303f9749cb26dc96861832ca",
+      "mtime_ns": 1794787533054376700,
+      "bytes": 3851
+    },
+    "content/difficulty/pz-c71563f1b8c940de998afdd62f09/rating.json": {
+      "sha256": "6609f22a7835b824965f77d6ffc5a8d4a716a19d947b7ffc79964f15fd830087",
+      "mtime_ns": 1794787533054376700,
+      "bytes": 4072
+    },
+    "content/difficulty/pz-d2d41fd0fc604172a7586f7f41c55320/rating.json": {
+      "sha256": "1a5e3aafde4003421ea1f9bc18c20cb8acde188e02032468c18e6caa929d8f36",
+      "mtime_ns": 1794787533055508900,
+      "bytes": 3970
+    },
+    "content/difficulty/pz-d6cb06cb41854b1da84f0ba2f043aa14/rating.json": {
+      "sha256": "9c5b24d153caea4408f01e197506c136cc9e821a50ed3b9d3ddb4ef110fe7608",
+      "mtime_ns": 1794787533056513900,
+      "bytes": 4136
+    },
+    "content/difficulty/pz-d7e68d1138a3448c8b2a4b07e8632350/rating.json": {
+      "sha256": "ae11f0d63eed9cb2f0ffe4a0f644acaec7e00fbd0b585ee7ddfe495f0d4f3174",
+      "mtime_ns": 1794787533057690900,
+      "bytes": 4061
+    },
+    "content/difficulty/pz-d829eb9b83e94f9c9357ee5ab9c9e359/rating.json": {
+      "sha256": "29e2b8b0a3b1e43cf7a30998ab1df32cf8ffb8567efd3a0503204e54d17fdbb2",
+      "mtime_ns": 1794787533058719700,
+      "bytes": 4150
+    },
+    "content/difficulty/pz-dad34b8331914c909e8ded79491dac94/rating.json": {
+      "sha256": "4ad4ad25daae68a8635c2f32649de3e7d87e7b9f4ae3079fd7d79083aaff36e1",
+      "mtime_ns": 1794787533058719700,
+      "bytes": 4150
+    },
+    "content/difficulty/pz-dbbebc72556d4f0c9a37ab69275480e9/rating.json": {
+      "sha256": "5bf551d931672a8f4ac5a7de00030267ce1a9f49035e76bdb5649445afb0d9d2",
+      "mtime_ns": 1794787533060267500,
+      "bytes": 4123
+    },
+    "content/difficulty/pz-dbcf38395b9f4dda86c8b3d6cdae1f2c/rating.json": {
+      "sha256": "57a493133b72eaecbfdbb84bd2151b867fc98b45b3ebd324b2ec215b93b71778",
+      "mtime_ns": 1794787533060267500,
+      "bytes": 3899
+    },
+    "content/difficulty/pz-e2e5092925ce4821a9219be7816b5931/rating.json": {
+      "sha256": "9663ed9fba9627ad112b47e68e2c9ecf507ed1c12d69b65ae0e26ab16cb97f60",
+      "mtime_ns": 1794787533061274500,
+      "bytes": 4033
+    },
+    "content/difficulty/pz-e45e2e0d67a34f6aa8368f477454/rating.json": {
+      "sha256": "9d29cc4272e7962e0a00f553a9bceb97d57c3da391746be327b1884a6d0a589d",
+      "mtime_ns": 1794787533062369900,
+      "bytes": 4154
+    },
+    "content/difficulty/pz-eedd1fe72af54714908d5b5aff34/rating.json": {
+      "sha256": "84a503119a49b00a11c220d2dbe61f7142c54d6ba7a0c48984c777e510b4bcf0",
+      "mtime_ns": 1794787533063374700,
+      "bytes": 4089
+    },
+    "content/difficulty/pz-erdbeere/rating.json": {
+      "sha256": "e390624e4fc3351027b2963b7adcb4e3fc1f33488f9d097bab50a9dfd5d1cd14",
+      "mtime_ns": 1794787533063879600,
+      "bytes": 3817
+    },
+    "content/difficulty/pz-f68e79ef419a4322b68d06817b39330d/rating.json": {
+      "sha256": "52c54fde8de7e9e663cd6fa49055cf52e60a326ea184863a3b38aea8c2706c86",
+      "mtime_ns": 1794787533064384300,
+      "bytes": 4029
+    },
+    "content/difficulty/pz-fliegenpilz/rating.json": {
+      "sha256": "150990359a3ba355868699cf0ba7705b63b0f47b3c34d5e416c069593072035e",
+      "mtime_ns": 1794787533065900400,
+      "bytes": 3816
+    },
+    "content/difficulty/pz-libelle/rating.json": {
+      "sha256": "5b0759b6b391c69fb5e2873d0590b9cf24f96f97f0253756e08b75b1457d9940",
+      "mtime_ns": 1794787533066405500,
+      "bytes": 4346
+    },
+    "content/difficulty/pz-marienkaefer/rating.json": {
+      "sha256": "c4b903bc88e22922ec947923090dba3f78a3bf5b89704d8a64fa8592ca531555",
+      "mtime_ns": 1794787533067410100,
+      "bytes": 3843
+    },
+    "content/difficulty/pz-radieschen/rating.json": {
+      "sha256": "9dd719342abe6b37c3b95d33db148ed9cb020d1f1033d6a0b9cad540e45eaa3f",
+      "mtime_ns": 1794787533067914900,
+      "bytes": 3817
+    },
+    "content/difficulty/pz-schluessel/rating.json": {
+      "sha256": "84c8eb586a16320feb0fefcf2821c8dacc5fdd1741796cb3f1af2e3af6faf243",
+      "mtime_ns": 1794787533068418500,
+      "bytes": 3827
+    },
+    "content/difficulty/pz-schnecke/rating.json": {
+      "sha256": "5fc37f6a85d2e4ebf91f894205d5fae96cc1fd8598e7af55941c906fbaa04e60",
+      "mtime_ns": 1794787533069442600,
+      "bytes": 3839
+    },
+    "content/difficulty/pz-zitrone/rating.json": {
+      "sha256": "3e7d3cd19379b6d927e667c3672a1f92e43894a3d20d986d8f3ea83074c9c5a3",
+      "mtime_ns": 1794787533070560700,
+      "bytes": 3829
+    },
+    "content/difficulty/reports/sd-c2-first-20261018-a/report.json": {
+      "sha256": "3e05293facf857aeffc1744b6961f27c1d9e1fd564d0d5e6995de340d0be3917",
+      "mtime_ns": 1794787533072591100,
+      "bytes": 39932
+    },
+    "content/difficulty/reports/sd-c2-first-20261018-a/report.md": {
+      "sha256": "f4f437cdd6b6ef6c50900f0cc18f84a8e88ff10f288e4c001f3501f9d514ea8f",
+      "mtime_ns": 1794787533073095100,
+      "bytes": 21718
+    },
+    "content/difficulty/reports/sd2-d-20261026-om01/report.json": {
+      "sha256": "94e41931fa0bb691c796d8f322e353671448cda84aa48d5246a889753cc93ddc",
+      "mtime_ns": 1794787533074111700,
+      "bytes": 107863
+    },
+    "content/difficulty/reports/sd2-d-20261026-om01/report.md": {
+      "sha256": "80029e1787240b9bed1c9ef8f69c60533f3a013d151e21a3014cce657e863415",
+      "mtime_ns": 1794787533074619900,
+      "bytes": 88618
+    },
+    "content/authoring/pz-cc522b3f66bc4d6eafe1f8a387d18d1f/r01/handoff.json": {
+      "sha256": "0939aed1a14df302f148b2f4d882a379126bba3fb9773c27e69d123b0bfad3b0",
+      "mtime_ns": 1794787532963502200,
+      "bytes": 2483
+    },
+    "content/authoring/pz-cc522b3f66bc4d6eafe1f8a387d18d1f/r01/package.zip": {
+      "sha256": "6b4f548b1ff0d96401729cb3730157d2238372bb8c202feed0557330b6cccfd9",
+      "mtime_ns": 1794787532966949500,
+      "bytes": 26578
+    },
+    "content/authoring/pz-cc522b3f66bc4d6eafe1f8a387d18d1f/r01/record.json": {
+      "sha256": "961f02f898b191973c996212742e201a174a5f4d7884cd25b2a47c77db1d5f80",
+      "mtime_ns": 1794787532967461400,
+      "bytes": 1627
+    },
+    "content/authoring/pz-4ec5ac61e2c447bd98c8508a993cbd32/r01/handoff.json": {
+      "sha256": "44112e8292058ff330ab05acb4d77cc4aa7aecf817f0a6d799cf8d8a07b5f4be",
+      "mtime_ns": 1794787532920976700,
+      "bytes": 3516
+    },
+    "content/authoring/pz-4ec5ac61e2c447bd98c8508a993cbd32/r01/package.zip": {
+      "sha256": "4bca086578af368d6d91becfcf7bee97493a07b826ccbbab9927a2d35aced56d",
+      "mtime_ns": 1794787532926581600,
+      "bytes": 4501224
+    },
+    "content/authoring/pz-4ec5ac61e2c447bd98c8508a993cbd32/r01/record.json": {
+      "sha256": "b33d084835e7c858fb05575b49d1715cbffcb7d698230111a6ec65838e788307",
+      "mtime_ns": 1794787532928099200,
+      "bytes": 2645
+    },
+    "content/authoring/pz-4ec5ac61e2c447bd98c8508a993cbd32/r02/approval.json": {
+      "sha256": "ab9901afe0d7cb7902decafd44b2f9a9ed43161ac8f388e0047136de86b65855",
+      "mtime_ns": 1794787532929617900,
+      "bytes": 774
+    },
+    "content/authoring/pz-4ec5ac61e2c447bd98c8508a993cbd32/r02/handoff.json": {
+      "sha256": "cdce54a1dac36b43dc8ab2ded99fa9366345e67251c7ac34d7d3452e28ff4ab2",
+      "mtime_ns": 1794787532929617900,
+      "bytes": 2834
+    },
+    "content/authoring/pz-4ec5ac61e2c447bd98c8508a993cbd32/r02/package.zip": {
+      "sha256": "7b29216142b47f1f54d5e9a82a923b2b844ed0556198271d6a8dc00ec97f2c87",
+      "mtime_ns": 1794787532934721200,
+      "bytes": 2795924
+    },
+    "content/authoring/pz-4ec5ac61e2c447bd98c8508a993cbd32/r02/record.json": {
+      "sha256": "e5660a989619868219dc1d515c011daec4d222d1c0cc3444c4df9a9421bb4fd9",
+      "mtime_ns": 1794787532934721200,
+      "bytes": 2242
+    },
+    "content/authoring/pz-4ec5ac61e2c447bd98c8508a993cbd32/r03/handoff.json": {
+      "sha256": "8a25852bc40785b18b0f93cff2f422ae8c337883a17f5e0c58fbc965af1796e0",
+      "mtime_ns": 1794787532936457600,
+      "bytes": 3228
+    },
+    "content/authoring/pz-4ec5ac61e2c447bd98c8508a993cbd32/r03/inspection.json": {
+      "sha256": "af0e48588a318d856684575203ad96a5278419e1e941fde5e31ab4b716050cf2",
+      "mtime_ns": 1794787532936457600,
+      "bytes": 3973
+    },
+    "content/authoring/pz-4ec5ac61e2c447bd98c8508a993cbd32/r03/motif-approval-evidence.txt": {
+      "sha256": "2aab782ebddc45dd6e7602314d48de9da20e2048a118fb21f33968cc644c365e",
+      "mtime_ns": 1794787532939500900,
+      "bytes": 453
+    },
+    "content/authoring/pz-4ec5ac61e2c447bd98c8508a993cbd32/r03/motif-approval.json": {
+      "sha256": "07582fd5a7ffa004a3b9b8bef084be6b060e989eea39b3163b8b260dc9109c9b",
+      "mtime_ns": 1794787532939500900,
+      "bytes": 1379
+    },
+    "content/authoring/pz-4ec5ac61e2c447bd98c8508a993cbd32/r03/package.zip": {
+      "sha256": "b44416135b9cfb8489529af46f3d148307c3e9bf569ffb63daa643104b82feef",
+      "mtime_ns": 1794787532955898800,
+      "bytes": 12239053
+    },
+    "content/authoring/pz-4ec5ac61e2c447bd98c8508a993cbd32/r03/preview.png": {
+      "sha256": "97beb9600bb3f8569850bc1defc6da534f63d7ddbe5e402aa7f266c006f96d99",
+      "mtime_ns": 1794787532960451400,
+      "bytes": 888242
+    },
+    "content/authoring/pz-4ec5ac61e2c447bd98c8508a993cbd32/r03/record.json": {
+      "sha256": "b76e48043c3d4fa798530ed12c82b1ca1fea3a66094c8e35b50de646ef384bb1",
+      "mtime_ns": 1794787532962993200,
+      "bytes": 3389
+    },
+    "content/added/reports/ku-b-initial.json": {
+      "sha256": "e6d7a01e740adbc40cdc90e64c733f95907c8924cfe1f0a4bb734bb7bc6b7884",
+      "mtime_ns": 1794787532916274900,
+      "bytes": 1225890
+    }
+  }
+}

@@ -1,0 +1,3 @@
+Production ID: pz-ri-one-one-color
+Artwork: Test fixture code
+Usage basis: Repository-owned synthetic test pixels; not a catalog asset

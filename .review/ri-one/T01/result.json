@@ -1,0 +1,117 @@
+{
+  "format": "ri-one-t01/v1",
+  "source_head": "ff828466405af3278e447f7de27b61e6ab13a496",
+  "base": "62401382f58adc2e3d303b19c1ecb1f1dc8a5040",
+  "source_unchanged": true,
+  "passed": true,
+  "tests": [
+    {
+      "test": "test_current_integration.CurrentIntegrationTests.test_actual_batch_run_and_resume_only_current_selected_data",
+      "status": "passed",
+      "seconds": 13.888738599984208
+    },
+    {
+      "test": "test_current_integration.CurrentIntegrationTests.test_cli_and_export_use_current_input",
+      "status": "passed",
+      "seconds": 2.234862899989821
+    },
+    {
+      "test": "test_current_integration.CurrentIntegrationTests.test_concurrent_source_and_unknown_journal_preserve_foreign_bytes",
+      "status": "passed",
+      "seconds": 0.7450631000101566
+    },
+    {
+      "test": "test_current_integration.CurrentIntegrationTests.test_current_input_needs_no_producer_or_rulebook",
+      "status": "passed",
+      "seconds": 1.521914500015555
+    },
+    {
+      "test": "test_current_integration.CurrentIntegrationTests.test_editor_listing_detail_metadata_and_raster_use_current_sources",
+      "status": "passed",
+      "seconds": 2.072188799997093
+    },
+    {
+      "test": "test_current_integration.CurrentIntegrationTests.test_interrupted_current_write_and_repeated_recovery",
+      "status": "passed",
+      "seconds": 2.561722100013867
+    },
+    {
+      "test": "test_current_integration.CurrentIntegrationTests.test_invalid_definition_proof_and_decision_rejected_without_writes",
+      "status": "passed",
+      "seconds": 0.21002540001063608
+    },
+    {
+      "test": "test_current_integration.CurrentIntegrationTests.test_modes_backgrounds_and_byte_mtime_noop",
+      "status": "passed",
+      "seconds": 6.3200064999982715
+    },
+    {
+      "test": "test_current_integration.CurrentIntegrationTests.test_no_foreign_archive_reads_during_plan_write_repeat_or_batch_result",
+      "status": "passed",
+      "seconds": 1.9762224000005517
+    },
+    {
+      "test": "test_current_integration.CurrentIntegrationTests.test_occupied_id_and_slot_are_conflicts",
+      "status": "passed",
+      "seconds": 1.8617161999864038
+    },
+    {
+      "test": "test_current_integration.CurrentIntegrationTests.test_recovery_preserves_foreign_data",
+      "status": "passed",
+      "seconds": 0.8996722000010777
+    },
+    {
+      "test": "test_current_integration.CurrentIntegrationTests.test_runtime_last_and_controlled_abort_rolls_back_with_own_budget",
+      "status": "passed",
+      "seconds": 2.375490999984322
+    },
+    {
+      "test": "test_current_integration.CurrentIntegrationTests.test_visual_rights_and_path_failures_cannot_be_reapproved",
+      "status": "passed",
+      "seconds": 0.24087800001143478
+    },
+    {
+      "test": "test_current_consumers.CurrentConsumerTests.test_activation_new_one_color_and_multicolor_keep_existing_rating_and_dates",
+      "status": "passed",
+      "seconds": 28.44191810002667
+    },
+    {
+      "test": "test_current_consumers.CurrentConsumerTests.test_current_catalog_recovery_restores_method_and_repeats",
+      "status": "passed",
+      "seconds": 6.704432300000917
+    },
+    {
+      "test": "test_current_consumers.CurrentConsumerTests.test_current_metadata_and_date_readers_need_no_reports_or_archives",
+      "status": "passed",
+      "seconds": 2.367106199992122
+    },
+    {
+      "test": "test_current_consumers.CurrentConsumerTests.test_current_preview_adopt_repeat_and_source_change_guard",
+      "status": "passed",
+      "seconds": 21.468131300003733
+    },
+    {
+      "test": "test_current_consumers.CurrentConsumerTests.test_separate_current_background_request_repeat_and_reverse",
+      "status": "passed",
+      "seconds": 1.7737502999952994
+    },
+    {
+      "test": "test_current_completion.CurrentCompletionTests.test_completion_no_archives_multiphase_retirement_and_noop",
+      "status": "passed",
+      "seconds": 13.977846099995077
+    },
+    {
+      "test": "test_current_completion.CurrentCompletionTests.test_foreign_completed_work_preserves_all_files",
+      "status": "passed",
+      "seconds": 12.734964300005231
+    },
+    {
+      "test": "test_current_completion.CurrentCompletionTests.test_list_current_and_old_branch_copies_keep_new_work_or_unconfirmed_main",
+      "status": "passed",
+      "seconds": 18.79371009999886
+    }
+  ],
+  "seconds": 143.52763050000067,
+  "python": "3.13.14",
+  "pillow": "12.3.0"
+}
