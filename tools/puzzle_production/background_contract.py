@@ -40,6 +40,10 @@ PROFILE = {
     "metadata": "sRGB-only",
 }
 
+PROFILE_3 = {**PROFILE, "id": "picross-background-png2304x768-v1", "height": 768, "fit": "exact"}
+PROFILES = {p["id"]: p for p in (PROFILE, PROFILE_3)}
+SIZES = {(p["width"], p["height"]): p["id"] for p in PROFILES.values()}
+
 ERROR_STATUS = {
     **dict.fromkeys((
         "invalid_json", "invalid_request", "unsupported_format", "invalid_binding",
@@ -285,10 +289,13 @@ def _format(value, expected):
     _require(value == expected, "Unsupported declared background format", code="unsupported_format")
 
 
-def _profile(value):
+def _profile(value, generation=2):
     _keys(value, PROFILE, "Derivation profile")
-    _require(all(type(value[key]) is type(expected) and value[key] == expected
-                 for key, expected in PROFILE.items()), "Only the fixed PNG2304 profile is supported")
+    expected = PROFILES.get(value.get("id")) if type(value.get("id")) is str else None
+    _require(expected is not None and (generation == 2 or expected == PROFILE),
+             "Unsupported background profile for this generation")
+    _require(all(type(value[key]) is type(item) and value[key] == item
+                 for key, item in expected.items()), "Background profile body differs")
 
 
 def validate_producer(value):
@@ -308,7 +315,7 @@ def validate_request(value):
     _ref(value["manifest"])
     _ref(value["decision"])
     _optional_ref(value["source"])
-    _profile(value["profile"])
+    _profile(value["profile"], 1 if value["format"].endswith("-v1") else 2)
     _sha(value["expected_tool_sha256"])
     relative(value["output"])
     return value
@@ -462,9 +469,9 @@ def validate_decision(value):
         _require(value["candidate_id"] != "none", "none is not a candidate ID")
         _ref(value["original"])
         _keys(value["profile"], ("id", "sha256"), "Decision profile binding")
-        _require(value["profile"]["id"] == PROFILE["id"], "Invalid decision profile ID", code="invalid_binding")
+        _require(type(value["profile"]["id"]) is str and value["profile"]["id"] in PROFILES, "Invalid decision profile ID", code="invalid_binding")
         _sha(value["profile"]["sha256"])
-        _require(value["profile"]["sha256"] == digest(PROFILE), "Decision profile hash mismatch",
+        _require(value["profile"]["sha256"] == digest(PROFILES[value["profile"]["id"]]), "Decision profile hash mismatch",
                  code="invalid_binding")
     else:
         _require(value["candidate_id"] is None and value["original"] is None and value["profile"] is None,
@@ -629,6 +636,10 @@ def load_inputs(request, reader):
              code="invalid_binding")
     _require(request["source"] == decision["original"], "Request source does not match the explicit decision",
              code="invalid_binding")
+
+    if decision["outcome"] == "selected":
+        _require(decision["profile"] == {"id": request["profile"]["id"], "sha256": digest(request["profile"])},
+                 "Decision and request profiles differ", code="invalid_binding")
 
     # Also rule out cycles through evidence/manifest edges, not just decisions.
     done, visiting = set(), set()

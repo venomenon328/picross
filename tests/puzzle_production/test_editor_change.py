@@ -179,3 +179,33 @@ class EditorChangeTests(unittest.TestCase):
         plan['plan_hash'] = digest({k: v for k, v in plan.items() if k != 'plan_hash'})
         with self.assertRaisesRegex(ValueError, 'lacks current image source|without current source'): edit.apply(self.root, plan)
         self.assertEqual(before, self.snapshot())
+
+    def test_hg31_new_prepared_profile_requires_v2_and_preserves_unrelated_bytes(self):
+        from io import BytesIO
+        from PIL import Image
+        from tools.puzzle_production.editor_image_input import validate_background
+        image = Image.new('RGBA', (2304,768), (0,0,0,0)); image.putpixel((100,700),(60,60,60,128))
+        stream = BytesIO(); image.save(stream, format='PNG'); raw=stream.getvalue()
+        checked=validate_background(raw)
+        self.assertEqual(checked['profile'], 'picross-prepared-background-png2304x768-v1')
+        request=self.request(background={'status':'selected','upload':'background'})
+        uploads={'background':{'raw':raw,'suffix':'png','checked':checked}}
+        before=self.snapshot()
+        with self.assertRaisesRegex(ValueError,'capability'): edit.plan(self.root,request,uploads=uploads)
+        self.assertEqual(before,self.snapshot())
+        write_json(self.root/bg.CAPABILITY, {'format':'picross-runtime-background-capability-v2',
+            'runtime_format':'picross-runtime-registry-v8','profile_ids':['picross-background-png2304-v1','picross-background-png2304x768-v1'],'enabled':True})
+        before=self.snapshot()
+        plan=edit.plan(self.root,request,uploads=uploads)
+        edit.apply(self.root,plan)
+        self.assertEqual((self.root/bg.asset_path(self.entry['id'])).read_bytes(),raw)
+        changed=set(plan['changes'])
+        for name,value in before.items():
+            if name not in changed: self.assertEqual(self.snapshot()[name],value,name)
+        after=self.snapshot()
+        self.assertEqual(edit.apply(self.root,edit.plan(self.root,request,uploads=uploads))['status'],'noop')
+        self.assertEqual(after,self.snapshot())
+        for status in ('none','standard'):
+            plan=edit.plan(self.root,self.request(background={'status':status,'upload':None}))
+            edit.apply(self.root,plan)
+            self.assertFalse((self.root/bg.asset_path(self.entry['id'])).exists())

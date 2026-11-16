@@ -41,7 +41,103 @@ Bestehende Inhalts-, Proof-, Paletten-, Bild-, Freigabe- und Integrationsgaranti
 bleiben erhalten. Der Dienst bleibt lesend; Veröffentlichung und Gitabschluss
 führt der beauftragte Akteur aus. Historische Originale werden nicht migriert.
 
-**Vertrag 1.0 · Dokumentrevision 15 · 15.11.2026 · HG-FORMAT / [#663](https://github.com/venomenon328/picross/issues/663); HP-W2-COMPAT-1 / #645; HP-W1/HP-W2 / #560; PB-H / #489; HP-I1a/HP-I1b1/HP-I1b2/HP-I1c/HP-I2 / #561; MJ-A/MJ-B / #490; BA-A/BA-B / #491; PE-A2 / #576**
+**Vertrag 1.0 · Dokumentrevision 18 · 16.11.2026 · HG-BESTAND / [#671](https://github.com/venomenon328/picross/issues/671); HG-KOMPOSITION / [#673](https://github.com/venomenon328/picross/issues/673); HP-W2-COMPAT-1 / #645; HP-W1/HP-W2 / #560; PB-H / #489; HP-I1a/HP-I1b1/HP-I1b2/HP-I1c/HP-I2 / #561; MJ-A/MJ-B / #490; BA-A/BA-B / #491; PE-A2 / #576**
+
+
+## HG31 · zwei geschlossene Bildprofile
+
+Vertrag vor konsumierendem Code · 16.11.2026 · [Paketentscheidung #675](https://github.com/venomenon328/picross/issues/675#umsetzungsvorbereitung-hg31).
+Dieser Abschnitt ersetzt für neue HG31-Arbeit die widersprechenden 4:1-Vorgaben
+in §§1–4, 6, 13–14 und den aktuellen RI-Abschnitten. Historische Belege bleiben
+unverändert. Neue Kandidaten sind durchgehende Einzelbilder exakt 3:1;
+Originalmaße dürfen variieren (etwa 2172×724). Drei verschiedene Angebote und
+persönliche Bildwahl bleiben. Keine Halbbildmontage, Seitenstreifen, Crop,
+Stretch oder Motivverschiebung. Aktive 4:1-Bilder bleiben bis zur ausdrücklich
+gewählten und integrierten Ersetzung bytegleich unter ihrem bisherigen Profil.
+Beauftragte Bestandsrevisionen entstehen in 3:1; [#671](https://github.com/venomenon328/picross/issues/671)
+umfasst auch alle bereits vorhandenen individuellen Hintergründe seiner Kohorte.
+Historische Originale und Freigaben werden nicht umgeschrieben. Die zusätzliche
+Höhe und die etwas hellere Graphitwirkung folgen dem [Bildstil](PUZZLE_IMAGE_STYLE.md):
+Höhenverteilung als unverbindliche Gestaltungsrichtung, ohne feste Mittel-/
+Seitenbelegung oder zusätzliche Ausnahmefreigabe.
+
+Das neue vollständige HP-W2-Profil lautet exakt:
+
+```json
+{
+  "id": "picross-background-png2304x768-v1",
+  "width": 2304,
+  "height": 768,
+  "format": "PNG",
+  "mode": "RGBA",
+  "fit": "exact",
+  "anchor": "bottom-center",
+  "upscale": true,
+  "resample": "pillow-rgba-premultiplied-lanczos",
+  "color_space": "sRGB",
+  "transparent_rgb": "zero",
+  "png_compress_level": 9,
+  "png_optimize": false,
+  "metadata": "sRGB-only"
+}
+```
+
+H(profile) verwendet die bestehende Kanonisierung. Das bisherige Profil in §4.1
+behält seinen Körper und Hash. V2-Request/Befund unterstützen genau beide Profile;
+Entscheidung v1 erweitert nur ihre geschlossene {id,sha256}-Wertedomäne.
+V1-Request/Befund bleiben ausschließlich beim alten Profil. Arbeitsmanifest v1
+bleibt unverändert. `describe(generation=2, profile_id=...)` bzw.
+`describe --profile-id ...` wählt das Profil ausdrücklich; ohne Angabe bleibt der
+bisherige API-Default. Neue 3:1-Produktion gibt stets die neue ID an.
+Request, Entscheidung, Befund und verify müssen dasselbe vollständige Profil
+und dessen Hash binden. Keine automatische Auswahl aus zufälligen Quellmaßen.
+Für das neue Profil gilt nach Orientierung exakt W=3H; sonst Abweisung vor
+Publikation. Die gesamte Quelle wird auf 2304×768 skaliert, ohne Padding.
+Farb-, Alpha-, Encoder-, Ressourcen- und tatsächliche Renderidentität bleiben
+nach §4 gebunden; geänderter Rendercode erfordert neue echte Bindungen.
+Historische Originale werden niemals umetikettiert oder neu versiegelt.
+
+Fertigimport ergänzt `picross-prepared-background-png2304x768-v1`: exakt
+2304×768 PNG RGBA8 mit den vorhandenen Farb-/Alpha-/Framinggrenzen.
+`picross-prepared-background-png2304-v1` behält seine 2304×576-Bedeutung und
+sämtliche bereits zulässigen Farbtypen, tRNS und Interlacing. Exakt validierte
+PNG-Geometrie bestimmt eindeutig die Fertigimport-ID. Bytes bleiben unverändert.
+RI-Eingang/aktive Quellen/Registry/Runtime und Editorrequest behalten ihre
+Feldformen; kein Profilfeld in Assetrefs, keine Save-/Bildrevisionsmigration.
+
+Capability v2 enthält exakt `format,runtime_format,profile_ids,enabled`:
+`format=picross-runtime-background-capability-v2`,
+`runtime_format=picross-runtime-registry-v8`, boolesches enabled und exakt
+`profile_ids=[picross-background-png2304-v1,picross-background-png2304x768-v1]`
+in dieser Reihenfolge. V1 bleibt ausschließlich die 4:1-Zusage aus dem alten
+Vertrag. 2304×768 zusammen mit v1 scheitert an Writer-, Import- und Runtimegrenzen.
+Unbekannte oder widersprüchliche Formen scheitern. Die Unterstützung beider
+Profile ist seit [PR #676](https://github.com/venomenon328/picross/pull/676) auf main
+integriert; der technische Zwischenhalt von #671 ist beendet. Den tatsächlichen
+Einführungsnachweis und die ausdrücklich erlassenen Vor-Merge-Gates A01/A02 hält
+[der HG31-Abschluss](https://github.com/venomenon328/picross/issues/675#issuecomment-6919304397)
+fest. Ein Nachweisverzicht gilt nicht nachträglich als bestandene Prüfung.
+
+Beide Profile verwenden dieselbe sichere horizontale Papierfläche und den
+unteren mittigen Anker aus §13.2. Mit r=4 bzw. r=3:
+Breite=min(sichere Breite,sichere Höhe*r), Höhe=Breite/r. Bei genügend Platz
+hat 3:1 dieselbe Breite und ein Drittel mehr Höhe, sonst vollständigen
+proportionalen Fit. Kategoriezeichnungen bleiben unverändert. Deckkraft 0,48,
+Mipfilterung, passive Eingabe, Capturehierarchie und Besuchspublikation bleiben.
+Geometrie wird aus der frisch validierten Textur des betreffenden Ladebesuchs
+gebunden; alte asynchrone Antworten dürfen keinen neuen Besuch beeinflussen.
+Beide Profile haben elf zusätzliche Mipstufen. Jede ganzzahlig halbierte
+Dimension und die vollständige RGBA-Kette werden geprüft: 7.077.844 bzw.
+9.437.176 Bytes. Die 64-MiB-Grenze wird nicht erhöht.
+
+HG31-T01–T03 und HG31-A01 bezeichnen die damaligen Einführungsnachweise aus #675;
+ihren tatsächlichen Abschluss einschließlich der Nachweisverzichte dokumentiert
+der oben verlinkte Paketabschluss. Sie eröffnen kein neues Gate je Bildserie.
+Synthetic End-to-End bis Editor/RI, Import und beiden PCKs, einmaliger bytegenauer
+Bestandsschutz und echte native/Web-/Editorbedienung sind getrennte Aussagen.
+Headless-/Node-/HTTP-Erfolg ersetzt keine tatsächlich geöffnete Darstellung.
+Revieworiginale liegen ausschließlich auf einem temporären separaten Reviewref,
+binärer Download vor Übergabe geprüft; erhalten bis HG31-A01/Paketabschluss.
 
 ## 1. Geltung und tatsächlicher Unterstützungsstand
 
@@ -116,12 +212,30 @@ Abschlussbild, Motivvorlage, Lösungsraster und Hintergrund bleiben getrennte
 Dateien, Revisionen und Freigabegegenstände.
 
 Standard sind echte ImageGen-Zeichnungen mit hellen neutralgrauen Graphitstrichen,
-offenen beziehungsweise nachgezogenen Konturen und sparsamer Schraffur. Papier
-muss auch zwischen den Strichen durchscheinen. Eingebrannte Buchflächen, UI,
-weiße Bildkästen, Schrift und Wasserzeichen sind ausgeschlossen. Gemeinsame
-transparente 4:1-Leinwand; durchgehende luftige Kompositionen sind ebenso möglich
-wie niedrigere Mitte, U- oder Halb-U-Form. Keine Pflicht zu zwei Ecken und keine
-individuellen Positions-, Crop- oder Maskenparameter.
+offenen beziehungsweise nachgezogenen Konturen und motivgerechter Schraffur.
+Die neuen Zeichnungen erhalten eine insgesamt geringfügig hellere, zurückhaltende
+Bleistiftwirkung nach dem [Bildstil](PUZZLE_IMAGE_STYLE.md); feine Striche und die
+zeichnerische Struktur bleiben erkennbar. Kein numerischer Helligkeits-/Alphawert
+und keine Änderung der Runtime-Deckkraft.
+Gefüllte Objektflächen sind ausdrücklich erlaubt, auch größere zusammenhängende
+Partien, sofern sie sichtbar realistisch handschraffiert wirken. Natürliche
+Strichführung/Kreuzschraffur und passende Dichte beurteilen; die bloße Existenz
+einer Fläche ist kein Korrekturgrund. Glatte digitale Deckflächen erfüllen den
+Graphitstil nicht. Papier muss in freien Außen-/Zwischenräumen und zwischen
+offenen Schraffurstrichen durchscheinen; dichtere gezeichnete Objektpartien sind
+kein Verstoß gegen diese Transparenzregel. Eingebrannte Buchflächen, UI, weiße
+Bildkästen, Schrift und Wasserzeichen sind ausgeschlossen.
+
+Neue vollständige transparente Einzelkompositionen folgen dem 3:1-Profil im
+[HG31-Vertrag](#hg31--zwei-geschlossene-bildprofile) und dem aktuellen
+[Bildstil](PUZZLE_IMAGE_STYLE.md#hintergrundkomposition-die-vollständige-leinwand).
+Die gemeinsame sichere Papierbreite mit Falz-/Randabständen und bewusstem Freiraum
+bleibt erhalten. Die zusätzliche Höhe ist kein Belegungsziel; niedrigere/luftigere
+Mitte und nicht vollhohe Seiten sind unverbindliche Gestaltungsrichtungen, keine
+festen Höhenquoten oder Ablehnungsgründe für passende andere Kompositionen.
+Keine individuellen Positions-, Crop- oder Maskenparameter. Korrektur vor Auswahl folgt
+[Schritt 4 §6.3.1](ai-workflows/PUZZLE_AUTHORING_STEP_4.md#631-formatkorrektur-vor-der-bildwahl),
+die isolierte Prüfung [Q-HG02–Q-HG04](PUZZLE_QUALITY.md#91-isolierte-visuelle-beurteilung).
 
 Die HP-I2-Runtime nach [#561](https://github.com/venomenon328/picross/issues/561)
 verwendet zunächst Variante A, dieselbe Grunddarstellung hinter Raster und
@@ -381,12 +495,17 @@ begrenzter Kantenqualität darf dieselbe Eigentümerwahl den konkret benannten
 Befund ausdrücklich annehmen. Dafür ist der passende Eintrag in
 `accepted_deviations` erforderlich, keine weitere Dialogphase. Q-HG01 und die
 festen Grenzen bleiben unabdingbar: tatsächlicher Kontext statt Rätselsubjekt,
-keine UI/Buchfläche/Schrift/Wasserzeichen, echte Transparenz zwischen Strichen,
-keine deckenden Bildkästen, kein individuelles Positionieren/Croppen/Maskieren,
+keine UI/Buchfläche/Schrift/Wasserzeichen, echte Transparenz in freien Außen-/
+Zwischenräumen und zwischen offenen Schraffurstrichen, keine deckenden Bildkästen,
+kein individuelles Positionieren/Croppen/Maskieren,
 gültige Datei-/Profil-/Freigabebindung und geklärte Rechte. Eine redaktionelle
 Annahme ersetzt diese Voraussetzungen nicht und macht einen technischen Fehler
 nicht erfolgreich. Bildwahl darf schon vor ihrer technischen Auflösung
 aufgezeichnet werden; `selected` allein ist gerade keine Bereitschaft.
+Die nach §1 und Q-HG02 zulässigen dichter schraffierten Objektflächen bleiben
+erlaubt; sie sind keine unerwünschte Füllung freier Außen-/Zwischenräume.
+Die volle Kompositionsbreite nach Q-HG03 darf nicht durch zusätzliche transparente
+Seitenbalken nur formal hergestellt werden.
 
 Hashrichtung: Originale/Belegdateien → Arbeitsmanifest → Entscheidung →
 Ableitungsbefund; Auslieferungs-PNG → Ableitungsbefund. Inventar bindet enthaltene
@@ -431,7 +550,12 @@ abweichende Parameter sind ungültig. `profile_sha256=H(dieses Objekt)`.
 }
 ```
 
-Originale dürfen andere native Maße haben. Quelle vollständig als ein PNG-Frame
+Originale dürfen andere native Maße haben, auch kleinere echte 4:1-Dateien wie
+2048×512. Die technische Annahme anderer Seitenverhältnisse durch diesen Reader
+ist keine gestalterische Zulassung: Auswahlfassungen erfüllen Schritt 4 §6.3.1
+und Q-HG03 einschließlich sichtbarer Breitenverteilung. Das Profil repariert
+keine falsche Komposition; 2896 Pixel sind keine vorgeschriebene Generatorbreite.
+Quelle vollständig als ein PNG-Frame
 dekodieren; unterstützte Modi mit höchstens 8 Bit je Kanal
 `1|L|LA|P|RGB|RGBA`, inklusive PNG-Transparenz.
 Beschädigte/trunkierte Daten, Animation, High-depth und andere Formate werden
@@ -781,7 +905,7 @@ Die konkrete ausgewählte Paketrevision und Originalbytes bleiben gleichwohl
 | Nur administrative Manifestangaben berichtigt | Alte Originale/Entscheidung erhalten. Übernahme über `carried_from` nur bei identischen gewählten Originalbytes, Kandidaten-ID/Bildrevision, `context` und Profil; tatsächlicher Akteur/UTC/Wortlaut/Beleg bytegleich. Neue Manifestbindung und Berichtigungsgrund im Entscheidungsprotokoll; keine erfundene neue Zustimmung. Geänderte Rechte werden eigenständig geprüft. |
 | Rastermaß, Zellwerte oder Palette geändert, Motivkontext unverändert | Vorhandene gültige Hintergrundwahl bleibt bestehen; nur die nach Authoring fälligen Raster-/Paletten-/Proofnachweise erneuern. Keine zusätzliche Buchsicht. |
 | Motivkontext oder geschützte Merkmale geändert | Gezielten Hintergrundvergleich dokumentieren. Bei betroffener Kontext-/Bildidentität neue Bildentscheidung; nicht automatisch drei neue Motive. |
-| Auswahl abgelehnt oder konkrete Korrektur offen | Zustand `rejected`/`pending`, Korrektur im beauftragten Umfang; reine Formatkorrektur laufender Kandidaten ist nach [Schritt 4 §6.3.1](ai-workflows/PUZZLE_AUTHORING_STEP_4.md#631-formatkorrektur-vor-der-bildwahl) bereits vom Hintergrundproduktionsauftrag umfasst und braucht keine zusätzliche Rückfrage, auch vor der Bildwahl. Unveränderte bereits autorisierte Rasterarbeit darf fortgesetzt werden. Keine automatische erste/empfohlene Option. |
+| Auswahl abgelehnt oder konkrete Korrektur offen | Zustand `rejected`/`pending`, Korrektur im beauftragten Umfang; Format- und dadurch nötige Kompositionskorrektur laufender Kandidaten ist nach [Schritt 4 §6.3.1](ai-workflows/PUZZLE_AUTHORING_STEP_4.md#631-formatkorrektur-vor-der-bildwahl) bereits vom Hintergrundproduktionsauftrag umfasst, bei Bedarf als zeichnerische Erweiterung/passende Neugenerierung im bestehenden Budget. Keine zusätzliche Ausführungserlaubnis, auch vor der Bildwahl; geänderte Bildbytes anschließend tatsächlich wählen. Zulässige schraffierte Objektflächen allein nicht korrigieren. Unveränderte bereits autorisierte Rasterarbeit darf fortgesetzt werden. Keine automatische erste/empfohlene Option. |
 | Wiederaufnahme | Index/Record, tatsächlichen Paketstand, Hintergrundmanifest, Entscheidung, Originale, Rechte, Befund und Freigaben selbst laden/prüfen. Keine erneuten Uploads/Bestätigungen für bereits erreichbare gültige Bytes; keine stillen Versionswechsel. |
 | Reiner späterer Hintergrundersatz | Gesonderter Bildauftrag mit neuen Originalen/Wahl/Ableitung und dem sicheren HP-I1b-Weg. Lösungs-, Hinweis-, Paletten-, Schwierigkeits-, Runtime-/Saveidentität, Slot, Added-Daten und gültige unveränderte Freigaben erhalten. Keine Rekonstruktion alter bereinigter Rasterproduktion oder neuen Solverläufe allein wegen des Bilds. |
 
@@ -792,9 +916,12 @@ muss genau diese Wahl verwenden. Keine alten Freigaben überschreiben. Für
 nicht auf sich oder einen Nachfolger zeigen. Eine Materialänderung ist darüber
 nicht übertragbar. Der ursprüngliche ImageGen-Prompt allein legitimiert keine
 materielle Umgestaltung. Die bereits vom Hintergrundproduktionsauftrag umfasste
-Formatkorrektur nach Schritt 4 §6.3.1 erlaubt das Herstellen korrigierter Kandidatenbytes,
-einschließlich
-transparenter Leinwanderweiterung per Skript; ihre tatsächliche Wahl bleibt offen.
+Format-/Kompositionskorrektur nach Schritt 4 §6.3.1 erlaubt das Herstellen
+korrigierter Kandidatenbytes, nötigenfalls durch gezielte zeichnerische Erweiterung
+oder passende Neugenerierung im bestehenden Bildkorrekturbudget. Proportionale
+Auflösungsanpassung einer vollständigen 4:1-Komposition darf per Skript erfolgen;
+bloße transparente Seitenbalken, Strecken oder Motivbeschnitt sind keine Lösung.
+Die tatsächliche Wahl der geänderten Fassung bleibt offen.
 Dieser Vorwahlschritt ist keine HP-W2-Ableitung und verändert weder deren Profil
 noch bereits integrierte Bilder oder historische Freigaben.
 

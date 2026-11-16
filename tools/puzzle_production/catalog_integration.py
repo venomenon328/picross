@@ -34,8 +34,9 @@ def integrate(export_dir, root, *, apply=False, fail_step=None, publication_seco
     require(not incoming.value["test_only"] or Path(root).resolve() != ROOT.resolve(), "Test-only input cannot enter product catalog")
     entry = incoming.entry
     snapshot = transaction.Snapshot(root, entry["id"])
-    from .catalog_background import capability
-    capability(snapshot.root, snapshot.raw, required=incoming.value["background"]["status"] in ("none", "selected"))
+    from .catalog_background import capability, image_profile
+    capability(snapshot.root, snapshot.raw, required=incoming.value["background"]["status"] in ("none", "selected"),
+               profile_id=image_profile(incoming.background["asset"]) if incoming.background else None)
     category = categories.lookup(snapshot.catalog, incoming.value["metadata"]["category_id"])
     if snapshot.existing is not None:
         require(same(snapshot.delivery, incoming), "Occupied ID differs; use the explicit revision operation")

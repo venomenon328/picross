@@ -1,5 +1,11 @@
 # RI: Zuverlässige und messbare Rätselintegration
 
+**HG31 / #675:** Neue 3:1-Einzelkompositionen und 2304×768 unter eigenem Profil;
+4:1-Bestand und sein Profil bleiben bytegleich. Maßgeblicher geschlossener
+[Profil-/Capability-/Geometrievertrag](PUZZLE_BACKGROUNDS.md#hg31--zwei-geschlossene-bildprofile)
+ersetzt widersprechende aktive Einprofilangaben unten. Keine Inhaltsmigration;
+Mainaktivierung erst nach technischen Nachweisen und unabhängigem HG31-A01.
+
 **RI-ONE · 16.11.2026.** Maßgeblich sind [Issue #660](https://github.com/venomenon328/picross/issues/660#umsetzungsvorbereitung-ri-one) und der [freigegebene gemeinsame Vertrag](PUZZLE_INTEGRATION_SINGLE_PATH.md). Dieser Vertrag ersetzt die bisherigen RI-A/B/C- und v1–v10-Integrationsvarianten. Historische Lieferstände sind über Git erreichbar und keine aktuellen Zulassungsregeln.
 
 ## Ein aktueller Eingang und Kern
