@@ -47,6 +47,9 @@ class HelperDiagnostic {
         }
     }
     static int Main(string[] args) {
+        // Framework Process creates StandardInput using the parent Console.InputEncoding.
+        // Pin it before Process.Start: a UTF-8 BOM would turn the closed GO command into foreign input.
+        Console.InputEncoding=new UTF8Encoding(false,true);
         if(args.Length==1 && args[0]=="child") { Console.WriteLine("READY"); Console.Out.Flush(); Console.ReadLine(); return 0; }
         try {
             if(args.Length==3 && args[0]=="handshake") {
@@ -94,6 +97,7 @@ class HelperDiagnostic {
                 using(var child=Process.Start(start)) {
                     string ready=child.StandardOutput.ReadLine();
                     if(ready!="READY "+new string('a',48)) throw new Exception("READY bytes: "+BitConverter.ToString(Encoding.UTF8.GetBytes(ready??"<EOF>")));
+                    Need(child.StandardInput.Encoding.GetPreamble().Length==0);
                     byte[] bytes=Encoding.ASCII.GetBytes(command);
                     child.StandardInput.BaseStream.Write(bytes,0,bytes.Length); child.StandardInput.BaseStream.Flush();
                     child.StandardInput.Close();
