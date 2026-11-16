@@ -101,24 +101,27 @@ jobs:
           Get-Content "$env:RUNNER_TEMP\pe-product\delivery.json"
           Get-Content "$env:RUNNER_TEMP\pe-inspection\result.json"
           if ((git status --porcelain)) { throw 'Build changed source checkout' }
-      - name: PE-APP-A T02/T03 frozen and signature diagnosis (no installation or publication)
+      - name: PE-APP-B T02/T03 frozen and signature diagnosis (no installation or publication)
         if: github.event_name == 'workflow_dispatch'
         shell: pwsh
         run: |
           & "$env:RUNNER_TEMP\pe-env\Scripts\python.exe" -m tools.puzzle_editor.diagnostic --build "$env:RUNNER_TEMP\pe-product" --output "$env:RUNNER_TEMP\pe-review"
           if ($LASTEXITCODE -ne 0) { throw 'PE diagnosis failed' }
-      - name: PE technical originals for independent PE-APP-A-A01 review
+          & "$env:RUNNER_TEMP\pe-env\Scripts\python.exe" -m tools.production_workspace.helper_diagnostic --app pe --build "$env:RUNNER_TEMP\pe-product" --output "$env:RUNNER_TEMP\pe-helper-review"
+          if ($LASTEXITCODE -ne 0) { throw 'PE helper diagnosis failed' }
+      - name: PE technical originals for independent PE-APP-B-A01 review
         if: github.event_name == 'workflow_dispatch'
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
         with:
           name: pe-review-${{ needs.plan.outputs.source }}
           path: |
             ${{ runner.temp }}/pe-review/*
+            ${{ runner.temp }}/pe-helper-review/*
             ${{ runner.temp }}/pe-product/input-audit.json
             ${{ runner.temp }}/pe-inspection/result.json
           retention-days: 7
           if-no-files-found: error
-      - name: Candidate for independent PE-APP-A review and gated publisher
+      - name: Candidate for independent PE-APP-B review and gated publisher
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
         with:
           name: Picross-Bestandseditor-${{ needs.plan.outputs.source }}

@@ -1,5 +1,6 @@
 """Private launcher update decisions and owned, flat staging (no checkout I/O)."""
 from pathlib import Path
+from tools.app_products import PW
 import os
 import secrets
 import stat
@@ -20,7 +21,8 @@ def no_links(path):
         except FileNotFoundError:
             continue
         require(not stat.S_ISLNK(info.st_mode) and
-                not getattr(info, 'st_file_attributes', 0) & 0x400, 'Update path contains a link/reparse point')
+                not getattr(info, 'st_file_attributes', 0) & 0x400 and
+                (not stat.S_ISREG(info.st_mode) or info.st_nlink == 1), 'Update path contains a link/reparse point')
     return path
 
 
@@ -91,7 +93,7 @@ class Stage:
         self.path.rmdir()  # Unknown files cause refusal, never recursive deletion.
 
 
-def recover(launcher):
+def recover(launcher, *, app=PW):
     """Read a result, remove only listed completed handoff files, never resume MSI."""
     launcher = no_links(launcher)
     pending = launcher / 'update-pending.json'
@@ -104,7 +106,7 @@ def recover(launcher):
             value['stage'] == value['nonce'] and len(value['stage']) == 48 and
             all(c in '0123456789abcdef' for c in value['stage']), 'Invalid pending stage')
     stage = no_links(launcher / 'update-staging' / value['stage'])
-    msi = release(version=value['version'])['filename']
+    msi = release(version=value['version'], app=app)['filename']
     expected = {msi, msi + '.sha256', 'START.txt', 'delivery.json', 'inputs.json',
                 'manifest.json', 'manifest.sig.json', 'UpdateHelper.exe', 'active'}
     require(type(value['files']) is list and len(value['files']) <= 12 and
@@ -112,7 +114,7 @@ def recover(launcher):
                 not n.endswith(('.', ' ')) for n in value['files']), 'Invalid pending inventory')
     require(set(value['files']) == expected and len(value['files']) == len(expected), 'Unowned pending inventory')
     if not result.exists():
-        return 'Updateausgang unbestätigt. Assistent regulär starten; vor erneutem Versuch Installation prüfen.'
+        return 'Updateausgang unbestätigt. Anwendung regulär starten; vor erneutem Versuch Installation prüfen.'
     report = read_small(result)
     shape(report, 'format nonce status version', 'Invalid update result')
     require(report['format'] == 'picross-update-result-v1' and report['nonce'] == value['nonce'] and report['version'] == value['version'] and
@@ -126,7 +128,7 @@ def recover(launcher):
         (stage / 'active').unlink(missing_ok=True)
         stage.rmdir()
     pending.unlink()
-    messages = {'installed': 'Installation bestätigt; Assistent neu gestartet.',
+    messages = {'installed': 'Installation bestätigt; Anwendung neu gestartet.',
                 'failed': 'Update fehlgeschlagen. Installation prüfen und bei Bedarf manuell erneut installieren.',
                 'reboot': 'Windows meldet erforderlichen Neustart. Update noch nicht als erfolgreich bestätigt.',
                 'unconfirmed': 'Update oder Wiederanlauf unbestätigt. Installation prüfen und manuell starten.',

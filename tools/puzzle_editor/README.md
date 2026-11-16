@@ -1,4 +1,4 @@
-# Lokaler Picross-Bestandseditor · PE-APP-A
+# Lokaler Picross-Bestandseditor · PE-APP-B
 
 Eigenständiges Offlinewerkzeug für bereits registrierte Rätsel. Der
 [Fachvertrag §13](../../docs/PUZZLE_EDITOR.md#13-pe-edit2-gezielte-pflege-statt-vollbestandsprüfung)
@@ -28,7 +28,7 @@ Tab schließen beendet den Dienst nicht. Beenden wartet laufende Fachoperationen
 ab; dabei weder Task-Manager-Kill noch Löschen von Journal-/Lockdateien verwenden.
 Für einen Checkoutwechsel zuerst Browseränderungen übernehmen/verwerfen,
 geordnet beenden und mit der neuen Ordnerwahl starten. Kein Import von Pythoncode
-oder UI aus dem Datencheckout. Es gibt keine Netzwerk-/Git-/Releasefunktion.
+oder UI aus dem Datencheckout. Git und Inhaltsveröffentlichung bleiben extern; App-Updates verwenden ausschließlich den getrennten signierten PE-Kanal.
 
 Entwicklerfallback mit CPython 3.13.14 x64, Pillow 12.3.0 und Tcl/Tk 8.6.15 aus
 dem vertrauenswürdigen Programmcheckout:
@@ -39,10 +39,34 @@ python -m tools.puzzle_editor --root E:\Test\picross --state E:\Test\pe-state --
 ```
 
 `--root` belegt die sichtbare Auswahl vor; gestartet wird erst per Button.
-Der separate Zustandsordner enthält nur `config.json` mit letztem Pfad/Port und Hell/Dunkel-Auswahl.
+Der separate Zustandsordner enthält `config.json` mit letztem Pfad/Port und Hell/Dunkel-Auswahl; eigene Updateentscheidungen und temporäre Übergaben stehen getrennt in `.updates/`.
 Standard: `%LOCALAPPDATA%/PicrossPuzzleEditor`. Keine Bilder, Inhalte oder Saves
 in Einstellungen/Browserstorage. Temporäre Importe und Pläne außerhalb des
 Checkouts verschwinden beim Verwerfen, Ablauf beziehungsweise regulären Stop.
+
+## App-Updates beim Start
+
+Nur die installierte, nicht erhöhte Windows-App bietet eine eigene ausdrückliche
+Zustimmung. Ohne Aktivieren erfolgt kein Update-Netzabruf. Ablehnen beziehungsweise
+Ausschalten bleibt gespeichert. Portable Ausgabe, Entwickler und Worker installieren
+keine Updates. Erstinstallation und der erste updaterfähige MSI bleiben manuell;
+ein noch nicht veröffentlichter PE-Kanal wird ehrlich als nicht verfügbar gemeldet.
+
+Bei Zustimmung prüft die App einmal vor der ersten Editoröffnung. Das native
+Fenster bleibt bedienbar; „Ohne Update fortfahren“ verwirft den aktuellen Versuch
+und erhält die Zustimmung. Offline-, Signatur- und Downloadfehler geben die
+vorhandene App frei. Eine signiert bestätigte Gleichversion meldet „Keine neuere
+Appversion veröffentlicht.“; Downgrades und abweichende Gleichversionen werden
+abgewiesen. „Editor starten“ bleibt die ausdrückliche Handlung für Server/Browser.
+
+Nach sicherer Helferübernahme sind Skip und Opt-out gesperrt. Laufende Arbeit
+wird vollständig abgewartet. Weitere PE-Instanzen, auch mit anderem Checkout
+oder --state, verhindern Installation. Nach erfolgreichem MSI und bestätigtem
+Wiederanlauf erscheint wieder das Auswahlfenster mit unverändertem Zustand;
+der Editorserver startet erst per Button. Fehler oder unbestätigter Wiederanlauf
+verlangen die angezeigte manuelle Prüfung. Es gibt keinen automatischen Retry,
+Hardkill, erzwungenen Neustart oder allgemeines Rollbackversprechen. Eigene noch
+belegte Updateablage bleibt erhalten und wird als solche gemeldet.
 
 ## Bearbeiten
 
@@ -142,11 +166,11 @@ Tatsächliche Paketinputs bestimmen den Fingerprint; identische Bytes ergeben
 keinen neuen Installer. Nur der gegatete Publisher signiert PE-Metadaten und
 veröffentlicht nach Rückdownloadprüfung unter `pe-vX.Y.Z`. Diagnose-Dispatch
 veröffentlicht nie. Ohne gesonderten Betriebsauftrag und PE-Environment/Flags/
-Signierbereitstellung bleibt Publikation gesperrt. **Kein Selbstupdate-Client in A**;
-dieser folgt in B. Keine private Laufzeit aus dem Datencheckout.
+Signierbereitstellung bleibt Publikation gesperrt. B ergänzt den standardmäßig ausgeschalteten Selbstupdateclient. Keine private Laufzeit aus dem Datencheckout.
 
 Maßgeblich sind [PE §14](../../docs/PUZZLE_EDITOR.md#14-pe-app-a--feste-windows-produkt--und-releasebindung)
-und [#691 / PE-APP-A](https://github.com/venomenon328/picross/issues/691#umsetzungsvorbereitung-pe-app-a).
+sowie [PE §15](../../docs/PUZZLE_EDITOR.md#15-pe-app-b--startgate-und-sicherer-wiederanlauf)
+und [#691 / PE-APP-B](https://github.com/venomenon328/picross/issues/691#umsetzungsvorbereitung-pe-app-b--startgate-selbstupdate-und-sicherer-wiederanlauf).
 Projektkern plus tools, `evidence.mode=none`; separate einmalige Windows-MSI-/
 Frozen-/Releaseproben T02/T03. Tatsächliche Originale und Ergebnisse stehen im
 Draft-PR. MSI-Inspektion ist keine Installation. Unabhängiges A01 vor Merge,
