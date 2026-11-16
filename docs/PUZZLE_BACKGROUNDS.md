@@ -14,6 +14,10 @@ ohne `notice` oder `authority` im `current`. Vorhandene historische TXT-Dateien
 am festen Hintergrundstamm bleiben unverändert und werden im technischen
 Importinventar mit echten Bytes/Hashes gebunden. Ohne vorhandene TXT-Datei ist
 dessen `notice` null; der Import erzeugt weder Ersatztext noch Herkunftspflichten.
+Dies gilt auch für den aktuellen Mainvergleich und den §9-Produktionsabschluss:
+Eine fehlende PE-EDIT2-Hintergrund-`.txt` ist keine Fehlerbedingung.
+Vorhandene tatsächliche TXT-Bytes und deren Abwesenheit bleiben bytegenau
+gegen den bestätigten Mainstand zu vergleichen; es wird nichts ergänzt.
 Aktive PNG-Bindung, sichere Namensräume und das gemeinsame Importprofil bleiben
 geprüft. Ältere Quellen behalten ihre bisherigen verpflichtenden Notice-Refs.
 

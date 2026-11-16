@@ -161,7 +161,7 @@ def notice_path(entry):
 
 def selected(root, value, identifier, *, read=None):
     """Read exactly one current delivery, never a package tree."""
-    read = read or (lambda n, limit=LIMIT: io.read(root, n, limit))
+    read = read or (lambda n, limit=LIMIT, *, missing=False: io.read(root, n, limit, missing=missing))
     entry = next((e for e in value["entries"] if e["id"] == identifier), None)
     require(entry is not None, "Unknown current ID")
     raw = read("game/"+entry["definition"], 2*1024*1024)
@@ -185,7 +185,8 @@ def selected(root, value, identifier, *, read=None):
         result[kind] = image
     result["notice"] = read(notice_path(entry), 65536)
     if result["background"]["current"]["status"] == "selected":
-        result["background_notice"] = read("game/art/backgrounds/"+identifier+".txt", 65536)
+        # PE-EDIT2 backgrounds may have no TXT; preserve actual presence/absence.
+        result["background_notice"] = read("game/art/backgrounds/"+identifier+".txt", 65536, missing=True)
     result["rating"] = rating.validate(io.json_bytes(read(rating.path(identifier), rating.LIMIT), rating.LIMIT),
                                       definition_bytes=raw, production_mode=entry["mode"])
     result["added"] = added.validate(io.json_bytes(read(added.path(identifier), added.LIMIT), added.LIMIT), identifier)

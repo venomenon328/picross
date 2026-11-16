@@ -4,7 +4,7 @@ from .authoring_package import require
 
 
 def snapshot(read, identifier):
-    """read(name, limit) supplies local or Git bytes; never opens an archive."""
+    """read(name, limit, missing=False) supplies local or Git bytes; no archives."""
     value = io.json_bytes(read(content.REGISTRY,8*1024*1024),8*1024*1024)
     runtime = io.json_bytes(read(content.RUNTIME,8*1024*1024),8*1024*1024)
     require(runtime["format"] == content.RUNTIME_FORMAT,"Current runtime required")
@@ -23,11 +23,17 @@ def snapshot(read, identifier):
         content.relative(path);require(path.startswith(prefix),"Foreign delivery resource")
     names={"game/"+entry["definition"],"game/"+row["reveal"],content.notice_path(entry),
            rating.path(identifier),added.path(identifier)}
+    optional=set()
     if row["background"]["asset"]:
         asset=row["background"]["asset"]
         require(asset["file"]=="art/backgrounds/"+identifier+".png","Foreign background asset")
-        names.update(("game/"+asset["file"],"game/art/backgrounds/"+identifier+".txt"))
-    files={name:content.ref(name,read(name,content.LIMIT)) for name in sorted(names)}
+        names.add("game/"+asset["file"])
+        optional.add("game/art/backgrounds/"+identifier+".txt")
+    files={}
+    for name in sorted(names | optional):
+        raw=read(name,content.LIMIT,missing=name in optional)
+        # For optional older notices, absence is compared just as strictly as bytes.
+        files[name]=content.ref(name,raw) if raw is not None else None
     return {"entry":fixed,"mode":entry.get("mode"),"metadata":meta,"runtime":row,"files":files}
 
 
