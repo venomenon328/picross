@@ -56,7 +56,7 @@ class CurrentCompletionTests(unittest.TestCase):
 
     def test_completion_no_archives_multiphase_retirement_and_noop(self):
         main=self.close()
-        live=current_delivery.snapshot(lambda n,l:catalog_io.read(self.root,n,l),'pz-current')
+        live=current_delivery.snapshot(lambda n,l,missing=False:catalog_io.read(self.root,n,l,missing=missing),'pz-current')
         self.phase('r02','raster_review') # A smaller number is still new open work.
         protected=(self.root/'content/authoring/pz-current/r02/record.json').read_bytes()
         kwargs={'completed_revisions':[('pz-current','r01')],'completed_work':[('pz-current','shared')]}
@@ -66,10 +66,54 @@ class CurrentCompletionTests(unittest.TestCase):
         self.assertFalse((self.root/'content/authoring/pz-current/r04/record.json').exists())
         self.assertFalse((self.root/current_view.path('pz-current')).exists())
         self.assertEqual((self.root/'content/authoring/pz-current/r02/record.json').read_bytes(),protected)
-        self.assertEqual(current_delivery.snapshot(lambda n,l:catalog_io.read(self.root,n,l),'pz-current'),live)
+        self.assertEqual(current_delivery.snapshot(lambda n,l,missing=False:catalog_io.read(self.root,n,l,missing=missing),'pz-current'),live)
         before=fingerprints(self.root)
         self.assertEqual(integrated_content.retire(self.root,['pz-current'],main,**kwargs)['status'],'no-op')
         self.assertEqual(before,fingerprints(self.root))
+
+    def test_retire_selected_background_without_legacy_notice(self):
+        self.close()
+        notice='game/art/backgrounds/pz-current.txt'
+        self.assertTrue((self.root/notice).is_file())
+        (self.root/notice).unlink()  # PE-EDIT2 never generates a replacement TXT.
+        main=self.commit()
+        self.git('update-ref','refs/remotes/origin/main',main)
+        read=lambda n,l,missing=False:catalog_io.read(self.root,n,l,missing=missing)
+        live=current_delivery.snapshot(read,'pz-current')
+        self.assertIsNone(live['files'][notice])
+        result=integrated_content.retire(
+            self.root,['pz-current'],main,
+            completed_revisions=[('pz-current','r01')],
+            completed_work=[('pz-current','shared')])
+        self.assertEqual(result['status'],'retired')
+        self.assertTrue((self.root/'game/art/backgrounds/pz-current.png').is_file())
+        self.assertFalse((self.root/notice).exists())
+        self.assertEqual(current_delivery.snapshot(read,'pz-current'),live)
+        before=fingerprints(self.root)
+        self.assertEqual(integrated_content.retire(self.root,['pz-current'],main)['status'],'no-op')
+        self.assertEqual(before,fingerprints(self.root))
+
+    def test_retire_rejects_foreign_notice_added_after_main(self):
+        self.close()
+        notice='game/art/backgrounds/pz-current.txt'
+        (self.root/notice).unlink()
+        main=self.commit()
+        self.git('update-ref','refs/remotes/origin/main',main)
+        put(self.root,notice,b'Uncommitted foreign notice.\\n')
+        before=fingerprints(self.root)
+        with self.assertRaisesRegex(ValueError,'Current selected delivery differs'):
+            integrated_content.retire(self.root,['pz-current'],main,
+                                      completed_work=[('pz-current','shared')])
+        self.assertEqual(fingerprints(self.root),before)
+
+    def test_retire_still_requires_reveal_notice(self):
+        main=self.close()
+        (self.root/'game/art/content/pz-current.txt').unlink()
+        before=fingerprints(self.root)
+        with self.assertRaisesRegex(ValueError,'Missing catalog file'):
+            integrated_content.retire(self.root,['pz-current'],main,
+                                      completed_work=[('pz-current','shared')])
+        self.assertEqual(fingerprints(self.root),before)
 
     def test_foreign_completed_work_preserves_all_files(self):
         main=self.close()
