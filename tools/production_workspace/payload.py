@@ -28,6 +28,8 @@ PRODUCTION_DATA = {
     'sd2_comparison_0_4.json', 'sd2_method_0_4.json',
     'sd2_references_0_4.json', 'sd2_validation_0_4.json', 'requirements-image.txt',
 }
+# Synthetic ZA-1 support is deliberately excluded from the Windows executable.
+PRODUCTION_TEST_ONLY = {'za1_fixtures.py'}
 
 
 def canonical(value):
@@ -44,7 +46,7 @@ def selected(path):
     for scope in (WORKSPACE, PRODUCTION):
         if path.startswith(scope):
             local = path[len(scope):]
-            if local.endswith('.md') or (scope == WORKSPACE and local in IGNORED) or (scope == PRODUCTION and local in PRODUCTION_DATA):
+            if local.endswith('.md') or (scope == WORKSPACE and local in IGNORED) or (scope == PRODUCTION and local in PRODUCTION_DATA | PRODUCTION_TEST_ONLY):
                 return False
             if local.endswith('.py'):
                 return True
