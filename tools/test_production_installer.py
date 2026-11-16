@@ -485,6 +485,8 @@ class AppReleaseTests(unittest.TestCase):
         payload.git(root, 'init', '-q')
         write('tools/puzzle_production/reader.py', b'reader=1\n'); commit()
         first = payload.fingerprint(root)
+        write('tools/puzzle_production/za1_fixtures.py', b'test-only fixture\n'); commit()
+        self.assertEqual(first, payload.fingerprint(root), 'Test-only code must not trigger an app update')
         for name in ('content/a.json', 'game/main.gd', 'docs/NOT-PACKAGED.md', 'tools/ci_modular.py'):
             write(name, b'irrelevant'); commit()
             self.assertEqual(first, payload.fingerprint(root))
@@ -501,6 +503,11 @@ class AppReleaseTests(unittest.TestCase):
             payload.fingerprint(root)
 
     def test_unknown_inputs_and_actual_collector_drift_are_errors(self):
+        from tools.production_workspace import build_windows
+        self.assertEqual(build_windows.FROZEN_EXCLUDES, ('tools.puzzle_production.za1_fixtures', 'tests'))
+        self.assertFalse(payload.selected('tools/puzzle_production/za1_fixtures.py'))
+        self.assertFalse(payload.selected('tests/puzzle_production/current_fixtures.py'))
+        self.assertTrue(payload.selected('tools/puzzle_production/current_content.py'))
         with self.assertRaisesRegex(ValueError, 'Unclassified'):
             payload.selected('tools/puzzle_production/new-resource.bin')
         entry = self.root / 'tools/production_workspace/desktop_entry.py'
@@ -513,6 +520,12 @@ class AppReleaseTests(unittest.TestCase):
         unknown = self.root / 'outside.py'; unknown.write_bytes(b'not fingerprinted')
         toc.write_text(repr([('entry', str(entry), 'PYSOURCE'), ('new', str(unknown), 'PYMODULE')]))
         with self.assertRaisesRegex(ValueError, 'absent'):
+            payload.audit_analysis(self.root, toc, {'sha256': 'x', 'files': [row]}, [])
+        # The exact failure observed in the real Windows PyInstaller Analysis.
+        leaked = self.root / 'tests/puzzle_production/current_fixtures.py'
+        leaked.parent.mkdir(parents=True); leaked.write_bytes(b'test-only')
+        toc.write_text(repr([('entry', str(entry), 'PYSOURCE'), ('leaked', str(leaked), 'PYMODULE')]))
+        with self.assertRaisesRegex(ValueError, 'Frozen input absent from fingerprint: tests/puzzle_production/current_fixtures.py'):
             payload.audit_analysis(self.root, toc, {'sha256': 'x', 'files': [row]}, [])
 
 
