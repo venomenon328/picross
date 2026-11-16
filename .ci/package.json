@@ -1,10 +1,10 @@
 {
   "format": "development-ci-plan/v1",
   "issue": "https://github.com/venomenon328/picross/issues/671",
-  "package": "HG-BESTAND-02-ABSCHLUSS",
+  "package": "HG-RAND-NORM",
   "modules": [],
-  "purpose": "Enger Produktionsabschluss nach Schritt 5 §9: genau 211 abgeschlossene HG-BESTAND-02-Arbeitsdateien für Ankh, Balut, Banane, Birne und Brandenburger Tor nach bestätigter Integration cfe11d8063226e2f93d1d378b8196f46a1a27140 entfernen. Aktive Bilder, aktuelle Quellen, echte Nutzungsangaben und Rätseldaten bleiben bytegleich.",
-  "omitted": "Reine Produktionsbereinigung mit eigenem aktuellem Paketplan, modules=[] und evidence.mode=none. retire-production verwendete den bestätigten Mainanker und fünf ausdrücklich zugeordnete ID-relative Arbeitsordner; Wiederholung no-op. Alle 1664 übrigen Dateien vor Planänderung bytegleich, darunter die fünf aktiven PNGs, Registry, Runtime, Reveals und Arbeitsindex. Keine Code-, Test-, Regel- oder gemeinsamen Spielassetänderungen; kein Playerbau und keine zusätzliche Fachtestsuite.",
+  "purpose": "Verbindliche Randauflösung neuer und beauftragter Hintergrundrevisionen: Gegenstände und Szenenteile vollständig innerhalb der Leinwand oder an allen vier Bildkanten zeichnerisch weich in echte Transparenz auslaufend; harte Anschnitte ausgeschlossen. Q-HG03/Q-HG04 und H-07 im bestehenden Sichtweg.",
+  "omitted": "Reiner Norm-/Dokumentdiff: keine Bilddatei, kein Runtime- oder Werkzeugcode, kein neues Schema. Kein Playerbau und keine zusätzlichen Fach-/Browsermodule; bestehende Dateisichtung und Qualitätsurteile werden präzisiert, die automatische CI prüft Dokumente, Plan und Quellen.",
   "test_changes": [],
   "core_change": null,
   "evidence": {

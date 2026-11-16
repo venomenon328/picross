@@ -45,7 +45,7 @@ Bestehende Inhalts-, Proof-, Paletten-, Bild-, Freigabe- und Integrationsgaranti
 bleiben erhalten. Der Dienst bleibt lesend; Veröffentlichung und Gitabschluss
 führt der beauftragte Akteur aus. Historische Originale werden nicht migriert.
 
-**Vertrag 1.0 · Dokumentrevision 18 · 16.11.2026 · HG-BESTAND / [#671](https://github.com/venomenon328/picross/issues/671); HG-KOMPOSITION / [#673](https://github.com/venomenon328/picross/issues/673); HP-W2-COMPAT-1 / #645; HP-W1/HP-W2 / #560; PB-H / #489; HP-I1a/HP-I1b1/HP-I1b2/HP-I1c/HP-I2 / #561; MJ-A/MJ-B / #490; BA-A/BA-B / #491; PE-A2 / #576**
+**Vertrag 1.0 · Dokumentrevision 19 · 16.11.2026 · HG-RAND / #671; HG-BESTAND / [#671](https://github.com/venomenon328/picross/issues/671); HG-KOMPOSITION / [#673](https://github.com/venomenon328/picross/issues/673); HP-W2-COMPAT-1 / #645; HP-W1/HP-W2 / #560; PB-H / #489; HP-I1a/HP-I1b1/HP-I1b2/HP-I1c/HP-I2 / #561; MJ-A/MJ-B / #490; BA-A/BA-B / #491; PE-A2 / #576**
 
 
 ## HG31 · zwei geschlossene Bildprofile
@@ -237,6 +237,13 @@ Die gemeinsame sichere Papierbreite mit Falz-/Randabständen und bewusstem Freir
 bleibt erhalten. Die zusätzliche Höhe ist kein Belegungsziel; niedrigere/luftigere
 Mitte und nicht vollhohe Seiten sind unverbindliche Gestaltungsrichtungen, keine
 festen Höhenquoten oder Ablehnungsgründe für passende andere Kompositionen.
+**Verbindlicher Randabschluss:** Gezeichnete Gegenstände und zusammenhängende
+Szenerie müssen entweder vollständig in die Leinwand passen oder an jeder
+Bildkante mit Konturen, Schraffur und Tonwerten weich in echte Transparenz
+auslaufen. Ein hart abgeschnittener Baum, ein Gebäude- oder Landschaftsanschnitt
+ist kein zulässiger offener Aufbau. An allen vier Kanten vor Angebot nach
+Q-HG03/Q-HG04 visuell prüfen; ohne positiven Randbefund kein abnahmefähiges Angebot.
+Die lockere Höhenverteilung bleibt davon unabhängig.
 Keine individuellen Positions-, Crop- oder Maskenparameter. Korrektur vor Auswahl folgt
 [Schritt 4 §6.3.1](ai-workflows/PUZZLE_AUTHORING_STEP_4.md#631-formatkorrektur-vor-der-bildwahl),
 die isolierte Prüfung [Q-HG02–Q-HG04](PUZZLE_QUALITY.md#91-isolierte-visuelle-beurteilung).
@@ -502,10 +509,16 @@ festen Grenzen bleiben unabdingbar: tatsächlicher Kontext statt Rätselsubjekt,
 keine UI/Buchfläche/Schrift/Wasserzeichen, echte Transparenz in freien Außen-/
 Zwischenräumen und zwischen offenen Schraffurstrichen, keine deckenden Bildkästen,
 kein individuelles Positionieren/Croppen/Maskieren,
+**keine hart angeschnittenen gezeichneten Objekte oder Szenenteile an einem
+der vier Bildränder (H-07; vollständige Darstellung oder weicher
+zeichnerischer Übergang in echte Transparenz)**,
 gültige Datei-/Profil-/Freigabebindung und geklärte Rechte. Eine redaktionelle
 Annahme ersetzt diese Voraussetzungen nicht und macht einen technischen Fehler
-nicht erfolgreich. Bildwahl darf schon vor ihrer technischen Auflösung
-aufgezeichnet werden; `selected` allein ist gerade keine Bereitschaft.
+nicht erfolgreich. `accepted_deviations` kann bei Q-HG03/Q-HG04 weiche
+Gestaltungsfeinheiten, aber niemals einen H-07-Verstoß legitimieren.
+Die Bildrandprüfung ist ein Sichturteil an tatsächlichen Dateien, kein neuer
+PNG-Grenzwert, Bildmaskenalgorithmus oder Datenfeld.
+Bildwahl darf schon vor ihrer technischen Auflösung aufgezeichnet werden; `selected` allein ist gerade keine Bereitschaft.
 Die nach §1 und Q-HG02 zulässigen dichter schraffierten Objektflächen bleiben
 erlaubt; sie sind keine unerwünschte Füllung freier Außen-/Zwischenräume.
 Die volle Kompositionsbreite nach Q-HG03 darf nicht durch zusätzliche transparente
