@@ -517,8 +517,8 @@ Annahme ersetzt diese Voraussetzungen nicht und macht einen technischen Fehler
 nicht erfolgreich. `accepted_deviations` kann bei Q-HG03/Q-HG04 weiche
 Gestaltungsfeinheiten, aber niemals einen H-07-Verstoß legitimieren.
 Die Bildrandprüfung ist ein Sichturteil an tatsächlichen Dateien, kein neuer
-PNG-Grenzwert, Bildmaskenalgorithmus oder Datenfeld. Bildwahl darf schon vor ihrer technischen Auflösung
-aufgezeichnet werden; `selected` allein ist gerade keine Bereitschaft.
+PNG-Grenzwert, Bildmaskenalgorithmus oder Datenfeld.
+Bildwahl darf schon vor ihrer technischen Auflösung aufgezeichnet werden; `selected` allein ist gerade keine Bereitschaft.
 Die nach §1 und Q-HG02 zulässigen dichter schraffierten Objektflächen bleiben
 erlaubt; sie sind keine unerwünschte Füllung freier Außen-/Zwischenräume.
 Die volle Kompositionsbreite nach Q-HG03 darf nicht durch zusätzliche transparente
