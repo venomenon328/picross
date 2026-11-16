@@ -267,4 +267,6 @@ zurück. Neue Ansichten prüfen alle neuen Quellen und Header vollständig.
 HG31 erweitert ausschließlich die geschlossenen HP-W2-v2-Profilwerte nach
 [Hintergrund](PUZZLE_BACKGROUNDS.md#hg31--zwei-geschlossene-bildprofile).
 Die Snapshotmenge bleibt exakt acht Dateien, alle sechs Authoringheader Rev9,
-Qualität 1.0/Rev13. Historische Originale werden nicht neu versiegelt.
+Qualität 1.0/Rev14. Die Stilpräzisierung aus [#671](https://github.com/venomenon328/picross/issues/671)
+bleibt über den tatsächlichen Quellcommit und die vollständigen Dateibytes gebunden;
+sie führt keine neue Authoringgeneration ein. Historische Originale werden nicht neu versiegelt.
