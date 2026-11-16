@@ -1,0 +1,51 @@
+{
+  "image_commit": "2cb4cd7d653d051ce4d8b281b12b134c093f9820",
+  "checked_at_utc": "2026-11-16T17:46:36.092Z",
+  "entries": [
+    {
+      "puzzle_id": "pz-b6f94e528b48444985d0561cb48a5bc7",
+      "candidate": "A1-r01",
+      "url": "https://raw.githubusercontent.com/venomenon328/picross/2cb4cd7d653d051ce4d8b281b12b134c093f9820/content/authoring/pz-b6f94e528b48444985d0561cb48a5bc7/hg-bestand-02/candidates/A1-r01.png",
+      "status": 200,
+      "content_type": "image/png",
+      "bytes": 1866081,
+      "sha256": "1d4df1ee192aecdce9ab5e49a26553a0669f8438f7a1da118c3e24637cde3452",
+      "size": [
+        2172,
+        724
+      ],
+      "mode": "RGBA",
+      "byte_equal": true
+    },
+    {
+      "puzzle_id": "pz-b6f94e528b48444985d0561cb48a5bc7",
+      "candidate": "A2-r02",
+      "url": "https://raw.githubusercontent.com/venomenon328/picross/2cb4cd7d653d051ce4d8b281b12b134c093f9820/content/authoring/pz-b6f94e528b48444985d0561cb48a5bc7/hg-bestand-02/candidates/A2-r02.png",
+      "status": 200,
+      "content_type": "image/png",
+      "bytes": 1143965,
+      "sha256": "a512098ea45f80802221b8e427f89edcbcbcb99c4b3d5cf4f46ca074ce8f1884",
+      "size": [
+        2172,
+        724
+      ],
+      "mode": "RGBA",
+      "byte_equal": true
+    },
+    {
+      "puzzle_id": "pz-b6f94e528b48444985d0561cb48a5bc7",
+      "candidate": "A4-r01",
+      "url": "https://raw.githubusercontent.com/venomenon328/picross/2cb4cd7d653d051ce4d8b281b12b134c093f9820/content/authoring/pz-b6f94e528b48444985d0561cb48a5bc7/hg-bestand-02/candidates/A4-r01.png",
+      "status": 200,
+      "content_type": "image/png",
+      "bytes": 931523,
+      "sha256": "e2e0a41f66a436c04b1e7b9db41ef3b904e0e3a46c6b8cc39623a164bbe52f37",
+      "size": [
+        2172,
+        724
+      ],
+      "mode": "RGBA",
+      "byte_equal": true
+    }
+  ]
+}
