@@ -1,6 +1,6 @@
 # Gemeinsamer Bildstil der Rätselproduktion
 
-**PW2-A · 13.11.2026; HG-KOMPOSITION · 16.11.2026 · [#673](https://github.com/venomenon328/picross/issues/673).**
+**PW2-A · 13.11.2026; HG-KOMPOSITION · 16.11.2026 · [#673](https://github.com/venomenon328/picross/issues/673); HG-BESTAND · 16.11.2026 · [#671](https://github.com/venomenon328/picross/issues/671).**
 Diese kurze Norm ist Pflichtlektüre in allen fünf
 Produktionsphasen sowie bei Korrektur und Wiederaufnahme. Sie präzisiert die
 zusammengehörige Bildserie; Ablauf und Quellenbedarf stehen in
@@ -59,6 +59,14 @@ Eine gefüllte Fläche allein ist kein Ablehnungs- oder Überarbeitungsgrund.
 Glatte digitale Deckflächen oder ein gleichmäßiger Farbauftrag ohne erkennbare
 Graphitzeichnung erfüllen diesen Stil nicht.
 
+Die neue Hintergrundserie erhält insgesamt eine geringfügig hellere,
+zurückhaltendere Bleistiftwirkung: als würde ein minimal hellerer Bleistift
+verwendet. Dadurch konkurriert die Zeichnung weniger mit Raster, Hinweisen und
+UI. Konturen, feine Striche und die natürliche Schraffur bleiben gut erkennbar;
+gemeint ist keine blasse, ausgewaschene oder detailarme Darstellung. Dies ist
+eine gestalterische Vorgabe für die neuen Zeichnungen, kein numerischer
+Helligkeits-/Alphagrenzwert und keine Änderung der Runtime-Deckkraft.
+
 Das Spielpapier soll in freien Außen-/Zwischenräumen und zwischen offenen
 Schraffurstrichen durchscheinen; dichtere gezeichnete Objektpartien müssen nicht
 an jeder Stelle transparent sein. Luftigkeit entsteht durch Gewichtung:
@@ -87,8 +95,9 @@ HG31 / [#675](https://github.com/venomenon328/picross/issues/675#umsetzungsvorbe
 Neue Kandidaten sind vollständige zusammenhängende transparente Einzelbilder
 exakt 3:1. Native Maße dürfen variieren, etwa 2172×724. Die ausdrücklich gewählte
 HP-W2-Ableitung liefert 2304×768 RGBA8 unter dem eigenen neuen Profil.
-Bereits gewählte 4:1-Bilder behalten ihre unveränderten Bytes und 2304×576.
-Die Profilkörper und der synchrone Mainübergang stehen im
+Aktive 4:1-Bilder bleiben bis zur ausdrücklich gewählten und integrierten
+Ersetzung bytegleich unter ihrem bisherigen 2304×576-Profil; beauftragte neue
+Bildrevisionen entstehen in 3:1. Die Profilkörper und ihr Einführungsstand stehen im
 [Hintergrundvertrag](PUZZLE_BACKGROUNDS.md#hg31--zwei-geschlossene-bildprofile).
 
 Die gesamte Leinwand samt bewusstem Freiraum nutzt die gemeinsame sichere
@@ -98,6 +107,16 @@ proportionalen Fit der ganzen Komposition gelöst. Unterer mittiger Anker,
 kein Alpha-Bounds-Crop oder Nachzentrieren nur des sichtbaren Motivs.
 Rechtsbetonte, offene, durchgehende, U-/Halb-U-Kompositionen sind erlaubt;
 keine Randpixel-, Prozentbelegungs-, Objektzahl- oder Zwei-Eckenpflicht.
+
+Die zusätzliche vertikale Höhe ist gestalterischer Spielraum, kein Belegungsziel.
+**Als unverbindliche Gestaltungsrichtung** die volle Höhe besonders in der
+horizontalen Bildmitte nicht routinemäßig ausschöpfen; die Mitte darf eher niedrig
+und luftig bleiben. Auch links und rechts muss die Zeichnung nicht bis zur vollen
+Bildhöhe reichen. Die Höhenverteilung folgt dem Motiv und der Gesamtkomposition.
+Eine passend hohe Mitte oder volle Seitenhöhe bleibt erlaubt. Es gibt weder eine
+feste Höhenquote noch eine Pflicht zu niedriger Mitte, hohen Seiten oder U-Form.
+Die Höhenverteilung allein begründet keine Ablehnung, Überarbeitungspflicht oder
+zusätzliche Ausnahmefreigabe.
 
 Tatsächliche PNG-Maße vor der Auswahl lesen: Breite=3*Höhe. Kein Seitenpadding,
 Stitching zweier generierter Hälften, Stretch, Beschnitt oder individuelles
@@ -117,8 +136,12 @@ Bildwahl sind getrennt. Materielle Änderungen an Illustration, Komposition oder
 Transparenz brauchen neue Bildbytes und die passende tatsächliche Entscheidung;
 unveränderte deterministische Ableitung keine neue kreative Wahl.
 
-Diese Präzisierung gilt für neue Bilder und beauftragte Bildrevisionen. Bereits
-freigegebene Bilder, historische Snapshots und Freigaben werden weder automatisch
-neu produziert noch rückwirkend umgedeutet. Sie ist kein neuer Bildalgorithmus,
-kein zusätzliches persönliches Buch-/Spieltestgate und keine Freigabe noch nicht
-vorliegender Bilder.
+Diese Präzisierung gilt für neue Bilder und beauftragte Bildrevisionen. Ein
+ausdrücklicher Auftrag zur Neuproduktion des Bestands umfasst auch bereits
+freigegebene und integrierte Hintergründe; [#671](https://github.com/venomenon328/picross/issues/671)
+beauftragt dies für seine gesamte feste Rätselkohorte. Jedes aktive Bild bleibt
+bis zur tatsächlichen Auswahl und Integration seiner neuen Fassung unverändert.
+Historische Originale, Snapshots und Freigaben werden nicht umgeschrieben oder auf
+neue Dateien übertragen. Die Regelfassung allein ersetzt oder konvertiert keine
+Bilddateien. Sie ist kein neuer Bildalgorithmus, kein zusätzliches persönliches
+Buch-/Spieltestgate und keine Freigabe noch nicht vorliegender Bilder.
