@@ -1,10 +1,10 @@
 {
   "format": "development-ci-plan/v1",
   "issue": "https://github.com/venomenon328/picross/issues/671",
-  "package": "HG-BESTAND-STIL",
+  "package": "HG-BESTAND-01",
   "modules": [],
-  "purpose": "Normen für die Neuproduktion aller 62 Rätselhintergründe in 3:1 präzisieren: unverbindliche Höhenverteilung, geringfügig hellerer Graphit und Bestandsschutz bis zur gewählten Ersetzung; aktuelle Quellen-/Revisionsbindung.",
-  "omitted": "Keine Zusatzmodule: ausschließlich Dokumente und Paketplan. Profilkörper, Renderer, Import, Datenformen und Inhaltsdateien unverändert. Tatsächliche Bildqualität wird später an neu erzeugten Kandidaten nach Q-HG02/Q-HG03 beurteilt; keine neue persönliche Buchabnahme.",
+  "purpose": "Drei tatsächlich ausgewählte neue 3:1-Hintergründe integrieren: Kaktus K4/r01, Japanische Teekanne T5/r01 und Qualle Q4/r01. Eigentümerwahl, aktuelle Regeln, HP-W2-Profil picross-background-png2304x768-v1, PNG-Ausgaben und gezielter Editorimport sind dateigenau belegt.",
+  "omitted": "Keine Zusatzmodule: reine Rätselproduktion mit Hintergrundquellen, Runtime-Daten, PNGs und gesicherter Arbeitsablage. Einmalige Prüfung der neun Originale, der drei gewählten Ableitungen und ihrer exakten Übernahme einschließlich geschützter Bestandswerte außerhalb der CI. Keine Code-, Renderer-, Profil- oder Saveänderung; keine Solver-/Proof-/Ratingwiederholung und kein Playerbau.",
   "test_changes": [],
   "core_change": null,
   "evidence": {
