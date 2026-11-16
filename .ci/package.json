@@ -1,10 +1,10 @@
 {
   "format": "development-ci-plan/v1",
   "issue": "https://github.com/venomenon328/picross/issues/671",
-  "package": "HG-BESTAND-03-COMPLETE",
+  "package": "HG-BESTAND-04",
   "modules": [],
-  "purpose": "Enger §9-Abschluss der auf main bestätigten HG-BESTAND-03-Integration aus PR #687: genau 183 identische gesicherte Arbeitsdateien aus fünf zugeordneten hg-bestand-03-Verzeichnissen entfernen. Wiederholung schreibfreier No-op; aktive Bilder und alle übrigen Nutzdaten erhalten.",
-  "omitted": "Reiner Produktionscleanup ohne Werkzeug-, Engine-, CI- oder gemeinsamen UI-Code. Alle 1669 verbleibenden Dateien vor Paketplanfortschreibung bytegleich geprüft; nur dieser aktuelle Plan ändert sich zusätzlich. Keine Raster-/Reveal-/Ratingänderung, kein Playerbau, kein Solver-/Proofreplay, kein Browser oder zusätzliches Fachmodul. Kleiner Quellen-/Plankern und Dokument-/Metadatenprüfung genügen.",
+  "purpose": "Tatsächliche Eigentümerwahl C3/r01, D2/r01, F1/r01, P2/r01 und B1/r01 für Chupacabra, Drachenfrucht, Efeutute, Erbse und Erdbeere als fünf neue 2304×768-RGBA8-Hintergründe integrieren. Auswahl an angebotene bg02-Manifeste und Originalbytes gebunden; explizites neues HP-W2-Profil, derive/verify, isolierte fertige Bildsichtung und gezielter Editorimport.",
+  "omitted": "Reine Bildinhaltsänderung mit Produktionsnachweisen, ohne Werkzeug-, Engine-, UI- oder CI-Code. Raster, Reveal, Metadaten, Saveidentität und Schwierigkeit unverändert. Keine Solver-/Proof-/Ratingwiederholung, kein Playerbau, Browser oder zusätzliches Fachmodul. Gezielte Byte-/Schutzwerte-/Readbackprüfung sowie kleiner Quellen-/Plankern genügen.",
   "test_changes": [],
   "core_change": null,
   "evidence": {
