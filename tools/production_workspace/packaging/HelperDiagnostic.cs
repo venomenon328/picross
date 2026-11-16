@@ -50,6 +50,7 @@ class HelperDiagnostic {
         if(args.Length==1 && args[0]=="child") { Console.WriteLine("READY"); Console.Out.Flush(); Console.ReadLine(); return 0; }
         try {
             if(args.Length==3 && args[0]=="handshake") {
+                Console.InputEncoding=new UTF8Encoding(false,true);
                 Load(args[1]); bool go=(bool)Call("ReadyGo",args[2]);
                 Console.WriteLine(go?"GO-accepted":"cancelled"); return 0;
             }
@@ -92,7 +93,9 @@ class HelperDiagnostic {
                     UseShellExecute=false,CreateNoWindow=true,RedirectStandardInput=true,RedirectStandardOutput=true };
                 using(var child=Process.Start(start)) {
                     Need(child.StandardOutput.ReadLine()=="READY "+new string('a',48));
-                    child.StandardInput.Write(command); child.StandardInput.Close();
+                    byte[] bytes=Encoding.ASCII.GetBytes(command);
+                    child.StandardInput.BaseStream.Write(bytes,0,bytes.Length); child.StandardInput.BaseStream.Flush();
+                    child.StandardInput.Close();
                     Need(child.WaitForExit(5000) && child.ExitCode==0);
                     Need(child.StandardOutput.ReadLine()==(command=="GO "+new string('a',48)+"\n"?"GO-accepted":"cancelled"));
                 }
