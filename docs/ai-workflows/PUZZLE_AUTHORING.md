@@ -115,9 +115,12 @@ sind keine Zellzustände, Revealtransparenz ändert weder EMPTY noch weiße Vord
 ## Gemeinsame Bildkorrektur
 
 Nur gewählte Darstellung korrigieren; ausgenommen ist die eigenständige
-[Formatkorrektur laufender Hintergrundkandidaten](PUZZLE_AUTHORING_STEP_4.md#631-formatkorrektur-vor-der-bildwahl),
-die bereits vor der Bildwahl zum Produktionsauftrag gehört. Schutzmerkmale
-nennen, neue Revision sichern. Nach zwei erfolglosen Bildkorrekturrunden
+[Format- und dadurch nötige Kompositionskorrektur laufender Hintergrundkandidaten](PUZZLE_AUTHORING_STEP_4.md#631-formatkorrektur-vor-der-bildwahl),
+die bereits vor der Bildwahl zum Produktionsauftrag gehört, einschließlich
+gezielter zeichnerischer Erweiterung oder passender Neugenerierung im bestehenden
+Bildkorrekturbudget. Zulässige schraffierte Objektflächen sind allein kein
+Korrekturgrund; bloßes transparentes Seitenpadding behebt kein falsches Format.
+Schutzmerkmale nennen, neue Revision sichern. Nach zwei erfolglosen Bildkorrekturrunden
 Ursache/geänderten Plan vorlegen.
 Ungeeignete Abstraktion: Vereinfachung/Größe/Palette überdenken; anderes Reveal neu
 freigeben, nie technischen Fehlschlägen anpassen. Materielles/Neuprüfungen: Schritt 3 §4.4.
