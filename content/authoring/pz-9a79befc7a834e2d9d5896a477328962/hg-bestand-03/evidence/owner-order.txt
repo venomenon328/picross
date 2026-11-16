@@ -1,9 +1,0 @@
-Eigentümerauftrag im Codex-Chat zu venomenon328/picross, Issue #671, Ziel main.
-
-„Bearbeite jetzt und auf mein späteres „nächste 5“ jeweils die nächsten fünf offenen Rätsel der Issue-Checkliste in Listenreihenfolge.“
-„Erzeuge pro Rätsel drei unterschiedliche Hintergrundkandidaten gemäß Issue, prüfe und sichere sie und stelle alle 15 Bilder mit einzeln öffnenden Links zur Auswahl bereit. Warte dann auf meine Entscheidung.“
-„Beginne die nächste Gruppe ausschließlich auf meine Aufforderung.“
-
-Aktuelle Aufforderung: „Die nächsten 5 bitte.“
-
-Dies beauftragt HG-BESTAND-03. Keine Kandidatenauswahl erklärt. Nach tatsächlicher Wahl aller fünf gelten Integrations-/Merge-/Abschlussbefugnisse des aktuellen Issuebodys.
