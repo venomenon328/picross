@@ -49,13 +49,20 @@ def retire(root,ids,integrated_commit,*,source_commits=None,completed_revisions=
     for commit in source_commits.values():
         require(re.fullmatch(r"[0-9a-f]{40}",commit) and git("cat-file","-t",commit).strip()==b"commit","Invalid work source commit")
         git("merge-base","--is-ancestor",commit,integrated_commit)
+    def main_read(name,limit,*,missing=False):
+        # Distinguish a genuinely absent historical TXT from an unreadable blob.
+        if missing and name.encode() not in git("ls-tree","-r","--name-only",main,"--",name).splitlines():
+            return None
+        raw=git("show",main+":"+name)
+        require(len(raw)<=limit,"Selected main file exceeds limit: "+name)
+        return raw
     snapshots={}
     protected=set()
     for identifier in ids:
         snapshot=transaction.Snapshot(root,identifier)
         require(snapshot.delivery is not None,"Delivery is not currently registered")
-        local=delivery.snapshot(lambda n,limit:snapshot.read(n,limit),identifier)
-        confirmed=delivery.snapshot(lambda n,limit:git("show",main+":"+n),identifier)
+        local=delivery.snapshot(lambda n,limit,missing=False:snapshot.read(n,limit,missing=missing),identifier)
+        confirmed=delivery.snapshot(main_read,identifier)
         require(delivery.same(local,confirmed),"Current selected delivery differs from confirmed main")
         snapshots[identifier]=snapshot
         protected.update(snapshot.raw)
