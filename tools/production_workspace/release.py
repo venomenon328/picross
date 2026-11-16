@@ -5,6 +5,8 @@ import re
 import uuid
 import subprocess
 
+from tools.app_products import PW
+
 SOURCE = Path(__file__).with_name('release.json')
 
 
@@ -17,23 +19,24 @@ def version_tuple(value):
     return parts
 
 
-def release(path=SOURCE, *, version=None):
+def release(path=None, *, version=None, app=PW):
+    path = path or (SOURCE if app == PW else app.source / "release.json")
     value = json.loads(path.read_text(encoding='utf-8'))
     version_tuple(value['version'])
     if version is not None:
         requested = version_tuple(version)
-        if requested[:2] != (0, 1) or requested < version_tuple(value['version']):
-            raise ValueError('Publikationsversion muss in der monotonen 0.1.x-Linie bleiben.')
+        if requested[:2] != app.line or requested < version_tuple(value['version']):
+            raise ValueError('Publikationsversion muss in der monotonen Produktlinie bleiben.')
         value['version'] = version
     code = uuid.UUID(value['upgrade_code'])
     value['product_code'] = str(uuid.uuid5(code, value['version'])).upper()
-    value['filename'] = 'Picross-Produktionsassistent-' + value['version'] + '-windows-x64.msi'
+    value['filename'] = app.title + '-' + value['version'] + '-windows-x64.msi'
     return value
 
 
-def check_history(root, current):
+def check_history(root, current, *, app=PW):
     """Reject a release version decrease or a changed product-line identity."""
-    relative = SOURCE.relative_to(root).as_posix()
+    relative = SOURCE.relative_to(root).as_posix() if app == PW else app.package + '/release.json'
     commits = subprocess.check_output(['git', '-C', str(root), 'log', '--format=%H', 'HEAD', '--', relative], text=True).splitlines()
     for commit in commits:
         previous = json.loads(subprocess.check_output(['git', '-C', str(root), 'show', commit + ':' + relative], text=True))

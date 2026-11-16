@@ -1,11 +1,15 @@
 {
   "format": "development-ci-plan/v1",
-  "issue": "https://github.com/venomenon328/picross/issues/671",
-  "package": "HG-BESTAND-04-COMPLETE",
-  "modules": [],
-  "purpose": "Enger §9-Abschluss der auf main bestätigten HG-BESTAND-04-Integration aus PR #689: genau 172 identische gesicherte Arbeitsdateien aus fünf zugeordneten hg-bestand-04-Verzeichnissen entfernen. Vollständige Wiederholung schreibfreier No-op; aktive Bilder und alle übrigen Nutzdaten erhalten.",
-  "omitted": "Reiner Produktionscleanup ohne Werkzeug-, Engine-, CI- oder gemeinsamen UI-Code. Sämtliche 1673 verbleibenden Dateien vor Paketplanfortschreibung bytegleich zu main geprüft; nur dieser aktuelle Paketplan ändert sich zusätzlich. Keine Raster-/Reveal-/Ratingänderung, kein Playerbau, kein Solver-/Proofreplay, Browser oder zusätzliches Fachmodul. Kleiner Quellen-/Plankern und Dokument-/Metadatenprüfung genügen.",
-  "test_changes": [],
+  "issue": "https://github.com/venomenon328/picross/issues/691",
+  "package": "PE-APP-A",
+  "modules": [
+    "tools"
+  ],
+  "purpose": "Getrennter PE-MSI-/signierter Releasekanal mit festen Produktadaptern und aktuellen gebundenen Editorbytes; gemeinsame PW-Bausteine erhalten.",
+  "omitted": "Keine Fachwriter-/Solver-/Spiel-/Renderingänderung: production.*, native.*, preflight, delivery und automatisches Chromium ausgelassen. Einmalige T02/Frozen- und T03-Releaseprobe am echten Windowskandidaten. Installation/Bedienung bleibt R01/U01 vor Release.",
+  "test_changes": [
+    "Kleine tools-Regressionen für feste PW/PE-Identitäten, Payloadinputs/Analysis, Signatur-/Releasezustände und Installationsschutz. Einmalige Frozen-/MSI-/Generalproben außerhalb des Produktpakets."
+  ],
   "core_change": null,
   "evidence": {
     "mode": "none",

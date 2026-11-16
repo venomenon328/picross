@@ -12,7 +12,8 @@ from .build_windows import ROOT, sha
 from .release import release
 from .payload import fingerprint
 from .update_verifier import production_trust
-from .smoke_installer import msi_properties
+from tools.msi_database import msi_properties
+from tools.app_products import PW, PE
 
 NS = {'w': 'http://schemas.microsoft.com/wix/2006/wi'}
 
@@ -22,12 +23,12 @@ def require(condition, message):
         raise RuntimeError(message)
 
 
-def verify(build, output, expected_commit, wix_archive=None, compare_build=False, version=None):
+def verify(build, output, expected_commit, wix_archive=None, compare_build=False, version=None, *, app=PW):
     require(re.fullmatch('[0-9a-f]{40}', expected_commit), 'Full expected source SHA required')
     require(not output.exists(), 'Use a new dedicated inspection directory')
     output.mkdir(parents=True)
     report = json.loads((build / 'delivery.json').read_text(encoding='utf-8'))
-    product = release(version=version)
+    product = release(version=version, app=app)
     require(report['commit'] == expected_commit, 'Unexpected build source')
     for key in ('version', 'product_code', 'upgrade_code'):
         require(report[key] == product[key], 'Release mismatch: ' + key)
@@ -37,12 +38,12 @@ def verify(build, output, expected_commit, wix_archive=None, compare_build=False
     require((build / (msi.name + '.sha256')).read_text(encoding='utf-8') ==
             report['msi_sha256'] + '  ' + msi.name + '\n', 'Checksum file mismatch')
     if compare_build:
-        inputs = fingerprint(ROOT)
+        inputs = fingerprint(ROOT, app=app)
         require(report['payload_fingerprint'] == inputs['sha256'], 'Source fingerprint mismatch')
         require(json.loads((build / 'inputs.json').read_bytes()) == inputs, 'Input inventory mismatch')
         audit = json.loads((build / 'input-audit.json').read_bytes())
         require(audit['fingerprint'] == inputs['sha256'] and audit['repository_inputs'], 'Frozen input audit missing')
-        portable = build / 'Picross-Start-windows-x64.zip'
+        portable = build / (app.executable + '-windows-x64.zip')
         require(portable.stat().st_size == report['zip_bytes'] and sha(portable) == report['zip_sha256'], 'ZIP byte mismatch')
     properties = msi_properties(msi)  # Actual Windows Installer database, not sidecar metadata.
     for field, key in (('ProductVersion', 'version'), ('ProductCode', 'product_code'), ('UpgradeCode', 'upgrade_code')):
@@ -51,8 +52,8 @@ def verify(build, output, expected_commit, wix_archive=None, compare_build=False
     wix_archive = wix_archive or build / 'work/wix.zip'
     require(report['wix_sha256'] == product['wix_sha256'] and
             sha(wix_archive) == product['wix_sha256'], 'Unbound WiX inspector')
-    app = build / 'dist/Picross-Start'
-    require(not compare_build or app.is_dir(), 'Missing original build payload')
+    image = build / 'dist' / app.executable
+    require(not compare_build or image.is_dir(), 'Missing original build payload')
     with tempfile.TemporaryDirectory(prefix='unpacked-', dir=output) as temporary:
         work = Path(temporary)
         extracted = work / 'bytes'
@@ -91,7 +92,7 @@ def verify(build, output, expected_commit, wix_archive=None, compare_build=False
         require(len(payload) == len(root.findall('.//w:File', NS)), 'Files outside program payload')
         inventory_file = payload['inventory.json']
         if compare_build:
-            require(inventory_file.read_bytes() == (app / 'inventory.json').read_bytes(), 'Embedded inventory differs from build')
+            require(inventory_file.read_bytes() == (image / 'inventory.json').read_bytes(), 'Embedded inventory differs from build')
         inventory = json.loads(inventory_file.read_text(encoding='utf-8'))
         rows = inventory['files']
         require(inventory['commit'] == expected_commit, 'Inventory source mismatch')
@@ -102,32 +103,33 @@ def verify(build, output, expected_commit, wix_archive=None, compare_build=False
             require(file.stat().st_size == row['bytes'] and sha(file) == row['sha256'],
                     'MSI payload differs from inventory: ' + row['file'])
             if compare_build:
-                original = (app / row['file']).resolve()
-                require(original.is_relative_to(app.resolve()) and sha(original) == row['sha256'],
+                original = (image / row['file']).resolve()
+                require(original.is_relative_to(image.resolve()) and sha(original) == row['sha256'],
                         'MSI payload differs from original build: ' + row['file'])
         components = json.loads(payload['components.json'].read_text(encoding='utf-8'))
         for key in ('commit', 'version', 'product_code', 'upgrade_code', 'payload_fingerprint', 'architecture', 'python',
                     'components', 'runtime_components', 'resources', 'signed'):
             require(components[key] == report[key], 'Embedded components mismatch: ' + key)
-        require(sha(payload['Picross-Start.exe']) == report['exe_sha256'], 'Embedded EXE mismatch')
+        require(sha(payload[app.executable + '.exe']) == report['exe_sha256'], 'Embedded EXE mismatch')
         for name in ('release.json', 'update-trust.json'):
-            relative = '_internal/tools/production_workspace/' + name
+            relative = '_internal/' + app.package + '/' + name
             require(sha(payload[relative]) == components['resources'][name] and
-                    payload[relative].read_bytes() == (ROOT / 'tools/production_workspace' / name).read_bytes(),
+                    payload[relative].read_bytes() == (app.source / name).read_bytes(),
                     'Packaged public trust/product identity mismatch: ' + name)
-        production_trust()
-        helper = payload['_internal/tools/production_workspace/UpdateHelper.exe']
-        require(sha(helper) == components['resources']['UpdateHelper.exe'], 'MSI independent helper mismatch')
-        require(payload['_internal/tools/production_workspace/build.json'].read_bytes() ==
+        production_trust(app=app)
+        if app == PW:
+            helper = payload['_internal/tools/production_workspace/UpdateHelper.exe']
+            require(sha(helper) == components['resources']['UpdateHelper.exe'], 'MSI independent helper mismatch')
+        require(payload['_internal/' + app.package + '/build.json'].read_bytes() ==
                 payload['components.json'].read_bytes(), 'Frozen build/components identity mismatch')
         extensions = [name for name in payload if name.endswith('.pyd')]
         require(any(name.endswith('cryptography/hazmat/bindings/_rust.pyd') for name in extensions) and
                 any(Path(name).name.startswith('_cffi_backend.') for name in extensions),
                 'MSI lacks native cryptography extensions')
-        require(payload['Picross-Start.exe'].stat().st_size == report['exe_bytes'], 'Embedded EXE size mismatch')
+        require(payload[app.executable + '.exe'].stat().st_size == report['exe_bytes'], 'Embedded EXE size mismatch')
         # Inspect the actual PE version resource, independently of sidecar JSON.
         import pefile
-        with pefile.PE(str(payload['Picross-Start.exe'])) as pe:
+        with pefile.PE(str(payload[app.executable + '.exe'])) as pe:
             fixed = pe.VS_FIXEDFILEINFO[0]
         expected = tuple(map(int, product['version'].split('.'))) + (0,)
         for prefix in ('FileVersion', 'ProductVersion'):

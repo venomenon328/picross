@@ -10,6 +10,8 @@ from pathlib import Path, PurePosixPath
 import subprocess
 import re
 
+from tools.app_products import PW, PE
+
 WORKSPACE = 'tools/production_workspace/'
 PRODUCTION = 'tools/puzzle_production/'
 # These files are neither collected nor read by the MSI/App builder. New unknown
@@ -40,7 +42,50 @@ def git(root, *args):
     return subprocess.check_output(['git', '-C', str(root), *args])
 
 
-def selected(path):
+PE_SHARED = {
+    'release.py', 'payload.py', 'release_manifest.py', 'update_verifier.py',
+    'release_channel.py', 'build_windows.py', 'build_installer.py',
+    'verify_installer.py', 'smoke_installer.py', 'install_interlock.py',
+    'requirements-windows.txt', 'requirements-update.txt', 'packaging/Guard.cs',
+    'assets/launcher.ico',
+}
+PE_EXCLUDED = {'images_cli', 'metadata_cli', 'raster_cli', 'editor_cli', 'za1_fixtures'}
+PE_DIAGNOSTIC = {'diagnostic.py', 'frozen_diagnostic.py'}
+
+
+def pe_selected(path):
+    if path in {'tools/__init__.py', 'tools/app_products.py', 'tools/msi_database.py', '.github/workflows/pe-installer.yml'}:
+        return True
+    if path.startswith('tools/puzzle_editor/'):
+        local = path[len('tools/puzzle_editor/'):]
+        if local in PE_DIAGNOSTIC:
+            return False
+        if (local.endswith('.py') or local.startswith('ui/') or
+                local in {'README.md', 'requirements-windows.txt', 'release.json', 'update-trust.json'}):
+            return True
+        raise ValueError('Unclassified potential package input: ' + path)
+    if path.startswith(WORKSPACE):
+        local = path[len(WORKSPACE):]
+        return local in PE_SHARED or local.startswith('licenses/') and local.endswith('.txt')
+    if path.startswith(PRODUCTION):
+        local = path[len(PRODUCTION):]
+        if local.endswith('.py'):
+            return Path(local).stem not in PE_EXCLUDED
+        if '/' not in local and Path(local).suffix in {'.json', '.md'}:
+            return True  # Actually copied method/configuration bytes, including README.
+        if local in {'requirements-image.txt'}:
+            return False
+        raise ValueError('Unclassified potential package input: ' + path)
+    if path in {'game/book/paper.png', 'game/book/paper.json'} or path.startswith('game/art/drawing/margins/'):
+        return True
+    return False
+
+
+def selected(path, *, app=PW):
+    if app == PE:
+        return pe_selected(path)
+    if path in {'tools/app_products.py', 'tools/msi_database.py'}:
+        return True
     if path in {'tools/__init__.py', '.github/workflows/pw-installer.yml'}:
         return True
     for scope in (WORKSPACE, PRODUCTION):
@@ -59,7 +104,7 @@ def selected(path):
     return False
 
 
-def fingerprint(root):
+def fingerprint(root, *, app=PW):
     rows = []
     seen = set()
     tree = git(root, 'ls-tree', '-rz', '--full-tree', 'HEAD').split(b'\0')
@@ -68,7 +113,7 @@ def fingerprint(root):
             continue
         metadata, name = entry.split(b'\t', 1)
         path = name.decode('utf-8')
-        if not selected(path):
+        if not selected(path, app=app):
             continue
         mode, kind, blob = metadata.decode().split()
         parts = PurePosixPath(path).parts
@@ -87,7 +132,7 @@ def fingerprint(root):
     return {'format': 'picross-app-inputs-v1', 'sha256': hashlib.sha256(canonical(rows)).hexdigest(), 'files': rows}
 
 
-def audit_analysis(root, toc, inventory, generated):
+def audit_analysis(root, toc, inventory, generated, *, app=PW):
     """Reject every repository input absent from the prebuild fingerprint.
 
     Walk the Analysis literal, not its version-dependent tuple offsets. External
@@ -117,7 +162,7 @@ def audit_analysis(root, toc, inventory, generated):
                 observed.add(relative)
 
     visit(ast.literal_eval(toc.read_text(encoding='utf-8')))
-    if 'tools/production_workspace/desktop_entry.py' not in observed:
+    if app.package + '/desktop_entry.py' not in observed:
         raise ValueError('Missing frozen entry point in Analysis inventory')
     return {'format': 'picross-frozen-input-audit-v1', 'fingerprint': inventory['sha256'],
             'repository_inputs': sorted(observed)}

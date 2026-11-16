@@ -19,6 +19,8 @@ from .release_manifest import (FORMAT, SIGNED_FORMAT, REPOSITORY, require, diges
                                validate_manifest, verify_files)
 from . import update_verifier
 
+from tools.app_products import PW
+
 REPOSITORY_ID = 1381196633
 MANIFEST = 'manifest.json'
 PREFIX = '/repos/' + REPOSITORY
@@ -110,77 +112,77 @@ def trusted_run(api, run_id, source):
     return run['run_attempt']
 
 
-def release_files(api, entry):
+def release_files(api, entry, *, app=PW):
     assets = api.pages('/releases/' + str(entry['id']) + '/assets')
     require(len({a['name'] for a in assets}) == len(assets), 'Duplicate release assets')
     by_name = {a['name']: a for a in assets}
     require(MANIFEST in by_name, 'Published PW release missing manifest')
     raw = api.asset(by_name[MANIFEST])
-    manifest = validate_manifest(strict_json(raw))
+    manifest = validate_manifest(strict_json(raw), app=app)
     require(canonical(manifest) == raw and entry['tag_name'] == manifest['tag'] and
             entry['target_commitish'] == manifest['source_commit'] and not entry['prerelease'], 'Release identity mismatch')
-    signed = manifest['format'] == SIGNED_FORMAT
+    signed = manifest['format'] == app.signed
     require(set(by_name) == set(manifest['assets']) | {MANIFEST} |
             ({update_verifier.SIGNATURE} if signed else set()), 'Unexpected release assets')
     verify_tag(api, manifest, allow_missing=entry['draft'])
     files = {name: api.asset(by_name[name]) for name in manifest['assets']}
     if signed:
-        update_verifier.verify_candidate(raw, api.asset(by_name[update_verifier.SIGNATURE]), files)
+        update_verifier.verify_candidate(raw, api.asset(by_name[update_verifier.SIGNATURE]), files, app=app)
     else:
-        verify_files(manifest, files)  # Historical version authority, never installation authority.
+        verify_files(manifest, files, app=app)  # Historical version authority, never installation authority.
     return manifest
 
 
-def authority(api):
-    entries = [r for r in api.pages('/releases') if r['tag_name'].startswith('pw-') and not r['draft']]
+def authority(api, *, app=PW):
+    entries = [r for r in api.pages('/releases') if r['tag_name'].startswith(app.key + '-') and not r['draft']]
     seen = set()
     for entry in entries:
-        require(re.fullmatch(r'pw-v0\.1\.(0|[1-9][0-9]*)', entry['tag_name']) and not entry['prerelease'],
+        require(re.fullmatch(re.escape(app.prefix + '.'.join(map(str, app.line)) + '.') + r'(0|[1-9][0-9]*)', entry['tag_name']) and not entry['prerelease'],
                 'Invalid published PW release')
-        require(version_tuple(entry['tag_name'][4:]) > (0, 1, 0), 'Published version is not above the start anchor')
+        require(version_tuple(entry['tag_name'][4:]) > version_tuple(app.anchor), 'Published version is not above the start anchor')
         require(entry['tag_name'] not in seen, 'Duplicate published version')
         seen.add(entry['tag_name'])
     if not entries:
         return None
     latest = max(entries, key=lambda r: version_tuple(r['tag_name'][4:]))
-    manifest = release_files(api, latest)
+    manifest = release_files(api, latest, app=app)
     return {'id': latest['id'], 'manifest': manifest, 'sha256': digest(canonical(manifest))}
 
 
-def next_version(inputs, previous):
-    require(release()['version'] == '0.1.0', 'The release start anchor must remain 0.1.0')
+def next_version(inputs, previous, *, app=PW):
+    require(release(app=app)['version'] == app.anchor, 'The release start anchor must remain 0.1.0')
     if previous and previous['manifest']['payload_fingerprint'] == inputs['sha256']:
         return None
-    current = previous['manifest']['version'] if previous else release()['version']
+    current = previous['manifest']['version'] if previous else release(app=app)['version']
     major, minor, patch = version_tuple(current)
-    require((major, minor) == (0, 1) and patch < 65535, '0.1.x publication line exhausted')
+    require((major, minor) == app.line and patch < 65535, '0.1.x publication line exhausted')
     return f'{major}.{minor}.{patch + 1}'
 
 
-def plan(api, root, source, run_id=None):
+def plan(api, root, source, run_id=None, *, app=PW):
     require(git(root, 'rev-parse', 'HEAD').decode().strip() == source and not git(root, 'status', '--porcelain'),
             'Clean pinned source checkout required')
     attempt = trusted_run(api, run_id, source) if run_id else None
-    inputs = fingerprint(root)
-    previous = authority(api)
-    version = next_version(inputs, previous)
-    return {'format': 'picross-pw-plan-v1', 'source_commit': source, 'run_id': run_id, 'run_attempt': attempt,
+    inputs = fingerprint(root, app=app)
+    previous = authority(api, app=app)
+    version = next_version(inputs, previous, app=app)
+    return {'format': 'picross-' + app.key + '-plan-v1', 'source_commit': source, 'run_id': run_id, 'run_attempt': attempt,
             'payload_fingerprint': inputs['sha256'], 'authority': previous, 'version': version,
-            'diagnostic': run_id is None, 'trust_sha256': digest(canonical(update_verifier.production_trust()))}
+            'diagnostic': run_id is None, 'trust_sha256': digest(canonical(update_verifier.production_trust(app=app)))}
 
 
-def seal(build, inspection, planned):
+def seal(build, inspection, planned, *, app=PW):
     require(planned['version'] is not None, 'No changed payload to seal')
-    product = release(version=planned['version'])
+    product = release(version=planned['version'], app=app)
     names = (product['filename'], product['filename'] + '.sha256', 'delivery.json', 'START.txt', 'inputs.json')
     files = {name: (build / name).read_bytes() for name in names}
-    manifest = {'format': FORMAT, 'repository': REPOSITORY, 'status': 'production',
-                'version': planned['version'], 'tag': 'pw-v' + planned['version'],
+    manifest = {'format': app.provenance, 'repository': REPOSITORY, 'status': 'production',
+                'version': planned['version'], 'tag': app.prefix + planned['version'],
                 'source_commit': planned['source_commit'], 'payload_fingerprint': planned['payload_fingerprint'],
                 'product_code': product['product_code'], 'upgrade_code': product['upgrade_code'],
                 'assets': {name: {'bytes': len(raw), 'sha256': digest(raw)} for name, raw in files.items()},
                 'inspection': strict_json(inspection.read_bytes())}
-    verify_files(manifest, files)
+    verify_files(manifest, files, app=app)
     (build / MANIFEST).write_bytes(canonical(manifest))
     return manifest
 
@@ -195,60 +197,60 @@ def verify_tag(api, manifest, *, allow_missing):
     require(obj['type'] == 'commit' and obj['sha'] == manifest['source_commit'], 'Conflicting PW release tag')
 
 
-def _candidate(build, planned):
+def _candidate(build, planned, *, app=PW):
     manifest_raw = (build / MANIFEST).read_bytes()
-    manifest = validate_manifest(strict_json(manifest_raw))
-    require(manifest['format'] == FORMAT and manifest_raw == canonical(manifest), 'Noncanonical v1 build provenance')
+    manifest = validate_manifest(strict_json(manifest_raw), app=app)
+    require(manifest['format'] == app.provenance and manifest_raw == canonical(manifest), 'Noncanonical v1 build provenance')
     require(all(manifest[k] == planned[k] for k in ('source_commit', 'version', 'payload_fingerprint')), 'Candidate differs from plan')
     files = {name: (build / name).read_bytes() for name in manifest['assets']}
-    verify_files(manifest, files)
+    verify_files(manifest, files, app=app)
     return manifest, files
 
 
-def _fresh(api, planned):
+def _fresh(api, planned, *, app=PW):
     require(trusted_run(api, planned['run_id'], planned['source_commit']) == planned['run_attempt'], 'Source CI attempt changed')
-    require(authority(api) == planned['authority'], 'Published release authority changed; replan')
-    require(next_version({'sha256': planned['payload_fingerprint']}, planned['authority']) == planned['version'],
+    require(authority(api, app=app) == planned['authority'], 'Published release authority changed; replan')
+    require(next_version({'sha256': planned['payload_fingerprint']}, planned['authority'], app=app) == planned['version'],
             'Candidate version is not the next changed-payload version')
-    require(digest(canonical(update_verifier.production_trust())) == planned['trust_sha256'],
+    require(digest(canonical(update_verifier.production_trust(app=app))) == planned['trust_sha256'],
             'Signing/trust configuration changed; replan')
 
 
-def authorize(api, build, planned, *, enabled, signing_enabled):
+def authorize(api, build, planned, *, enabled, signing_enabled, app=PW):
     """Secret-free checks BEFORE a job may reference the signing environment."""
     require(enabled and signing_enabled and not planned['diagnostic'], 'Publication activation/source gate is closed')
-    manifest, _ = _candidate(build, planned)
-    _fresh(api, planned)
+    manifest, _ = _candidate(build, planned, app=app)
+    _fresh(api, planned, app=app)
     verify_tag(api, manifest, allow_missing=True)
-    trust = update_verifier.production_trust()
+    trust = update_verifier.production_trust(app=app)
     require(trust['active_signer'] is not None, 'Production signing trust is unprovisioned')
-    update_verifier._public_key(trust, trust['active_signer'])
-    environment = api.request(PREFIX + '/environments/pw-app-release')
-    require(environment is not None and environment.get('name') == 'pw-app-release' and
+    update_verifier._public_key(trust, trust['active_signer'], app=app)
+    environment = api.request(PREFIX + '/environments/' + app.environment)
+    require(environment is not None and environment.get('name') == app.environment and
             environment.get('deployment_branch_policy') == {'protected_branches': False, 'custom_branch_policies': True},
             'Pre-existing signing environment with explicit main-only policy required')
-    rules = api.pages('/environments/pw-app-release/deployment-branch-policies', 'branch_policies')
+    rules = api.pages('/environments/' + app.environment + '/deployment-branch-policies', 'branch_policies')
     require(len(rules) == 1 and rules[0].get('name') == 'main' and rules[0].get('type') == 'branch',
             'Signing environment must allow only the main branch')
 
 
-def publish(api, build, planned, *, enabled, signing_enabled=False, secret=None):
-    authorize(api, build, planned, enabled=enabled, signing_enabled=signing_enabled)
-    provenance, files = _candidate(build, planned)
-    manifest_raw, signature_raw = update_verifier.sign_candidate(provenance, files, secret)
-    manifest = validate_manifest(strict_json(manifest_raw))
+def publish(api, build, planned, *, enabled, signing_enabled=False, secret=None, app=PW):
+    authorize(api, build, planned, enabled=enabled, signing_enabled=signing_enabled, app=app)
+    provenance, files = _candidate(build, planned, app=app)
+    manifest_raw, signature_raw = update_verifier.sign_candidate(provenance, files, secret, app=app)
+    manifest = validate_manifest(strict_json(manifest_raw), app=app)
 
     def fresh():
-        authorize(api, build, planned, enabled=enabled, signing_enabled=signing_enabled)
+        authorize(api, build, planned, enabled=enabled, signing_enabled=signing_enabled, app=app)
         # The signed bytes must still be trusted at the final publication check.
-        update_verifier.verify_candidate(manifest_raw, signature_raw, files)
+        update_verifier.verify_candidate(manifest_raw, signature_raw, files, app=app)
         verify_tag(api, manifest, allow_missing=True)
 
     fresh()
     # Read by tag including drafts. Never overwrite or delete a foreign draft/tag.
     matches = [r for r in api.pages('/releases') if r['tag_name'] == manifest['tag']]
     require(len(matches) <= 1, 'Ambiguous release candidate')
-    body = (f'PW APP-B1 {manifest["tag"]}\nSource: {manifest["source_commit"]}\n'
+    body = (f'{app.key.upper()} APP-B1 {manifest["tag"]}\nSource: {manifest["source_commit"]}\n'
             f'Fingerprint: {manifest["payload_fingerprint"]}\nManifest: {digest(manifest_raw)}\n'
             f'Trust: {planned["trust_sha256"]}\nSignature: {digest(signature_raw)}')
     if matches:
@@ -274,16 +276,16 @@ def publish(api, build, planned, *, enabled, signing_enabled=False, secret=None)
     # Round-trip every uploaded byte before publication, not only metadata.
     current = api.request(PREFIX + f'/releases/{release_id}')
     require(current['draft'] is True and current['body'] == body, 'Draft changed during upload')
-    require(release_files(api, current) == manifest,
+    require(release_files(api, current, app=app) == manifest,
             'Candidate round-trip mismatch')
     fresh()
     published = api.request(PREFIX + f'/releases/{release_id}', method='PATCH',
                             value={'draft': False, 'make_latest': 'true'})
-    require(not published['draft'] and release_files(api, published) == manifest, 'Publication not confirmed')
+    require(not published['draft'] and release_files(api, published, app=app) == manifest, 'Publication not confirmed')
     return published['html_url']
 
 
-def main():
+def main(*, app=PW):
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('command', choices=('plan', 'seal', 'authorize', 'publish'))
     parser.add_argument('--root', type=Path, default=Path(__file__).resolve().parents[2])
@@ -302,14 +304,14 @@ def main():
                     'Wrong triggering source')
         else:
             require(os.environ['GITHUB_EVENT_NAME'] == 'workflow_dispatch', 'Unsupported release event')
-        result = plan(GitHub(os.environ['GH_TOKEN']), args.root, source, run_id)
+        result = plan(GitHub(os.environ['GH_TOKEN']), args.root, source, run_id, app=app)
         args.plan.write_bytes(canonical(result))
         with open(os.environ['GITHUB_OUTPUT'], 'a', encoding='utf-8') as output:
             output.write('version=' + (result['version'] or '') + '\n')
             output.write('changed=' + str(result['version'] is not None).lower() + '\n')
         print(json.dumps({k: result[k] for k in ('source_commit', 'payload_fingerprint', 'version', 'diagnostic')}))
     elif args.command == 'seal':
-        seal(args.build, args.inspection, strict_json(args.plan.read_bytes()))
+        seal(args.build, args.inspection, strict_json(args.plan.read_bytes()), app=app)
     else:
         require(os.environ['GITHUB_EVENT_NAME'] == 'workflow_run' and os.environ['GITHUB_REF'] == 'refs/heads/main' and
                 os.environ['GITHUB_REPOSITORY'] == REPOSITORY, 'Publisher must run from repository main')
@@ -317,11 +319,11 @@ def main():
         planned = strict_json(args.plan.read_bytes())
         require(git(args.root, 'rev-parse', 'HEAD').decode().strip() == planned['source_commit'],
                 'Publisher code must match the pinned main source')
-        options = {'enabled': os.environ.get('PW_RELEASE_ENABLED') == 'true',
-                   'signing_enabled': os.environ.get('PW_UPDATE_SIGNING_ENABLED') == 'true'}
+        options = {'enabled': os.environ.get(app.key.upper() + '_RELEASE_ENABLED') == 'true',
+                   'signing_enabled': os.environ.get(app.key.upper() + '_UPDATE_SIGNING_ENABLED') == 'true'}
         if args.command == 'publish':
-            options['secret'] = os.environ.get('PW_UPDATE_SIGNING_KEY')
-        result = operation(GitHub(os.environ['GH_TOKEN']), args.build, planned, **options)
+            options['secret'] = os.environ.get(app.key.upper() + '_UPDATE_SIGNING_KEY')
+        result = operation(GitHub(os.environ['GH_TOKEN']), args.build, planned, app=app, **options)
         if args.command == 'authorize':
             with open(os.environ['GITHUB_OUTPUT'], 'a', encoding='utf-8') as output:
                 output.write('authorized=true\n')

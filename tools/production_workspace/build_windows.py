@@ -18,6 +18,8 @@ from .release import release, version_tuple, check_history
 from .payload import fingerprint, audit_analysis
 from .update_verifier import production_trust
 
+from tools.app_products import PW, PE
+
 ROOT = Path(__file__).resolve().parents[2]
 PACKAGE = ROOT / 'tools/production_workspace'
 
@@ -30,7 +32,8 @@ def sha(path):
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
-def build(destination, *, version=None):
+def build(destination, *, version=None, app=PW):
+    package = app.source
     if sys.platform != 'win32' or platform.machine().lower() not in ('amd64', 'x86_64') or platform.python_version() != '3.13.14':
         raise RuntimeError('Build benötigt CPython 3.13.14 Windows x64.')
     import tkinter
@@ -59,27 +62,57 @@ def build(destination, *, version=None):
     if git('status', '--porcelain'):
         raise RuntimeError('Nur aus sauberem, gesichertem Quellstand bauen.')
     commit = git('rev-parse', 'HEAD')
-    product = release(version=version)
-    check_history(ROOT, product)
-    inputs = fingerprint(ROOT)
+    product = release(version=version, app=app)
+    check_history(ROOT, product, app=app)
+    inputs = fingerprint(ROOT, app=app)
     destination = destination.resolve()
     if destination.exists() or destination.is_relative_to(ROOT):
         raise RuntimeError('Neuen eigenen Buildordner außerhalb des Checkouts wählen.')
     destination.mkdir(parents=True)
     work = destination / 'work'; work.mkdir()
-    compiler = Path(os.environ['SystemRoot']) / 'Microsoft.NET/Framework64/v4.0.30319/csc.exe'
-    helper = work / 'UpdateHelper.exe'
-    subprocess.run([str(compiler), '/nologo', '/target:exe', '/platform:x64',
-                    '/reference:System.Web.Extensions.dll', '/out:' + str(helper),
-                    str(PACKAGE / 'packaging/UpdateHelper.cs')], check=True)
+    generated = []
+    helper = None
+    if app == PW:
+        compiler = Path(os.environ['SystemRoot']) / 'Microsoft.NET/Framework64/v4.0.30319/csc.exe'
+        helper = work / 'UpdateHelper.exe'
+        subprocess.run([str(compiler), '/nologo', '/target:exe', '/platform:x64',
+                        '/reference:System.Web.Extensions.dll', '/out:' + str(helper),
+                        str(PACKAGE / 'packaging/UpdateHelper.cs')], check=True)
+        generated.append(helper)
     env = os.environ.copy()
     env.update(PYINSTALLER_CONFIG_DIR=str(work / 'cache'), TEMP=str(work), TMP=str(work), PYTHONHASHSEED='0')
-    resources = {f'ui/{name}': sha(PACKAGE / 'ui' / name) for name in ('index.html', 'app.js', 'workflow.js', 'style.css')}
+    resources = {f'ui/{name}': sha(package / 'ui' / name) for name in
+                 (('index.html', 'app.js', 'workflow.js', 'style.css') if app == PW else ('index.html', 'app.js', 'style.css'))}
     resources['assets/launcher.ico'] = sha(PACKAGE / 'assets/launcher.ico')
-    resources['UpdateHelper.exe'] = sha(helper)
-    production_trust()  # Fail the build on malformed public roots, even if unprovisioned.
+    if helper:
+        resources['UpdateHelper.exe'] = sha(helper)
+    production_trust(app=app)
     for name in ('release.json', 'update-trust.json'):
-        resources[name] = sha(PACKAGE / name)
+        resources[name] = sha(package / name)
+    extra_args = []
+    if app == PE:
+        from .payload import PE_EXCLUDED, PRODUCTION
+        source_data = work / 'puzzle_production'; source_data.mkdir()
+        expected = {row['file']: row for row in inputs['files']}
+        # Method identities read exact source/JSON bytes, not PYZ bytecode.
+        for file in sorted((ROOT / PRODUCTION).iterdir()):
+            if file.is_file() and file.suffix in ('.py', '.json', '.md') and file.stem not in PE_EXCLUDED:
+                relative = file.relative_to(ROOT).as_posix()
+                if relative not in expected or sha(file) != expected[relative]['sha256']:
+                    raise RuntimeError('Unbound method source: ' + relative)
+                target = source_data / file.name
+                shutil.copyfile(file, target); generated.append(target)
+                resources[relative] = sha(target)
+        extra_args += ['--add-data', str(source_data) + ':tools/puzzle_production',
+                       '--hidden-import', 'tools.puzzle_editor.worker',
+                       '--hidden-import', 'tkinter.filedialog', '--hidden-import', 'tkinter.messagebox']
+        for relative in ('game/book/paper.png', 'game/book/paper.json', 'game/art/drawing/margins'):
+            target = str(Path(relative).parent) if Path(relative).suffix else relative
+            extra_args += ['--add-data', str(ROOT / relative) + ':' + target]
+        for name in PE_EXCLUDED:
+            extra_args += ['--exclude-module', 'tools.puzzle_production.' + name]
+        extra_args += ['--exclude-module', 'tools.puzzle_editor.diagnostic',
+                       '--exclude-module', 'tools.puzzle_editor.frozen_diagnostic']
     from cryptography.hazmat.backends.openssl.backend import backend
     runtime_versions['cryptography OpenSSL'] = backend.openssl_version_text()
     if runtime_versions['cryptography OpenSSL'] != 'OpenSSL 4.0.3 29 Sep 2026':
@@ -96,12 +129,12 @@ def build(destination, *, version=None):
     file_version.write_text(
         'VSVersionInfo(ffi=FixedFileInfo(filevers=' + repr(numbers) + ', prodvers=' + repr(numbers) +
         ', mask=0x3f, flags=0x0, OS=0x40004, fileType=0x1, subtype=0x0, date=(0,0)), '
-        'kids=[StringFileInfo([StringTable("040704B0", [StringStruct("ProductName", "Picross-Produktionsassistent"), '
+        'kids=[StringFileInfo([StringTable("040704B0", [StringStruct("ProductName", ' + repr(app.title) + '), '
         'StringStruct("ProductVersion", ' + repr(product['version']) + '), StringStruct("FileVersion", ' +
         repr(product['version']) + '), StringStruct("Comments", ' + repr(commit) + ')])]), '
         'VarFileInfo([VarStruct("Translation", [1031, 1200])])])', encoding='utf-8')
     subprocess.run([sys.executable, '-m', 'PyInstaller', '--clean', '--noconfirm', '--onedir', '--windowed',
-                    '--noupx', '--name', 'Picross-Start', '--icon', str(PACKAGE / 'assets/launcher.ico'),
+                    '--noupx', '--name', app.executable, '--icon', str(PACKAGE / 'assets/launcher.ico'),
                     '--version-file', str(file_version),
                     '--distpath', str(destination / 'dist'),
                     '--workpath', str(work / 'pyinstaller'), '--specpath', str(work), '--paths', str(ROOT),
@@ -110,22 +143,22 @@ def build(destination, *, version=None):
                     '--hidden-import', 'tools.production_workspace.update_verifier',
                     '--hidden-import', 'cryptography.hazmat.primitives.asymmetric.ed25519',
                     '--hidden-import', '_cffi_backend',
-                    '--add-data', str(PACKAGE / 'ui') + ':tools/production_workspace/ui',
+                    '--add-data', str(package / 'ui') + ':' + app.package + '/ui',
                     '--add-data', str(PACKAGE / 'assets/launcher.ico') + ':tools/production_workspace/assets',
-                    '--add-data', str(manifest_file) + ':tools/production_workspace',
-                    '--add-data', str(helper) + ':tools/production_workspace',
-                    '--add-data', str(PACKAGE / 'release.json') + ':tools/production_workspace',
-                    '--add-data', str(PACKAGE / 'update-trust.json') + ':tools/production_workspace',
-                    str(PACKAGE / 'desktop_entry.py')], check=True, cwd=ROOT, env=env)
-    audit = audit_analysis(ROOT, work / 'pyinstaller/Picross-Start/Analysis-00.toc', inputs,
-                           [manifest_file, file_version, helper])
+                    '--add-data', str(manifest_file) + ':' + app.package,
+                    *(['--add-data', str(helper) + ':' + app.package] if helper else []),
+                    '--add-data', str(package / 'release.json') + ':' + app.package,
+                    '--add-data', str(package / 'update-trust.json') + ':' + app.package,
+                    *extra_args, str(package / 'desktop_entry.py')], check=True, cwd=ROOT, env=env)
+    audit = audit_analysis(ROOT, work / 'pyinstaller' / app.executable / 'Analysis-00.toc', inputs,
+                           [manifest_file, file_version, *generated], app=app)
     (destination / 'inputs.json').write_text(json.dumps(inputs, indent=2) + '\n', encoding='utf-8')
-    app = destination / 'dist/Picross-Start'
-    verify_update_payload(app, work / 'pyinstaller/Picross-Start/PYZ-00.pyz', audit)
+    image = destination / 'dist' / app.executable
+    verify_update_payload(image, work / 'pyinstaller' / app.executable / 'PYZ-00.pyz', audit, app=app)
     (destination / 'input-audit.json').write_text(json.dumps(audit, indent=2) + '\n', encoding='utf-8')
-    shutil.copyfile(PACKAGE / 'START-WINDOWS.txt', app / 'START.txt')
-    shutil.copyfile(manifest_file, app / 'components.json')
-    licenses = app / 'LICENSES'; licenses.mkdir()
+    shutil.copyfile(PACKAGE / 'START-WINDOWS.txt' if app == PW else package / 'README.md', image / 'START.txt')
+    shutil.copyfile(manifest_file, image / 'components.json')
+    licenses = image / 'LICENSES'; licenses.mkdir()
     shutil.copyfile(Path(sys.base_prefix) / 'LICENSE.txt', licenses / 'Python.txt')
     for notice in (PACKAGE / 'licenses').glob('*.txt'):
         shutil.copyfile(notice, licenses / notice.name)
@@ -153,28 +186,37 @@ def build(destination, *, version=None):
                 raise RuntimeError('Tcl/Tk-Lizenz fehlt: ' + name)
         for file in candidates:
             shutil.copyfile(file, licenses / (name + '-' + file.name + '.txt'))
-    files = [{'file': f.relative_to(app).as_posix(), 'bytes': f.stat().st_size, 'sha256': sha(f)}
-             for f in sorted(app.rglob('*')) if f.is_file()]
-    (app / 'inventory.json').write_text(json.dumps({'commit': commit, 'files': files}, indent=2) + '\n', encoding='utf-8')
-    archive = destination / 'Picross-Start-windows-x64.zip'
+    files = [{'file': f.relative_to(image).as_posix(), 'bytes': f.stat().st_size, 'sha256': sha(f)}
+             for f in sorted(image.rglob('*')) if f.is_file()]
+    (image / 'inventory.json').write_text(json.dumps({'commit': commit, 'files': files}, indent=2) + '\n', encoding='utf-8')
+    archive = destination / (app.executable + '-windows-x64.zip')
     with zipfile.ZipFile(archive, 'w', zipfile.ZIP_DEFLATED) as output:
-        for file in sorted(app.rglob('*')):
+        for file in sorted(image.rglob('*')):
             if file.is_file():
-                output.write(file, 'Picross-Start/' + file.relative_to(app).as_posix())
+                output.write(file, app.executable + '/' + file.relative_to(image).as_posix())
     report = {**manifest, 'zip_bytes': archive.stat().st_size, 'zip_sha256': sha(archive),
-              'exe_bytes': (app / 'Picross-Start.exe').stat().st_size, 'exe_sha256': sha(app / 'Picross-Start.exe')}
+              'exe_bytes': (image / (app.executable + '.exe')).stat().st_size, 'exe_sha256': sha(image / (app.executable + '.exe'))}
     (destination / 'delivery.json').write_text(json.dumps(report, indent=2) + '\n', encoding='utf-8')
     print(json.dumps(report, ensure_ascii=False))
 
 
-def verify_update_payload(app, pyz, audit):
+def verify_update_payload(image, pyz, audit, *, app=PW):
     """Check real frozen code and native crypto extensions, not just source pins."""
     from PyInstaller.archive.readers import ZlibArchiveReader
     names = set(ZlibArchiveReader(str(pyz)).toc)
     required = {'tools.production_workspace.update_verifier', 'tools.production_workspace.release_manifest',
-                'tools.production_workspace.update_client', 'tools.production_workspace.update_storage',
-                'tools.production_workspace.update_windows', 'tools.production_workspace.app_updates',
-                'tools.production_workspace.release', 'cryptography.hazmat.primitives.asymmetric.ed25519'}
+                'tools.production_workspace.release', 'tools.app_products',
+                'cryptography.hazmat.primitives.asymmetric.ed25519'}
+    if app == PW:
+        required |= {'tools.production_workspace.update_client', 'tools.production_workspace.update_storage',
+                     'tools.production_workspace.update_windows', 'tools.production_workspace.app_updates'}
+    else:
+        required |= {'tools.puzzle_editor.server', 'tools.puzzle_editor.worker', 'tools.puzzle_editor.desktop',
+                     'tools.puzzle_production.editor_change', 'tools.puzzle_production.current_content',
+                     'tools.puzzle_production.editor_image_input'}
+        if any(name.startswith('tools.production_workspace.') and name.rsplit('.', 1)[-1] not in
+               {'release', 'payload', 'release_manifest', 'update_verifier', 'install_interlock'} for name in names):
+            raise RuntimeError('PE includes unrelated PW application code')
     if not required <= names or any('tools.production_workspace.' + name in names for name in ('update_diagnostic', 'helper_diagnostic')):
         raise RuntimeError('Frozen Verifier-/Kryptografieinventar fehlt oder enthält den Testadapter.')
     if 'tools.puzzle_production.za1_fixtures' in names or any(
@@ -182,10 +224,10 @@ def verify_update_payload(app, pyz, audit):
         raise RuntimeError('Frozen-Payload enthält synthetische Testmodule.')
     observed = set(audit['repository_inputs'])
     sources = {name.replace('.', '/') + '.py' for name in required if name.startswith('tools.')}
-    sources |= {'tools/production_workspace/release.json', 'tools/production_workspace/update-trust.json'}
+    sources |= {app.package + '/release.json', app.package + '/update-trust.json'}
     if not sources <= observed:
         raise RuntimeError('Verifier-/Trustquellen fehlen im tatsächlichen PyInstaller-Inputabgleich.')
-    files = [p.relative_to(app).as_posix() for p in app.rglob('*.pyd')]
+    files = [p.relative_to(image).as_posix() for p in image.rglob('*.pyd')]
     if not any(p.endswith('cryptography/hazmat/bindings/_rust.pyd') for p in files) or not any(
             Path(p).name.startswith('_cffi_backend.') for p in files):
         raise RuntimeError('Native Kryptografiemodule fehlen im Frozen-Payload.')
