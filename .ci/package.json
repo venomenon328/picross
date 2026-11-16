@@ -8,7 +8,21 @@
   "purpose": "Getrennter PE-MSI-/signierter Releasekanal mit festen Produktadaptern und aktuellen gebundenen Editorbytes; gemeinsame PW-Bausteine erhalten.",
   "omitted": "Keine Fachwriter-/Solver-/Spiel-/Renderingänderung: production.*, native.*, preflight, delivery und automatisches Chromium ausgelassen. Einmalige T02/Frozen- und T03-Releaseprobe am echten Windowskandidaten. Installation/Bedienung bleibt R01/U01 vor Release.",
   "test_changes": [
-    "Kleine tools-Regressionen für feste PW/PE-Identitäten, Payloadinputs/Analysis, Signatur-/Releasezustände und Installationsschutz. Einmalige Frozen-/MSI-/Generalproben außerhalb des Produktpakets."
+    {
+      "path": "tools/test_editor_installer.py",
+      "disposition": "change-scoped",
+      "reason": "Kleine PW/PE-Identitäts-, Input-/Analysis-, Signatur-/Release- und Installationsschutzregressionen im gewählten tools-Modul."
+    },
+    {
+      "path": "tools/test_production_installer.py",
+      "disposition": "change-scoped",
+      "reason": "Bestehende PW-API-/Kandidatfixtures für feste Produktadapter wiederverwenden; bestehende Regressionen erhalten."
+    },
+    {
+      "path": "tools/puzzle_editor/diagnostic.py",
+      "disposition": "temporary",
+      "reason": "Einmalige PE-APP-A T02/T03 am fixierten Kandidaten, ausdrücklich aus Frozen-Payload und Fingerprint ausgeschlossen. Nach technischer Einführung/Review entfernen; lokale Daten nach Probe bereinigen."
+    }
   ],
   "core_change": null,
   "evidence": {
