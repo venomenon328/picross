@@ -6,7 +6,6 @@ abort, or refuses to enter application code until the installer has finished.
 The marker lives through setup, preflight, requests and the entire P2 drain.
 """
 import os
-from tools.app_products import PW
 
 
 def _mutex_busy(name):
@@ -33,8 +32,9 @@ def _mutex_busy(name):
 
 
 class InstallInterlock:
-    def __init__(self, *, app=PW):
-        self.app = app
+    def __init__(self, *, app=None):
+        # Retain the standalone PW CMD fallback; PE passes its fixed adapter.
+        self.marker = app.marker if app is not None else 'Global\\PicrossProductionWorkspace.Running.'
         self.handle = None
 
     def acquire(self):
@@ -61,7 +61,7 @@ class InstallInterlock:
             pointer = ctypes.cast(buffer, ctypes.POINTER(ctypes.c_void_p))[0]
             if not adv.ConvertSidToStringSidW(pointer, ctypes.byref(sid)):
                 raise ValueError('Windowsbenutzer für Installationsschutz unbekannt.')
-            name = self.app.marker + sid.value
+            name = self.marker + sid.value
         finally:
             if sid:
                 kernel.LocalFree(ctypes.cast(sid, ctypes.c_void_p))

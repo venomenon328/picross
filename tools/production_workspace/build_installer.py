@@ -44,7 +44,7 @@ def wix_source(image, product, guard, *, app=PW):
     element(p, 'Property', Id='ARPPRODUCTICON', Value='AppIcon')
     target = element(p, 'Directory', Id='TARGETDIR', Name='SourceDir')
     local = element(target, 'Directory', Id='LocalAppDataFolder')
-    install = element(local, 'Directory', Id='INSTALLFOLDER', Name=app.title)
+    install = element(local, 'Directory', Id='INSTALLFOLDER', Name=app.install_directory)
     element(p, 'SetDirectory', Id='INSTALLFOLDER', Value='[LocalAppDataFolder]Programs\\' + app.install_directory)
     directories = {'': install}
     feature = element(p, 'Feature', Id='Application', Title=app.title, Level='1', Absent='disallow')
@@ -97,8 +97,10 @@ def wix_source(image, product, guard, *, app=PW):
     element(sequence, 'Custom', Action='CheckStopped', Before='InstallValidate').text = '1'
     element(p, 'UIRef', Id='WixUI_Common')
     ui = element(p, 'UI')
-    element(ui, 'Error', Id='1722').text = ('App läuft oder Zugriff ist unklar. Assistent regulär beenden '
-        'und Produktionsentfernung abwarten. Dann Installer erneut starten. Kein Prozess wird beendet.')
+    element(ui, 'Error', Id='1722').text = ('App läuft oder Zugriff ist unklar. ' +
+        ('Assistent regulär beenden und Produktionsentfernung abwarten. ' if app == PW else
+         'Editor regulär beenden und laufende Fachoperation abwarten. ') +
+        'Dann Installer erneut starten. Kein Prozess wird beendet.')
     element(ui, 'TextStyle', Id='WixUI_Font_Normal', FaceName='Segoe UI', Size='9')
     element(ui, 'TextStyle', Id='WixUI_Font_Bigger', FaceName='Segoe UI', Size='12')
     element(ui, 'TextStyle', Id='WixUI_Font_Title', FaceName='Segoe UI', Size='10', Bold='yes')
@@ -107,7 +109,7 @@ def wix_source(image, product, guard, *, app=PW):
         element(ui, 'DialogRef', Id=did)
     element(ui, 'Publish', Dialog='ExitDialog', Control='Finish', Event='EndDialog', Value='Return').text = '1'
     dialog = element(ui, 'Dialog', Id='InstallOptions', Width='370', Height='200', Title='Picross installieren')
-    element(dialog, 'Control', Id='Info', Type='Text', X='20', Y='20', Width='330', Height='60', Text='Installiert nur für diesen Benutzer. Git für Windows bleibt erforderlich. Die unsignierte App enthält private Laufzeit und Lizenzen. Einrichtung und Produktionsdaten bleiben getrennt erhalten.')
+    element(dialog, 'Control', Id='Info', Type='Text', X='20', Y='20', Width='330', Height='60', Text=('Installiert nur für diesen Benutzer. ' + ('Git für Windows bleibt erforderlich. ' if app == PW else '') + 'Die unsignierte App enthält private Laufzeit und Lizenzen. Einrichtung und Daten bleiben getrennt erhalten.'))
     element(dialog, 'Control', Id='Desktop', Type='CheckBox', X='20', Y='95', Width='320', Height='18', Property='INSTALLDESKTOP', CheckBoxValue='1', Text='Zusätzlich Desktopverknüpfung anlegen')
     button = element(dialog, 'Control', Id='Install', Type='PushButton', X='205', Y='160', Width='70', Height='18', Default='yes', Text='Installieren')
     element(button, 'Publish', Event='EndDialog', Value='Return').text = '1'

@@ -48,6 +48,7 @@ def verify(build, output, expected_commit, wix_archive=None, compare_build=False
     properties = msi_properties(msi)  # Actual Windows Installer database, not sidecar metadata.
     for field, key in (('ProductVersion', 'version'), ('ProductCode', 'product_code'), ('UpgradeCode', 'upgrade_code')):
         require(properties[field].strip('{}') == product[key], 'MSI property mismatch: ' + field)
+    require(properties['ProductName'] == app.title, 'Foreign MSI product name')
     require(not properties.get('ALLUSERS'), 'MSI is not per-user')
     wix_archive = wix_archive or build / 'work/wix.zip'
     require(report['wix_sha256'] == product['wix_sha256'] and
@@ -70,7 +71,9 @@ def verify(build, output, expected_commit, wix_archive=None, compare_build=False
         require(all(node.get('Root') == 'HKCU' for node in root.findall('.//w:RegistryValue', NS)),
                 'Unexpected machine registry payload')
         install = root.find('.//w:Directory[@Id="INSTALLFOLDER"]', NS)
-        require(install is not None, 'Missing program directory')
+        require(install is not None and install.get('Name') == app.install_directory, 'Foreign program directory')
+        require(all(node.get('Key', '').startswith(app.registry + '\\Installer') for node in
+                    root.findall('.//w:RegistryValue', NS)), 'Foreign registry identity')
         payload = {}
         seen = set()
 
