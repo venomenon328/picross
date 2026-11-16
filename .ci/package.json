@@ -1,10 +1,10 @@
 {
   "format": "development-ci-plan/v1",
   "issue": "https://github.com/venomenon328/picross/issues/671",
-  "package": "HG-BESTAND-03",
+  "package": "HG-BESTAND-03-COMPLETE",
   "modules": [],
-  "purpose": "Genau fünf tatsächlich ausgewählte neue Hintergründe für Buntspecht, Carabao – Kopf, Cầu Vàng, Chicken Adobo und Chocolate Hills gemäß #671 integrieren; explizite HP-W2-2304×768-Ableitung, bytegleicher Editorimport und geschützte Bestandswerte geprüft.",
-  "omitted": "Reine rätselbezogene Bildproduktion samt eigener Arbeitsnachweise und aktueller Hintergrundquellen/Registry/Runtime. Kein Werkzeug-, Engine-, CI- oder gemeinsamer UI-Code. Unveränderte Logik, Reveals, Metadaten, Ratings und Saves; daher kein Playerbau, Solver-/Proof-/Ratingreplay, Browser oder zusätzliches Fachmodul. Sichtprüfung, HP-W2-verify, Importreadback und Diffaudit erfolgen gezielt im Produktionslauf.",
+  "purpose": "Enger §9-Abschluss der auf main bestätigten HG-BESTAND-03-Integration aus PR #687: genau 183 identische gesicherte Arbeitsdateien aus fünf zugeordneten hg-bestand-03-Verzeichnissen entfernen. Wiederholung schreibfreier No-op; aktive Bilder und alle übrigen Nutzdaten erhalten.",
+  "omitted": "Reiner Produktionscleanup ohne Werkzeug-, Engine-, CI- oder gemeinsamen UI-Code. Alle 1669 verbleibenden Dateien vor Paketplanfortschreibung bytegleich geprüft; nur dieser aktuelle Plan ändert sich zusätzlich. Keine Raster-/Reveal-/Ratingänderung, kein Playerbau, kein Solver-/Proofreplay, kein Browser oder zusätzliches Fachmodul. Kleiner Quellen-/Plankern und Dokument-/Metadatenprüfung genügen.",
   "test_changes": [],
   "core_change": null,
   "evidence": {
