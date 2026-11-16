@@ -1,10 +1,10 @@
 {
   "format": "development-ci-plan/v1",
   "issue": "https://github.com/venomenon328/picross/issues/671",
-  "package": "HG-RAND-NORM",
+  "package": "HG-BESTAND-03",
   "modules": [],
-  "purpose": "Verbindliche Randauflösung neuer und beauftragter Hintergrundrevisionen: Gegenstände und Szenenteile vollständig innerhalb der Leinwand oder an allen vier Bildkanten zeichnerisch weich in echte Transparenz auslaufend; harte Anschnitte ausgeschlossen. Q-HG03/Q-HG04 und H-07 im bestehenden Sichtweg.",
-  "omitted": "Reiner Norm-/Dokumentdiff: keine Bilddatei, kein Runtime- oder Werkzeugcode, kein neues Schema. Kein Playerbau und keine zusätzlichen Fach-/Browsermodule; bestehende Dateisichtung und Qualitätsurteile werden präzisiert, die automatische CI prüft Dokumente, Plan und Quellen.",
+  "purpose": "Genau fünf tatsächlich ausgewählte neue Hintergründe für Buntspecht, Carabao – Kopf, Cầu Vàng, Chicken Adobo und Chocolate Hills gemäß #671 integrieren; explizite HP-W2-2304×768-Ableitung, bytegleicher Editorimport und geschützte Bestandswerte geprüft.",
+  "omitted": "Reine rätselbezogene Bildproduktion samt eigener Arbeitsnachweise und aktueller Hintergrundquellen/Registry/Runtime. Kein Werkzeug-, Engine-, CI- oder gemeinsamer UI-Code. Unveränderte Logik, Reveals, Metadaten, Ratings und Saves; daher kein Playerbau, Solver-/Proof-/Ratingreplay, Browser oder zusätzliches Fachmodul. Sichtprüfung, HP-W2-verify, Importreadback und Diffaudit erfolgen gezielt im Produktionslauf.",
   "test_changes": [],
   "core_change": null,
   "evidence": {
