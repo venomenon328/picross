@@ -1,7 +1,0 @@
-Tatsächliche Eigentümererklärung im aktuellen Codex-Chat:
-„S1, C1, V2, D2, H1“
-
-Eindeutige Zuordnung zur tatsächlich vorgelegten Gruppe HG-BESTAND-03: Buntspecht S1/r02, Carabao – Kopf C1/r02, Cầu Vàng V2/r01, Chicken Adobo D2/r01, Chocolate Hills H1/r01.
-Vorlage: https://github.com/venomenon328/picross/issues/671#issuecomment-6926087620
-
-Aufgezeichnet bei Verarbeitung dieser Erklärung am 2026-11-16T19:16:24Z. Kein früherer menschlicher Entscheidungszeitpunkt erfunden. Zusammen mit dem bestehenden Serienauftrag autorisiert die tatsächliche Wahl Ableitung, gezielte Bildintegration, Eigenprüfung, Pflicht-CI, bedingten Squash-Merge nach main und §9-Abschluss einschließlich Cleanup-Merge.
