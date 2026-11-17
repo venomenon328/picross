@@ -2,6 +2,7 @@
 from copy import deepcopy
 from pathlib import Path
 import shutil
+import tempfile
 import unittest
 from unittest.mock import patch
 
@@ -57,7 +58,7 @@ class WorkflowFixture:
         for name, raw in payload.items():
             put(self.helper.source, name, raw)
         (self.helper.source / 'rulebook.md').unlink()
-        self.request.update(format=rules.REQUEST, document_revision=9)
+        self.request.update(format=rules.REQUEST, document_revision=rules.DOCUMENT_REVISION)
         self.request['handoff'].update(format=rules.HANDOFF, repo_commit=commit, rulebook=rule)
         return payload
 
@@ -120,6 +121,41 @@ class WorkflowFixture:
 
 
 class WorkflowTests(unittest.TestCase):
+    def test_revision_nine_preserves_original_paths_and_header_binding(self):
+        from tools.puzzle_production import authoring_rulebook as rules, catalog_io as io
+        old_authoring = ['docs/ai-workflows/PUZZLE_AUTHORING.md', *[
+            f'docs/ai-workflows/PUZZLE_AUTHORING_STEP_{n}.md' for n in range(1, 6)]]
+        paths = sorted([*old_authoring, 'docs/PUZZLE_IMAGE_STYLE.md', 'docs/PUZZLE_QUALITY.md'])
+        with tempfile.TemporaryDirectory(prefix='rulebook-rev9-') as directory:
+            repository = Path(directory)
+            git(repository, 'init', '-q')
+            payload = {}
+            for path in paths:
+                raw = (('**Version 0.8.0 · Dokumentrevision 9 · TEST ONLY**\n' if path in old_authoring else '') +
+                       'TEST ONLY historical source shape: ' + path + '\n').encode('utf-8')
+                put(repository, path, raw)
+                payload['rulebook/' + path] = raw
+            git(repository, 'add', '.')
+            git(repository, '-c', 'user.name=Rulebook synthetic', '-c', 'user.email=rulebook@example.invalid',
+                'commit', '-qm', 'TEST ONLY historical rulebook')
+            commit = git(repository, 'rev-parse', 'HEAD').decode().strip()
+            rule = {'format': rules.FORMAT, 'version': '0.8.0', 'document_revision': 9,
+                    'source_commit': commit, 'sources': [
+                        {'path': path, 'file': 'rulebook/' + path,
+                         'sha256': io.checksum(payload['rulebook/' + path]), 'bytes': len(payload['rulebook/' + path])}
+                        for path in paths]}
+            rules.validate(rule, rules.HANDOFF, commit, payload.__getitem__, 9,
+                           history_repo=repository, verify_git=True)
+            # The revision selects the complete path set; it cannot relabel old bytes.
+            wrong = {**rule, 'document_revision': rules.DOCUMENT_REVISION}
+            with self.assertRaisesRegex(ValueError, 'sources'):
+                rules.validate(wrong, rules.HANDOFF, commit, payload.__getitem__)
+            item = next(source for source in rule['sources'] if source['path'] == old_authoring[0])
+            payload[item['file']] = payload[item['file']].replace(b'Dokumentrevision 9', b'Dokumentrevision 10')
+            item.update(sha256=io.checksum(payload[item['file']]), bytes=len(payload[item['file']]))
+            with self.assertRaisesRegex(ValueError, 'header/document revision'):
+                rules.validate(rule, rules.HANDOFF, commit, payload.__getitem__, 9)
+
     def test_split_snapshot_builder_reader_finalizer(self):
         from tools.puzzle_production import authoring_rulebook as rules, target_adapter as adapter
         from tools.puzzle_production import authoring_package as ap
@@ -168,7 +204,7 @@ class WorkflowTests(unittest.TestCase):
         item.clear(); item.update(original); put(f.helper.source, name, payload[name])
         f.request['document_revision'] = 6
         with self.assertRaisesRegex(ValueError, 'revision'): verify()
-        f.request['document_revision'] = 9
+        f.request['document_revision'] = rules.DOCUMENT_REVISION
         original_commit = h['repo_commit']
         h['rulebook']['source_commit'] = 'f' * 40
         with self.assertRaisesRegex(ValueError, 'commit'): verify()
@@ -179,7 +215,7 @@ class WorkflowTests(unittest.TestCase):
         f.request['format'] = workflow.REQUEST
         with self.assertRaisesRegex(ValueError, 'matching unsealed'): validate_request(f.request)
         f.request['format'] = rules.REQUEST
-        legacy_rule = {'version':'0.8.0', 'file':'rulebook/docs/ai-workflows/PUZZLE_AUTHORING.md',
+        legacy_rule = {'version':'0.8.0', 'file':'rulebook/docs/production/authoring/PUZZLE_AUTHORING.md',
                        'sha256':next(v['sha256'] for v in h['rulebook']['sources'] if v['path'].endswith('/PUZZLE_AUTHORING.md'))}
         with self.assertRaisesRegex(ValueError, 'Rev7'):
             rules.validate(legacy_rule, workflow.HANDOFF, original_commit,
@@ -192,12 +228,12 @@ class WorkflowTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, 'sources'): f.build()
         self.assertFalse((f.helper.output / 'content/authoring/pz-hp-synthetic/r01').exists())
 
-    def test_unchanged_historical_single_file_snapshot_keeps_its_reader(self):
-        # Existing, immutable historical Markdown; no re-snapshot of current norms.
+    def test_historical_single_file_generation_keeps_its_reader(self):
+        # New synthetic fixture from the isolated legacy reference, not current norms.
         from tools.puzzle_production import authoring_package as ap
         f = finalization_tests.AuthoringFinalizationTests()
         f.setUp(); self.addCleanup(f.doCleanups)
-        raw = (Path(__file__).resolve().parents[2] / 'docs/ai-workflows/PUZZLE_AUTHORING_0_7_0_PREVIEW.md').read_bytes()
+        raw = (Path(__file__).resolve().parents[2] / 'docs/legacy/authoring/PUZZLE_AUTHORING_0_7_0_PREVIEW.md').read_bytes()
         ref = put(f.source, 'rulebook.md', raw)
         f.handoff['rulebook'] = {'version':'0.7.0', 'file':'rulebook.md', 'sha256':ref['sha256']}
         f.build_request['document_revision'] = 9

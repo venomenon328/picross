@@ -22,11 +22,11 @@ _PREFIX = "tools/puzzle_production/"
 _ENTRY_MODULES = {"__init__", "integration_batch_operations", "integration_batch_contract",
                   "integration_batch_runner", "integration_batch_cli"}
 _NORMS = {
-    "docs/PUZZLE_INTEGRATION_SINGLE_PATH.md", "docs/PRODUCTION_BATCH.md", "docs/PUZZLE_INTEGRATION.md", "docs/ZA1_ADAPTER.md",
-    "docs/PUZZLE_PRODUCTION.md", "docs/PUZZLE_BACKGROUNDS.md", "docs/PUZZLE_QUALITY.md",
-    "docs/ai-workflows/PUZZLE_AUTHORING.md", "docs/ai-workflows/PUZZLE_AUTHORING_0_7_0_PREVIEW.md",
-    "docs/REVEAL_TRANSPARENCY.md", "docs/PUZZLE_EDITOR.md", "docs/CATEGORIES.md", "docs/SD_CATALOG.md",
-    "docs/SD2_INTEGRATION.md", "docs/SD2_ANALYZER.md",
+    "docs/production/PUZZLE_INTEGRATION_SINGLE_PATH.md", "docs/tools/PRODUCTION_BATCH.md",
+    "docs/production/PUZZLE_INTEGRATION.md", "docs/production/ZA1_ADAPTER.md",
+    "docs/production/PUZZLE_PRODUCTION.md", "docs/production/PUZZLE_BACKGROUNDS.md", "docs/production/PUZZLE_QUALITY.md",
+    "docs/production/REVEAL_TRANSPARENCY.md", "docs/tools/PUZZLE_EDITOR.md", "docs/game/CATEGORIES.md",
+    "docs/difficulty/SD_CATALOG.md", "docs/difficulty/SD2_INTEGRATION.md", "docs/difficulty/SD2_ANALYZER.md",
 }
 from .authoring_rulebook import PATHS as _RULE_PATHS
 _NORMS.update(_RULE_PATHS)

@@ -22,6 +22,6 @@ python -m tools.puzzle_production export-p1 --bundle artifacts/rp3-import --vari
 ```
 
 Dieser alte quadratische Exportadapter ist ein technisches Formatbeispiel.
-Neue Spielinhalte werden über [ZA-1](../../docs/ZA1_ADAPTER.md) und den aktuellen
-[Authoringworkflow](../../docs/ai-workflows/PUZZLE_AUTHORING.md) freigegeben und
+Neue Spielinhalte werden über [ZA-1](../../docs/production/ZA1_ADAPTER.md) und den aktuellen
+[Authoringworkflow](../../docs/production/authoring/PUZZLE_AUTHORING.md) freigegeben und
 registriert. Das Beispiel erweitert weder den Spielkatalog noch die CI-Fallliste.

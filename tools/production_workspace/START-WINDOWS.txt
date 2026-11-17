@@ -46,8 +46,10 @@ nicht abschalten. Eine Signatur würde Warnungsfreiheit ebenfalls nicht garantie
 Komponenten/Quellcommit: components.json. Dateien und Hashes: inventory.json.
 Python-, Pillow-, Tcl/Tk-, Kryptografie- und PyInstaller-/Bootloaderlizenzen: LICENSES.
 Actions-Diagnosekandidaten bleiben 14 Tage verfügbar. Der getrennte App-Releasekanal
-enthält die erste veröffentlichte signierte Version pw-v0.1.1; weitere Releases
-benötigen eine eigene Betriebsfreigabe. Versionen unter
+enthält die signierten veröffentlichten Appversionen. Der dauerhaft freigegebene
+PW-Releasebetrieb und die tatsächlichen Abnahmeentscheidungen sind unter
+https://github.com/venomenon328/picross/issues/612#issuecomment-6878665809 gebunden.
+Versionen unter
 https://github.com/venomenon328/picross/releases enthalten MSI, Prüfsumme,
 Anleitung, delivery.json, inputs.json, manifest.json und manifest.sig.json mit
 signierter Quell-/Versions-/Dateibindung. Der feste öffentliche Trust ist in der
@@ -86,4 +88,5 @@ bleibt nutzbar. Kanal-/Netzfehler bestätigen weiterhin keine Aktualität.
 Installationsfehler/unklarer Ausgang/Rebootbedarf werden ehrlich gemeldet: danach
 Windowsinstallation prüfen und manuell starten bzw. geprüften Installer erneut
 ausführen. Kein automatischer Retry, keine universelle Rollbackgarantie.
-Die vollständige echte Windows-11-Selbstupdateabnahme steht noch aus.
+Die in #612 dokumentierten persönlichen Nachweisverzichte bleiben erhalten;
+eine umfassende Windows-11-Selbstupdateabnahme wird dadurch nicht behauptet.

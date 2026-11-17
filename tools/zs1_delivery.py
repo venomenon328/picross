@@ -231,7 +231,7 @@ def package(root: Path, output: Path, build: Path, files: dict, product: dict, e
     manifest.update(specification_commit="c82ae74f794936bca93d45f5f505ba283e971227",
                     owner_decision="https://github.com/venomenon328/picross/pull/55#issuecomment-6040480659",
                     font_owner_decision="https://github.com/venomenon328/picross/pull/55#issuecomment-6042067344",
-                    font_input=json.loads((root / "docs/zs1-font-input.json").read_text(encoding="utf-8")),
+                    font_input=json.loads((root / "docs/legacy/zs1/zs1-font-input.json").read_text(encoding="utf-8")),
                     developer_reference_commit=evidence.get("developer_reference_commit"), export_files=files, evidence=evidence, owner_acceptance="ZS1-M01 and ZS2-M01 PASSED historically; current VS2-M01 and independent review OPEN")
     renders = output / "zs1-renders"
     manifest["render_files"] = {p.name: toolchain.sha256_file(p) for p in sorted(renders.iterdir()) if p.is_file()}
@@ -242,12 +242,12 @@ def package(root: Path, output: Path, build: Path, files: dict, product: dict, e
         with zipfile.ZipFile(player, "w", compression=zipfile.ZIP_DEFLATED) as bundle:
             for name in files:
                 bundle.write(build / name, name)
-            bundle.writestr("README.txt", f"ZS-1 · Quellhead {manifest['source_commit']}\n\n" + (root / "docs/ZS1_OWNER_TRIAL.md").read_text(encoding="utf-8"))
+            bundle.writestr("README.txt", f"ZS-1 · Quellhead {manifest['source_commit']}\n\n" + (root / "docs/legacy/zs1/ZS1_OWNER_TRIAL.md").read_text(encoding="utf-8"))
             bundle.writestr("zs1-report.json", report)
             for path in (root / "game/art/book").glob("*-OFL.txt"):
                 bundle.write(path, "licenses/" + path.name)
             bundle.write(root / "game/art/book/manifest.json", "licenses/resources.json")
-            bundle.write(root / "docs/ZS1_FONT_INPUT.md", "FONTSTATUS.md")
+            bundle.write(root / "docs/legacy/zs1/ZS1_FONT_INPUT.md", "FONTSTATUS.md")
             bundle.write(root / "game/study/fonts/NOTICES.md", "licenses/study-fonts-NOTICES.md")
         with zipfile.ZipFile(player) as bundle:
             for name, digest in files.items():
@@ -264,8 +264,8 @@ def package(root: Path, output: Path, build: Path, files: dict, product: dict, e
         for name in sorted(names):
             bundle.write(renders / name, name)
         bundle.writestr("zs1-report.json", report)
-        bundle.write(root / "docs/ZS1_VERIFICATION.md", "PRUEFUNG.md")
-        bundle.write(root / "docs/ZS1_DECISION.md", "ENTSCHEIDUNG.md")
+        bundle.write(root / "docs/legacy/zs1/ZS1_VERIFICATION.md", "PRUEFUNG.md")
+        bundle.write(root / "docs/legacy/zs1/ZS1_DECISION.md", "ENTSCHEIDUNG.md")
         bundle.writestr("index.html", review_html(evidence))
     movement = output / "picross-zs1-strokes.zip"
     with zipfile.ZipFile(movement, "w", compression=zipfile.ZIP_DEFLATED) as bundle:

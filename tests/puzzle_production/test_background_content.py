@@ -69,9 +69,9 @@ class BackgroundContentTests(unittest.TestCase):
                 reveal_approval=put(fixture.source, "context/reveal-approval.json",
                                     (target / h["reveal"]["approval"]).read_bytes()))
             if ready:
-                norm = {"file": "docs/PUZZLE_QUALITY.md", "contract": "1.0", "document_revision": 9,
+                norm = {"file": "docs/production/PUZZLE_QUALITY.md", "contract": "1.0", "document_revision": 16,
                         "commit": subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=ROOT, text=True).strip(),
-                        "sha256": file_hash(ROOT / "docs/PUZZLE_QUALITY.md")}
+                        "sha256": file_hash(ROOT / "docs/production/PUZZLE_QUALITY.md")}
                 candidate = fixture.manifest["candidates"][0]
                 candidate["review"] = {criterion: {
                     "result": "erfüllt", "reason": "TEST ONLY synthetic judgment.",

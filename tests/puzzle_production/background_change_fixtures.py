@@ -36,9 +36,9 @@ def create_work(testcase, checkout, workspace, revision="bg-r01", choice="select
     if choice == "none":
         fixture.manifest["candidate_policy"]["exception"].update(statement=statement, evidence=deepcopy(evidence))
     else:
-        norm = {"file": "docs/PUZZLE_QUALITY.md", "contract": "1.0", "document_revision": 9,
+        norm = {"file": "docs/production/PUZZLE_QUALITY.md", "contract": "1.0", "document_revision": 16,
                 "commit": subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=ROOT, text=True).strip(),
-                "sha256": bg.ref("quality", (ROOT / "docs/PUZZLE_QUALITY.md").read_bytes())["sha256"]}
+                "sha256": bg.ref("quality", (ROOT / "docs/production/PUZZLE_QUALITY.md").read_bytes())["sha256"]}
         candidate = fixture.manifest["candidates"][0]
         candidate["review"] = {criterion: {
             "result": "erfüllt", "reason": "TEST ONLY synthetic contract judgment.",

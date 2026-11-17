@@ -644,7 +644,7 @@
         "bytes": 0,
         "pngs": 0
       },
-      "coverage": "Nonpositive added workload: 272 H and seven E image obligations retired, 156 D obligations reduced to native in-memory checks, 29 temporary consumed images and ten minimal AT/HN raw inputs. Native HZ/KE/HC/V1/V3/Z2 studies and EA film production removed, not reclassified as permanent. Current functional/save/recovery/export and independent pixel/geometry negatives remain. Cost fields describe added work only, not total historical suite costs. Exact per-family scope and ten exceptions with owner/review 2026-11-18 in docs/P2_C_V03_AUDIT.md; measured full CI and local remainder in V03-T01. No P3-B.",
+      "coverage": "Nonpositive added workload: 272 H and seven E image obligations retired, 156 D obligations reduced to native in-memory checks, 29 temporary consumed images and ten minimal AT/HN raw inputs. Native HZ/KE/HC/V1/V3/Z2 studies and EA film production removed, not reclassified as permanent. Current functional/save/recovery/export and independent pixel/geometry negatives remain. Cost fields describe added work only, not total historical suite costs. Exact per-family scope and ten exceptions with owner/review 2026-11-18 in https://github.com/venomenon328/picross/blob/6fe91a08a4d073547df43c6aebbe8ead4c45ae0f/docs/P2_C_V03_AUDIT.md; measured full CI and local remainder in V03-T01. No P3-B.",
       "expires": null,
       "retire_when": null,
       "owner_decision": null
@@ -913,7 +913,7 @@
         "bytes": 8192,
         "pngs": 0
       },
-      "coverage": "KE: two layouts, three metadata mutations, one delayed negative/positive hover and UI roundtrip, two pointer targets, five measured resize widths. KK: one full tight UI125 state/save/reveal/reset chain, two basic layouts and two aspect endpoints. Recovery-pointer and empty-write-error functions and all other modes remain unchanged. New checkpoints/boundary reader reject missing or forged retained evidence; no equivalent replacement for removed metadata/size/tooltip/hit cross products. Accepted gaps and concrete counterexamples: docs/CI_C_NATIVE_GROUPS.md and P2-E-A-V02-T01 in delivery PR. D02: https://github.com/venomenon328/picross/issues/502#issuecomment-6655391391 . Cost is conservative incremental Python/JSON work only; net native reduction measured separately. Existing original paths, identity/hash binding, budgets, scheduler and retention remain. Source ownership transfers from P2-C/P3-B; their other guarantees persist.",
+      "coverage": "KE: two layouts, three metadata mutations, one delayed negative/positive hover and UI roundtrip, two pointer targets, five measured resize widths. KK: one full tight UI125 state/save/reveal/reset chain, two basic layouts and two aspect endpoints. Recovery-pointer and empty-write-error functions and all other modes remain unchanged. New checkpoints/boundary reader reject missing or forged retained evidence; no equivalent replacement for removed metadata/size/tooltip/hit cross products. Accepted gaps and concrete counterexamples: docs/ci/CI_C_NATIVE_GROUPS.md and P2-E-A-V02-T01 in delivery PR. D02: https://github.com/venomenon328/picross/issues/502#issuecomment-6655391391 . Cost is conservative incremental Python/JSON work only; net native reduction measured separately. Existing original paths, identity/hash binding, budgets, scheduler and retention remain. Source ownership transfers from P2-C/P3-B; their other guarantees persist.",
       "expires": null,
       "retire_when": null,
       "owner_decision": null
@@ -1021,7 +1021,7 @@
         "bytes": 0,
         "pngs": 0
       },
-      "coverage": "18 of 96 VS2 cases; all 15 frame/reveal metadata cases. Five compact processes, 66 of 158 frames, 400 of 859 pixel checks. Exact surviving variants and accepted gaps in docs/CI_C_NATIVE_GROUPS.md. Save/HN/HF/HS/Atlas/cache/ZS2/Export and all remaining pixel oracles unchanged. D02 https://github.com/venomenon328/picross/issues/502#issuecomment-6655391391 . No coverage-neutrality claim. Cost is conservative added Python reader/test work, not net native runtime; no added evidence fields/files. Sources transferred from prior records, their unrelated guarantees remain. Actual costs bound in delivery P2-E-B-V01-T01.",
+      "coverage": "18 of 96 VS2 cases; all 15 frame/reveal metadata cases. Five compact processes, 66 of 158 frames, 400 of 859 pixel checks. Exact surviving variants and accepted gaps in docs/ci/CI_C_NATIVE_GROUPS.md. Save/HN/HF/HS/Atlas/cache/ZS2/Export and all remaining pixel oracles unchanged. D02 https://github.com/venomenon328/picross/issues/502#issuecomment-6655391391 . No coverage-neutrality claim. Cost is conservative added Python reader/test work, not net native runtime; no added evidence fields/files. Sources transferred from prior records, their unrelated guarantees remain. Actual costs bound in delivery P2-E-B-V01-T01.",
       "expires": null,
       "retire_when": null,
       "owner_decision": null
@@ -1107,7 +1107,7 @@
         "bytes": 20000,
         "pngs": 0
       },
-      "coverage": "T04 mono at 1920/UI100 and T06 50x50 color at 1280/UI125, each work/detail/partial album/freshly loaded completion/earned album. Explicit case IDs, slot/palette/state binding, positive native assertion records, original miniature and reveal pixels. All twelve RP6 partial/finish/read processes, foreign-slot control, ZA-1/recovery/registration/PCK unchanged. Two processes and thirty cosmetic combinations removed without equivalent replacement: risks in docs/CI_C_NATIVE_GROUPS.md and delivery T01. D02 and scope https://github.com/venomenon328/picross/issues/502#issuecomment-6659141735 . Costs estimate incremental JSON/reader/pixel/test work, not net native reduction; up to 20 KB extra assertion fields in retained originals, zero new paths or PNGs. Source ownership transferred from prior records; unrelated contracts remain. Full CI and costs bound in delivery T01.",
+      "coverage": "T04 mono at 1920/UI100 and T06 50x50 color at 1280/UI125, each work/detail/partial album/freshly loaded completion/earned album. Explicit case IDs, slot/palette/state binding, positive native assertion records, original miniature and reveal pixels. All twelve RP6 partial/finish/read processes, foreign-slot control, ZA-1/recovery/registration/PCK unchanged. Two processes and thirty cosmetic combinations removed without equivalent replacement: risks in docs/ci/CI_C_NATIVE_GROUPS.md and delivery T01. D02 and scope https://github.com/venomenon328/picross/issues/502#issuecomment-6659141735 . Costs estimate incremental JSON/reader/pixel/test work, not net native reduction; up to 20 KB extra assertion fields in retained originals, zero new paths or PNGs. Source ownership transferred from prior records; unrelated contracts remain. Full CI and costs bound in delivery T01.",
       "expires": null,
       "retire_when": null,
       "owner_decision": null
@@ -1248,7 +1248,7 @@
         "bytes": 150000,
         "pngs": 0
       },
-      "coverage": "Ten enumerated strokes (all lengths 1/4/16/17/50 and both buttons; axes/directions sampled), four T01/T06 font/UI cases, two session transitions. Protected gesture/G1/lifecycle/chord/119-120/209-210ms probes unchanged. Twenty-four actual assertion records and observed effect/model/mini/history/save traces in existing log, independently checked twice; rehashed mutation and sparse-reader tests. Thirty/eight/four combinations intentionally removed under D02, risks and current contract in docs/CI_C_NATIVE_GROUPS.md. Scope https://github.com/venomenon328/picross/issues/502#issuecomment-6661639913 . Incremental cost estimates cover JSON/hash/reader/tests, not net native savings; no new process or PNG. P2-F-B-V01-T01 binds actual costs. Retire/update with replacement or removal of current ZS2 core contract; small size is not an independent retention purpose.",
+      "coverage": "Ten enumerated strokes (all lengths 1/4/16/17/50 and both buttons; axes/directions sampled), four T01/T06 font/UI cases, two session transitions. Protected gesture/G1/lifecycle/chord/119-120/209-210ms probes unchanged. Twenty-four actual assertion records and observed effect/model/mini/history/save traces in existing log, independently checked twice; rehashed mutation and sparse-reader tests. Thirty/eight/four combinations intentionally removed under D02, risks and current contract in docs/ci/CI_C_NATIVE_GROUPS.md. Scope https://github.com/venomenon328/picross/issues/502#issuecomment-6661639913 . Incremental cost estimates cover JSON/hash/reader/tests, not net native savings; no new process or PNG. P2-F-B-V01-T01 binds actual costs. Retire/update with replacement or removal of current ZS2 core contract; small size is not an independent retention purpose.",
       "expires": null,
       "retire_when": null,
       "owner_decision": null
