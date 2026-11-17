@@ -194,7 +194,7 @@ konfigurierten Remotebetrieb führen nur Remotequellen. Die gültige Spitze von
 `content/pw/<puzzle_id>` öffnet direkt, auch bei lokalen Vorsprüngen, Divergenzen
 oder einer früheren veröffentlichten Korrekturphase. Tatsächlich offene Main-only-
 Arbeit bleibt sichtbar. Die untergeordneten Versions-/Quelldetails dienen der
-gezielten Remoteversionswahl bei fehlendem/defektem Pointer und der konkreten
+gezielten Wahl ungeklärter Quellen und der konkreten
 Quellwahl für P2. Automatisches Öffnen aktiviert keine Entfernung.
 [Ansichtsvertrag](../../docs/tools/PRODUCTION_CURRENT_VIEW.md).
 
@@ -207,21 +207,22 @@ Refs weiter für P2/Diagnose lesbar, ohne Produktionsalternativen zu erzeugen.
 
 Offline bleibt der alte Remotesnapshot lesbar, samt „Remote nicht aktuell
 bestätigt“, Fehler und letzter Cachezeit. Unbestätigte Quellen erlauben keinen
-Cloudauftrag. Fehlende Pointer lassen sich vom beauftragten Akteur
-für eine vollständige Revision gezielt publizieren:
+Cloudauftrag. Den aktuellen Record kann der beauftragte Akteur gezielt
+zurücklesen; für historische Revisionen bleibt die ausdrückliche alte
+Pointerprüfung eine getrennte Diagnose:
 
 ```text
 python -m tools.production_workspace.projector --repository <checkout> --current-view <pz-ID> <revision>
 ```
 
-Die Detailansicht zeigt überlieferte Parameterrollen und das inventarisierte
-Originalbriefing aus dem geprüften Paket als Klartext mit Absätzen. Beide Originalbereiche
-starten auch nach Wiederladen und Motiv-/Revisionswechsel eingeklappt; Zusammenfassung,
-Quellenstatus und Fehler bleiben sichtbar. Eindeutige
-Einzelwünsche belegen die Felder vor; mehrere Optionen und freie Formen bleiben
-vollständig lesbar. Die Anzeige bestätigt keine neue menschliche Freigabe.
-Record und Handoff müssen übereinstimmen; fehlende/beschädigte Originale und
-ungültiger UTF-8-Text erscheinen als Fehler. Briefings sind auf 1 MiB begrenzt.
+Die Detailansicht leitet freigegebene oder vorgeschlagene Parameter und das
+aktuelle Motivbriefing aus dem einzigen Record ab. Beide Bereiche starten nach
+Wiederladen und Motiv-/Quellwechsel eingeklappt; Zusammenfassung, Quellenstatus
+und Fehler bleiben sichtbar. Eindeutige Einzelwünsche belegen Felder vor;
+mehrere Optionen und freie Formen bleiben vollständig lesbar. Die Anzeige
+erteilt keine neue menschliche Freigabe. Fehlende oder veränderte gebundene
+Nutzdateien erscheinen als Fehler. Für aktuelle Records gilt die Briefgrenze
+von 16.384 Zeichen nach PW-B, ohne separaten Handoff oder Pakettext.
 
 Folgeaufträge nennen einen festen erreichbaren Commit mit dem kanonischen Record
 als Einstieg und binden AGENTS/Authoring 0.8.0 kurz verbindlich ein. Dieser Einstieg
@@ -297,7 +298,7 @@ Synchronisierungsdatei bleiben unangetastet und werden nicht durchsucht.
 Kein Pull/Checkout/Reset/Stash/Add/Commit oder Merge im Benutzercheckout.
 Die optionale lokale P2-Nachbereinigung entfernt nur den bestätigten sicheren Ref.
 Fetch verwendet eine flache Historie (`depth=1`) und `blob:none`, soweit das
-Remote Filter unterstützt. Ausdrücklich gebundene historische Commits und
+Remote Filter unterstützt. Bei ausdrücklich historischen Eingängen gebundene Commits und
 einzelne baumgebundene Blobs werden bei Bedarf geholt. Unveränderte Listenbefunde
 liegen commitgebunden in einem begrenzten 8-MiB-Prozesscache. HTTP-Statusabrufe
 lesen den fertigen Snapshot und starten keine Git-Suche.
@@ -354,88 +355,60 @@ Die nicht gelieferten P2-Browser-/PNG-/A01-Gates wurden für P2 ausdrücklich
 [aufgehoben](https://github.com/venomenon328/picross/pull/590#issuecomment-6809311950),
 nicht als bestanden bestätigt. P3 hat eigene T01–T03-/A01-Nachweise.
 
-## Projektor für den Produktionsakteur
+## Aktuelle Veröffentlichung und abgeleitete Ansicht
 
-Vor der beauftragten Phasensicherung erzeugt der Produktionsakteur automatisch
-die neue Ansichtsdatei. Dies ist kein zusätzlicher manueller Schritt für den
-Benutzer. Builder v3 und Finalizer v2 erzeugen und prüfen sie obligatorisch.
-Der Finalizer aktualisiert die Projektion nach dem guarded Recordwechsel; eine
-unterbrochene Wiederholung vervollständigt genau diese gebundenen Bytes.
+Neue Produktion verwendet genau den aktuellen Record nach
+[PW-B](../../docs/tools/PW_B_CONTRACT.md). Builder und Finalizer veröffentlichen
+Record, benötigte Nutzdateien und den gemeinsamen Verweisindex unter denselben
+Lock-/CAS-/Recoveryguards. Liste, Angebote, Bilder und Folgeauftrag werden daraus
+am fixierten Gitstand abgeleitet. Kein obligatorisches workspace.json,
+current-view.json, ZIP oder historischer Originalbezug für aktuelle Jobs.
 
-```sh
-python -m tools.production_workspace.projector --repository /absoluter/projektcheckout --request /absoluter/request.json
-```
+Der Produktionsakteur sichert die aktuellen Arbeitsbytes samt Index per Git.
+Noch angebotene Varianten bleiben bis zur echten inhaltsgebundenen Entscheidung
+erreichbar. Eine allein gesetzte selected-Kennung autorisiert keine Bereinigung.
+Rasteransichten werden aus der gebundenen Definition gerendert; die aktuelle
+PNG-Vorschau wird zusätzlich semantisch gegen Matrix und Palette geprüft.
 
-API: `projector.project(request, repository)`.
-Der Auftrag folgt [request.schema.json](request.schema.json): nur Identitäten,
-Beschriftungen und vorhandene Quellreferenzen, keine Hash-/Erfolgs-/Freigabeoverrides.
-Beispiel für eine einzelne Assetquelle im Auftrag:
+Optionaler gezielter Readback einer bestehenden aktuellen Veröffentlichung:
 
-```json
-{"id":"reveal-A","role":"reveal","caption":"Abschlussbild A","location":{"commit":null,"storage":"package","container":"content/authoring/pz-beispiel/r01/package.zip","file":"images/reveal-A.png"}}
-```
+~~~sh
+python -m tools.production_workspace.projector --repository /absoluter/arbeitscheckout --current-view pz-beispiel current
+~~~
 
-Das Beispiel ist nur ein Feldbeispiel; der komplette Auftrag enthält exakt
-`format,puzzle_id,revision,record,title,assets,offers`. Format:
-`picross-production-presentation-request-v2` für aktuelle 0.8-Originale. `record` ist `{commit:null,file:...}`
-an der kanonischen Indexposition. `offers[]` enthält `id,kind,label,record,asset_ids`;
-jeder Angebotsrecord liegt im Index seines ausdrücklich gebundenen Snapshots.
-Angebotsmitgliedschaft und Beschriftungen stammen aus der tatsächlichen
-Auswahlvorlage. Es gibt keinen PNG-Verzeichnisscan. Historische Quellen benötigen
-volle Commit-SHAs; `null` bezeichnet die gemeinsam zu sichernden Arbeitsbytes.
-Verworfene Hintergrundoriginale dürfen über die ausdrückliche Historybindung
-aus einem bytegleichen früheren Manifest gelesen werden; aktive Originale
-müssen regulär vorliegen. Verlorene historische Gitobjekte sind ein Fehler.
-
-Bei direkter Repositoryquelle ist `container=null`; der Pfad bezeichnet die zum
-Record gehörende Originaldatei unter dessen Produktionsrevision. ZIP-Mitgliedspfade
-sind relativ zur Paketwurzel, auch bei ZIPs mit einer einzelnen äußeren Wurzel.
-Voraussetzung sind aktuelle v4-/v3-Pakete; kein WIP-Import und keine automatische
-Konvertierung. Reveal-/Motivbezüge, Revealangebote, vorhandene Import-/Reparatur-
-Rasteransichten und Hintergrundmanifestkandidaten werden an ihren Originalen
-geprüft. Unvollständige Raster bleiben `raster_draft`; sie sind kein Rasterangebot.
-
-Der Projektor berechnet sämtliche Hashes und Bytezahlen selbst und prüft die
-Projektion nach [presentation.schema.json](presentation.schema.json) plus den
-fachlichen Kreuzbindungen aus dem Fachvertrag. Die geschlossenen JSON-Schemas
-beschreiben die Formen; Pfadsicherheit, Eindeutigkeit, Rollen, Inventare,
-Originalbezüge, tatsächlich dekodierte PNG/JPEG und fachliche Angebotsfähigkeit
-werden zusätzlich im Reader/Projektor geprüft. Keine Solver-/Difficultyausführung.
-
-Projektor und Detailreader teilen nach PW3-B nur während desselben Aufrufs
-Recordmetadaten, Quell-/ZIP-Mitgliedbytes und Dekodierbefunde identischer Bilder.
-Der gemeinsame Bytevorrat bleibt bei 64 MiB/512 Einträgen; verdrängte Daten werden
-gewöhnlich neu gelesen. Jede Angebots-/Rollen-/Hash-/Größenbindung bleibt geprüft.
-Frische Quellbytes samt Pfad-/Dateiidentität werden vor Rückgabe beziehungsweise
-an den bisherigen Publikations-/No-op-Grenzen erneut verglichen. Neue unabhängige
-Detail-/Bildabrufe beginnen frisch. Das ist kein Adapter-/Proof-/HP-W2-Prüfpass;
-Finalizerzustände und Export-/Offlineprüfgrenzen bleiben getrennt.
-
-Geschrieben wird `workspace.json` neben `record.json`; bei aktuellem Request v2
-folgt obligatorisch der geprüfte `current-view.json`-Verweis im ID-Verzeichnis.
-Andere Originale bleiben bytegleich. Identische Wiederholung ist No-op samt mtimes. Abweichende
-bestehende Ausgabe oder zwischenzeitlich geänderte Quellen stoppen. Ein temporärer
-Nachbar wird nach erneuter Quellenprüfung atomar ohne Ersetzen veröffentlicht und
-entfernt. Ergebnis auf stdout: `published` oder `reused`, Pfad/Hash/Bytezahl;
-Exit 0 bei Erfolg, 2 bei ungültigen oder kollidierenden Quellen. Git-Sicherung
-von Index, Record, Projektion, aktuellem Ansichtsverweis und Originalen bleibt ausdrücklich Aufgabe des
-beauftragten Produktionsakteurs. Die HTTP-API kann den Projektor nicht aufrufen.
+Dieser aktuelle Readback erzeugt keine separate Ansichts- oder Pointerdatei.
+Die früheren Projektorrequests, workspace-/Pointerdateien und Paket-/Historyformen
+sind ausschließlich historische Eingänge. Sie stehen am
+[Stand vor PROD-SLIM](https://github.com/venomenon328/picross/blob/d389fbad01dd01860ed949a4e1e8e0b52c21362a/tools/production_workspace/README.md#projektor-für-den-produktionsakteur);
+keine automatische Migration oder Wiederherstellung entfernter Archive.
 
 ## Tatsächlicher Registrierungsabschluss
 
-Nach sicherer Registrierung deren tatsächliche Dateien committen. Anschließend:
+Der endgültige aktuelle Record wird aus der Arbeitskopie als temporärer
+RI-ONE-Eingang vorbereitet:
 
-```sh
-python -m tools.production_workspace.projector --repository /absoluter/checkout --complete-record content/authoring/pz-beispiel/r02/record.json --integration-commit <volle-SHA>
-```
+~~~sh
+python -m tools.puzzle_production.authoring_builder prepare-integration --repository /absoluter/arbeitscheckout --record content/authoring/pz-beispiel/current/record.json --output-dir /absoluter/aktueller-eingang
+~~~
 
-Dieser Aufruf registriert nichts. Er bindet den bereits committeten Registry-/
-Export-/Runtimestand an genau das freigegebene Original, aktualisiert Record und
-Projektion samt aktuellem Ansichtsverweis und ist identisch wiederholbar. Danach
-alle drei Dateien committen/pushen.
-Der Assistent meldet „lokal registriert“, niemals dadurch bereits Mainintegration.
-Ein separater Hintergrundfolgeauftrag liest danach zuerst die aktive integrierte
-Source und verwendet ausschließlich den vorhandenen HP-I1b2-Weg.
+Der saubere Integrationsbranch entsteht vom aktuellen Main und übernimmt nur
+gewählte Produktdaten über den gemeinsamen Integrationskern. Seine tatsächliche
+Registrierung committen. Danach in der Arbeitskopie:
+
+~~~sh
+python -m tools.production_workspace.projector --repository /absoluter/arbeitscheckout --complete-record content/authoring/pz-beispiel/current/record.json --integration-commit <volle-SHA> --input /absoluter/aktueller-eingang
+~~~
+
+Completion registriert nichts. Es prüft die tatsächliche gewählte Lieferung samt
+Rechten, Modus und Bewertung am genannten Commit und aktualisiert ausschließlich
+den aktuellen Arbeitsrecord. Für reine Hintergrundpflege ist --input der aus
+dem aktuellen Record vorbereitete Editor-Eingangsordner. Beide Wege verwenden
+die gemeinsamen Writer; kein vorheriger Import des Arbeitsarchivs nach Main.
+Den geänderten Record committen/pushen. Nach bestätigtem Mainergebnis erfolgt das
+gezielte Retirement nach Authoring Schritt 5. Fehlende oder geänderte aktuelle
+Arbeitsbytes bleiben vor diesem Abschluss sichtbar; die Liste prüft ihre Bindungen
+frisch ohne erneuten Solverlauf. Ein separater späterer Hintergrundauftrag beginnt
+an der tatsächlichen aktiven Runtime-/Bildsource.
 
 ## Sicherheits- und Prüfgrenzen
 
@@ -444,8 +417,9 @@ Die API akzeptiert nur serververgebene Job-/Assetkennungen, keine Pfade/Refs/URL
 CSP erlaubt eigene UI und lokal erzeugte Bild-Blob-URLs; HTML/SVG aus Paketen
 werden nicht ausgeführt. Gitlinks/Submodule, ZIP-Aliase, Spezialdateien,
 CRC-/Hash-/Größenfehler und beschädigte Bilder werden zurückgewiesen.
-Die vorhandenen 128/64/512-MiB-/2048-Datei-Paketgrenzen und 32-MiB-/8-Megapixel-
-Bildgrenzen gelten weiter. Der Reader bestätigt keine neue Inhaltsfreigabe.
+Aktuelle Record-/Nutzdateigrenzen stehen in PW-B; die 32-MiB-/8-Megapixel-
+Bildgrenzen bleiben erhalten. Historische Paketreader behalten ihre geschlossenen
+Paketlimits. Der Reader bestätigt keine neue Inhaltsfreigabe.
 
 Kleine Regressionen: `python -m unittest tools.test_production_workspace -v`
 in der isolierten Imageumgebung, mit Node.js 22+ für die browserfreie Ausführung
@@ -463,35 +437,27 @@ maßgeblich. Daraus entstehen keine neuen PW2-A-Browser-/Bildprüfpflichten.
 
 ## PW-PERF-C · aufrufgebundene Prüfung und Hintergrund v2
 
-Die geschlossenen HP-W2-v1/v2-Formen stehen in
-[Hintergrund §4](../../docs/production/PUZZLE_BACKGROUNDS.md#4-hp-w2-eigenständige-datei--und-ableitungsschnittstelle),
-die beiden technischen Profile unter HG31.
-Neue Ableitungen verwenden Request/Befund v2 und Tool `picross-background-2`;
-Git-`producer` bleibt getrennt vom Bildkern aus `background_render.py` und
-`image_normalization.py`. Alle Consumer prüfen v1 und v2 generationsgenau;
-keine Neusiegelung alter Originale oder Erweiterung von #645.
+Aktuelle Publikation, Ansichtsprüfung und Wiederholung verwenden die gebundenen
+Nutzdaten nach PW-B sowie den gemeinsamen RI-ONE-Eingang. Prüfungen beginnen
+bei jedem unabhängigen Aufruf frisch; keine Befunde über Ziele oder Locks hinweg
+weiterverwenden. Der aktuelle Finalizer verwendet denselben Recordwriter,
+keine separate Paket-/Sidecar-/Projektionskette.
 
-Aktuelle Export-, Publikations- und Wiederholungsprüfung folgen ausschließlich
-[RI](../../docs/production/PUZZLE_INTEGRATION.md) und dem
-[ZA-1-Eingang](../../docs/production/ZA1_ADAPTER.md). Ein eigener unveränderter
-Aufrufkontext gilt nur innerhalb seines vollständig geprüften Aufrufs;
-separate Prüfungen beginnen frisch. Die frühere Export-v6-Strecke ist abgelöst.
-
-Der Finalizer darf zwei Projektionen aus einem vollständig geprüften gemeinsamen
-Paket-/Record-/Quellkontext ableiten. Nur ein geschlossenes Delta der bereits
-unabhängig geprüften Zustands-, Hintergrund- und Freigabefelder ist zulässig;
-abweichende Darstellungs-/Bild-/Angebotsquellen verlangen vollständige Prüfung.
-Alte und neue Inhalts-/Freigabeprüfung bleiben eigenständig. Sidecar vor Record,
-Bytevergleich, Fremddatenschutz, Wiederaufnahme und No-op bleiben verbindlich.
-Keine Befunde über Aufrufe, Ziele oder Locks hinweg weiterverwenden.
+Die früheren HP-W2-v1/v2-Requests, Ableitungsbefunde und der gemeinsame
+Paket-/Projektionskontext sind historische Formen. Ihr damaliger Vertrag steht
+am [Stand vor PROD-SLIM](https://github.com/venomenon328/picross/blob/d389fbad01dd01860ed949a4e1e8e0b52c21362a/tools/production_workspace/README.md#pw-perf-c--aufrufgebundene-prüfung-und-hintergrund-v2).
+Sie sind keine Voraussetzung aktueller Bilder und werden nicht automatisch
+rekonstruiert oder neu versiegelt.
 
 ## HG31: explizite Profilwahl
 
-Neue Einzelkompositionen sind exakt 3:1. HP-W2: `describe --profile-id
-picross-background-png2304x768-v1` (in einer Zeile aufrufen), dann dessen
-vollständiges Profil/Hash in Request v2 und Entscheidung binden. Ausgabe
-2304×768 RGBA8; verify prüft dieselbe Bindung. Altes Profil bleibt unverändert.
-Fertigimport erkennt 2304×768 bzw. 2304×576 aus validierten PNG-Bytes und
-übernimmt unverändert. V1-Capability erlaubt ausschließlich das alte Profil.
-[Geschlossener Vertrag](../../docs/production/PUZZLE_BACKGROUNDS.md#hg31--zwei-geschlossene-bildprofile).
-Keine Kandidatenintegration vor geprüftem Mainmerge oder neue WIP-Migration.
+Neue Einzelkompositionen sind exakt 3:1. Der aktuelle Bildhelfer
+`python -m tools.puzzle_production.current_tools background --input <datei> --output <neue-png>`
+verwendet standardmäßig picross-background-png2304x768-v1 und erzeugt ausschließlich
+das aktuelle 2304×768-RGBA8-PNG. Keine Ableitungs-/Codec-/Generatorhistorie.
+Aktuelle Rechte und Bildurteile stehen kompakt im Record.
+
+Fertigimport erkennt 2304×768 bzw. bestehende 2304×576 aus validierten PNG-Bytes
+und übernimmt unverändert. V1-Capability erlaubt ausschließlich das alte Profil.
+Der [geschlossene Bildprofilvertrag](../../docs/production/PUZZLE_BACKGROUNDS.md#hg31--zwei-geschlossene-bildprofile)
+bleibt verbindlich. Das alte Profil wird nicht automatisch konvertiert.

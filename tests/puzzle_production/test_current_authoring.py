@@ -159,7 +159,7 @@ class CurrentAuthoringTests(unittest.TestCase):
         bad=deepcopy(request);bad['record']['assets'][0]['file']['file']='../escape.png'
         with self.assertRaises(InvalidInput):current.build(bad,self.sources,self.root)
 
-    def test_completion_and_retirement_without_work_in_integration_commit(self):
+    def registered(self):
         self.approved();work_commit=commit(self.root,'current work')
         current.prepare(self.root,current.path('pz-current'),self.work/'integration')
         # Product branch starts at clean main; only final product data is integrated.
@@ -172,10 +172,19 @@ class CurrentAuthoringTests(unittest.TestCase):
         git(self.root,'checkout','-qb','work',work_commit)
         self.assertEqual(json.loads((self.root/'content/registry.json').read_bytes())['entries'],[])
         result=projector.complete(self.root,current.path('pz-current'),product,current_input=self.work/'integration')
-        self.assertEqual(result['status'],'built');commit(self.root,'completed work')
+        self.assertEqual(result['status'],'built');completed=commit(self.root,'completed work')
+        self.job=json.loads((self.root/current.path('pz-current')).read_bytes())
+        return product,completed
+
+    def test_completion_and_retirement_without_work_in_integration_commit(self):
+        product,_=self.registered()
+        # Resume after own committed definition/record were removed by a partial retirement.
+        (self.root/self.job['rasters'][0]['definition']['file']).unlink()
+        (self.root/current.path('pz-current')).unlink()
         self.assertEqual(current.retire(self.root,['pz-current'],product)['status'],'retired')
         self.assertEqual(current.retire(self.root,['pz-current'],product)['status'],'no-op')
         self.assertEqual(json.loads((self.root/'content/authoring/index.json').read_bytes())['entries'],[])
+
 
     def test_color_standard_and_accepted_editorial_result(self):
         self.input=make(self.work/'color-input',mode='color',colors=2)
@@ -314,6 +323,149 @@ class CurrentAuthoringTests(unittest.TestCase):
         self.assertEqual(service.picture(jid,'active-reveal'),(svg,'image/svg+xml'))
         self.job['target']['reveal']['file']='game/'+entry['reveal']
         with self.assertRaises(InvalidInput):self.publish()
+
+
+    def background_offers(self):
+        from io import BytesIO
+        from PIL import Image, PngImagePlugin
+        self.raster_ready();self.job['selected']['raster']='raster-a';decide(self.job,'raster')
+        for n in range(3):
+            stream=BytesIO();info=PngImagePlugin.PngInfo();info.add(b'sRGB',b'\0')
+            image=Image.new('RGBA',(2304,768),(0,0,0,0));image.putpixel((20+n,500),(50+n,50,50,100));image.save(stream,format='PNG',pnginfo=info)
+            self.job['assets'].append({'id':'context-'+str(n),'role':'background','label':'Synthetic context '+str(n),
+                'file':self.file('context-'+str(n)+'.png',stream.getvalue()),'rights':self.incoming['reveal']['rights'],
+                'review':judgment(current.CRITERIA['background'])})
+        self.job['state']='background_review';self.publish()
+
+    def delivery_reader(self,work_commit):
+        from types import SimpleNamespace
+        from tools.production_workspace.deliveries import Deliveries
+        source=LocalSource(self.root);product=git(self.root,'rev-parse','origin/main')
+        reader=Deliveries(SimpleNamespace(cached=source,confirmed_main=product),[{'source':'remote','ref':'main','commit':product}])
+        raw=source.read(work_commit,current.path('pz-current'));record=json.loads(raw)
+        job={'puzzle_id':'pz-current','revision':'current','binding':io.checksum(raw),'commit':work_commit,
+             'source':'remote','ref':'content/pw/pz-current','_record':record,'_source':source,'current_view':True,
+             '_current_invalid':False,'_projection':current.projection(record,raw)}
+        return reader,job
+
+    def test_selection_requires_decision_before_any_candidate_is_pruned(self):
+        from tests.puzzle_production.current_fixtures import fingerprints
+        for role in ('reveal','motif','raster','background'):
+            with self.subTest(role=role):
+                case=CurrentAuthoringTests();case.setUp();self.addCleanup(case.doCleanups)
+                if role=='reveal':
+                    case.job['assets']=[case.asset('reveal-'+str(n),'reveal') for n in range(3)]
+                    case.job['state']='reveal_review'
+                elif role=='background':case.background_offers()
+                else:
+                    case.raster_ready()
+                    if role=='motif':
+                        case.job.update(state='motif_review',rasters=[])
+                        case.job['selected']['motif']=None;case.job['parameters']['approved']=[]
+                        case.job['decisions']=[d for d in case.job['decisions'] if d['scope']=='reveal']
+                        case.job['assets'].append(case.asset('motif-b','motif'))
+                    else:
+                        other=deepcopy(case.job['rasters'][0]);other['id']='raster-b'
+                        other['definition']=case.file('alternative-definition.json',(case.input/'definition.json').read_bytes())
+                        case.job['rasters'].append(other)
+                case.publish();before=fingerprints(case.root/'content/authoring')
+                candidates=case.job['rasters'] if role=='raster' else [a for a in case.job['assets'] if a['role']==role]
+                case.job['selected'][role]=candidates[0]['id']
+                with self.assertRaisesRegex(InvalidInput,'choice'):case.publish()
+                self.assertEqual(before,fingerprints(case.root/'content/authoring'))
+                decide(case.job,role);case.publish()
+                remaining=case.job['rasters'] if role=='raster' else [a for a in case.job['assets'] if a['role']==role]
+                self.assertEqual([a['id'] for a in remaining],[candidates[0]['id']])
+
+    def test_completed_listing_checks_actual_work_files_without_solver(self):
+        _,completed=self.registered();reader,job=self.delivery_reader(completed)
+        with patch('tools.puzzle_production.verifier.verify',side_effect=AssertionError('Listing must not execute proof')):
+            self.assertEqual(reader.filter([job])[1]['hidden_count'],1)
+            selected=self.root/self.job['assets'][0]['file']['file'];original=selected.read_bytes()
+            swapped=(self.root/self.job['rasters'][0]['preview']['file']).read_bytes()
+            for mutation in ('missing','swapped','changed'):
+                selected.write_bytes(original)
+                if mutation=='missing':selected.unlink()
+                else:selected.write_bytes(swapped if mutation=='swapped' else b'foreign work bytes')
+                wrong=commit(self.root,'published '+mutation+' selected work')
+                reader,job=self.delivery_reader(wrong);remaining,result=reader.filter([job])
+                self.assertEqual(remaining,[job]);self.assertEqual(result['hidden_count'],0)
+                self.assertTrue(result['unresolved'])
+
+    def test_parameter_alternatives_are_complete_options_and_keep_corridor(self):
+        self.raster_ready();original=deepcopy(self.job['parameters']['approved'][0])
+        other={**original,'width':4,'height':4,'mode':'color','foreground_colors':2}
+        self.job['parameters']={'approved':[other,original],'proposed':[other,original]}
+        decide(self.job,'motif');self.publish()
+        facts=current.Checked(self.job,lambda n,limit:io.read(self.root,n,limit),technical=False)
+        self.assertEqual(facts.rasters['raster-a']['mode'],'mono')
+        mixed=[{**original,'height':4},{**original,'width':4}]
+        self.job['parameters']={'approved':mixed,'proposed':mixed};decide(self.job,'motif')
+        with self.assertRaisesRegex(InvalidInput,'complete approved parameter option'):self.publish()
+        corridor={'format':'picross-raster-parameters-v1',
+            'constraints':{k:{'kind':'exact','target':v,'minimum':None,'maximum':None} for k,v in [('width',3),('height',3),('foreground_colors',1)]},
+            'imports':[{'width':3,'height':3,'mode':'mono','foreground_colors':1,'method':'area','fit':'exact','actual_crop':[0,0,3,3]}],
+            'derivation':{'cell_edits':False,'empty_edge_crop':[],'protected_features':[]}}
+        self.job['parameters']={'approved':[corridor],'proposed':[corridor]};decide(self.job,'motif');self.publish()
+
+    def test_parameter_alternatives_preserve_one_color_color_assessment(self):
+        self.input=make(self.work/'one-color',mode='color',colors=1);self.incoming=json.loads((self.input/'manifest.json').read_bytes())
+        self.raster_ready();chosen=deepcopy(self.job['parameters']['approved'][0]);other={**chosen,'width':4,'height':4,'mode':'mono'}
+        self.job['parameters']={'approved':[other,chosen],'proposed':[other,chosen]};decide(self.job,'motif');self.publish()
+        checked=current.Checked(self.job,lambda n,limit:io.read(self.root,n,limit),technical=False)
+        self.assertEqual(checked.rasters['raster-a']['mode'],'color')
+
+    def test_raster_offer_rejects_swapped_preview_and_displays_definition(self):
+        from io import BytesIO
+        from PIL import Image
+        self.raster_ready();original=deepcopy(self.job)
+        self.job['rasters'][0]['preview']=self.job['assets'][0]['file']
+        with self.assertRaisesRegex(InvalidInput,'preview differs'):self.publish()
+        with self.assertRaisesRegex(InvalidInput,'preview differs'):
+            current.Checked(self.job,lambda n,limit:io.read(self.root,n,limit),technical=False)
+        self.job=original;stream=BytesIO()
+        with Image.open(self.root/self.job['rasters'][0]['preview']['file']) as image:image.save(stream,format='PNG',compress_level=1)
+        self.job['rasters'][0]['preview']=self.file('same-pixels.png',stream.getvalue());self.publish()
+        raw=(self.root/current.path('pz-current')).read_bytes();view=presentation.validate(current.projection(self.job,raw))
+        asset=next(a for a in view['assets'] if a['id']=='raster-a')
+        self.assertEqual(asset['location']['storage'],'definition')
+        definition=json.loads((self.root/self.job['rasters'][0]['definition']['file']).read_bytes())
+        self.assertEqual(presentation.asset_bytes(LocalSource(self.root),None,asset['location']),current.raster_preview(definition))
+
+    def test_background_context_is_hard_but_fine_detail_acceptance_is_allowed(self):
+        self.background_offers();self.job['selected']['background']='context-0';self.job['state']='content_ready';decide(self.job,'background')
+        background=next(a for a in self.job['assets'] if a['id']=='context-0')
+        for criterion in ('Q-HG01','H-07'):
+            background['review']=judgment(current.CRITERIA['background'])
+            background['review'][criterion].update(result='nicht erfüllt',accepted=True)
+            self.job['decisions'][-1]['statement']='Synthetic explicit acceptance of '+criterion
+            with self.assertRaisesRegex(InvalidInput,'acceptance required'):self.publish()
+        background['review']=judgment(current.CRITERIA['background'])
+        background['review']['Q-HG02'].update(result='nicht erfüllt',accepted=True)
+        self.job['decisions'][-1]['statement']='Synthetic explicit acceptance of Q-HG02';self.publish()
+
+    def test_registered_work_rejects_changed_reveal_rights_and_assessment(self):
+        from tools.puzzle_production import current_tools
+        product,_=self.registered();original=deepcopy(self.job)
+        for change in ('rights','assessment'):
+            self.job=deepcopy(original)
+            if change=='rights':self.job['assets'][0]['rights']['usage_basis']='Changed current usage basis'
+            else:
+                definition=json.loads((self.input/'definition.json').read_bytes())
+                out=self.work/'reassessment';current_tools.raster(definition,out,mode='mono',method='picross-difficulty-0.4')
+                self.job['rasters'][0]['difficulty']=self.file('reassessment.json',(out/'difficulty.json').read_bytes())
+                decide(self.job,'raster');decide(self.job,'background')
+            decide(self.job,'final');decide(self.job,'integration')
+            with self.assertRaisesRegex(InvalidInput,'Completion .* differ'):self.publish()
+            for ref in current.references(self.job):
+                if ref['file'].endswith('/reassessment.json'):
+                    target=self.root/ref['file'];target.parent.mkdir(parents=True,exist_ok=True);target.write_bytes((self.sources/'reassessment.json').read_bytes())
+            (self.root/current.path('pz-current')).write_bytes(current.encoded(self.job));wrong=commit(self.root,'published unintegrated '+change)
+            reader,job=self.delivery_reader(wrong);remaining,result=reader.filter([job])
+            self.assertEqual(remaining,[job]);self.assertEqual(result['hidden_count'],0)
+            with self.assertRaisesRegex(InvalidInput,'Completion .* differ'):current.retire(self.root,['pz-current'],product)
+            self.assertTrue((self.root/current.path('pz-current')).is_file())
+            (self.root/current.path('pz-current')).write_bytes(current.encoded(original));commit(self.root,'restore original completed job')
 
 
 if __name__=='__main__':unittest.main()
