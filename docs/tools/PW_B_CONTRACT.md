@@ -24,11 +24,11 @@ Metadatenautorität. Format `picross-authoring-current-v1`, exakt:
 - operation: production/background. target ist bei production null, bei reiner Hintergrundpflege exakt definition/reveal als aktive Refs und mode=mono|color. Unveränderte aktive Raster brauchen dafür keinen neuen Proof oder Difficulty. Das aktuelle Rasterpreview wird nur transient aus der Definition gerendert.
 - budgets: exakt limits/used, jeweils raster_candidates/repair_rounds/image_corrections als ganze Zähler 0–1.000.000. Used bleibt monoton; Erhöhung eines Limits braucht eine echte budget-Entscheidung. Nur aktueller Budgetverbrauch, keine Versuchsliste oder interne Historie.
 - title: 1–128 Zeichen, brief: 1–16384, übrige Texte: 1–4096, ohne NUL; category_id nach Kategorienvertrag, bei ungeklärter Zuordnung null.
-- parameters: exakt `proposed,approved`, jeweils Liste mit höchstens acht gültigen vorhandenen Rasterparameterobjekten. Approved braucht eine tatsächliche Motiv-/Parameterentscheidung.
+- parameters: exakt `proposed,approved`, jeweils Liste mit höchstens acht gültigen vorhandenen Rasterparameterobjekten. Approved braucht eine tatsächliche Motiv-/Parameterentscheidung. Mehrere Objekte sind vollständige Alternativen: Ein Raster muss mindestens eine ganze passende Option erfüllen. Sein expliziter Checked-Modus muss zu einer solchen Option gehören; ohne Checked ist ein eindeutiger Modus nötig. Einzelne Felder verschiedener Optionen dürfen nicht vermischt werden.
 - assets: höchstens 100 Objekte `id,role,label,file,rights,review`. Eindeutige ID nach `[A-Za-z0-9][A-Za-z0-9_-]{0,63}`; role: reveal/motif/background/input. label 1–512 Zeichen. file ist Ref. rights: null bei offener Klärung, sonst exakt `author,usage_basis,source,changes`, mit tatsächlichen Angaben. review: Kriterien-ID → Urteil.
-- rasters: höchstens 20 Objekte `id,label,definition,proof,difficulty,preview,review,exceptions`. Definition/preview sind Refs; proof/difficulty bleiben bei ungeprüften Sichtungsentwürfen ausdrücklich null, qualifizierte Angebote brauchen alle vier Refs auf aktuelle Nutzdaten; kein Import-/Reparaturbaum. Definition und Proof müssen dieselbe endgültige Runtime-Farbsemantik verwenden. Difficulty ist der bestehende Checked-Befund. exceptions ist die aktuelle RI-ONE-Liste konkreter frame-/palette-Ausnahmen mit Erklärung und Beleg.
+- rasters: höchstens 20 Objekte `id,label,definition,proof,difficulty,preview,review,exceptions`. Definition/preview sind Refs; proof/difficulty bleiben bei ungeprüften Sichtungsentwürfen ausdrücklich null, qualifizierte Angebote brauchen alle vier Refs auf aktuelle Nutzdaten; kein Import-/Reparaturbaum. Definition und Proof müssen dieselbe endgültige Runtime-Farbsemantik verwenden. Die Vorschau bildet jede Zelle in einem 12×12-Pixelblock mit exakter RGBA-Palette und transparentem Leerfeld ab; der Reader vergleicht ihre dekodierten Pixel mit der Definition. Angezeigt wird die transient aus der Definition gerenderte Ansicht. Difficulty ist der bestehende Checked-Befund. exceptions ist die aktuelle RI-ONE-Liste konkreter frame-/palette-Ausnahmen mit Erklärung und Beleg.
 - Urteil: exakt `result,accepted,reason,method,actor,timestamp_utc`; result erfüllt/Warnung/nicht erfüllt/nicht geprüft, accepted bool. Negative und ungeprüfte Befunde bleiben unterscheidbar. Annahme braucht die konkrete echte Entscheidung; harte Kriterien sind nicht redaktionell heilbar.
-- selected: exakt `reveal,motif,raster,background`, jeweils ID oder null; background zusätzlich none/standard. Null bedeutet offen. Angebote bleiben bis zur Entscheidung erreichbar. Danach bleiben nur gewählte Dateien und noch benötigte Eingaben.
+- selected: exakt `reveal,motif,raster,background`, jeweils ID oder null; background zusätzlich none/standard. Null bedeutet offen. Jede gesetzte Auswahl verlangt bereits vor Verdichtung eine gültige Entscheidung desselben Scopes; die unveränderte aktive Revealreferenz eines Hintergrundjobs benötigt keine neue Bildwahl. Angebote bleiben bis zur Entscheidung erreichbar. Danach bleiben nur gewählte Dateien und noch benötigte Eingaben.
 - decisions: höchstens acht Objekte `scope,binding,actor,timestamp_utc,statement`, je Scope genau eine noch gültige echte Erklärung. scope reveal/motif/raster/background/final/integration/budget; binding ist H des aktuellen semantischen Auswahlscope nach `current_authoring.binding`. UTC explizit Z/+00:00; ein nicht überlieferter Prüfzeitpunkt im Urteil bleibt null. Keine separate kopierte Erklärung, Prompt- oder Korrekturdatei. Tatsächliche Inhaltsänderung invalidiert abhängige Entscheidungen; reine Pfad-/Beschriftungsumstellung gleicher Bytes erhält kreative Wahlen. Endabnahme/Integration binden zusätzlich aktuelles Briefing, Titel/Kategorie, Rechte, Sichturteile und technische Ausnahmen.
 - blockers: höchstens 64 konkrete aktuelle Texte. test_only: bool, unveränderlicher Scope. integration: null oder `commit,result` der tatsächlich erreichten aktuellen Lieferung nach RI-ONE; keine historische Receiptdatei.
 
@@ -106,10 +106,10 @@ Die ausgewählten finalen Daten werden über denselben aktuellen RI-ONE-Eingang
 nach [ZA-1](../production/ZA1_ADAPTER.md) exportiert. Integration erfolgt in einem
 sauberen Branch vom aktuellen Main. Nur gewählte finale Produktdaten und wirklich
 benötigte aktive Metadaten übernehmen; niemals den Arbeitsbranch mit Alternativen
-und Protokollen nach Main mergen. Completion vergleicht die tatsächliche Lieferung,
+und Protokollen nach Main mergen. Completion und jeder registered-Readback vergleichen die tatsächliche Lieferung einschließlich aktueller Reveal-/Hintergrundnotices und vollständiger ausgewählter Bewertung,
 auch wenn der Integrationscommit keine Arbeitsdateien enthält. Retirement prüft
 bestätigtes Mainergebnis und eigene ausgewählte aktuelle Arbeitsbytes am Arbeitsref;
-die Arbeitsdateien müssen nie zuvor in Main gelegen haben. Neue/offene Arbeit,
+die Arbeitsdateien müssen nie zuvor in Main gelegen haben. Vor Ausblendung aktuelle Record-/Nutzdateibindungen am Arbeitsref frisch prüfen, ohne Solverlauf. Retirement darf nach eigenem Teilabbruch fehlende eigene Dateien nur aus dem gesicherten Arbeitscommit prüfen; vorhandene fremde oder geänderte Bytes blockieren. Neue/offene Arbeit,
 fremde Bytes und echte Rechte bleiben erhalten. Kein neuer historischer Receipt.
 
 ## Historische Formen
@@ -125,7 +125,7 @@ Aktuelle Urteile und konkrete technische Ausnahmen stehen direkt am aktuellen
 Raster. Die geschlossene Ausnahmeform entspricht dem RI-ONE-Eingang nach ZA-1;
 negative Befunde bleiben negativ. Redaktionell ausdrücklich angenommene
 Abweichungen bleiben mit result und accepted getrennt. Ungeprüft ist nie zulässig;
-H-07 bleibt unabdingbar. Keine Original-ZIP-/Inventar-/Handoffbindung.
+Q-HG01 und H-07 bleiben unabdingbar; Hintergrundabweichungen sind ausschließlich für Q-HG02–04 redaktionell annehmbar. Keine Original-ZIP-/Inventar-/Handoffbindung.
 
 ## PW-PERF-C · aktuelle Prüfung
 

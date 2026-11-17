@@ -14,7 +14,7 @@
     {
       "path": "tests/puzzle_production/test_current_authoring.py",
       "disposition": "change-scoped",
-      "reason": "Kleine synthetische Fünfphasen-, Inhalts-, Auswahl-, Konflikt-, Recovery- und Abschlussfälle ohne Herstellungsunterlagen in production.adapter. K07-Zählung und Mainaudit einmalig, keine dauerhafte Katalogsuite."
+      "reason": "Kleine synthetische Fünfphasen-, Inhalts-, Auswahl-, Konflikt-, Recovery- und Abschlussfälle ohne Herstellungsunterlagen in production.adapter. K07-Zählung und Mainaudit einmalig, keine dauerhafte Katalogsuite. Unabhängiges Review B-700-01–06: Entscheidung vor Bereinigung, frische Arbeitsrefs, vollständige Parameteralternative, echte Rasteransicht, harte Kontextgrenze sowie aktuelle Rechte-/Bewertungsbindung einschließlich Retirement."
     },
     {
       "path": "tests/puzzle_production/test_current_integration.py",

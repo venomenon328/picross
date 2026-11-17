@@ -87,7 +87,8 @@ def validate(value, measured=True):
                 from .sources import read_path
                 read_path(loc['file'])
                 if loc['storage']=='definition':
-                    ap.require(a['role']=='raster' and loc['file'].startswith('game/data/content/') and loc['file'].endswith('.json'), 'Ungültige aktive Rasteransicht.')
+                    ap.require(a['role'] in ('raster','raster_draft') and loc['file'].endswith('.json') and
+                               (loc['file'].startswith('game/data/content/') or loc['file'].startswith('content/authoring/'+value['puzzle_id']+'/')), 'Ungültige aktuelle Rasteransicht.')
             else: production_path(loc['file'])
         else:
             if measured:

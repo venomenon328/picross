@@ -66,10 +66,13 @@ def binding(job, scope):
         return chosen if chosen in (None,'none','standard') else identity(assets[chosen])
     reveal = image('reveal')
     motif = {'reveal':reveal,'motif':image('motif'),'parameters':job['parameters']['approved']}
+    def raster_content(r):
+        return {'id':r['id'],'definition':{k:r['definition'][k] for k in ('sha256','bytes')},
+                'difficulty':None if r['difficulty'] is None else {k:r['difficulty'][k] for k in ('sha256','bytes')}}
     chosen = selected['raster']
     raster = {'motif':motif,'raster':None if chosen is None else
-              {'id':chosen, **{k:rasters[chosen]['definition'][k] for k in ('sha256','bytes')}},
-              'offers':[{ 'id':r['id'], **{k:r['definition'][k] for k in ('sha256','bytes')}} for r in job['rasters']] if chosen is None else []}
+              raster_content(rasters[chosen]),
+              'offers':[raster_content(r) for r in job['rasters']] if chosen is None else []}
     if job['operation']=='background':
         raster={'target':{k:{f:job['target'][k][f] for f in ('sha256','bytes')} for k in ('definition','reveal')}}
     background = {'raster':raster,'background':image('background')}
@@ -171,6 +174,9 @@ def validate(job):
         scope=decision['scope']; ap.require(scope in SCOPES and scope not in seen, 'Invalid/duplicate decision scope')
         seen.add(scope); human(decision)
         ap.require(decision['binding']==binding(job,scope), 'Stale decision: '+scope)
+    for role,selected in job['selected'].items():
+        if selected is None or job['operation']=='background' and role=='reveal':continue
+        ap.require(role in seen, 'Actual '+role+' choice required before selection')
     all_refs={}
     for ref in references(job):
         content.reference(ref,limit=64*LIMIT)
@@ -200,7 +206,7 @@ def review(value, criteria, *, ready, decisions=()):
             recorded=list(decisions.values()) if isinstance(decisions,dict) else list(decisions)
             accepted=any(criterion in d['statement'] for d in recorded if d.get('scope') in ('background','final','motif','raster'))
             ap.require(finding['result']!='nicht geprüft', 'Visual criterion not checked: '+criterion)
-            ap.require(finding['result']=='erfüllt' or criterion!='H-07' and finding['accepted'] and accepted,
+            ap.require(finding['result']=='erfüllt' or criterion not in ('H-07','Q-HG01') and finding['accepted'] and accepted,
                        'Actual editorial acceptance required: '+criterion)
 
 
@@ -258,7 +264,7 @@ class Checked:
             ap.require('final' in decisions and 'integration' in decisions and not j['blockers'], 'Actual final content/integration decisions required')
         if phase==9:
             ap.require(j['integration'] is not None, 'Registration result missing')
-            matches(j,j['integration']['result'])
+            self.matches(j['integration']['result'])
 
     def bound(self, ref, limit):
         content.reference(ref,limit=limit)
@@ -277,27 +283,27 @@ class Checked:
         used={c for row in definition['solution'] for c in row if c}
         ap.require(used=={p['id'] for p in definition['palette']} and used, 'Palette must contain exactly used colors')
         params=self.job['parameters']['approved']
-        mode=(params[0].get('mode') or params[0]['imports'][0]['mode']) if params else None
-        ap.require(mode in ('mono','color'), 'Current raster needs explicit approved mode')
-        ap.require(mode!='mono' or len(used)==1, 'Mono requires one used color')
-        for p in params:
+        values={'width':definition['width'],'height':definition['height'],'foreground_colors':len(used)}
+        def accepts_option(p):
             if 'constraints' in p:
                 from .raster_parameters import accepts
-                values={'width':definition['width'],'height':definition['height'],'foreground_colors':len(used)}
-                ap.require(all(accepts(p['constraints'][k],v) for k,v in values.items()), 'Raster violates approved corridor')
-            else:
-                for axis in ('width','height'):
-                    if p.get('size_constraint')=='exact' and p.get(axis) is not None:
-                        ap.require(p[axis]==definition[axis], 'Raster violates exact dimension')
-                if p.get('foreground_color_constraint')=='exact': ap.require(p['foreground_colors']==len(used), 'Raster violates exact color count')
+                return all(accepts(p['constraints'][k],v) for k,v in values.items())
+            return (all(p['size_constraint']!='exact' or p[axis]==values[axis] for axis in ('width','height')) and
+                    (p['foreground_color_constraint']!='exact' or p['foreground_colors']==len(used)))
+        matching=[p for p in params if accepts_option(p)]
+        modes={p.get('mode') or p['imports'][0]['mode'] for p in matching}
+        rating_value=(current_rating.validate(io.json_bytes(self.bound(raster['difficulty'],8*LIMIT),8*LIMIT),
+                    definition_bytes=raw,active=False) if raster['difficulty'] is not None else None)
+        mode=rating_value.get('production_mode') if rating_value is not None else next(iter(modes)) if len(modes)==1 else None
+        ap.require(mode in ('mono','color') and mode in modes, 'Raster requires one complete approved parameter option and an unambiguous explicit mode')
+        ap.require(mode!='mono' or len(used)==1, 'Mono requires one used color')
         ap.require(not ready or raster['proof'] is not None and raster['difficulty'] is not None, 'Qualified raster needs proof and difficulty')
         proof=io.json_bytes(self.bound(raster['proof'],64*LIMIT),64*LIMIT) if raster['proof'] is not None else None
         if technical and proof is not None:
             result=verifier.verify(puzzle,proof,Budget(300,1000000))
             ap.require(result['proof_verified'] and (result['certified'] or not ready), 'Complete independently checked current proof required')
             if result['certified']: check_end(definition,proof)
-        checked=(current_rating.validate(io.json_bytes(self.bound(raster['difficulty'],8*LIMIT),8*LIMIT),
-                                        definition_bytes=raw,production_mode=mode,active=False) if raster['difficulty'] is not None else None)
+        checked=rating_value
         if ready:
             review(raster['review'],CRITERIA['raster'],ready=True,decisions=self.job['decisions'])
             matrix=definition['solution']
@@ -312,7 +318,17 @@ class Checked:
                 ap.require(self.bound(exception['evidence'],65536).decode('utf8').strip(), 'Empty exception evidence')
         self.rasters[raster['id']]={'definition':definition,'mode':mode,'difficulty':checked}
         from tools.production_workspace.presentation import image
-        image(self.bound(raster['preview'],32*LIMIT))
+        preview=self.bound(raster['preview'],32*LIMIT)
+        image(preview)
+        from io import BytesIO
+        from PIL import Image
+        with Image.open(BytesIO(preview)) as actual, Image.open(BytesIO(raster_preview(definition))) as expected:
+            ap.require(actual.size==expected.size and actual.convert('RGBA').tobytes()==expected.tobytes(),
+                       'Raster preview differs from current definition')
+
+    def matches(self,result):
+        rating=self.rasters[self.job['selected']['raster']]['difficulty'] if self.job['operation']=='production' else None
+        return matches(self.job,result,rating=rating)
 
     def recheck(self):
         for name,raw in self.raw.items(): ap.require(self.read(name,max(len(raw),1))==raw, 'Current input changed: '+name)
@@ -470,7 +486,7 @@ def projection(job, record_raw):
     qualified=PHASES.index(job['state'])>=5
     for raster in job['rasters']:
         assets.append({'id':raster['id'],'role':'raster' if qualified else 'raster_draft','caption':raster['label'],
-                       'location':{'commit':None,'storage':'repository','container':None,**raster['preview']}})
+                       'location':{'commit':None,'storage':'definition','container':None,**raster['definition']}})
         if qualified and job['selected']['raster'] is None:
             offers.append({'id':raster['id'],'kind':'raster','label':raster['label'],'record':ref,'asset_ids':[raster['id']]})
     return {'format':p.CURRENT_FORMAT,'puzzle_id':job['puzzle_id'],'revision':'current','record':ref,
@@ -580,7 +596,7 @@ def prepare(root, record_path, output, *, entry=None):
     return {'status':'exported','id':job['puzzle_id'],'output':str(output)}
 
 
-def matches(job, result):
+def matches(job, result, *, rating=None):
     """A completion is bound to current selected bytes, never an arbitrary same-ID result."""
     selected=job['selected']
     raster=({'definition':job['target']['definition']} if job['operation']=='background' else next(r for r in job['rasters'] if r['id']==selected['raster']))
@@ -588,12 +604,23 @@ def matches(job, result):
     ap.require(result['entry']['id']==job['puzzle_id'] and result['metadata']==
                {'id':job['puzzle_id'],'name':job['title'],'category_id':job['category_id']}, 'Completion metadata differs')
     def same(ref, path):
-        actual=result['files'][path]
+        actual=result['files'].get(path)
         return actual is not None and all(actual[k]==ref[k] for k in ('sha256','bytes'))
     ap.require(same(raster['definition'],'game/'+result['entry']['definition']) and
                same(reveal['file'],'game/'+result['runtime']['reveal']), 'Completion contains different selected bytes')
-    params=job['parameters']['approved']
-    mode=job['target']['mode'] if job['operation']=='background' else (params[0].get('mode') or params[0]['imports'][0]['mode'])
+    if job['operation']=='production':
+        from . import catalog_rating
+        ap.require(rating is not None,'Current selected assessment required')
+        mode=rating['production_mode']
+        rights=reveal['rights'];ap.require(rights is not None,'Current reveal rights missing')
+        notice=('\n'.join(k+': '+rights[k] for k in sorted(rights))+'\n').encode('utf8')
+        notice_path=content.notice_path(result['entry'])
+        ap.require(same(content.ref(notice_path,notice),notice_path),'Completion reveal rights differ')
+        rating_path=catalog_rating.path(job['puzzle_id'])
+        rating_bytes=catalog_rating.encoded(catalog_rating.active_record(rating))
+        ap.require(same(content.ref(rating_path,rating_bytes),rating_path) and
+                   result['runtime']['difficulty']==catalog_rating.project(rating),'Completion assessment differs')
+    else:mode=job['target']['mode']
     ap.require(result['mode']==mode, 'Completion mode differs')
     bg=selected['background']; actual=result['runtime']['background']
     ap.require(actual['status']==(bg if bg in ('none','standard') else 'selected'), 'Completion background differs')
@@ -616,7 +643,7 @@ def complete(root, record_path, commit, *, current_input):
     source=LocalSource(root)
     raw=source.read(None,record_path); job=io.json_bytes(raw,LIMIT)
     ap.require(record_path==path(job['puzzle_id']) and job['state'] in ('editorially_approved','registered'), 'Current final approval required')
-    Checked(job,lambda n,limit:source.read(None,n,limit))
+    checked=Checked(job,lambda n,limit:source.read(None,n,limit))
     incoming=None
     if job['operation']=='production':
         incoming=integration_input.Input(current_input)
@@ -634,7 +661,7 @@ def complete(root, record_path, commit, *, current_input):
             for name in prepared['imports'].values():
                 ap.require(io.read(io.external(current_input),name,32*LIMIT)==(expected/name).read_bytes(), 'Background input changed')
     result=current_delivery.snapshot(lambda n,limit,missing=False:source.read(commit,n,limit,missing),job['puzzle_id'])
-    matches(job,result)
+    checked.matches(result)
     if incoming is not None:
         registry=io.json_bytes(source.read(commit,content.REGISTRY,8*LIMIT),8*LIMIT)
         actual=content.selected(None,registry,job['puzzle_id'],read=lambda n,limit,missing=False:source.read(commit,n,limit,missing))
@@ -682,7 +709,14 @@ def retire(root, ids, integrated_commit, *, source_commits=None):
             job=io.json_bytes(raw,LIMIT)
             validate(job); ap.require(job['state']=='registered' and job['integration'] is not None, 'Current work has not completed')
             ap.require(current_delivery.same(result,job['integration']['result']), 'Confirmed main contains different selected data')
-            matches(job,result)
+            def current_work(name,limit):
+                data=io.read(root,name,limit,missing=True)
+                if data is None:
+                    ap.require(own(identity_id,name),'Missing active retirement input: '+name)
+                    data=source.read(work_commit,name,limit)
+                return data
+            checked=Checked(job,current_work,technical=False)
+            checked.matches(result);checked.recheck()
             expected={record_path:io.read(root,record_path,LIMIT,missing=True)}
             for ref in references(job):
                 if own(identity_id,ref['file']):
