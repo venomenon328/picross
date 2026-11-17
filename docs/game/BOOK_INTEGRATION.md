@@ -163,7 +163,7 @@ Karten-/Kopfgeometrie.
 
 ## Hintergrundbilder und passive Dekoration
 
-Aktive Bildprofile, selected/none/legacy, Quellenbindung, Besuchstoken,
+Aktive Bildprofile, Hintergrundzustände, Quellenbindung, Besuchstoken,
 Publikationspunkt und begrenzte Bildreferenzen folgen ausschließlich
 PUZZLE_BACKGROUNDS. Die Darstellung ist Teil der tatsächlichen Seiten-/
 Capturehierarchie; Layout, Trefferflächen und Übergangsdauer bleiben unverändert.

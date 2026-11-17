@@ -67,7 +67,7 @@ Schwierigkeitseinstufung ändert weder Rätsellogik noch Sterne-/Progressionsreg
 
 ### 3.3 Motive und Abschlussansicht
 
-- **MUSS:** ein tatsächliches Motiv darstellen; zufälliges Rauschen und reine abstrakte Formen gehören nicht in den regulären Katalog. Eng begrenzte redaktionelle Ausnahmen folgen [Qualität](../production/PUZZLE_QUALITY.md).
+- **MUSS:** ein tatsächliches Motiv darstellen; zufälliges Rauschen und reine abstrakte Formen gehören nicht in den regulären Katalog. Für die kleinsten Dimensionen wurden begründete Ausnahmen lediglich erwogen; ihre Kriterien sind weiterhin offen (§11, O-03). Daraus entsteht kein bereits freigegebener Ausnahmeweg.
 - **MUSS:** als Belohnung das erarbeitete Motiv selbst zeigen. Das Verhältnis von Illustration, Motivvorlage und Lösungsraster sowie die unterschiedlichen Erkennbarkeitsmaßstäbe für Mono/Farbe stehen in den [Bildnormen](../production/images/README.md).
 - **MUSS:** vor Abschluss Lösungsbild und Motivname verbergen. Die eigene Miniatur zeigt ausschließlich tatsächliche Spielereingaben einschließlich Fehlern; sie darf keine korrigierte Lösung vorwegnehmen.
 - **MUSS:** Katalogvorschau und Abschluss aus derselben freigegebenen Bildquelle darstellen; die Anzeigegröße darf sich unterscheiden.

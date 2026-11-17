@@ -116,8 +116,9 @@ qualifizierten Record bindet. Checked-v3 bindet die ausdrücklich gewählte nume
 Runtime-Revision des vorläufigen Analyseinputs, getrennt von der Paketrevision.
 Unveränderte Logik erfordert keinen neuen Analyselauf. Unveränderte Bildfreigaben bleiben gültig. Matrixgebundene
 Hinweise, Proofs, Paletten-/Sichturteile, Motiv-/Revealbeurteilung und Schwierigkeit
-müssen zum Ende passen. Die gestalterische Randregel folgt [RASTER](images/RASTER.md);
-ihre operative Prüfung steht in [PUZZLE_QUALITY](PUZZLE_QUALITY.md).
+müssen zum Ende passen. Die technische Außenrandregel steht in
+[Authoring Schritt 3 §4.2](authoring/PUZZLE_AUTHORING_STEP_3.md#42-harte-kriterien);
+Kriterienklassifikation und Einzelurteile in [PUZZLE_QUALITY](PUZZLE_QUALITY.md).
 
 Die historische production.difficulty 0.1/0.2 bleibt getrennt. Der bestehende
 `catalog_analysis candidate → analyze --method picross-difficulty-0.4 → import`
@@ -140,5 +141,7 @@ Builder liest das tatsächlich geschriebene ZIP frisch. Erst alle Inhaltsgates
 ergeben raster_ready, qualifiziertes Rasterangebot, workspace.json und current-view.
 Background und raster_selection bleiben null; keine Endfreigabe wird erfunden.
 Fehlende Nachweise blockieren oder bleiben raster_review. Der HTTP-Leser prüft
-Datei-/Matrixbindungen ohne Solver/Writer. Späterer Export prüft denselben regulären
-Ableitungsweg mit den dann wirklich vorliegenden Auswahl-/Hintergrund-/Endfreigaben.
+Datei-/Matrixbindungen ohne Solver/Writer. Spätere kreative Phasenprüfungen erhalten
+diese Ableitungsbindung und die dann vorliegenden Auswahl-/Hintergrund-/Endfreigaben.
+Die Katalogintegration prüft ausschließlich den vollständigen aktuellen
+[ZA-1-Eingang](ZA1_ADAPTER.md); sie rekonstruiert keine Produktionsgeschichte.

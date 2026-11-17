@@ -10,17 +10,18 @@ oder bei Fehlern startet die vorhandene App. Die ausgelieferte
 T01 prüft die Start-/Abbruchrennen im gewählten tools-Modul. T02 verwendet den
 unten beschriebenen nicht veröffentlichenden Windowsdispatch am fixierten
 Produkt-Head samt MSI-/Input-/Lizenz-/Trust- und unveränderter Helferdiagnose.
-APP-B2-S-A01 prüft diese Originale unabhängig vor Merge; APP-B2-S-R01/T03 bleibt
-die echte installierte Windows-11-Probe vor produktiver Weiterverteilung.
+Die damaligen APP-B2-S-A01-/R01-/T03-Entscheidungen und ihr tatsächlicher Abschluss
+stehen im [Updatevertrag](../../docs/tools/PRODUCTION_UPDATES.md) und Issue #612.
 
 Aktuell maßgeblich: [APP-ROOT1 / #612](https://github.com/venomenon328/picross/issues/612#issuecomment-6851636493)
 mit [öffentlicher Eigentümerfreigabe](https://github.com/venomenon328/picross/issues/612#issuecomment-6852316923)
 und der [App-Releasevertrag](../../docs/tools/PRODUCTION_UPDATES.md).
-APP-A ist über #613 unabhängig abgenommen und in main integriert; Erstaktivierung
-und Windows-11-Upgradeprobe bleiben offen. APP-B1 liefert signierte Autorität und
-Verifier; APP-ROOT1 bindet ausschließlich den freigegebenen öffentlichen Root.
-Private Signierbereitstellung und Aktivierung bleiben gesondert. APP-B2 ergänzt Client und
-eigenständigen x64-.NET-Helfer, standardmäßig ausgeschaltet. Der Kanal bleibt inaktiv.
+APP-A, APP-B1, APP-ROOT1 und APP-B2 verbinden MSI-Bau, signierte Autorität,
+festen öffentlichen Root, zustimmungsgebundenen Client und x64-.NET-Helfer.
+Betriebsfreigabe und tatsächliche persönliche Nachweise folgen ausschließlich
+dem Updatevertrag und der dort verlinkten Abschlussentscheidung; frühere offene
+Einführungsgates werden hier nicht erneut behauptet. Ein Bau aktiviert keine
+Releaseflags oder Signierbereitstellung.
 Die historischen
 [P4/K01–K08](https://github.com/venomenon328/picross/issues/588#issuecomment-6825638437),
 [P4-N1](https://github.com/venomenon328/picross/issues/588#issuecomment-6828896451)
@@ -231,7 +232,7 @@ sieben Tage. Logs bleiben im zugeordneten Run/Attempt; tatsächliche Downloads,
 Byte-/SHA-/Headbindungen im Lieferkommentar. Kein privater Testkey als Datei.
 T02 belegt Paketierung und Windows-Kryptofunktion, keine Installation oder
 Windows-11-Lebenszyklusprobe. Details zu Wireform, reinem Verifier/API,
-Bootstrap/Rotation und offenen A01/R01-Gates stehen in
+Bootstrap/Rotation und tatsächlichen Abnahmeentscheidungen stehen in
 [Updates §6](../../docs/tools/PRODUCTION_UPDATES.md#6-app-b1--signierte-autorität-und-feste-roots).
 
 ## APP-B2: eigenständiger Helfer und Diagnose

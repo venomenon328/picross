@@ -264,7 +264,8 @@ Lesen, Sync, Cleanup, Recovery, Build, Spielstart oder CI aktivieren nichts.
 [SD-Catalog](SD_CATALOG.md#aktuelle-katalogjournale) definiert allein das aktuelle
 Katalogjournal für Bewertung, Datum, Standard, Metadaten und Sync. Es schreibt
 keine Definitionen/Bilder und registriert keine neue ID. Erstintegration folgt
-RI; gezielte Editorpflege verwendet den eigenen kleinen Plan/Journal aus §13.
+RI; gezielte Editorpflege verwendet den eigenen kleinen Plan/Journal aus
+[PE §13](../tools/PUZZLE_EDITOR.md#13-pe-edit2-gezielte-pflege-statt-vollbestandsprüfung).
 Eine breite Quellenbindung einer ausdrücklichen Kataloganalyse ist keine
 Vollbestandsprüfungspflicht für Editor-Detail oder Metadatenpflege.
 

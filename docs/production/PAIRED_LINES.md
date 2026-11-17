@@ -85,10 +85,10 @@ nicht. Linienfälle behalten R0–R3/L1–L5; keine nachträgliche Umdeutung von
 Die Instrumentierung belegt nur R4-Notwendigkeit, keinen vollständigen R0–R3-
 Analysator und keine menschliche Kalibrierung. Umfang/Zeit bleiben getrennt.
 
-Historische Authoring-0.5.0-Eingänge erlauben diese Profile ausdrücklich. Alte 0.4.x-Snapshots und
-Schwierigkeit 0.1 legitimieren keinen Paarproof. ZA-1 prüft die Baseline und
-Assessmentdatei frisch, bindet das Profil im neuen Export-/Inspektionsformat v4
-und erhält sämtliche Herkunfts-, Masken-, Freigabe-, Kategorie- und Produktgrenzen.
+Historische Authoring-0.5.0-Eingänge erlaubten diese Profile ausdrücklich. Alte 0.4.x-Snapshots und
+Schwierigkeit 0.1 legitimieren keinen Paarproof. Der damalige ZA-1-Vertrag prüfte die Baseline und
+Assessmentdatei frisch, band das Profil im Export-/Inspektionsformat v4
+und erhielt sämtliche Herkunfts-, Masken-, Freigabe-, Kategorie- und Produktgrenzen.
 Manuelle Ableitungen binden ihre neue Profilwahl ausdrücklich im Plan; alte
 Autorisierungen/Originale werden nicht umgeschrieben. Kein Solver im Spiel.
 Eine bereits mit Paarprofil geprüfte Referenz darf nicht in einen alten
@@ -100,7 +100,13 @@ Budgetregeln. Ihre äußeren Hüllen sind in [PW-B](../tools/PW_B_CONTRACT.md) u
 [ZA-1](ZA1_ADAPTER.md) definiert. Die 0.5.0-/0.6.0- und v4-Bindungen unten
 sind generationengebundene Kompatibilitätsformen, keine aktuelle Quellenroute.
 
-### Konkrete Produktionsbindungen
+### Konkrete Produktionsbindungen und historische Hüllen
+
+Die Profil-/Proofregeln bleiben aktiv. Die folgenden Handoff-v2-/Export-v4-
+Angaben beschreiben dagegen ihre historischen Originalgenerationen und versprechen
+keinen heutigen Exportreader oder Writer. Aktuelle kreative Formen stehen in
+[PW-B](../tools/PW_B_CONTRACT.md); die heutige Integration konsumiert ausschließlich
+den aktuellen [ZA-1-Eingang](ZA1_ADAPTER.md).
 
 Die Konfiguration hat genau drei Schlüssel, beispielsweise
 `{"profile":"paired-lines-color","max_pair_work":20000000,"max_pair_records":250000}`.
@@ -129,10 +135,10 @@ allein genügt nicht. Die bestehenden Freigabe-/Inventarbindungen bleiben Pflich
 
 Die externe menschliche Autorisierung v1–v4 bleibt ihrem jeweiligen Pfad
 zugeordnet. Ein neuer Plan braucht neue tatsächliche Bindungen; dieser Vertrag
-erteilt keine Änderungsbefugnis an alten Originalen. ZA-1 liefert
+erteilt keine Änderungsbefugnis an alten Originalen. Der damalige ZA-1-Vertrag lieferte
 `picross-target-inspection-v4` und `picross-target-export-v4` mit
 `deduction={profile,profile_hash,assessment}` sowie gegebenenfalls der bisherigen
-manuellen Autorisierung. Registrierung prüft diese Exporte frisch offline.
+manuellen Autorisierung. Seine Registrierung prüfte diese Exporte frisch offline.
 
 Der gesonderte CLI-Aufruf `assess` erzeugt `picross-quality-report-v1`:
 Diagnose-A-Dateicheck, geprüfte Deduktion, Baseline, Umfang, Difficulty und
@@ -147,8 +153,9 @@ Paare, partielle Domains, Farbkontakt/-abstand und kleine vollständige Orakel.
 Negativtests für überstarke/fehlende/veraltete Änderungen, falsche Bindungen,
 Widerspruch/Fixpunkt/Abschluss, Ressourcen-/Dateigrenzen und fehlende Freigaben.
 Durchstiche für Import, Reparatur, manuelle Ableitungen, ZA-1 und Registrierung
-verwenden ausschließlich künstliche Pakete. Alte Proofs/Diagnose/Exporte bleiben
-fachliche Kompatibilitätsanforderungen. Die tatsächlich nötigen Regressionen
+verwenden ausschließlich künstliche Pakete. Alte Proofs und Diagnoseformen behalten
+ihre jeweils unterstützte Lesesemantik; abgelöste Exporthüllen bleiben historische
+Referenzen mit ihren Originalbytes. Die tatsächlich nötigen Regressionen
 wählt das aktuelle Paket nach [CI_WORKFLOW_V2](../ci/CI_WORKFLOW_V2.md), ohne historische
 Produktionsreplays. Resultate, Head/Basis/Test-Merge und getrenntes Selbstreview
 stehen im zugehörigen PR; aktuellen Paketstatus in #139 prüfen.

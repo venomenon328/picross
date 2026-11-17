@@ -1286,7 +1286,7 @@ Referenzen werden freigegeben; kein Verlaufscache und keine wachsende Queue.
 Fehlende Browser-APIs, ungültige Importcontainer oder fehlgeschlagene Dekodierung
 führen zur diagnostizierten Auslassung dieses Besuchs. Das ist kein pauschaler
 Webausschluss für selected. Das Lesen der gebundenen Importbytes, der begrenzte
-Transfer und der Upload der festen 2304×576-Textur samt Mipmaps bleiben reale
+Transfer und der Upload der Textur ihres gebundenen HG31-Profils samt Mipmaps bleiben reale
 Hauptthreadarbeit; eine Garantie für die gesamte Framedauer wird nicht behauptet.
 Günstige Node-Mechanikprüfungen und das tatsächliche Web-PCK prüfen Quellbindung
 und Lieferung, ersetzen aber keine ausgeführte Browserinteraktion. HP-I2 behauptet
