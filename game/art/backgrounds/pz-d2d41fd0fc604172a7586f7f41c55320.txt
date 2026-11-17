@@ -1,0 +1,4 @@
+author: OpenAI ImageGen (KI-generiert im Eigentümerauftrag)
+changes: Vollständiges 2172×724-Original mit aktuellem Bildhelfer und ausdrücklich picross-background-png2304x768-v1 proportional zu 2304×768 RGBA8 vorbereitet; kein Crop, Padding, Motivverschieben oder kreative Retusche.
+source: Integriertes ImageGen in dieser Codex-Sitzung, Issue #671, HG-BESTAND-09, 17.11.2026.
+usage_basis: Für picross im ausdrücklichen Eigentümerauftrag mit dem integrierten Bildwerkzeug neu erzeugt; keine fremden Bildvorlagen oder Drittassets verwendet.
