@@ -501,7 +501,7 @@ def main(argv=None):
         else:
             result = build(request, args.source_root, args.output_root, args.publish_to, history_repo=args.history_repo)
             code = 0
-    except (InvalidInput, OSError, ValueError, Aborted, KeyboardInterrupt) as exc:
+    except (InvalidInput, OSError, ValueError, KeyError, TypeError, Aborted, KeyboardInterrupt) as exc:
         aborted = isinstance(exc, (Aborted, KeyboardInterrupt)) or getattr(exc, 'aborted', False)
         from . import current_authoring
         if isinstance(request,dict) and request.get('format')==current_authoring.REQUEST:
