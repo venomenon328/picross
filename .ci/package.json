@@ -1,33 +1,12 @@
 {
   "format": "development-ci-plan/v1",
-  "issue": "https://github.com/venomenon328/picross/issues/700",
-  "package": "PROD-SLIM",
-  "modules": [
-    "tools",
-    "production.images",
-    "production.adapter",
-    "production.catalog"
-  ],
-  "purpose": "Ein kanonischer aktueller Produktionsstand ohne Entstehungsarchive; Producer, Reader, Auswahl, RI-ONE-Übergabe und Abschluss gemeinsam umstellen. Mainbestand am d389fbad01dd01860ed949a4e1e8e0b52c21362a repositoryweit prüfen und nachgewiesen entbehrliche Unterlagen entfernen.",
-  "omitted": "Keine Solver-, Difficulty-, Runtime-, native-, preflight-, delivery- oder Browseränderung. Bestehende Algorithmen und RI-ONE bleiben erhalten. Windowsbau wegen technischer Änderung erforderlich. Keine Bildgenerierung, Vollkataloganalyse, neue persönliche Abnahme oder historische WIP-Migration.",
-  "test_changes": [
-    {
-      "path": "tests/puzzle_production/test_current_authoring.py",
-      "disposition": "change-scoped",
-      "reason": "Kleine synthetische Fünfphasen-, Inhalts-, Auswahl-, Konflikt-, Recovery- und Abschlussfälle ohne Herstellungsunterlagen in production.adapter. K07-Zählung und Mainaudit einmalig, keine dauerhafte Katalogsuite. Unabhängiges Review B-700-01–06: Entscheidung vor Bereinigung, frische Arbeitsrefs, vollständige Parameteralternative, echte Rasteransicht, harte Kontextgrenze sowie aktuelle Rechte-/Bewertungsbindung einschließlich Retirement."
-    },
-    {
-      "path": "tests/puzzle_production/test_current_integration.py",
-      "disposition": "change-scoped",
-      "reason": "Negativen ungeprüften beziehungsweise nicht angenommenen Sichtbefund weiterhin ablehnen; ausdrücklich angenommene redaktionelle Abweichungen am aktuellen Ergebnis getrennt erhalten."
-    },
-    {
-      "path": "tools/test_authoring_sheet.py",
-      "disposition": "change-scoped",
-      "reason": "Die öffentliche Promptprojektion bindet den aktuellen Record; gemeinsame Integration und Abschluss führen keine Arbeitsarchive nach Main. Bestehende Bedienprüfungen vollständig erhalten."
-    }
-  ],
-  "core_change": "Keine Änderung an CI-Kern oder automatischer Modulauswahl. evidence.mode=none; aktuelle synthetische Originale im Lauf prüfen und entfernen.",
+  "issue": "https://github.com/venomenon328/picross/issues/671",
+  "package": "HG-SEITENKOMPOSITION",
+  "modules": [],
+  "purpose": "Verbindliche seitliche Motivschwerpunkte und eine niedrige offene Mittelzone für neue Hintergrundkandidaten in der alleinigen Bildnorm festlegen; die bisher unverbindliche HG-07-Anbindung in Q-HG03 konsistent korrigieren.",
+  "omitted": "Reine Dokumentationsänderung ohne Bildproduktion, Asset-, Runtime-, Werkzeug- oder Schemaänderung. Deshalb keine Zusatzmodule, kein Player-Build und kein Spiel-/Overlaytest; Bildsichtung der sieben Nutzeranhänge und Konsistenzprüfung der aktuellen Quellen genügen zusammen mit dem Dokument-/Plankern. Bestehende Bildfreigaben werden nicht neu bewertet.",
+  "test_changes": [],
+  "core_change": "Keine Änderung an Tests oder CI-Kern. Einmalige Sichtung der Anhänge und Prüfung des vollständigen Dokumentdiffs; keine neuen Testfixtures, Messquoten oder dauerhaften Prüfartefakte.",
   "evidence": {
     "mode": "none",
     "purpose": null,
