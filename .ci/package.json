@@ -1,10 +1,10 @@
 {
   "format": "development-ci-plan/v1",
   "issue": "https://github.com/venomenon328/picross/issues/671",
-  "package": "HG-SKIZZENSTIL",
+  "package": "HG-BESTAND-05",
   "modules": [],
-  "purpose": "Verbindlichen skizzenhaften Graphitstil für neue Hintergrundkandidaten und beauftragte Revisionen präzisieren: beiläufige, gekonnte Handskizze statt professionell durchpolierter Bleistiftillustration; KI-lesbare Regeln, optionale natürliche Korrekturspuren ohne Fehlerpflicht.",
-  "omitted": "Nur Bildstilnorm und Paketplan. Keine Spiel-/Produktionscode-, Bilddaten-, Raster-, Profil- oder Schemaänderung. Q-HG02 referenziert bereits verbindlich den gemeinsamen Bildstil; daher keine neuen Tests, numerischen Stilmetriken, Bildevidenz, zusätzlichen Module, Player-Builds oder persönlichen Abnahmen. Vorhandene historische Bildfreigaben bleiben gültig.",
+  "purpose": "Fünf tatsächlich gewählte neue 3:1-Rätselhintergründe B1/r02, F3/r02, Y1/r02, E1/r02 und R2/r02 über explizites HP-W2-Profil 2304×768 und aktuellen Editorimport übernehmen.",
+  "omitted": "Reine Bildinhaltsgruppe: kein Werkzeug-, Regel-, Spiel- oder CI-Codediff. Bildwahl, Q-HG-Sichturteile, derive/verify, Byteimport, Wiederholungspläne und geschützte Bestandswerte werden auftragsbezogen geprüft. Daher Quellen-/Plankern ohne Playerbau, Zusatzmodule, Solver-/Proof-/Ratingreplay oder Browserlauf; keine neuen rätselspezifischen Tests.",
   "test_changes": [],
   "core_change": null,
   "evidence": {
