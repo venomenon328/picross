@@ -2,11 +2,11 @@
 
 Der fünfstufige Assistent für neue Authoring-0.8.0-Produktionen verwendet
 Handoff v5, Record v4 und Projektion v2. Der aktuelle operative Regelstand ist
-**Authoring 0.8.0, Dokumentrevision 9 (PW-PERF-D)**. Normale Produktion liest den
+**Authoring 0.8.0, Dokumentrevision 10 (DOCS-696)**. Normale Produktion liest den
 Produktionseinstieg in [AGENTS](../../AGENTS.md),
 [Authoring §1.1](../../docs/production/authoring/PUZZLE_AUTHORING.md#11-pflichtquellen-nach-phase),
-den vollständigen [gemeinsamen Bildstil](../../docs/production/images/README.md) und
-nur die dort geroutete Phasendatei. Diese Anleitung, der
+die [Bildnorm-Leseregeln](../../docs/production/images/README.md) und
+die dort gerouteten Phasen- und Bildtypdateien. Diese Anleitung, der
 [PW-B-Datenvertrag](../../docs/tools/PW_B_CONTRACT.md) und die technische
 [Produktions-README](../puzzle_production/README.md) werden für die konkret
 verwendete Operation abschnittsbezogen gelesen, nicht pauschal vollständig.
@@ -26,13 +26,14 @@ Bereinigung werden nicht routinemäßig im Prompt wiederholt. PW2-C nimmt konkre
 nachgewiesene integrierte Lieferungen aus der aktiven Auswahl. Ein vollständig geeigneter qualifizierter
 Rasterkandidat genügt; weitere entstehen nach Authoring bedarfsweise nacheinander,
 ohne Budget-/Qualitätslockerung. Die drei Reveal- und drei Hintergrundoriginale
-bleiben ihre eigenen Bildauswahlen. Hintergrund bedeutet die ganze 2304×576-
-Leinwand samt Freiraum, nicht einen Zuschnitt auf sichtbare Pixel.
+bleiben ihre eigenen Bildauswahlen. Hintergrund bedeutet die ganze Leinwand des
+gebundenen [HG31-Profils](../../docs/production/PUZZLE_BACKGROUNDS.md#hg31--zwei-geschlossene-bildprofile)
+samt Freiraum; neue Produktion verwendet ausdrücklich das 3:1-Profil.
 
 Die PW-A2-Start-/Git-/Sicherheitsarchitektur bleibt erhalten; P2 ergänzt allein
 die ausdrücklich bestätigte Branchentfernung nach [PW §4.4](../../docs/tools/PRODUCTION_WORKSPACE.md#44-p2--ausdrücklich-bestätigte-produktionsentfernung).
-Bestehende WIP werden nicht konvertiert. Das frühere Offline-Sheet ist nur noch
-ein Einstieg zur Windows-App.
+Bestehende WIP werden nicht konvertiert. Das frühere Offline-Sheet ist entfallen;
+der reguläre Einstieg ist die Windows-App.
 
 „Neues Motiv“ beginnt mit einem Briefing und optional einer eigenen Datei, die
 dem Chat tatsächlich beigegeben werden muss. Zusätzliche Motivhinweise wie Blickwinkel,
@@ -68,16 +69,15 @@ damit die bisherige Git-/SSH-/Credential-Einrichtung weiterverwendet wird.
 Keine Administratorrechte nötig. [Start-/Updateanleitung](START-WINDOWS.txt),
 [versionierter Bau und Smoke](WINDOWS_BUILD.md).
 
-APP-A ergänzt den [separaten App-Releasekanal](../../docs/tools/PRODUCTION_UPDATES.md)
-mit automatischer Versionsplanung und geprüftem MSI. Erstpublikation bleibt bis
-zur gesonderten Betriebsfreigabe gesperrt; ein Actions-Dispatch ist ausschließlich
-Diagnose. APP-B1 ergänzt die signierte Updateautorität und einen gemeinsamen Offlineverifier,
-der Produktions-Truststore bleibt unprovisioniert. Beide Aktivierungsschalter und
-ein eigener Betriebsauftrag sind nötig. APP-B2 liefert den standardmäßig
-ausgeschalteten Updateclient mit einmaliger ausdrücklicher Zustimmung im nativen
-Steuerfenster und jederzeit sichtbarem Schalter. Leerer Trust bedeutet inaktiver
-Kanal; eine erste vertrauenswürdig root-provisionierte Version wird manuell
-installiert. Gitrefresh und installierte Programmversion bleiben getrennt.
+Der [separate App-Releasekanal](../../docs/tools/PRODUCTION_UPDATES.md) verbindet
+automatische Versionsplanung, MSI-Bau, signierte Updateautorität und Offlineverifier.
+Sein produktbezogener Betriebsstand folgt ausschließlich dem Updatevertrag und
+der dort gebundenen Abschlussentscheidung zu #612. Ein Actions-Dispatch ist
+Diagnose. Der installierte Updateclient benötigt weiterhin eine einmalige
+ausdrückliche Zustimmung im nativen Steuerfenster und bietet einen sichtbaren
+Schalter. Leerer Trust erlaubt keinen Updatekanal; die erste vertrauenswürdig
+root-provisionierte Version wird manuell installiert. Gitrefresh und installierte
+Programmversion bleiben getrennt.
 Nur der normale installierte GUI-Start prüft einmal nebenläufig. Bei bestehendem
 Opt-in wartet Browser/Sheet samt erstem Git-Refresh bis zur Updateentscheidung,
 bei höherem geprüftem Kandidaten auch bis zum vollständigen Download und Handoff.
@@ -255,19 +255,18 @@ Bis zu acht Listenstände bleiben pro Sitzung erreichbar; danach neu laden.
 Unterschiedliche Quellen derselben ID/Revision mit abweichenden Bytes sind
 Konflikte. Es wird keine höchste Revisionszeichenfolge gewählt.
 
-PW2-C gleicht konkrete Lieferungen samt Original-/Integrationsbindungen mit dem
-frisch bestätigten konfigurierten Remote-`main` ab. Vollständiger Export und die
-vorhandenen kompakten Abschlussbelege werden anhand begrenzter Metadaten gelesen;
-dies öffnet keine ZIPs/Bilder und führt keine Solver-/Proofprüfung aus. Regulärer
+PW2-C gleicht konkrete aktuelle Lieferungen mit dem frisch bestätigten
+konfigurierten Remote-`main` ab. Registry, Runtime und die betroffenen Livebytes
+belegen den Abschluss nach [PW2-C](../../docs/tools/PRODUCTION_WORKSPACE.md#pw2-c--aktive-lieferungen-und-bestätigter-abschluss);
+historische ZIPs, Receipts und Produktionsketten werden nicht geöffnet. Regulärer
 Merge, Squash und unveränderte Sammelübernahme werden gleich behandelt. Bestätigte
 Lieferungen, identische Kopien und eindeutig zugehörige alte Schritte verschwinden
 aus der aktiven Liste. Eine offene neue Revision oder spätere Bildarbeit derselben
-ID bleibt sichtbar. Unklare Zuordnung wird nicht als Abschluss geraten. Aktive Reveal-v4- und
-Hintergrund-v6-Quellen werden rein lesend gegen Originalexport/Receipt und Runtime
-abgeglichen; O/R bleiben verschieden. Exakte Quellmetadaten am gebundenen
-Integrationscommit erlauben alte Branchkopien, kein beliebiger gemeinsamer
-Exportanker. Mehr als 32 Abschlüsse werden vollständig verarbeitet; identische
-Lieferbelege werden dedupliziert, konkrete Originalquellen einzeln geprüft.
+ID bleibt sichtbar. Unklare Zuordnung wird nicht als Abschluss geraten. Die
+aktuellen kompakten Bildquellen binden Identität und Livebytes. Frühere Phasen
+werden über unveränderte Record-/Projektionsbytes am bestätigten Integrationscommit
+zugeordnet. Mehr als 32 Abschlüsse werden vollständig verarbeitet; identische
+Lieferbindungen werden dedupliziert.
 Fehlende Belege erscheinen konkret als Fehler und halten betroffene Arbeit offen.
 
 Eine lokale Mainkopie, Cachezeit oder erfolgreiche Suche nur anderer Refs bestätigt
@@ -463,20 +462,19 @@ maßgeblich. Daraus entstehen keine neuen PW2-A-Browser-/Bildprüfpflichten.
 
 ## PW-PERF-C · aufrufgebundene Prüfung und Hintergrund v2
 
-Die geschlossenen HP-W2-v1/v2-Formen und das unveränderte PNG2304-Profil stehen
-in [Hintergrund §4](../../docs/production/PUZZLE_BACKGROUNDS.md#4-hp-w2-eigenständige-datei--und-ableitungsschnittstelle).
+Die geschlossenen HP-W2-v1/v2-Formen stehen in
+[Hintergrund §4](../../docs/production/PUZZLE_BACKGROUNDS.md#4-hp-w2-eigenständige-datei--und-ableitungsschnittstelle),
+die beiden technischen Profile unter HG31.
 Neue Ableitungen verwenden Request/Befund v2 und Tool `picross-background-2`;
 Git-`producer` bleibt getrennt vom Bildkern aus `background_render.py` und
 `image_normalization.py`. Alle Consumer prüfen v1 und v2 generationsgenau;
 keine Neusiegelung alter Originale oder Erweiterung von #645.
 
-Export v6 prüft Original und tatsächliches Staging jeweils vollständig. Zwischen
-beiden ersetzt ausschließlich der eigene unveränderte, byte-/pfadgebundene
-Aufrufkontext die redundante volle Pending-Inspektion. Ein geschlossener Vergleich
-der geschriebenen Pending-Dateimenge samt Bytes/Manifest und frischen Identitäten
-bleibt Pflicht. Inspection, Hashliste, Methoden, Freigaben, Notices, Kategorien und
-vollständige Readbacks bleiben gebunden. Vor Publikation werden Quellen und Ziel
-frisch geprüft. Separates verify-export beginnt immer eine vollständige Prüfung.
+Aktuelle Export-, Publikations- und Wiederholungsprüfung folgen ausschließlich
+[RI](../../docs/production/PUZZLE_INTEGRATION.md) und dem
+[ZA-1-Eingang](../../docs/production/ZA1_ADAPTER.md). Ein eigener unveränderter
+Aufrufkontext gilt nur innerhalb seines vollständig geprüften Aufrufs;
+separate Prüfungen beginnen frisch. Die frühere Export-v6-Strecke ist abgelöst.
 
 Der Finalizer darf zwei Projektionen aus einem vollständig geprüften gemeinsamen
 Paket-/Record-/Quellkontext ableiten. Nur ein geschlossenes Delta der bereits

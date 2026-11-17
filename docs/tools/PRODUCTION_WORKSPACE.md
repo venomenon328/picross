@@ -523,7 +523,7 @@ fixiertem erreichbarem Quellencommit, einem kanonischen Recordpfad als Einstieg
 und tatsächlichen Auswahl-IDs. Daraus erreichbare Parameter, Briefings, Hashes,
 Paket-/Projektionspfade und allgemeine Regeln werden nicht in Folgeaufträge kopiert.
 Ein kurzer verbindlicher Verweis auf AGENTS und Authoring 0.8.0 genügt; er aktiviert
-die phasenbezogene Quellenroute einschließlich des gemeinsamen Bildstils, nicht
+die phasenbezogene Quellenroute einschließlich der zugeordneten Bildtypnormen, nicht
 die Volllektüre aller Fachhandbücher. Nur neue Absicht, Freigabe, Änderung oder
 Aufhebung sowie persönliche Befugnisse ergänzen.
 Ein neuer Erstauftrag enthält dagegen Motiv, Hinweise, Referenz und frühe Wünsche.

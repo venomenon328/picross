@@ -21,6 +21,16 @@ Stand: 17.11.2026 · [#696](https://github.com/venomenon328/picross/issues/696)
 - Stilregeln nur in der zuständigen Bildtypdatei ändern. Andere Quellen verweisen auf diese Regel; sie führen keine zweite Formulierung derselben Norm.
 - UI-Titelgrafiken gehören zur Spielgestaltung. Ihre Produktion und Abnahme folgen dem jeweiligen Entwicklungsauftrag; TITLES ist keine zusätzliche Pflichtquelle oder Snapshotdatei der fünf Rätselphasen.
 
+Weitere Bilddarstellungen besitzen eigene Zuständigkeiten außerhalb der kreativen
+Rätselproduktion:
+
+| Gegenstand | Zuständige Quelle und Abgrenzung |
+| --- | --- |
+| Buchflächen und Kategoriezeichnungen | [Buchintegration](../../game/BOOK_INTEGRATION.md), [Zeichenstil](../../game/UI_DRAWING_STYLE.md) und [Ressourcenbindung](../../game/Z2_SELECTION.md); Herkunft im [Designindex](../../design/README.md). Keine Anwendung des neuen Kontextbildformats auf bestehende Kategoriezeichnungen. |
+| UI-Schrift, Rahmen und Piktogramme | [HAND_DRAWN_UI](../../game/HAND_DRAWN_UI.md); Hinweisziffern nach [CLUE_TYPOGRAPHY](../../game/CLUE_TYPOGRAPHY.md). Keine generativen Abschlussbilder. |
+| Zelltexturen, Sprites und Atlanten | [CELL_RENDERING](../../game/CELL_RENDERING.md) und [Zeichenstil](../../game/UI_DRAWING_STYLE.md); technische Spielressourcen ohne eigene Bildfreigabe im Authoring. |
+| Raster-, Katalog- und Prüfansichten | Ableitungen des jeweils gebundenen Rasters beziehungsweise Originalbilds nach [Qualität](../PUZZLE_QUALITY.md) und [Katalogdarstellung](../../game/CATALOG_PRESENTATION.md). Eine Ansicht ersetzt weder Lösungszellen noch freigegebene Originalbytes. |
+
 ## IMG-02 Normwörter
 
 | Wort | Bedeutung |

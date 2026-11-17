@@ -257,10 +257,13 @@ relativen Pfaden. ZIP-Entpacken, `StoredRef`-Paketauflösung oder Beschaffen
 fehlender Dateien gehören nicht zu diesem Werkzeug.
 
 `derive` prüft die vollständigen Formen und die tatsächlich benötigten
-Referenzen frisch. Nur das gewählte Original wird dekodiert und nach
-`picross-background-png2304-v1` proportional auf 2304×576 RGBA/sRGB eingepasst,
-mit gemeinsamem unteren mittigen Anker, vormultipliziertem Lanczos und
-transparentem Rest. Keine individuellen Crop-/Masken-/Positionsparameter.
+Referenzen frisch. Nur das gewählte Original wird dekodiert. Das ausdrücklich
+gewählte Profil aus [HG31](../../docs/production/PUZZLE_BACKGROUNDS.md#hg31--zwei-geschlossene-bildprofile)
+bestimmt Ausgabegröße und Fit: neue 3:1-Arbeit verwendet
+`picross-background-png2304x768-v1` mit exakter vollständiger Skalierung;
+das alte Profil behält seinen proportionalen Contain-Fit. Gemeinsamer unterer
+mittiger Anker, vormultipliziertes Lanczos und unveränderte Originale bleiben.
+Keine individuellen Crop-/Masken-/Positionsparameter.
 Im neuen Ausgabeordner entstehen ausschließlich `derivation.json` und bei
 `selected` `background.png`. Gültiges `none` erzeugt nur den Befund; ein früher
 Verzicht auf die Kandidatenproduktion braucht zusätzlich den tatsächlichen
@@ -945,11 +948,13 @@ werden nicht angewendet. Ressourcenende ist `aborted`, kein starker Fixpunkt.
 `import-image` erhält dieselbe ausdrückliche `--profile`-Auswahl und Paarbudgets.
 Es schreibt Manifest v2 mit `certification` und je Variante Baseline/Assessment.
 Reparaturen binden diese Konfiguration im [Plan v2](../../examples/rp5/README.md).
-Handoff-v2 bindet sie in `candidate.certification`; mindestens Regelwerk 0.5.0,
-bei neuer Produktion 0.6.0 mit seinem zusätzlichen v5-Palettengate ist Pflicht.
+Die aktuelle kreative Handoffbindung und alle Phasengates stehen in
+[PW-B](../../docs/tools/PW_B_CONTRACT.md) und
+[Authoring Schritt 3](../../docs/production/authoring/PUZZLE_AUTHORING_STEP_3.md).
 Alte Import-/Reparaturmanifeste und Authoring 0.4.x legitimieren keine Paarproofs.
-Die 0.5.0-ZA-1-Exporte verwenden v4, damalige Linienfälle v2/v3;
-0.6.0 verwendet für alle diese Wege ausschließlich v5.
+Historische Handoff-v2- und Export-v4/v5-Hüllen behalten ihre Originalbedeutung
+nach dem [Paarlinienvertrag](../../docs/production/PAIRED_LINES.md#konkrete-produktionsbindungen-und-historische-hüllen);
+sie sind kein aktueller Integrationseingang.
 
 `assess` prüft die übergebenen gespeicherten Proofs frisch. Optionales
 `--diagnosis <A-Verzeichnis>` ergänzt den unveränderten A-Dateicheck, ohne eine
@@ -960,15 +965,13 @@ Notwendigkeitsbeleg. Difficulty 0.2 meldet R4/L5 nur bei geprüfter Linienbaseli
 `stalled` und vollständigem Paarproof derselben Logik. Umfang, Zeit und
 redaktionelle Freigabe bleiben eigene Angaben; kein vollständiger R0–R3-Analysator.
 
-ZA-1 ergänzt mit `picross-manual-authorization-v6` die ausdrücklich angenommene
-monochrome Pixelvorlage aus einem versiegelten manuellen Neuentwurf. Die separate
-Eigentümererklärung bindet Originalpaket, Motivannahme, Parameter und Endabnahme;
-eine eng geprüfte Präfixbindung erhält historische Revealfreigabe und Provenienz.
-Der vollständige RP-3-Pixelimport wird frisch unabhängig zertifiziert, ohne alte
-Gates oder Dateien umzuschreiben. V1–v5, Randregel und Inhaltsgates bleiben erhalten.
-Schema und Grenzen stehen in [ZA-1](../../docs/production/ZA1_ADAPTER.md); CLI weiterhin
-`--manual-authorization`, Export v3/v4. Synthetische Regressionen prüfen diesen
-Weg; reale Rätsel bleiben reine Produktionsinputs.
+Die kreative Annahme monochromer Pixelvorlagen behält ihre tatsächlichen
+Motiv-/Parameterentscheidungen und unabhängigen RP-3-Nachweise.
+Historische Autorisierungs-v6-/Export-v3/v4-Bindungen sind am
+[ursprünglichen ZA-1-Vertrag](https://github.com/venomenon328/picross/blob/6fe91a08a4d073547df43c6aebbe8ead4c45ae0f/docs/ZA1_ADAPTER.md)
+nachschlagbar. Die aktuelle Katalogintegration verwendet ausschließlich den
+[RI-ONE-Eingang](#ri-one-aktuelle-integration); dort gibt es keine Zulassung
+über alte Exportnummern oder `--manual-authorization`.
 
 ## Instrumentierte Einzelanalyse (SD-A) und feste Bewertung (SD-B)
 
@@ -1642,8 +1645,9 @@ regulären Buch. Die bestehende `game/data/background-capability.json` darf erst
 mit diesem funktionierenden und technisch abgenommenen Weg true sein. Die
 einmalige unabhängige Renderer-/Gestaltungsabnahme steht am konkreten Produkt-
 Head; sie ist keine zusätzliche persönliche Buchabnahme pro produzierter Datei.
-Authoring-/Sheetdefault bleibt 0.6.0, der gesonderte 0.7.0-Weg opt-in. Kein
-Capabilityflag ersetzt den vollständigen Einzelwegabgleich in #560.
+Neue Produktion folgt der aktuellen [Authoringroute](../../docs/production/authoring/PUZZLE_AUTHORING.md).
+0.6-/0.7-Paketformen behalten ausschließlich ihre bezeichnete Lesegeneration.
+Der historische Aktivierungsabgleich aus #560 ist kein neuer Default- oder Betriebsauftrag.
 
 ### Regulärer Import- und Exportweg
 
@@ -1673,7 +1677,7 @@ Der interne Helfer `tools/background_import.py` trennt vier Aufgaben:
 | `verify_import(project, inventory)` | Prüft nach Godot tatsächliche Sidecars, Profilwerte, Importremap und `.ctex`-Header sowie getrennte Importbytes/-hashes. Dekodierte Pixel und vollständige Mipmaps benötigen die gesonderte tatsächliche PCK-Probe. |
 | `restore_sources(root, project, inventory=None)` | Stellt vor regulärem Export die wirklichen aktiven Hintergrundressourcen passend zum tatsächlichen Katalog wieder her und entfernt synthetische Dateien samt eigenen Importresten aus der isolierten Kopie. |
 
-Das feste Profil erhält 2304×576 RGBA und verwendet verlustfreie Kompression
+Das gebundene HG31-Profil bestimmt Maße und Pixelmodus; der Import verwendet verlustfreie Kompression
 (`compress/mode=0`), generierte Mipmaps (`mipmaps/generate=true`), keine Alpha-
 Randkorrektur/Premultiplikation, keine Größenbegrenzung und keine 3D-Erkennung.
 Der Renderer verwendet passende Mipmapfilterung. Native und Web verwenden

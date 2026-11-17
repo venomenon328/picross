@@ -41,7 +41,7 @@
       "reason": "Bestehenden Installer-Vertragsabgleich auf den verschobenen PE-Fachvertrag richten; keine neue Testfamilie."
     }
   ],
-  "core_change": null,
+  "core_change": "Der bestehende Dokumentvalidator bindet seine beiden verschobenen Pflichtdateien am neuen Projektpfad. Keine zusätzlichen Prüfschritte, kein neuer Kerntest und keine Änderung der CI-Auswahl oder des Ergebnisgates.",
   "evidence": {
     "mode": "none",
     "purpose": null,
