@@ -26,6 +26,14 @@ class Deliveries:
         record=job["_record"]
         require(record.get("state")=="registered" and not job.get("_current_invalid"),
                 "Current work remains open")
+        from tools.puzzle_production import current_authoring
+        if record.get('format') == current_authoring.FORMAT:
+            current_authoring.validate(record)
+            integration=record.get('integration')
+            require(integration is not None,'Current completion missing')
+            current_authoring.matches(record,integration['result'])
+            require(current.same(integration['result'],self.main_results[identifier]),'Main contains another current delivery')
+            return True
         observed=self.result(job["_source"],job["commit"],identifier)
         require(current.same(observed,self.main_results[identifier]),"Main contains another current delivery")
         integration=record.get("integration")

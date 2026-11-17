@@ -415,6 +415,19 @@ class Repository:
                     continue
                 file = row['record'].rsplit('/', 1)[0] + '/workspace.json'
                 try:
+                    from tools.puzzle_production import current_authoring
+                    record_raw = source.read(commit, row['record'], JSON_LIMIT)
+                    record = p.parse(record_raw)
+                    if record.get('format') == current_authoring.FORMAT:
+                        projection = current_authoring.projection(record, record_raw)
+                        ap.require(row['record'] == current_authoring.path(row['puzzle_id']), 'Noncanonical current job')
+                        from .motifs import PHASES
+                        jobs.append({'puzzle_id': row['puzzle_id'], 'revision': 'current', 'title': record['title'],
+                                     'file': row['record'], 'status': 'Bilder noch nicht geprüft', '_projection': projection,
+                                     'phase': PHASES.get(record['state'],record['state']), '_record': record,
+                                     '_fingerprint': io.checksum(p.data(projection)+record_raw),
+                                     'current_view': True, 'current_error': None, '_current_invalid': False})
+                        continue
                     raw = source.read(commit, file, JSON_LIMIT, missing=True)
                     if raw is None:
                         continue
@@ -434,7 +447,7 @@ class Repository:
                     errors.append('Ungültige Projektion für ' + row['puzzle_id'] + '/' + row['revision'] + ': ' + str(exc))
         from . import current_view
         pointer_read_error = False
-        for identity in {j['puzzle_id'] for j in jobs}:
+        for identity in {j['puzzle_id'] for j in jobs if j['_record'].get('format') != 'picross-authoring-current-v1'}:
             current, message = None, None
             current_invalid = False
             try:
@@ -486,7 +499,7 @@ class Repository:
                     value = self.scan(source, commit, None if branch == 'main' else branch.rsplit('/', 1)[1])
                     errors.extend(value['errors'])
                     for job in value['jobs']:
-                        identity = (job['puzzle_id'], job['revision'])
+                        identity = (job['puzzle_id'], job['revision'], branch if job['_record'].get('format') == 'picross-authoring-current-v1' else None)
                         fingerprint = job.pop('_fingerprint')
                         entry = {**job, 'binding': fingerprint, 'commit': commit, 'source': origin, 'ref': branch, '_source': source}
                         if identity in bindings and bindings[identity] != fingerprint:
@@ -517,11 +530,11 @@ class Repository:
         # only remaining, deliberately open version of the same revision.
         active_bindings = {}
         for job in jobs:
-            identity = (job['puzzle_id'], job['revision'])
+            identity = (job['puzzle_id'], job['revision'], job['ref'] if job['_record'].get('format') == 'picross-authoring-current-v1' else None)
             active_bindings.setdefault(identity, set()).add(job['binding'])
         for job in jobs:
             job.pop('conflict', None)
-            if len(active_bindings[(job['puzzle_id'], job['revision'])]) > 1:
+            if len(active_bindings[(job['puzzle_id'], job['revision'], job['ref'] if job['_record'].get('format') == 'picross-authoring-current-v1' else None)]) > 1:
                 job['conflict'] = True
         from .motifs import Relations
         history = Relations(self)

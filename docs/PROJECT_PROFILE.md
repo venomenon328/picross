@@ -27,8 +27,8 @@ Abschnitte werden zur Pflichtlektüre.
 | Produktanforderungen und reguläre Größen | [PRODUCT_DEFINITION](project/PRODUCT_DEFINITION.md); technische Entwicklungsbindung ist keine abschließende Veröffentlichungspolitik |
 | Runtime-Inhalt | Ausschließlich aktuelle registrierte Daten; Inhaltsautorität und Runtimeprojektion nach [RI-ONE](production/PUZZLE_INTEGRATION_SINGLE_PATH.md) |
 | App-/Saveidentität | `picross · P1`, Save-Schema 1, `user://p1/saves/`; vollständige Validierung vor Normalisierung nach [P1](game/PROTOTYPE_P1.md) |
-| Arbeitsproduktion | `content/authoring/`, aktive Pakete `content/packages/`; Abschluss nach [Authoring Schritt 5 §9](production/authoring/PUZZLE_AUTHORING_STEP_5.md#9-produktionsabschluss-und-bereinigung) |
-| Neue kreative Produktion | Phasenbezogene Bildregeln und aktuelle Version/Dokumentrevision in [Authoring](production/authoring/PUZZLE_AUTHORING.md), technische Snapshotformen in [PW-B](tools/PW_B_CONTRACT.md) |
+| Arbeitsproduktion | Ein aktueller Job unter `content/authoring/` plus benötigte Nutzdaten; Abschluss nach [Authoring Schritt 5 §9](production/authoring/PUZZLE_AUTHORING_STEP_5.md#9-produktionsabschluss-und-bereinigung) |
+| Neue kreative Produktion | Phasenbezogene Bildregeln und aktuelle Version/Dokumentrevision in [Authoring](production/authoring/PUZZLE_AUTHORING.md), technische aktuelle Form in [PW-B](tools/PW_B_CONTRACT.md) |
 | Bild-/Rasterintegration und Pflege | [RI-ONE](production/PUZZLE_INTEGRATION_SINGLE_PATH.md), [ZA-1](production/ZA1_ADAPTER.md), [Bestandseditor](tools/PUZZLE_EDITOR.md) |
 | Hintergrundprofile | Ausschließlich [PUZZLE_BACKGROUNDS](production/PUZZLE_BACKGROUNDS.md#hg31--zwei-geschlossene-bildprofile); keine automatische Konversion aktiver Bilder |
 | Schwierigkeit | [SD2-Integration](difficulty/SD2_INTEGRATION.md) und aktive Methodendatei; keine Katalogbestandszahl in diesem Profil |

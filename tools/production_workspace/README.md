@@ -1,8 +1,9 @@
 # Lokaler Produktionsassistent (PW-B)
 
 Der fünfstufige Assistent für neue Authoring-0.8.0-Produktionen verwendet
-Handoff v5, Record v4 und Projektion v2. Der aktuelle operative Regelstand ist
-**Authoring 0.8.0, Dokumentrevision 10 (DOCS-696)**. Normale Produktion liest den
+genau einen aktuellen Record nach PROD-SLIM und daraus abgeleitete Ansichten.
+Der aktuelle operative Regelstand ist **Authoring 0.8.0, Dokumentrevision 10**;
+der aktuelle Datenvertrag steht in PW-B. Normale Produktion liest den
 Produktionseinstieg in [AGENTS](../../AGENTS.md),
 [Authoring §1.1](../../docs/production/authoring/PUZZLE_AUTHORING.md#11-pflichtquellen-nach-phase),
 die [Bildnorm-Leseregeln](../../docs/production/images/README.md) und
@@ -20,7 +21,7 @@ kopieren“ erzeugt einen gemeinsamen Schlussauftrag; erst sein Absenden erklär
 die Freigabe. Bedingter Squash-Merge nach unabhängigem Review und aktuellen Gates
 ist ohne gespeicherte Einstellung der Standard; ein ausdrückliches Nein bleibt
 als Draft-Auftrag erhalten. Korrektur/Wiederaufnahme erklären keine neue Endabnahme
-oder Mergefreigabe. Vollständige geprüfte Übergabe-/Recorddaten bleiben unten
+oder Mergefreigabe. Der geprüfte aktuelle Record bleibt unten
 aufklappbar und kopierbar. Quellenwerte, Regeln und nicht beauftragte lokale
 Bereinigung werden nicht routinemäßig im Prompt wiederholt. PW2-C nimmt konkret
 nachgewiesene integrierte Lieferungen aus der aktiven Auswahl. Ein vollständig geeigneter qualifizierter

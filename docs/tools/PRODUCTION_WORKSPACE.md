@@ -95,15 +95,12 @@ Ein importierter Erfolgsstatus oder eine geprüfte Dateiprüfsumme ist keine
 frische Logikprüfung, keine Rechteklärung und keine menschliche Abnahme.
 
 Beim Wiederöffnen zeigt die Detailansicht die tatsächlich veröffentlichten
-Rasterwünsche und den als freigegeben überlieferten Korridor getrennt. Quelle
-ist der gebundene Handoff; der Record muss dessen bestehender Parameterprojektion
-entsprechen. Ein Statuswort beweist keine menschliche Freigabe. Eindeutig
+Rasterwünsche und den als freigegeben überlieferten Korridor getrennt. Quelle ist ausschließlich der aktuelle Record nach PW-B. Ein Statuswort beweist keine menschliche Freigabe. Eindeutig
 abbildbare Einzelwünsche belegen die Rasterfelder vor, andere Formen und mehrere
 Optionen bleiben vollständig lesbar. Fehlende strukturierte Einzelwerte sagen
 nichts über freie Wünsche im Motivbriefing aus. Vollständige Parameteroriginale und veröffentlichtes
 Motivbriefing sind beim Öffnen, Wiederladen und Motiv-/Revisionswechsel geschlossen;
-Zusammenfassung, Quellenstatus und Fehler bleiben davor sichtbar. Das inventarisierte `handoff.brief` wird aus demselben
-geprüften Originalpaket als UTF-8-Klartext mit Absätzen gelesen (höchstens 1 MiB).
+Zusammenfassung, Quellenstatus und Fehler bleiben davor sichtbar. Das aktuelle Briefing steht direkt im geprüften Record.
 Fehlende oder widersprüchliche Originale sind Fehler.
 
 Veröffentlichte Stände haben genau einen Haupteintrag je Rätsel-ID und eine
@@ -190,8 +187,7 @@ vorhandenen gebundenen Stand weiter anzeigen, aber Alter und Fehler klar nennen.
 
 ### 4.3 Konsistenz
 
-Vor einer Anzeige jeden Ref in eine volle Commit-SHA auflösen. Index, Records,
-Paket, Projektion und Bilder werden innerhalb dieser Ansicht ausschließlich aus
+Vor einer Anzeige jeden Ref in eine volle Commit-SHA auflösen. Index, aktueller Record, abgeleitete Ansicht und Bilder werden innerhalb dieser Ansicht ausschließlich aus
 diesem Snapshot oder aus ausdrücklich darin gebundenen historischen Commits
 gelesen. Keine Mischung aus `main` von eben und einem Bild vom späteren Head.
 
@@ -341,135 +337,26 @@ hat einen isolierten erfolgreichen Main-CI-Folgetrigger und diagnostischen
 Opt-in-Updater gemäß Updatevertrag; kein dauerhafter Dienst. Das App-Image und der Installer sind ohne Zertifikatauftrag unsigniert;
 Lizenzen und mögliche SmartScreenhinweise gehören zur Lieferung.
 
-## 5. Warum eine veröffentlichte Ansichtsprojektion nötig ist
+## 5. Direkt abgeleitete aktuelle Ansicht
 
-Der aktuelle [Builder](../../tools/puzzle_production/authoring_builder.py) erzeugt
-`record`, Handoff und Paket; seine `sheet_from_record`-Projektion setzt die
-Rasteroptionsliste zunächst auf `[]`. Die gemeinsame Angebotsliste wird nach
-[Authoring §7](../production/authoring/PUZZLE_AUTHORING.md) bislang in der Chatübergabe
-geführt. Ein Repositoryreader darf diese nicht aus allen gefundenen PNGs oder
-der lexikografisch letzten Paketrevision erraten.
+Neue Jobs besitzen genau einen aktuellen Record nach [PW-B](PW_B_CONTRACT.md).
+Der gemeinsame Index verweist darauf; kein persistiertes workspace.json oder
+current-view.json ist erforderlich. Liste, Bilder, Angebots-IDs, tatsächliche
+Auswahl, Briefing, Parameter und Folgeauftrag werden am selben fixierten Gitstand
+daraus abgeleitet. Die Bedienung bleibt unverändert. Ein aktuelles Rasterpreview
+bei reiner Hintergrundpflege wird aus der aktiven Definition nur für den Abruf
+gerendert; keine neue Produktionsdatei oder Bildkopie.
 
-Für neue, mit PW veröffentlichte Arbeitsstände kommt deshalb eine kompakte
-**`workspace.json`-Ansichtsprojektion** neben den zuständigen `record.json`.
-Sie enthält keine neuen Proofs oder Freigaben und ersetzt kein Originalpaket.
-Sie macht die tatsächlich angebotenen Optionen und ihre Bildbezüge maschinen-
-lesbar im Repository verfügbar. Fachliche Werte müssen zu den referenzierten
-Originalrecords, Handoffs, Inventaren und Entscheidungen passen; bei Konflikten
-wird die Projektion abgewiesen, nicht zur neuen Wahrheit erklärt.
+## 6. Geschlossener Sichtvertrag
 
-Der Produktionsakteur lässt sie automatisch aus seinem vorhandenen Arbeitsstand
-erzeugen und sichert sie mit den zugehörigen Quellen in demselben
-Phasen-Sicherungscommit. Kein zusätzlicher manueller Benutzerschritt. Ein
-veröffentlichtes Bild-/Rasterangebot ohne erreichbare Originale und gültige
-Projektion ist für den neuen Assistenten nicht vollständig übergeben.
-
-PW-A liefert dafür einen kleinen Projektor mit API/CLI neben dem bestehenden
-Paketbau. Er schreibt ausschließlich eine neue, geprüfte `workspace.json` in die
-zugehörige lokale Arbeitsrevision. Ein identischer Wiederholungsaufruf ist No-op;
-abweichende bereits veröffentlichte Bytes werden nicht überschrieben. Record,
-Handoff, ZIP, Entscheidungen, Index und Spielkatalog bleiben unverändert.
-Die normale beauftragte Git-Sicherung bleibt Aufgabe des Produktionsakteurs.
-Vor Publikation die gebundenen Quellbytes erneut vergleichen; bei zwischen-
-zeitlicher Änderung keine scheinbar passende Projektion veröffentlichen.
-
-PW3-B teilt ausschließlich innerhalb eines Projektor-/Detailprüfaufrufs bereits
-gelesene Quell- und ZIP-Mitgliedbytes sowie geprüfte Recordmetadaten und
-Bilddekodierbefunde. Der gemeinsame Bytevorrat ist auf 64 MiB/512 Einträge
-begrenzt; Verdrängung führt zum gewöhnlichen vollständigen Lesen. ZIPs werden
-weiter einzeln geöffnet und geschlossen, ihre Namespaces und CRCs vollständig
-geprüft. Jede Referenz behält ihre eigene Hash-/Größen-, Index-, Rollen- und
-Angebotsprüfung. Vor Rückgabe einer lokalen Detailprüfung und an den bisherigen
-Projektor-Publikations-/No-op-Grenzen werden alle ursprünglichen Quellbytes
-frisch gelesen und verglichen, einschließlich Dateiidentität und Pfadschutz.
-Danach und bei Fehler/Abbruch endet der Vorrat. Ein unabhängiger Detail-/Bildabruf
-beginnt ohne diesen Kontext. Keine gespeicherte Prüfautorität, keine Übernahme
-von Adapter-/Proof-/HP-W2-Ergebnissen und keine Zusammenlegung verschiedener
-Finalizerzustände oder Export-/Offlineprüfgrenzen.
-
-PW-B integriert diesen Aufruf verbindlich in jede fällige Übergabe des neuen
-Produktionswegs. Die bisherigen Chat-Sheet-Daten können als Diagnose entfallen;
-der Nutzer muss sie nicht mehr in eine zweite Datenhaltung kopieren.
-
-## 6. Geschlossener Sichtvertrag für PW-A
-
-### 6.1 Datenform
-
-`picross-production-presentation-v1` enthält genau:
-
-| Feld | Bedeutung |
-| --- | --- |
-| `format` | Exakt `picross-production-presentation-v1` |
-| `puzzle_id`, `revision` | Bestehende gültige Authoring-ID und Revision des äußeren Arbeitsrecords |
-| `record` | Bytebindung des zugehörigen äußeren Records gemäß untenstehendem Referenztyp |
-| `title` | Kurzer redaktioneller Anzeigename; keine neue Namensautorität für das Spiel |
-| `assets` | Liste tatsächlich verfügbarer Betrachtungsdateien |
-| `offers` | Liste der in dieser Lieferung tatsächlich angebotenen Auswahlmöglichkeiten |
-
-Eine Dateireferenz enthält genau `commit,file,sha256,bytes`.
-`commit=null` bedeutet den vom Reader bereits fixierten Publikationssnapshot;
-eine volle SHA bezeichnet eine explizite historische Quelle im selben
-Repository. `file` ist ein sicherer repositoryrelativer Pfad; SHA-256 und
-Bytezahl werden aus den tatsächlichen Bytes bestimmt. Es wird kein zukünftiger
-Sicherungscommit in die Datei hineingeschrieben: dadurch keine Commit-Selbstreferenz.
-Der äußere `record` liegt an der kanonischen ID-/Revisionsposition des Index.
-
-Jedes Asset enthält genau `id,role,caption,location`.
-`role` ist `reveal`, `motif`, `raster`, `raster_draft` oder `background`.
-`location` enthält genau `commit,storage,container,file,sha256,bytes`:
-
-- `storage=repository`: `container=null`, `file` ist der gebundene relative
-  Dateipfad im erlaubten Produktionsbaum.
-- `storage=package`: `container` ist genau `{file,sha256,bytes}` für das
-  Original-ZIP im Repository; `file` bezeichnet dessen sicheren Mitgliedspfad.
-  Beide liegen im durch `location.commit` bestimmten Snapshot.
-
-Jedes Angebot enthält genau `id,kind,label,record,asset_ids`.
-`kind` ist `reveal`, `raster` oder `background`; `record` bindet die dafür
-zuständige echte Revision derselben Rätsel-ID. `asset_ids` verweist auf die
-passenden Assets dieser Projektion. IDs sind je Liste eindeutig und folgen
-den vorhandenen Options-ID-Grenzen. Kein verstecktes `approved=true`, keine
-Auswahl aus der Listenreihenfolge, keine freien URLs oder absoluten Pfade.
-
-`title`, `caption` und `label` sind nichtleere Klartexte mit höchstens 512 Zeichen.
-Höchstens 100 Assets und 20 Angebote je Projektion; der eigentliche Dreier-
-Hintergrundauftrag wird dadurch nicht erweitert. Die Projektionsdatei bleibt
-höchstens 1 MiB. Diese Grenzen schützen den lokalen Leser, sind keine Grenzen
-für CI-Artefakte oder eine erzwungene Produktionsausbeute.
-
-### 6.2 Ableitung und Prüfung
-
-Projektor und Reader prüfen ID/Revision, geschlossene Formen, referenzierte
-Dateien und tatsächliche Hashes. Das Paket muss dem Record entsprechen; äußere
-Handoffkopie und Inventarbindung müssen stimmen. Assetrollen werden mit den
-jeweiligen Originalbezügen abgeglichen: Revealangebote/-auswahl, Motivbezug,
-konkreter Rasterkandidat und dessen inventarisierte Ansicht beziehungsweise
-Hintergrundmanifest samt Kandidatenrevision. Eine fremde PNG mit passendem
-Namen ist keine passende Option.
-
-Rasterangebote binden jeweils ihre eigene Revision, den tatsächlichen
-Handoffkandidaten und eine passende vollständige vorhandene Inhaltsprüfung;
-`raster_ready` mit offener Hintergrundarbeit ist dabei zulässig. Ein
-`raster_draft` kann betrachtet werden, gehört aber nicht in ein freigabefähiges
-Rasterangebot. Die Anzeige benennt den fachlichen Zustand als überlieferten
-Produktionsbefund. Der Reader führt keine neue Solver-/Proof-/Difficultyprüfung
-und erteilt kein eigenes Inhaltszertifikat.
-
-Die Angebotsmitgliedschaft und kurze Beschriftung liefert der Produktionsakteur
-aus der tatsächlich erstellten Auswahlvorlage. Der Projektor übernimmt keine
-ungeprüften Hashangaben und erfindet keine Angebote durch Verzeichnissuche.
-Vor dem Implementieren die Requestschema-Datei für den Projektor aus exakt diesen
-Eingaben ableiten; sie darf nur Identitäten/Beschriftungen und vorhandene
-Quellreferenzen transportieren, keine Erfolgs- oder Freigabeoverrides.
-
-Der Index bleibt der vorhandene `content/authoring/index.json`. Der Reader sucht
-neben dessen kanonischen Records nach `workspace.json`; fehlende Projektionen
-sind nicht für PW veröffentlicht und werden nicht automatisch konvertiert.
-Es gibt keinen Scan aller Bilder im Repository. PW-A wird an neu erzeugten
-synthetischen heutigen Handoff-v3-/Record-v2-Paketen geprüft. Das ist die
-Wiederverwendung vorhandener Formen, kein Auftrag, den bestehenden WIP-Bestand
-lesbar zu machen. PW-B bindet den neuen Authoringstand ausdrücklich an die
-angepassten Fachleser.
+Der Reader vergleicht die ganze abgeleitete Ansicht mit dem kanonischen aktuellen
+Record und den tatsächlichen aktiven Datei-/Inhaltsbindungen. Fremde Angebote,
+vertauschte Bilder und stale Auswahl scheitern. Technische Detailprüfung ist
+keine neue kreative Entscheidung und führt im HTTP-Lesepfad keinen Solver aus.
+Der geschlossene persistente Vertrag und die Limits stehen ausschließlich in
+[PW-B](PW_B_CONTRACT.md); die vorhandene transiente Präsentationshülle bleibt
+für die UI erhalten. Historische workspace-/Pointerformen werden ausdrücklich
+als alte Formen erkannt und niemals still als aktuelle Daten etikettiert.
 
 ## 7. Lokale Auslieferung und Schutzgrenzen
 
@@ -557,8 +444,7 @@ eine frühere gespeicherte Bereinigungsoption hat keine Wirkung. Der separate
 fachliche Produktionsabschluss nach Authoring §9 bleibt unverändert. Bei neuem Job muss dessen Motivbriefing im kopierten Erstauftrag stehen;
 noch nicht vorhandene Repositorydaten werden nicht als existent behauptet.
 
-Die normalen beauftragten Produktionsakteure committen/pushen Index, Record,
-Projektion und Originale an den fälligen Übergängen. Merge bleibt entsprechend
+Die normalen beauftragten Produktionsakteure committen/pushen Index, aktuellen Record und benötigte Nutzdateien an den fälligen Übergängen. Merge bleibt entsprechend
 dem tatsächlichen Auftrag getrennt. Nach vollständiger Mainintegration gilt
 Authoring §9. Der Assistent zeigt danach den bestätigten Abschluss und gültige
 Runtime-/Belegbezüge, keine defekten Links auf entfernte Zwischenbilder.
@@ -581,17 +467,11 @@ Mergefreigabe. Vorhandene passende Endabnahmen werden nicht erneut erklärt.
 Unveränderte Quellenwerte und allgemeine Regeln werden nicht im Prompt wiederholt;
 Auftrag, feste Recordquelle, neue Absichten und persönliche Arbeitswurzel bleiben.
 
-Die interne lesende Detailantwort ergänzt `facts.metadata` aus den vorhandenen
-Recordfeldern `width,height,mode,used_colors,difficulty`, `facts.originals` mit
-vollständigem geprüftem `record,handoff` und `facts.composition` mit den Asset-IDs
-`raster,reveal,background`. Die Komposition ist vor tatsächlicher Rasterwahl null.
-Spätere IDs stammen ausschließlich aus den Originalbezügen des äußeren Records;
-die inventarisierte Rasterwahl samt unveränderten Quellkopien und Bild-/Kandidaten-
-bindungen wird lesend abgeglichen. Fehlende/uneindeutige Auswahl wird nicht aus
-Galerieordnung oder Dateinamen geraten. Äquivalente Referenzen desselben Originals
-werden deterministisch nach ID zusammengefasst. Ein fehlender Rollenbezug bleibt
-null und verhindert eine scheinbar vollständige Schlussfreigabe. Das sind
-Ansichtsdaten, keine neuen Zertifikate oder Felder der geschlossenen Originalformen.
+Die interne Detailantwort leitet Metadaten, aktuelle Recorddaten und die
+Komposition aus genau den ausgewählten aktuellen Dateien ab. Keine Kopien alter
+Angebotsrecords oder Inventare. Fehlende Rollen oder Entscheidungen bleiben
+sichtbar offen. `facts.originals.record` enthält den kanonischen Record;
+es gibt keinen zweiten Handoff als eigene Autorität.
 
 Bilder und relevante Parameter stehen vor dem Auftrag; handlungsrelevante Probleme
 bleiben sichtbar. Der standardmäßig geschlossene, kopierbare Detailbereich unten
@@ -607,9 +487,8 @@ Die Liste bestätigt abgeschlossene Lieferungen anhand der tatsächlichen aktuel
 Registry, Runtime und Livebytes am bestätigten `origin/main`. Ein unveränderter
 abgeschlossener Stand bleibt auch in alten Branchkopien ausgeblendet; ein alter
 Integrationshinweis allein genügt nicht. Dabei werden keine historischen ZIPs,
-Receipts oder Provenienzen geöffnet. Noch benötigte frühere Phasen desselben
-abgeschlossenen Vorgangs werden über unveränderte Record-/Projektionsbytes am
-bestätigten Integrationscommit erkannt.
+Receipts oder Provenienzen geöffnet. Aktuelle Completion bindet das bestätigte Produktresultat; der Produktcommit
+muss keine Arbeitsdateien enthalten.
 
 Ausdrücklich neu übergebene Frühphasen, neue Bild-/Rasterarbeit, abweichende
 Livebytes, fehlende Mainbestätigung und defekte Ansichtsbindungen bleiben sichtbar.
@@ -620,7 +499,7 @@ Ansichtsverweis hat Vorrang vor der Vermutung, eine frühe Phase sei erledigt.
 Integrationszustand wie Plan/Write/No-op. Danach entfernt `retire` nur nachweislich
 integrierte, ausdrücklich zugeordnete Arbeit: automatische registrierte Revisionen,
 explizite frühere Revisionen und explizite gemeinsame Arbeitsverzeichnisse.
-Die Prüfung verlangt einen bestätigten Mainstand und identische Gitbytes; fremde
+Die Prüfung vergleicht bestätigten Maininhalt und eigene Arbeitsbytes an ihrem Arbeitsref; fremde
 oder wiederaufgenommene Daten blockieren. Der aktuelle Pointer wird mit entfernt,
 wenn er genau auf die entfernte Arbeit verweist. Keine Abschlussreceipt,
 Zählerfortschreibung oder neue Bild-/Rasterfreigabe. Einzelheiten und Befehle in
