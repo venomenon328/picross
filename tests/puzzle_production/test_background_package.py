@@ -37,9 +37,9 @@ class BackgroundPackageTests(unittest.TestCase):
         fixture = BackgroundFixture(folder / "working", assets.describe(), none=none)
         if ready and not none:
             candidate = fixture.manifest["candidates"][0]
-            norm = {"file": "docs/PUZZLE_QUALITY.md", "contract": "1.0", "document_revision": 9,
+            norm = {"file": "docs/production/PUZZLE_QUALITY.md", "contract": "1.0", "document_revision": 16,
                     "commit": subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=ROOT, text=True).strip(),
-                    "sha256": hashlib.sha256((ROOT / "docs/PUZZLE_QUALITY.md").read_bytes()).hexdigest()}
+                    "sha256": hashlib.sha256((ROOT / "docs/production/PUZZLE_QUALITY.md").read_bytes()).hexdigest()}
             candidate["review"] = {criterion: {
                 "result": "erfüllt", "reason": "TEST ONLY synthetic judgment for package validation.",
                 "method": "TEST ONLY fixture construction", "norm": copy.deepcopy(norm),

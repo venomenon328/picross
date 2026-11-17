@@ -40,7 +40,9 @@ for(const url of [null,'http://localhost:1234/job','https://github.com/venomenon
 }
 v.source_url='https://github.com/venomenon328/picross/tree/'+'b'.repeat(40);v.facts.state='registered';
 assert.doesNotMatch(P.prompt(v,{},opts),/Ich erteile/);
-assert.match(P.prompt(v,{action:'background_change',feedback:'Mehr Wald'},opts),/HP-I1b2/);
+const backgroundChange=P.prompt(v,{action:'background_change',feedback:'Mehr Wald'},opts);
+assert.match(backgroundChange,/PUZZLE_BACKGROUNDS.md §11 \(HP-I1b2\)/);
+assert.doesNotMatch(backgroundChange,/als aktuellen RI-ONE-Eingang vorbereiten/);
 v.source_url='https://github.com/venomenon328/picross/tree/'+'b'.repeat(40);v.facts.authoring_version='0.7.0';
 assert.throws(()=>P.prompt(v,{},opts),/historische/);
 """
@@ -277,9 +279,3 @@ for(const cleanup of [true,false]){
 """
         result = subprocess.run(['node', '-e', probe], cwd=ROOT, capture_output=True, text=True, encoding='utf-8')
         self.assertEqual(result.returncode, 0, result.stderr)
-
-    def test_old_sheet_is_only_a_launcher_entry_without_embedded_state_machine(self):
-        text=(ROOT/'docs/ai-workflows/Picross_Raetselproduktion_Cheat-Sheet.html').read_text(encoding='utf-8')
-        self.assertIn('Picross-Start.exe',text)
-        self.assertNotIn('<script',text)
-        self.assertNotIn('picross-cheatsheet-session',text)

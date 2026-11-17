@@ -15,7 +15,7 @@ die echte installierte Windows-11-Probe vor produktiver Weiterverteilung.
 
 Aktuell maßgeblich: [APP-ROOT1 / #612](https://github.com/venomenon328/picross/issues/612#issuecomment-6851636493)
 mit [öffentlicher Eigentümerfreigabe](https://github.com/venomenon328/picross/issues/612#issuecomment-6852316923)
-und der [App-Releasevertrag](../../docs/PRODUCTION_UPDATES.md).
+und der [App-Releasevertrag](../../docs/tools/PRODUCTION_UPDATES.md).
 APP-A ist über #613 unabhängig abgenommen und in main integriert; Erstaktivierung
 und Windows-11-Upgradeprobe bleiben offen. APP-B1 liefert signierte Autorität und
 Verifier; APP-ROOT1 bindet ausschließlich den freigegebenen öffentlichen Root.
@@ -232,7 +232,7 @@ Byte-/SHA-/Headbindungen im Lieferkommentar. Kein privater Testkey als Datei.
 T02 belegt Paketierung und Windows-Kryptofunktion, keine Installation oder
 Windows-11-Lebenszyklusprobe. Details zu Wireform, reinem Verifier/API,
 Bootstrap/Rotation und offenen A01/R01-Gates stehen in
-[Updates §6](../../docs/PRODUCTION_UPDATES.md#6-app-b1--signierte-autorität-und-feste-roots).
+[Updates §6](../../docs/tools/PRODUCTION_UPDATES.md#6-app-b1--signierte-autorität-und-feste-roots).
 
 ## APP-B2: eigenständiger Helfer und Diagnose
 
@@ -267,7 +267,7 @@ Der vorhandene C#-Helfer wird für PE zusätzlich mit `/define:PE` kompiliert.
 Produktname, UpgradeGUID, Versionslinie, Programmpfad, Registry und Zustandsbereich
 sind Compilezeitkonstanten; keine Auswahl im Übergabeauftrag. PW behält seinen
 normalen Build und HTTP-Ready-Vertrag. PE verwendet die native private Pipe aus
-[PE §15](../../docs/PUZZLE_EDITOR.md#15-pe-app-b--startgate-und-sicherer-wiederanlauf).
+[PE §15](../../docs/tools/PUZZLE_EDITOR.md#15-pe-app-b--startgate-und-sicherer-wiederanlauf).
 Beide Builds inventarisieren und inspizieren ihren tatsächlichen UpdateHelper,
 Client, Trust und Lizenzen. PE sammelt nur die benötigten gemeinsamen Hilfsmodule.
 Der vorhandene synthetische Helferdiagnosetreiber bleibt aus beiden Paketen

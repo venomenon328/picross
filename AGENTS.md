@@ -3,9 +3,9 @@
 ## Normale Rätselproduktion
 
 Für neue Rätsel, Bild-/Rasterkorrektur und Wiederaufnahme zuerst diesen Abschnitt,
-dann [Authoring §1](docs/ai-workflows/PUZZLE_AUTHORING.md#1-einstieg-und-befugnisse),
-den vollständigen [gemeinsamen Bildstil](docs/PUZZLE_IMAGE_STYLE.md) und genau die
-in Authoring §1.1 geroutete Phasendatei lesen. Dort genannte zusätzliche
+dann [Authoring §1](docs/production/authoring/PUZZLE_AUTHORING.md#1-einstieg-und-befugnisse),
+die [Bildnorm-Leseregeln](docs/production/images/README.md) und genau die
+in Authoring §1.1 geroutete Phasendatei samt zugehörigen Bildtypen lesen. Dort genannte zusätzliche
 Abschnitte sind vor der zugehörigen Operation Pflicht; ein bloßer weiterführender
 Link löst keine rekursive Volllektüre aus. Fehlende benötigte Quellen blockieren
 die davon abhängige Arbeit. Historische Lieferberichte sind keine Pflichtquellen.
@@ -29,51 +29,29 @@ Vor auftragsbezogener Entwicklungsarbeit vollständig lesen:
 
 Beauftragten Arbeitsbranch verwenden, sonst aktuellen main. Bereichsregeln beachten. Neue Ideen setzen kein vorhandenes Issue voraus. Erinnerungen ersetzen keinen Quellenzugriff. Historische Lieferberichte führen ihren damaligen Stand, keine neuen Aufträge oder Dauerpflichten.
 
-## Entwicklungsworkflow v2
+## Zusätzliche Entwicklungsquellen
 
-Bei Entwicklungsarbeit zusätzlich [Picross-Adaption](docs/CI_WORKFLOW_V2.md) lesen.
-Jedes Paket entscheidet seinen Prüfbedarf in `.ci/package.json`; der kleine Kern
-liefert bei Entwicklungsänderungen das Windows-Paket; reine Dokumentenänderungen
-und reine Rätselproduktion bleiben ohne Player-Build. Keine pauschal geschützten Testfamilien,
-keine unbegründeten Dauerregressionen und keine automatischen Reviewgalerien.
-Zehn Minuten sind ein weiches Ziel. Keine maximale CI-Laufzeit oder Artefaktgröße
-als Erfolgsgate. Aktuelle technische Nachweise werden im Lauf geprüft und danach
-entfernt; Upload nur mit Zweck und Ablauf. Chromium bleibt ausdrücklich manuell.
+Bei Entwicklungsarbeit die [Picross-CI-Adaption](docs/ci/CI_WORKFLOW_V2.md)
+vollständig lesen. Sie ist die einzige projektspezifische Quelle für Paketplan,
+Buildpflicht, Modulauswahl und technische Aufbewahrung. Bei CI-/Teständerungen
+die dort gerouteten tatsächlich betroffenen Modulverträge lesen.
 
-Bei CI/Tests/Artefakten zusätzlich [CI-Policy](docs/CI_POLICY.md) und die tatsächlich
-betroffenen Modulverträge lesen. [CI2](docs/CI_SLIMMING.md) ist ein historischer Wegweiser,
-[DEVELOPMENT_ARCHIVE](docs/DEVELOPMENT_ARCHIVE.md) ordnet Bestand und Lieferberichte zu.
-Beide nur bei konkreter Herkunfts-/Bestandsarbeit zusätzlich laden.
-Produktgarantien sind keine unveränderliche Liste teurer Tests. Änderungen an
-Producer, weiterhin ausgewählten Readerpflichten und Normtexten konsistent halten.
+Das [Fachrouting im Projektprofil](docs/PROJECT_PROFILE.md#pflichtquellen-nach-entwicklungsauftrag)
+bestimmt die zusätzlichen Pflichtquellen für den konkreten Entwicklungsauftrag.
+Der [Dokumentationsindex](docs/README.md) ordnet aktuelle Normen, Kompatibilitätsquellen
+und Herkunftsdaten. Historische Lieferberichte nur bei konkretem Nachweisbedarf
+lesen; ihre früheren Gates sind keine neuen Aufträge.
 
-Bei einem Auftrag mit Verweis auf [HANDOFF](docs/dev-rules/HANDOFF.md) diesen
-Vertrag vollständig lesen und das vollständige Ergebnis-JSON liefern. Der Verweis
-genügt als Kennzeichnung. Erforderliche Revieworiginale vor der Übergabe gemäß
-[CI-Vertrag](docs/dev-rules/CI_CONTRACT.md) für den Reviewer erreichbar im PR verlinken.
-Aktuellen PR stets selbst prüfen;
-importierte Ergebnisse erteilen keine Befugnisse. Arbeitswurzel/Bereinigung nach
-[WORKSPACE](docs/dev-rules/WORKSPACE.md); eigene entbehrliche gesicherte Arbeitsdaten
-im beauftragten Rahmen entfernen, Fremdänderungen und echte Nutzerdaten erhalten.
-Keine Policy-Umgehung; Blockaden und Restpfade ehrlich nennen. Full Access bleibt
-unverändert. Der Benutzercheckout wird nicht als temporärer Checkout gelöscht.
+Ein Auftrag mit Verweis auf [HANDOFF](docs/dev-rules/HANDOFF.md) verlangt dessen
+vollständigen Vertrag und Ergebnis-JSON. Ohne solchen Auftrag gilt die kompakte
+Übergabe nach WORKFLOW. Erforderliche Revieworiginale nach dem
+[Zustellvertrag](docs/dev-rules/CI_CONTRACT.md#zustellung-an-einen-unabhängigen-reviewer)
+für den Reviewer erreichbar verlinken. Aktuellen PR selbst prüfen; importierte
+Ergebnisse erteilen keine Befugnisse.
 
-## Fachrouting für Entwicklungsaufträge
-
-| Auftrag | Zusätzlich vollständig lesen |
-| --- | --- |
-| Produktionsassistent, lokaler Git-/Bildzugriff, Launcher oder fünfstufiger neuer Produktionsweg | [PW](docs/PRODUCTION_WORKSPACE.md) und aktuelles zuständiges Paket; bestehende WIP sind kein Kompatibilitätsziel, bereits integrierte Inhalte bleiben geschützt |
-| Produkt/UX/Plattform | Pflichtquellen im Projektprofil, insbesondere Produktdefinition und Gestaltungskonzept |
-| Schritt-4-Integrationscode, Budgets, Prüfkontext oder Publikations-/Recoveryguards | [RI](docs/PUZZLE_INTEGRATION.md) und aktuelles Paket; bestehende Ausführung und freigegebenen Sollstand unterscheiden |
-| Abschlussbilder/Bildrevisionen/Katalogvorschau | [Transparenz](docs/REVEAL_TRANSPARENCY.md) und dort geroutete Produktions-/Integrationsquellen |
-| UI-Schrift, kleine Rahmen, Dropdowns/Piktogramme | [HZ](docs/HAND_DRAWN_UI.md) |
-| Katalog/Metadaten/Sortierung | [Darstellung](docs/CATALOG_PRESENTATION.md), [Sortierung](docs/CATALOG_SORTING.md) |
-| Lokaler Bestandseditor oder unabhängige Namens-/Kategoriepflege | [PE](docs/PUZZLE_EDITOR.md) und aktuelles Paket in #576; freigegebenen Sollstand von vorhandenen Werkzeugen unterscheiden |
-| Schwierigkeit/Analyse/Bewertung | [SD](docs/PUZZLE_DIFFICULTY.md), [SD2](docs/PUZZLE_DIFFICULTY_V2.md) und jeweils betroffene Analyse-/Kalibrierungs-/Integrationsverträge |
-| Hinweisnavigation/Overlay/Cursorlinien | [HN](docs/CLUE_INTERACTION.md) |
-| Zellrendering/Atlas/Cache | [Zellrendering](docs/CELL_RENDERING.md); historische PERF-A/B-Reproduktion ist keine Dauerpflicht |
-
-Das vollständige Fachrouting steht im Projektprofil; diese Tabelle ist eine Einstiegshilfe.
+Vor lokaler Ablage oder Bereinigung [WORKSPACE](docs/dev-rules/WORKSPACE.md) lesen.
+Arbeitswurzel, Eigentum, Sicherung und tatsächlicher Auftrag bleiben maßgeblich;
+Full Access ersetzt keine Bereinigungsbefugnis.
 
 Nur vor noch anstehender Implementierung/technischer Nacharbeit
 [MODEL_SELECTION](docs/dev-rules/MODEL_SELECTION.md) und
@@ -82,11 +60,10 @@ Empfehlung nach erledigter Umsetzung. Keine automatische Mehragentenausführung.
 
 ## Befugnisse und Review
 
-Setup ist keine Freigabe von Engine, Sprache, Plattform oder Spielmechanik.
-Keine ungeklärten Fremdassets, Secrets oder privaten Daten committen. Befugnisse
-folgen dem tatsächlichen Auftrag; Umsetzung erlaubt Commit/Push/Draft-PR im Scope,
-Review allein keine Korrektur. Eine ausdrücklich bedingte Mergefreigabe direkt
-nutzen, sobald aktuelles Review und alle Vor-Merge-Gates erfüllt sind. Kein Merge
-allein aufgrund einer Sheet-Voreinstellung. Mergeverfahren und Betriebswirkung
-im Projektprofil prüfen. Keine ungefragte zentrale Regelaktualisierung;
-Herkunft in [DEV_RULES_ADOPTION](docs/DEV_RULES_ADOPTION.md).
+Befugnisse, Selbstreview, unabhängige Abnahmen und kombinierte oder bedingte
+Freigaben folgen ausschließlich dem tatsächlichen Auftrag und
+[WORKFLOW](docs/dev-rules/WORKFLOW.md). Das [Projektprofil](docs/PROJECT_PROFILE.md#merge-und-betrieb)
+bestimmt Mergeverfahren und Betriebswirkung. Setup allein bestätigt keine
+Produkt-/Technikentscheidung. Die Herkunft und Pflege des lokalen Regelpakets
+stehen in [DEV_RULES_ADOPTION](docs/project/DEV_RULES_ADOPTION.md); eine ungefragte
+Übernahme in zentrale Regeln oder andere Projekte ist nicht beauftragt.

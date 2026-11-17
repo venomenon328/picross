@@ -1,7 +1,7 @@
 # Lokaler Picross-Bestandseditor · PE-APP-B
 
 Eigenständiges Offlinewerkzeug für bereits registrierte Rätsel. Der
-[Fachvertrag §13](../../docs/PUZZLE_EDITOR.md#13-pe-edit2-gezielte-pflege-statt-vollbestandsprüfung)
+[Fachvertrag §13](../../docs/tools/PUZZLE_EDITOR.md#13-pe-edit2-gezielte-pflege-statt-vollbestandsprüfung)
 definiert die lokale API und ihre Grenzen; der
 [Paketentscheid](https://github.com/venomenon328/picross/issues/640)
 führt K01–K08, T01–T03, unabhängiges Review A01 und persönliche Bedienprobe U01.
@@ -168,8 +168,8 @@ veröffentlicht nach Rückdownloadprüfung unter `pe-vX.Y.Z`. Diagnose-Dispatch
 veröffentlicht nie. Ohne gesonderten Betriebsauftrag und PE-Environment/Flags/
 Signierbereitstellung bleibt Publikation gesperrt. B ergänzt den standardmäßig ausgeschalteten Selbstupdateclient. Keine private Laufzeit aus dem Datencheckout.
 
-Maßgeblich sind [PE §14](../../docs/PUZZLE_EDITOR.md#14-pe-app-a--feste-windows-produkt--und-releasebindung)
-sowie [PE §15](../../docs/PUZZLE_EDITOR.md#15-pe-app-b--startgate-und-sicherer-wiederanlauf)
+Maßgeblich sind [PE §14](../../docs/tools/PUZZLE_EDITOR.md#14-pe-app-a--feste-windows-produkt--und-releasebindung)
+sowie [PE §15](../../docs/tools/PUZZLE_EDITOR.md#15-pe-app-b--startgate-und-sicherer-wiederanlauf)
 und [#691 / PE-APP-B](https://github.com/venomenon328/picross/issues/691#umsetzungsvorbereitung-pe-app-b--startgate-selbstupdate-und-sicherer-wiederanlauf).
 Projektkern plus tools, `evidence.mode=none`; separate einmalige Windows-MSI-/
 Frozen-/Releaseproben T02/T03. Tatsächliche Originale und Ergebnisse stehen im
@@ -185,5 +185,5 @@ vollständiges Profil/Hash in Request v2 und Entscheidung binden. Ausgabe
 2304×768 RGBA8; verify prüft dieselbe Bindung. Altes Profil bleibt unverändert.
 Fertigimport erkennt 2304×768 bzw. 2304×576 aus validierten PNG-Bytes und
 übernimmt unverändert. V1-Capability erlaubt ausschließlich das alte Profil.
-[Geschlossener Vertrag](../../docs/PUZZLE_BACKGROUNDS.md#hg31--zwei-geschlossene-bildprofile).
+[Geschlossener Vertrag](../../docs/production/PUZZLE_BACKGROUNDS.md#hg31--zwei-geschlossene-bildprofile).
 Keine Kandidatenintegration vor geprüftem Mainmerge oder neue WIP-Migration.

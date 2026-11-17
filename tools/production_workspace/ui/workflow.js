@@ -111,7 +111,7 @@ const PW = (()=>{
   const remote=value?.source_url?.match(/^https:\/\/github\.com\/([A-Za-z0-9_.-]+\/[A-Za-z0-9_.-]+)\/tree\/([a-f0-9]{40})$/);
   if(value&&(!remote||value.commit!==remote[2]))throw Error('Remote-Sicherung nicht bestätigt. Originale und Projektion zuerst pushen, dann Quellen aktualisieren.');
   if(!['continue','rework','resume','background_change'].includes(action))throw Error('Bitte eine gültige Aktion wählen.');
-  const lines=[`Repository: ${remote?.[1]||'venomenon328/picross'} · Ziel: main. Lies AGENTS.md und den gemeinsamen Authoring-Kern, den vollständigen Bildstil und die dort für Schritt ${n} geroutete Phasendatei im aktuellen main (Authoring 0.8.0).`];
+  const lines=[`Repository: ${remote?.[1]||'venomenon328/picross'} · Ziel: main. Lies AGENTS.md, den gemeinsamen Authoring-Kern und die dort für Schritt ${n} gerouteten Phasen- und Bildregeln im aktuellen main (Authoring 0.8.0).`];
   if(value){
    if(!/^pz-[a-z0-9]+(?:-[a-z0-9]+)*$/.test(value.puzzle_id)||!/^[A-Za-z0-9][A-Za-z0-9._-]{0,31}$/.test(value.revision)||value.record?.file!==`content/authoring/${value.puzzle_id}/${value.revision}/record.json`)throw Error('Der kanonische Produktionsrecord ist nicht eindeutig gebunden.');
    lines.push(`Produktionsdatensatz: https://github.com/${remote[1]}/blob/${remote[2]}/${value.record.file}`);
@@ -124,7 +124,7 @@ const PW = (()=>{
   if(action==='background_change'){
    if(value?.facts.state!=='registered')throw Error('Eine spätere Hintergrundrevision braucht einen tatsächlich registrierten Stand.');
    if(!intent.feedback?.trim())throw Error('Bitte die gewünschte Hintergrundänderung beschreiben.');
-   lines.push(`Separater späterer Hintergrundauftrag nach docs/PUZZLE_BACKGROUNDS.md §7.6 / HP-I1b2: ${intent.feedback.trim()}`);
+   lines.push(`Separater späterer Hintergrundauftrag nach docs/production/PUZZLE_BACKGROUNDS.md §11 (HP-I1b2) und Authoring Schritt 5 §9: ${intent.feedback.trim()}`);
   }else if(action==='rework'){
    if(!intent.feedback?.trim())throw Error('Bitte die gewünschte Korrektur beschreiben.');
    lines.push(`Korrektur in Schritt ${step(value)}: ${intent.feedback.trim()}. Korrigierten Stand zur fälligen Entscheidung vorlegen.`);
@@ -152,7 +152,7 @@ const PW = (()=>{
    else if(value.facts.state==='editorially_approved')lines.push('Schritt 5: Die bereits endabgenommene unveränderte Lieferung integrieren.');
    else lines.push('Schritt 5: Ich erteile die Endabnahme der gebundenen unveränderten Raster-, Reveal- und Hintergrundfassung (gegebenenfalls none) und beauftrage deren Integration.');
   }
-  if(n===5)lines.push('Die ausgew�hlten finalen Nutzdaten mit explizitem Modus, g�ltigem Logiknachweis, aktueller Bewertung, Rechten und dieser tats�chlichen Entscheidung als aktuellen RI-ONE-Eingang vorbereiten. Planung, �bernahme und Wiederholung verwenden denselben Kern. Completion best�tigt diese aktuelle Lieferung; beim Mainabschluss eindeutig zugeordnete fr�here Phasen und gemeinsame Arbeitsbelege mitf�hren.');
+  if(n===5&&action!=='background_change')lines.push('Die ausgewählten finalen Nutzdaten mit explizitem Modus, gültigem Logiknachweis, aktueller Bewertung, Rechten und dieser tatsächlichen Entscheidung als aktuellen RI-ONE-Eingang vorbereiten. Planung, Übernahme und Wiederholung verwenden denselben Kern. Completion bestätigt diese aktuelle Lieferung; beim Mainabschluss eindeutig zugeordnete frühere Phasen und gemeinsame Arbeitsbelege mitführen.');
   const published=value?.facts.published;
   if(n===1&&intent.notes?.trim())lines.push(`Neue/zusätzliche Motivhinweise:\n${intent.notes.trim()}`);
   if(n<=2||(n===3&&action==='rework')){

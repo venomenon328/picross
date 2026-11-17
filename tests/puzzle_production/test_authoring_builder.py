@@ -120,7 +120,7 @@ class AuthoringBuilderTests(unittest.TestCase):
             self.assertIn(result['status'], ('derived', 'none'), result)
             shutil.copytree(fixture.target, self.source / 'outputs' / 'b01')
             binding['derivation'] = stored('outputs', file_ref(self.source / 'outputs', 'b01/derivation.json'))
-        snapshot = Path(__file__).resolve().parents[2] / 'docs/ai-workflows/PUZZLE_AUTHORING_0_7_0_PREVIEW.md'
+        snapshot = Path(__file__).resolve().parents[2] / 'docs/legacy/authoring/PUZZLE_AUTHORING_0_7_0_PREVIEW.md'
         (self.source / 'rulebook.md').write_bytes(snapshot.read_bytes())
         self.h.update(format='picross-authoring-handoff-v3', background=binding,
                       rulebook={'version': '0.7.0', 'file': 'rulebook.md', 'sha256': file_hash(self.source / 'rulebook.md')})

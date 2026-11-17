@@ -93,7 +93,7 @@ _BUILDER = _ANALYSIS | _BACKGROUND | {
     "authoring_builder", "authoring_inspection", "image_validation", "authoring_build_contract", "background_package", "repair", "accepted_raster",
     "manual_derivation", "color_derivation", "catalog_background", "reveal_source", "current_content", "integration_input", "current_registration", "current_rating",
 }
-_COMMON_NORMS = ("docs/PRODUCTION_BATCH.md",)
+_COMMON_NORMS = ("docs/tools/PRODUCTION_BATCH.md",)
 _METHOD_FILES = ("content/difficulty-method.json", "tools/puzzle_production/sd2_method_0_4.json",
                  "tools/puzzle_production/sd2_calibration_0_4.json",
                  "tools/puzzle_production/sd2_references_0_4.json",
@@ -184,14 +184,14 @@ def _tool_paths(kind):
     modules = sorted("tools/puzzle_production/" + n + ".py" for n in _CORE | groups[kind])
     norms = list(_COMMON_NORMS)
     if kind in ("image_import", "candidate_verify", "logic_certify", "repair", "difficulty", "authoring_build"):
-        norms.append("docs/PUZZLE_PRODUCTION.md")
+        norms.append("docs/production/PUZZLE_PRODUCTION.md")
     if kind in ("image_import", "logic_certify", "repair", "difficulty", "authoring_build"):
         from .authoring_rulebook import PATHS
         norms.extend(PATHS)
     if kind in ("difficulty", "authoring_build"):
-        norms.extend((*_METHOD_FILES, "docs/SD2_INTEGRATION.md", "docs/SD2_ANALYZER.md"))
+        norms.extend((*_METHOD_FILES, "docs/difficulty/SD2_INTEGRATION.md", "docs/difficulty/SD2_ANALYZER.md"))
     if kind in ("background", "authoring_build"):
-        norms.append("docs/PUZZLE_BACKGROUNDS.md")
+        norms.append("docs/production/PUZZLE_BACKGROUNDS.md")
     return modules, sorted(set(norms))
 
 

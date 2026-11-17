@@ -1,75 +1,124 @@
-# RP-1 bis RP-5: Deduktionskern, Bildproduktion und Reparatur
+# Rätselproduktion: Werkzeuge und Befehle
 
-> **PE-EDIT2:** Normale Bestandsbearbeitung verwendet jetzt
-> [`editor_cli`](editor_cli.py) und [`editor_change`](editor_change.py) nach
-> [PE §13](../../docs/PUZZLE_EDITOR.md#13-pe-edit2-gezielte-pflege-statt-vollbestandsprüfung).
-> `list`, `detail --id`, `plan --request --output`, `apply --plan`, `recover`
-> verwenden `--target-root`; Request `picross-editor-request-v2` enthält keine
-> Herkunfts-/Akteurfelder. Die unten dokumentierten alten A1/A2/A3-Datenformen
-> bleiben explizite Alt-/Recoverykompatibilität. Aktuelle CLI-Planrouten nutzen
-> den schlanken Vertrag. Runtime-/Quellmigration erfolgen ausschließlich extern
-> nach [#641](https://github.com/venomenon328/picross/issues/641), nie in der App.
+Diese Anleitung beschreibt die Bedienung der vorhandenen Werkzeuge. Geschlossene
+Datenformen, Grenzen und Befugnisse stehen in den verlinkten Fachverträgen.
+Alle Aufrufe starten im Repositoryroot; Bildbefehle benötigen die unten erläuterte
+[isolierte Image-Umgebung](#rp-3-isolierte-image-umgebung-und-reale-befehle).
 
+| Aufgabe | Einstieg und maßgeblicher Vertrag |
+| --- | --- |
+| Neue Rätsel und Wiederaufnahme | [Authoring](../../docs/production/authoring/PUZZLE_AUTHORING.md), [PW-B](../../docs/tools/PW_B_CONTRACT.md) |
+| Finalen aktuellen Eingang integrieren | RI-ONE-Aufrufe im nächsten Abschnitt; [ZA-1](../../docs/production/ZA1_ADAPTER.md) und [RI](../../docs/production/PUZZLE_INTEGRATION.md) |
+| Registrierte Rätsel bearbeiten | Aktueller Editorweg unten; [PE §13](../../docs/tools/PUZZLE_EDITOR.md#13-pe-edit2-gezielte-pflege-statt-vollbestandsprüfung) |
+| Bildtyp und Darstellung beurteilen | [Bildnormen](../../docs/production/images/README.md) und [Qualität](../../docs/production/PUZZLE_QUALITY.md) |
+| Logik, Rasterableitung und Analyse | Die jeweiligen Werkzeugabschnitte dieser Anleitung; [Produktionsvertrag](../../docs/production/PUZZLE_PRODUCTION.md) |
 
-## PE-A3: geprüfte manuelle Rasterrevision
+## RI-ONE: aktuelle Integration
 
-Vertrag vor konsumierendem Code, 13.11.2026, gemäß
-[PE §9](../../docs/PUZZLE_EDITOR.md#9-pe-a3-geschlossener-raster--und-revisionsvertrag).
-`python -m tools.puzzle_production.raster_cli` bietet `view --checkout ROOT --id ID`,
-`plan --checkout ROOT --request REQUEST --output-dir NEW`,
-`apply --checkout ROOT --bundle BUNDLE` und `recover --checkout ROOT`.
-View liefert den aktuellen numerischen Rastertext und die vorhandene Palette.
-Plan liest `picross-editor-raster-request-v1` nach PE §9.1, prüft Matrix und
-aktuelles Reveal, erzeugt vollständigen Proof samt unabhängiger Prüfung sowie
-aktuelle Bewertung und bindet alle Originale im neuen externen Bundle.
-Apply übernimmt ausdrücklich genau dieses frisch geprüfte Bundle in einer
-gemeinsamen Transaktion einschließlich optionaler A1/A2-Felder. Alle vier
-geschlossenen neuen Formen und ihre exakten Felder stehen in PE §9;
-keine künstlichen Authoringfreigaben. Recovery rollt ausschließlich auf den
-validierten Altstand zurück. Exit 0 Erfolg/No-op, 2 Eingabe/Stale/Belegfehler,
-4 Ressourcenabbruch. Je Aufruf 300 s; keine RI-Budgetoptionen.
-V4/v8 ist Voraussetzung; v7 verlangt zuerst die vorhandene explizite
-`images_cli plan-migration/apply-migration`. Keine echte Bestandsmigration
-durch Rasterpflege. Gleiche Logik bleibt revisionsgleich ohne Solverlauf.
-Saves werden erst durch den regulären Spieler nach dem geschlossenen
-[Savevertrag](../../docs/PROTOTYPE_P1.md#6-speicherung-und-wiederaufnahme)
-gezielt und abbruchsicher behandelt; keine Tests an echten Nutzerprofilen.
+Der aktuelle Eingang ist ein Verzeichnis mit `manifest.json` im Format
+`picross-integration-input-v1` und seinen finalen referenzierten Dateien.
+[ZA-1](../../docs/production/ZA1_ADAPTER.md) definiert allein die Feldformen,
+Qualitätsnachweise, Rechte und tatsächlichen Entscheidungen.
+[RI-ONE](../../docs/production/PUZZLE_INTEGRATION_SINGLE_PATH.md) legt die
+Bestandsautorität fest; [RI](../../docs/production/PUZZLE_INTEGRATION.md) den Writer.
 
-## PE-A1: aktuelle Namen und Kategorien
+```text
+python -m tools.puzzle_production.target_adapter inspect --input FINAL_INPUT
+python -m tools.puzzle_production.target_adapter export --input FINAL_INPUT --output-dir NEW_EXPORT
+python -m tools.puzzle_production.target_adapter verify-export --input NEW_EXPORT
+python -m tools.puzzle_production.target_adapter plan --input FINAL_INPUT --checkout CHECKOUT
+python -m tools.puzzle_production.target_adapter register --input FINAL_INPUT --checkout CHECKOUT
+python -m tools.puzzle_production.target_adapter recover-registration --checkout CHECKOUT
+python -m tools.puzzle_production.target_adapter check-registry --checkout CHECKOUT
+python -m tools.puzzle_production.target_adapter sync-runtime --checkout CHECKOUT
+```
 
-[`metadata_cli`](metadata_cli.py) pflegt vorhandene registrierte IDs gemäß
-[PE-A1](../../docs/PUZZLE_EDITOR.md#7-pe-a1-geschlossener-metadatenvertrag).
-Aktuelle Namen und Kategorien stehen in Inhaltsregistry v4; Runtime v7 ist die
-geprüfte Projektion; nach der ausdrücklichen PE-A2-Migration bleibt Runtime v8 erhalten. Definitions-/Bildbytes, Rasterrevisionen, Ratings, Added und
-historische Produktionsbelege werden bei dieser Pflege nicht neu geschrieben.
-Die gemeinsame API liegt in [`catalog_metadata`](catalog_metadata.py).
+`inspect`, `verify-export` und `plan` lesen und prüfen. `export` schreibt eine
+neue geprüfte Kopie außerhalb des Checkouts. `register` prüft selbst vollständig
+und schreibt nur im ausdrücklich autorisierten Integrationsauftrag; die beiden
+separaten Diagnoseaufrufe sind davor keine zusätzliche Routinepflicht.
+`sync-runtime` schreibt die Projektion aus aktuellen gültigen Quellen.
+`prepare-integration` im Authoringbuilder verwendet denselben Exportkern.
 
-Alle Aufrufe laufen vom Repositoryroot. `CHECKOUT` ist der explizite lokale
-Zielcheckout. Plan-/Operationsdateien sind UTF-8-JSON. `--output` schreibt eine
-neue Datei außerhalb des Zielcheckouts als UTF-8 ohne BOM und überschreibt
-keine vorhandene Datei; ohne diese Option steht das JSON auf stdout.
+Eine identische Wiederholung bleibt ein No-op. Eine belegte ID mit anderen Daten
+ist ein Konflikt und gehört in die gezielte Editorpflege. Alte Authoring-ZIPs,
+Export-/Receiptgenerationen und frühere Journale sind keine alternativen aktuellen
+Integrationseingänge. Getrennte neue Befehlsaufrufe prüfen ihre eigenen Eingänge;
+ein früherer Diagnoseerfolg erteilt keine Schreibbefugnis. Budgets, Diagnostik und
+Recovery folgen den Fachverträgen, ohne zusätzliches Kompatibilitätsversprechen
+für abgelöste Writer.
+
+Serielle Integration verwendet [BA-B Plan v2](../../docs/tools/PRODUCTION_BATCH.md#8-ba-b-autorisierte-serielle-einzelintegration).
+Nach bestätigtem Mainmerge folgt der ausgewählte
+[Produktionsabschluss](../../docs/production/ZA1_ADAPTER.md#pw-retire--abschluss-mehrphasiger-produktion).
+
+## Aktuelle Bestandsbearbeitung
+
+[`editor_cli`](editor_cli.py) ist der gemeinsame CLI-Einstieg für Name, Kategorie,
+Bilder und Raster. Seine aktuelle Requestform und die gezielte Prüfgrenze gehören
+[PE §13](../../docs/tools/PUZZLE_EDITOR.md#13-pe-edit2-gezielte-pflege-statt-vollbestandsprüfung).
+Der Editor setzt aktuelle RI-ONE-Quellen voraus und führt keine Bestandsmigration aus.
+
+```text
+python -m tools.puzzle_production.editor_cli list --target-root CHECKOUT
+python -m tools.puzzle_production.editor_cli detail --target-root CHECKOUT --id PUZZLE_ID
+python -m tools.puzzle_production.editor_cli plan --target-root CHECKOUT --request INPUT/request.json --output PLAN.json
+python -m tools.puzzle_production.editor_cli apply --target-root CHECKOUT --plan PLAN.json
+python -m tools.puzzle_production.editor_cli recover --target-root CHECKOUT
+```
+
+`INPUT` und die neue Plandatei liegen außerhalb des Inhaltscheckouts. Beispiel
+für eine reine Namensänderung an einer zuvor aus `list` gelesenen ID:
+
+```json
+{
+  "format": "picross-editor-request-v2",
+  "id": "pz-beispiel",
+  "metadata": {"name": "Neuer Motivname"},
+  "text": null,
+  "profile": null,
+  "reveal": null,
+  "background": null,
+  "imports": {}
+}
+```
+
+Für Bildimporte ordnet `imports` die verwendeten Uploadschlüssel relativen neuen
+PNG-/SVG-Dateien unter `INPUT` zu. Reveal verwendet `{ "upload": "reveal" }`;
+ein eigenes Hintergrundbild `{ "status": "selected", "upload": "background" }`.
+Die vollständigen Zustände und Importgrenzen stehen in PE; es gibt keine
+Akteur-, Herkunfts- oder Bestätigungsfelder im aktuellen Editorrequest.
+Rastertext und Prüfprofil werden im selben Request übergeben. Nur tatsächliche
+Logikänderung erzeugt einen neuen Proof, eine neue Bewertung und Rasterrevision.
+
+Planen bereitet die gebundenen Schreibbytes vor und verändert keinen Inhalt.
+Vor `apply` Vorschau und Dateiliste prüfen. Apply kontrolliert Planhash und
+aktuelle Altbytes, verwendet die vorbereiteten Bild-/Rasterbytes und schreibt
+unter gemeinsamem Lock mit Runtime zuletzt. Stale Eingänge verlangen einen
+frischen Plan; fremde Bytes bleiben bei Konflikt und Recovery erhalten.
+Spielstände behandelt ausschließlich der Spieler nach
+[PE §9.3](../../docs/tools/PUZZLE_EDITOR.md#93-sicherer-automatischer-save-neustart), nicht der Editor.
+
+`images_cli` und `raster_cli` bleiben schmale Bedienadapter dieses aktuellen
+Editorwegs; ihre eigenen Argumentnamen zeigt jeweils `--help`. Sie nehmen
+keine alten A2-/A3-Requests, Migrationen oder Altjournale wieder in Betrieb.
+Die früheren A1/A2/A3-Anleitungen sind im
+[historischen README](https://github.com/venomenon328/picross/blob/6fe91a08a4d073547df43c6aebbe8ead4c45ae0f/tools/puzzle_production/README.md)
+erhalten.
+
+### Namen und Kategorien über die Metadaten-CLI
+
+[`metadata_cli`](metadata_cli.py) bietet einen direkten Einstieg für die
+Operationsliste aus [PE §13.2](../../docs/tools/PUZZLE_EDITOR.md#132-geschlossener-änderungsplan-und-kleines-journal):
 
 ```text
 python -m tools.puzzle_production.metadata_cli view --target-root CHECKOUT
-python -m tools.puzzle_production.metadata_cli plan-migration --target-root CHECKOUT --output MIGRATION.json
-python -m tools.puzzle_production.metadata_cli apply --target-root CHECKOUT --plan MIGRATION.json
 python -m tools.puzzle_production.metadata_cli plan --target-root CHECKOUT --operations OPERATIONS.json --output PLAN.json
 python -m tools.puzzle_production.metadata_cli apply --target-root CHECKOUT --plan PLAN.json
 python -m tools.puzzle_production.metadata_cli recover --target-root CHECKOUT
 ```
 
-`view` ist lesend und zeigt alle aktuellen Autorenmetadaten. Eine v4-Ansicht
-öffnet nur Registry und Kategorienquelle. Die API `MetadataView(root)` baut
-einmal die ID-Zuordnung auf; `lookup(id)` und `document()` liefern anschließend
-abgetrennte Speicheransichten ohne weitere Datei-, Bild- oder Proofzugriffe.
-
-Die explizite Migration validiert v2/v3 und schreibt ausschließlich die beiden
-Registrydateien. Ein bereits gültiger v4/v7-Bestand bleibt unverändert. Normale
-mutierende Writer verlangen danach v4 mit Runtime v7 oder v8 und migrieren nicht nebenbei. Alte
-gebundene Journale zuerst über ihren gemeinsamen Recoveryweg auflösen.
-
-Eine Operationsdatei enthält eine Liste. Beispiel mit einer zuvor aus `view`
-gelesenen ID und aktuell vorhandener Kategorie:
+Beispiel für `OPERATIONS.json` mit einer vorhandenen ID und Kategorie:
 
 ```json
 [
@@ -77,120 +126,57 @@ gelesenen ID und aktuell vorhandener Kategorie:
 ]
 ```
 
-`set_metadata` verlangt mindestens Name oder Kategorie. Weitere Operationen
-sind `category_create` mit `name`, `category_rename` mit `id,name` sowie
-`category_delete` mit `id` und optionalem `reassign_to`. Der Plan vergibt bei
-Kategorieanlage eine stabile ID und hängt den internen Ordnungswert an.
-Eine belegte Kategorie kann nur mit einer anderen vorhandenen Ersatzkategorie
-gelöscht werden; sämtliche betroffenen Rätsel werden in derselben Transaktion
-neu zugeordnet. Ihre historischen Kategorieangaben bleiben erhalten.
-
-Planen schreibt keinen Inhalt. Vor Übernahme `changes` und `files` prüfen;
-die Übernahme bindet auch die unveränderten Quellen und deren Abwesenheiten.
-Eine zwischenzeitliche Bearbeitung verlangt einen frischen Plan. Identische
-aktuelle Werte ergeben beim erneuten Planen einen No-op ohne neue Bytes oder
-mtimes. Offene Journale/Locks verhindern auch einen konkurrierenden No-op.
-Recovery stellt den vollständigen alten Zustand wieder her und schützt fremde
-Änderungen. Es gibt keine zusätzliche Metadatenhistorie oder freie Registry-API.
-Rückgabecodes: 0 erfolgreich, 2 ungültiger Eingang/Konflikt, 4 Ressourcenabbruch.
-Rasterpflege verwendet den eigenen PE-A3-Vertrag oben; die Weboberfläche folgt in PE-B.
-
-## PE-A2: vorbereitete Bilder und Hintergrundpräferenzen
-
-[`images_cli`](images_cli.py) und die gemeinsame API
-[`catalog_images`](catalog_images.py) pflegen genau eine bereits registrierte ID
-gemäß dem [geschlossenen PE-A2-Vertrag](../../docs/PUZZLE_EDITOR.md#8-pe-a2-geschlossener-bild--und-präferenzvertrag).
-Ein Request kann Abschlussbild, Hintergrundpräferenz sowie aktuellen Namen und
-Kategorie gemeinsam ändern. Kategorieanlage/-umbenennung bleibt bei `metadata_cli`.
-
-```text
-python -m tools.puzzle_production.images_cli view --target-root CHECKOUT --id PUZZLE_ID
-python -m tools.puzzle_production.images_cli plan-migration --target-root CHECKOUT --output MIGRATION.json
-python -m tools.puzzle_production.images_cli apply --target-root CHECKOUT --plan MIGRATION.json
-python -m tools.puzzle_production.images_cli plan --target-root CHECKOUT --request INPUT/request.json --output BUNDLE
-python -m tools.puzzle_production.images_cli apply --target-root CHECKOUT --plan BUNDLE/plan.json
-python -m tools.puzzle_production.images_cli recover --target-root CHECKOUT
-```
-
-Die ausdrückliche Migration schreibt ausschließlich die Runtimeprojektion von v7
-nach v8; eine Wiederholung ändert keine Bytes oder mtimes. Ohne Migration wird
-Bildpflege abgewiesen. Normale Folgeoperationen erhalten v8.
-
-Der UTF-8-Request `picross-editor-images-request-v1` hat genau die Felder
-`format,id,metadata,reveal,background,decision`. Nicht gewählte Bereiche sind
-`null`; mindestens ein Bereich muss gewählt sein. Bildrefs binden relative Datei,
-SHA-256 und Bytezahl. Die tatsächliche manuelle Entscheidung nennt handelnde
-Person, UTC-Zeitpunkt und Erklärung; Bildprovenienz nennt Urheber, Nutzungsgrundlage,
-Quelle und Änderungen. Die vollständigen Feldformen stehen im Fachvertrag.
-
-Abschlussbilder sind bereits vorbereitete PNGs oder lokale SVGs. Hintergrundbilder
-sind bereits vorbereitete PNGs mit genau 2304×576 Pixeln, transparenten und
-sichtbaren Bereichen und der festgelegten Farbdarstellung. Der Writer übernimmt
-die geprüften Bytes unverändert. `standard` folgt der aktuellen Kategoriezeichnung,
-`selected` bindet das eigene Bild, `none` unterdrückt den Hintergrund.
-
-`INPUT`, `BUNDLE` und Migrationsplan liegen außerhalb des Zielcheckouts. `plan`
-erzeugt einen neuen geschlossenen Ordner mit `plan.json`, gebundenem `request.json`,
-den benötigten `input/`-Dateien und früheren Bildbytes in `previous/`. Nach der
-Planung darf der ursprüngliche Inputordner entfallen. Vor `apply` sind Vorschau,
-Dateiliste und Entscheidung zu prüfen. Fremde Zusatzdateien, veränderte Quellen,
-offene Journale sowie Pfad- und Dateikollisionen verhindern die Übernahme.
-Die gemeinsame Transaktion veröffentlicht die Runtime zuletzt; Recovery stellt
-ausschließlich den geprüften alten Zustand wieder her. Gleiche aktuelle Werte
-und eine identische Wiederholung bleiben No-ops.
+`plan` erzeugt den aktuellen gezielten Editorplan. Die separate Fach-API
+`catalog_metadata.view/plan/apply` bleibt nach
+[PE §7.1](../../docs/tools/PUZZLE_EDITOR.md#71-getrennte-aktuelle-metadaten-fach-api)
+verfügbar; `metadata_cli apply` akzeptiert auch deren Metadatenplan v2 mit dem
+aktuellen gemeinsamen Katalogjournal. Das ist keine Unterstützung der früheren
+v4/v7-Migration oder ihrer Journalformen. Namens-/Kategoriepflege verändert keine
+Definitionen, Bilder, Rasterrevisionen, Bewertungen oder Hinzugefügt-Daten.
 
 ## #596/C · Feste Rasterableitung
 
-Der vor Code festgelegte [Vertrag](../../docs/FIXED_RASTER.md) definiert die
+Der vor Code festgelegte [Vertrag](../../docs/production/FIXED_RASTER.md) definiert die
 geschlossenen Parameter-/Plan-/Record-/Manifestformen und deren Grenzen.
 `python -m tools.puzzle_production.fixed_raster derive --root ROOT --plan PLAN --output OUT`
 erzeugt das reguläre Bundle; `inspect --root ROOT --bundle BUNDLE` prüft es frisch.
-Authoring 0.8.0 Dokumentrevision 4: source_type=fixed, kein manueller Override.
+`source_type=fixed`, kein manueller Override; die aktuelle Authoringgeneration
+steht in [PW-B](../../docs/tools/PW_B_CONTRACT.md).
 Aktive Schwierigkeit zusätzlich über catalog_analysis mit expliziter Methode 0.4.
 
 
-**PW-B · 0.8.0, 11.11.2026:** Für neue Produktionen gilt der
-[fünfstufige Authoringweg](../../docs/ai-workflows/PUZZLE_AUTHORING.md) mit dem geschlossenen
-[PW-B-Datenvertrag](../../docs/PW_B_CONTRACT.md). Hintergrundbriefing, drei Kandidaten und
-Auswahl beginnen erst nach der ausdrücklichen qualifizierten Rasterwahl in Schritt 4.
-Frühe Hintergrundpflichten sowie 0.6-Default/0.7-Opt-in-/Offline-Sheetbeschreibungen
-weiter unten bezeichnen ihre alten Generationen und gelten nicht für neue 0.8-Jobs.
-Bestehende Inhalts-, Proof-, Paletten-, Bild-, Freigabe- und Integrationsgarantien
-bleiben erhalten. Der Dienst bleibt lesend; Veröffentlichung und Gitabschluss
-führt der beauftragte Akteur aus. Historische Originale werden nicht migriert.
-
 ## PW-B: neue Produktion 0.8.0
 
-Dokumentrevision 9 bindet den [geschlossenen Mehrdateisnapshot](../../docs/PW_B_CONTRACT.md#pw-perf-d--regelquellen-und-snapshotgeneration).
-`authoring_rulebook.capture(repository, commit)` liefert die geprüfte Regelbindung
-und ein Dictionary der unveränderten Paketdateibytes. Diese unter den gelieferten
-Pfaden im eigenen source-root ablegen und wie alle Eingänge explizit in `files`
-führen; `handoff.repo_commit=commit`, Request v4, Handoff v5, Dokumentrevision 9.
-Alte Einzeldatei-Originale bleiben unter ihren bisherigen Generationen lesbar.
+Neue Produktion verwendet den [fünfstufigen Authoringweg](../../docs/production/authoring/PUZZLE_AUTHORING.md)
+und den [PW-B-Datenvertrag](../../docs/tools/PW_B_CONTRACT.md). Dokumentrevision 10
+bindet den dort definierten [Mehrdateisnapshot](../../docs/tools/PW_B_CONTRACT.md#pw-perf-d--regelquellen-und-snapshotgeneration).
+`authoring_rulebook.capture(repository, commit)` liest dessen aktuelle zwölf
+Quellen aus genau einem Commit und liefert die Regelbindung sowie die
+unveränderten Paketdateibytes. Diese unter den gelieferten Pfaden im eigenen
+source-root ablegen und explizit in `files` führen; `handoff.repo_commit=commit`,
+Request v4, Handoff v5 und Dokumentrevision 10 gehören zusammen. Gespeicherte
+Rev9-Mehrdateisnapshots und frühere Einzeldatei-Originale behalten ihre eigenen
+Pfade, Header und Bytes. Neue Capture-Aufrufe erzeugen keine alten Revisionen.
 
-Build v4 veröffentlicht Handoff v5/Record v4 und die automatisch geprüfte
-workspace.json gemeinsam mit der Revision im expliziten Repositoryziel.
-[#596/B](../../docs/PRODUCTION_CURRENT_VIEW.md) ergänzt den gemeinsamen
-`current-view.json`-Übergabeschritt für Builder, Finalizer, Projektor und Completion.
-Den Pointer samt aktuellen Record-/Projektionsbytes im selben Handoffcommit
-sichern/pushen und Remotezugriff prüfen; unterbrochene Aufrufe identisch vollständig
-wiederholen. Für bestehende vollständige 0.8-Arbeit gezielt
-`python -m tools.production_workspace.projector --repository <checkout> --current-view <pz-ID> <revision>`
-aufrufen. Kein HTTP-Writer und keine Änderung versiegelter Originale.
-Request v4 übernimmt `presentation={title,raster_offers}`. Frühe background- und
-raster_selection-Felder sind null. Erst die gebundene menschliche Rasterwahl
-öffnet background_review. Finalizer v2 aktualisiert den bestehenden Record v4
-und die zugehörige Projektion; keine alten Originalbytes werden verändert.
-Die vollständigen neuen Formen, Beispiele und Aufrufe stehen in
-[PW-B](../../docs/PW_B_CONTRACT.md) und [Authoring §§6–8](../../docs/ai-workflows/PUZZLE_AUTHORING.md).
-Alle folgenden älteren formatgebundenen CLIs bleiben unter ihren ursprünglichen
-Grenzen verfügbar; der neue reguläre Bedienweg ist der lokale Assistent.
+Builder, Finalizer und Projektor veröffentlichen die in PW-B definierten
+Record-/Projektionsformen samt [aktuellem Übergabepointer](../../docs/tools/PRODUCTION_CURRENT_VIEW.md).
+Diesen gemeinsamen Stand sichern und den tatsächlich beauftragten Gitabschluss
+ausführen; unterbrochene Aufrufe identisch wiederholen. Der zusätzliche
+Projektoraufruf für eine vorhandene vollständige Revision lautet:
 
+```text
+python -m tools.production_workspace.projector --repository CHECKOUT --current-view PUZZLE_ID REVISION
+```
+
+Hintergrundbriefing und Kandidaten folgen erst auf die gebundene qualifizierte
+Rasterwahl. Die zuständigen Phasendateien und Formatgrenzen stehen ausschließlich
+in Authoring/PW-B. Die folgenden BA-A-/PB-A-/PB-H-Einzeldateiformen sind getrennte
+bestehende Werkzeuggenerationen, keine Vorgabe für neue reguläre 0.8-Produktion.
 
 ## BA-A: lokale Batchverarbeitung und Wiederaufnahme
 
 [`batch_cli`](batch_cli.py) verarbeitet ausdrücklich vorbereitete Jobs seriell.
-[PRODUCTION_BATCH](../../docs/PRODUCTION_BATCH.md) beschreibt die vollständigen
+[PRODUCTION_BATCH](../../docs/tools/PRODUCTION_BATCH.md) beschreibt die vollständigen
 geschlossenen Formen, festen Operationen, Entscheidungen, Budgets und Zustände;
 maßgeblich ist [BA-A / #491](https://github.com/venomenon328/picross/issues/491#issuecomment-6779908657).
 Die Befehle laufen im Repositoryroot mit Python aus der isolierten
@@ -220,27 +206,17 @@ Vorhandene fachliche Status und Zertifizierungen bleiben im Bericht getrennt.
 
 ## BA-B: autorisierte serielle Einzelintegration
 
-Dieser frühere Integrationsweg ist durch RI-ONE ersetzt. Der vollständige aktuelle
-Input- und Befehlsvertrag steht in [ZA-1](../../docs/ZA1_ADAPTER.md), die getrennten
-Editoroperationen in [PE](../../docs/PUZZLE_EDITOR.md), der Batchplan v2 in
-[BA-B](../../docs/PRODUCTION_BATCH.md#8-ba-b-autorisierte-serielle-einzelintegration).
-Es gibt keinen Export-v6-/Receipt-Fallback und keinen historischen Abschlussreplay.
-
-```text
-python -m tools.puzzle_production.target_adapter export --input <final-input> --output-dir <new-output>
-python -m tools.puzzle_production.target_adapter plan --input <new-output> --checkout <checkout>
-python -m tools.puzzle_production.target_adapter register --input <new-output> --checkout <checkout>
-```
-
-Der Input muss vor dem Aufruf vollständige aktuelle Daten, unabhängigen Deduktions-
-nachweis, Rechte und echte gebundene Endfreigabe enthalten. Der Export erfindet
-keine Entscheidung. Schritte und Abschluss: [Authoring 5](../../docs/ai-workflows/PUZZLE_AUTHORING_STEP_5.md).
+Der aktuelle Batchplan v2, seine Run-/Resume-/Statusbefehle und die geschlossenen
+Ledgerformen stehen in [BA-B](../../docs/tools/PRODUCTION_BATCH.md#8-ba-b-autorisierte-serielle-einzelintegration).
+Jeder Job verwendet denselben [RI-ONE-Kern](#ri-one-aktuelle-integration) mit
+vollständigem aktuellen Input. Die frühere BA-B-Export-/Receiptgeneration ist
+abgelöst; die eigenständigen BA-A-Leser für 0.6/0.7 bleiben davon getrennt.
 
 ## HP-W2: eigenständige Hintergrundableitung
 
 [`background_assets`](background_assets.py) stellt die lokale API/CLI für die
 Arbeits-, Entscheidungs-, Auftrags- und Befundformen aus
-[PUZZLE_BACKGROUNDS §§3–4](../../docs/PUZZLE_BACKGROUNDS.md) bereit. Maßgeblich
+[PUZZLE_BACKGROUNDS §§3–4](../../docs/production/PUZZLE_BACKGROUNDS.md) bereit. Maßgeblich
 ist die [Paketentscheidung HP-W2](https://github.com/venomenon328/picross/issues/560#issuecomment-6748799473).
 Sie verarbeitet gespeicherte ausgewählte PNG-Bytes oder eine tatsächliche
 ausdrückliche Leerentscheidung. Die API erzeugt keine Kandidaten und trifft
@@ -265,7 +241,7 @@ samt Hash sowie getrennte tatsächliche Git-Herkunft `producer={commit,dirty}`.
 V2-`dirty` beschreibt den Arbeitsbaum einschließlich unversionierter Dateien
 zu Aufrufbeginn vor eigenen Schreibvorgängen. Spätere eigene Lock-/Stagingdateien
 ändern keine Bildautorität; Quellen, Renderstand und Ziele werden frisch geprüft.
-Die genaue Provenienzsemantik steht in [Hintergrund §4.7](../../docs/PUZZLE_BACKGROUNDS.md#47-pw-perf-c-neue-hp-w2-beleggeneration-v2).
+Die genaue Provenienzsemantik steht in [Hintergrund §4.7](../../docs/production/PUZZLE_BACKGROUNDS.md#47-pw-perf-c-neue-hp-w2-beleggeneration-v2).
 `describe --generation 1` beschreibt ausdrücklich die alte Neun-Modul-Identität. Für einen neuen Auftrag diese Werte verwenden; ein abweichender
 `expected_tool_sha256` wird vor dem Schreiben zurückgewiesen.
 
@@ -336,28 +312,23 @@ Bei Fehlern melden `error` die konkrete Ursache und `remaining` einen tatsächli
 verbliebenen eigenen Restpfad oder null. Ressourcen-, Fehlercode-, Lock- und
 Veröffentlichungsvertrag stehen vollständig in Hintergrundvertrag §4.4.
 
-**Der Produktionsdefault bleibt 0.6.0.** Authoring 0.6.0 und PB-A
-behalten ihre Hüllen und Gates. PB-H ergänzt den ausdrücklich gewählten
-Paketbau und die lesende Inhaltsprüfung unten; HP-I1a ergänzt äußere
-Fortschreibung und frühere Export-v6-Strecke (aktuell durch RI-ONE ersetzt). HP-I1b1 ergänzt zielgebundene Erstregistrierung
-und ersten Abschluss. Die echte Capability folgt dem HP-I2-Runtime-/Abnahmevertrag.
-Späterer reiner Hintergrundersatz folgt dem HP-I1b2-Weg, erlaubte Raster-/
-Revealneubindung vorhandener Hintergrundziele HP-I1c. MJ-A führt den regulären
-Sheetweg; MJ-B ergänzt den eigenen Hintergrundänderungsjob nach §7.6. Die Standalone-
-Fähigkeit allein liefert keinen Hintergrundersatz im Spiel oder Produktionsabschluss.
+Die Standalone-Ableitung ist ein kreatives Werkzeug und registriert keinen
+Hintergrund im Spiel. Neue Produktion folgt [PW-B](#pw-b-neue-produktion-080),
+Integration [RI-ONE](#ri-one-aktuelle-integration), Bestandsänderung dem
+[Editor](#aktuelle-bestandsbearbeitung). Die folgenden PB-H-Formen erhalten ihre
+ausdrückliche 0.7-Lese-/Baukompatibilität; sie setzen keinen neuen Produktionsdefault.
 
 ## PB-H: Hintergrundpakete und lesende Inhaltsprüfung
 
-[Paketentscheidung #489/PB-H](https://github.com/venomenon328/picross/issues/489#issuecomment-6751071312)
-und [Hintergrundvertrag §§2–8](../../docs/PUZZLE_BACKGROUNDS.md) legen die
-neue geschlossene Generation fest. Sie verwendet ausdrücklich den vollständigen
-[Authoring-0.7.0-Vorschausnapshot](../../docs/ai-workflows/PUZZLE_AUTHORING_0_7_0_PREVIEW.md),
-Dokumentrevision 9, mit tatsächlichem Dateihash und gelesenem Quellencommit.
-Der aktive Authoringpfad und der Default neuer Offline-Sheetjobs bleiben
-**0.6.0 / Dokumentrevision 48**. Beide eingebetteten Snapshots entsprechen ihren
-Markdownquellen; 0.7.0 / Dokumentrevision 9 bleibt ausdrücklich opt-in. Die
-verpflichtende Gesamtaktivierung wird am konkreten Einzelweg in #560 abgeglichen.
-Versiegelte ältere Pakete behalten ihren gebundenen Snapshot unverändert.
+Dieser Abschnitt beschreibt die weiterhin unterstützte 0.7-Werkzeuggeneration
+nach [#489/PB-H](https://github.com/venomenon328/picross/issues/489#issuecomment-6751071312).
+Ihre geschlossenen Hintergrundformen stehen im
+[Hintergrundvertrag](../../docs/production/PUZZLE_BACKGROUNDS.md).
+Der isolierte [0.7-Referenztext](../../docs/legacy/authoring/PUZZLE_AUTHORING_0_7_0_PREVIEW.md)
+bleibt mit seinem tatsächlichen Dateihash verwendbar. Gespeicherte ältere
+Snapshots behalten dagegen exakt ihre ursprünglichen Bytes und Quellencommits;
+die Verschiebung und korrigierte Links behaupten keine alte Dateichecksumme.
+Für neue reguläre Produktion gilt [PW-B](#pw-b-neue-produktion-080).
 
 ```sh
 python -m tools.puzzle_production.authoring_builder build --request <request-v2.json> --source-root <quellen> --output-root <arbeitsordner> [--publish-to <checkout>] [--history-repo <lokaler-checkout>]
@@ -422,16 +393,16 @@ Technischer Erfolg erfindet weder Nutzungsrechte noch visuelle Annahmen.
 Die öffentliche **rein lesende API** verwendet die vorhandenen Prüfer:
 `authoring_package.open_package(path, allow_background=True,
 history_repo=..., external_root=...)` und anschließend
-`target_adapter.inspect(package, ..., allow_background=True)`. Optionaler
+`authoring_inspection.inspect_authoring(package, ..., allow_background=True)`. Optionaler
 `approval_path` bezeichnet eine schon vorhandene `picross-editorial-approval-v2`;
 `external_root` ist nur bei tatsächlich äußeren Hintergrundbelegen ausdrücklich
 anzugeben. Das Ergebnis `picross-authoring-content-inspection-v1` unterscheidet
 `original_state` und frisch ermittelten `effective_state`, führt offene Gates
 und setzt stets `integration_ready=false`. Keine frühere Phase oder gespeicherte
-Erfolgsflagge ersetzt eine neue Inhaltsprüfung. PB-H selbst ergänzt keinen CLI;
-HP-I1a öffnet inspect/export ausschließlich über den ausdrücklichen Opt-in unten.
-Die bisherigen Defaultwege bleiben für 0.7.0 geschlossen; der neue
-zielgebundene HP-I1b1-Katalogweg steht unten.
+Erfolgsflagge ersetzt eine neue Inhaltsprüfung. PB-H ergänzt keinen eigenen CLI;
+der Builder verwendet diese Arbeitsprüfung. Die aktuelle Integration nimmt
+anschließend den vollständigen [RI-ONE-Eingang](#ri-one-aktuelle-integration),
+keinen alten Paketexport.
 
 Endfreigabe v2 muss das unveränderte Original-ZIP, Handoff, Inventar, Rasterwahl,
 Manifest, tatsächliche Entscheidung, Original, Ableitung, Profil, Ausgabe und
@@ -460,63 +431,26 @@ Bau schreibt keinen Gitcommit und behauptet keinen Sicherungsstand.
 
 ## MJ-A: reguläre Jobs im Offline-Sheet
 
-[Paketentscheidung #490/MJ-A](https://github.com/venomenon328/picross/issues/490#issuecomment-6774440064)
-und [Hintergrundvertrag §7.5](../../docs/PUZZLE_BACKGROUNDS.md#75-mj-a-mehrjob-arbeitsbereich-und-sichere-übernahme)
-regeln Jobidentität, persönliche Globals/Joboptionen, atomare Importvorschau,
-geschlossene Sammlung v1 und die Bindung asynchroner Vorgänge. Einzelne Sitzungen
-bleiben nutzbar; die Sammlung sichert Reihenfolge, aktive lokale Jobkennung,
-Sitzungen v4/v5, Joboptionen und passend importierte Records. Import und Export
-erteilen keine Freigabe und prüfen keine tatsächliche Repositoryverfügbarkeit.
-
-Für Record v2 das erfolgreiche Builder-/Finalizerresultat mit seinem wirklichen
-Update v3 oder beide ausdrücklich zugeordneten lokalen Eingänge verwenden. Der
-Record allein enthält keine vollständige Kandidaten-/Statusprojektion. Keine Daten
-aus Refs nachladen oder erfinden, keine fremden Hashwerte durch JSON-Neuhashung
-ersetzen. Vollständige Updates v3 bleiben eigenständig ladbar. Historische false-
-Readiness, offene Auswahl und wirkliche `none`-Entscheidung bleiben unterscheidbar.
-
-Neue Jobs starten mit 0.6.0/v4; der reguläre Hintergrundweg ist ausdrücklich
-0.7.0/v5 mit Auftrag v4 und passendem Regelpfad. Beide eingebetteten Regeltexte sind
-bytegleich mit ihren Markdownquellen. Nach Authoring §9 bleiben kompakte echte
-Abschlussbezüge erhalten, bereinigte Produktionsdateien werden nicht rekonstruiert.
-Der separate `picross-background-adoption-request-v1` folgt MJ-B mit eigener
-Sitzung v1 und Sammlung v2 nach Hintergrundvertrag §7.6. Keine Batchausführung, automatische Bildproduktion oder neue Modell-API.
+Das frühere Offline-Sheet ist entfernt. Seine Bedienung ist ausschließlich im
+[historischen README](https://github.com/venomenon328/picross/blob/6fe91a08a4d073547df43c6aebbe8ead4c45ae0f/tools/puzzle_production/README.md#mj-a-reguläre-jobs-im-offline-sheet)
+erhalten. Neue Produktion verwendet [PW-B](#pw-b-neue-produktion-080), die Pflege
+registrierter Bilder den [aktuellen Editor](#aktuelle-bestandsbearbeitung).
 
 ## HP-I1a: äußere Endabnahme und frühere Export-v6-Strecke (aktuell durch RI-ONE ersetzt)
 
-Dieser frühere Integrationsweg ist durch RI-ONE ersetzt. Der vollständige aktuelle
-Input- und Befehlsvertrag steht in [ZA-1](../../docs/ZA1_ADAPTER.md), die getrennten
-Editoroperationen in [PE](../../docs/PUZZLE_EDITOR.md), der Batchplan v2 in
-[BA-B](../../docs/PRODUCTION_BATCH.md#8-ba-b-autorisierte-serielle-einzelintegration).
-Es gibt keinen Export-v6-/Receipt-Fallback und keinen historischen Abschlussreplay.
-
-```text
-python -m tools.puzzle_production.target_adapter export --input <final-input> --output-dir <new-output>
-python -m tools.puzzle_production.target_adapter plan --input <new-output> --checkout <checkout>
-python -m tools.puzzle_production.target_adapter register --input <new-output> --checkout <checkout>
-```
-
-Der Input muss vor dem Aufruf vollständige aktuelle Daten, unabhängigen Deduktions-
-nachweis, Rechte und echte gebundene Endfreigabe enthalten. Der Export erfindet
-keine Entscheidung. Schritte und Abschluss: [Authoring 5](../../docs/ai-workflows/PUZZLE_AUTHORING_STEP_5.md).
+Dieser frühere Weg ist durch [RI-ONE](#ri-one-aktuelle-integration) ersetzt.
+Frühere Formen und Befehle bleiben im
+[gebundenen Vorgängerstand](https://github.com/venomenon328/picross/blob/6fe91a08a4d073547df43c6aebbe8ead4c45ae0f/tools/puzzle_production/README.md)
+nachschlagbar. Aktuelle Bild-/Rasterpflege verwendet den [Editor](#aktuelle-bestandsbearbeitung),
+aktueller Abschluss [Authoring Schritt 5](../../docs/production/authoring/PUZZLE_AUTHORING_STEP_5.md).
 
 ## HP-I1b1: erste Hintergrundregistrierung und Produktionsabschluss
 
-Dieser frühere Integrationsweg ist durch RI-ONE ersetzt. Der vollständige aktuelle
-Input- und Befehlsvertrag steht in [ZA-1](../../docs/ZA1_ADAPTER.md), die getrennten
-Editoroperationen in [PE](../../docs/PUZZLE_EDITOR.md), der Batchplan v2 in
-[BA-B](../../docs/PRODUCTION_BATCH.md#8-ba-b-autorisierte-serielle-einzelintegration).
-Es gibt keinen Export-v6-/Receipt-Fallback und keinen historischen Abschlussreplay.
-
-```text
-python -m tools.puzzle_production.target_adapter export --input <final-input> --output-dir <new-output>
-python -m tools.puzzle_production.target_adapter plan --input <new-output> --checkout <checkout>
-python -m tools.puzzle_production.target_adapter register --input <new-output> --checkout <checkout>
-```
-
-Der Input muss vor dem Aufruf vollständige aktuelle Daten, unabhängigen Deduktions-
-nachweis, Rechte und echte gebundene Endfreigabe enthalten. Der Export erfindet
-keine Entscheidung. Schritte und Abschluss: [Authoring 5](../../docs/ai-workflows/PUZZLE_AUTHORING_STEP_5.md).
+Dieser frühere Weg ist durch [RI-ONE](#ri-one-aktuelle-integration) ersetzt.
+Frühere Formen und Befehle bleiben im
+[gebundenen Vorgängerstand](https://github.com/venomenon328/picross/blob/6fe91a08a4d073547df43c6aebbe8ead4c45ae0f/tools/puzzle_production/README.md)
+nachschlagbar. Aktuelle Bild-/Rasterpflege verwendet den [Editor](#aktuelle-bestandsbearbeitung),
+aktueller Abschluss [Authoring Schritt 5](../../docs/production/authoring/PUZZLE_AUTHORING_STEP_5.md).
 
 ## PB-A: deterministischer Authoring-Paketbau
 
@@ -609,81 +543,25 @@ Keine Teilpublikation wird als Erfolg gemeldet, kein `editorially_approved`-
 
 ## P-B2: automatische Frühdiagnose und finale Palettengates
 
-Vor Code festgelegter Vertrag, 08.11.2026: [ZA-1 P-B2](../../docs/ZA1_ADAPTER.md#p-b2--authoring-060-und-additive-palettengeneration-v5)
-definiert die exakten geschlossenen Pflicht-/Optionalfelder, C(x)/H(x),
-Dateihashes, Fehlerzustände und Kreuzbindungen. Neue Produktionen verwenden
-Authoring 0.6.0 und ausschließlich `picross-target-inspection-v5` /
-`picross-target-export-v5`; 0.4.x/0.5.0 und v1–v4 bleiben unverändert lesbar.
-Der aktuelle Authoring-/Offline-Snapshot weist 0.6.0 selbst aus. Paarprofile und
-manuelle Autorisierungen v1–v6 bleiben zulässig. Kein Legacy-Schalter für neue
-Produktion, kein neuer Solver-/Runtime-/Recoveryvertrag.
+Die kreative Rasterprüfung berechnet die aktuelle Palette frisch: RP-3 vor dem
+Solver, RP-5 vor einer Bewertung und feste manuelle Wege vor dem Endproof.
+Negative Entwürfe bleiben als Diagnose sichtbar und werden dadurch nicht
+freigabefähig. Ein Entwurf ohne Matrix hat nur eine vorläufige Palette.
 
-RP-3 prüft konkrete Matrizen vor dem Solver, RP-5 vor jeder Bewertung, feste
-manuelle Wege vor dem Endproof-Replay. Die bestehenden Vergleiche zeigen die
-Diagnose; negative Entwürfe bleiben vorhanden. Ein Palettenentwurf ohne Matrix
-ist nur vorläufig. Endprüfung in ZA-1 liest immer den tatsächlichen finalen
-Stand neu. Der unveränderte P-B1-Bericht bindet Normrevision 4 und bleibt die
-Rechenbasis; kein früherer positiver Report wird übernommen.
+Der [P-B1-Aufruf](#p-b1-lesende-palettendiagnose) liefert die eigenständige
+technische Diagnose. Der [Authoringbuilder](#pb-a-deterministischer-authoring-paketbau)
+führt die benötigte Arbeitsprüfung über `authoring_inspection` aus. Die exakten
+Palettengate-, Review-, Ausnahme- und Bindungsformen sowie ihre generationsabhängigen
+Unterschiede stehen ausschließlich in [PW-B · Palettenausnahme](../../docs/tools/PW_B_CONTRACT.md#palettenausnahme).
+[Qualität](../../docs/production/PUZZLE_QUALITY.md) besitzt die Kriterien und ihre
+redaktionelle Bedeutung. Ein positiver technischer Abstand ersetzt keine
+Bildsichtung; eine dokumentierte Ausnahme ersetzt keinen unabhängigen Endproof.
 
-`palette_gate` enthält genau `assessment,binding,visual_review,exception,allowed`.
-Die vollständige aktuelle Messung entsteht im Adapter selbst; ein optional
-inventarisiertes `palette_assessment={file,sha256}` wird zusätzlich frisch
-verifiziert. `binding` enthält genau `puzzle_id,revision,candidate,source,
-matrix_hash,logic_hash,palette_sha256,source_fingerprint,rulebook,handoff_sha256,
-inventory_sha256,original_zip_sha256` nach ZA-1. V5-Exporte führen dieselbe
-Gatehülle, gegebenenfalls die bisherige `manual_authorization` und bei Paarprofil
-`deduction`. Andere Felder oder Formatdowngrades sind Fehler.
-
-Farbpakete führen im Handoff `palette_review={file,sha256}` auf einen
-inventarisierten `picross-palette-visual-review-v1`-Record. Exakt `format,
-puzzle_id,revision,matrix_hash,logic_hash,palette_sha256,criteria`; die drei
-Kriterien Q-R04/Q-H01/Q-H02 führen je `result,accepted,actor,timestamp_utc,
-statement,reason,evidence`. Ergebniswörter sind die vier deutschen Urteile des
-Qualitätsvertrags. Belege sind nichtleere Listen exakter `{file,sha256}`-Refs.
-Nicht geprüft blockiert; Warnung/negatives Sichturteil braucht ausdrücklich
-`accepted=true` samt tatsächlichem Wortlaut/Begründung. Ein positives S allein
-erteilt keine Sichtfreigabe. Ohne Review bleibt die Diagnose sichtbar und
-gesperrt; Mono hat hier null, sein bisheriges visuelles Gate bleibt Pflicht.
-
-```sh
-python -m tools.puzzle_production.target_adapter inspect --input <paket> --report <neue-diagnose.json>
-python -m tools.puzzle_production.target_adapter inspect --input <paket> --approval <endfreigabe.json> --palette-exception <externe-einzelfallannahme.json>
-python -m tools.puzzle_production.target_adapter export --input <current-input> --output-dir <neuer-export>
-```
-
-`--palette-exception` ausschließlich bei negativem vollständigem Paarset und
-echter Endfreigabe; mit `--manual-authorization` kombinierbar. Der äußere Record
-`picross-palette-editorial-exception-v1` hat exakt `format,binding,negative_pairs,
-actor,timestamp_utc,statement,reason,approval_sha256,test_only` (maximal 128 KiB).
-Er bindet das vollständige Gate-Binding und alle negativen P-B1-Paarobjekte,
-einschließlich exaktem S/RGB/IDs, plus Endfreigabebytes und Paketscope. Keine
-Links/Reparsepunkte, keine Ablage im Originalpaket. Export liefert ihn unverändert
-als `palette-exception.json`, sein Gatefeld `exception` hat exakt `record,sha256`.
-Die Software authentifiziert keine Menschen; eine tatsächliche Erklärung ist
-weiterhin notwendig. Teilmenge, Freitext, fremde oder mutierte Bindung scheitert.
-Der technische Status bleibt negativ; nur der Palettenredaktionsblocker entfällt.
-
-Vor `content_ready` die geschriebene Paketfassung inspizieren. Die 0.6.0-Diagnose
-liest schon `raster_review`, ohne daraus Bereitschaft abzuleiten. Export verlangt
-`technical=true` und echte Endabnahme. Offline-Reader, Plan/Register und
-Rasterersatz prüfen die Originale und Gatebindung erneut, nicht nur Flags/Hashes.
-Ungültige oder stale Records sind Eingabefehler; Budget-/Prozessabbruch kein
-Erfolg (bestehende Exitcodes 2/4). Rechte, Proof, Bild-/Motivabnahmen, feste
-Parameter, Difficulty, Randregel und Registrierungsauftrag bleiben unabhängig.
-Bei null freigabefähigen Angeboten echte Sichtungsentwürfe mit konkreten
-Defiziten/Korrekturen zeigen; `Raster-Optionen=[]`. Keine neue Oberfläche,
-Bestandsvalidierung, persönliche Referenzabnahme oder dauerhafte Bildgalerie.
-
-**Q-A / #488:** [PUZZLE_QUALITY](../../docs/PUZZLE_QUALITY.md) ist die verbindliche
-redaktionelle Produktionsreferenz, zusammen mit dem
-[Authoringworkflow](../../docs/ai-workflows/PUZZLE_AUTHORING.md). Sie regelt auch
-Sichtungsentwürfe ohne vollständige Qualifikation und gezielte redaktionelle
-Einzelfallentscheidungen. Diese sind keine technischen Zertifikate; Proof,
-Herkunft/Rechte, Datei-/Freigabebindungen und bestehende Adaptergates bleiben
-Pflicht. Q-A führt den Qualitätsvertrag; P-A normiert die unveränderte
-Farbregel und P-B1 liefert die lesende Diagnose. P-B2 aktiviert sie unter 0.6.0
-gemäß dem obigen v5-Vertrag. Altformate und versiegelte Belege behalten ihre
-Semantik, tatsächliche Sichtentscheidungen bleiben eigenständig.
+Die frühere P-B2-Export-v5-/CLI-Zulassung ist im
+[historischen README](https://github.com/venomenon328/picross/blob/6fe91a08a4d073547df43c6aebbe8ead4c45ae0f/tools/puzzle_production/README.md#p-b2-automatische-frühdiagnose-und-finale-palettengates)
+erhalten. Die aktuelle Integration verwendet [RI-ONE](#ri-one-aktuelle-integration)
+und die dort referenzierten finalen Qualitätsdaten; alte `target_adapter inspect`
+Optionen für Authoring-ZIPs werden nicht als aktuelle Bedienung angeboten.
 
 ## P-B1: lesende Palettendiagnose
 
@@ -763,154 +641,45 @@ werden ebenfalls ohne Links/Reparsepunkte gelesen. Reportpfade aus fremden
 JSONs werden nie geöffnet. Die CLI prüft den erzeugten Bericht vor Ausgabe
 erneut; optionale Reportdatei wird exklusiv neu angelegt und frisch gelesen.
 
-**Aktivierungsgrenze:** Die einzelne P-B1-CLI bleibt freiwillige Diagnose,
-kein Zertifikat. Seit P-B2 laufen zusätzlich automatische Frühchecks und das
-verbindliche v5-Endgate für neue 0.6.0-Pakete. F05 bleibt metrisch negativ bei
-historisch dokumentierter visueller Referenzannahme, ohne Produktionsausnahme.
-Keine rückwirkende Bestandsprüfung oder zusätzliche Standard-Erfolgsausgabe.
+**Geltung:** Die einzelne P-B1-CLI ist eine freiwillige Diagnose, kein Zertifikat.
+Die kreative Arbeitsprüfung verwendet die generationsgebundenen Palettengates
+nach [PW-B](../../docs/tools/PW_B_CONTRACT.md#palettenausnahme); die aktuelle
+Integration prüft die finale Palette nach [ZA-1](../../docs/production/ZA1_ADAPTER.md).
+F05 bleibt metrisch negativ bei historisch dokumentierter visueller
+Referenzannahme, ohne Produktionsausnahme. Keine rückwirkende Bestandsprüfung
+oder zusätzliche Standard-Erfolgsausgabe.
 
-**AT · Umsetzungsvorbereitung V4 vom 19.10.2026; AT-A nach AT-A-R01 mit PR #263 integriert:**
-[AT](../../docs/REVEAL_TRANSPARENCY.md) ergänzt mit AT-A den Produktionsstandard
-für transparente Abschlussbilder und einen eigenen eng begrenzten Bildupdateweg.
-AT-B stellt danach den gebundenen Bestand mit tatsächlichen Bildfreigaben um.
-Reine Bildrevisionen verwenden den eigenen `catalog_reveal`-Weg; `plan-update`/
-`update` bleibt auf den gesonderten Rasterersatz begrenzt und erhält aktive
-Bildfassungen. Die technische AT-A-Lieferung übernimmt keine realen Bilder
-oder Metadaten.
-[AT-B-V01](../../docs/AT_B_VERIFICATION.md) liefert die vollständige
-Bild-/Endfreigabevorlage im frühen Authoringstatus `reveal_review`.
-Die anschließende [Eigentümerabnahme](../../docs/AT_B_OWNER_APPROVAL.md) erlaubt
-AT-B-F01 mit kontrolliertem `catalog_reveal plan/adopt` und AT-B-T01.
-Kein produktiver Request oder Plan mit ausstehenden Zustimmungen.
+Die historische AT-Einführung und ihre tatsächliche Bestandsabnahme sind über
+[Transparenz](../../docs/production/REVEAL_TRANSPARENCY.md) und die
+[Eigentümerabnahme](../../docs/history/AT_B_OWNER_APPROVAL.md) erreichbar.
+Aktuelle Bildänderungen verwenden den [Editorweg](#aktuelle-bestandsbearbeitung).
 
 **Aktuelle Prüfzuordnung:** Konkrete Rätsel werden während ihrer Produktion und
 Integration geprüft, nicht als wachsender CI-Korpus. Keine rätselspezifischen
 Unit-Tests. Der aktuelle Paketplan wählt bei Werkzeugänderungen begründete Fachmodule
 mit festen synthetischen Eingängen. Reine Inhalts-PRs erhalten den allgemeinen Quellen-/Plankern ohne Player-Build;
 das ist keine erneute Logik-/Proof-/Rasterprüfung. Auch der Main-Nachlauf bleibt buildfrei.
-Maßgeblich: [CI-Vertrag](../../docs/CI_WORKFLOW_V2.md) und
-[Authoringworkflow](../../docs/ai-workflows/PUZZLE_AUTHORING.md).
+Maßgeblich: [CI-Vertrag](../../docs/ci/CI_WORKFLOW_V2.md) und
+[Authoringworkflow](../../docs/production/authoring/PUZZLE_AUTHORING.md).
 
-KAT-1 ergänzt [Kategorien und Zuordnung](../../docs/CATEGORIES.md): neue ZA-1-Exporte verlangen `--category-id` und `--categories`; Snapshot, Manifest v2, Zielregistry und Runtimeprojektion werden gemeinsam geprüft. `sync-runtime --checkout .` übernimmt geprüfte Metadaten in die Projektion. `check-registry --checkout .` prüft laufende Produktionspakete per Replay, abgeschlossene Produktion über die kompakte Integrationsbindung. Alte Exporte bleiben prüfbar, benötigen zur neuen Registrierung aber einen kategorisierten Neu-Export.
+## Historische Integrationswege
 
-ZA-1 ergänzt den allgemeinen Authoring-v2-Zieladapter und Datenregistrierung:
-[CLI, Schemas und Fehlerverhalten](../../docs/ZA1_ADAPTER.md),
-[Prüfzuordnung](../../docs/ZA1_VERIFICATION.md). Diese Befehle benötigen die
-isolierte Image-Umgebung mit Pillow 12.3.0. Alte Pilotprofile bleiben erhalten.
-Das reguläre Ziel unterstützt 1…8 Vordergrundfarben plus Leer. Ein ausdrücklich
-beauftragter Rasterersatz verwendet `plan-update` → `update` mit
-`--expected-definition-sha256`, höherer Runtime-Revision und neuer Paketrevision;
-Identität, Slot, Kategorie und Reveal bleiben erhalten. Recovery nutzt weiterhin
-`recover-registration`; Details und Grenzen im ZA-1-Vertrag. `register` allein
-überschreibt weiterhin keine vorhandenen Inhalte.
+Die früheren KAT-1-/ZA-1-Exporte, RI-A/B/C, RI-REPLAY, RI-V9 und KE-Recoveryformen
+stehen im [gebundenen Vorgänger-README](https://github.com/venomenon328/picross/blob/6fe91a08a4d073547df43c6aebbe8ead4c45ae0f/tools/puzzle_production/README.md).
+Die damaligen RI-C-Phasengrenzen sind im
+[historischen Transaktionsvertrag](https://github.com/venomenon328/picross/blob/62401382f58adc2e3d303b19c1ecb1f1dc8a5040/docs/SD_CATALOG.md#ri-c--phasengrenzen-für-erstregistrierung-v6)
+nachschlagbar. Diese Quellen dokumentieren frühere Implementierungen und
+Nachweise; sie sind keine aktuelle Writer-, Recovery- oder Replaypflicht.
+Der aktuelle Integrationsweg steht ausschließlich im [RI-ONE-Einstieg](#ri-one-aktuelle-integration).
 
-**RI-A-V01 · Über PR #484 auf main integriert:**
-[RI](../../docs/PUZZLE_INTEGRATION.md) und [RI-A-T01](../../docs/RI_A_VERIFICATION.md)
-binden Umfang, Messungen und Gates. Nur `register` akzeptiert
-`--publication-seconds S` und `--recovery-seconds S` (jeweils Default 1800).
-`recover-registration --recovery-seconds S` gilt nur für sicher erkannte
-Registrierungsjournale; andere Operationen lehnen diesen Override ab und
-behalten sonst 300 s plus bestehende Außenbudgets. Die feste Warnung nach
-300 s bricht keinen Lauf ab. API: `registration`/`integrate` erhalten
-`publication_seconds=None, recovery_seconds=None`; `recover` erhält
-`recovery_seconds=None`. Plan/Update lehnen mutierende Overrides ab.
-`S` ist positiv und endlich, API exakt `int`/`float` ohne `bool`, inklusive
-endlicher berechneter Deadline.
-Noch unbekannte Recoveryoperationen bleiben während der lesenden Klassifikation
-unter höchstens 300 s beziehungsweise einem kürzeren Override. Erst sichere
-Zuordnung erlaubt den Registrierungsrahmen ab dem ursprünglichen Aufrufstart;
-abgelaufene Erst-/Außenfristen werden nicht verlängert. Eine früh erkannte
-zulässige Registrierungs-Format-/Operationspaarung erlaubt die vollständige
-Validierung über die Warnschwelle von 300 s hinaus, sofern die ursprüngliche
-Registrierungsfrist noch läuft. Die Vorzuordnung ist keine Autorisierung
-für Mutation; Journal-/Quellenprüfung bleibt vollständig verbindlich.
-
-`export`, `plan`, `register`, `recover-registration` ergänzen stdout ausschließlich
-um `operation_diagnostics`; es bleibt genau ein JSON-Ergebnis. Fortschritt,
-300-s-Warnung und Abschluss stehen auf stderr, regulär höchstens alle 30 s.
-`--operation-report <neue-datei>` veröffentlicht dieselbe Hülle
-`picross-ri-a-operation-v1` atomar außerhalb des Checkouts und aller Eingänge.
-Der Elternordner muss existieren; keine Überschreibung. Ein Berichtsfehler nach
-Commit bleibt ein Diagnosefehler auf stderr, kein fehlgeschlagener Commit.
-Verschachtelte Phasen sind inklusive, nicht additiv; Zähler zählen tatsächliche
-Aufrufe/Bytes, benannte Messlücken bleiben offen. Ressourcen/Signale: Exit 4
-auch nach Rollback; fachliche Fehler: Exit 2. Dauerhaftes P6 einschließlich
-Lockentfernung bleibt Erfolg bei erst danach bemerktem Fristablauf.
-Ein harter Prozessabbruch kann den Abschlussbericht verhindern.
-`*_attempts` zählt begonnene Kandidaten-/Input-/Exportprüfungen, die drei
-`full_*`-Zähler nur deren erfolgreichen vollständigen Rücklauf. Fehler und
-Fristabläufe bleiben als Versuche/Teilzeiten erhalten. Phasen P0–P6/R0–R2
-bezeichnen die gerade ausgeführte Arbeit einschließlich wiederholter Dateien;
-Checkpointfortschritt ist kein vorgezogener Phasenabschluss. Details und
-Zählernamen stehen im [ZA-1-Vertrag](../../docs/ZA1_ADAPTER.md).
-
-Andere Writer, `catalog_reveal --seconds` 1…300, Authoring-Eingangsprüfung,
-Solver-/Import-/Proof- und Datei-/Bytegrenzen bleiben unverändert.
-
-**RI-B-V01 · Branchlieferung zu #479:** Innerhalb einer mutierenden neuen
-Registrierung bleiben Eingangsprüfung und unabhängiger Staging-Replay vollständig.
-Ein privater prozess-/threadgebundener Kontext ersetzt danach ausschließlich die
-beiden wiederholten Proofprüfungen des neuen Pakets in P3/P5 durch vollständige
-frische Inventar-/Byte-Nachprüfungen. Er bindet tatsächliche Freigaben, Parameter,
-Quellen, Methodenbytes, Stagingidentitäten und konkretes Journal. Änderungen,
-Austausch und Scopeende bei Erfolg/Fehler/Abbruch entziehen die Wiederverwendung.
-Diagnostik zählt `verified_package_reuses` getrennt von `full_*`; Nachprüfung ist
-keine weitere vollständige Proofprüfung. Es gibt keinen neuen CLI-Schalter,
-persistenten Cache oder externen Pass-Beleg. Getrennte Befehle prüfen unabhängig;
-`verify-export` vollständig, `plan` lesend, `register` ausdrücklich autorisiert.
-Updates/No-ops, alle globalen Guards, P0–P6/R0–R2 und Recovery bleiben durch B unverändert.
-Recovery verwendet niemals den Kontext. [RI-B-T01](../../docs/RI_B_VERIFICATION.md)
-bindet Plattformmessungen, tatsächliche CI und offene Gates.
-
-**RI-C-F01 / RI-C-V01 · Branchlieferung zu #480:** Nur mutierende v6-
-Erstregistrierungen und deren Recovery verwenden vollständige G0/G2/G5a/G5b/G6-
-bzw. GR0/GR2-Prüfungen mit frischen lokalen Journal-/Ziel-/Eltern-/Tempprüfungen
-zwischen diesen Grenzen. Runtime bleibt letztes Datenziel. Unbeteiligte fremde
-Quellen seit G2 werden spätestens vor Runtime an G5a erkannt; danach an G5b/G6,
-bei Recovery an GR2. Unsicherer Rollback erhält Fremdbytes und Journal.
-Andere Writer/Generationenpfade, CLI, Limits und RI-A-Budgets bleiben erhalten.
-Der [Transaktionsvertrag](../../docs/SD_CATALOG.md#ri-c--phasengrenzen-für-erstregistrierung-v6)
-erklärt die geänderte Erkennungszeit, kooperativen Lock und verbleibende OS-Rennen.
-[RI-C-T01](../../docs/RI_C_VERIFICATION.md) bindet die tatsächlichen Nachweise;
-keine Sekundenbeschleunigung allein aus verringerten Guardzahlen ableiten.
-
-**RI-REPLAY-1 / #650:** Im normalen mutierenden Registrierungs-P5 wird
-`check_checkout` mit dem aus dem Journal gebundenen **neuen** Paket als
-einziger vollständiger Produktionsreplay-Zielpfad ausgeführt. Für den
-Bestand bleiben frische Manifest-/Inventar-/Runtime-/Bild-/Namespace-
-und RI-C-Quellen-/Transaktionsprüfungen erhalten. Eine alte unkompaktierte
-Produktion wird dort nicht wegen Werkzeugdrift neu reproduziert.
-Explizites `check-registry` (`replay=True` ohne Ziel) sowie
-`verify-export` alter Pakete bleiben vollständige und strenge Audits.
-Unbekannte historische HP-W2-Tools werden nicht per Ausnahme zugelassen.
-Keine Änderung von RI-B-Kontextgrenzen, Recovery oder anderen Operationen.
-
-**RI-V9 / #652:** Der geschlossene Generationsvertrag verbindet Erzeuger,
-Dispatch und Recovery: v5 bleibt gemeinsam; v6/v7/v8/v9 laufen phasiert.
-Ein echter v4/v8-Checkout erzeugt v9. Reveal-v4-/Hintergrund-v6-Quellen
-werden über ihre aktuellen Bindungen gelesen, ohne historischen Origin.
-Die leere externe Transportwurzel alter Vollpakete benötigt das gebundene
-v6-Exportmanifest; unbekannte Verzeichnisse bleiben Fehler. Identische
-Registrierung wiederholt Eingangsprüfung und Checkoutintegrität, keinen
-fremden Produktionsreplay. Completion folgt P6 und Registrierungscommit;
-normaler §9-Abschluss bleibt an bestätigtes main gebunden.
-Details: [RI-V9-Vertrag](../../docs/PUZZLE_INTEGRATION.md#6-hp-i1b1--erweiterung-der-belegten-quellenmenge).
-
-KE-N1: `recover-registration` übernimmt gültige alte Runtime-v2-Snapshots in
-Registrierungsjournal v2 bzw. Updatejournal v1 und stellt direkt einen vollständig
-geprüften v3-Checkout her. Beide Snapshots müssen kanonisch und formatgleich sein.
-Die gesamte Zielansicht wird vor Änderungen ohne Produktionsreplay geprüft;
-Wiederaufnahme erlaubt nur exakt gebundene alte/neue Bytes oder die eigene
-hergeleitete v3-Projektion. Fremde Änderungen erhalten alle Dateien samt Journal.
-Kein nachgeschobenes Sync, keine realen Saveänderungen; Journal v1 bleibt gesperrt.
-Feste Altformatregressionen: `tests/puzzle_production/test_ke_recovery.py`.
+## Deduktionskern
 
 Python **3.11+**, ausschließlich Standardbibliothek, ohne Installation von Paketen,
 Netzwerk-/Modellaufrufe oder P1-Abhängigkeit. Aus dem Repository-Root ausführen;
 unter Windows einen tatsächlichen Python-Interpreter statt eines Store-Alias nutzen.
-Fachvertrag: [Rätselproduktion](../../docs/PUZZLE_PRODUCTION.md).
-Prüfzuordnung: [RP1_VERIFICATION.md](../../docs/RP1_VERIFICATION.md).
-Farberweiterung: [RP2_VERIFICATION.md](../../docs/RP2_VERIFICATION.md).
+Fachvertrag: [Rätselproduktion](../../docs/production/PUZZLE_PRODUCTION.md).
+Prüfzuordnung: [RP1_VERIFICATION.md](https://github.com/venomenon328/picross/blob/6fe91a08a4d073547df43c6aebbe8ead4c45ae0f/docs/RP1_VERIFICATION.md).
+Farberweiterung: [RP2_VERIFICATION.md](https://github.com/venomenon328/picross/blob/6fe91a08a4d073547df43c6aebbe8ead4c45ae0f/docs/RP2_VERIFICATION.md).
 RP-1/RP-2 sind nach unabhängigem Review über PR #42/#43 in `main` integriert.
 RP-3-Bildbefehle benötigen die separate Image-Umgebung weiter unten; die bisherigen
 Kernbefehle bleiben ohne Pillow nutzbar. [RP-3-Prüfzuordnung](https://github.com/venomenon328/picross/blob/37f500d5e6599a6c8ff85c8ca8edb4d190474c5f/docs/RP3_VERIFICATION.md).
@@ -1153,7 +922,7 @@ und Schwierigkeit L1–L5 werden durch diese Diagnose nicht verändert.
 
 ## Paarlinienprofil und Schwierigkeit 0.2 (#139 B/C)
 
-Der [Paarlinienvertrag](../../docs/PAIRED_LINES.md) ergänzt ausdrücklich gewählte
+Der [Paarlinienvertrag](../../docs/production/PAIRED_LINES.md) ergänzt ausdrücklich gewählte
 `paired-lines-mono`/`paired-lines-color` v1 und `picross-proof-v3`. Exakte Beziehungen
 zweier beliebiger paralleler Linien werden nach dem vollständigen Linienfixpunkt
 ausgewertet. Der getrennte Prüfer leitet sie selbst her. Standardaufrufe,
@@ -1197,13 +966,13 @@ Eigentümererklärung bindet Originalpaket, Motivannahme, Parameter und Endabnah
 eine eng geprüfte Präfixbindung erhält historische Revealfreigabe und Provenienz.
 Der vollständige RP-3-Pixelimport wird frisch unabhängig zertifiziert, ohne alte
 Gates oder Dateien umzuschreiben. V1–v5, Randregel und Inhaltsgates bleiben erhalten.
-Schema und Grenzen stehen in [ZA-1](../../docs/ZA1_ADAPTER.md); CLI weiterhin
+Schema und Grenzen stehen in [ZA-1](../../docs/production/ZA1_ADAPTER.md); CLI weiterhin
 `--manual-authorization`, Export v3/v4. Synthetische Regressionen prüfen diesen
 Weg; reale Rätsel bleiben reine Produktionsinputs.
 
 ## Instrumentierte Einzelanalyse (SD-A) und feste Bewertung (SD-B)
 
-Der freigegebene [SD-Vertrag](../../docs/PUZZLE_DIFFICULTY.md), Ursprung
+Der freigegebene [SD-Vertrag](../../docs/difficulty/PUZZLE_DIFFICULTY.md), Ursprung
 [#235](https://github.com/venomenon328/picross/issues/235), bindet die getrennte
 Bewertungsspur mit instrumentierten R0–R3-Regeln und synchronen Wellen.
 Bestehende Proofverträge und der unabhängige R4-Notwendigkeitsbeleg bleiben
@@ -1214,8 +983,8 @@ Auch Kopien realer Rätsel dürfen keine automatisierten Bewertungsfälle werden
 SD-C1 führt den gemeinsamen manuellen Weg für ausgewählte Bestandsrätsel und
 neue Rätsel nach finaler Deduktionsprüfung ein: Bericht erzeugen, Bindungen prüfen,
 ausdrücklich beauftragt übernehmen. Passende Berichte sind wiederverwendbar.
-Die [Methode 0.3](../../docs/SD_CALIBRATION.md) ist als opt-in Einzelbewertung
-implementiert; [SD-C1](../../docs/SD_CATALOG.md) liefert die technische Übernahme.
+Die [Methode 0.3](../../docs/difficulty/SD_CALIBRATION.md) ist als opt-in Einzelbewertung
+implementiert; [SD-C1](../../docs/difficulty/SD_CATALOG.md) liefert die technische Übernahme.
 Reale Bestandsbewertung/Übernahme bleibt der separate Auftrag SD-C2. Neue Registrierung
 und logikrelevante Updates verlangen zusätzlich den vollständig geprüften 0.3-Input.
 Authoring 0.5.0 und Produktionsfreigaben bleiben erhalten. Keine reale Analyse in CI,
@@ -1273,7 +1042,7 @@ Produktionsmodus behauptet. Die Sollmatrix wird erst nach der Ableitung geprüft
 Analysehash, Engine-Logikhash und tatsächlicher Definitions-Dateihash bleiben
 getrennt. Kein Bestandscheck und keine Rekonstruktion alter Produktionspakete.
 
-Der vollständige [SD-A-Vertrag](../../docs/SD_ANALYZER.md) definiert die endlichen
+Der vollständige [SD-A-Vertrag](../../docs/difficulty/SD_ANALYZER.md) definiert die endlichen
 Regeln, Wellen, Zähler/Nenner, Symmetrie und die Formate
 `picross-analysis-input-v1`, `picross-analysis-trace-v1` sowie
 `picross-analysis-report-v1`. `result` mit `result_hash` ist deterministisch;
@@ -1322,7 +1091,7 @@ Bytes. Vorhandene Proof-v1/v2/v3-Verifikation und `quality.assess()` bleiben erh
 
 ## SD2-A: Separater Analyseweg
 
-Der [technische Vertrag 1.0](../../docs/SD2_ANALYZER.md) wurde vor Code versioniert.
+Der [technische Vertrag 1.0](../../docs/difficulty/SD2_ANALYZER.md) wurde vor Code versioniert.
 Der eigene Analysator und unabhängige Prüfer verwenden E0–E3 und liefern getrennte
 Rohprofile für Denkanspruch, Suchaufwand und Bearbeitungsumfang. Die eigene CLI
 ist ohne Pillow oder Engine ausführbar:
@@ -1352,19 +1121,19 @@ Lösungsverlauf. Proxys sind keine gemessenen menschlichen Zeiten oder Klickzahl
 Auch vollständige SD2-A-Berichte enthalten keine Endnote oder aktive Bewertung;
 `method`, `level`, `confidence`, `estimated_minutes` bleiben null. Alte Aufrufe
 und der vollständige 0.3-Freeze bleiben erhalten. A ist nach separatem Review
-über PR #408 integriert. [Historische Prüfzuordnung](../../docs/SD2_A_VERIFICATION.md).
+über PR #408 integriert. [Historische Prüfzuordnung](https://github.com/venomenon328/picross/blob/6fe91a08a4d073547df43c6aebbe8ead4c45ae0f/docs/SD2_A_VERIFICATION.md).
 
 ## SD2-C: gemeinsamer Integrationsvertrag
 
-[SD2-C-V01](../../docs/SD2_INTEGRATION.md) bindet vor Code die neuen Checked-/
+[SD2-C-V01](../../docs/difficulty/SD2_INTEGRATION.md) bindet vor Code die neuen Checked-/
 Rating-/Kontext-/Reportformate, Runtime-v5 und Journalgenerationen. Die bisherigen
 0.3-Formate und eigenständigen A-/B-CLIs bleiben geschlossen. Der reale
-Produktionsdefault ist nach [D-F01/T01](../../docs/SD2_D_ADOPTION.md)
+Produktionsdefault ist nach [D-F01/T01](https://github.com/venomenon328/picross/blob/6fe91a08a4d073547df43c6aebbe8ead4c45ae0f/docs/SD2_D_ADOPTION.md)
 auf dem Arbeitsbranch 0.4. Neue `--method`-Auswahl und explizites
 `catalog_method plan/adopt` folgen diesem Vertrag.
-[SD2-C-T01](../../docs/SD2_C_VERIFICATION.md) ordnet die synthetischen Nachweise zu.
+[SD2-C-T01](https://github.com/venomenon328/picross/blob/6fe91a08a4d073547df43c6aebbe8ead4c45ae0f/docs/SD2_C_VERIFICATION.md) ordnet die synthetischen Nachweise zu.
 C ist nach separatem R01 über PR #410 integriert;
-[D-V01](../../docs/SD2_D_VERIFICATION.md) liefert den gesondert beauftragten
+[D-V01](https://github.com/venomenon328/picross/blob/6fe91a08a4d073547df43c6aebbe8ead4c45ae0f/docs/SD2_D_VERIFICATION.md) liefert den gesondert beauftragten
 Bestandsvergleich und Planungsstand vor der anschließenden F01-Übernahme/Aktivierung.
 
 Einzelanalyse und frischer Import verwenden eine ausdrücklich übergebene
@@ -1426,7 +1195,7 @@ Die echte Aktivierung, Analyse und Umstellung bleiben #406.
 
 ## SD2-B: Eigenständige Bewertung 0.4
 
-Der [B-Vertrag](../../docs/SD2_CALIBRATION.md) bindet vorab festgelegte unabhängige
+Der [B-Vertrag](../../docs/difficulty/SD2_CALIBRATION.md) bindet vorab festgelegte unabhängige
 synthetische Referenzen, getrennte Validierung, genaue rationale Arithmetik und
 den eingefrorenen Methodensatz. Der folgende Weg bewertet nur den ausdrücklich
 übergebenen Input. 0.3 bleibt aktiv; gemeinsame Integration und reale Umstellung
@@ -1459,13 +1228,13 @@ geprüft, auch wenn stalled/contradiction keine Note erlauben. Exit 2/3/4/5
 bezeichnen Eingabe-/Beleg-/Abbruch-/Technikfehler. Ein verifizierter abgebrochener
 Präfix bleibt unrated und liefert Exit 4; Prüfabbrüche schreiben kein Rating.
 Ausgabeordner müssen neu sein. Explizites R4 erfordert beide `--r4-proof` und
-`--r4-baseline`; kein automatischer Paarlauf. [SD2-B-T01](../../docs/SD2_B_VERIFICATION.md)
+`--r4-baseline`; kein automatischer Paarlauf. [SD2-B-T01](https://github.com/venomenon328/picross/blob/6fe91a08a4d073547df43c6aebbe8ead4c45ae0f/docs/SD2_B_VERIFICATION.md)
 bindet den historischen Lieferstand/Selbstreview; B ist nach separatem R01
 über PR #409 integriert.
 
 ## SD-C1: Kandidat, geprüfter Input, Vorschau und Übernahme
 
-[Daten-/Recoveryvertrag](../../docs/SD_CATALOG.md). Keine dieser Operationen läuft
+[Daten-/Recoveryvertrag](../../docs/difficulty/SD_CATALOG.md). Keine dieser Operationen läuft
 automatisch bei Export, Registryprüfung, Build oder Spielstart. In C1 werden nur
 synthetische Fälle geprüft; der echte Erstlauf und seine Übernahme bleiben SD-C2.
 Alle Arbeits-/Ausgabepfade ausdrücklich wählen, außerhalb von `game/` und
@@ -1501,22 +1270,19 @@ Ein gültiger Bericht, auch `unrated`, beendet den Befehl mit 0; ungültige Date
 mit 2, ein nicht als Bericht abgeschlossener Budgetabbruch mit 4. Status/Grund
 im Bericht sind maßgeblich, nicht allein der Prozessstatus.
 
-Nach tatsächlicher Endfreigabe und unverändertem regulärem `target_adapter export`:
+Eine geprüfte Bewertung bei Bedarf ausdrücklich an die finale Definition binden:
 
 ```sh
-python -m tools.puzzle_production.catalog_analysis rebind --input <export/runtime/data/content/stem.json> --production-mode <mono-oder-color> --rating <work/checked.json> --output <work/final-checked.json>
-python -m tools.puzzle_production.target_adapter plan --input <current-input> --checkout <checkout>
-python -m tools.puzzle_production.target_adapter register --input <current-input> --checkout <checkout>
+python -m tools.puzzle_production.catalog_analysis rebind --input <final-definition.json> --production-mode <mono-oder-color> --rating <work/checked.json> --output <work/final-checked.json>
 ```
 
-Rebind verlangt identische ID, Produktionsmodus, kanonische Logik und Zielmatrix; ursprüngliches
-`rating.source` bleibt erhalten. Alternativ führt `--rebind-difficulty` im Plan/
-Register/Update die ausdrücklich gewählte Neubindung durch. Neue Registrierung
-und logisch geänderte Definitionen brauchen vollständiges 0.3. Für einen
-Metadatenupdate mit vorhandener aktiver Bewertung genügt bei gleichem Modus/Logik/Matrix
-`--rebind-difficulty`. Identische Legacy-Wiederholungen brauchen keine neue Analyse.
-`plan-update`/`update` behalten zusätzlich ihren Erwartungshash, neue Paket-/Runtime-
-Revision und vollständige ZA-1-Prüfung. Reine Bewertungsänderung benutzt sie nicht.
+Rebind verlangt identische ID, Produktionsmodus, kanonische Logik und Zielmatrix;
+ursprüngliches `rating.source` bleibt erhalten. Die aktuelle fachliche Auswahl
+und zulässige Integration bestimmen [SD-Catalog](../../docs/difficulty/SD_CATALOG.md)
+und [SD2-Integration](../../docs/difficulty/SD2_INTEGRATION.md). Die passende fertige
+Bewertung gehört in den [RI-ONE-Eingang](#ri-one-aktuelle-integration).
+Alte `--rebind-difficulty`- und `plan-update`-/`update`-Routen sind abgelöst;
+Rasteränderung registrierter Rätsel verwendet den [Editor](#aktuelle-bestandsbearbeitung).
 
 Neue checked-/aktive Hüllen verwenden v2 mit separatem `production_mode`.
 Alte v1-Hüllen bleiben lesbar, aber ohne erfundene Modusherkunft: Rebind und neue
@@ -1551,10 +1317,10 @@ alte Produktionsbelege, Definitionen, Revisionen, Kategorien und Saves bleiben.
 Report-v2 bindet zusätzlich alle gelesenen Quellen. `plan-adoption` und `adopt`
 prüfen vor einem No-op den erwarteten Übernahmezustand einschließlich dieser
 Quellen; nach zwischenzeitlicher Kategorie-/Registry-/Ratingänderung stoppen beide
-konkret ohne Mutation. Alte Report-v1-Journale und identische Wiederholungen bleiben
-unter ihren ursprünglichen Bindungen unterstützt; die zusätzliche vollständige
-Quellenbindung gilt für neue v2-Berichte.
-Der gemeinsame Lock schützt Register/Update/Sync/Adoption. Nach Unterbrechung:
+konkret ohne Mutation. Der aktuelle gemeinsame Katalogjournalvertrag steht in
+[SD-Catalog](../../docs/difficulty/SD_CATALOG.md#aktuelle-katalogjournale);
+frühere Journalgenerationen sind keine aktuellen Recoveryeingänge.
+Der gemeinsame Lock schützt Registrierung, Editor, Sync und Adoption. Nach Unterbrechung:
 
 ```sh
 python -m tools.puzzle_production.target_adapter recover-registration --checkout <checkout>
@@ -1562,9 +1328,8 @@ python -m tools.puzzle_production.target_adapter recover-registration --checkout
 
 Recovery prüft vollständig vor Mutation und stellt eine gültige Altprojektion
 her. Fremdänderungen erhalten Dateien und Journal; den Konflikt klären, nicht
-den Lock löschen oder durch `sync-runtime` umgehen. Exakte KE-Altjournale bleiben
-nur ohne ungebundene aktive Sidecars wiederaufnehmbar. Neue Formate und Grenzen
-stehen im SD-C1-Vertrag.
+den Lock löschen oder durch `sync-runtime` umgehen. Formen und Grenzen stehen im
+[aktuellen Katalogvertrag](../../docs/difficulty/SD_CATALOG.md#aktuelle-katalogjournale).
 
 Alle Quellen-/Recoverywege prüfen auch verwaiste oder falsch platzierte aktive
 Ratingdateien. Nur `content/difficulty/<registrierte-ID>/rating.json` ist aktiv;
@@ -1626,8 +1391,8 @@ Diese technischen Referenzen behaupten keine Motiv-/Pilotqualität.
 
 ## CI und Artefakte
 
-[Package CI](../../docs/CI_WORKFLOW_V2.md) wählt `production.solver/images/adapter/catalog`
-über den aktuellen Paketplan. [Fachgruppen](../../docs/CI_A_SELECTION.md) und
+[Package CI](../../docs/ci/CI_WORKFLOW_V2.md) wählt `production.solver/images/adapter/catalog`
+über den aktuellen Paketplan. [Fachgruppen](../../docs/ci/CI_A_SELECTION.md) und
 `tools/production_contract.py` binden Tests und Integrationen. Kein pauschaler
 Fachlauf bei jedem PR/Main-Push. Der eigene Fachtestort liegt außerhalb des
 `tools`-Discoverys. Allgemeiner Windowsbau und Produktionsnachweis sind getrennt.
@@ -1761,36 +1526,37 @@ ZA-1 mit expliziter Freigabe, Kategorie und Registrierung.
 
 Für ausdrücklich autorisierte feste manuelle Mono-Entfernungen ohne Suchlauf
 unterstützt ZA-1 zusätzlich einen versionierten Replay-/Autorisierungsweg.
-Vertrag, `--manual-authorization`, unveränderte Originalbindungen und v3-Export:
-[ZA-1: manuelle Ableitungen](../../docs/ZA1_ADAPTER.md#autorisierte-manuelle-ableitungen).
+Die gebundene `manual_authorization` und unveränderten Originalbindungen werden
+in der kreativen Arbeitsprüfung behandelt; fachliche Einordnung:
+[ZA-1: kreative Vorbereitung](../../docs/production/ZA1_ADAPTER.md#kreative-werkzeuge-und-fachliche-qualität).
 Dieser Weg ersetzt weder RP-5 noch dessen Such-/Nachweisvertrag.
 
 Die additive v2-Autorisierung unterstützt auch feste manuelle Einfügungen in
 gespeicherten Mono-Rasterimporten und eine ausdrücklich an die Endauswahl
 gebundene Randregel-Ausnahme. Beide RP-3-Bündel, sämtliche feste Edits und der
 Endproof werden frisch geprüft; Original-ZIP/Handoff/Inventar bleiben unverändert.
-Schema, Grenzen und synthetische Tests: [ZA-1-v2-Vertrag](../../docs/ZA1_ADAPTER.md).
+Schema, Grenzen und synthetische Tests: [ZA-1-v2-Vertrag](../../docs/production/ZA1_ADAPTER.md).
 
 Die additive v3-Autorisierung bindet bereits versiegelte feste Farbkorrekturen
 mit nachträglicher menschlicher Motiv-/Parameterannahme. Sie replayt eine begrenzte
 Kette gespeicherter Edits mit exakten Schutzmasken und prüft sämtliche RP-3-/RP-5-
 Herkunfts- und Proofbindungen frisch. Originale bleiben unverändert, alle übrigen
-Inhaltsgates einschließlich Randregel Pflicht. CLI bleibt `--manual-authorization`,
-Exportformat v3. [ZA-1-v3-Vertrag](../../docs/ZA1_ADAPTER.md).
+Inhaltsgates einschließlich Randregel Pflicht. Die Autorisierung gehört zur
+Arbeitsprüfung, der finale Katalogeingang zu [ZA-1](../../docs/production/ZA1_ADAPTER.md).
 
 Die additive v4-Autorisierung unterstützt feste manuelle Farbkorrekturen aus
 einer bereits freigegebenen Motivvorlage. Original-ZIP, Handoff, Inventar und
 Motivfreigabe bleiben unverändert; Parameter werden am Originalimport geprüft,
 danach die exakte feste Zellkette und sämtliche unabhängigen Proofs. Alle
-Inhaltsgates und echte Endabnahme bleiben Pflicht. CLI und v3-Exportformat
-bleiben gleich. [ZA-1-v4-Vertrag](../../docs/ZA1_ADAPTER.md).
+Inhaltsgates und echte Endabnahme bleiben Pflicht. Auch diese Arbeitsform ist
+kein eigener Katalogexport; aktueller Eingang nach [ZA-1](../../docs/production/ZA1_ADAPTER.md).
 
 V5 ergänzt ausdrücklich freigegebene feste Farbkorrekturen aus einem unabhängig
 bestätigten ursprünglichen `stalled`-Direktimport. Die Originalquelle und der
 vollständige Fixpunkt werden frisch geprüft; alle korrigierten Kindstufen
 benötigen vollständige Zertifikate. Eigentümerbindung, Masken und Endabnahme
 bleiben Pflicht; v1–v4 werden nicht gelockert. CLI/Exportformate bleiben gleich.
-[ZA-1-v5-Vertrag](../../docs/ZA1_ADAPTER.md).
+[ZA-1-v5-Vertrag](../../docs/production/ZA1_ADAPTER.md).
 
 [Versionierter Vertrag, Status-/Exitcodes, Schema-/Hash-/Ressourcengrenzen](../../examples/rp5/README.md),
 [Prüfzuordnung](https://github.com/venomenon328/picross/blob/37f500d5e6599a6c8ff85c8ca8edb4d190474c5f/docs/RP5_VERIFICATION.md), [Offlinevergleich](https://github.com/venomenon328/picross/blob/37f500d5e6599a6c8ff85c8ca8edb4d190474c5f/examples/rp5/index.html).
@@ -1811,28 +1577,19 @@ RP5-Korpus, seine Suchpläne und der separate Replayjob werden nicht benötigt.
 
 ## Historische Produktionen und Abschluss
 
-Dieser frühere Integrationsweg ist durch RI-ONE ersetzt. Der vollständige aktuelle
-Input- und Befehlsvertrag steht in [ZA-1](../../docs/ZA1_ADAPTER.md), die getrennten
-Editoroperationen in [PE](../../docs/PUZZLE_EDITOR.md), der Batchplan v2 in
-[BA-B](../../docs/PRODUCTION_BATCH.md#8-ba-b-autorisierte-serielle-einzelintegration).
-Es gibt keinen Export-v6-/Receipt-Fallback und keinen historischen Abschlussreplay.
-
-```text
-python -m tools.puzzle_production.target_adapter export --input <final-input> --output-dir <new-output>
-python -m tools.puzzle_production.target_adapter plan --input <new-output> --checkout <checkout>
-python -m tools.puzzle_production.target_adapter register --input <new-output> --checkout <checkout>
-```
-
-Der Input muss vor dem Aufruf vollständige aktuelle Daten, unabhängigen Deduktions-
-nachweis, Rechte und echte gebundene Endfreigabe enthalten. Der Export erfindet
-keine Entscheidung. Schritte und Abschluss: [Authoring 5](../../docs/ai-workflows/PUZZLE_AUTHORING_STEP_5.md).
+Dieser frühere Weg ist durch [RI-ONE](#ri-one-aktuelle-integration) ersetzt.
+Frühere Formen und Befehle bleiben im
+[gebundenen Vorgängerstand](https://github.com/venomenon328/picross/blob/6fe91a08a4d073547df43c6aebbe8ead4c45ae0f/tools/puzzle_production/README.md)
+nachschlagbar. Aktuelle Bild-/Rasterpflege verwendet den [Editor](#aktuelle-bestandsbearbeitung),
+aktueller Abschluss [Authoring Schritt 5](../../docs/production/authoring/PUZZLE_AUTHORING_STEP_5.md).
 
 ## KU-B: Hinzugefügt-Metadaten
 
 `catalog_added` validiert ID-gebundene Sidecars und dauerhafte Quellenbelege;
 Registryprojektion, Registrierung, Update, Sync, Bewertungsadoption und Recovery
-verwenden denselben Transaktionsweg. Neue Runtime ist v4; alte exakte v2/v3 bleiben
-lesbar. Der separate historische Nachtrag läuft ausdrücklich und ohne Analyse:
+verwenden den aktuellen Katalogtransaktionsweg. Runtimeprojektion und reine
+Spieler-Lesekompatibilität stehen in [RI-ONE](../../docs/production/PUZZLE_INTEGRATION_SINGLE_PATH.md#21-geschlossene-aktuelle-runtimeprojektion).
+Der separate historische Nachtrag läuft ausdrücklich und ohne Analyse:
 
 ```powershell
 python -m tools.puzzle_production.catalog_added_history plan --root . --run <run> --base <vollstaendiger-main-SHA> --repository venomenon328/picross --output <plan.json>
@@ -1846,206 +1603,40 @@ als JSON-Liste übergeben werden. `adopt` ohne `--apply` bleibt lesend; beide We
 prüfen vollständige Quellbindungen. Eine identische Übernahme ist ein echter
 Byte-/mtime-No-op. Bestehende Metadaten bleiben bei Folgeplänen erhalten, neue IDs
 oder geänderte Quellen verlangen einen neuen Plan. Fremde Bytes blockieren
-Recovery vor Mutation. Details: [KU-B-Vertrag](../../docs/CATALOG_SORTING.md),
-[Bestandsplan](../../docs/KU_B_BACKFILL.md).
+Recovery vor Mutation. Details: [KU-B-Vertrag](../../docs/game/CATALOG_SORTING.md),
+[Bestandsplan](https://github.com/venomenon328/picross/blob/6fe91a08a4d073547df43c6aebbe8ead4c45ae0f/docs/KU_B_BACKFILL.md).
 
-## AT: Noch zu implementierender Bildupdateweg
+## Bildrevisionen: aktueller Weg und AT-Historie
 
-Der freigegebene [AT-A-Vertrag](../../docs/REVEAL_TRANSPARENCY.md) verlangt eine
-eigene Bildrevision mit neuer tatsächlicher Freigabe und nachvollziehbarer
-Alt-/Neuhashbindung außerhalb historischer Produktions-/Integrationsbelege.
-PNG-Alpha wird durch den bestehenden Revealexport bereits bytegleich erhalten;
-der Austausch eines registrierten Bilds benötigt dennoch den zusätzlichen
-abgesicherten Weg. Ein bloßes Überschreiben des PNGs oder nachträgliches
-Umschreiben seiner alten Freigabe-/Manifestbindung ist keine gültige Übernahme.
-
-P01 legt vor der ersten betroffenen Codeänderung die exakten Eingänge, Pfade,
-Felder, Versionen, Grenzen und die nachfolgende Soll-Syntax gemeinsam in
-[ZA-1](../../docs/ZA1_ADAPTER.md), [Projektion](../../docs/CATEGORIES.md) und dem
-[Transaktionsvertrag](../../docs/SD_CATALOG.md) fest. Die AT-A-Implementierung
-und ihr Prüfstand sind in [AT-A-T01](../../docs/AT_A_VERIFICATION.md) gebunden.
-Lesender Plan, aktuelle
-Erwartungshashes, gemeinsame Quellenprüfung, versionierter Binärersatz,
-kontrollierter Rollback und echte Wiederholungs-No-ops gehören zusammen.
-Ein zulässiger Altstand ohne neue Bildquelle und eine vorhandene ungültige
-Bildquelle bleiben unterscheidbar; fremde Bytes werden einschließlich Journal
-erhalten.
-
-Reine Bildupdates erhalten Definitionen, Runtime-Revisionen, Raster/Hinweise,
-IDs/Keys, Ressourcenpfade, Slots, Kategorien, Ratings und Hinzugefügt-Daten
-bytegleich. Keine neue Analyse, Zertifizierung oder Wiederherstellung gelöschter
-Produktionspakete. Bestehende Register-/Rasterupdate-/Sync-/Adopt-/Cleanup-/
-Recoverywege müssen die aktive Bildbindung gemeinsam erhalten; alte exakte
-Formate werden nicht gelockert. Synthetische technische Regressionen gehören
-zu AT-A, konkrete Bestandsfreistellung, Bildabnahme und Motivprüfung zu AT-B.
-
-### AT-P01-D04 · CLI für Bildrevisionen
-
-Eigener Moduleinstieg `tools.puzzle_production.catalog_reveal`. Genau zwei
-Unterbefehle, keine automatische Bestandsauswahl, kein Force/Resume/Skip-Schalter:
-
-```sh
-# Nur explizit freigegebene Bildrevisionen; keine automatische Bestandsauswahl.
-python -m tools.puzzle_production.catalog_reveal plan --checkout <checkout> --id <pz-ID> [--id <weitere-ID>] --input <externe-anfrage.json> --output-dir <neuer-externer-planordner> [--seconds 300]
-python -m tools.puzzle_production.catalog_reveal adopt --checkout <checkout> --plan <planordner/plan.json> [--seconds 300]
-# Gemeinsamer Recovery-Einstieg, einschließlich AT-Binärjournalen:
-python -m tools.puzzle_production.target_adapter recover-registration --checkout <checkout>
-```
-
-`--checkout`, `--input`, `--output-dir`, `--plan` sind einzelne Pfadargumente,
-`--id` wiederholbar, mindestens einmal, eindeutig und kanonisch. Keine `--all`-
-Option oder implizite Auswahl. Anfrageliste und ID-Auswahl stimmen exakt überein;
-beide werden lexikografisch normalisiert, doppelte IDs bleiben Fehler.
-`--seconds` Ganzzahl 1…300, Default 300, kumulative monotone Deadline vom ersten
-Eingabelesen bis zur Abschlussprüfung; keine Identitätswirkung. Recoverybudget
-und Unterbrechungsregeln stehen im Transaktionsvertrag. Argparsefehler Exit 2.
-
-Alle Eingangsbilder liegen neben/unter der externen Anfragedatei; relative
-Pfade nach ZA-1, keine Links/Hardlinks/Reparsepunkte/Traversal oder Kollisionen.
-Die geprüften absoluten Ein-/Ausgabewurzeln müssen außerhalb des gesamten
-Checkouts liegen und dürfen einander nicht überdecken. Kein automatisches Laden
-von URLs/Git/Chats. `plan` erzeugt nur einen **neuen nicht vorhandenen** externen
-Ordner; ein vorhandener leerer Ordner ist ebenfalls Fehler. Darin exakt
-`plan.json`, `images/<pz-ID>.png|svg` (neu) und `previous/<pz-ID>.png|svg` (alt),
-je mit zur vorhandenen Revealendung passendem Suffix. Alte Live-Bildbytes werden
-für die unabhängige Altprüfung beim Wiederholungs-No-op ebenfalls extern gesichert.
-Bildbytes werden unverändert kopiert; keine Formatkonvertierung oder
-Bildbearbeitung. Keine zusätzlichen/aliasierenden Dateien. Fehler dürfen ein
-als unvollständig bezeichnetes externes Arbeitsverzeichnis hinterlassen; ohne
-vollständig geschriebenen und frisch geprüften Plan ist es kein `adopt`-Input.
-
-Inputformat `picross-reveal-request-v1`, exakt `format,entries`.
-1…10000 Zeilen, je exakt `id,image,approval,provenance,notice_append`.
-`image` ist der sichere relative Eingangsbildpfad; `approval` und `provenance`
-sind die vollständigen geschlossenen Objekte nach ZA-1, keine Dateiverweise.
-`notice_append` ist null für identische Notice oder nichtleerer UTF-8/LF-Text
-ohne BOM/NUL, endet LF; Zielnotice ist exakt alte Notice + LF + dieser Text.
-Das alte Präfix bleibt erhalten, Gesamtlimit 64 KiB. Freigabe bindet den Hash
-dieser vollständigen Zielnotice. Nur Bildrevisionen mit tatsächlich anderen
-Bildbytes sind planbar; bereits erreichter Stand wird durch denselben Plan
-wiederholt, nicht durch künstliche neue Revision einer identischen Datei.
-
-PNG/SVG-Grenzen bleiben: 32 MiB je Datei, 8192 je Achse, höchstens 8000000 Pixel,
-Detailauflösung mindestens zwei Pixel je aktueller Rasterzelle; lokales begrenztes
-SVG-Profil bis 10000 Elemente ohne externe Referenzen/Ausführung/Entities.
-Kein JPEG oder Endungswechsel am bestehenden Pfad. PNG wird vollständig geprüft,
-keine Animation/trunkierten Daten; vorhandene gültige Altformate bleiben erhalten.
-Transparenzqualität ist eine tatsächliche Bildentscheidung nach AT, kein
-automatisches Akzeptieren allein wegen eines Alphakanals.
-Anfrage maximal 8 MiB, Plan-JSON maximal 128 MiB, bis 10000 Zeilen;
-kopierte alte und neue Bilder zusammen maximal 96 MiB. JSON-/String-/Tiefen-/Hashregeln wie
-ZA-1, sämtliche Objektfelder exakt. Engeres Journal-/Zielrecordlimit gilt schon
-bei Planung: ein nicht journalisierbarer Mehrfachplan darf nicht erfolgreich
-ausgegeben werden. Zu große Anfragen ausdrücklich aufteilen, keine Teilübernahme.
-
-### Gespeicherter Plan und Ergebnis
-
-`picross-reveal-plan-v1` hat exakt
-`format,ids,snapshot,entries,writes,plan_hash`. Keine Zeit/Git-HEAD/absoluten
-Maschinenpfade im Identitätskern; `plan_hash=H(Plan ohne plan_hash)` nach ZA-1.
-Datei exakt kanonisches JSON plus LF. `ids` ist die eindeutige sortierte Auswahl.
-
-| Feld | Geschlossener Untervertrag |
-| --- | --- |
-| `snapshot` | Exakt `sources,namespaces`. `sources` ist die vollständige Pfad→Dateihash/null-Map aus T/K des Transaktionsvertrags, einschließlich erwarteter AT-/Rating-/Added-Abwesenheiten und erlaubter fehlender neuer Textziele; maximal 100000 Pfade. `namespaces` exakt `reveals,difficulty,added,packages`, jeweils lexikografisch sortierte Liste aller bei der Quellenprüfung relevanten regulären Dateipfade, ohne doppelte Pfade. Leere erlaubte Verzeichnisse haben keine Identitätswirkung. |
-| `entries[]` | Sortiert nach Auswahl, je exakt `id,old_image_revision,new_image_revision,binding_hash,old_reveal,new_reveal,old_record,new_record,old_notice,new_notice`. Altbildrevision 0 nur bei noch fehlendem Record, sonst letzte; neue genau +1. Bindung ist aktuelle geprüfte Bindung beziehungsweise neue erste Bindung aus Altproduktion. |
-| `old_reveal` | Exakt `file,sha256,bytes`, `file` genau `previous/<id>.<vorhandene-Endung>`, externe unveränderte Kopie der geprüften alten Live-Bildbytes, nicht null. |
-| `new_reveal` | Exakt `file,sha256,bytes`, `file` genau `images/<id>.<vorhandene-Endung>` im Planordner, Hash/Bytezahl der kopierten neuen Bytes. |
-| `old_record` | Null bei bisher fehlender Quelle, sonst exakt `text,sha256`, ursprünglicher vollständiger kanonischer UTF-8-Record samt LF und Dateihash. |
-| `new_record` | Exakt `text,sha256`, vollständige nach Appendregel hergeleitete neue Quelle, inklusive Freigabe/Herkunft/Historie; nicht null. |
-| `old_notice,new_notice` | Exakt `text,sha256` nach ZA-1; unveränderte Notice ist in beiden gleich. |
-| `writes[]` | Nur tatsächlich geänderte Ziele, lexikografisch nach Pfad; je exakt `path,kind,old_sha256,new_sha256,bytes`. `kind` ist `binary-replace`, `text-add` oder `text-replace`; `bytes` neue Dateibytes, positiver Integer. Althash nur bei Textneuanlage null. |
-
-`old/new_record.sha256` sind Dateihashes, `record_hash` innen ist der eigene
-kanonische Objekthash. Alle Inhalte/Hashes/Bytezahlen werden selbst berechnet und
-bei `adopt` neu geprüft. Schreibpfade werden **ausschließlich** aus geprüfter
-Registry/ID hergeleitet und gegen `writes` exakt verglichen. Keine Eingabepfade
-in den Checkout kopieren. Alt-/Neubildgrößen und Notice-/Recordgrößen folgen
-ihren strengeren Einzelgrenzen. Ganze Plandatei und Bildinventar werden beim
-Planabschluss frisch gelesen und unmittelbar vor sowie unter Lock erneut geprüft.
-
-`adopt` konsumiert genau diesen unveränderten gespeicherten Plan; keine neue
-Freigabe, ID-Auswahl oder Bilddateioption. Vollständige Quellen-/Namespacebindung
-erneut prüfen, Alt-/Zielzustand isoliert validieren, Journal nach SD_CATALOG
-erzeugen, gemeinsame Transaktion ausführen, abschließend den Zielcheckout prüfen.
-Geänderter Registry-/Kategorie-/Runtime-/Definitions-/Rating-/Added-/AT-/Bild-/
-Notice-/Produktionsstand einer beliebigen gebundenen ID ist stale. Keine neue
-Analyse, kein Produktionsreplay allein wegen des Bildwechsels.
-
-**Eigener No-op:** Alle `writes` müssen exakt ihre vollständigen eigenen Zielbytes
-besitzen, sämtliche übrigen Quellen und Inventare weiterhin passen. Hinzugekommene
-eigene AT-Recordpfade werden nur im rekonstruierten Namespaceinventar entfernt. Die
-gebundenen Alttexte/Bildhashes werden nur im Speicher eingesetzt und ergeben
-exakt den ursprünglichen Snapshot; der ursprüngliche Altcheckout wird ebenfalls
-isoliert geprüft. Planbilder, Freigaben, Historie, Zielrevisionen und Recordbytes
-müssen vollständig passen. Das Erreichen nur einer Teilmenge ist kein No-op.
-Bei offener Transaktion zuerst Recovery, niemals No-op am Lock vorbei.
-Erfolg vor Journalanlage, ohne Byte-/Revisions-/mtimeänderung oder Rewrite.
-Fehlendes Ziel, andere Freigabe, ähnliche Pixel oder inzwischen dritte Bildrevision
-blockieren als stale/conflict. Ein alter Plan nach Cleanup ist ebenfalls stale.
-
-Stdout ist genau ein JSON-Objekt `picross-reveal-result-v1`, exakt
-`format,status,plan_hash,ids,changes,error,recovery_required`.
-`status`: `planned,adopted,no-op,invalid_input,aborted`; `plan_hash` Hash oder
-null falls noch kein gültiger Plan ermittelt; `ids` geprüfte sortierte Auswahl
-oder leere Liste vor gültiger Auswahl; `changes` bei `planned/adopted` exakt
-`writes`, sonst `[]`. `error` null bei Erfolg, sonst exakt `code,message`:
-Code `invalid_input,stale,conflict,io_error,resource_limit,interrupted`, Nachricht
-1…2048 Zeichen, keine Secrets. `recovery_required` Boolean, true ausschließlich
-bei erhaltenem offenen Lock oder konkret blockierendem Journalstagingrest.
-Kein zusätzliches dauerhaftes Ergebnisformat: stdout darf extern protokolliert
-werden; die dauerhafte Freigabe-/Revisionshistorie steht im aktiven Record.
-
-| Exit | Ergebnis und Grenze |
-| --- | --- |
-| 0 | Nur `planned`, `adopted`, `no-op`; vollständige Prüfung erfolgreich. `planned` verändert keine Repositoryquelle. |
-| 2 | Ungültiger/blockierter Eingang, stale Plan, Fremdkonflikt oder gewöhnlicher Datei-/Schreibfehler. Nach Mutation nur mit erfolgreichem Rollback oder ausdrücklich erhaltenem Journal samt `recovery_required=true`. |
-| 4 | Zeit-/Speicher-/Signalabbruch; keine Erfolgsaussage. Journal-/Rollbackzustand nach Transaktionsvertrag. |
-
-Unbekannte Optionen sind Fehler; kein Exit 0 für Teiladoption. Harter Kill kann
-kein stdout garantieren. Der bestehende Recoveryeinstieg behält seine Ausgabe
-`rolled-back/registered=false` bei Erfolg und seine 0/2/4-Konvention.
+Aktuelle registrierte Bilder werden über den
+[gezielten Editor](#aktuelle-bestandsbearbeitung) bearbeitet. `catalog_reveal`
+leitet ebenfalls auf die aktuelle Bild-CLI; der frühere eigene AT-Plan-/Adopt-
+Vertrag und seine Binärjournale sind abgelöst. Seine früheren Feldformen,
+Befugnisse und Nachweise bleiben im
+[historischen AT-Abschnitt](https://github.com/venomenon328/picross/blob/6fe91a08a4d073547df43c6aebbe8ead4c45ae0f/tools/puzzle_production/README.md#at-noch-zu-implementierender-bildupdateweg).
+Die weiterhin geltenden visuellen Regeln besitzt der
+[Transparenzstandard](../../docs/production/REVEAL_TRANSPARENCY.md).
 
 ## HP-I1b2: eigenständiger Hintergrundwechsel und revisionsgenauer Abschluss
 
-Dieser frühere Integrationsweg ist durch RI-ONE ersetzt. Der vollständige aktuelle
-Input- und Befehlsvertrag steht in [ZA-1](../../docs/ZA1_ADAPTER.md), die getrennten
-Editoroperationen in [PE](../../docs/PUZZLE_EDITOR.md), der Batchplan v2 in
-[BA-B](../../docs/PRODUCTION_BATCH.md#8-ba-b-autorisierte-serielle-einzelintegration).
-Es gibt keinen Export-v6-/Receipt-Fallback und keinen historischen Abschlussreplay.
-
-```text
-python -m tools.puzzle_production.target_adapter export --input <final-input> --output-dir <new-output>
-python -m tools.puzzle_production.target_adapter plan --input <new-output> --checkout <checkout>
-python -m tools.puzzle_production.target_adapter register --input <new-output> --checkout <checkout>
-```
-
-Der Input muss vor dem Aufruf vollständige aktuelle Daten, unabhängigen Deduktions-
-nachweis, Rechte und echte gebundene Endfreigabe enthalten. Der Export erfindet
-keine Entscheidung. Schritte und Abschluss: [Authoring 5](../../docs/ai-workflows/PUZZLE_AUTHORING_STEP_5.md).
+Dieser frühere Weg ist durch [RI-ONE](#ri-one-aktuelle-integration) ersetzt.
+Frühere Formen und Befehle bleiben im
+[gebundenen Vorgängerstand](https://github.com/venomenon328/picross/blob/6fe91a08a4d073547df43c6aebbe8ead4c45ae0f/tools/puzzle_production/README.md)
+nachschlagbar. Aktuelle Bild-/Rasterpflege verwendet den [Editor](#aktuelle-bestandsbearbeitung),
+aktueller Abschluss [Authoring Schritt 5](../../docs/production/authoring/PUZZLE_AUTHORING_STEP_5.md).
 
 ## HP-I1c: Rasterupdate und Revealadoption gültiger Hintergrundziele
 
-Dieser frühere Integrationsweg ist durch RI-ONE ersetzt. Der vollständige aktuelle
-Input- und Befehlsvertrag steht in [ZA-1](../../docs/ZA1_ADAPTER.md), die getrennten
-Editoroperationen in [PE](../../docs/PUZZLE_EDITOR.md), der Batchplan v2 in
-[BA-B](../../docs/PRODUCTION_BATCH.md#8-ba-b-autorisierte-serielle-einzelintegration).
-Es gibt keinen Export-v6-/Receipt-Fallback und keinen historischen Abschlussreplay.
-
-```text
-python -m tools.puzzle_production.target_adapter export --input <final-input> --output-dir <new-output>
-python -m tools.puzzle_production.target_adapter plan --input <new-output> --checkout <checkout>
-python -m tools.puzzle_production.target_adapter register --input <new-output> --checkout <checkout>
-```
-
-Der Input muss vor dem Aufruf vollständige aktuelle Daten, unabhängigen Deduktions-
-nachweis, Rechte und echte gebundene Endfreigabe enthalten. Der Export erfindet
-keine Entscheidung. Schritte und Abschluss: [Authoring 5](../../docs/ai-workflows/PUZZLE_AUTHORING_STEP_5.md).
+Dieser frühere Weg ist durch [RI-ONE](#ri-one-aktuelle-integration) ersetzt.
+Frühere Formen und Befehle bleiben im
+[gebundenen Vorgängerstand](https://github.com/venomenon328/picross/blob/6fe91a08a4d073547df43c6aebbe8ead4c45ae0f/tools/puzzle_production/README.md)
+nachschlagbar. Aktuelle Bild-/Rasterpflege verwendet den [Editor](#aktuelle-bestandsbearbeitung),
+aktueller Abschluss [Authoring Schritt 5](../../docs/production/authoring/PUZZLE_AUTHORING_STEP_5.md).
 
 ## HP-I2: Runtimeanschluss und isolierter Hintergrundimport
 
 [Paketentscheidung](https://github.com/venomenon328/picross/issues/561#issuecomment-6770077470)
-und [normativer Runtimevertrag §13](../../docs/PUZZLE_BACKGROUNDS.md#13-hp-i2--runtime-darstellung-und-besuch)
+und [normativer Runtimevertrag §13](../../docs/production/PUZZLE_BACKGROUNDS.md#13-hp-i2--runtime-darstellung-und-besuch)
 führen Reader v6, papiergebundene Darstellung A und begrenztes Bedarfsladen im
 regulären Buch. Die bestehende `game/data/background-capability.json` darf erst
 mit diesem funktionierenden und technisch abgenommenen Weg true sein. Die
@@ -2115,26 +1706,10 @@ rätsel werden durch HP-I2 nicht migriert; Legacy-only bleibt Runtime v5.
 
 ## MJ-B: eigener Hintergrundwechsel im Offline-Sheet
 
-[Vertrag §7.6](../../docs/PUZZLE_BACKGROUNDS.md#76-mj-b-eigenständige-hintergrundrevision-im-sheet)
-führt die geschlossenen äußeren Formen. „Neuer Hintergrundwechsel“ legt einen
-separaten 0.7-Job an; neue reguläre Jobs bleiben 0.6. Originalrequestdatei mit
-kanonischen Bytes einschließlich End-LF nach Vorschau übernehmen, unverändert
-als Sitzung sichern oder in Sammlung v2 gemeinsam mit regulären Jobs exportieren.
-Alte v1-Sammlungen bleiben ausschließlich für reguläre Jobs lesbar. Familienwechsel
-ist ausdrücklich vollständiger Ersatz mit erhaltener lokaler Job-ID.
-
-`prepare/rework` sind Bild-/Auswahlaufträge; `resume/adopt/complete` verwenden
-Codex mit eingestellter Arbeitswurzel. Ein neuer materieller Wunsch sperrt die
-Adoption des alten Requests. `adopt` braucht vollständigen Originalrequest,
-benannten Quellstand und den konkreten Fundort der vollständigen Arbeitsrevision.
-ZIP enthält nur Bedienauftrag/Metadaten, Originalrequest und bei gewähltem Anhang
-den 0.7-Snapshot, niemals die automatisch eingesammelten `request.files`.
-Originale separat bereitstellen; `store/plan` prüft sie und das frische Ziel.
-
-„Abschluss melden“ benötigt tatsächlich gemeldeten vollständigen Maincommit und
-konkreten HTTPS-Bericht. Danach bleiben kompakte historische Refs und `test_only`;
-Arbeitsinventar/Originaltext werden aus der Sitzung entfernt. Das ersetzt keine
-Retirementprüfung oder Mainverifikation. Keine neuen Writer oder CLI-Ergebnisimporte.
+Das frühere Offline-Sheet ist entfernt. Seine Bedienung ist ausschließlich im
+[historischen README](https://github.com/venomenon328/picross/blob/6fe91a08a4d073547df43c6aebbe8ead4c45ae0f/tools/puzzle_production/README.md#mj-b-eigener-hintergrundwechsel-im-offline-sheet)
+erhalten. Neue Produktion verwendet [PW-B](#pw-b-neue-produktion-080), die Pflege
+registrierter Bilder den [aktuellen Editor](#aktuelle-bestandsbearbeitung).
 
 ## PW-A: lesende Git-/Bildansicht
 
@@ -2147,26 +1722,16 @@ Phasenveröffentlichung folgen erst PW-B; bestehende Produktionsbefehle bleiben.
 
 ## PW-PERF-B · Begrenzte Erstregistrierungsprüfung
 
-Dieser frühere Integrationsweg ist durch RI-ONE ersetzt. Der vollständige aktuelle
-Input- und Befehlsvertrag steht in [ZA-1](../../docs/ZA1_ADAPTER.md), die getrennten
-Editoroperationen in [PE](../../docs/PUZZLE_EDITOR.md), der Batchplan v2 in
-[BA-B](../../docs/PRODUCTION_BATCH.md#8-ba-b-autorisierte-serielle-einzelintegration).
-Es gibt keinen Export-v6-/Receipt-Fallback und keinen historischen Abschlussreplay.
-
-```text
-python -m tools.puzzle_production.target_adapter export --input <final-input> --output-dir <new-output>
-python -m tools.puzzle_production.target_adapter plan --input <new-output> --checkout <checkout>
-python -m tools.puzzle_production.target_adapter register --input <new-output> --checkout <checkout>
-```
-
-Der Input muss vor dem Aufruf vollständige aktuelle Daten, unabhängigen Deduktions-
-nachweis, Rechte und echte gebundene Endfreigabe enthalten. Der Export erfindet
-keine Entscheidung. Schritte und Abschluss: [Authoring 5](../../docs/ai-workflows/PUZZLE_AUTHORING_STEP_5.md).
+Dieser frühere Weg ist durch [RI-ONE](#ri-one-aktuelle-integration) ersetzt.
+Frühere Formen und Befehle bleiben im
+[gebundenen Vorgängerstand](https://github.com/venomenon328/picross/blob/6fe91a08a4d073547df43c6aebbe8ead4c45ae0f/tools/puzzle_production/README.md)
+nachschlagbar. Aktuelle Bild-/Rasterpflege verwendet den [Editor](#aktuelle-bestandsbearbeitung),
+aktueller Abschluss [Authoring Schritt 5](../../docs/production/authoring/PUZZLE_AUTHORING_STEP_5.md).
 
 ## PW-PERF-C · aufrufgebundene Prüfung und Hintergrund v2
 
 Die geschlossenen HP-W2-v1/v2-Formen und das unveränderte PNG2304-Profil stehen
-in [Hintergrund §4](../../docs/PUZZLE_BACKGROUNDS.md#4-hp-w2-eigenständige-datei--und-ableitungsschnittstelle).
+in [Hintergrund §4](../../docs/production/PUZZLE_BACKGROUNDS.md#4-hp-w2-eigenständige-datei--und-ableitungsschnittstelle).
 Neue Ableitungen verwenden Request/Befund v2 und Tool `picross-background-2`;
 Git-`producer` bleibt getrennt vom Bildkern aus `background_render.py` und
 `image_normalization.py`. Alle Consumer prüfen v1 und v2 generationsgenau;
@@ -2191,21 +1756,11 @@ Keine Befunde über Aufrufe, Ziele oder Locks hinweg weiterverwenden.
 
 ## PW-PERF-E · Gezielter Abschluss aktueller Quellen
 
-Dieser frühere Integrationsweg ist durch RI-ONE ersetzt. Der vollständige aktuelle
-Input- und Befehlsvertrag steht in [ZA-1](../../docs/ZA1_ADAPTER.md), die getrennten
-Editoroperationen in [PE](../../docs/PUZZLE_EDITOR.md), der Batchplan v2 in
-[BA-B](../../docs/PRODUCTION_BATCH.md#8-ba-b-autorisierte-serielle-einzelintegration).
-Es gibt keinen Export-v6-/Receipt-Fallback und keinen historischen Abschlussreplay.
-
-```text
-python -m tools.puzzle_production.target_adapter export --input <final-input> --output-dir <new-output>
-python -m tools.puzzle_production.target_adapter plan --input <new-output> --checkout <checkout>
-python -m tools.puzzle_production.target_adapter register --input <new-output> --checkout <checkout>
-```
-
-Der Input muss vor dem Aufruf vollständige aktuelle Daten, unabhängigen Deduktions-
-nachweis, Rechte und echte gebundene Endfreigabe enthalten. Der Export erfindet
-keine Entscheidung. Schritte und Abschluss: [Authoring 5](../../docs/ai-workflows/PUZZLE_AUTHORING_STEP_5.md).
+Dieser frühere Weg ist durch [RI-ONE](#ri-one-aktuelle-integration) ersetzt.
+Frühere Formen und Befehle bleiben im
+[gebundenen Vorgängerstand](https://github.com/venomenon328/picross/blob/6fe91a08a4d073547df43c6aebbe8ead4c45ae0f/tools/puzzle_production/README.md)
+nachschlagbar. Aktuelle Bild-/Rasterpflege verwendet den [Editor](#aktuelle-bestandsbearbeitung),
+aktueller Abschluss [Authoring Schritt 5](../../docs/production/authoring/PUZZLE_AUTHORING_STEP_5.md).
 
 ## HG31: explizite Profilwahl
 
@@ -2215,5 +1770,5 @@ vollständiges Profil/Hash in Request v2 und Entscheidung binden. Ausgabe
 2304×768 RGBA8; verify prüft dieselbe Bindung. Altes Profil bleibt unverändert.
 Fertigimport erkennt 2304×768 bzw. 2304×576 aus validierten PNG-Bytes und
 übernimmt unverändert. V1-Capability erlaubt ausschließlich das alte Profil.
-[Geschlossener Vertrag](../../docs/PUZZLE_BACKGROUNDS.md#hg31--zwei-geschlossene-bildprofile).
+[Geschlossener Vertrag](../../docs/production/PUZZLE_BACKGROUNDS.md#hg31--zwei-geschlossene-bildprofile).
 Keine Kandidatenintegration vor geprüftem Mainmerge oder neue WIP-Migration.

@@ -1,9 +1,24 @@
-# Native KK-Originalausschnitte
+# KK-Diagnoseeingänge
 
-18 unverkleinerte Kartenrechtecke aus dem isolierten synthetischen Windows-/NVIDIA-
-OpenGL-Lauf. Keine echten Spielstände oder produktiven Motivdaten.
-[Manifest](native-crops.json) bindet Host, Framebuffer, UI, Quellrechtecke,
-Prüfergebnis, tatsächliche Bereichsmaße und Runtime-Dateihashes.
+Dokument-ID: `kk-diagnostic-inputs`
+Status: `reference`
+Zuständigkeit: Erhaltene Originale für die ausdrücklich aufrufbare KK-Diagnose.
+
+Die vorhandenen JSON-/PNG-Dateien werden von `tools/kk_windows_probe.py` konsumiert.
+Sie bleiben deshalb mit ihren tatsächlichen Byte- und Quellenbindungen erhalten.
+Sie sind keine aktuelle Pflichtgalerie und keine eigenständige Katalog-Sollnorm.
+Aktuelle Darstellung steht in [CATALOG_PRESENTATION](../../game/CATALOG_PRESENTATION.md),
+ausgewählte Dauerprüfungen im [nativen Modulvertrag](../../ci/CI_C_NATIVE_GROUPS.md).
+
+Frühere Berichtstexte und deren Prüfstand sind über
+[history](../../history/README.md) erreichbar. Eine erneute Diagnose benötigt
+einen passenden aktuellen Anlass; alte Liefertexte sind kein neuer Auftrag.
+
+## Gebundene Originale
+
+Die 18 unverkleinerten Kartenrechtecke stammen aus einem isolierten synthetischen
+Windows-/NVIDIA-Lauf. Das [Manifest](native-crops.json) bindet Host, Framebuffer, UI,
+Quellrechtecke, Prüfwerte und die damaligen Runtime-Dateihashes.
 
 | Fläche / UI | Neu → Begonnen → Gelöst → Reset | Langer Motivname |
 | --- | --- | --- |
@@ -15,12 +30,3 @@ Prüfergebnis, tatsächliche Bereichsmaße und Runtime-Dateihashes.
 [Backuperneuerung](kk-backup_invalid-card.png) zeigen dieselbe Geometrie mit innen
 scrollbarer Diagnose. Die Recoveryausschnitte zeigen den nach unten gescrollten
 Textaktionsbereich; die vollständige Diagnose bleibt nach oben erreichbar.
-
-Die Bilder wurden im neuen nativen Windows-Lauf der KK-Reviewnacharbeit aus
-den manifestgebundenen Runtimebytes aufgenommen. Die 17 unveränderten Ausschnitte
-wurden neu erzeugt; die Fehlerkarte zeigt den aktuellen Scrollbar-Hoverzustand. `tools/kk_windows_probe.py` verlangt am finalen sauberen
-Head dieselben Bytes und reproduziert alle 18 PNG-Hashes. Der PR führt diesen
-erneuten Windows-Lauf samt finaler Head-/Basis-/CI-/Checkout-/EXE-/PCK-Bindung.
-Erst dieser Nachweis bindet die Bilder an den finalen Stand. Quellprobe und echter
-CI-Spielerstart sind getrennte Prüfschritte. Kein unabhängiges Review oder
-persönliche Eigentümerabnahme durch diese technische Lieferung.

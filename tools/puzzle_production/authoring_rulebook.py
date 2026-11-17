@@ -1,4 +1,4 @@
-"""Closed PW-PERF-D rulebook generation; legacy snapshots keep their own bytes."""
+"""Revision-bound rulebook source sets; historical snapshots keep their own bytes."""
 import re
 from .contract import exact_keys, integer
 from . import catalog_io as io
@@ -7,10 +7,23 @@ FORMAT = 'picross-authoring-rulebook-v2'
 HANDOFF = 'picross-authoring-handoff-v5'
 REQUEST = 'picross-authoring-build-request-v4'
 RECORD = 'picross-authoring-record-v4'
-PATHS = tuple(sorted([
+DOCUMENT_REVISION = 10
+_LEGACY_AUTHORING_PATHS = (
     'docs/ai-workflows/PUZZLE_AUTHORING.md',
-    *[f'docs/ai-workflows/PUZZLE_AUTHORING_STEP_{n}.md' for n in range(1, 6)],
-    'docs/PUZZLE_IMAGE_STYLE.md', 'docs/PUZZLE_QUALITY.md']))
+    *[f'docs/ai-workflows/PUZZLE_AUTHORING_STEP_{n}.md' for n in range(1, 6)])
+AUTHORING_PATHS = (
+    'docs/production/authoring/PUZZLE_AUTHORING.md',
+    *[f'docs/production/authoring/PUZZLE_AUTHORING_STEP_{n}.md' for n in range(1, 6)])
+PATHS = tuple(sorted([
+    *AUTHORING_PATHS,
+    *[f'docs/production/images/{name}.md' for name in ('README', 'REVEAL', 'MOTIF', 'RASTER', 'BACKGROUND')],
+    'docs/production/PUZZLE_QUALITY.md']))
+_PATHS_BY_REVISION = {
+    9: tuple(sorted([*_LEGACY_AUTHORING_PATHS, 'docs/PUZZLE_IMAGE_STYLE.md', 'docs/PUZZLE_QUALITY.md'])),
+    DOCUMENT_REVISION: PATHS,
+}
+_AUTHORING_BY_REVISION = {9: _LEGACY_AUTHORING_PATHS, DOCUMENT_REVISION: AUTHORING_PATHS}
+_READ_PATHS = frozenset(path for paths in _PATHS_BY_REVISION.values() for path in paths)
 
 
 def shape(rule, handoff_format, repo_commit, revision=None):
@@ -23,13 +36,14 @@ def shape(rule, handoff_format, repo_commit, revision=None):
         return False
     exact_keys(rule, {'format', 'version', 'document_revision', 'source_commit', 'sources'})
     ap.require(rule['format'] == FORMAT and rule['version'] == '0.8.0' and
-               type(rule['document_revision']) is int and rule['document_revision'] == 9,
+               type(rule['document_revision']) is int and rule['document_revision'] in _PATHS_BY_REVISION,
                'Unsupported rulebook generation/document revision')
+    paths = _PATHS_BY_REVISION[rule['document_revision']]
     ap.require(isinstance(repo_commit, str) and re.fullmatch(r'[0-9a-f]{40}', repo_commit) and
                rule['source_commit'] == repo_commit, 'Rulebook source commit differs from producer')
     ap.require(revision is None or revision == rule['document_revision'], 'Rulebook document revision mismatch')
-    ap.require(isinstance(rule['sources'], list) and len(rule['sources']) == len(PATHS), 'Missing rulebook sources')
-    for item, path in zip(rule['sources'], PATHS):
+    ap.require(isinstance(rule['sources'], list) and len(rule['sources']) == len(paths), 'Missing rulebook sources')
+    for item, path in zip(rule['sources'], paths):
         exact_keys(item, {'path', 'file', 'sha256', 'bytes'})
         ap.require(item['path'] == path and item['file'] == 'rulebook/' + path, 'Noncanonical rulebook source set')
         ap.sha(item['sha256']); integer(item['bytes'], 1, 1024 * 1024, 'rulebook source bytes')
@@ -64,8 +78,10 @@ def validate(rule, handoff_format, repo_commit, read, revision=None, *, history_
         raw = read(item['file'])
         ap.require(len(raw) == item['bytes'] and io.checksum(raw) == item['sha256'],
                    'Rulebook source bytes/hash mismatch: ' + item['path'])
-        if '/ai-workflows/' in item['path']:
-            ap.require(re.search(rb'^\*\*Version 0\.8\.0 \xc2\xb7 Dokumentrevision 9 \xc2\xb7', raw, re.M),
+        if item['path'] in _AUTHORING_BY_REVISION[rule['document_revision']]:
+            header = (rb'^\*\*Version 0\.8\.0 \xc2\xb7 Dokumentrevision ' +
+                      str(rule['document_revision']).encode('ascii') + rb' \xc2\xb7')
+            ap.require(re.search(header, raw, re.M),
                        'Rulebook source header/document revision mismatch')
         if source is not None:
             ap.require(read_git(source, rule['source_commit'], item['path']) == raw,
@@ -82,12 +98,12 @@ def capture(repository, commit):
     check_commit(commit)
     git(repository, 'merge-base', '--is-ancestor', commit, 'HEAD')
     payload = {'rulebook/' + path: read_git(repository, commit, path) for path in PATHS}
-    rule = {'format': FORMAT, 'version': '0.8.0', 'document_revision': 9,
+    rule = {'format': FORMAT, 'version': '0.8.0', 'document_revision': DOCUMENT_REVISION,
             'source_commit': commit, 'sources': [
                 {'path': path, 'file': 'rulebook/' + path,
                  'sha256': io.checksum(payload['rulebook/' + path]), 'bytes': len(payload['rulebook/' + path])}
                 for path in PATHS]}
-    validate(rule, HANDOFF, commit, payload.__getitem__, 9)
+    validate(rule, HANDOFF, commit, payload.__getitem__, DOCUMENT_REVISION)
     return rule, payload
 
 
@@ -96,7 +112,7 @@ def read_git(repository, commit, path):
     from tools.production_workspace.sources import git, check_commit
     from . import authoring_package as ap
     check_commit(commit)
-    ap.require(path in PATHS, 'Unknown rulebook Git path')
+    ap.require(path in _READ_PATHS, 'Unknown rulebook Git path')
     rows = git(repository, 'ls-tree', '-z', commit, '--', path).split(b'\0')
     rows = [row for row in rows if row]
     ap.require(len(rows) == 1, 'Missing rulebook Git source: ' + path)
