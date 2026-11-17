@@ -34,9 +34,10 @@ jobs:
       source: ${{ steps.source.outputs.commit }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        timeout-minutes: 10
         with:
           ref: ${{ github.event.workflow_run.head_sha || github.sha }}
-          fetch-depth: 0
+          fetch-depth: 1
           persist-credentials: false
       - id: source
         run: echo "commit=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
@@ -64,9 +65,10 @@ jobs:
     runs-on: windows-2025
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        timeout-minutes: 10
         with:
           ref: ${{ needs.plan.outputs.source }}
-          fetch-depth: 0
+          fetch-depth: 1
           persist-credentials: false
       - uses: actions/download-artifact@634f93cb2916e3fdff6788551b99b062d0335ce0
         with:
@@ -152,8 +154,10 @@ jobs:
     steps:
       # No environment reference: a disabled/unprovisioned run cannot create it.
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        timeout-minutes: 10
         with:
           ref: ${{ github.sha }}
+          fetch-depth: 1
           persist-credentials: false
       - uses: actions/setup-python@83679a892e2d95755f2dac6acb0bfd1e9ac5d548
         with:
@@ -192,8 +196,10 @@ jobs:
     steps:
       # Only default-branch code ever runs with write access. No PR artifacts.
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        timeout-minutes: 10
         with:
           ref: ${{ github.sha }}
+          fetch-depth: 1
           persist-credentials: false
       - uses: actions/setup-python@83679a892e2d95755f2dac6acb0bfd1e9ac5d548
         with:

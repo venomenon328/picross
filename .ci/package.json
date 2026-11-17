@@ -1,32 +1,17 @@
 {
   "format": "development-ci-plan/v1",
   "issue": "https://github.com/venomenon328/picross/issues/691",
-  "package": "PE-APP-B",
+  "package": "PE-PW-REL-CHECKOUT",
   "modules": [
     "tools"
   ],
-  "purpose": "Fester PE-Selbstupdateclient mit früher Zustimmung/Startgate, gemeinsamem externem Helfer, vollständigem Drain und authentisiertem nativem Wiederanlauf; PW bleibt kompatibel.",
-  "omitted": "Keine Fachwriter-, Solver-, Datenmigrations-, Spiel- oder Renderingänderung. Genau tools zusätzlich zum Kern und Windows-Spieler; production.*, native.*, preflight, delivery und automatisches Chromium ausgelassen. T02/T03 separat ohne Installation oder Veröffentlichung; R01/U01 später vor Release.",
+  "purpose": "PE- und PW-Releasecheckouts auf einen gepinnten Commit mit 10-Minuten-Step-Hängeschutz begrenzen; überflüssigen lokalen Versionshistorien-Scan aus dem Installerbau entfernen. Veröffentlichung bleibt signiert und aus verifizierter Releaseautorität versioniert.",
+  "omitted": "Keine Fachwriter-/Solver-/Spiel-/Inhaltsänderungen; kein anderes Zusatzmodul als tools, keine production.*, native.*, preflight, delivery oder Chromium. Die bereits erfolgten Windows-MSI-/C#-Diagnosen werden nicht wegen einer Checkout-Einstellung wiederholt. Keine Release-/Secret-/Environmentaktion durch diesen PR. Nach einem späteren Merge kann der bereits aktive PW-Kanal regulär automatisch veröffentlichen.",
   "test_changes": [
     {
-      "path": "tools/test_app_updates.py",
+      "path": "tools/test_production_installer.py",
       "disposition": "change-scoped",
-      "reason": "Gemeinsame PW-Suite um feste PE-Kanal-/Identitäts-/Zustimmungs-/Abbruch-/Recoveryfälle erweitern; keine zweite Vollsuite."
-    },
-    {
-      "path": "tools/production_workspace/helper_diagnostic.py",
-      "disposition": "temporary",
-      "reason": "Vorhandenen synthetischen Durchstich für tatsächliche PE-/PW-Helferbytes verwenden, ohne Installation. Aus Payload ausgeschlossen; Diagnoseoriginale nur sieben Tage für PE-APP-B-A01."
-    },
-    {
-      "path": "tools/production_workspace/packaging/HelperDiagnostic.cs",
-      "disposition": "temporary",
-      "reason": "Echten gemeinsamen Helfer isoliert auf Prozessende, READY/abgebrochenes GO, MSI-Identität und nativen Wiederanlauf prüfen. Kein Testadapter im Produkt."
-    },
-    {
-      "path": "tools/puzzle_editor/diagnostic.py",
-      "disposition": "temporary",
-      "reason": "Einmalige echte native PE-Start-/Offline-/Skip- und IPC-Prüfung im vorhandenen T02/T03-Durchstich; außerhalb der Payload, Originale sieben Tage."
+      "reason": "Historischen Git-Repo-Fixturetest durch kleine Quell-/Checkout-/Timeoutregression für beide Releaseworkflows ersetzen; bestehende signierte Release-/Versions-/MSI-Tests erhalten."
     }
   ],
   "core_change": null,
