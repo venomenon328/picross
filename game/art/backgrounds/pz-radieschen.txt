@@ -1,6 +1,4 @@
-Production ID: pz-radieschen
-Background: RAD-HG-A-b01
-Image revision: b01
-Artwork: OpenAI ImageGen im beauftragten Codex-Produktionslauf
-Source: Native integrierte Bilderzeugung aus neuem Kontextbriefing, unveränderte Original-PNG-Bytes.
-Usage basis: Im ausdrücklichen Nutzerauftrag neu generiert; keine externe Bildquelle oder Fremdassets verwendet. Nutzung im beauftragten Projekt, keine Exklusivitätszusage.
+author: OpenAI ImageGen
+changes: Gewaehltes vollstaendiges 3:1-Original mit dem aktuellen Bildhelfer und ausdruecklich picross-background-png2304x768-v1 proportional auf 2304 x 768 RGBA8 vorbereitet; keine kreative Aenderung, kein Crop oder Padding.
+source: Integriertes ImageGen-Werkzeug, Issue #671, HG-BESTAND-10, 2026-11-17.
+usage_basis: Im ausdruecklichen Auftrag des Projektinhabers fuer picross neu erzeugt; keine Fremdassets oder Fremdvorlagen verwendet.
