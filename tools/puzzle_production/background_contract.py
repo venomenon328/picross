@@ -43,6 +43,8 @@ PROFILE = {
 PROFILE_3 = {**PROFILE, "id": "picross-background-png2304x768-v1", "height": 768, "fit": "exact"}
 PROFILES = {p["id"]: p for p in (PROFILE, PROFILE_3)}
 SIZES = {(p["width"], p["height"]): p["id"] for p in PROFILES.values()}
+# The old path is part of historical judgments; never relabel their committed norm.
+QUALITY_NORM_PATHS = ("docs/PUZZLE_QUALITY.md", "docs/production/PUZZLE_QUALITY.md")
 
 ERROR_STATUS = {
     **dict.fromkeys((
@@ -376,7 +378,7 @@ def _review(value, original):
         _utc(judgment["timestamp_utc"])
         norm = _keys(judgment["norm"], ("file", "contract", "document_revision", "commit", "sha256"),
                      "Quality norm")
-        _require(norm["file"] == "docs/PUZZLE_QUALITY.md" and norm["contract"] == "1.0",
+        _require(norm["file"] in QUALITY_NORM_PATHS and norm["contract"] == "1.0",
                  "Quality judgment requires the declared quality contract")
         _integer(norm["document_revision"], "Quality document revision", low=1)
         _pattern(norm["commit"], r"[0-9a-f]{40}", "quality norm commit")

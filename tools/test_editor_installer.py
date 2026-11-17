@@ -67,7 +67,7 @@ class EditorInstallerTests(unittest.TestCase):
                      'game/book/paper.png','game/art/drawing/margins/water.png','tools/production_workspace/packaging/Guard.cs']:
             self.assertTrue(payload.selected(name,app=PE),name)
         for name in ['content/registry.json','game/art/backgrounds/pz-test.png','game/data/content/pz-test.json',
-                     'game/ui/root.gd','docs/PUZZLE_EDITOR.md','tools/puzzle_production/za1_fixtures.py']:
+                     'game/ui/root.gd','docs/tools/PUZZLE_EDITOR.md','tools/puzzle_production/za1_fixtures.py']:
             self.assertFalse(payload.selected(name,app=PE),name)
         with self.assertRaises(ValueError): payload.selected('tools/puzzle_editor/unknown.dat',app=PE)
         import subprocess
