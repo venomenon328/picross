@@ -1,10 +1,10 @@
 {
   "format": "development-ci-plan/v1",
   "issue": "https://github.com/venomenon328/picross/issues/671",
-  "package": "HG-BESTAND-05",
+  "package": "HG-BESTAND-05-COMPLETE",
   "modules": [],
-  "purpose": "Fünf tatsächlich gewählte neue 3:1-Rätselhintergründe B1/r02, F3/r02, Y1/r02, E1/r02 und R2/r02 über explizites HP-W2-Profil 2304×768 und aktuellen Editorimport übernehmen.",
-  "omitted": "Reine Bildinhaltsgruppe: kein Werkzeug-, Regel-, Spiel- oder CI-Codediff. Bildwahl, Q-HG-Sichturteile, derive/verify, Byteimport, Wiederholungspläne und geschützte Bestandswerte werden auftragsbezogen geprüft. Daher Quellen-/Plankern ohne Playerbau, Zusatzmodule, Solver-/Proof-/Ratingreplay oder Browserlauf; keine neuen rätselspezifischen Tests.",
+  "purpose": "Enger Produktionsabschluss nach bestätigter Mainintegration e86b4170af7569d8113ac854ae23b9df6f1782f3: genau 213 abgeschlossene, bytegleich gebundene Arbeitsdateien der fünf hg-bestand-05-Verzeichnisse über retire-production entfernen.",
+  "omitted": "Reiner Inhaltsabschluss ohne Werkzeug-, Regel-, Spiel- oder CI-Codediff. Vollständiger Bestandsvergleich: alle 1688 verbleibenden Dateien vor Paketplanfortschreibung bytegleich, davon 1687 Nutz-/Quell-/Runtime-/Rechte- und sonstige Dateien unverändert; nur der aktuelle Paketplan wird fortgeschrieben. Wiederholung des autorisierten Werkzeugwegs ist schreibfreier no-op. Daher modules=[], Quellen-/Plankern ohne Playerbau, Zusatzmodule, Solver-/Proof-/Ratingreplay oder Browserlauf; keine neuen rätselspezifischen Tests.",
   "test_changes": [],
   "core_change": null,
   "evidence": {
