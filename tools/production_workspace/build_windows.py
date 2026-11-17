@@ -14,7 +14,7 @@ import ssl
 import zlib
 import pyexpat
 import decimal
-from .release import release, version_tuple, check_history
+from .release import release, version_tuple
 from .payload import fingerprint, audit_analysis
 from .update_verifier import production_trust
 
@@ -63,7 +63,6 @@ def build(destination, *, version=None, app=PW):
         raise RuntimeError('Nur aus sauberem, gesichertem Quellstand bauen.')
     commit = git('rev-parse', 'HEAD')
     product = release(version=version, app=app)
-    check_history(ROOT, product, app=app)
     inputs = fingerprint(ROOT, app=app)
     destination = destination.resolve()
     if destination.exists() or destination.is_relative_to(ROOT):

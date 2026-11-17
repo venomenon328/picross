@@ -3,7 +3,6 @@ import json
 from pathlib import Path
 import tempfile
 import unittest
-import subprocess
 import os
 import threading
 import uuid
@@ -14,7 +13,7 @@ from unittest.mock import patch, MagicMock
 import xml.etree.ElementTree as ET
 
 from tools.production_workspace import build_installer as installer
-from tools.production_workspace.release import release, version_tuple, check_history
+from tools.production_workspace.release import release, version_tuple
 from tools.production_workspace import payload, release_channel as channel, verify_installer, update_verifier
 from tools.production_workspace.update_diagnostic import test_identity
 
@@ -56,20 +55,20 @@ class InstallerContractTests(unittest.TestCase):
             release.set(); thread.join(5)
         self.assertFalse(_mutex_busy(name))
 
-    def test_source_history_refuses_decrease_or_upgrade_identity_change(self):
-        with tempfile.TemporaryDirectory() as folder:
-            root = Path(folder)
-            source = root / 'release.json'
-            product = release()
-            source.write_text(json.dumps(product))
-            for args in (('init', '-q'), ('add', '.'), ('-c', 'user.name=P4 test', '-c', 'user.email=p4@example.invalid', 'commit', '-qm', 'synthetic')):
-                subprocess.run(['git', '-C', str(root), *args], check=True, stdout=subprocess.DEVNULL)
-            with patch('tools.production_workspace.release.SOURCE', source):
-                check_history(root, product)
-                with self.assertRaisesRegex(ValueError, 'monoton'):
-                    check_history(root, {**product, 'version': '0.0.1'})
-                with self.assertRaisesRegex(ValueError, 'Upgradeidentität'):
-                    check_history(root, {**product, 'upgrade_code': '11111111-1111-1111-1111-111111111111'})
+    def test_release_checkout_uses_shallow_bounded_git_without_history_scan(self):
+        # The signed published release, not every intermediate Git commit, is version authority.
+        for source in ('tools/production_workspace/release.py',
+                       'tools/production_workspace/build_windows.py'):
+            self.assertNotIn('check_history', (ROOT / source).read_text(encoding='utf-8'))
+        for name in ('pe-installer.yml', 'pw-installer.yml'):
+            workflow = (ROOT / '.github/workflows' / name).read_text(encoding='utf-8')
+            checkouts = workflow.split('      - uses: actions/checkout@')[1:]
+            self.assertEqual(len(checkouts), 4, name)
+            self.assertNotIn('fetch-depth: 0', workflow)
+            for checkout in checkouts:
+                self.assertIn('\n        timeout-minutes: 10\n        with:\n', checkout[:210], name)
+                self.assertIn('\n          fetch-depth: 1\n', checkout[:400], name)
+                self.assertIn('\n          persist-credentials: false\n', checkout[:470], name)
 
     def test_strict_msi_versions_and_identity(self):
         for invalid in ('01.2.3', '1.0', '1.2.3.4', '1.2.3-rc1', '256.0.0', '1.256.0', '1.0.65536', '0.0.0', '1.2.3\n'):

@@ -82,6 +82,13 @@ Browserprofil oder portable Altordner.
 
 ## Separater Workflow, Diagnose und Aktivierung
 
+Der Publisher benötigt für Planung und Bau nur den festgelegten Quellcommit:
+beide Releaseworkflows verwenden einen flachen Git-Checkout (`fetch-depth: 1`)
+mit eigenem zehnminütigem Checkout-Hängeschutz. Der Installerbau scannt keine
+historischen `release.json`-Commits mehr; feste aktuelle Produkt-/MSI-Identität
+und die tatsächlich veröffentlichte, signierte Releaseautorität bleiben die
+maßgeblichen Schutz- und Versionsgrenzen.
+
 [Production assistant release](../../.github/workflows/pw-installer.yml) ist kein
 Job/Modul/Gate der Package CI. Sein automatischer Folgetrigger akzeptiert nur
 eine erfolgreiche abgeschlossene Package-CI-Pushquelle von `venomenon328/picross`
