@@ -145,33 +145,65 @@ steht in [PW-B](../../docs/tools/PW_B_CONTRACT.md).
 Aktive Schwierigkeit zusätzlich über catalog_analysis mit expliziter Methode 0.4.
 
 
-## PW-B: neue Produktion 0.8.0
+<a id="pw-b-neue-produktion-080"></a>
 
-Neue Produktion verwendet den [fünfstufigen Authoringweg](../../docs/production/authoring/PUZZLE_AUTHORING.md)
-und den [PW-B-Datenvertrag](../../docs/tools/PW_B_CONTRACT.md). Dokumentrevision 10
-bindet den dort definierten [Mehrdateisnapshot](../../docs/tools/PW_B_CONTRACT.md#pw-perf-d--regelquellen-und-snapshotgeneration).
-`authoring_rulebook.capture(repository, commit)` liest dessen aktuelle zwölf
-Quellen aus genau einem Commit und liefert die Regelbindung sowie die
-unveränderten Paketdateibytes. Diese unter den gelieferten Pfaden im eigenen
-source-root ablegen und explizit in `files` führen; `handoff.repo_commit=commit`,
-Request v4, Handoff v5 und Dokumentrevision 10 gehören zusammen. Gespeicherte
-Rev9-Mehrdateisnapshots und frühere Einzeldatei-Originale behalten ihre eigenen
-Pfade, Header und Bytes. Neue Capture-Aufrufe erzeugen keine alten Revisionen.
+## PW-B: aktuelle Produktion ohne Entstehungsarchive
 
-Builder, Finalizer und Projektor veröffentlichen die in PW-B definierten
-Record-/Projektionsformen samt [aktuellem Übergabepointer](../../docs/tools/PRODUCTION_CURRENT_VIEW.md).
-Diesen gemeinsamen Stand sichern und den tatsächlich beauftragten Gitabschluss
-ausführen; unterbrochene Aufrufe identisch wiederholen. Der zusätzliche
-Projektoraufruf für eine vorhandene vollständige Revision lautet:
+Neue Jobs verwenden den [fünfstufigen Authoringweg](../../docs/production/authoring/PUZZLE_AUTHORING.md)
+und den geschlossenen aktuellen [PW-B-Vertrag](../../docs/tools/PW_B_CONTRACT.md).
+Ein Record plus benötigte Nutzdateien, ein gemeinsamer Verweisindex. Kein
+Handoff, Inventar, ZIP, Regelwerksnapshot, Generator-/Prompt-/Reparaturarchiv,
+workspace-Snapshot oder Pointer pro neuem Job. Die UI und Folgeaufträge werden
+direkt aus dem Record und seinen konkreten Datei-/Inhaltsbindungen abgeleitet.
 
-```text
-python -m tools.production_workspace.projector --repository CHECKOUT --current-view PUZZLE_ID REVISION
-```
+`authoring_builder build --request REQUEST --source-root QUELLEN --output-root
+ARBEIT --publish-to CHECKOUT` verarbeitet `picross-authoring-current-request-v1`.
+Der Akteur erstellt den Auftrag aus tatsächlichen Ergebnissen und Erklärungen;
+keine manuelle JSON-Pflege im Benutzerablauf. Finalize-background verarbeitet
+denselben aktuellen Fortschreibungsauftrag. Identische Wiederaufnahme vollendet
+nur die eigene offene Operation; nach Abschluss verschwindet ihr Journal.
 
-Hintergrundbriefing und Kandidaten folgen erst auf die gebundene qualifizierte
-Rasterwahl. Die zuständigen Phasendateien und Formatgrenzen stehen ausschließlich
-in Authoring/PW-B. Die folgenden BA-A-/PB-A-/PB-H-Einzeldateiformen sind getrennte
-bestehende Werkzeuggenerationen, keine Vorgabe für neue reguläre 0.8-Produktion.
+`prepare-integration --repository ARBEITSCHECKOUT --record RECORD --output-dir NEU`
+leitet den aktuellen RI-ONE-Eingang ab. Eine reine Hintergrundpflege erzeugt
+statt Erstregistrierung den aktuellen gemeinsamen Editorrequest. Die Integration
+bekommt einen sauberen Branch vom aktuellen Main und ausschließlich ausgewählte
+finale Produktdaten. Completion und Retirement benötigen keine Arbeitsarchive im
+Produktcommit. Aktuelle angebotene Alternativen bleiben bis zur tatsächlichen
+Wahl erreichbar; danach entbehrliche Varianten ohne Archivierung entfernen.
+
+### Aktuelle Bild- und Rasterhelfer
+
+Die folgenden Befehle benutzen die vorhandenen Algorithmen in der isolierten
+Pillow-Umgebung; sie erzeugen keine neue Spielmechanik oder Solverregel:
+
+`python -m tools.puzzle_production.current_tools image --input BILD --design DESIGN
+--puzzle-id ID --name NAME --output-dir NEU` schreibt je tatsächlichem Kandidaten
+nur Definition, aktuellen Proof, Preview und bei vollständigem Ergebnis aktuelle
+Difficulty. Original/Normalisierung/Generator-/Toolhash-/Vergleichsarchive entfallen.
+
+`python -m tools.puzzle_production.current_tools raster --input DEFINITION --mode
+mono|color --output-dir NEU` prüft einen aktuellen Rasterstand unabhängig von
+seiner Herstellung. Vollständiger geschriebener Proof wird in einem frischen
+Verifierprozess geprüft und mit der Endmatrix verglichen. Bei stalled bleibt
+Difficulty null; kein qualifiziertes Angebot oder falscher Erfolg. Paarprofil nur
+mit ausdrücklichem `--profile paired`. Methode standardmäßig aktuelle 0.4;
+keine neuen Algorithmen, automatische Profil-/Budgeterhöhung oder Kataloganalyse.
+
+`python -m tools.puzzle_production.current_tools background --input ORIGINAL.png
+--output AKTUELL.png` bereitet allein aktuelle Bildbytes nach dem ausdrücklich
+gewählten HG31-Profil vor. Keine Ableitungs-/Tool-/Codecdatei. none/standard
+benötigen keinen Bildlauf und keinen Nullbefund. Angebote selbst prüfen/vorlegen.
+
+Temporäre Analyse-, Such-, Masken- oder Reparaturdaten dürfen während einer
+konkreten Operation existieren und enden nach dem aktuellen Ergebnis. Nur
+aktuellen Budgetverbrauch im Record fortführen. Aktueller Proof, echte Rechte,
+Motiv-/Parameterkonformität, Bildsichtung und tatsächliche Entscheidungen bleiben.
+Vorhandene aktive Produktbilder werden referenziert und nicht pro Job kopiert.
+
+Die folgenden alten BA-A-/PB-A-/PB-H-/HP-W2-Bundleformen sind ausdrücklich
+historische beziehungsweise temporäre Operationswege, keine Aufbewahrungs- oder
+Zulassungsbedingung neuer aktueller Jobs. Kein automatisches Wiederherstellen
+entfernter Herstellungsunterlagen und keine allgemeine WIP-Migration.
 
 ## BA-A: lokale Batchverarbeitung und Wiederaufnahme
 
@@ -1571,10 +1603,10 @@ python -m tools.puzzle_production.repair search --reference <aktuelles-importbun
 python -m tools.puzzle_production.repair verify --reference <aktuelles-importbundle> --bundle <reparaturbundle> --report <neuer-pruefbericht.json>
 ```
 
-Alle Ausgabepfade neu. Während der Produktion rekonstruiert der Verifier jeden
-Kandidaten und Proof unabhängig, auch bei Nichtfund/Abbruch. Ein ursprünglicher
-Abbruch wird nicht zur logischen Freigabe aufgewertet. Vorher/Nachher, feste
-Änderungen und Schutzmaske gehören bis zur Endabnahme zum aktuellen Paket.
+Alle Ausgabepfade neu. Der ausdrücklich benutzte alte Operationsreader rekonstruiert seine
+Kandidaten temporär; aktuelle Authoringreader prüfen nur das aktuelle Ergebnis. Ein ursprünglicher
+Abbruch wird nicht zur logischen Freigabe aufgewertet. Aktuelle Ergebnisse benötigen keine dauerhafte Vorher-/Nachher-, Plan- oder
+Schutzmaskenkopie nach Abschluss der Operation.
 Die CI prüft das allgemeine Verfahren mit synthetischen Eingängen; der alte
 RP5-Korpus, seine Suchpläne und der separate Replayjob werden nicht benötigt.
 

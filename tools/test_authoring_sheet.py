@@ -45,6 +45,12 @@ assert.match(backgroundChange,/PUZZLE_BACKGROUNDS.md §11 \(HP-I1b2\)/);
 assert.doesNotMatch(backgroundChange,/als aktuellen RI-ONE-Eingang vorbereiten/);
 v.source_url='https://github.com/venomenon328/picross/tree/'+'b'.repeat(40);v.facts.authoring_version='0.7.0';
 assert.throws(()=>P.prompt(v,{},opts),/historische/);
+v.facts.authoring_version='0.8.0';v.facts.state='background_review';v.revision='current';
+v.record={file:'content/authoring/pz-test/current/record.json',sha256:'d'.repeat(64)};
+text=P.prompt(v,{selection:'standard'},opts);
+assert.match(text,/Standardhintergrund/);assert.match(text,/einem aktuellen Metadatensatz/);
+assert.ok(text.includes(v.record.file));assert.match(text,/Integrationsbranch vom aktuellen main/);
+assert.doesNotMatch(text,/Arbeitsbelege mitführen/);
 """
         result=subprocess.run(['node','-e',probe],cwd=ROOT,capture_output=True,text=True,encoding='utf-8')
         self.assertEqual(result.returncode,0,result.stderr)

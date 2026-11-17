@@ -24,7 +24,7 @@ const PW = (()=>{
   const result={raster:bound('raster',ids.raster),reveal:bound('reveal',ids.reveal),background:null};
   const pending=value.facts.state==='background_review';
   const choice=pending?intent.selection:value.facts.background_choice;
-  if(choice==='none'){result.choice='none';return result;}
+  if(['none','standard'].includes(choice)){result.choice=choice;return result;}
   if(!pending&&ids.background){result.background=bound('background',ids.background);result.choice=choice;return result;}
   if(pending&&intent.kind!=='background')throw Error('Bitte einen Hintergrund oder bewusst keinen wählen.');
   const offers=(value.offers||[]).filter(o=>o.kind==='background'&&o.id===choice);
@@ -120,6 +120,7 @@ const PW = (()=>{
    lines.push(`Neues Motiv: ${intent.brief.trim()}`);
    if(intent.inputImage)lines.push(`Eigene Eingangsdatei: ${intent.inputImage}. Ich füge die tatsächliche Datei diesem Auftrag bei; falls sie fehlt, vor Bildarbeit anfordern.`);
   }
+  lines.push('Arbeitsstand nach dem aktuellen PW-B-Vertrag in genau einem aktuellen Metadatensatz veröffentlichen; Ansichten daraus ableiten. Aktuelle Angebote bis zur Wahl erhalten, danach nicht mehr benötigte Varianten entfernen.');
   const selected=value?.offers.find(o=>o.id===intent.selection&&o.kind===intent.kind);
   if(action==='background_change'){
    if(value?.facts.state!=='registered')throw Error('Eine spätere Hintergrundrevision braucht einen tatsächlich registrierten Stand.');
@@ -146,13 +147,13 @@ const PW = (()=>{
   }else{
    const final=finalAssets(value,intent);
    if(value.facts.state==='background_review'){
-    lines.push(final.choice==='none'?'Schritt 5: Ich entscheide mich ausdrücklich für keinen Hintergrund.':`Schritt 5: Ich wähle die unveränderte Kontextzeichnung aus Angebot ${final.choice}.`);
+    lines.push(final.choice==='none'?'Schritt 5: Ich entscheide mich ausdrücklich für keinen Hintergrund.':final.choice==='standard'?'Schritt 5: Ich wähle ausdrücklich den Standardhintergrund.':`Schritt 5: Ich wähle die unveränderte Kontextzeichnung aus Angebot ${final.choice}.`);
     lines.push('Ich erteile die Endabnahme für diese Hintergrundentscheidung zusammen mit dem gewählten Raster und dem zugehörigen Reveal im gebundenen Datensatz und beauftrage deren Integration.');
    }else if(value.facts.state==='registered')lines.push('Schritt 5: Git-/PR-Abschluss der bereits registrierten unveränderten Lieferung fortsetzen.');
    else if(value.facts.state==='editorially_approved')lines.push('Schritt 5: Die bereits endabgenommene unveränderte Lieferung integrieren.');
    else lines.push('Schritt 5: Ich erteile die Endabnahme der gebundenen unveränderten Raster-, Reveal- und Hintergrundfassung (gegebenenfalls none) und beauftrage deren Integration.');
   }
-  if(n===5&&action!=='background_change')lines.push('Die ausgewählten finalen Nutzdaten mit explizitem Modus, gültigem Logiknachweis, aktueller Bewertung, Rechten und dieser tatsächlichen Entscheidung als aktuellen RI-ONE-Eingang vorbereiten. Planung, Übernahme und Wiederholung verwenden denselben Kern. Completion bestätigt diese aktuelle Lieferung; beim Mainabschluss eindeutig zugeordnete frühere Phasen und gemeinsame Arbeitsbelege mitführen.');
+  if(n===5&&action!=='background_change')lines.push('Die ausgewählten finalen Nutzdaten mit explizitem Modus, gültigem Logiknachweis, aktueller Bewertung, Rechten und dieser tatsächlichen Entscheidung als aktuellen RI-ONE-Eingang vorbereiten. Planung, Übernahme und Wiederholung verwenden denselben Kern. Den Integrationsbranch vom aktuellen main aufbauen und ausschließlich finale gewählte Produktdaten übernehmen. Completion prüft diese tatsächliche Lieferung; abgeschlossene eigene Arbeitsdaten anschließend nach bestätigtem Mainergebnis entfernen.');
   const published=value?.facts.published;
   if(n===1&&intent.notes?.trim())lines.push(`Neue/zusätzliche Motivhinweise:\n${intent.notes.trim()}`);
   if(n<=2||(n===3&&action==='rework')){

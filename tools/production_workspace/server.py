@@ -223,12 +223,15 @@ class Service:
         self.metrics['image_requests'] += 1
         if raw is None:
             raw = p.asset_bytes(job['_source'], job['commit'], loc)
-            p.image(raw)
+            from tools.puzzle_production import current_authoring
+            if job['_record'].get('format')==current_authoring.FORMAT:
+                current_authoring.image_info(raw,loc['file'],job['_record'])
+            else:p.image(raw)
             self.views.put(cache_key, raw)
         else:
             self.metrics['image_cache_hits'] += 1
         self.metrics['image_seconds'] += time.perf_counter() - started
-        return raw, 'image/png' if raw.startswith(b'\x89PNG') else 'image/jpeg'
+        return raw, 'image/png' if raw.startswith(b'\x89PNG') else 'image/svg+xml' if loc['file'].endswith('.svg') else 'image/jpeg'
 
 
 class Server(ThreadingHTTPServer):

@@ -80,10 +80,16 @@ def validate(value, measured=True):
         if measured:
             ap.sha(loc['sha256'])
             integer(loc['bytes'], 1, 32 * 1024 * 1024, 'Bilddateigröße')
-        ap.require(loc['storage'] in ('repository', 'package'), 'Unbekannter Bildspeicher.')
-        if loc['storage'] == 'repository':
+        ap.require(loc['storage'] in (('repository','package','definition') if value['revision']=='current' else ('repository','package')), 'Unbekannter Bildspeicher.')
+        if loc['storage'] in ('repository','definition'):
             ap.require(loc['container'] is None, 'Direktdatei darf keinen Container haben.')
-            production_path(loc['file'])
+            if value['revision']=='current':
+                from .sources import read_path
+                read_path(loc['file'])
+                if loc['storage']=='definition':
+                    ap.require(a['role'] in ('raster','raster_draft') and loc['file'].endswith('.json') and
+                               (loc['file'].startswith('game/data/content/') or loc['file'].startswith('content/authoring/'+value['puzzle_id']+'/')), 'Ungültige aktuelle Rasteransicht.')
+            else: production_path(loc['file'])
         else:
             if measured:
                 exact_keys(loc['container'], {'file', 'sha256', 'bytes'})
@@ -531,6 +537,10 @@ class Record:
 
 def asset_bytes(source, snapshot, loc):
     commit = loc['commit'] if loc['commit'] is not None else snapshot
+    if loc['storage'] == 'definition':
+        raw = bind(source.read(commit, loc['file'], 2 * JSON_LIMIT), loc)
+        from tools.puzzle_production.current_authoring import raster_preview
+        return raster_preview(io.json_bytes(raw, 2 * JSON_LIMIT))
     if loc['storage'] == 'repository':
         return bind(source.read(commit, loc['file'], 32 * JSON_LIMIT), loc)
     raw = source.read(commit, loc['container']['file'], ap.MAX_ZIP)
@@ -606,6 +616,10 @@ class _Inspection:
 
 def inspect(source, snapshot, value):
     """Fresh independent detail inspection; never reuses another call's findings."""
+    from tools.puzzle_production import current_authoring
+    raw = source.read(snapshot, value['record']['file'], JSON_LIMIT)
+    if parse(raw).get('format') == current_authoring.FORMAT:
+        return current_authoring.detail(source, snapshot, value)
     with _Inspection(source, snapshot) as operation:
         result = operation.inspect(value)
         operation.source.recheck()

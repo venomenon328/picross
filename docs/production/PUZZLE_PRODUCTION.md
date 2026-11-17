@@ -45,11 +45,11 @@ Diagnosebilder und Berichte können für eine weitere ChatGPT-/Codex-Runde expor
 werden. Die Rückgabe ist erneut eine Datei; der Logikprüfer erhält kein Motivwissen.
 Es ist keine eigene Modellschulung erforderlich oder beauftragt.
 
-Gespeichert werden das tatsächliche Original und verwendete Zwischenbilder,
-Herkunft/Nutzungsfreigabe, Briefing, Bearbeitungsschritte und Dateihashes.
-KI-Durchläufe und menschliche Arbeitszeit werden erfasst; eine reproduzierbare
-Neugenerierung aus einem Prompt wird nicht zugesagt. Die deterministische
-Reproduzierbarkeit beginnt an der konkret gespeicherten Eingabedatei.
+Dauerhaft im laufenden Job bleiben nur aktuell benötigte Eingaben, Angebote,
+gewählte Ergebnisse, knappe aktuelle Prüfungen und echte Nutzungsgrundlagen nach
+[PW-B](../tools/PW_B_CONTRACT.md). Kein Herstellungsbeweis, Prompt-/Seed-/
+Normalisierungs-/Generatorarchiv oder Korrekturverlauf. Temporäre Arbeitsdaten
+enden nach Vorliegen des aktuellen Ergebnisses.
 
 ### 3.2 Motivtreue und Rastervarianten
 
@@ -76,8 +76,8 @@ Hintergrund/Leer ist ein eigener Wert, keine Verwechslung mit einer hellen Räts
 
 Das Werkzeug darf ein anderes Format oder eine stärkere Vereinfachung empfehlen.
 Die universelle erfolgreiche Umwandlung jedes Bilds bei jeder Rastergröße ist kein
-Versprechen. Die tatsächlich verwendeten Einstellungen und jeder ausgewertete
-Fehlschlag gehören zum Produktionsbericht.
+Versprechen. Aktuelle Parameter und offene Blocker stehen im einen aktuellen Record;
+Fehlschläge benötigen keinen dauerhaften Bericht.
 
 ## 4. Gemeinsamer Daten- und Prüfvertrag
 
@@ -88,26 +88,22 @@ Produktsprache oder Betriebssystemmatrix.
 
 | Objekt | Mindestinhalt und Invariante |
 | --- | --- |
-| Motivquelle | Stabile Quellen-ID, Original/Normalisierung/Zwischenbilder mit Hashes, Herkunft, Briefing, Arbeitsweise und Bearbeitungsparameter. |
+| Motivquelle | Aktuelle sichere Dateireferenz, gültiges Briefing/Parameter und tatsächliche Nutzungsgrundlage; keine Normalisierungs- oder Zwischenbildkette. |
 | Rasterentwurf | Stabile ID/Revision, Breite/Höhe, Zellmatrix mit Leerwert und stabilen Farb-IDs, Palette, Quellenbezug und Schutzinformationen. |
 | Rätseldefinition | Dimensionen, vollständige geordnete Randhinweise mit Länge/Farbe, Regelversion und Bezug zum exakten Rasterentwurf. Die Hinweise müssen aus diesem Raster reproduzierbar ableitbar sein. |
 | Logikeingang | Ausschließlich Dimensionen, Hinweise, Farb-/Abstandsregeln und initiale volle Zell-Domains. Keine Lösungsmatrix, Bilder, Motivnamen oder vorgegebenen Zellen. |
 | Nachweis | Regelprofil-/Formatversion, Hash der relevanten Logikdaten, geordnete Schlussfolge mit prüfbaren Voraussetzungen und Folgerungen sowie Endstatus. |
-| Qualitätsbericht | Getrennte technische Ergebnisse, Motivvergleich, geschätztes Schwierigkeitsprofil, Arbeits-/Rechenaufwand, offene Fragen und tatsächliche redaktionelle Bewertungen. |
-| Exportmanifest | Exakte Definition/Revision, Nachweis- und Abschlussbildbezug, Palette/Assets, Hashes, Zieladapterversion und Freigabestatus. |
+| Aktueller Qualitätsstand | Knappe gebundene technische Befunde, Motivvergleich, passende Schwierigkeit, offene Blocker und tatsächliche Einzelurteile im aktuellen Record. |
+| Integrationsinput | Ausgewählte finale Daten und aktuelle Qualitäts-/Entscheidungsbindungen nach RI-ONE; keine Herstellungsarchive. |
 
 RP-1 konkretisiert serialisierbare Schemas und Schnittstellen für Logikeingang,
 Ergebnis und Nachweis sowie die dafür erforderlichen Raster-/Hinweisbezüge,
 Fehlerzustände, kanonische Hashbildung und Profilkennungen. Ergänzungen für weitere
-Produktionsstufen folgen im jeweils zuständigen Paket. Zufall bei späterer
-Varianten- oder Reparatursuche erhält gespeicherte Seeds und deterministische
-Reihenfolgen. Betriebssystemabhängige Laufzeitmessungen gehören nicht in den
-Identitätshash. Die deterministische Rasterisierung liefert mit unveränderter
-Werkzeugversion, identischem normalisiertem Eingang und denselben Parametern
-denselben Rasterstand. Für spätere Suche gilt dies bei identischen tatsächlich
-ausgeführten Suchschritten. Ein Zeitlimit kann auf unterschiedlicher Hardware
-verschiedene Teilverläufe beenden; deshalb tatsächliche Schritte und Ergebnisse
-speichern und keinen identischen Suchausgang allein aus Seed und Zeitlimit zusagen.
+Produktionsstufen folgen im jeweils zuständigen Paket. Begrenzte Suchen dürfen während der Operation Seeds, Masken und
+Zähler benötigen. Nach Vorliegen des aktuellen Ergebnisses bleibt nur der noch
+benötigte aktuelle Budgetverbrauch; keine Versuchsliste oder rückwirkende
+Dokumentationspflicht. Datei-/Matrix-/Hinweiskonsistenz und der vollständige
+unabhängig geprüfte aktuelle Proof bleiben verbindlich.
 
 ### 4.1 Technische Konkretisierung RP-1
 
@@ -150,7 +146,13 @@ und an Grenzen geprüft. Vollständige Endraster werden zusätzlich durch direkt
 Runextraktion einschließlich berührender Farbwechsel geprüft. Kein zweiter
 Prüfkern, Spieladapter, Bildimport oder Suchprofil wird eingeführt.
 
-### 4.3 Technische Konkretisierung RP-3
+### 4.3 Bildalgorithmen und historische RP-3-Bundles
+
+Der aktuelle Ergebnishelfer current_tools benutzt dieselben Bild-/Logikalgorithmen
+ohne Archivwriter. Persistiert werden aktuelle Definition, Proof, Rating und
+Preview; keine Original-/Normalisierungs-/Manifestkopie. Die folgenden alten
+Bundleformen sind explizite temporäre Operationsformen, keine Zulassungs- oder
+Aufbewahrungspflicht aktueller Jobs.
 
 Bildbefehle verwenden die separate isolierte Abhängigkeit Pillow 12.3.0;
 der Logikkern bleibt Standardbibliothek. `picross-image-design-v1` bindet Quelle,
@@ -180,7 +182,7 @@ in diesem ersten Adapter abgewiesen. Die Produktion unterstützt weiterhin Farbe
 Rechtecke und 100×100. Details/Grenzen: [Anleitung](../../tools/puzzle_production/README.md),
 [reales Beispiel](../../examples/rp3/README.md), [Prüfzuordnung](https://github.com/venomenon328/picross/blob/37f500d5e6599a6c8ff85c8ca8edb4d190474c5f/docs/RP3_VERIFICATION.md).
 
-### 4.4 Technische Konkretisierung RP-5
+### 4.4 Begrenzte Reparatur und historische RP-5-Bundles
 
 `picross-repair-plan-v1`, `picross-repair-v1` und eigenes Reparaturmanifest
 binden unveränderten geprüften Import, Farbsemantik, boolesche Schutzmaske,
@@ -314,14 +316,9 @@ AT-A-P01 schließt vor Codeänderungen den exakten
 die historische AT-A-Lieferung steht in [AT-A-T01](https://github.com/venomenon328/picross/blob/6fe91a08a4d073547df43c6aebbe8ead4c45ae0f/docs/AT_A_VERIFICATION.md).
 AT-A ist nach qualifiziertem AT-A-R01 über PR #263 integriert. Die reale
 Bildübernahme ist nach AT-B-V01 und Eigentümerabnahme gesondert als AT-B-F01 beauftragt.
-Die dauerhafte Quelle `content/reveals/<pz-ID>.json` enthält die kompakte
-ursprüngliche Herkunft sowie die vollständige Bild-/Freigabehistorie; nötige neue
-Attribution wird an die aktive Notice angehängt, ursprüngliche Notices bleiben
-historisch gebunden. Cleanup erhält Quelle und Live-Notice/Bild bytegleich;
-sein kompakter Receipt bindet weiter die historische Produktionsnotice.
-Rasterexports nach AT enthalten genau die bereits aktive Bildfassung; die neue
-Definitionsbindung wird getrennt und in derselben Transaktion fortgeführt.
-Keine zusätzliche Bildrevision oder Logikanalyse allein durch diese Neubindung.
+Aktuelle Reveal-/Hintergrundquellen binden ausschließlich aktive Identität und
+Livebytes nach RI-ONE. Benötigte Notices bleiben erhalten. Keine ursprüngliche
+Produktions-/Freigabehistorie oder Abschlussreceipt als neue Bestandsautorität.
 
 ### 5.5 Separate Eindeutigkeitsdiagnose (#139, Paket A)
 
@@ -390,7 +387,8 @@ Leerstellen wie ein Henkelinnenraum. Das Änderungsbudget begrenzt bei jedem
 bewerteten Kandidaten die Anzahl gegenüber der Referenz veränderter Zellwerte.
 Hinzu kommen separate kumulative Grenzen für Suchschritte, Kandidaten und
 Rechenzeit; temporäres Zurücknehmen setzt diese Suchbudgets nicht zurück.
-Parameter werden vor dem Lauf festgelegt und protokolliert.
+Parameter und Schutzmaske werden vor dem Lauf festgelegt; die konkrete Operation
+darf sie temporär halten. Kein historisches Reparaturprotokoll danach.
 
 Zunächst genügen einzelne Zelländerungen und wenige nachvollziehbare lokale
 Formänderungen. Der reguläre [C-Weg](FIXED_RASTER.md) ergänzt ausdrücklich

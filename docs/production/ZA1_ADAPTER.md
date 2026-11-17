@@ -33,7 +33,7 @@ Definition und Modus müssen zusammenpassen: Mono hat genau eine benutzte Farbe,
 
 `rights` enthält exakt `author,usage_basis,source,changes` als nichtleere Texte. Die aktuelle Notice enthält diese benötigten Angaben. Reveal-PNG/SVG wird nach den geltenden Größen-, Alpha-, Sicherheits- und Bildregeln geprüft. Ein ausgewählter Hintergrund muss einem nach [Hintergrundvertrag](PUZZLE_BACKGROUNDS.md#hg31--zwei-geschlossene-bildprofile) zugelassenen Profil und der Ziel-Capability entsprechen; `none` und `standard` führen keine künstliche Textur. Die tatsächliche Auswahl oder der tatsächliche Verzicht muss aus der Entscheidung hervorgehen.
 
-`quality.review` enthält JSON mit `actor,timestamp_utc,statement,criteria`. `criteria` führt exakt Q-R04, Q-H01 und Q-H02; jeder Befund hat `result=fulfilled|borderline|failed`, Boolean `accepted` und nichtleeren `reason`. Ein Grenzfall braucht tatsächliche ausdrückliche Annahme; ein gescheitertes visuelles Kriterium ist kein erfolgreicher Eingang. Der Integrator berechnet Randregel und technische Palettenabstände frisch. Negative Befunde benötigen genau ihre ausdrücklich dokumentierten Ausnahmen: `criterion=frame` oder `palette:<id1>:<id2>`, dazu `actor,timestamp_utc,statement,evidence`. Keine pauschale Forcefreigabe.
+`quality.review` enthält JSON mit `actor,timestamp_utc,statement,criteria`. `criteria` führt exakt Q-R04, Q-H01 und Q-H02; jeder Befund hat `result=fulfilled|borderline|failed`, Boolean `accepted` und nichtleeren `reason`. Ein Grenzfall braucht tatsächliche ausdrückliche Annahme; ein negatives redaktionelles Urteil bleibt negativ und braucht seine tatsächliche ausdrückliche Annahme. Ungeprüft bleibt blockiert. Der Integrator berechnet Randregel und technische Palettenabstände frisch. Negative Befunde benötigen genau ihre ausdrücklich dokumentierten Ausnahmen: `criterion=frame` oder `palette:<id1>:<id2>`, dazu `actor,timestamp_utc,statement,evidence`. Keine pauschale Forcefreigabe.
 
 `approval.checks` führt exakt `reveal,motif,raster,palette,hint_legibility,background,final_content,integration`, jeweils true als dokumentierte tatsächliche Annahme. `evidence` bindet den realen Entscheidungstext. `selection_sha256` ist der kanonische Hash des vollständigen Manifests ohne `approval`. Bestehende gültige Entscheidungen dürfen übernommen werden; ein technischer Hash, erfundener Text oder Schweigen ist keine menschliche Freigabe. Neue kreative Bytes benötigen eine passende tatsächliche Entscheidung. Die technischen Grenzen allein ersetzen keine direkte Bildsichtung nach den [Bildtypnormen](images/README.md).
 
@@ -53,19 +53,19 @@ python -m tools.puzzle_production.target_adapter recover-registration --checkout
 
 ## Kreative Werkzeuge und fachliche Qualität
 
-Die Verfahren für direkten Import, feste motivtreue Korrektur, manuelle Ableitung, angenommene Pixelvorlage und Paarprofile bleiben kreative Werkzeuge. `authoring_inspection` prüft ihre tatsächlichen Arbeitsnachweise, Masken, Budgets, Entscheidungen und vollständigen Endproofs. Diese werkzeugspezifischen Arbeitsformen sind keine alternativen Katalogexporter und keine Herkunftsallowlist des Integrators. Autorisierungen dürfen keine unabhängigen harten Inhaltsgates aufheben. Paarprofil allein belegt weder R4-Notwendigkeit noch ein Difficultylabel.
+Die Verfahren für direkten Import, feste motivtreue Korrektur, manuelle Ableitung, angenommene Pixelvorlage und Paarprofile bleiben kreative Werkzeuge. Aktuelle Vorbereitung prüft erlaubte Masken/Budgets während der konkreten Operation und vollständige aktuelle Endproofs. Keine Herstellungsnachweise oder historischen Arbeitsdateien als neue Zulassung. Diese werkzeugspezifischen Arbeitsformen sind keine alternativen Katalogexporter und keine Herkunftsallowlist des Integrators. Autorisierungen dürfen keine unabhängigen harten Inhaltsgates aufheben. Paarprofil allein belegt weder R4-Notwendigkeit noch ein Difficultylabel.
 
 Neue reguläre Produktion folgt [Authoring](authoring/PUZZLE_AUTHORING.md), [PW-B](../tools/PW_B_CONTRACT.md), [fester Rasterkorrektur](FIXED_RASTER.md) und der beauftragten Phase. Vorhandene gültige Bilder/Proofs nicht nachproduzieren. Bildformat- und Korrekturbefugnisse aus aktuellem Main bleiben erhalten. Alt-WIP ist kein Kompatibilitätsziel und wird nicht automatisch konvertiert.
 
 ## PW-RETIRE · Abschluss mehrphasiger Produktion
 
-Nach tatsächlichem Mainmerge dessen vollen Commit und frisch aktualisiertes origin/main prüfen. `retire-production` bestätigt die aktuelle ausgewählte Lieferung, nicht einen Originalexport oder Receipt. Die integrierte Schlussrevision und ihre Indexzeile werden anhand des registrierten Arbeitsrecords ausgewählt; frühere abgeschlossene Phasen und gemeinsame Belege ausdrücklich ergänzen:
+Nach tatsächlichem Mainmerge dessen vollen Commit und frisch aktualisiertes origin/main prüfen. `retire-production` bestätigt die aktuelle ausgewählte Lieferung, nicht einen Originalexport oder Receipt. Aktuelle Jobs haben einen einzelnen registrierten Record. Ihre Arbeitsbytes werden am eigenen Arbeitsref geprüft; sie müssen nicht im Produkt-Maincommit enthalten sein. Nur bei ausdrücklich älteren mehrphasigen Formen frühere zugeordnete Arbeit zusätzlich auswählen:
 
 ```text
 python -m tools.puzzle_production.target_adapter retire-production --checkout <checkout> --integrated-commit <main-SHA> --puzzle-id <pz-ID> --completed-revision <pz-ID> <frühere-revision> --completed-work <pz-ID> <relativer-arbeitsordner>
 ```
 
-Zusatzoptionen sind wiederholbar und gehören zur bestehenden Abschlussbefugnis, ohne neue Freigabe pro Vorgängerrecord. Zuordnung aus tatsächlichem Produktionsverlauf und bytegleichen Mainquellen, keine numerische Revisionsheuristik. Aktuelle Bild-/Definitions-/Notice-/Rating-/Datumsdaten bleiben erhalten.
+Zusatzoptionen sind wiederholbar und gehören zur bestehenden Abschlussbefugnis, ohne neue Freigabe pro Vorgängerrecord. Zuordnung aus tatsächlicher aktueller Arbeit und deren unveränderten Arbeitsbytes, keine numerische Revisionsheuristik. Aktuelle Bild-/Definitions-/Notice-/Rating-/Datumsdaten bleiben erhalten.
 
 **Keine neue Abschluss-Notice:** Aktuelle PE-EDIT2-Hintergründe haben keine
 Pflicht-`.txt` am Hintergrundstamm. `retire-production` prüft den ausgewählten

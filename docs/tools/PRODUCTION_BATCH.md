@@ -3,11 +3,24 @@
 ## Geltung und Quellen
 
 - **Status:** aktiver technischer Vertrag für zwei getrennte, ausdrücklich aufgerufene Runner.
-- **BA-A, §§1–7:** lokale technische Produktion mit den weiterhin gelesenen geschlossenen 0.6.0-/0.7.0-Quellen. Keine Katalogmutation und kein Ersatz der normalen [Authoringroute](../production/authoring/PUZZLE_AUTHORING.md).
+- **BA-A, §§1–7:** lokale technische Produktion mit den weiterhin gelesenen geschlossenen 0.6.0-/0.7.0-Quellen. Ausdrücklich ältere lokale Runnerformen; ihre Buchführung ist keine Aufbewahrungs- oder Zulassungsbedingung aktueller Jobs. Keine Katalogmutation und kein Ersatz der normalen [Authoringroute](../production/authoring/PUZZLE_AUTHORING.md).
 - **BA-B, §8:** autorisierte serielle Einzelintegration über den aktuellen [RI-Kern](../production/PUZZLE_INTEGRATION.md) und separate aktuelle Editoroperationen.
-- **Phasen-/Snapshotformen:** [PW-B](PW_B_CONTRACT.md); Bildprofile und Ableitung nach [Hintergrundvertrag](../production/PUZZLE_BACKGROUNDS.md).
+- **Aktuelle Phasen-/Ergebnisformen:** [PW-B](PW_B_CONTRACT.md); Bildprofile und Ableitung nach [Hintergrundvertrag](../production/PUZZLE_BACKGROUNDS.md).
 - **Bedienung:** [Werkzeuganleitung](../../tools/puzzle_production/README.md).
 - **Entscheidungs- und Lieferhistorie:** [BA-A / #491](https://github.com/venomenon328/picross/issues/491#issuecomment-6779908657) und [BA-B / #491](https://github.com/venomenon328/picross/issues/491#issuecomment-6782256272). Historische Paket- und Reviewstände sind keine zusätzlichen aktuellen Runnerzustände.
+
+## Aktuelle Ergebnisübergabe
+
+Neue Authoringjobs verwenden den einzelnen aktuellen Record nach PW-B und die
+archivfreien Ergebnishelfer. BA-B konsumiert weiterhin exakt den aktuellen
+RI-ONE-Eingang oder den gemeinsamen aktuellen Editorrequest. Es fordert weder
+alte Authoring-ZIPs noch Handoffs/Inventare/Regelquellen oder Erzeugerketten nach.
+Keine automatische Konversion alter BA-A-WIP. Die folgenden v1-Buchführungen
+sind explizite historische Operationsdaten; sie werden weder Bestandteil neuer
+aktueller Jobs noch deren dauerhafte interne Historie. Vollständig abgeschlossene
+temporäre Batchoperationen dürfen ihre nicht mehr benötigten Arbeitsdaten nach
+der tatsächlichen Ergebnisübergabe entfernen. Offene Transaktionen/Recovery und
+noch laufende Budgets bleiben durch ihren wirklichen Runner geschützt.
 
 ## 1. Grenze und Aufruf
 

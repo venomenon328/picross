@@ -2,7 +2,7 @@
 
 Dokument-ID: `background-technical`
 Status: `active`
-Vertrag: 1.0 · Dokumentrevision 20 · 17.11.2026 · DOCS-696 / [#696](https://github.com/venomenon328/picross/issues/696)
+Vertrag: 1.0 · Dokumentrevision 20 · 17.11.2026 · PROD-SLIM / [#700](https://github.com/venomenon328/picross/issues/700)
 
 ## Zuständigkeit
 
@@ -31,6 +31,32 @@ Import und Mainvergleich erzeugen weder Ersatztext noch Herkunftspflichten.
 Eine fehlende PE-EDIT2-Hintergrund-TXT ist auch beim Produktionsabschluss kein
 Fehler. Vorhandene Bytes und tatsächliche Abwesenheit bytegenau gegen Main
 vergleichen. Ältere Quellen behalten ihre verpflichtenden Notice-Refs.
+
+## Aktuelle Ergebnisform
+
+Neue Jobs führen Briefing, Angebote, Auswahl, aktuelle Sichturteile und echte
+Nutzungsgrundlagen ausschließlich im einen aktuellen Record nach
+[PW-B](../tools/PW_B_CONTRACT.md). Reine Hintergrundpflege referenziert aktive
+Reveal-/Definitionsbytes sicher und erzeugt keine Kopien oder neuen Rasterproofs.
+
+Der aktuelle Helfer `python -m tools.puzzle_production.current_tools background
+--input ORIGINAL.png --output AKTUELL.png` bereitet mit dem ausdrücklich gewählten
+HG31-Profil ein aktuelles PNG vor. Kein Manifest, Prompt, Generator-/Codec-Hash,
+Ableitungsbefund, Entscheidungsdossier oder Nullbefund als Begleitdatei. Die
+aktuellen angebotenen PNGs werden selbst geprüft und vorgelegt; temporäre
+Vorbereitungsdateien enden nach Erhalt des aktuellen Ergebnisses. Bei none/standard
+entsteht kein Bild. Tatsächliche Wahl und Qualitätsurteile bleiben im Record.
+
+Angebote bleiben bis zur Entscheidung erreichbar. Ersetzte, abgelehnte oder
+nicht gewählte Bilder und ausschließlich zugehörige Hilfsdateien danach entfernen,
+sobald keine aktuelle Nutzung mehr besteht. Kein Archivieren und kein Warten auf
+Main. Materielle Änderungen übernehmen keine alte Freigabe; reine administrative
+Pfadänderungen unveränderter Bytes verlangen keine neue kreative Entscheidung.
+
+Die folgenden HP-W2-v1/v2-, Paket- und Sidecarformen dokumentieren ausdrücklich
+ältere/temporäre Operationsdaten. Kein aktueller Reader darf sie für einen neuen
+aktuellen Record nachfordern oder automatisch als Entstehungsarchiv neu erzeugen.
+Bildprofile, aktuelle Bildqualität und technische Import-/Runtimegarantien bleiben.
 
 ## HG31 · zwei geschlossene Bildprofile
 
@@ -1082,7 +1108,7 @@ nicht abschalten. Kein alter Export wird durch Umbenennen zum aktuellen Eingang.
 
 ## 9. Aufbewahrung und Abschluss
 
-Sicherung während der Auswahl und tatsächlicher Produktionsabschluss folgen
+Aktuelle Sicherung während der Auswahl und tatsächlicher Produktionsabschluss folgen
 [Authoring §§6–7](authoring/PUZZLE_AUTHORING.md#6-dateien-übergabe-und-wiederaufnahme)
 und [Schritt 5 §9](authoring/PUZZLE_AUTHORING_STEP_5.md#9-produktionsabschluss-und-bereinigung).
 Aktive Nutzdaten und Rechte bleiben erhalten; abgeschlossene Produktion benötigt
@@ -1090,9 +1116,8 @@ kein dauerhaftes Kandidatenarchiv. Noch offene/neuere Arbeit nicht entfernen.
 Historische Freigaben nicht umschreiben und bereinigte Rasterproduktion für einen
 Bildwechsel nicht rekonstruieren.
 
-Aufwand für Generierung, Fehlversuche, Alphakorrektur, Werkzeuglauf, aktive
-Menschenzeit und Auswahlwartezeit im vorhandenen Protokoll unterscheiden;
-unbekannte Zeiten bleiben `null`.
+Kein Generierungs-, Fehlversuchs- oder Korrekturprotokoll nach Vorliegen des
+aktuellen Ergebnisses führen. Offene aktuelle Blocker bleiben im Record.
 
 Die früheren synthetischen Vertragsfälle und vollständigen Formbeispiele sind
 am [Vorgängerstand §9](https://github.com/venomenon328/picross/blob/6fe91a08a4d073547df43c6aebbe8ead4c45ae0f/docs/PUZZLE_BACKGROUNDS.md#9-aufbewahrung-abschluss-und-vertragsfälle)

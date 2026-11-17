@@ -1,6 +1,6 @@
 # Redaktioneller Qualitätsvertrag für neue Rätsel
 
-**Vertrag 1.0 · Dokumentrevision 16 · 17.11.2026 · DOCS-696 / [#696](https://github.com/venomenon328/picross/issues/696)**
+**Vertrag 1.0 · Dokumentrevision 16 · 17.11.2026 · PROD-SLIM / [#700](https://github.com/venomenon328/picross/issues/700)**
 
 ## 1. Geltung und Zuständigkeit
 
@@ -21,14 +21,12 @@ Ist-Matrixprüfung und die abschließende Endprüfung gelten unverändert.
 
 ## 2. Einzelurteile, Belege und Klassen
 
-Für jedes an der jeweiligen Phase fällige Kriterium aus §§3–4 und §9.1 MUSS ein
-Einzelurteil mit kurzer Begründung und konkretem Beleg im vorhandenen
-Qualitäts-/Entscheidungsprotokoll stehen. Es bindet Kriterien-ID, diese
-Regelversion/Dokumentrevision beziehungsweise ihren Quellcommit und Dateihash,
-Kandidaten-ID/Revision, betrachtete Dateien/Hashes, Methode, Zeitpunkt und Prüfer.
-Bei Farbfragen die tatsächlich verwendeten Farb-IDs und RGB-Werte einschließlich
-der betroffenen Paare nennen. Fehlende Bindungen ausdrücklich offenlassen.
-Keine neue technische Pflichtdatei oder Erweiterung geschlossener Schemas.
+Für jedes fällige Kriterium steht ein knappes aktuelles Einzelurteil mit
+Begründung, Methode und tatsächlichem Prüfer im einen aktuellen Arbeitsrecord
+nach [PW-B](../tools/PW_B_CONTRACT.md). Die gebundenen Bild-/Rasterdateien
+bestimmen den Gegenstand. Bei Farbfragen verwendete IDs/RGB und betroffene Paare
+benennen. Unbekannter Zeitpunkt bleibt ausdrücklich unbekannt; keine erfundene
+Prüfung. Keine separaten Protokoll-, Herkunfts-, Prompt- oder Korrekturdateien.
 
 | Ergebnis | Bedeutung und Folge |
 | --- | --- |
@@ -117,9 +115,9 @@ Schemas, Zahlen und Befehle bleiben ausschließlich in den verlinkten Normen.
 | --- | --- | --- |
 | H-01 · Maße, Werte, verwendete Farbzahl und Farb-/Randregeln | [Authoring §4.2](authoring/PUZZLE_AUTHORING_STEP_3.md), [ZA-1](ZA1_ADAPTER.md), [CLI](../../tools/puzzle_production/README.md) | Bei jedem Import/finalen Kandidaten automatisch an exakter Matrix/Design/Hinweisen prüfen; vor `content_ready` vollständig belegen. Eine Randverletzung nur über die bereits unterstützte konkrete ZA-1-v2-Autorisierung behandeln, tatsächlichen Negativbefund sichtbar erhalten. |
 | H-02 · Vollständige Deduktion und unabhängiger Proof | [Produktion §5](PUZZLE_PRODUCTION.md), [Authoring §§4.2/4.2.1](authoring/PUZZLE_AUTHORING_STEP_3.md) | Nach letzter Logikänderung vom unbekannten Start unter benanntem zugelassenem Profil lösen, geschriebenen vollständigen Proof unabhängig frisch prüfen und Endmatrix vergleichen; vor `content_ready`. `stalled`, Abbruch, Such-`unique` und bloßer Exitcode genügen nicht. |
-| H-03 · Herkunft, Rekonstruktion und Nutzungsgrundlage | [Produktion §§3–4](PUZZLE_PRODUCTION.md), [Import §4.1](authoring/PUZZLE_AUTHORING_STEP_3.md) / [Sicherung §6](authoring/PUZZLE_AUTHORING.md), [ZA-1](ZA1_ADAPTER.md) | Quellenbytes, Bearbeitung, Normalisierung, Parameter, Matrix-/Hinweisbindung und gegebenenfalls Reparatur-Replay dateibasiert prüfen; Rechte/Herkunft vor Freigabe klären. Kein erfundener Rechtetext oder Ersatz durch Eigentümerwunsch. Vor `content_ready` vollständig belegen. |
+| H-03 · Aktuelle Inhaltsbindung und Nutzungsgrundlage | [Produktion](PUZZLE_PRODUCTION.md), [PW-B](../tools/PW_B_CONTRACT.md), [ZA-1](ZA1_ADAPTER.md) | Aktuelle Bilder, Matrix/Hinweise, Motiv-/Parameterkonformität und tatsächlich nötige Rechte/Notices prüfen. Keine Normalisierungs-, Generator-, Codec-, Toolhash-, Import- oder Reparaturhistorie und kein Herstellungsreplay als Zulassung. Ungeklärte Rechte bleiben Blocker. |
 | H-04 · Tatsächliche Bild-/Motivfreigaben und erlaubte Änderungen | [Bildwahl §2.4](authoring/PUZZLE_AUTHORING_STEP_1.md) / [Motiv §2.4](authoring/PUZZLE_AUTHORING_STEP_2.md) / [Änderung §4.4](authoring/PUZZLE_AUTHORING_STEP_3.md) / [Sicherung §6](authoring/PUZZLE_AUTHORING.md), [AT](REVEAL_TRANSPARENCY.md), [ZA-1](ZA1_ADAPTER.md) | Vor Abstraktion die konkrete Bildfreigabe, vor Rasterproduktion die Motivfreigabe samt Parameterkorridor prüfen. Materielle Änderungen erneut freigeben; vor `content_ready` alle gültigen Bindungen abgleichen. Ein ausdrücklich unterstützter historischer Autorisierungsweg gilt nur unter seinen eigenen Bedingungen. |
-| H-05 · Paket-/Inventarbindung, echte Endabnahme und Integrationsauftrag | [Übergabe §§6–7](authoring/PUZZLE_AUTHORING.md) / [Integration §8](authoring/PUZZLE_AUTHORING_STEP_5.md), [ZA-1](ZA1_ADAPTER.md) | Vor Ausgabe eines Angebots geschriebenes Einzelkandidatenpaket/Inventar prüfen. Endabnahme am tatsächlich ausgewählten Paket extern binden, vor Export/Integration vollständig nachweisen und Arbeitsbefugnis prüfen. `content_ready` darf noch die menschliche Endabnahme offen haben; eine Sheet-Auswahl erteilt sie nicht automatisch. |
+| H-05 · Aktuelle Auswahl, echte Endabnahme und Integrationsauftrag | [PW-B](../tools/PW_B_CONTRACT.md), [Integration](authoring/PUZZLE_AUTHORING_STEP_5.md), [ZA-1](ZA1_ADAPTER.md) | Aktuelle angebotene/gewählte Dateien mit Kennung und Inhaltsbindung prüfen. Tatsächliche Entscheidungen an unveränderte aktuelle Inhalte binden; kein ZIP, Inventar, Handoff oder historischer Angebotsrecord erforderlich. content_ready kann die menschliche Endabnahme noch offen haben; eine UI-Absicht erteilt sie nicht. |
 | H-06 · Gebundene Schwierigkeit | [Authoring §5](authoring/PUZZLE_AUTHORING_STEP_3.md), [SD2-Integration](../difficulty/SD2_INTEGRATION.md) | Nach finaler Deduktion vor Endabnahme den aktuellen Methoden-/Analysevertrag am konkreten Kandidaten erfüllen; beim Export Definitionsbindung prüfen. Keine Ersatzstufe für fehlenden/abgebrochenen Nachweis und keine Neubewertung alter Pakete aus Q-A. |
 | H-07 · Vollständige oder weich auslaufende Hintergrundkomposition | [HG-06](images/BACKGROUND.md#hg-06-randabschluss), Q-HG03/Q-HG04 | Vor Angebot jede der vier Kanten der gespeicherten Originale visuell gegen HG-06 prüfen; nach materieller Korrektur und nach Ableitung am fertigen Bild wieder kontrollieren. Unabdingbare Voraussetzung ohne redaktionelle Abweichungsannahme. Dateimaße oder ein vorhandener Alphakanal belegen die Bildqualität nicht. |
 
@@ -134,8 +132,8 @@ Nach der vorgesehenen bedarfsweisen Varianten-/Profil-/Reparatursuche innerhalb
 der [Authoringbudgets §§4.1–4.4](authoring/PUZZLE_AUTHORING_STEP_3.md) MUSS die KI bei
 null vollständig qualifizierten Kandidaten die **zwei bis drei möglichst
 unterschiedlichen besten vorliegenden brauchbaren Entwürfe** zur menschlichen
-Ansicht zeigen, sofern vorhanden. Bei nur einem diesen zeigen. Weitere sinnvolle
-Entwürfe bleiben im Entscheidungsprotokoll auffindbar; gleiche Matrizen mit
+Ansicht zeigen, sofern vorhanden. Bei nur einem diesen zeigen. Weitere aktuell angebotene
+Entwürfe bleiben im aktuellen Record erreichbar; gleiche Matrizen mit
 anderem Namen/Profil zählen nicht als Unterschied. Keine künstliche Quote,
 Budgetausweitung oder zusätzliche Erzeugung allein für diese Sichtungszahl.
 Ein geeigneter vollständig qualifizierter Kandidat genügt dagegen nach Authoring
@@ -173,11 +171,10 @@ vollständiger technischer Prüfung im bestehenden gültigen Auswahlweg erschein
 Der Eigentümer DARF einen konkreten redaktionellen Mangel bewusst akzeptieren.
 Dafür legt die KI zuerst den Befund samt Korrekturmöglichkeit nach §5 offen und
 benennt ausdrücklich die betroffenen Kriterien. Die tatsächliche Entscheidung
-wird im vorhandenen äußeren Entscheidungs-/Freigabebeleg **außerhalb versiegelter
-Originale** nachvollziehbar festgehalten:
+wird im aktuellen Record am konkreten gebundenen Ergebnis nachvollziehbar festgehalten:
 
 - Kandidaten-ID/Revision, Matrix-/Logikbindung, tatsächliche Palette mit IDs und
-  Werten, Bild-/Motivdateien und Hashes sowie Originalpaket-/Handoff-/Inventarbindung;
+  Werten, Bild-/Motivdateien und Hashes ohne Originalpaket-/Handoff-/Inventarpflicht;
 - Kriterien-ID und Regelversion/Dokumentrevision/Quellstand, konkreter negativer
   Befund und Umfang der akzeptierten Abweichung einschließlich betroffener Paare;
 - Begründung, tatsächlicher Akteur, UTC-Zeitpunkt und Wortlaut der Entscheidung;
@@ -195,7 +192,7 @@ unterstützten revisionsgebundenen Ausnahmeweg gedeckt sein. Ohne diese Prüfung
 bleibt nur Korrektur/Neunachweis; eine bloße Eigentümerauswahl ist kein Ersatz.
 Keine negativen Originalgates oder alten Belege umschreiben. Bei neuer Lieferung
 die aktuellen redaktionellen Entscheidungen getrennt dokumentieren und nach
-Authoring §6 sichern; Gatefelder behalten ihre bisherige Freigabe-/Belegsemantik.
+Authoring §6 sichern; Negative Urteile und ausdrücklich angenommene Abweichungen bleiben getrennt.
 Kann ein bestehender technischer Weg einen Zustand nicht gültig abbilden, ist
 keine Übernahme durch Freitext oder ein zusätzliches `pass` erlaubt.
 
@@ -549,7 +546,7 @@ Vergleich dieser Referenzen ist keine ausgeführte Produktionsprüfung.
 | fehlender Proof, ungeklärte Rechte oder stale/fehlende Bindung | Technischer Blocker unabhängig von Farbe oder redaktioneller Annahme; Diagnose-Sichtung möglich, kein freigabefähiges Sheet-Angebot. |
 
 Ausnahmebindungen folgen §6 einschließlich Regelversion, konkreten Farbpaaren,
-Kandidaten-/Paletten-/Inventarbindung, Begründung, Akteur und UTC-Zeitpunkt.
+aktuelle Kandidaten-/Palettenbindung, Begründung, Akteur und UTC-Zeitpunkt.
 Das technische Negativurteil und die separate Annahme bleiben beide sichtbar.
 Keine zusätzliche allgemeine Freigabeschleife oder Pflicht-Probespielrunde.
 
