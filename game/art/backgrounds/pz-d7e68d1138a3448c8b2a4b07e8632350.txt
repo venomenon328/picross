@@ -1,0 +1,4 @@
+author: OpenAI ImageGen
+changes: Gezielte ImageGen-Revision von N2: Handschuhe entfernt, restliche Szene vergleichbar; natives transparentes PNG unverändert übernommen. Proportionale vollständige Aufbereitung im HG31-Profil picross-background-png2304x768-v1 (2304 × 768 RGBA8).
+source: Integriertes ImageGen-Werkzeug, Issue #671, HG-BESTAND-11, Bildrevisionen 2026-11-17. Bearbeitungsgrundlage: bereits vorgelegtes eigenes N2-Original am Angebotscommit 30aab92f5ceb3859bdb700ce5b61d2a244e777e9.
+usage_basis: Im ausdrücklichen Auftrag des Projektinhabers für picross erzeugt; keine ungeklärten Fremdassets.

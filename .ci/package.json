@@ -1,12 +1,12 @@
 {
   "format": "development-ci-plan/v1",
   "issue": "https://github.com/venomenon328/picross/issues/671",
-  "package": "HG-BESTAND-10",
+  "package": "HG-BESTAND-11",
   "modules": [],
-  "purpose": "Die tatsächliche Eigentümerwahl P3/r01, T5/r01, F1/r01, R1/r02 und G2/r01 für Pentagramm, Petronas Towers, Pfirsich, Radieschen und Regenbogen als fünf geprüfte 2304×768-RGBA8-Hintergründe integrieren; Kuala-Lumpur-Großstadtmotiv für Petronas, bytegleicher serieller Editorimport und Schutz aller übrigen Nutzdaten.",
-  "omitted": "Reine Hintergrundinhalte ohne Code-, UI-, Raster-, Solver-, Bewertungs- oder CI-Änderung. modules=[] und evidence.mode=none; kein Playerbau und keine Fach-/Native-/Browsermodule. Arbeitsrecords und Alternativen bleiben außerhalb von main. Separate ChatGPT-Reviewrunde entfällt gemäß tatsächlichem Eigentümerauftrag.",
+  "purpose": "Die Eigentümerwahl W1/r01, N2/r03, C2/r01, K5/r02 und S2/r01 für Regenwurm, Rote Nelke, Schachspringer, Schlüssel und Schnecke als geprüfte 2304 × 768 RGBA8-Hintergründe übernehmen und die geschützten Bestandsdaten prüfen.",
+  "omitted": "Reine Hintergrundpflege mit unveränderten Rätsel-, Spiel- und Werkzeugquellen. Der Quellen- und Plankern deckt das Paket ab. Kein Playerbau und keine Fach-, Native- oder Browsermodule. Die eigenständige ChatGPT-Reviewrunde entfällt gemäß Eigentümerauftrag.",
   "test_changes": [],
-  "core_change": "Keine Änderung am CI-Kern. Quellen-/Plankern und gezielte aktuelle Bild-/Import-/Bestandsschutzprüfung; evidence.mode=none.",
+  "core_change": "CI-Kern unverändert. Gezielte aktuelle Bild-, Import- und Bestandsprüfung. Keine aufbewahrten technischen Artefakte.",
   "evidence": {
     "mode": "none",
     "purpose": null,
