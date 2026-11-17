@@ -1,19 +1,11 @@
 {
   "format": "development-ci-plan/v1",
-  "issue": "https://github.com/venomenon328/picross/issues/691",
-  "package": "PE-PW-REL-CHECKOUT",
-  "modules": [
-    "tools"
-  ],
-  "purpose": "PE- und PW-Releasecheckouts auf einen gepinnten Commit mit 10-Minuten-Step-Hängeschutz begrenzen; überflüssigen lokalen Versionshistorien-Scan aus dem Installerbau entfernen. Veröffentlichung bleibt signiert und aus verifizierter Releaseautorität versioniert.",
-  "omitted": "Keine Fachwriter-/Solver-/Spiel-/Inhaltsänderungen; kein anderes Zusatzmodul als tools, keine production.*, native.*, preflight, delivery oder Chromium. Die bereits erfolgten Windows-MSI-/C#-Diagnosen werden nicht wegen einer Checkout-Einstellung wiederholt. Keine Release-/Secret-/Environmentaktion durch diesen PR. Nach einem späteren Merge kann der bereits aktive PW-Kanal regulär automatisch veröffentlichen.",
-  "test_changes": [
-    {
-      "path": "tools/test_production_installer.py",
-      "disposition": "change-scoped",
-      "reason": "Historischen Git-Repo-Fixturetest durch kleine Quell-/Checkout-/Timeoutregression für beide Releaseworkflows ersetzen; bestehende signierte Release-/Versions-/MSI-Tests erhalten."
-    }
-  ],
+  "issue": "https://github.com/venomenon328/picross/issues/671",
+  "package": "HG-SKIZZENSTIL",
+  "modules": [],
+  "purpose": "Verbindlichen skizzenhaften Graphitstil für neue Hintergrundkandidaten und beauftragte Revisionen präzisieren: beiläufige, gekonnte Handskizze statt professionell durchpolierter Bleistiftillustration; KI-lesbare Regeln, optionale natürliche Korrekturspuren ohne Fehlerpflicht.",
+  "omitted": "Nur Bildstilnorm und Paketplan. Keine Spiel-/Produktionscode-, Bilddaten-, Raster-, Profil- oder Schemaänderung. Q-HG02 referenziert bereits verbindlich den gemeinsamen Bildstil; daher keine neuen Tests, numerischen Stilmetriken, Bildevidenz, zusätzlichen Module, Player-Builds oder persönlichen Abnahmen. Vorhandene historische Bildfreigaben bleiben gültig.",
+  "test_changes": [],
   "core_change": null,
   "evidence": {
     "mode": "none",
