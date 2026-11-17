@@ -1,6 +1,6 @@
 # Redaktioneller Qualitätsvertrag für neue Rätsel
 
-**Vertrag 1.0 · Dokumentrevision 16 · 17.11.2026 · PROD-SLIM / [#700](https://github.com/venomenon328/picross/issues/700)**
+**Vertrag 1.0 · Dokumentrevision 17 · 17.11.2026 · HG-SEITENKOMPOSITION / [#671](https://github.com/venomenon328/picross/issues/671)**
 
 ## 1. Geltung und Zuständigkeit
 
@@ -570,7 +570,7 @@ ersetzt sie nicht.
 | --- | --- | --- |
 | Q-HG01 · Kontext statt Rätselsubjekt | [HG-01](images/BACKGROUND.md#hg-01-kontext) | Vor Auswahl jede Datei mit Briefing, freigegebenem Abschlussbild und geschützten Merkmalen vergleichen; Kontextgrenze tatsächlich beurteilen. |
 | Q-HG02 · Helle Graphitzeichnung | [HG-02–HG-03](images/BACKGROUND.md#hg-02-beiläufige-handskizze), [HG-08](images/BACKGROUND.md#hg-08-stilbezogene-korrektur) | Vor Auswahl am Original Skizzencharakter, Striche, Schraffur und Helligkeit beurteilen. Leitfrage: beiläufige gekonnte Skizze oder professionell fertig ausgearbeitete Graphitzeichnung? Technische Korrektheit oder Schönheit ersetzt dieses Urteil nicht. |
-| Q-HG03 · Luftige gemeinsame Komposition | [HG-05–HG-07](images/BACKGROUND.md#hg-05-ganze-leinwand) | Vor Vorlage tatsächliche PNG-Maße aus den Bytes lesen und binden; Gesamtleinwand, Breitenverteilung, geplante Positionen und vier Bildkanten ansehen. Nach Ableitung Maße, erhaltene Komposition und Strichqualität am fertigen Bild erneut prüfen. H-07 bleibt hart; HG-07 bleibt unverbindlich. |
+| Q-HG03 · Luftige gemeinsame Komposition | [HG-05–HG-07](images/BACKGROUND.md#hg-05-ganze-leinwand) | Vor Vorlage tatsächliche PNG-Maße aus den Bytes lesen und binden; Gesamtleinwand, seitliche Gewichtung, mittleren Höhenverlauf nach HG-07 und vier Bildkanten ansehen. Nach Ableitung Maße, erhaltene Komposition und Strichqualität am fertigen Bild erneut prüfen. Verstöße gegen die verbindlichen Regeln aus HG-07 als nicht erfüllt beurteilen; nur die dortige Rechtspräferenz bleibt unverbindlich. H-07 bleibt hart. |
 | Q-HG04 · Echte Transparenz und saubere Striche | [HG-04](images/BACKGROUND.md#hg-04-transparenz), [HG-06](images/BACKGROUND.md#hg-06-randabschluss) | Vor Auswahl, nach materieller Änderung und am fertigen Ableitungsbild freie Außen-/Zwischenräume, feine Striche, Säume und tatsächlich erreichte Kanten sichten; bei Bedarf neutrale Prüfgründe/Transparenzraster verwenden. Alpha-Zählungen allein genügen nicht. |
 
 Einen Mangel mit gezieltem Korrekturvorschlag benennen. Keine positive
