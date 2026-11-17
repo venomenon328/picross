@@ -1,12 +1,12 @@
 {
   "format": "development-ci-plan/v1",
   "issue": "https://github.com/venomenon328/picross/issues/671",
-  "package": "HG-SEITENKOMPOSITION",
+  "package": "HG-BESTAND-06-B1-V1",
   "modules": [],
-  "purpose": "Verbindliche seitliche Motivschwerpunkte und eine niedrige offene Mittelzone für neue Hintergrundkandidaten in der alleinigen Bildnorm festlegen; die bisher unverbindliche HG-07-Anbindung in Q-HG03 konsistent korrigieren.",
-  "omitted": "Reine Dokumentationsänderung ohne Bildproduktion, Asset-, Runtime-, Werkzeug- oder Schemaänderung. Deshalb keine Zusatzmodule, kein Player-Build und kein Spiel-/Overlaytest; Bildsichtung der sieben Nutzeranhänge und Konsistenzprüfung der aktuellen Quellen genügen zusammen mit dem Dokument-/Plankern. Bestehende Bildfreigaben werden nicht neu bewertet.",
+  "purpose": "Ausschließlich die tatsächlich gewählten Hintergründe Bierglas B1/r01 und Ho Chi Minh V1/r01 integrieren. Aktuelle proportionale HG31-Vorbereitung mit explizitem 2304x768-Profil, isolierte Bildsichtung, bytegleicher serieller Editorimport und Schutz der unveränderten Rätseldaten.",
+  "omitted": "Reine Rätselbildinhalte ohne Code-, UI-, Raster-, Solver-, Difficulty- oder CI-Änderung. Hamburger, Huhn und Ingwer bleiben ausdrücklich zurückgestellt. Keine Fach-/Native-/Browsermodule, kein Playerbau, keine neue unabhängige ChatGPT-Reviewrunde gemäß Eigentümerauftrag. Arbeitsrecords und Alternativen werden nicht nach main gemergt.",
   "test_changes": [],
-  "core_change": "Keine Änderung an Tests oder CI-Kern. Einmalige Sichtung der Anhänge und Prüfung des vollständigen Dokumentdiffs; keine neuen Testfixtures, Messquoten oder dauerhaften Prüfartefakte.",
+  "core_change": "Keine Änderung am CI-Kern. Quellen-/Plankern und gezielte aktuelle Bild-/Import-/Bestandsschutzprüfung; evidence.mode=none.",
   "evidence": {
     "mode": "none",
     "purpose": null,

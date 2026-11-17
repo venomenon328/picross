@@ -1,0 +1,4 @@
+author: OpenAI ImageGen / ChatGPT-Codex
+changes: Vollständige gewählte 3:1-Leinwand proportional nach picross-background-png2304x768-v1 auf 2304×768 RGBA8 vorbereitet; keine kreative Änderung.
+source: Mit integriertem OpenAI ImageGen erzeugte eigene Kontextzeichnung.
+usage_basis: Auf ausdrücklichen Eigentümerauftrag neu für picross mit integriertem ImageGen erzeugt; keine Fremdvorlage oder fremden Bildbytes übernommen.
