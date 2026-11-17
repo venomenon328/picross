@@ -114,7 +114,8 @@
               "storage": {
                 "enum": [
                   "repository",
-                  "package"
+                  "package",
+                  "definition"
                 ]
               },
               "container": {

@@ -127,5 +127,14 @@ def handoff(root, puzzle_id, revision):
     """Explicit recovery/publication for an already complete current revision."""
     from tools.puzzle_production import authoring_builder as builder
     root = io.external(root)
+    if revision == 'current':
+        from tools.puzzle_production import current_authoring
+        source = LocalSource(root)
+        name = current_authoring.path(puzzle_id)
+        raw = source.read(None, name, JSON_LIMIT)
+        value = current_authoring.projection(p.parse(raw), raw)
+        current_authoring.detail(source, None, value)
+        source.recheck()
+        return {'status': 'reused', **reference(name, raw)}
     with builder.writer(builder.git_root(root) / 'authoring-builder.lock'):
         return publish(root, puzzle_id, revision, observe(root, puzzle_id))

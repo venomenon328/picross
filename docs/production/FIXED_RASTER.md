@@ -72,76 +72,29 @@ Auch solved-Eingänge dürfen so verbessert werden; gute Kandidaten unverändert
 lassen. Ein vollständig unveränderter Plan wird als No-op ohne neues Bundle
 abgewiesen. Materielle Änderungen außerhalb der Freigabe benötigen Entscheidung.
 
-## Ergebnis, Dateien und Replay
+## Ergebnis und aktuelle Übergabe
 
-CLI: `python -m tools.puzzle_production.fixed_raster derive --root ROOT --plan PLAN --output OUT`.
-OUT muss fehlen; keine Überschreibung. Fehler liefern Exit 2, Ressourcenende 4.
-`inspect --root ROOT --bundle BUNDLE` prüft das geschriebene Bundle erneut.
-Alle JSON-Dateien sind kanonisches UTF-8 mit End-LF; semantische Hashes binden
-kanonisches JSON ohne End-LF, Dateihashes tatsächliche Bytes. Dateinamen sind
-geschlossen, keine Links oder zusätzlichen Dateien. Plan/Record je höchstens
-1 MiB, Proofs behalten die bestehenden profilabhängigen Grenzen.
+Feste Änderungen und Schutzmaske werden vor der konkreten Operation geprüft.
+Der bestehende Ableitungshelfer darf seine gebundenen Pläne/Quellen während der
+laufenden Operation temporär benötigen. Sie sind keine dauerhafte Voraussetzung
+für das aktuelle Ergebnis. Keine erfolglosen Raster/Proofs, Reparaturpläne oder
+Normalisierungs-/Generator-/Toolhashketten veröffentlichen oder rekonstruieren.
 
-`picross-fixed-raster-manifest-v1` hat exakt `format,tool,files`.
-Tool ist exakt `{name,version,modules}` mit name `fixed-raster`, version 1 und
-SHA-256 der Produzentenmodule fixed_raster.py/raster_parameters.py. Die Hashes
-dokumentieren den Produzenten; aktuelle Prüfung rekonstruiert alle Inhalte.
-Files bindet exakt `plan.json,record.json,logic.json,proof.json,result.json,
-replay.json,raster.png`, bei Paarprofil zusätzlich `baseline-proof.json,assessment.json`.
+Die aktuelle Übergabe nach [PW-B](../tools/PW_B_CONTRACT.md) besteht aus endgültiger
+Definition/Matrix/Hinweisen/Palette, aktuellem Proof mit unabhängiger Prüfung und
+Endmatrixvergleich, passender aktueller Difficulty, Rasterpreview und gebundenen
+aktuellen Sichturteilen. Motiv-/Parameterkonformität und echte Freigaben bleiben
+Pflicht. Geänderte Logik verlangt neue aktuelle Nachweise; unveränderte Bilder
+verlangen keine neue kreative Entscheidung.
 
-`picross-fixed-raster-v1` hat exakt `format,puzzle_id,revision,plan_sha256,
-reference_manifest_sha256,import_design,design,matrix,matrix_hash,logic_hash,base_status`.
-Importdesign bleibt unverändert; design ist dessen Kopie mit allein abgeleiteten
-Endmaßen. Matrix ist exakt die editierte Originalmatrix im Crop. Base_status ist
-der frisch bestätigte solved/stalled-Status, kein umetikettiertes Zertifikat.
-Replay ist exakt `{plan_sha256,matrix_hash,logic_hash,status,proof_verified,certified}`.
-Result folgt dem bestehenden Verifierresultat. Beide müssen solved und zertifiziert
-sein; der endgültige Proof entsteht unbekannt startend, wird von einem frischen
-unabhängigen Prozess geprüft und muss exakt die Endmatrix ergeben. Paarproof,
-getrennte Baseline und R4-Assessment behalten ihre bisherigen Regeln.
+`python -m tools.puzzle_production.current_tools raster --input DEFINITION
+--mode mono|color --output-dir NEU` benutzt die vorhandenen Solver-/Verifier-/
+Analysealgorithmen, prüft den geschriebenen Proof zusätzlich in einem frischen
+Prozess und erhält nur aktuelle Nutzdateien. Paarprofil wird ausdrücklich mit
+`--profile paired` gewählt. Bei stalled bleibt Difficulty null und das Ergebnis
+ein Sichtungsentwurf. Die Integration konsumiert ausschließlich den aktuellen
+RI-ONE-Eingang, kein Import-/Reparaturreplay oder altes Paket.
 
-Vor jedem Replay werden Original, Normalisierung, Importmatrix, Hinweise und
-gespeicherter Originalproof frisch geprüft. Ein gültiger bestätigter stalled-Import
-ist zulässig. Abbruch/Widerspruch/ungültiger Proof sind keine Ausgangsbasis.
-Dateihashes, Planidentität und rekonstruierte Recordbytes müssen exakt stimmen.
-
-## Reguläre Übergabe
-
-Candidate hat `source_type=fixed`, `variant=fixed`, proof `BUNDLE/proof.json`.
-Repair hat exakt `type=fixed_edits_empty_crop,reference,reference_variant,plan,
-record,replay`; die drei Dateien liegen im ausgewählten Bundle. Keine externe
-manuelle Autorisierung. Bei späterem Phasenwechsel bleibt die ursprüngliche
-Planrevision erhalten, wenn die geprüfte raster_selection genau deren
-qualifizierten Record bindet. Checked-v3 bindet die ausdrücklich gewählte numerische
-Runtime-Revision des vorläufigen Analyseinputs, getrennt von der Paketrevision.
-Unveränderte Logik erfordert keinen neuen Analyselauf. Unveränderte Bildfreigaben bleiben gültig. Matrixgebundene
-Hinweise, Proofs, Paletten-/Sichturteile, Motiv-/Revealbeurteilung und Schwierigkeit
-müssen zum Ende passen. Die technische Außenrandregel steht in
-[Authoring Schritt 3 §4.2](authoring/PUZZLE_AUTHORING_STEP_3.md#42-harte-kriterien);
-Kriterienklassifikation und Einzelurteile in [PUZZLE_QUALITY](PUZZLE_QUALITY.md).
-
-Die historische production.difficulty 0.1/0.2 bleibt getrennt. Der bestehende
-`catalog_analysis candidate → analyze --method picross-difficulty-0.4 → import`
-erzeugt zusätzlich eine echte Checked-v3-Bewertung aus dem Enddesign, der Endmatrix
-und Endlogik. Der aktive Default steht in content/difficulty-method.json; der
-CLI-Default 0.3 ist dafür ungeeignet. Das Checked-Objekt liegt in der inventarisierten
-Analyseablage, nicht im historischen difficulty-Objekt. Identische vollständige
-Bindung wird über `gate_evidence.difficulty` auf das Checked-v3-JSON geprüft:
-der Reader rekonstruiert die vorläufige Definition aus Enddesign/Matrix/Logik,
-Rätsel-ID und expliziter Runtime-Revision aus current_source und verlangt deren
-vollständige Checked-Bindung. Der endgültige Export verwendet den bestehenden Rebind.
-Für `visual` und `reveal_consistency` bindet der vorhandene redaktionelle Bericht
-in seinen tatsächlichen Textbytes explizit Endmatrix- und Logikhash; er enthält
-die konkreten Urteile zu Motivtreue und Reveal. Kein technisches Ersatzformat.
-Identische vollständige
-Bindung darf frisch geprüft wiederverwendet werden; geänderte Matrix erfordert
-neue Analyse, Metadatenänderung allein den bestehenden Rebind.
-
-Builder liest das tatsächlich geschriebene ZIP frisch. Erst alle Inhaltsgates
-ergeben raster_ready, qualifiziertes Rasterangebot, workspace.json und current-view.
-Background und raster_selection bleiben null; keine Endfreigabe wird erfunden.
-Fehlende Nachweise blockieren oder bleiben raster_review. Der HTTP-Leser prüft
-Datei-/Matrixbindungen ohne Solver/Writer. Spätere kreative Phasenprüfungen erhalten
-diese Ableitungsbindung und die dann vorliegenden Auswahl-/Hintergrund-/Endfreigaben.
-Die Katalogintegration prüft ausschließlich den vollständigen aktuellen
-[ZA-1-Eingang](ZA1_ADAPTER.md); sie rekonstruiert keine Produktionsgeschichte.
+Die früheren geschlossenen Plan-/Record-/Manifest-/Replayformen bleiben am
+[Mainanker vor PROD-SLIM](https://github.com/venomenon328/picross/blob/d389fbad01dd01860ed949a4e1e8e0b52c21362a/docs/production/FIXED_RASTER.md)
+dokumentiert; ihr damaliger Fortbestand ist keine neue Ergebniszulassung.

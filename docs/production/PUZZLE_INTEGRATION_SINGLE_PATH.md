@@ -240,8 +240,12 @@ Die folgenden Verbraucher teilen die aktuelle Inhaltsautorität:
 
 RI, ZA-1, SD-Catalog, PW/PW-B, Authoring Schritt 5, Hintergrund-/Reveal-/
 Editorvertrag, Batchvertrag und Werkzeuganleitung beziehen sich auf diesen einen
-Integrationsweg. Phasensnapshots behalten ihre eigene geschlossene Form nach
-[PW-B](../tools/PW_B_CONTRACT.md); sie sind keine Integrationszulassungsbedingung.
+Integrationsweg. Laufende Arbeit verwendet genau einen aktuellen Metadatensatz
+nach [PW-B](../tools/PW_B_CONTRACT.md); Ansichten und der temporäre RI-ONE-Eingang
+werden daraus abgeleitet. Produktbranches übernehmen keine Arbeitsarchive.
+Completion prüft die tatsächlichen gewählten Produktbytes auf dem Integrationscommit;
+Retirement entfernt den gesicherten eigenen Arbeitsstand nach bestätigtem Mainergebnis,
+ohne dessen vorherigen Import nach Main zu verlangen.
 Historische Integrationsbeschreibungen und Lieferberichte sind keine aktuellen
 Pflichtquellen und dürfen bestehende Entscheidungen nicht nachträglich umetikettieren.
 

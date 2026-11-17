@@ -216,6 +216,10 @@ def complete(root, record_path, commit, *, current_input):
     from .sources import INDEX, check_commit, production_path, git
     production_path(record_path); check_commit(commit)
     root = io.external(root)
+    from tools.puzzle_production import current_authoring
+    current = p.parse(io.read(root, record_path, JSON_LIMIT))
+    if current.get('format') == current_authoring.FORMAT:
+        return current_authoring.complete(root, record_path, commit, current_input=current_input)
     from tools.puzzle_production import catalog_integration, integration_input, current_delivery
     incoming = integration_input.Input(current_input)
     ap.require(catalog_integration.reached(current_input, root), 'Selected final input is not currently registered')

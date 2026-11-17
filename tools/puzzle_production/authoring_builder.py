@@ -310,6 +310,10 @@ def verify_revision(target, expected):
 
 
 def build(request, source_root, output_root, publish_to=None, *, history_repo=None):
+    from . import current_authoring
+    if request.get('format') == current_authoring.REQUEST:
+        ap.require(publish_to is not None, 'Current production requires an explicit repository')
+        return current_authoring.build(request, source_root, publish_to)
     remaining = None
     try:
         with io.budget(ap.SECONDS):
@@ -438,6 +442,9 @@ def build(request, source_root, output_root, publish_to=None, *, history_repo=No
 
 
 def finalize_background(request, source_root, output_root, *, history_repo=None):
+    from . import current_authoring
+    if request.get('format') == current_authoring.REQUEST:
+        return current_authoring.build(request, source_root, output_root)
     """Advance an existing outer record without rebuilding its sealed package."""
     from .authoring_finalization import finalize_background as finalize
     return finalize(request, source_root, output_root, history_repo=history_repo)
@@ -453,7 +460,10 @@ def main(argv=None):
     parser = FinalizerParser(description=__doc__)
     sub = parser.add_subparsers(dest='command', required=True)
     current = sub.add_parser('prepare-integration')
-    current.add_argument('--input', type=Path, required=True)
+    selection = current.add_mutually_exclusive_group(required=True)
+    selection.add_argument('--input', type=Path)
+    selection.add_argument('--record')
+    current.add_argument('--repository', type=Path)
     current.add_argument('--output-dir', type=Path, required=True)
     command = sub.add_parser('build')
     for option in ('request', 'source-root', 'output-root'):
@@ -474,21 +484,39 @@ def main(argv=None):
     try:
         if args.command == 'prepare-integration':
             from .authoring_finalization import finalize_integration
-            result = finalize_integration(args.input, args.output_dir)
+            if args.record:
+                from .current_authoring import prepare
+                ap.require(args.repository is not None, 'Current export requires --repository')
+                result = prepare(args.repository, args.record, args.output_dir)
+            else:
+                result = finalize_integration(args.input, args.output_dir)
             print(canonical_bytes(result).decode('utf-8'))
             return 0
         path = io.external(args.request)
         request = io.json_bytes(io.read(path.parent, path.name, 8 * 1024 * 1024), 8 * 1024 * 1024)
         if args.command == 'finalize-background':
             result = finalize_background(request, args.source_root, args.output_root, history_repo=args.history_repo)
-            code = {'updated': 0, 'reused': 0, 'invalid_input': 2, 'conflict': 2,
+            code = {'updated': 0, 'built': 0, 'reused': 0, 'invalid_input': 2, 'conflict': 2,
                     'aborted': 4, 'technical_error': 5}[result['status']]
         else:
             result = build(request, args.source_root, args.output_root, args.publish_to, history_repo=args.history_repo)
             code = 0
     except (InvalidInput, OSError, ValueError, Aborted, KeyboardInterrupt) as exc:
         aborted = isinstance(exc, (Aborted, KeyboardInterrupt)) or getattr(exc, 'aborted', False)
-        if args.command == 'finalize-background':
+        from . import current_authoring
+        if isinstance(request,dict) and request.get('format')==current_authoring.REQUEST:
+            remaining=None
+            try:
+                selected_root=args.publish_to if args.command=='build' else args.output_root
+                if selected_root is not None:
+                    pending=io.safe(io.external(selected_root),'content/authoring/'+request['record']['puzzle_id']+'/.current-operation.json')
+                    if pending.is_file():remaining=str(pending)
+            except (ValueError,OSError,KeyError,TypeError):pass
+            result={'format':current_authoring.FORMAT,'status':'aborted' if aborted else 'invalid_input',
+                    'message':str(exc),'remaining':remaining,
+                    'next_action':'Inspect current files and any retained operation; repeat the identical request after resolving the conflict.'}
+            code=4 if aborted else 2
+        elif args.command == 'finalize-background':
             from .authoring_finalization import error_result
             result = error_result(exc)
             code = {'invalid_input': 2, 'conflict': 2, 'aborted': 4, 'technical_error': 5}[result['status']]

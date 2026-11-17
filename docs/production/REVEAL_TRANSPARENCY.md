@@ -46,7 +46,7 @@ benötigte aktuelle Bildbindung. Sie ist kein Rasterupdate.
 | Auffindbarkeit | ID, Schlüssel, Save-Slot, Kategorie, Sichtbarkeit und Katalogslot bleiben erhalten. Den aktiven Ressourcenpfad über den aktuellen Writer auflösen; erlaubter PNG↔SVG-Wechsel folgt PE. |
 | Fortschritt | Saves, Redo, Abschlusszustand und Recent-Marker bleiben gültig; kein Reset, keine Migration und keine Rückstufung. |
 | Metadaten | Schwierigkeit, Rating-/Added-Daten und ihre Bindungen bleiben erhalten; ein neues Bild ist keine neue Katalogaufnahme. |
-| Historische Freigaben | Ursprüngliche Handoffs, Bildwahlen, Exportmanifeste und Integrationsbelege behalten Bytes und Aussage. Nicht auf den neuen Bildhash umschreiben oder neu versiegeln. |
+| Tatsächliche Entscheidungen | Aktuelle Bildwahl und benötigte Nutzungsgrundlagen bleiben konkret an die gewählten Bytes gebunden. Tatsächlich vorhandene alte Belege nicht auf einen neuen Bildhash umschreiben; ihre Aufbewahrung oder Rekonstruktion ist keine Voraussetzung der aktuellen Produktion. |
 | Neue Bildfassung | Neue Bild-/Recordrevision mit tatsächlicher Entscheidung und aktueller Identitäts-/Bytebindung. Herkunft, Rechte und tatsächlich nötige Notices erhalten. |
 
 Der aktuelle Editor prüft die ausgewählten neuen Bildbytes und die relevanten
@@ -71,7 +71,8 @@ Zulässige vorbereitete PNGs und begrenzte lokale SVGs werden bytegleich importi
 variable Maße und Seitenverhältnisse sind erlaubt. PNG↔SVG wechselt den
 verwalteten technischen Pfad samt Source/Notice/Runtime und entfernt nur die
 eigene verdrängte Live-Datei im gemeinsamen Journal. Bestehende ursprüngliche
-Produktions-/Definitionsbelege bleiben historisch gebunden.
+Produktions-/Definitionsbelege dürfen keine neue Aufbewahrungspflicht begründen;
+der aktuelle Stand folgt [PW-B](../tools/PW_B_CONTRACT.md).
 
 Recovery prüft die tatsächlich zuständige Journalgeneration und alle gebundenen
 Zielbytes, bevor eigene Daten entfernt werden. Ein aktueller Bildplan hängt nicht

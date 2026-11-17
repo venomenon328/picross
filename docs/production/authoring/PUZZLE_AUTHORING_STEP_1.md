@@ -1,6 +1,6 @@
 # Schritt 1: Abschlussbilder
 
-**Version 0.8.0 · Dokumentrevision 10 · 17.11.2026 · DOCS-696**
+**Version 0.8.0 · Dokumentrevision 10 · 17.11.2026 · PROD-SLIM**
 
 Pflicht: [Kern und Phasenroute](PUZZLE_AUTHORING.md#11-pflichtquellen-nach-phase),
 danach diese Phase und die dort zugeordnete Bildnorm. Zusätzlich:
