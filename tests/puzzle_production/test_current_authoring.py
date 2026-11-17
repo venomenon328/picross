@@ -151,6 +151,9 @@ class CurrentAuthoringTests(unittest.TestCase):
         before={p:(p.read_bytes(),p.stat().st_mtime_ns) for p in (self.root/'content/authoring').rglob('*') if p.is_file()}
         self.assertEqual(current.build(request,self.sources,self.root)['status'],'reused')
         self.assertEqual(before,{p:(p.read_bytes(),p.stat().st_mtime_ns) for p in before})
+        for malformed in ('not-a-list',[{}]):
+            bad=deepcopy(request);bad['files']=malformed
+            with self.assertRaises(InvalidInput):current.build(bad,self.sources,self.root)
         bad=deepcopy(request);bad['record']['brief']='foreign';bad['expected']='0'*64
         with self.assertRaisesRegex(InvalidInput,'conflict'):current.build(bad,self.sources,self.root)
         bad=deepcopy(request);bad['record']['assets'][0]['file']['file']='../escape.png'

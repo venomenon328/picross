@@ -159,6 +159,7 @@ def validate(job):
     exact_keys(job['selected'], {'reveal','motif','raster','background'})
     for role, selected in job['selected'].items():
         if selected is None: continue
+        ap.require(isinstance(selected,str), 'Invalid selected identity')
         if role == 'raster':
             ap.require(selected in raster_ids, 'Selected raster missing')
         elif role == 'background' and selected in ('none','standard'): continue
@@ -338,6 +339,9 @@ def build(request, source_root, root):
     ap.require(request['format']==REQUEST, 'Current publication request required')
     # Roundtrip rejects NaN, duplicate/schema surprises and caller mutation.
     request=io.json_bytes(encoded(request),4*LIMIT)
+    validate(request['record'])
+    ap.require(isinstance(request['files'],list) and len(request['files'])<=2048, 'Invalid current payload')
+    for item in request['files']:exact_keys(item, {'path','source','sha256','bytes'})
     original_refs={r['file'] for r in references(request['record'])}
     job=validate(compact(request['record'])); request['record']=job
     retained={r['file'] for r in references(job)}
@@ -346,7 +350,7 @@ def build(request, source_root, root):
     name=path(job['puzzle_id'])
     root=io.external(root); source_root=io.external(source_root)
     ap.require(root.is_dir() and source_root.is_dir(), 'Explicit roots required')
-    ap.require(request['expected'] is None or re.fullmatch('[0-9a-f]{64}',request['expected']), 'Invalid expected record')
+    ap.require(request['expected'] is None or isinstance(request['expected'],str) and re.fullmatch('[0-9a-f]{64}',request['expected']), 'Invalid expected record')
     ap.require(isinstance(request['files'],list) and len(request['files'])<=2048, 'Invalid current payload')
     wanted={ref['file']:ref for ref in references(job)}; payload={}; observed={}
     for item in request['files']:
