@@ -8,4 +8,4 @@ im temporären Replay. Keine Katalogaufnahme.
 
 Neue Rätsel erweitern diese technischen Fixtures nicht. Der frühere reale
 Knoblauch-Referenztest samt doppeltem Test-ZIP wurde entfernt; sein gebundener
-historischer Nachweis steht in der [Nachweiszuordnung](../../../../docs/ZA1_VERIFICATION.md).
+historischer Nachweis steht in der [Nachweiszuordnung](https://github.com/venomenon328/picross/blob/6fe91a08a4d073547df43c6aebbe8ead4c45ae0f/docs/ZA1_VERIFICATION.md).

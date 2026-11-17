@@ -97,7 +97,7 @@ class BatchFixture:
         # BA-A remains a separate local generation; never relabel current 0.8 rules.
         raw = ("**Version 0.6.0 · Dokumentrevision 1 · TEST ONLY**\n"
                "Synthetic BA-A snapshot; not a production rulebook.\n").encode("utf-8") if version == "0.6.0" else (
-                   ROOT / "docs/ai-workflows/PUZZLE_AUTHORING_0_7_0_PREVIEW.md").read_bytes()
+                   ROOT / "docs/legacy/authoring/PUZZLE_AUTHORING_0_7_0_PREVIEW.md").read_bytes()
         revision = int(re.search(r"\*\*Version " + re.escape(version) +
                                  r" · Dokumentrevision (\d+) ·", raw.decode()).group(1))
         return {"version": version, "document_revision": revision,
@@ -165,7 +165,7 @@ class BatchFixture:
                 "matrix": put(self.source, prefix + "/matrix.json", matrix),
                 "logic": put(self.source, prefix + "/logic.json", wire), "image": motif_ref,
                 "handoff": handoff}
-        # The local BA-A job binds the unchanged explicit 0.7 snapshot; its
+        # The local BA-A job binds the isolated 0.7 reference; its
         # standalone legacy input above remains a labelled synthetic 0.6 fixture.
         job = {"job_id": name, "puzzle_id": identifier, "revision": "r01",
                "background_revision": "bg01" if background else None,

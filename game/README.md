@@ -36,17 +36,17 @@ Katalog oder Rätsel. Bewusst geänderte Einstellungen bleiben erhalten.
 Bearbeitung und Sortierauswahl werden über die bisherigen Speicherwege gesichert.
 Bei einem Speicherfehler bleibt die Anwendung mit einer sichtbaren Wiederholung
 offen; notwendige Backupübernahme verlangt weiterhin Bestätigung. Die
-[historische Studie](../docs/BOOK_STUDY.md) ist aus dem aktiven Tree entfernt.
+[historische Studie](https://github.com/venomenon328/picross/blob/6fe91a08a4d073547df43c6aebbe8ead4c45ae0f/docs/BOOK_STUDY.md) ist aus dem aktiven Tree entfernt.
 Der kurze Prüfeinstieg `tools/book_lifecycle.py` verwendet den regulären Root
-mit synthetischen Daten und isolierten Speicherpfaden. [B-B-Vertrag](../docs/BOOK_INTEGRATION.md) und
-[Prüfstand](../docs/B_B_VERIFICATION.md) binden die Integration; unabhängige und
+mit synthetischen Daten und isolierten Speicherpfaden. [B-B-Vertrag](../docs/game/BOOK_INTEGRATION.md) und
+[Prüfstand](https://github.com/venomenon328/picross/blob/6fe91a08a4d073547df43c6aebbe8ead4c45ae0f/docs/B_B_VERIFICATION.md) binden die Integration; unabhängige und
 persönliche Abnahmen bleiben gesondert.
 
 **Kleine Texte und Ausrichtung (HZ-C):** Kategorien, Kartenmetadaten, Status,
 Auswahllisten und kleine Papiertextbuttons verwenden eine gemeinsame etwas
 größere Textrolle. Beim Wechsel von Werten bleibt die Grundlinie ruhig;
 „Blatt NN“ behält seine bisherige Größe. UI100/125 skaliert die zugehörigen
-Abstände und Textbudgets gemeinsam. [HZ-C-Prüfstand](../docs/HZ_C_VERIFICATION.md).
+Abstände und Textbudgets gemeinsam. [HZ-C-Prüfstand](https://github.com/venomenon328/picross/blob/6fe91a08a4d073547df43c6aebbe8ead4c45ae0f/docs/HZ_C_VERIFICATION.md).
 
 **Schrift und Lesbarkeit (PANG-A):** Normale Texte, Auswahlen, Hilfen und Tooltips
 verwenden Pangolin Regular. Bestehende Überschriften und Delight-Coffee-Hinweiszahlen
@@ -55,20 +55,20 @@ bei schmalen Fenstern darf „Sortieren nach“ innerhalb der Kopfzeile umbreche
 Lange Kategorien bleiben über vollständig umgebrochene Tooltips lesbar; die
 native Auswahlliste scrollt vertikal. Pangolin und die lokale Plex-Ergänzung
 stehen offline bereit; die Original-OFL und Herkunft liegen unter
-`licenses/pangolin/` im Spielerpaket. [HZ](../docs/HAND_DRAWN_UI.md) bindet die Schriftrollen und Nachweise.
+`licenses/pangolin/` im Spielerpaket. [HZ](../docs/game/HAND_DRAWN_UI.md) bindet die Schriftrollen und Nachweise.
 
 **Rahmen, Menüs und Symbole (HZ-B):** Karten und kleine Papierbuttons haben
 ruhende handgezeichnete Konturen. Dropdowns öffnen auf opakem Papier; ein Haken
 markiert die aktuelle Auswahl unabhängig von der angefahrenen Zeile.
 Pfeile, Werkzeuge und Checkboxen gehören zur selben gezeichneten Familie.
 Maus, Tastatur, Fokus und Scrollen bleiben wie gewohnt bedienbar.
-[HZ-B-Lieferung und Prüfstand](../docs/HZ_B_VERIFICATION.md).
+[HZ-B-Lieferung und Prüfstand](https://github.com/venomenon328/picross/blob/6fe91a08a4d073547df43c6aebbe8ead4c45ae0f/docs/HZ_B_VERIFICATION.md).
 
 **Scrollleisten (SBR-A):** Buchseiten und lange Auswahllisten verwenden dieselben
 graphitgrauen, diagonal handschraffierten Leisten mit hellem Griff und hellen
 Dreieckspfeilen. Rad, Griffziehen, Spur- und Pfeilklicks bleiben die gewohnten
 nativen Scrollaktionen. Leisten erscheinen nur bei Bedarf; UI100/125 skaliert
-ihre Darstellung und Trefferbreite gemeinsam. [Stilvertrag](../docs/HAND_DRAWN_UI.md).
+ihre Darstellung und Trefferbreite gemeinsam. [Stilvertrag](../docs/game/HAND_DRAWN_UI.md).
 
 Die kompakten Katalogkacheln bleiben gleich groß, auch nach Abschluss oder Reset.
 Links steht die Vorschau, rechts die Überschrift in Bakso: vor Abschluss
@@ -101,7 +101,7 @@ letzte mit nur einer oder zwei Karten, steht für sich mittig auf ihrer Hälfte.
 Beide Hälften scrollen unabhängig und behalten ihre Position beim Umbruch
 innerhalb der jeweils erreichbaren Grenzen.
 Verdiente Reveals und Stiftsymbole bleiben lokal geglättet.
-Aktueller Vertrag: [Kataloggestaltung](../docs/CATALOG_PRESENTATION.md).
+Aktueller Vertrag: [Kataloggestaltung](../docs/game/CATALOG_PRESENTATION.md).
 
 Die Karte öffnet oder setzt ihr Blatt fort; gelöste Blätter öffnen die Endansicht.
 Oben rechts steht bei bearbeiteten Blättern der Neustartpfeil mit „Rätsel zurücksetzen“.
@@ -112,14 +112,14 @@ sperren Öffnen und zeigen „Ungültig“. Speicherhinweise und „Backup über
 Die Karte selbst hat keinen Tooltip; gezielte Modus- und
 Resettooltips skalieren bei UI100/125 mit.
 
-Zusätzlich gibt es den [WEB-1-Browserentwicklungsweg](../docs/WEB_HOSTING.md):
+Zusätzlich gibt es den [WEB-1-Browserentwicklungsweg](../docs/operations/WEB_HOSTING.md):
 statischer Export für Chromium/Firefox mit Maus und dauerhaftem Browserspeicher.
 Die Kopfzeile zeigt Build und tatsächlichen Speicherstatus. Bei Speicherfehler
 offen lassen und erneut versuchen. Nur ein schreibender Tab je Origin ist erlaubt.
 Build, SSH-Update, Rollback, Hostingvoraussetzungen und Speichergrenzen stehen in
 der verlinkten Anleitung. Persönliche Webprobe und Live-Deployment bleiben separat.
 
-Die Entwicklungsfassung enthält die [Kategorienprojektion nach KAT-1](../docs/CATEGORIES.md). Das Spiel startet im Rätselkatalog mit „Alle Rätsel“. Die scrollbare Kategorienauswahl enthält auch leere Kategorien; je Seite erscheinen höchstens 24 Karten. Eine Karte öffnet oder setzt genau ihr Blatt fort. Zurückkehren erhält Kategorie, Seite und Scrollposition; ein Neustart beginnt wieder bei „Alle Rätsel“, Seite 1. Einstellungen/Info und Beenden sind direkt erreichbar.
+Die Entwicklungsfassung enthält die [Kategorienprojektion nach KAT-1](../docs/game/CATEGORIES.md). Das Spiel startet im Rätselkatalog mit „Alle Rätsel“. Die scrollbare Kategorienauswahl enthält auch leere Kategorien; je Seite erscheinen höchstens 24 Karten. Eine Karte öffnet oder setzt genau ihr Blatt fort. Zurückkehren erhält Kategorie, Seite und Scrollposition; ein Neustart beginnt wieder bei „Alle Rätsel“, Seite 1. Einstellungen/Info und Beenden sind direkt erreichbar.
 
 Direkt neben der Kategorie steht „Sortieren nach“: Kategorie, Größe,
 Schwierigkeit oder Hinzugefügt. Der Pfeil wechselt auf- und absteigend.
@@ -169,7 +169,7 @@ Karten zeigen „Neu“, „Begonnen“ (auch mit ausschließlich Redohistorie) 
 
 Der reguläre Spielbestand folgt `content/registry.json` und enthält ausschließlich
 freigegebene Workflow-Inhalte, aktuell elf Rätsel. Weitere Inhalte werden über den
-[ZA-1-Adapter](../docs/ZA1_ADAPTER.md) registriert. Historische Prototypen F-01 bis
+[ZA-1-Adapter](../docs/production/ZA1_ADAPTER.md) registriert. Historische Prototypen F-01 bis
 F-09 sind seit #114 nicht mehr Bestandteil des Spielerangebots oder Exports.
 
 Das reguläre Projekt liegt unter `game/`. Sidebar, Vollsicht, Stift-/Atlasdarstellung
@@ -226,7 +226,7 @@ Primary nicht. Ein kurzer Dialog „Rätsel überarbeitet“ erscheint nach dem
 abgeschlossenen Neustart. Der eigene `<slot>.revision-reset.json`-Marker macht
 Unterbrechungen wiederaufnehmbar. Offene Marker und fremde, beschädigte oder
 zukünftige Daten bleiben gesperrt; neue Fortschritte, andere Slots und allgemeine
-Präferenzen werden erhalten. [Revisionsvertrag](../docs/PUZZLE_EDITOR.md#93-sicherer-automatischer-save-neustart).
+Präferenzen werden erhalten. [Revisionsvertrag](../docs/tools/PUZZLE_EDITOR.md#93-sicherer-automatischer-save-neustart).
 
 Fehlendes oder beschädigtes Primary mit gültigem Backup wird sichtbar als Recovery geladen;
 normales Speichern bleibt bis zur bewussten Übernahme gesperrt.
@@ -339,7 +339,7 @@ Die Beispiele lassen sich nicht bearbeiten und erzeugen keine Spielaktion.
   übernimmt genau einen Strich; ein darunterliegender Button wird dabei nicht geklickt.
   Der sichtbare Zeiger bleibt frei. Bei erhaltenem Spielfokus ist auch Loslassen
   außerhalb der Fensterclientfläche möglich. Technischer Windows-Nachweis und noch
-  offene Eigentümerprobe sind getrennt in der [Prüfzuordnung](../docs/CELL_DRAG_VERIFICATION.md)
+  offene Eigentümerprobe sind getrennt in der [Prüfzuordnung](https://github.com/venomenon328/picross/blob/6fe91a08a4d073547df43c6aebbe8ead4c45ae0f/docs/CELL_DRAG_VERIFICATION.md)
   und PR #145 gebunden; diese Anleitung ist keine persönliche Abnahme.
   Esc, Fokusverlust, verlorene Tastenzuordnung oder Albumwechsel verwerfen den Strich
   vollständig. Rückkehr startet keine Geste ohne frischen Tastendruck. Kein Auto-Scrollen.
@@ -468,7 +468,7 @@ python tools/p1_product.py --cache-dir $gameCache --output-dir artifacts/p1-hist
 Arbeits-/Cachepfade bei vorgegebener Arbeitswurzel darunter anlegen. Der Harness
 prüft offizielle Archive/Hashes und isoliert Projekte und Benutzerprofile.
 Linux-Renderprüfung benötigt Xvfb/Mesa. Gruppen und aktueller Umfang stehen im
-[nativen Vertrag](../docs/CI_C_NATIVE_GROUPS.md). Ohne `--groups` läuft lokal die
+[nativen Vertrag](../docs/ci/CI_C_NATIVE_GROUPS.md). Ohne `--groups` läuft lokal die
 vollständige Vereinigung; die alten Erweiterungsflags bleiben kompatibel, sind
 aber kein Anlass für routinemäßige Vollprüfungen.
 
@@ -479,7 +479,7 @@ unabhängigem Orakel. Die alte 500er-Route wird nicht als Stressdefault fortgef�
 `export` prüft Windows-/PCK-Ausgabe und auf Windows auch tatsächliche EXE-Starts.
 Nicht ausgeführte Bereiche sind kein erfolgreicher Nachweis.
 
-Die [Package-CI](../docs/CI_WORKFLOW_V2.md) liefert bei Entwicklungsänderungen den regulären Windows-
+Die [Package-CI](../docs/ci/CI_WORKFLOW_V2.md) liefert bei Entwicklungsänderungen den regulären Windows-
 Download und startet nur begründet gewählte Zusatzmodule. Reine Dokumente und
 reine Rätselproduktion bleiben ohne Player-Build, auch im Main-Nachlauf. Der Kern-Windowsbau ist kein voller Product-Harnesslauf
 und keine erneute Rätselprüfung. Das Spielerpaket enthält Startdateien, Anleitung
@@ -491,6 +491,6 @@ Keine automatisierte Prüfung ersetzt eine persönliche Maus-/Komfortprobe.
 
 Aktuelle Verträge und Pflichtquellen: [Projektprofil](../docs/PROJECT_PROFILE.md).
 Historische Studien, alte Abnahmen und Quellenbindungen:
-[Bestandsinventar](../docs/DEVELOPMENT_ARCHIVE.md). Die ursprüngliche Anleitung ist
+[Bestandsinventar](../docs/history/README.md). Die ursprüngliche Anleitung ist
 [am Stand vor Cleanup](https://github.com/venomenon328/picross/blob/0f89f08729539bbb4a02a590cbd18e58fbbda305/prototypes/p1/README.md) erreichbar.
 Historische Prüferdokumente mit Motivspoiler: [F01](https://github.com/venomenon328/picross/blob/37f500d5e6599a6c8ff85c8ca8edb4d190474c5f/game/F01_PROOF.md), [F02/F03](https://github.com/venomenon328/picross/blob/37f500d5e6599a6c8ff85c8ca8edb4d190474c5f/game/F02_PROOF.md).

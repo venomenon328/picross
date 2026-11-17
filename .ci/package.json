@@ -1,11 +1,46 @@
 {
   "format": "development-ci-plan/v1",
-  "issue": "https://github.com/venomenon328/picross/issues/671",
-  "package": "HG-BESTAND-05-COMPLETE",
-  "modules": [],
-  "purpose": "Enger Produktionsabschluss nach bestätigter Mainintegration e86b4170af7569d8113ac854ae23b9df6f1782f3: genau 213 abgeschlossene, bytegleich gebundene Arbeitsdateien der fünf hg-bestand-05-Verzeichnisse über retire-production entfernen.",
-  "omitted": "Reiner Inhaltsabschluss ohne Werkzeug-, Regel-, Spiel- oder CI-Codediff. Vollständiger Bestandsvergleich: alle 1688 verbleibenden Dateien vor Paketplanfortschreibung bytegleich, davon 1687 Nutz-/Quell-/Runtime-/Rechte- und sonstige Dateien unverändert; nur der aktuelle Paketplan wird fortgeschrieben. Wiederholung des autorisierten Werkzeugwegs ist schreibfreier no-op. Daher modules=[], Quellen-/Plankern ohne Playerbau, Zusatzmodule, Solver-/Proof-/Ratingreplay oder Browserlauf; keine neuen rätselspezifischen Tests.",
-  "test_changes": [],
+  "issue": "https://github.com/venomenon328/picross/issues/696",
+  "package": "DOCS-696",
+  "modules": [
+    "tools",
+    "production.images",
+    "production.adapter"
+  ],
+  "purpose": "Gesamten docs-Bestand konsolidieren: eindeutige Fachzuständigkeit, Bildnormen je Typ, zusammengehörige Ordner, aufgabenbezogene Leserouten und Entfernen obsoleter Berichte nach Inhaltssicherung. Aktuelle Pfadleser und Authoring-Snapshotrevision10 gemeinsam aktualisieren; alte Bytebindungen explizit lesbar halten.",
+  "omitted": "Keine Änderungen an Spielverhalten, Assets, Produktionsinhalten, Methoden oder Runtimeformaten. Native/Browser-/Solver-/Katalogmodule liefern für diese Navigations- und Regelbuchänderung keinen zusätzlichen fachlichen Nachweis. tools prüft Dokumentation, Prompt/Launcher und Hilfsverbraucher; production.adapter prüft Authoring/Snapshots/Batch und Hintergrundeingänge; production.images prüft Bildverträge. Wegen tatsächlicher Werkzeugänderungen bleibt der reguläre Windowsbau erforderlich. Keine neue Bildproduktion, persönliche Abnahme, technische Galerie oder Betriebsaktivierung.",
+  "test_changes": [
+    {
+      "path": "tests/puzzle_production/test_authoring_builder.py",
+      "disposition": "change-scoped",
+      "reason": "Bestehende gezielte Regression auf aktuelle Dokumentpfade und Revision10 anpassen; echte historische Revision9-Bytebindung sowie geschlossene Quellenmenge bewahren."
+    },
+    {
+      "path": "tests/puzzle_production/test_authoring_workflow.py",
+      "disposition": "change-scoped",
+      "reason": "Bestehende gezielte Regression auf aktuelle Dokumentpfade und Revision10 anpassen; echte historische Revision9-Bytebindung sowie geschlossene Quellenmenge bewahren."
+    },
+    {
+      "path": "tests/puzzle_production/test_background_content.py",
+      "disposition": "change-scoped",
+      "reason": "Bestehende gezielte Regression auf aktuelle Dokumentpfade und Revision10 anpassen; echte historische Revision9-Bytebindung sowie geschlossene Quellenmenge bewahren."
+    },
+    {
+      "path": "tests/puzzle_production/test_background_package.py",
+      "disposition": "change-scoped",
+      "reason": "Bestehende gezielte Regression auf aktuelle Dokumentpfade und Revision10 anpassen; echte historische Revision9-Bytebindung sowie geschlossene Quellenmenge bewahren."
+    },
+    {
+      "path": "tools/test_authoring_sheet.py",
+      "disposition": "change-scoped",
+      "reason": "Obsolete Produktions-HTML-Prüfung entfernen. Bestehende tatsächliche Promptgenerator-Regressionsprobe erhält aktuelle Quellenroute und prüft, dass ein separater Hintergrundwechsel keinen Erstintegrationsauftrag erzeugt."
+    },
+    {
+      "path": "tools/test_editor_installer.py",
+      "disposition": "change-scoped",
+      "reason": "Bestehenden Installer-Vertragsabgleich auf den verschobenen PE-Fachvertrag richten; keine neue Testfamilie."
+    }
+  ],
   "core_change": null,
   "evidence": {
     "mode": "none",

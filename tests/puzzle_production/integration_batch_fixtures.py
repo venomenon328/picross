@@ -114,7 +114,7 @@ class IntegrationFixture:
         self.save()
 
     def rulebook(self, name):
-        raw = (ROOT / "docs/ai-workflows/PUZZLE_AUTHORING_0_7_0_PREVIEW.md").read_bytes()
+        raw = (ROOT / "docs/legacy/authoring/PUZZLE_AUTHORING_0_7_0_PREVIEW.md").read_bytes()
         match = re.search(r"\*\*Version 0\.7\.0 · Dokumentrevision (\d+) ·", raw.decode("utf-8"))
         if match is None:
             raise RuntimeError("Current opt-in rulebook has no actual version/revision")

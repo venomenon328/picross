@@ -26,7 +26,7 @@ ORIGINAL_NOTICES = {"game/art/drawing/delight-coffee/More Info.txt":
                     "414e35e9875605ea0dfe549a6bdad6d1f1f3d5427c97af2060213adb6709484c"}
 REQUIRED = (
     "README.md", "AGENTS.md", "docs/PROJECT_PROFILE.md",
-    "docs/DEV_RULES_ADOPTION.md", "docs/CHATGPT_PROJECT_INSTRUCTIONS.md",
+    "docs/project/DEV_RULES_ADOPTION.md", "docs/project/CHATGPT_PROJECT_INSTRUCTIONS.md",
     "docs/dev-rules/WORKFLOW.md", "docs/dev-rules/MODEL_SELECTION.md",
     "docs/dev-rules/MODEL_CATALOG.md", "docs/dev-rules/VERSION",
     "docs/dev-rules/CHANGELOG.md", ".github/workflows/ci-chromium.yml",

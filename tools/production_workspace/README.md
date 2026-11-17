@@ -4,10 +4,10 @@ Der fünfstufige Assistent für neue Authoring-0.8.0-Produktionen verwendet
 Handoff v5, Record v4 und Projektion v2. Der aktuelle operative Regelstand ist
 **Authoring 0.8.0, Dokumentrevision 9 (PW-PERF-D)**. Normale Produktion liest den
 Produktionseinstieg in [AGENTS](../../AGENTS.md),
-[Authoring §1.1](../../docs/ai-workflows/PUZZLE_AUTHORING.md#11-pflichtquellen-nach-phase),
-den vollständigen [gemeinsamen Bildstil](../../docs/PUZZLE_IMAGE_STYLE.md) und
+[Authoring §1.1](../../docs/production/authoring/PUZZLE_AUTHORING.md#11-pflichtquellen-nach-phase),
+den vollständigen [gemeinsamen Bildstil](../../docs/production/images/README.md) und
 nur die dort geroutete Phasendatei. Diese Anleitung, der
-[PW-B-Datenvertrag](../../docs/PW_B_CONTRACT.md) und die technische
+[PW-B-Datenvertrag](../../docs/tools/PW_B_CONTRACT.md) und die technische
 [Produktions-README](../puzzle_production/README.md) werden für die konkret
 verwendete Operation abschnittsbezogen gelesen, nicht pauschal vollständig.
 Die [ursprüngliche PW-B-Paketentscheidung](https://github.com/venomenon328/picross/issues/578#issuecomment-6799208194)
@@ -30,7 +30,7 @@ bleiben ihre eigenen Bildauswahlen. Hintergrund bedeutet die ganze 2304×576-
 Leinwand samt Freiraum, nicht einen Zuschnitt auf sichtbare Pixel.
 
 Die PW-A2-Start-/Git-/Sicherheitsarchitektur bleibt erhalten; P2 ergänzt allein
-die ausdrücklich bestätigte Branchentfernung nach [PW §4.4](../../docs/PRODUCTION_WORKSPACE.md#44-p2--ausdrücklich-bestätigte-produktionsentfernung).
+die ausdrücklich bestätigte Branchentfernung nach [PW §4.4](../../docs/tools/PRODUCTION_WORKSPACE.md#44-p2--ausdrücklich-bestätigte-produktionsentfernung).
 Bestehende WIP werden nicht konvertiert. Das frühere Offline-Sheet ist nur noch
 ein Einstieg zur Windows-App.
 
@@ -68,7 +68,7 @@ damit die bisherige Git-/SSH-/Credential-Einrichtung weiterverwendet wird.
 Keine Administratorrechte nötig. [Start-/Updateanleitung](START-WINDOWS.txt),
 [versionierter Bau und Smoke](WINDOWS_BUILD.md).
 
-APP-A ergänzt den [separaten App-Releasekanal](../../docs/PRODUCTION_UPDATES.md)
+APP-A ergänzt den [separaten App-Releasekanal](../../docs/tools/PRODUCTION_UPDATES.md)
 mit automatischer Versionsplanung und geprüftem MSI. Erstpublikation bleibt bis
 zur gesonderten Betriebsfreigabe gesperrt; ein Actions-Dispatch ist ausschließlich
 Diagnose. APP-B1 ergänzt die signierte Updateautorität und einen gemeinsamen Offlineverifier,
@@ -195,7 +195,7 @@ oder einer früheren veröffentlichten Korrekturphase. Tatsächlich offene Main-
 Arbeit bleibt sichtbar. Die untergeordneten Versions-/Quelldetails dienen der
 gezielten Remoteversionswahl bei fehlendem/defektem Pointer und der konkreten
 Quellwahl für P2. Automatisches Öffnen aktiviert keine Entfernung.
-[Ansichtsvertrag](../../docs/PRODUCTION_CURRENT_VIEW.md).
+[Ansichtsvertrag](../../docs/tools/PRODUCTION_CURRENT_VIEW.md).
 
 „Neues Motiv“ bleibt der Einstieg vor Veröffentlichung. Unter „Gespeicherte
 Motivtexte“ lassen sich lokale Eingaben ausdrücklich öffnen oder verwerfen;
@@ -464,7 +464,7 @@ maßgeblich. Daraus entstehen keine neuen PW2-A-Browser-/Bildprüfpflichten.
 ## PW-PERF-C · aufrufgebundene Prüfung und Hintergrund v2
 
 Die geschlossenen HP-W2-v1/v2-Formen und das unveränderte PNG2304-Profil stehen
-in [Hintergrund §4](../../docs/PUZZLE_BACKGROUNDS.md#4-hp-w2-eigenständige-datei--und-ableitungsschnittstelle).
+in [Hintergrund §4](../../docs/production/PUZZLE_BACKGROUNDS.md#4-hp-w2-eigenständige-datei--und-ableitungsschnittstelle).
 Neue Ableitungen verwenden Request/Befund v2 und Tool `picross-background-2`;
 Git-`producer` bleibt getrennt vom Bildkern aus `background_render.py` und
 `image_normalization.py`. Alle Consumer prüfen v1 und v2 generationsgenau;
@@ -494,5 +494,5 @@ vollständiges Profil/Hash in Request v2 und Entscheidung binden. Ausgabe
 2304×768 RGBA8; verify prüft dieselbe Bindung. Altes Profil bleibt unverändert.
 Fertigimport erkennt 2304×768 bzw. 2304×576 aus validierten PNG-Bytes und
 übernimmt unverändert. V1-Capability erlaubt ausschließlich das alte Profil.
-[Geschlossener Vertrag](../../docs/PUZZLE_BACKGROUNDS.md#hg31--zwei-geschlossene-bildprofile).
+[Geschlossener Vertrag](../../docs/production/PUZZLE_BACKGROUNDS.md#hg31--zwei-geschlossene-bildprofile).
 Keine Kandidatenintegration vor geprüftem Mainmerge oder neue WIP-Migration.

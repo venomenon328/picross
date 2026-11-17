@@ -66,13 +66,13 @@ umetikettieren.
 Der v1-`export-p1` weist Reparaturbundles am abweichenden Manifest zurück.
 Kein Reparaturraster darf als unveränderter `picross-image-candidate-v1`
 ausgegeben werden. Der spätere Adaptervertrag für Reparatur- und manuelle
-Ableitungen steht in [ZA-1](../../docs/ZA1_ADAPTER.md).
+Ableitungen steht in [ZA-1](../../docs/production/ZA1_ADAPTER.md).
 
 ## Explizites Paarprofil: Reparatur v2
 
 Für #139 B/C ergänzt `picross-repair-plan-v2` genau das Pflichtfeld
 `certification={profile,max_pair_work,max_pair_records}` gemäß
-[Paarlinienvertrag](../../docs/PAIRED_LINES.md). Zulässig sind die zur Matrix
+[Paarlinienvertrag](../../docs/production/PAIRED_LINES.md). Zulässig sind die zur Matrix
 passenden `paired-lines-mono`/`paired-lines-color`. Der Verlauf verwendet
 `picross-repair-v2`, das Manifest `picross-repair-manifest-v2` und die
 Werkzeugkennung `rp5-single-cell-2`. V1 behält ausschließlich `full-line-*`.
