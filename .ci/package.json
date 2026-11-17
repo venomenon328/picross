@@ -1,19 +1,11 @@
 {
   "format": "development-ci-plan/v1",
-  "issue": "https://github.com/venomenon328/picross/issues/691",
-  "package": "PE-PW-REL-CHECKOUT",
-  "modules": [
-    "tools"
-  ],
-  "purpose": "PE- und PW-Releasecheckouts auf einen gepinnten Commit mit 10-Minuten-Step-Hängeschutz begrenzen; überflüssigen lokalen Versionshistorien-Scan aus dem Installerbau entfernen. Veröffentlichung bleibt signiert und aus verifizierter Releaseautorität versioniert.",
-  "omitted": "Keine Fachwriter-/Solver-/Spiel-/Inhaltsänderungen; kein anderes Zusatzmodul als tools, keine production.*, native.*, preflight, delivery oder Chromium. Die bereits erfolgten Windows-MSI-/C#-Diagnosen werden nicht wegen einer Checkout-Einstellung wiederholt. Keine Release-/Secret-/Environmentaktion durch diesen PR. Nach einem späteren Merge kann der bereits aktive PW-Kanal regulär automatisch veröffentlichen.",
-  "test_changes": [
-    {
-      "path": "tools/test_production_installer.py",
-      "disposition": "change-scoped",
-      "reason": "Historischen Git-Repo-Fixturetest durch kleine Quell-/Checkout-/Timeoutregression für beide Releaseworkflows ersetzen; bestehende signierte Release-/Versions-/MSI-Tests erhalten."
-    }
-  ],
+  "issue": "https://github.com/venomenon328/picross/issues/671",
+  "package": "HG-BESTAND-05",
+  "modules": [],
+  "purpose": "Fünf tatsächlich gewählte neue 3:1-Rätselhintergründe B1/r02, F3/r02, Y1/r02, E1/r02 und R2/r02 über explizites HP-W2-Profil 2304×768 und aktuellen Editorimport übernehmen.",
+  "omitted": "Reine Bildinhaltsgruppe: kein Werkzeug-, Regel-, Spiel- oder CI-Codediff. Bildwahl, Q-HG-Sichturteile, derive/verify, Byteimport, Wiederholungspläne und geschützte Bestandswerte werden auftragsbezogen geprüft. Daher Quellen-/Plankern ohne Playerbau, Zusatzmodule, Solver-/Proof-/Ratingreplay oder Browserlauf; keine neuen rätselspezifischen Tests.",
+  "test_changes": [],
   "core_change": null,
   "evidence": {
     "mode": "none",
