@@ -9,3 +9,5 @@ Issue #671 / HG-BESTAND-06: Ho Chi Minh; bestehende ID pz-023b50b44d1c4698a6e17e
 - V3/r01: Stelzenhaus im Garten · [PNG](candidates/V3-r01.png)
 
 Profil im Auswahlscope: picross-background-png2304x768-v1. Erst nach tatsächlicher Wahl derive/verify und gezielter Editorimport; keine Vorab-Integration. Originale, Prompts, Einzelurteile und Kontextbindungen im zugehörigen Arbeitsordner. Manifest bg01 ist vor Remote-Angebot pending; erst bg02 bindet die erfolgreich zurückgelesenen festen Links.
+
+Aktuelles gültiges Angebot: [bg02](work/bg02.json), [drei feste Einzelbildlinks](evidence/presentation01.md) und [HTTP-/Byte-Readback](evidence/remote-readback01.json). Alle drei Originale 2172×724 RGBA, 12 positive Einzelurteile. Tatsächliche Wahl bleibt offen.
