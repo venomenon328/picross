@@ -1,12 +1,12 @@
 {
   "format": "development-ci-plan/v1",
   "issue": "https://github.com/venomenon328/picross/issues/671",
-  "package": "HG-BESTAND-11",
+  "package": "HG-BESTAND-12",
   "modules": [],
-  "purpose": "Die Eigentümerwahl W1/r01, N2/r03, C2/r01, K5/r02 und S2/r01 für Regenwurm, Rote Nelke, Schachspringer, Schlüssel und Schnecke als geprüfte 2304 × 768 RGBA8-Hintergründe übernehmen und die geschützten Bestandsdaten prüfen.",
-  "omitted": "Reine Hintergrundpflege mit unveränderten Rätsel-, Spiel- und Werkzeugquellen. Der Quellen- und Plankern deckt das Paket ab. Kein Playerbau und keine Fach-, Native- oder Browsermodule. Die eigenständige ChatGPT-Reviewrunde entfällt gemäß Eigentümerauftrag.",
+  "purpose": "H3/r02, G2/r02, M2/r01, F1/r01 und B2/r01 als fünf geprüfte 2304 × 768 RGBA8-Hintergründe integrieren.",
+  "omitted": "Ausschließlich rätselspezifische Hintergrunddaten und Referenzen. Der Quellen- und Plankern deckt die Änderung ab. Kein Playerbau, kein Solver- oder Browserlauf. Separate ChatGPT-Reviewrunde entfällt laut Auftrag.",
   "test_changes": [],
-  "core_change": "CI-Kern unverändert. Gezielte aktuelle Bild-, Import- und Bestandsprüfung. Keine aufbewahrten technischen Artefakte.",
+  "core_change": "CI-Kern unverändert. Der Editorimport und geschützte Bestandswerte werden gezielt geprüft.",
   "evidence": {
     "mode": "none",
     "purpose": null,
