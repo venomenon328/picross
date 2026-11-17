@@ -1,10 +1,10 @@
 {
   "format": "development-ci-plan/v1",
   "issue": "https://github.com/venomenon328/picross/issues/671",
-  "package": "HG-BESTAND-06-B1-V1",
+  "package": "HG-BESTAND-07",
   "modules": [],
-  "purpose": "Ausschließlich die tatsächlich gewählten Hintergründe Bierglas B1/r01 und Ho Chi Minh V1/r01 integrieren. Aktuelle proportionale HG31-Vorbereitung mit explizitem 2304x768-Profil, isolierte Bildsichtung, bytegleicher serieller Editorimport und Schutz der unveränderten Rätseldaten.",
-  "omitted": "Reine Rätselbildinhalte ohne Code-, UI-, Raster-, Solver-, Difficulty- oder CI-Änderung. Hamburger, Huhn und Ingwer bleiben ausdrücklich zurückgestellt. Keine Fach-/Native-/Browsermodule, kein Playerbau, keine neue unabhängige ChatGPT-Reviewrunde gemäß Eigentümerauftrag. Arbeitsrecords und Alternativen werden nicht nach main gemergt.",
+  "purpose": "Die tatsächliche Eigentümerwahl U3/r01, H1/r01, I1/r01, J1/r01 und R1/r01 als fünf geprüfte 2304×768-RGBA8-Hintergründe integrieren; bytegleicher serieller Editorimport und Schutz aller übrigen Nutzdaten.",
+  "omitted": "Reine Hintergrundinhalte ohne Code-, UI-, Raster-, Solver-, Bewertungs- oder CI-Änderung. modules=[] und evidence.mode=none; kein Playerbau und keine Fach-/Native-/Browsermodule. Arbeitsrecords und Alternativen bleiben außerhalb von main. Separate ChatGPT-Reviewrunde entfällt gemäß tatsächlichem Eigentümerauftrag.",
   "test_changes": [],
   "core_change": "Keine Änderung am CI-Kern. Quellen-/Plankern und gezielte aktuelle Bild-/Import-/Bestandsschutzprüfung; evidence.mode=none.",
   "evidence": {
