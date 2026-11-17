@@ -319,7 +319,14 @@ def plan(root, request, *, uploads=None, work=None, expected=None, expected_defi
             else:
                 old_current = row["background"]
                 if part is not None:
-                    exact_keys(part, {"status", "upload"})
+                    exact_keys(part, {"status", "upload", "rights"} if "rights" in part else {"status", "upload"})
+                    if "rights" in part:
+                        from .reveal_source import provenance, make_notice
+                        require(part["status"] == "selected" and part["upload"] is not None, "New background rights need selected image")
+                        provenance(part["rights"])
+                        notice=("\n".join(k+": "+part["rights"][k] for k in sorted(part["rights"]))+"\n").encode("utf8")
+                        make_notice(notice)
+                        put("game/art/backgrounds/"+identifier+".txt",notice)
                     require(part["status"] in ("standard", "selected", "none"), "Invalid background preference")
                     raw = uploads[part["upload"]]["raw"] if part["upload"] else None
                     if raw is not None:
@@ -425,7 +432,7 @@ def validate(value, *, journal=False):
     else: require(entry is None, "Unselected entry")
     if value["action"] in ("images", "raster"):
         require(entry is not None, "Puzzle action requires ID")
-        allowed |= {"game/"+entry["definition"], "content/reveals/"+identifier+".json", bg.path(identifier), bg.asset_path(identifier), bg.CAPABILITY}
+        allowed |= {"game/"+entry["definition"], "content/reveals/"+identifier+".json", bg.path(identifier), bg.asset_path(identifier), "game/art/backgrounds/"+identifier+".txt", bg.CAPABILITY}
         allowed |= {Path("game/"+entry["reveal"]).with_suffix(s).as_posix() for s in (".png", ".svg")}
     if value["action"] == "raster":
         from .catalog_method import PATH
@@ -500,6 +507,11 @@ def validate_targets(value, sides, actual):
                 require(source_path in sides, "Background index changed without source")
         for name, (old_raw, new_raw) in sides.items():
             if not name.startswith("game/art/"): continue
+            if name == "game/art/backgrounds/"+identifier+".txt":
+                from .reveal_source import make_notice
+                require(new_raw is not None and row["background"]["status"] == "selected", "Notice needs current selected background")
+                make_notice(new_raw)
+                continue
             kind = "background" if name == bg.asset_path(identifier) else "reveal"
             source_path = "content/"+("reveals" if kind == "reveal" else "backgrounds")+"/"+identifier+".json"
             require(source_path in sides, "Image bytes changed without current source")

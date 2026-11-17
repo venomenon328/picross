@@ -1,6 +1,6 @@
 # Schritt 3: Rasterangebote
 
-**Version 0.8.0 · Dokumentrevision 10 · 17.11.2026 · DOCS-696**
+**Version 0.8.0 · Dokumentrevision 10 · 17.11.2026 · PROD-SLIM**
 
 Pflicht: [Kern und Phasenroute](PUZZLE_AUTHORING.md#11-pflichtquellen-nach-phase),
 danach diese Phase und die dort zugeordnete Bildnorm. Zusätzlich:
@@ -18,12 +18,12 @@ die eigene Hintergrundbereitschaft voraus. Keine vorgezogenen Hintergrundblocker
 ### 4.1 Import und Rastervarianten
 
 1. Von der freigegebenen gespeicherten Motivvorlage ausgehen; Ableitung aus genau
-   dem freigegebenen Reveal anhand Originalen, Hashes und Bearbeitung prüfen.
-   Originalbytes, SHA-256, Normalisierung, Rechte, Parameter und Toolversion erhalten.
+   dem freigegebenen Reveal anhand aktueller Bilder und Inhaltsbindungen prüfen.
+   Aktuelle Motivbytes, Inhaltsbindung, echte Nutzungsgrundlage und gültige Parameter prüfen.
    Während der Produktion beginnt deterministische Prüfung bei Bildbytes, nicht
    beim Prompt. Nach finaler Integration gilt der Abschluss nach §9.
 2. Striktes bestehendes Designformat und aktuelle Format-/Ressourcengrenzen der
-   RP-3-Anleitung verwenden. Redaktionelle Zusatzangaben in Begleitdateien.
+   aktuellen Bildhelfers nach PW-B verwenden. Redaktionelle Angaben stehen im aktuellen Record.
    Crop und Seitenverhältnis beachten, nicht stillschweigend strecken.
 3. Mit dem aussichtsreichsten begründeten Rasterkandidaten beginnen. Einen zweiten
    und weitere jeweils nacheinander nur für ein konkret benanntes unerfülltes
@@ -36,7 +36,7 @@ die eigene Hintergrundbereitschaft voraus. Keine vorgezogenen Hintergrundblocker
 4. Vor teurer Qualifikation preisgünstige Ausschlüsse und Duplikate erkennen:
    Maße/Werte/Palette, feste Wünsche, offensichtliche Form-/Randmängel und exakten
    Vergleich von Maßen, Palette und Zellwerten. Parametergebundene Kandidatenhashes
-   sind kein reiner Matrixvergleich. Entstehungswege und Ablehnungsgründe erhalten.
+   sind kein reiner Matrixvergleich. Nur aktuelle Angebote, Prüfergebnisse und offene Defizite erhalten.
    Diese Vorprüfung ersetzt keine vollständige Prüfung eines angebotenen Rasters.
 5. Unterschiedliche globale Maße, Crops oder Paletten benötigen getrennte Designs.
    Beim farbigen area-Pfad ist der Schwellenwert wirkungslos; reine Schwellenvarianten
@@ -60,10 +60,10 @@ Jeder angebotene freigabefähige Kandidat erfüllt vollständig:
 - Vollständige deduktive Lösung vom unbekannten Start, ohne vorgefüllte Zellen,
   notwendiges Raten, Suchannahmen oder Motivwissen; vollständiger Proof unter
   benanntem Profil, frischer unabhängiger Prüferprozess und exakter Endmatrixvergleich.
-- Datei-/redaktionelle Herkunft Input → freigegebenes Reveal → freigegebene
-  Motivvorlage; deterministische Rekonstruktion Motivvorlage → Normalisierung →
-  Matrix → Hinweise. Alle Dateien/Parameter prüfen, bei Reparatur zusätzlich
-  Referenz, Plan und Replay. Rechte und echte Freigaben sind keine Solverergebnisse.
+- Aktuelle Motiv-/Revealbindung, Parameter, Motivtreue und Nutzungsgrundlage
+  dateibasiert prüfen. Matrix und Hinweise müssen zusammenpassen. Kein
+  Normalisierungs-/Import-/Reparaturreplay oder Herstellungsarchiv als Zulassung.
+  Rechte und echte Freigaben sind keine Solverergebnisse.
 - Randregel: mindestens eine gefüllte Zelle an linker ODER rechter Außenkante
   UND mindestens eine an oberer ODER unterer Außenkante. Jede Vordergrundfarbe
   zählt, nicht alle vier Kanten sind nötig; gilt auch für Breite/Höhe 1.
@@ -71,8 +71,8 @@ Jeder angebotene freigabefähige Kandidat erfüllt vollständig:
   allein zum Bestehen der Regel hinzufügen.
 
 Eine tatsächliche menschliche Randregel-Ausnahme für eine konkrete Endrevision
-nur über den unterstützten äußeren ZA-1-v2-Autorisierungsvertrag an Originalpaket,
-Handoff, Inventar, Wahl und Endfreigabe binden. Negativen Originalbefund sichtbar
+als konkrete frame-Ausnahme mit Akteur, Erklärung und aktuell gebundenem
+Belegtext nach PW-B/RI-ONE führen. Negativen aktuellen Befund sichtbar
 erhalten; kein pass-Flag oder allgemeiner Bypass. Alle übrigen Gates bleiben hart.
 
 Vollständige gültige Deduktion belegt Eindeutigkeit. stalled beweist weder
@@ -83,8 +83,8 @@ unique ersetzt keinen Deduktionsproof, unknown nach einer Lösung keine
 Eindeutigkeit. check-diagnosis prüft Bindungen/Zeugen, nicht die vollständige Suche.
 Keine neue Schwierigkeit oder Freigabe aus einem Suchurteil ableiten.
 
-Die vorhandene Rekonstruktionsprüfung (inspect_candidate bzw. passender Reparatur-/
-Exportreader) zusätzlich zur Logik benutzen. Nur wirklich verfügbare Befehle/API
+Die aktuelle Datei-, Parameter-, Matrix-/Hinweis- und Proofprüfung zusätzlich
+zur Sichtung benutzen; kein Wiederabspielen des Imports. Nur verfügbare Befehle/API
 verwenden; aktuelle Zeit-/Linien-/Ressourcengrenzen der entsprechenden README-
 Abschnitte vor Ausführung lesen. Abgebrochene Versuche nicht umetikettieren.
 
@@ -99,24 +99,19 @@ Abschnitte vor Ausführung lesen. Abgebrochene Versuche nicht umetikettieren.
    einfache Techniken oder Ressourcenblocker) festhalten. Vorgaben bleiben wirksam;
    Profilprüfung derselben Matrix ist keine zusätzliche Rastervariante. Durch
    zwei geprüfte Lösungen belegtes multiple dagegen direkt nach §4.4 bearbeiten.
-3. Profil-ID und Zeit-/Linien-/Paarbudgets vor Lauf binden. import-image explizit
-   mit --profile paired-lines-mono bzw. paired-lines-color und Paarbudgets aufrufen;
-   Standard bleibt Linienlogik. Bestehende direkte Quelle mit identischem Design
-   in neues Ziel importieren, Matrix-/Logikgleichheit prüfen. Isoliertes solve ist
-   kein exportfähiges Produktionsbündel; keinen Proof im alten Manifest austauschen.
-4. Der Paarlauf erzeugt eigenen full-line-Baselineproof und Assessment. Baseline
-   und Paarproof derselben Logik frisch unabhängig prüfen, etwa mittels assess
-   --input ... --proof ... --baseline ... gemäß CLI. Das ersetzt weder Herkunft
-   noch Endmatrix-/Dateiprüfung. picross-quality-report-v1 ersetzt weder
-   picross-deduction-assessment-v1 noch difficulty.json oder menschliche Freigaben.
+3. Profil und zulässige Budgets vor dem konkreten Lauf festlegen. Der aktuelle
+   Bild-/Rasterhelfer verwendet --profile line|paired und erhält ausschließlich
+   aktuelle Definition, Proof, Schwierigkeit und Vorschau. Keine Importpaketkette.
+4. Bei Paarbedarf die unveränderte Logik mit Linienbaseline und Paarprofil frisch
+   unabhängig prüfen. Baseline und Assessment dürfen für diese konkrete Analyse
+   temporär vorliegen; dauerhaft bleiben aktueller Paarproof und passende geprüfte
+   Bewertung. Endmatrix- und Datei-/Motivprüfung bleiben erforderlich.
 5. Nur verifizierte stalled-Baseline plus vollständiger verifizierter Paarproof
    belegen notwendigen R4. Aborted, unvollständiger Paarproof oder unique genügen
-   nicht. Bei Nichtabschluss Profil, offene Zellen, verbrauchte Budgets und Endgrund
-   nennen, keine absolute Aussage über alle denkbaren Lösungsregeln treffen.
-6. Passende versionierte Import-/Reparatur-/manuelle Ableitungsformen nach
-   PAIRED_LINES und die exakte certification durch alle Stufen einschließlich
-   candidate.certification im Handoff führen. Nicht in alten Ableitungsvertrag
-   zurückfallen. Quelle, Motivschutz, Bildfreigaben und Endabnahme bleiben Pflicht.
+   nicht. Bei Nichtabschluss aktuelle Lücke und Endgrund nennen.
+6. Aktuellen Proof und Bewertung im einzigen aktuellen Record referenzieren.
+   Kein zusätzliches candidate.certification/Handoff oder historischer Replay
+   als Zulassung. Motivschutz, echte Bildwahl und Endabnahme bleiben Pflicht.
 
 Die separate Eindeutigkeitsdiagnose ist nur bei konkreter offener Frage sinnvoll,
 keine Voraussetzung der bereits zugelassenen Paarprofilwahl. Kein neuer CI-Fall
@@ -138,26 +133,14 @@ Negative Entwürfe bleiben sichtbar. check-palette ist nur zusätzliche Diagnose
 Nach Änderungen Matrix, IDs/RGB/Nutzung und Regelbindung frisch rekonstruieren;
 Palettenentwürfe ohne tatsächliche Verwendung sind vorläufig.
 
-Vor einem qualifizierten Angebot das geschriebene Paket frisch mit ZA-1 prüfen;
-raster_ready enthält alle Rastergarantien, content_ready später zusätzlich den
-Hintergrund. Der Adapter erhebt den Pflichtbefund an allen Paaren frisch.
-Optionales palette_assessment wird zusätzlich neu verifiziert; Farbpakete binden
-palette_review an den inventarisierten picross-palette-visual-review-v1-Record
-mit tatsächlichen Q-R04/Q-H01/Q-H02-Ansichten und Einzelurteilen. Die geschlossenen
-Felder stehen ausschließlich in [PW-B · Palettenausnahme](../../tools/PW_B_CONTRACT.md#palettenausnahme).
-Fehlende/stale Sichtung, nicht geprüft
-und positive S-Werte allein erlauben keine Freigabe.
-
-Bei Warnung/negativem Sichturteil gilt Qualität §6: ursprüngliches Urteil,
-Akteur, UTC, Wortlaut, Begründung und Beleg. Technischer Negativbefund bleibt negativ.
-Für die Übernahme außerhalb versiegelter Originale via --palette-exception:
-Handoff v5 verlangt picross-palette-editorial-exception-v2 mit vollständigem
-rulebook-v2 in binding.rulebook, auch bei historischer Dokumentrevision 9.
-Originalhandoffs v2/v3/v4 verwenden ausschließlich Ausnahme v1 nach PW-B.
-Alle negativen Paare, exakte Werte/IDs, Kandidat/Revision/Istmatrix/Quelle/Regel,
-Handoff/Inventar/Paket und echte Endfreigabe binden. Erforderliche manuelle
-Autorisierungen bleiben zusätzlich nötig. Die Ausnahme heilt weder Proof noch
-Rechte, Freigaben, feste Parameter, Difficulty oder Randregel.
+Vor einem qualifizierten Angebot den aktuellen Record und seine Nutzdateien
+frisch mit dem aktuellen Reader prüfen. raster_ready enthält alle Rastergarantien;
+content_ready zusätzlich die Hintergrundbereitschaft. Fällige Sichturteile
+Q-R04/Q-H01/Q-H02 und tatsächliche Ausnahmen stehen kompakt am gebundenen
+aktuellen Raster nach [PW-B](../../tools/PW_B_CONTRACT.md). Ein negatives
+Paar bleibt negativ; konkrete frame-/palette-Ausnahmen und echte Erklärungen
+werden zusätzlich durch RI-ONE geprüft. Kein ZIP-/Handoff-/Inventar- oder
+Regelbuchbinding. Fehlende oder ungeprüfte Sichtung bleibt ein Blocker.
 
 Historische F05-Referenzannahmen sind keine Ausnahme oder Freigabe eines neuen
 realen Kandidaten. Bei null qualifizierten Kandidaten §4.5 verwenden, mit echten
@@ -168,13 +151,13 @@ Bildern, Defiziten und Korrekturmöglichkeiten; keine qualifizierten Angebote vo
 Konkrete kleine Kontur-/Flächenmängel und störende leere Außenlinien innerhalb
 des freigegebenen Korridors vor Rückgabe bearbeiten, auch bei solved. Gute
 Kandidaten nicht unnötig ändern. Reguläre feste Korrektur folgt
-[FIXED_RASTER](../FIXED_RASTER.md): vollständiger vorab gebundener Plan gegen
-den direkten unveränderten RP-3-Import, keine Suche/nachträglich erweiterte
+[FIXED_RASTER](../FIXED_RASTER.md): vorab festgelegte erlaubte Änderungen am
+aktuellen Raster, keine Suche/nachträglich erweiterte
 Editliste, Schutzmaske und frische Endnachweise einschließlich aktiver 0.4-Analyse.
 Offene/ungefähre Endmaße bleiben trotz konkretem Importstart offen/ungefähr.
 Materielle Änderungen entscheiden lassen; eine Zelle ist nicht automatisch
 harmlos. Runden/Kandidaten/Änderungen zählen kumulativ unter allen Namen/Ordnern.
-Erst frisch geprüfter geschriebener Builder-ZIP erlaubt raster_ready, ohne damit
+Erst frisch geprüfter aktueller Record erlaubt raster_ready, ohne damit
 Rasterwahl, Hintergrund oder Endfreigabe zu erklären.
 
 Wenn kein visuell tragfähiger Kandidat vollständig zertifiziert ist, gezielte
@@ -209,12 +192,11 @@ sonst zuerst Abstraktion/Größe/Palette und notwendige Motivfreigaben klären.
    ausführen. Historische manuelle Ableitungen brauchen ihren unterstützten
    ZA-1-Vertrag und gesonderte Autorisierung; nicht als regulären Import ausgeben.
 
-Je Runde genügen Hypothese, Referenz-/Plankennung, tatsächliche Kandidaten-/
-Änderungszahl, Endgrund und Auswahlentscheidung im bestehenden Protokoll.
-Begrenzter Nichtfund ist kein Beweis unmöglicher Reparatur. Referenz, Resultat
-und markierten Zell-Diff vergleichen; found allein genügt nicht ohne Endproof,
-unabhängige Prüfung, Replay und Redaktion. Neue Hinweise verlangen eigene
-Baseline/Endnachweise; Paarpläne binden certification bereits vor Lauf.
+Laufende Suche hält nur die für die konkrete Operation erforderlichen Masken,
+Parameter und Zähler temporär. Nach Vorliegen des aktuellen Ergebnisses keine
+Rundenprotokolle, erfolglosen Raster/Proofs oder historischen Reparaturpläne
+aufbewahren. Aktuelles Ergebnis motivisch und mathematisch prüfen; Nichtfund
+bleibt Nichtfund. Grenzen setzen keine rückwirkende Dokumentationspflicht.
 
 | Änderung | Erforderliche Wiederholung |
 | --- | --- |
@@ -222,9 +204,9 @@ Baseline/Endnachweise; Paarpläne binden certification bereits vor Lauf.
 | Quelle, Crop, Palette oder Importparameter | Neuer gebundener Import und vollständige Prüfung. |
 | Materielle Motivänderung | Zusätzlich erneute ausdrückliche Motivfreigabe. |
 | Abschlussbild | Neue Bildrevision und menschliche Bildfreigabe; Ableitung, Motiv-/Rasterkonsistenz und Endabnahme erneut prüfen. Materielle Änderungen invalidieren abhängige Motivfreigaben. Kein neuer Logiklauf allein bei nachweislich identischem Raster/Logikeingang. |
-| Hintergrundillustration, Komposition oder Transparenz | Neue Bildrevision/Wahl und abhängige Ableitung; Ablehnung mit Grund sichern, kein automatisches none. Unveränderte Raster-/Proof-/Schwierigkeitsbindungen erhalten. |
-| Nur Schwierigkeit/Kategorie/Metadaten | Keine neue Bild-/Rasterproduktion oder Freigabe allein deswegen; bei versiegelten Paketen äußere Ergänzung/Exportbindung, passende Nachweise erhalten. |
-| Erstmals Paarprofil bei gleicher Matrix | Neue profilierte Produktionsbindung samt Baseline, Paarproof und Assessment; keine umetikettierten Altproofs oder veränderten Rasterwerte. Neue Produktion bindet aktuellen 0.8-Regelstand; alte versiegelte Originale bleiben. Endfreigabe bindet tatsächliches Handoff/Inventar. |
+| Hintergrundillustration, Komposition oder Transparenz | Neue Bildrevision/Wahl und abhängige Ableitung; Aktuellen Mangel benennen und ersetzte Datei nach Ende ihrer Nutzung entfernen; kein automatisches none. Unveränderte Raster-/Proof-/Schwierigkeitsbindungen erhalten. |
+| Nur Schwierigkeit/Kategorie/Metadaten | Keine neue Bild-/Rasterproduktion oder Freigabe allein deswegen; aktuelle Daten/Bindungen korrigieren und nur tatsächlich abhängige Endentscheidungen erneuern. |
+| Erstmals Paarprofil bei gleicher Matrix | Aktueller Paarproof und passende unabhängig geprüfte Bewertung; Baseline/Assessment nur für den laufenden Vorgang. Keine umetikettierten Altproofs, keine dauerhafte Handoff-/Inventarkette. |
 
 Materiell sind Identität, Pose, prägende Proportionen, wichtige Innenräume,
 Gesichtszüge oder geschützte Merkmale; schon eine Zelle kann materiell sein.
@@ -265,16 +247,14 @@ bzw. blocked mit Grund führen. Erst zulässige Korrektur/Einzelfallentscheidung
 alle technischen Nachweise erlauben den gültigen Auswahlweg. Fehlende Proofs oder
 unklare Rechte bleiben Blocker. Empfehlungen erteilen keine automatische Freigabe.
 
-Jedes Angebot bekommt stabile Kennung, Unterschiede, Maße/Modus/Istfarbzahl,
-Schwierigkeit und echte Rasteransichten. Vor Ausgabe pro Raster eine kollisionsfreie
-Einzelpaketrevision derselben ID nach Kern §6 sichern, mit genau einem handoff.candidate,
-allen nötigen Inputs und Inventar. Geschriebene ZIPs frisch prüfen; keine neue
-Mehrfachhülle und keine verschachtelten Alternativen-ZIPs. Vergleich ersetzt kein Paket.
-Workspace bindet Angebote an Einzelrecord, Originalinventar, Bilder und Quellencommit.
-Schritt 4 beginnt erst mit tatsächlicher qualifizierter Rasterwahl; die neue Revision
-führt picross-raster-selection-v1 nach PW-B. Originale bleiben bytegleich, nicht
-gewählte Angebote bis bestätigter Mainintegration erreichbar. Weder erste Option
-noch höchste Revisionsnummer gilt automatisch als Wahl.
+Jedes Angebot erhält stabile Kennung, Unterschiede, Maße/Modus/Istfarbzahl,
+Schwierigkeit und echte Rasteransicht. Ein gemeinsamer aktueller Record bindet
+alle tatsächlich angebotenen Raster samt aktuellen Definitionen, Proofs,
+Bewertungen und Sichturteilen. Kein Einzelpaket/ZIP pro Angebot. Auswahl bindet
+die konkreten Inhaltsbytes nach [PW-B](../../tools/PW_B_CONTRACT.md).
+Schritt 4 beginnt erst mit der tatsächlichen qualifizierten Rasterwahl.
+Ungewählte Angebote danach entfernen, sobald sie keine aktuelle Nutzung mehr
+haben. Keine automatische Auswahl nach Reihenfolge oder Dateinamen.
 
 ## 5. Schwierigkeit L1–L5
 
@@ -299,8 +279,8 @@ Bildproduktion bei fehlender/abgebrochener Analyse.
 Passend gebundene vollständige Ergebnisse wiederverwenden. Gleiche Methodenversion
 und Eingabe bestimmen dieselbe Bewertung. Keine Skalenenden aus dem realen Katalog,
 kein realer Rätselbestand als Testkorpus. Titel/Kategorie/Reveal bei gleicher Logik
-erzwingen keinen neuen Analyselauf. Alte Originalpakete/Handoffs/Freigaben nicht
-überschreiben; aktive Bewertungen außerhalb versiegelter Produktion führen.
+erzwingen keinen neuen Analyselauf. Tatsächliche Entscheidungen erhalten; ausschließlich die aktuelle Bewertung
+an die aktuelle Definition binden.
 Probespielen bleibt optional; technische Referenzen sind keine empirische
 menschliche Kalibrierung. Ungemessene Lösungszeiten nicht behaupten.
 

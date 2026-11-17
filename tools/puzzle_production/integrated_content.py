@@ -32,6 +32,11 @@ def _completed_selection(ids,revisions,work):
 
 def retire(root,ids,integrated_commit,*,source_commits=None,completed_revisions=None,completed_work=None):
     root=io.external(root)
+    from . import current_authoring
+    current_index=io.json_bytes(io.read(root,INDEX,LIMIT),LIMIT)
+    if all(not any(r['puzzle_id']==identifier and r['revision']!='current' for r in current_index['entries']) for identifier in ids):
+        require(not completed_revisions and not completed_work, 'Current jobs need no historical phase selection')
+        return current_authoring.retire(root,ids,integrated_commit,source_commits=source_commits)
     def git(*args):
         result=subprocess.run(["git",*args],cwd=root,capture_output=True)
         require(result.returncode==0,"Cannot confirm main/work: "+result.stderr.decode(errors="replace").strip())

@@ -1,6 +1,6 @@
 # Picross: Produktionsregeln
 
-**Version 0.8.0 · Dokumentrevision 10 · 17.11.2026 · DOCS-696**
+**Version 0.8.0 · Dokumentrevision 10 · 17.11.2026 · PROD-SLIM**
 
 ## 1. Einstieg und Befugnisse
 
@@ -42,11 +42,11 @@ Vor technischer Benutzung zusätzlich Referenz lesen:
 [Tool-README](../../../tools/puzzle_production/README.md), PW/ZA-1/Produktion,
 Produktdefinition/Gestaltung und historische Lieferberichte nicht pauschal voll lesen.
 Felder/Grenzen nie erraten; fehlende Quellen/Widersprüche blockieren nur
-abhängige Operationen. Vorhandene Arbeitsoriginale und Freigaben bleiben bytegleich. Alt-WIP ist kein
-Kompatibilitätsziel; keine automatische WIP-Migration. Integration benutzt
-ausschließlich den aktuellen Eingang nach RI-ONE. Neue Rev10-Snapshots:
-[PW-B](../../tools/PW_B_CONTRACT.md#pw-perf-d--regelquellen-und-snapshotgeneration).
-Regeln/Stil/Fachquellen vom selben vollen Quellcommit lesen. Separate Entwicklung
+abhängige Operationen. Aktuelle gewählte Ergebnisse und echte Entscheidungen erhalten. Verworfene oder
+ersetzte Dateien nach ihrer letzten aktuellen Nutzung entfernen; kein Archiv,
+Regelbuchsnapshot, Erzeuger-/Normalisierungs-/Reparaturreplay als Zulassung.
+Der geschlossene aktuelle Datenvertrag steht in [PW-B](../../tools/PW_B_CONTRACT.md).
+Separate Entwicklung
 an Regeln/Werkzeugen/Spiel/CI folgt vollständig AGENTS.
 
 ### 1.2 Gemeinsame Arbeitsregeln
@@ -54,7 +54,7 @@ an Regeln/Werkzeugen/Spiel/CI folgt vollständig AGENTS.
 Zu Beginn Kategorienquelle/Arbeitsindex/Runtime-Registry lesen, keine Bestandsrätsel
 laden/nachprüfen. Kategorie nach Auftrag/Hauptgegenstand gemäß [Kategorien](../../game/CATEGORIES.md)
 im Briefing/Record führen.
-Repository-/Toolstand mit voller SHA binden; Datei-/Bild-/Repository-/Ausführungszugriff
+Aktuellen Quellenstand mit voller SHA zuordnen; Datei-/Bild-/Repository-/Ausführungszugriff
 prüfen. Nur verfügbare Originale/Fähigkeiten und ausgeführte Prüfungen/Erfolge melden. Bestehende Formate, Farbregeln, Solverprofile,
 Nachweise und Reparaturverträge benutzen; normale Produktion entwickelt keine Tools
 oder direkte Modell-API. MODEL_SELECTION/MODEL_CATALOG weder laden noch dafür
@@ -74,11 +74,10 @@ Materielle kreative Änderungen verlangen passende neue Entscheidungen.
 
 ### Prüfungen gehören zur Produktion, nicht zur CI
 
-Lösbarkeit/Eindeutigkeit, unabhängigen Proof, Herkunft, Reparatur, Gestaltung und
+Lösbarkeit/Eindeutigkeit, unabhängigen aktuellen Proof, Nutzungsgrundlage, Gestaltung und
 Zielintegration revisionsgebunden tatsächlich prüfen; unveränderte passende Belege
 wiederverwenden (Schritt 3 §4.4). Keine rätselspezifischen Unit-Tests/Snapshots/
-CI-Falllisten/Dauerreplays; Auftragsskripte temporär außerhalb Discovery, Ergebnisse
-im Paket. Vor Inhalts-/Ablage-/Cleanup-PR [CI v2](../../ci/CI_WORKFLOW_V2.md) Paketplan/
+CI-Falllisten/Dauerreplays; Auftragsskripte temporär außerhalb Discovery, nur aktuell benötigte Ergebnisse im Arbeitsstand. Vor Inhalts-/Ablage-/Cleanup-PR [CI v2](../../ci/CI_WORKFLOW_V2.md) Paketplan/
 buildfreie Klassen lesen: aktueller `.ci/package.json`, begründet `modules=[]`,
 `evidence.mode=none`, Quellen-/Plankern ohne Player auch nach main. Keine Fach-/
 Solver-/Proof-/native Volltests allein für neue Rätsel. Code, gemeinsame Spielassets
@@ -95,8 +94,8 @@ Ausdrücklicher Draftumfang bleibt. Erst Absenden erklärt Rechte, Gitdaten bele
 
 ## Darstellungen und Sichtung
 
-Ursprungsidee/Bildquelle bindet Auftrag/Referenz, Original, Herkunft und
-Nutzungsgrundlage. Die Gegenstände und gestalterischen Zuständigkeiten definiert
+Das aktuelle Briefing bindet Auftrag/aktive Referenz, gewählte Ergebnisse und
+tatsächlich erforderliche Nutzungsgrundlagen. Die Gegenstände und gestalterischen Zuständigkeiten definiert
 [Bildverträge IMG-03](../images/README.md#img-03-gegenstände-und-geltung).
 Input → freigegebenes Reveal → freigegebene Abstraktion → Raster bleibt die
 verbindliche Produktionsfolge; der Hintergrund ist ein eigener Auswahlgegenstand.
@@ -115,7 +114,8 @@ die bereits vor der Bildwahl zum Produktionsauftrag gehört, einschließlich
 gezielter zeichnerischer Erweiterung oder passender Neugenerierung im bestehenden
 Bildkorrekturbudget. Ob ein Bildmangel besteht, bestimmt ausschließlich die
 zuständige Bildtypnorm mit den zugehörigen Qualitätskriterien.
-Schutzmerkmale nennen, neue Revision sichern. Nach zwei erfolglosen Bildkorrekturrunden
+Schutzmerkmale und aktuellen korrigierten Kandidaten sichern; ersetzte Fassungen
+nach Ende ihrer aktuellen Nutzung entfernen. Nach zwei erfolglosen Bildkorrekturrunden
 Ursache/geänderten Plan vorlegen.
 Ungeeignete Abstraktion: Vereinfachung/Größe/Palette überdenken; anderes Reveal neu
 freigeben. Die Grenzen einer Revealänderung stehen in
@@ -124,45 +124,48 @@ Materielles/Neuprüfungen: Schritt 3 §4.4.
 
 ## 6. Dateien, Übergabe und Wiederaufnahme
 
-### 6.1 Repositoryablage während der laufenden Produktion
+### 6.1 Ein aktueller Arbeitsstand
 
-Neue pz-ID und stabilen Branch `content/pw/<puzzle_id>` von main anlegen; alle
-Phasen/Varianten/Korrekturen/Wiederaufnahmen bleiben dort. Index/Kollisionen prüfen,
-fremde Arbeit erhalten. Jede Übergabe bekommt vollständige Einzelrevision unter
-`content/authoring/<puzzle_id>/<revision>/` und Arbeitsindexeintrag.
-Unversiegelten Request v4/Handoff v5 mit expliziter Dateiliste und geschlossenem
-Rev10-Snapshot nach PW-B/PB-A verwenden:
+Neue pz-ID und stabilen Arbeitsbranch `content/pw/<puzzle_id>` von main anlegen.
+Je Job genau `content/authoring/<puzzle_id>/current/record.json` und die aktuell
+benötigten Nutzdateien nach [PW-B](../../tools/PW_B_CONTRACT.md) führen. Der
+Arbeitsindex enthält nur Verweise. Ansichten und Folgeaufträge werden direkt
+daraus abgeleitet, keine zusätzliche Handoff-/Inventar-/workspace-/Pointerdatei.
+Vorhandene aktive Referenzbilder sicher referenzieren, nicht je Job kopieren.
 
-```text
-python -m tools.puzzle_production.authoring_builder build --request <request-v4.json> --source-root <vorbereitete-dateien> --output-root <eigene-arbeitswurzel> --publish-to <produktionscheckout> --history-repo <produktionscheckout>
-```
+Der Akteur übergibt `picross-authoring-current-request-v1` an den bestehenden
+Builder: `build --request ... --source-root ... --output-root ... --publish-to ...`.
+Er verwendet aktuelle Ergebnisse und echte Erklärungen. Kein Benutzer muss JSON
+pflegen. Builder und Finalizer prüfen dieselbe geschlossene Form, aktuellen Proof,
+Dateien, Phase und Entscheidungen; sichere Pfade, Lock, atomare Publikation,
+Konfliktschutz und identische Wiederaufnahme bleiben wirksam. Ein temporäres
+Operationsjournal endet nach Abschluss des Aufrufs.
 
-Builder validiert Quellen und geschriebenen ZIP, erzeugt Inventar v1, bytegleiche
-Handoffkopie, Record v4 und geprüfte workspace.json. [Ansichtsverweis](../../tools/PRODUCTION_CURRENT_VIEW.md)
-bindet genau diese Übergabe; Finalizer/Completion führen ihn auch In-place nach.
-Frühphasen sind keine Zertifikate. raster_ready/spätere Inhaltsphasen frisch prüfen.
-Presentation enthält tatsächliche Angebote; weitere Raster binden bereits gesicherte
-qualifizierte Einzelrecords. Keine erfundene Galerie oder HTTP-Projektwriter.
+### 6.2 Auswahl und Wiederaufnahme
 
-Alle nötigen Originale einschließlich sichtbarer Alternativen, Index, Projektion
-und Ansichtsverweis committen/pushen, feste Remote-Commit-/Dateipfade wirklich prüfen.
-Sicherungscommit erst nach Erfolg melden; repo_commit ist gelesene Herkunft,
-kein Sicherungsbeleg. Lokale Pfade/localhost/ungesicherte SHAs sind keine Cloudquelle.
-Neuere Quellen ausdrücklich laden; passive Suche erhält Ansicht/Eingaben,
-Job-/Quellwechsel verwirft Auswahlabsichten. Wiederaufnahme prüft aktuelle Quellen,
-gültige Freigaben, verbrauchte Budgets und offene Arbeit ohne historische Wiederholung.
+Aktuell angebotene Alternativen bleiben bis zur tatsächlichen Wahl erreichbar.
+Danach ausgeschiedene Varianten und ausschließlich zugehörige Hilfsdateien
+entfernen, sobald keine aktuelle Nutzung mehr besteht. Kein Archivieren und
+keine Wartepflicht auf Main. Gewählte Bilder/Raster/Proofs nur so lange erhalten,
+wie die aktuelle Phase sie braucht; wiederverwendete Dateien nicht duplizieren.
 
-### 6.2 Übergabedatensatz
+Keine Prompts, Seeds, Such-/Reparaturverläufe, Ablehnungs- oder Korrekturhistorie
+aufbewahren oder rekonstruieren. Temporäre Laufdaten sind erlaubt, ihr Fortbestand
+ist nach Vorliegen des aktuellen Ergebnisses keine Voraussetzung. Suchbudgets
+bleiben begrenzt; Wiederaufnahme setzt sie nicht zurück und verlangt kein
+Versuchstagebuch. Aktuelle offene Blocker und noch relevante Entscheidungen
+kompakt im Record führen; fehlende Erklärungen niemals erfinden.
 
-[PW-B](../../tools/PW_B_CONTRACT.md) schließt Request v4/Handoff v5/Record v4/Resultat v4;
-Rasterwahl, Inspektion v2, Projektion v2, Inventar/Index v1 und technische Bild-/
-Proof-/Freigabeformen bleiben. Früh background/raster_selection null, beide
-Hintergrundgates pending und Belege null; null ist kein none. Erst background_review/
-content_ready besitzen Hintergrundarbeit und qualifizierte Rasterwahl.
-Registered erst nach Registrierung, main nach bestätigtem Merge melden.
-Originale nie umetikettieren/neu versiegeln. Konflikte, Restpfade und Teilpublikation
-offen melden. Nur vollständig geprüft identische Wiederholung ist No-op;
-keine pauschale Locklöschung/verdeckte Recovery.
+Record, aktuell angebotene/gewählte Nutzdateien und gemeinsamen Index committen
+und pushen; feste Remotequelle tatsächlich prüfen. Ungesicherte lokale Dateien
+sind keine Cloudquelle. Wiederaufnahme prüft aktuelle Dateien, Freigaben,
+Parameter und offene Arbeit. Reine Pfadumstellung gleicher Bytes erhält die
+Auswahl; materiell geänderte Inhalte invalidieren abhängige Freigaben.
+
+Integration erhält einen eigenen sauberen Branch vom aktuellen Main und übernimmt
+nur gewählte finale Produktdaten und wirklich benötigte aktive Metadaten. Der
+Arbeitsbranch mit Alternativen wird nicht nach Main gemergt. Abschluss prüft das
+tatsächliche aktuelle Ergebnis, ohne zuvor Arbeitsarchive in Main zu verlangen.
 
 ## 7. Freigaben und Abschlussausgabe
 

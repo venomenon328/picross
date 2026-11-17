@@ -118,7 +118,7 @@ class Input:
             exact_keys(finding,{"result","accepted","reason"})
             require(finding["result"] in ("fulfilled","borderline","failed") and type(finding["accepted"]) is bool and
                     isinstance(finding["reason"],str) and finding["reason"].strip(),"Invalid visual criterion: "+criterion)
-            require(finding["result"]=="fulfilled" or finding["result"]=="borderline" and finding["accepted"],
+            require(finding["result"]=="fulfilled" or finding["accepted"],
                     "Visual criterion needs actual acceptance: "+criterion)
         matrix = self.definition["solution"]
         frame_ok = (any(row[0] for row in matrix) or any(row[-1] for row in matrix)) and (any(matrix[0]) or any(matrix[-1]))

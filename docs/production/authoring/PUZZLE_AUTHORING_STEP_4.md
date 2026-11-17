@@ -1,6 +1,6 @@
 # Schritt 4: Kontextzeichnungen
 
-**Version 0.8.0 · Dokumentrevision 10 · 17.11.2026 · DOCS-696**
+**Version 0.8.0 · Dokumentrevision 10 · 17.11.2026 · PROD-SLIM**
 
 Pflicht: [Kern und Phasenroute](PUZZLE_AUTHORING.md#11-pflichtquellen-nach-phase),
 danach diese Phase und die dort zugeordnete Bildnorm. Zusätzlich:
@@ -20,12 +20,12 @@ Sicherung, Wiederaufnahme und Abschlussausgabe: Kern §§6–7.
    prüfen. Maße aus den PNG-Bytes lesen; Prompt und Vorschau ersetzen dies nicht.
    Vor einer qualifizierten Auswahlvorlage nötige Korrekturen nach §6.3.1 ausführen.
 3. Geprüfte Kandidatenrevisionen als erreichbare isolierte Einzelbilder vorlegen.
-   Arbeitsmanifest und tatsächliche Entscheidung nach Hintergrundtechnik §3
-   führen; das passende HG31-Profil gehört bereits zum vorgelegten Auswahlscope.
+   Angebote, tatsächliche Entscheidung und aktuelle Bildurteile im gemeinsamen
+   Record nach PW-B führen; das passende HG31-Profil gehört bereits zum vorgelegten Auswahlscope.
    Wahl oder ausdrückliches none bindet genau den vorgelegten Stand.
 4. Nur das gewählte Original mit dem ausdrücklich gewählten aktuellen HG31-Profil
-   nach Hintergrundtechnik §4 ableiten und verify ausführen; bei none den echten
-   Nullbefund prüfen. Nach Ableitung die im Qualitätsvertrag fälligen Bildurteile
+   mit dem aktuellen Bildhelfer vorbereiten; Ergebnisdatei und Bildurteile
+   prüfen. Bei none keine Bild- oder Nullbefunddatei erzeugen. Nach Ableitung die im Qualitätsvertrag fälligen Bildurteile
    am fertigen Bild bestätigen. HP-W2-Erfolg allein ist kein Gestaltungsurteil.
 5. Eine offene Hintergrundwahl darf mit tatsächlicher Endabnahme im passend
    beauftragten Schlussauftrag erfolgen. Eine eindeutige gültige Wahl derselben
@@ -44,8 +44,8 @@ Hintergrundkandidatenzahl nicht.
   innerhalb des bestehenden Bildkorrekturbudgets herstellen. Bei Bedarf eine
   passende vollständige Komposition neu erzeugen; erlaubte und ausgeschlossene
   Gestaltung beziehungsweise Formatheilung stehen ausschließlich in der Bildnorm.
-- Rohoriginale unverändert sichern. Jede kreative Korrektur als neue Revision
-  mit Ausgangsdatei, tatsächlichen Maßen und Operation dokumentieren.
+- Nur die aktuell benötigten Angebote sichern. Ersetzte oder verworfene
+  Fassungen nach ihrer letzten aktuellen Nutzung entfernen; keine Korrekturhistorie.
 - Geänderte kreative Bytes zur normalen tatsächlichen Bildwahl vorlegen;
   frühere Freigaben nicht übertragen. Unveränderte deterministische Ableitung
   und bytegleicher Transport benötigen keine neue kreative Entscheidung.

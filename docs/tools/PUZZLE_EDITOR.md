@@ -481,9 +481,11 @@ Alpha- und SVG-Grenzen. Rastertext wird kanonisch verglichen; nur geänderte Log
 startet den bestehenden Solver-/Ratingweg samt unabhängiger Proofprüfung für
 diese ID. Apply verwendet dessen vorbereitete Bytes ohne erneute Analyse.
 Beschädigte, nicht benötigte historische Belege blockieren die Pflege nicht.
-Urheber, Rechte, Quelle, Akteur, Erklärung und Bestätigung entfallen aus neuen
-Editorrequests und aktiven Editorquellen. Keine Platzhalter und keine erzeugten
-Herkunftsnotices. Historische Archive und Bibliothekslizenzen bleiben erhalten.
+Normale Editorrequests benötigen keine Herkunfts- oder Akteursfelder und
+erzeugen keine Platzhalter oder erfundenen Herkunftsnotices. Eine aktuelle
+Produktionsübergabe darf tatsächlich angegebene Rechte für ihren ausgewählten
+neuen Hintergrund kompakt mitgeben; der gemeinsame Writer erhält diese
+Angaben als aktive Notice. Bibliothekslizenzen bleiben erhalten.
 Derselbe Grundsatz gilt für den späteren Mainvergleich und den
 [Abschluss nach Authoring Schritt 5 §9](../production/authoring/PUZZLE_AUTHORING_STEP_5.md#9-produktionsabschluss-und-bereinigung):
 Ein unter PE-EDIT2 ausgewählter Hintergrund ohne Live-`.txt` ist vollständig;
@@ -504,7 +506,14 @@ background,imports`. `metadata` ist bei einer ID die optionale Name/Kategorie-
 Kategorien-/Metadatenoperationen. Alle Requestfelder sind vorhanden; nicht
 verwendete Einzeländerungen sind null. `text` ist optionaler Rastertext,
 `profile` bei Rasteränderung `line` oder `paired`, sonst auch null; Reveal ist
-null oder `{upload}`, Hintergrund null oder `{status,upload}`. `imports` ordnet
+null oder `{upload}`, Hintergrund null oder `{status,upload}`. Für eine
+ausgewählte neue Hintergrunddatei erlaubt die aktuelle Produktionsübergabe
+zusätzlich exakt `rights={author,usage_basis,source,changes}` mit den tatsächlichen
+Angaben nach PW-B; keine leeren/erfundenen Texte und kein `rights` ohne Upload.
+Der gemeinsame Editorwriter schreibt dafür ausschließlich
+`game/art/backgrounds/<id>.txt` im selben geprüften Plan/Journal. Ohne dieses
+explizite Feld bleiben vorhandene Notices unverändert; ein fehlender TXT bleibt
+zulässig. `imports` ordnet
 nur benutzte Uploadschlüssel relativen neuen PNG-/SVG-Pfaden neben dem Request
 zu. Eingaben und Plan liegen außerhalb des Inhaltscheckouts. Kein Akteur,
 keine Herkunft, Bestätigung oder implizite Migrationsaktion. Die HTTP-Route

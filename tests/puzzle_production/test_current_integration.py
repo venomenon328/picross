@@ -191,7 +191,7 @@ class CurrentIntegrationTests(unittest.TestCase):
             value=deepcopy(original)
             if kind=="visual":
                 review=json.loads((source/"review.json").read_bytes())
-                review["criteria"]["Q-R04"].update(result="failed",accepted=True)
+                review["criteria"]["Q-R04"].update(result="failed",accepted=False)
                 value["quality"]["review"]=json_file(source,"failed-review.json",review)
             elif kind=="rights": value["reveal"]["rights"]["author"]="Invented author absent from notice"
             elif kind=="path": value["proof"]["file"]="../proof.json"

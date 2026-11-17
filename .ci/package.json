@@ -1,47 +1,33 @@
 {
   "format": "development-ci-plan/v1",
-  "issue": "https://github.com/venomenon328/picross/issues/696",
-  "package": "DOCS-696",
+  "issue": "https://github.com/venomenon328/picross/issues/700",
+  "package": "PROD-SLIM",
   "modules": [
     "tools",
     "production.images",
-    "production.adapter"
+    "production.adapter",
+    "production.catalog"
   ],
-  "purpose": "Gesamten docs-Bestand konsolidieren: eindeutige Fachzuständigkeit, Bildnormen je Typ, zusammengehörige Ordner, aufgabenbezogene Leserouten und Entfernen obsoleter Berichte nach Inhaltssicherung. Aktuelle Pfadleser und Authoring-Snapshotrevision10 gemeinsam aktualisieren; alte Bytebindungen explizit lesbar halten.",
-  "omitted": "Keine Änderungen an Spielverhalten, Assets, Produktionsinhalten, Methoden oder Runtimeformaten. Native/Browser-/Solver-/Katalogmodule liefern für diese Navigations- und Regelbuchänderung keinen zusätzlichen fachlichen Nachweis. tools prüft Dokumentation, Prompt/Launcher und Hilfsverbraucher; production.adapter prüft Authoring/Snapshots/Batch und Hintergrundeingänge; production.images prüft Bildverträge. Wegen tatsächlicher Werkzeugänderungen bleibt der reguläre Windowsbau erforderlich. Keine neue Bildproduktion, persönliche Abnahme, technische Galerie oder Betriebsaktivierung.",
+  "purpose": "Ein kanonischer aktueller Produktionsstand ohne Entstehungsarchive; Producer, Reader, Auswahl, RI-ONE-Übergabe und Abschluss gemeinsam umstellen. Mainbestand am d389fbad01dd01860ed949a4e1e8e0b52c21362a repositoryweit prüfen und nachgewiesen entbehrliche Unterlagen entfernen.",
+  "omitted": "Keine Solver-, Difficulty-, Runtime-, native-, preflight-, delivery- oder Browseränderung. Bestehende Algorithmen und RI-ONE bleiben erhalten. Windowsbau wegen technischer Änderung erforderlich. Keine Bildgenerierung, Vollkataloganalyse, neue persönliche Abnahme oder historische WIP-Migration.",
   "test_changes": [
     {
-      "path": "tests/puzzle_production/test_authoring_builder.py",
+      "path": "tests/puzzle_production/test_current_authoring.py",
       "disposition": "change-scoped",
-      "reason": "Bestehende gezielte Regression auf aktuelle Dokumentpfade und Revision10 anpassen; echte historische Revision9-Bytebindung sowie geschlossene Quellenmenge bewahren."
+      "reason": "Kleine synthetische Fünfphasen-, Inhalts-, Auswahl-, Konflikt-, Recovery- und Abschlussfälle ohne Herstellungsunterlagen in production.adapter. K07-Zählung und Mainaudit einmalig, keine dauerhafte Katalogsuite. Unabhängiges Review B-700-01–06: Entscheidung vor Bereinigung, frische Arbeitsrefs, vollständige Parameteralternative, echte Rasteransicht, harte Kontextgrenze sowie aktuelle Rechte-/Bewertungsbindung einschließlich Retirement."
     },
     {
-      "path": "tests/puzzle_production/test_authoring_workflow.py",
+      "path": "tests/puzzle_production/test_current_integration.py",
       "disposition": "change-scoped",
-      "reason": "Bestehende gezielte Regression auf aktuelle Dokumentpfade und Revision10 anpassen; echte historische Revision9-Bytebindung sowie geschlossene Quellenmenge bewahren."
-    },
-    {
-      "path": "tests/puzzle_production/test_background_content.py",
-      "disposition": "change-scoped",
-      "reason": "Bestehende gezielte Regression auf aktuelle Dokumentpfade und Revision10 anpassen; echte historische Revision9-Bytebindung sowie geschlossene Quellenmenge bewahren."
-    },
-    {
-      "path": "tests/puzzle_production/test_background_package.py",
-      "disposition": "change-scoped",
-      "reason": "Bestehende gezielte Regression auf aktuelle Dokumentpfade und Revision10 anpassen; echte historische Revision9-Bytebindung sowie geschlossene Quellenmenge bewahren."
+      "reason": "Negativen ungeprüften beziehungsweise nicht angenommenen Sichtbefund weiterhin ablehnen; ausdrücklich angenommene redaktionelle Abweichungen am aktuellen Ergebnis getrennt erhalten."
     },
     {
       "path": "tools/test_authoring_sheet.py",
       "disposition": "change-scoped",
-      "reason": "Obsolete Produktions-HTML-Prüfung entfernen. Bestehende tatsächliche Promptgenerator-Regressionsprobe erhält aktuelle Quellenroute und prüft, dass ein separater Hintergrundwechsel keinen Erstintegrationsauftrag erzeugt."
-    },
-    {
-      "path": "tools/test_editor_installer.py",
-      "disposition": "change-scoped",
-      "reason": "Bestehenden Installer-Vertragsabgleich auf den verschobenen PE-Fachvertrag richten; keine neue Testfamilie."
+      "reason": "Die öffentliche Promptprojektion bindet den aktuellen Record; gemeinsame Integration und Abschluss führen keine Arbeitsarchive nach Main. Bestehende Bedienprüfungen vollständig erhalten."
     }
   ],
-  "core_change": "Der bestehende Dokumentvalidator bindet seine beiden verschobenen Pflichtdateien am neuen Projektpfad. Keine zusätzlichen Prüfschritte, kein neuer Kerntest und keine Änderung der CI-Auswahl oder des Ergebnisgates.",
+  "core_change": "Keine Änderung an CI-Kern oder automatischer Modulauswahl. evidence.mode=none; aktuelle synthetische Originale im Lauf prüfen und entfernen.",
   "evidence": {
     "mode": "none",
     "purpose": null,

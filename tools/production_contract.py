@@ -43,7 +43,8 @@ MODULES = {'solver': ('test_analysis',
              'test_palette_gate',
              'test_stalled_color_adapter',
              'test_target_adapter',
-             'test_current_integration'),
+             'test_current_integration',
+             'test_current_authoring'),
  'catalog': ('test_editor_change',
              'test_registration_budgets',
              'test_current_consumers',
@@ -198,12 +199,12 @@ SOURCE_GROUPS = {'tests/puzzle_production/background_catalog_fixtures.py': ('sol
  'tools/puzzle_production/analysis_rules.py': ('solver', 'images', 'adapter', 'catalog'),
  'tools/puzzle_production/analysis_verifier.py': ('solver', 'images', 'adapter', 'catalog'),
  'tools/puzzle_production/authoring_build_contract.py': ('solver', 'images', 'adapter', 'catalog'),
- 'tools/puzzle_production/authoring_builder.py': ('adapter',),
- 'tools/puzzle_production/authoring_finalization.py': ('adapter',),
+ 'tools/puzzle_production/authoring_builder.py': ('images', 'adapter', 'catalog'),
+ 'tools/puzzle_production/authoring_finalization.py': ('images', 'adapter', 'catalog'),
  'tools/puzzle_production/authoring_inspection.py': ('solver', 'images', 'adapter', 'catalog'),
  'tools/puzzle_production/authoring_package.py': ('solver', 'images', 'adapter', 'catalog'),
  'tools/puzzle_production/authoring_rulebook.py': ('solver', 'images', 'adapter', 'catalog'),
- 'tools/puzzle_production/authoring_staging.py': ('adapter',),
+ 'tools/puzzle_production/authoring_staging.py': ('images', 'adapter', 'catalog'),
  'tools/puzzle_production/authoring_workflow.py': ('solver', 'images', 'adapter', 'catalog'),
  'tools/puzzle_production/background_assets.py': ('solver', 'images', 'adapter', 'catalog'),
  'tools/puzzle_production/background_contract.py': ('solver', 'images', 'adapter', 'catalog'),
@@ -300,7 +301,10 @@ SOURCE_GROUPS = {'tests/puzzle_production/background_catalog_fixtures.py': ('sol
  'tools/puzzle_production/solver.py': ('solver', 'images', 'adapter', 'catalog'),
  'tools/puzzle_production/target_adapter.py': ('images', 'adapter', 'catalog'),
  'tools/puzzle_production/verifier.py': ('solver', 'images', 'adapter', 'catalog'),
- 'tools/puzzle_production/za1_fixtures.py': ('images', 'adapter')}
+ 'tools/puzzle_production/za1_fixtures.py': ('images', 'adapter'),
+ 'tools/puzzle_production/current_authoring.py': ('images', 'adapter', 'catalog'),
+ 'tools/puzzle_production/current_tools.py': ('adapter',),
+ 'tests/puzzle_production/test_current_authoring.py': ('adapter',)}
 
 DATA_GROUPS = {
     **{'tools/puzzle_production/' + name: GROUPS for name in (
