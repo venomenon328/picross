@@ -68,7 +68,8 @@ def binding(job, scope):
     motif = {'reveal':reveal,'motif':image('motif'),'parameters':job['parameters']['approved']}
     chosen = selected['raster']
     raster = {'motif':motif,'raster':None if chosen is None else
-              {'id':chosen, **{k:rasters[chosen]['definition'][k] for k in ('sha256','bytes')}}}
+              {'id':chosen, **{k:rasters[chosen]['definition'][k] for k in ('sha256','bytes')}},
+              'offers':[{ 'id':r['id'], **{k:r['definition'][k] for k in ('sha256','bytes')}} for r in job['rasters']] if chosen is None else []}
     if job['operation']=='background':
         raster={'target':{k:{f:job['target'][k][f] for f in ('sha256','bytes')} for k in ('definition','reveal')}}
     background = {'raster':raster,'background':image('background')}
@@ -541,7 +542,7 @@ def prepare(root, record_path, output, *, entry=None):
         def image(asset,stem):
             rights=asset['rights']; ap.require(rights is not None,'Actual usage basis required')
             # These are the supplied actual rights, not invented provenance.
-            notice='\n'.join(k+': '+v for k,v in rights.items()).encode('utf8')+b'\n'
+            notice='\n'.join(k+': '+rights[k] for k in sorted(rights)).encode('utf8')+b'\n'
             ext=Path(asset['file']['file']).suffix
             return {'asset':put(stem+ext,checked.bound(asset['file'],32*LIMIT)),
                     'notice':put(stem+'.txt',notice),'rights':rights}
@@ -595,6 +596,11 @@ def matches(job, result):
     if actual['status']=='selected':
         a=next(a for a in job['assets'] if a['id']==bg)
         ap.require(same(a['file'],'game/'+actual['asset']['file']), 'Completion selected another background')
+        rights=a['rights']
+        ap.require(rights is not None,'Current background rights missing')
+        notice=('\n'.join(k+': '+rights[k] for k in sorted(rights))+'\n').encode('utf8')
+        notice_path='game/art/backgrounds/'+job['puzzle_id']+'.txt'
+        ap.require(same(content.ref(notice_path,notice),notice_path),'Completion background rights differ')
     return True
 
 

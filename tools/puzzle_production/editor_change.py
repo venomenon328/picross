@@ -324,7 +324,7 @@ def plan(root, request, *, uploads=None, work=None, expected=None, expected_defi
                         from .reveal_source import provenance, make_notice
                         require(part["status"] == "selected" and part["upload"] is not None, "New background rights need selected image")
                         provenance(part["rights"])
-                        notice=("\n".join(k+": "+v for k,v in part["rights"].items())+"\n").encode("utf8")
+                        notice=("\n".join(k+": "+part["rights"][k] for k in sorted(part["rights"]))+"\n").encode("utf8")
                         make_notice(notice)
                         put("game/art/backgrounds/"+identifier+".txt",notice)
                     require(part["status"] in ("standard", "selected", "none"), "Invalid background preference")

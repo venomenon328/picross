@@ -119,6 +119,10 @@ class CurrentAuthoringTests(unittest.TestCase):
     def test_missing_swapped_unauthorized_and_invalid_proof_fail(self):
         self.raster_ready()
         original=deepcopy(self.job)
+        decide(self.job,'raster')
+        self.job['rasters'][0]['definition']['sha256']='0'*64
+        with self.assertRaisesRegex(InvalidInput,'Stale decision'):self.publish()
+        self.job=deepcopy(original)
         self.job['selected']['raster']='raster-a';self.job['state']='background_review'
         with self.assertRaisesRegex(InvalidInput,'choice'):self.publish()
         self.job=deepcopy(original);self.job['rasters'][0]['proof']['file']=self.job['rasters'][0]['definition']['file']
@@ -224,6 +228,11 @@ class CurrentAuthoringTests(unittest.TestCase):
         self.assertEqual(editor_change.apply(self.root,json.loads(plan_path.read_bytes()))['status'],'updated')
         self.assertIn(self.incoming['reveal']['rights']['usage_basis'],(self.root/'game/art/backgrounds/pz-current.txt').read_text(encoding='utf8'))
         product=commit(self.root,'changed selected background')
+        notice=self.root/'game/art/backgrounds/pz-current.txt';actual_notice=notice.read_bytes()
+        notice.write_bytes(b'Different rights.\n');wrong=commit(self.root,'wrong current notice')
+        with self.assertRaisesRegex(InvalidInput,'rights differ'):
+            projector.complete(self.root,current.path('pz-current'),wrong,current_input=self.work/'bg-change')
+        notice.write_bytes(actual_notice);product=commit(self.root,'actual background rights')
         projector.complete(self.root,current.path('pz-current'),product,current_input=self.work/'bg-change')
 
     def test_budget_reset_and_midpublication_foreign_edit_are_rejected(self):
