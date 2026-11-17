@@ -80,7 +80,7 @@ def validate(value, measured=True):
         if measured:
             ap.sha(loc['sha256'])
             integer(loc['bytes'], 1, 32 * 1024 * 1024, 'Bilddateigröße')
-        ap.require(loc['storage'] in (('repository','definition') if value['revision']=='current' else ('repository','package')), 'Unbekannter Bildspeicher.')
+        ap.require(loc['storage'] in (('repository','package','definition') if value['revision']=='current' else ('repository','package')), 'Unbekannter Bildspeicher.')
         if loc['storage'] in ('repository','definition'):
             ap.require(loc['container'] is None, 'Direktdatei darf keinen Container haben.')
             if value['revision']=='current':

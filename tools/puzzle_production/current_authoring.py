@@ -218,8 +218,7 @@ class Checked:
         for asset in j['assets']:
             raw=self.bound(asset['file'],32*LIMIT)
             # Existing bounded decoder; does not execute data or alter originals.
-            from tools.production_workspace.presentation import image
-            image(raw)
+            image_info(raw,asset['file']['file'],j)
             ready=(asset['id'] in (selected['reveal'],selected['motif']) and phase>=5 and j['operation']=='production' or
                    asset['role']=='background' and phase>=7 and asset['id']==selected['background'])
             if ready:
@@ -234,9 +233,14 @@ class Checked:
             from . import catalog_rating
             registry=io.json_bytes(read(content.REGISTRY,8*LIMIT),8*LIMIT)
             entries=[e for e in registry['entries'] if e['id']==j['puzzle_id']]
-            ap.require(len(entries)==1 and entries[0]['mode']==j['target']['mode'] and
+            runtime=io.json_bytes(read(content.RUNTIME,8*LIMIT),8*LIMIT)
+            rows=[r for r in runtime['entries'] if r['id']==j['puzzle_id']]
+            ap.require(len(entries)==len(rows)==1 and entries[0]['mode']==j['target']['mode'] and
                        'game/'+entries[0]['definition']==j['target']['definition']['file'] and
-                       'game/'+entries[0]['reveal']==j['target']['reveal']['file'], 'Background target is not current active content')
+                       'game/'+rows[0]['reveal']==j['target']['reveal']['file'], 'Background target is not current active content')
+            reveal_source=content.validate_source(io.json_bytes(read(content.source_path(j['puzzle_id'],'reveal'),LIMIT),LIMIT),entries[0])
+            ap.require(reveal_source['current']['asset']==j['target']['reveal'] and
+                       reveal_source['binding']['identity']['definition']==j['target']['definition'], 'Active target binding differs')
             definition,_,_,_=catalog_rating.definition(self.bound(j['target']['definition'],2*LIMIT))
             ap.require(definition['id']==j['puzzle_id'], 'Background target differs')
             ap.require(selected['reveal'] is not None and next(a for a in j['assets'] if a['id']==selected['reveal'])['file']==j['target']['reveal'], 'Active reveal reference differs')
@@ -582,7 +586,7 @@ def matches(job, result):
         actual=result['files'][path]
         return actual is not None and all(actual[k]==ref[k] for k in ('sha256','bytes'))
     ap.require(same(raster['definition'],'game/'+result['entry']['definition']) and
-               same(reveal['file'],'game/'+result['entry']['reveal']), 'Completion contains different selected bytes')
+               same(reveal['file'],'game/'+result['runtime']['reveal']), 'Completion contains different selected bytes')
     params=job['parameters']['approved']
     mode=job['target']['mode'] if job['operation']=='background' else (params[0].get('mode') or params[0]['imports'][0]['mode'])
     ap.require(result['mode']==mode, 'Completion mode differs')
@@ -695,6 +699,15 @@ def retire(root, ids, integrated_commit, *, source_commits=None):
         ap.require(io.read(root,INDEX,8*LIMIT)==index_raw,'Current index changed')
         _atomic(root,INDEX,encoded(updated))
     return {'status':'retired','main_commit':main,'retired':sorted(removals),'registered':True}
+
+
+def image_info(raw, name, job):
+    if (job['operation']=='background' and name==job['target']['reveal']['file'] and name.endswith('.svg')):
+        from .editor_image_input import validate_reveal
+        result=validate_reveal(raw,'.svg')
+        return {'width':result['width'],'height':result['height'],'mime':'image/svg+xml'}
+    from tools.production_workspace.presentation import image
+    return image(raw)
 
 
 def raster_preview(definition):
