@@ -280,4 +280,28 @@ class CurrentAuthoringTests(unittest.TestCase):
         self.assertFalse(any(p.name.startswith('.current-') for p in self.work.iterdir()))
 
 
+    def test_background_reader_references_active_svg_after_editor_image_switch(self):
+        from tools.puzzle_production import editor_change, editor_image_input
+        from tools.production_workspace.repository import Repository, configure
+        from tools.production_workspace.server import Service
+        catalog_integration.integrate(self.input,self.root,apply=True)
+        svg=b'<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 12 12"><path d="M1 1H11V11H1Z" fill="#202020"/></svg>'
+        request={'id':'pz-current','metadata':None,'text':None,'profile':None,'reveal':{'upload':'new'},'background':None}
+        plan=editor_change.plan(self.root,request,uploads={'new':{'raw':svg,'suffix':'svg','checked':editor_image_input.validate_reveal(svg,'.svg')}})
+        editor_change.apply(self.root,plan)
+        entry=self.incoming['entry'];runtime=json.loads((self.root/content.RUNTIME).read_bytes())['entries'][0]
+        self.assertNotEqual(runtime['reveal'],entry['reveal'])
+        target={'definition':content.ref('game/'+entry['definition'],(self.root/('game/'+entry['definition'])).read_bytes()),
+                'reveal':content.ref('game/'+runtime['reveal'],svg),'mode':'mono'}
+        self.job.update(operation='background',target=target,state='background_review')
+        self.job['assets']=[{'id':'active-reveal','role':'reveal','label':'Active SVG','file':target['reveal'],'rights':None,'review':{}}]
+        self.job['selected']['reveal']='active-reveal';self.publish();commit(self.root,'current active SVG work')
+        configure(self.root,self.work/'svg-state',refs=['main']);service=Service(Repository(self.work/'svg-state'))
+        listing=service.listing();self.assertEqual(listing['errors'],[])
+        jid=listing['jobs'][0]['id'];self.assertEqual(service.detail(jid)['facts']['composition']['reveal'],'active-reveal')
+        self.assertEqual(service.picture(jid,'active-reveal'),(svg,'image/svg+xml'))
+        self.job['target']['reveal']['file']='game/'+entry['reveal']
+        with self.assertRaises(InvalidInput):self.publish()
+
+
 if __name__=='__main__':unittest.main()
