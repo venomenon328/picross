@@ -1,6 +1,4 @@
-Production ID: pz-schluessel
-Background: SCH-HG-A
-Image revision: b02
-Artwork: OpenAI ImageGen im Auftrag des Eigentümers; technische Leinwandergänzung durch Codex/Pillow
-Source: Eingebautes image_gen.imagegen, unveränderte native r05-Eingänge; autorisierte proportionale Pillow-Leinwandergänzung.
-Usage basis: Eigene vom Eigentümer beauftragte generierte Projektillustration ohne externe Bildreferenzen.
+author: OpenAI ImageGen
+changes: Neu erzeugtes natives transparentes PNG unverändert übernommen; keine kreative Nachbearbeitung. Proportionale vollständige Aufbereitung im HG31-Profil picross-background-png2304x768-v1 (2304 × 768 RGBA8).
+source: Integriertes ImageGen-Werkzeug, Issue #671, HG-BESTAND-11, Bildrevisionen 2026-11-17.
+usage_basis: Im ausdrücklichen Auftrag des Projektinhabers für picross erzeugt; keine ungeklärten Fremdassets.

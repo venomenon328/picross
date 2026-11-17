@@ -1,0 +1,4 @@
+author: OpenAI ImageGen
+changes: Unveraendertes natives transparentes PNG aus ImageGen; keine kreative Nachbearbeitung. Proportionale vollständige Aufbereitung im HG31-Profil picross-background-png2304x768-v1 (2304 × 768 RGBA8).
+source: Integriertes ImageGen-Werkzeug, Issue #671, HG-BESTAND-11, 2026-11-17.
+usage_basis: Im ausdruecklichen Auftrag des Projektinhabers fuer picross neu erzeugt; keine Fremdassets oder Fremdvorlagen verwendet.
