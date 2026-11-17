@@ -46,7 +46,7 @@ Profile und Runtimegeometrie: [Hintergrundtechnik](../PUZZLE_BACKGROUNDS.md#hg31
 
 - MUSS: neue Kandidaten und beauftragte neue Bildrevisionen als vollständige zusammenhängende transparente Einzelbilder exakt 3:1 herstellen; tatsächliche PNG-Breite = 3 × Höhe. Native Maße sind variabel, beispielsweise 2172×724.
 - MUSS: die gesamte Leinwand einschließlich bewusstem Freiraum komponieren; geplante seitliche Positionen und sichere Falz-/Randabstände erhalten. Gemeinsamer Fit und Anker folgen dem technischen Profil.
-- DARF: rechtsbetonte, offene, durchgehende, U-/Halb-U-Kompositionen, wechselnde seitliche Positionen und unterschiedlich hohe Formen.
+- MUSS: seitliche Motivschwerpunkte und Höhenverteilung nach HG-07 bereits für die vollständige Leinwand planen.
 - DARF NICHT: Alpha-Bounds-Crop, Nachzentrieren nur des sichtbaren Motivs, Seitenpadding, Zusammensetzen generierter Hälften, Stretch, Beschnitt oder Motivverschiebung zur Formatheilung einsetzen.
 - Keine Randpixel-, Prozentbelegungs-, Objektzahl- oder Zwei-Eckenpflicht. Die Beispielbreite ist keine technische Mindestbreite.
 
@@ -61,9 +61,16 @@ Profile und Runtimegeometrie: [Hintergrundtechnik](../PUZZLE_BACKGROUNDS.md#hg31
 
 ## HG-07 Höhenverteilung
 
-- EMPFEHLUNG: zusätzliche Höhe als Spielraum behandeln. Besonders die horizontale Bildmitte nicht routinemäßig über die volle Höhe füllen; die Mitte darf niedrig/luftig sein. Auch links/rechts muss die volle Höhe nicht genutzt werden.
-- DARF: eine motivgerechte hohe Mitte, volle Seitenhöhe oder andere Verteilung.
-- Keine feste Höhenquote, Pflicht zur niedrigen Mitte, hohen Seiten oder U-Form. Höhe allein begründet keine Ablehnung, Überarbeitung oder Ausnahmefreigabe.
+- BEZUG: Die horizontale Mitte ist der breite zentrale Bereich der vollständigen 3:1-Leinwand, nicht nur die senkrechte Mittellinie oder die Mitte der sichtbaren Alpha-Bounds. Maßstab ist die gesamte verfügbare Zeichenhöhe.
+- ZWECK: Die Mitte bleibt als ruhiger Bereich für die Spiel-UI offen; die seitlichen Bereiche tragen die Hintergrunddetails.
+- MUSS: die tragenden Hauptformen und höheren Motivteile seitlich gewichten. Zulässig sind links/rechts verteilte Gruppen mit deutlich abgesenkter Mitte (U-/Halb-U-Verteilung) oder ein Schwerpunkt auf nur einer Seite.
+- EMPFEHLUNG: den rechten Bereich bevorzugen. Linksbetonte Kompositionen bleiben zulässig; eine Rechtspräferenz ist keine Rechts-, Symmetrie- oder Zwei-Eckenpflicht.
+- MUSS: die breite Mittelzone niedrig, luftig und gegenüber den seitlichen Motivschwerpunkten deutlich zurückgenommen halten. Vollständig freie Mitte sowie sparsame flache Bodendetails oder niedrige Verbindungen sind zulässig.
+- DARF NICHT: die Zeichnung als zentrale Motivinsel mit weitgehend leeren Seiten anlegen. Kleine seitliche Nebendetails gleichen einen weiterhin zentralen Hauptkörper nicht aus.
+- DARF NICHT: in der Mittelzone einen Großteil der Zeichenhöhe durch hohe Einzelobjekte, übereinandergestellte Objektgruppen, aufragende Diagonalen oder hoch durchlaufende Querformen belegen. Eine seitliche Objektbasis genügt nicht, wenn die hohe Form weit in die Mitte hineinragt.
+- MUSS: die sichtbaren Gesamtformen und ihren Höhenverlauf beurteilen. Transparente Innenräume, offene Umrisse oder Zwischenlöcher innerhalb hoher Mittelobjekte ersetzen keine niedrige Mittelzone; geringe Strichdichte oder helles Graphit beheben eine falsche Platzierung nicht.
+- DARF: einseitig offene, asymmetrische oder zusammenhängende Szenen verwenden, sofern Schwerpunkt und Mittelzone diese Regeln erfüllen. U-/Halb-U bezeichnet die Höhenverteilung, keine zu zeichnende Kontur. Auch die Seiten müssen nicht die volle Höhe nutzen.
+- Keine feste Pixel-/Prozentquote oder Pflicht zu hohen Seiten. Das hebt die verbindliche seitliche Gewichtung und niedrige Mitte nicht auf. Randabschluss weiterhin nach HG-06.
 
 ## HG-08 Stilbezogene Korrektur
 
