@@ -1,0 +1,238 @@
+## HG-BESTAND-05 · abgeschlossen · 17.11.2026
+
+Die tatsächliche Eigentümerwahl **Fledermaus B1/r02, Fliegenpilz F3/r02, Game Boy Y1/r02, Gecko E1/r02 und Giraffe R2/r02** ist vollständig integriert und nach §9 abgeschlossen. Originalentscheidung in diesem Chat: `B1, F3, Y1, E1, R2`.
+
+- **Integration:** [PR #697](https://github.com/venomenon328/picross/pull/697), Squash-Maincommit [`e86b4170af7569d8113ac854ae23b9df6f1782f3`](https://github.com/venomenon328/picross/commit/e86b4170af7569d8113ac854ae23b9df6f1782f3). Fünf ausdrücklich gewählte HP-W2-Ableitungen mit `picross-background-png2304x768-v1`, fünf erfolgreiche `verify`, isolierte Sichtprüfung der fertigen PNGs auf Weiß und Grau einschließlich aller vier Ränder/H-07 und bytegleicher serieller Editorimport. Entscheidungen d01 binden die tatsächlich angebotenen bg02-Manifeste und unveränderten Originalbytes. Bildrevisionen jeweils 1→2; Fliegenpilzes bisheriges 4:1-Bild wurde durch die gewählte neue 3:1-Fassung ersetzt. Fünf frische Editor-Wiederholungspläne sind leer.
+- **Produktionsabschluss:** [PR #698](https://github.com/venomenon328/picross/pull/698), Squash-Maincommit [`ca3eba639e8df882eeb1ae5085606700acd022c6`](https://github.com/venomenon328/picross/commit/ca3eba639e8df882eeb1ae5085606700acd022c6). `retire-production` entfernte genau **213** gegen den bestätigten Integrationsmain bytegleich gebundene abgeschlossene Arbeitsdateien aus den fünf zugeordneten `hg-bestand-05`-Verzeichnissen. Vollständige Wiederholung: schreibfreier `no-op`. Keine manuellen Vorlöschungen oder Ersatznotices. Alle **1.688** verbleibenden Dateien waren vor Paketplanfortschreibung bytegleich; danach bleiben die **1.687 sonstigen Dateien** unverändert. Ausschließlich der aktuelle CI-Paketplan wird zusätzlich fortgeschrieben.
+- **Prüfungen:** tatsächlicher PR-Diff und GitHub-Testmerge für beide PRs, vollständiger Pfad-/Bytevergleich des geschützten Bestands, Auswahl-/Profil-/PNG-Bindungen, fünf leere Editor-Wiederholungspläne, 21 kleine CI-Kerntests und Dokument-/Paket-/Bestandsprüfung. 63 Dateien am Integrationshead und 14 Dateien am abschließenden Mainstand wurden über feste GitHub-URLs bytegleich zurückgelesen, einschließlich aller fünf aktiven 2304×768-RGBA8-PNGs und aktueller Hintergrundsources. [Integrations-PR-CI](https://github.com/venomenon328/picross/actions/runs/44065926465), [Integrations-Main-CI](https://github.com/venomenon328/picross/actions/runs/44066916607), [Cleanup-PR-CI](https://github.com/venomenon328/picross/actions/runs/44068360402) und [Cleanup-Main-CI](https://github.com/venomenon328/picross/actions/runs/44068673523): jeweils `docs`, `verify (source)` und `ci-required` erfolgreich, ohne Playerbau. Gezielte Eigenprüfung; keine unabhängige ChatGPT-Reviewrunde gemäß Eigentümerauftrag.
+- **Quellenstand:** Die bereits ausgewählten Bilder behalten gemäß Eigentümerentscheidung zu [#695](https://github.com/venomenon328/picross/pull/695) ihre gültigen Original-/Normbindungen. Die während der Integration auf main aktualisierte Stilnorm bleibt unverändert enthalten; sie gilt für ab dann neu erzeugte oder überarbeitete Bilder.
+- **K01–K06 erfüllt. Fortschritt: 20 von 59 Zielen abgeschlossen, 39 offen.** Aktive Bilder, Definitionen/Reveals, IDs/Keys/Slots, Namen/Kategorien, Schwierigkeit, Added-Daten, tatsächliche Rechte/Notices und Arbeitsindex sind erhalten. Originale, Kandidaten, bg02 und d01 bleiben im [festen Integrationsstand](https://github.com/venomenon328/picross/tree/e86b4170af7569d8113ac854ae23b9df6f1782f3/content/authoring) erreichbar. Benutzercheckout und vorhandene lokale Änderungen bleiben erhalten. Keine zusätzliche lokale Checkoutbereinigung und **keine nächste Gruppe gestartet**.
+
+## HG-BESTAND-04 · abgeschlossen · 16.11.2026
+
+Die tatsächliche Eigentümerwahl **Chupacabra C3/r01, Drachenfrucht D2/r01, Efeutute F1/r01, Erbse P2/r01 und Erdbeere B1/r01** ist vollständig integriert und nach §9 abgeschlossen.
+
+- **Integration:** [PR #689](https://github.com/venomenon328/picross/pull/689), Squash-Maincommit [`7d05b7c05e995a05851fd57148d53ec9e539eac9`](https://github.com/venomenon328/picross/commit/7d05b7c05e995a05851fd57148d53ec9e539eac9). Fünf ausdrücklich gewählte HP-W2-Ableitungen mit `picross-background-png2304x768-v1`, fünf erfolgreiche `verify`, isolierte Sichtprüfung der fertigen Bilder einschließlich aller vier Ränder/H-07 und bytegleicher serieller Editorimport. Entscheidungen d01 binden die tatsächlich angebotenen bg02-Manifeste und unveränderten Originalbytes. Bildrevisionen jeweils 1→2; Erdbeeres bisheriges 4:1-Bild wurde erst nach tatsächlicher Wahl durch das neue 3:1-Bild ersetzt.
+- **Produktionsabschluss:** [PR #690](https://github.com/venomenon328/picross/pull/690), Squash-Maincommit [`76a0ff53705e04320d73c48ccab7a94660f35905`](https://github.com/venomenon328/picross/commit/76a0ff53705e04320d73c48ccab7a94660f35905). `retire-production` entfernte genau **172** identische abgeschlossene Arbeitsdateien aus den fünf zugeordneten `hg-bestand-04`-Verzeichnissen. Vollständige Wiederholung: schreibfreier `no-op`. Keine manuellen Vorlöschungen und keine Ersatznotices. Vor Paketplanfortschreibung bleiben alle **1.673** übrigen Dateien bytegleich; zusätzlich ändert sich nur der aktuelle Paketplan. Die **1.672 sonstigen Dateien** wurden direkt bytegleich gegen den Mainanker geprüft.
+- **Prüfungen:** eigener tatsächlicher PR-Diff und GitHub-Testmerge für beide PRs, Auswahl-/Profil-/Bytebindungen, fünf leere Editor-Wiederholungspläne, geschützte Quellen-/Runtime-/Registrywerte, 21 kleine CI-Kerntests, Dokument-/Paket-/Metadatenprüfung. 48 Dateien am Integrationshead und 13 am abschließenden Mainstand wurden über feste GitHub-URLs bytegleich zurückgelesen, einschließlich aller fünf aktiven 2304×768-RGBA8-PNGs. [Integrations-PR-CI](https://github.com/venomenon328/picross/actions/runs/43948771699), [Integrations-Main-CI](https://github.com/venomenon328/picross/actions/runs/43949168265), [Cleanup-PR-CI](https://github.com/venomenon328/picross/actions/runs/43950561877) und [Cleanup-Main-CI](https://github.com/venomenon328/picross/actions/runs/43950837762): jeweils `docs`, `verify (source)` und `ci-required` erfolgreich, ohne Playerbau. Eigenprüfung ist kein unabhängiges Review.
+- **K01–K06 erfüllt. Fortschritt: 15 von 59 Zielen abgeschlossen, 44 offen.** Aktive Bilder, Reveals/Definitionen, IDs/Keys/Slots, Namen/Kategorien, Schwierigkeit, Added-Daten, tatsächliche Rechte/Notices und Arbeitsindex bleiben erhalten. Kandidaten und Produktionsnachweise bleiben in Git und über [die Auswahlvorlage](https://github.com/venomenon328/picross/issues/671#issuecomment-6927905528) erreichbar. Keine zusätzliche lokale Checkoutbereinigung und **keine nächste Gruppe gestartet**.
+
+## HG-BESTAND-03 · abgeschlossen · 16.11.2026
+
+Die tatsächliche Eigentümerwahl **Buntspecht S1/r02, Carabao – Kopf C1/r02, Cầu Vàng V2/r01, Chicken Adobo D2/r01 und Chocolate Hills H1/r01** ist vollständig integriert und nach §9 abgeschlossen.
+
+- **Integration:** [PR #687](https://github.com/venomenon328/picross/pull/687), Squash-Maincommit [`7590602fa5d52fe0bf8d96335c899e3cc514c202`](https://github.com/venomenon328/picross/commit/7590602fa5d52fe0bf8d96335c899e3cc514c202). Fünf explizite HP-W2-Ableitungen mit `picross-background-png2304x768-v1`, fünf erfolgreiche `verify`, isolierte Sichtprüfung der fertigen Bilder einschließlich H-07 und bytegleicher serieller Editorimport. Die Entscheidungen d01 binden die tatsächlich angebotenen bg02-Manifeste und unveränderten Originalbytes; alle fünf Bildrevisionen sind 1→2.
+- **Produktionsabschluss:** [PR #688](https://github.com/venomenon328/picross/pull/688), Squash-Maincommit [`cd272225bf973263baa7bca50ee298770afdb5b7`](https://github.com/venomenon328/picross/commit/cd272225bf973263baa7bca50ee298770afdb5b7). `retire-production` entfernte genau **183** identische abgeschlossene Dateien aus den fünf zugeordneten `hg-bestand-03`-Ordnern. Vollständige Wiederholung: schreibfreier `no-op`. Keine manuellen Vorlöschungen und keine Ersatznotices. Alle **1.668 übrigen Dateien** bleiben bytegleich; nur der eigene aktuelle Paketplan wird zusätzlich fortgeschrieben.
+- **Prüfungen:** eigener tatsächlicher PR-Diff und GitHub-Testmerge, Auswahl-/Profil-/Bytebindungen, fünf leere Editor-Wiederholungspläne, geschützte Quellen-/Runtime-/Registrywerte, 21 kleine CI-Kerntests, Dokument-/Paket-/Metadatenprüfung. 48 Dateien des Integrationsheads und 13 Dateien des abschließenden Mainstands wurden über feste GitHub-URLs bytegleich zurückgelesen, einschließlich aller fünf aktiven 2304×768-RGBA8-PNGs. [Integrations-PR-CI](https://github.com/venomenon328/picross/actions/runs/43938516395), [Integrations-Main-CI](https://github.com/venomenon328/picross/actions/runs/43938998441), [Cleanup-PR-CI](https://github.com/venomenon328/picross/actions/runs/43940097876) und [Cleanup-Main-CI](https://github.com/venomenon328/picross/actions/runs/43940381481): jeweils `docs`, `verify (source)` und `ci-required` erfolgreich, ohne Playerbau. Eigenprüfung wird nicht als unabhängiges Review bezeichnet.
+- **K01–K06 erfüllt. Fortschritt: 10 von 59 Zielen abgeschlossen, 49 offen.** Aktive Bilder, Reveal-/Definitionsdaten, IDs/Keys/Slots, Namen/Kategorien, Schwierigkeit, Added-Daten, tatsächliche Rechte/Notices und Arbeitsindex sind erhalten. Kandidaten und Nachweise bleiben in Git und über [die Auswahlvorlage](https://github.com/venomenon328/picross/issues/671#issuecomment-6926087620) erreichbar. Keine zusätzliche lokale Checkoutbereinigung und **keine nächste Gruppe gestartet**.
+
+## HG-BESTAND-02 · abgeschlossen · 16.11.2026
+
+Die tatsächliche Eigentümerwahl **Ankh A1/r01, Balut L3/r02, Banane N2/r01, Birne P1/r02 und Brandenburger Tor G3/r01** ist vollständig integriert und nach §9 abgeschlossen.
+
+- **Integration:** [PR #683](https://github.com/venomenon328/picross/pull/683), Squash-Maincommit [`cfe11d8063226e2f93d1d378b8196f46a1a27140`](https://github.com/venomenon328/picross/commit/cfe11d8063226e2f93d1d378b8196f46a1a27140). Explizite HP-W2-Ableitung mit `picross-background-png2304x768-v1`, fünfmal `verify`, isolierte Sichtprüfung und bytegleicher Editorimport. Gültige aktuelle Auswahl-/Ableitungsbindung D02; der dokumentierte D01-Zeilenendentransportfehler wurde vor dem Merge behoben, ohne Bildänderung oder neue menschliche Entscheidung.
+- **Produktionsabschluss:** [PR #685](https://github.com/venomenon328/picross/pull/685), Squash-Maincommit [`263679cc95497133a9ff0fa87f8ef8faf2259918`](https://github.com/venomenon328/picross/commit/263679cc95497133a9ff0fa87f8ef8faf2259918). `retire-production` entfernte genau **211** identische abgeschlossene Arbeitsdateien aus den fünf zugeordneten `hg-bestand-02`-Ordnern; Wiederholung schreibfreier `no-op`. Keine manuellen Vorlöschungen oder Ersatznotices. Alle **1.663 übrigen Dateien** bleiben einschließlich aktiver Bilder, Quellen, Runtime/Registry, Reveals, tatsächlicher Rechte/Notices, Rätseldaten und Arbeitsindex bytegleich; nur der aktuelle Paketplan wird fortgeschrieben.
+- **Prüfungen:** gezielte Eigenprüfung am tatsächlichen PR-Head und Testmerge, Original-/Entscheidungs-/PNG-Readback, fünf leere Editor-Wiederholungspläne, Schutzwerte-/Dateivergleich, kleiner CI-Kern und Dokument-/Paket-/Metadatenprüfung. [Integrations-PR-CI](https://github.com/venomenon328/picross/actions/runs/43924967544), [Integrations-Main-CI](https://github.com/venomenon328/picross/actions/runs/43925387754), [Cleanup-PR-CI](https://github.com/venomenon328/picross/actions/runs/43926377904) und [Cleanup-Main-CI](https://github.com/venomenon328/picross/actions/runs/43926731652) sind jeweils mit `docs`, `verify (source)` und `ci-required` erfolgreich, ohne Playerbau. Die ausdrücklich aufgehobene unabhängige ChatGPT-Reviewrunde wird nicht als ausgeführt behauptet.
+- **Fortschritt: 5 von 59 Zielen abgeschlossen, 54 offen.** Die fünf Checklistenpunkte sind erst nach bestätigtem Cleanup-Mainstand abgehakt. Originale, Kandidaten und Nachweise bleiben über ihre festen Gitcommits und [die Auswahlvorlage](https://github.com/venomenon328/picross/issues/671#issuecomment-6924365781) erreichbar. **Keine nächste Gruppe gestartet; Fortsetzung ausschließlich auf „nächste 5“.**
+
+## HG-BESTAND-01 · Produktionsabschluss erledigt · 16.11.2026
+
+Die drei gewählten Hintergründe **Kaktus K4/r01, Japanische Teekanne T5/r01 und Qualle Q4/r01** sind über [PR #680](https://github.com/venomenon328/picross/pull/680) integriert: [`917bdf6673f1ace3677b71431df06df47db92762`](https://github.com/venomenon328/picross/commit/917bdf6673f1ace3677b71431df06df47db92762). Die tatsächliche Auswahl, das Eigentümerreview und der ausdrückliche Mergeauftrag bleiben gültig.
+
+**K01–K06 des früheren Piloten sind abgeschlossen.** Nach dem separat geprüften und gemergten [Reader-Fix #681](https://github.com/venomenon328/picross/pull/681) auf [`13910ef883f6be3baa549bb95e2564fd4eb3708b`](https://github.com/venomenon328/picross/commit/13910ef883f6be3baa549bb95e2564fd4eb3708b) wurde der zuvor blockierte §9-Weg mit demselben Integrationsanker wiederaufgenommen. `retire-production` entfernte genau **193 abgeschlossene Arbeitsdateien** aus den drei zugeordneten `hg-bestand-01`-Verzeichnissen; Wiederholung: schreibfreier `no-op`. Keine Ersatznotices und keine manuellen Vorlöschungen.
+
+Der enge Cleanup ist nach eigener Diff-/Byteprüfung und grüner Pflicht-CI über [PR #682](https://github.com/venomenon328/picross/pull/682) per Squash auf main: [`a5e751322f68a9cb9686dc66f12c772e921baef7`](https://github.com/venomenon328/picross/commit/a5e751322f68a9cb9686dc66f12c772e921baef7). [PR-CI 43916950193](https://github.com/venomenon328/picross/actions/runs/43916950193) und [Main-CI 43917224145](https://github.com/venomenon328/picross/actions/runs/43917224145): jeweils `docs`, `verify (source)` und `ci-required` erfolgreich, ohne Playerbau.
+
+Zurückgelesenes main entspricht exakt dem geprüften Cleanup-Baum. **Alle 1.659 übrigen Dateien bleiben bytegleich**; insbesondere die drei aktiven 2304×768-PNGs einschließlich ihrer geprüften SHA-256-Werte, Hintergrundquellen, Revealbilder und tatsächlichen Rechte-/Notices, Rätseldaten, Registry, Runtime und Arbeitsindex. Alle 256 vorgefundenen lokalen Arbeitsdateien bleiben erhalten. Kandidaten und Produktionsnachweise bleiben in der Git-Historie erreichbar.
+
+Der frühere Abschlussblocker ist damit erledigt. Dieser Pilot gehört weiterhin **nicht** zur nachfolgenden Restkohorte von 59 Rätseln; deren Checkliste und Dauerauftrag bleiben unverändert offen. Keine nächste Gruppe gestartet.
+
+## Aktueller Serienauftrag · 16.11.2026 · Eigentümerentscheidung Fünfergruppen
+
+**Die feste Kohorte umfasst 59 Bestandsrätsel mit neu zu erstellenden individuellen 3:1-Hintergründen. Davon sind 20 abgeschlossen; 39 bleiben offen.** Kaktus, Japanische Teekanne und Qualle sind nach ausdrücklicher Eigentümerentscheidung erledigte, **aus diesem Restauftrag ausgeschlossene** Rätsel; sie werden weder erneut angeboten noch in die 59 eingerechnet. Auch die neun zuvor individuell bebilderten Rätsel gehören zur festen Kohorte; ihren aktuellen Abschlussstand führt die Checkliste. Je Ziel werden **drei neue, inhaltlich unterschiedliche Kandidaten** erzeugt. **Pro regulärem Durchlauf exakt fünf Rätsel (= 15 Kandidaten)** in der Reihenfolge der offenen Checkliste; keine Erweiterung des Produktionsassistenten. Nur der rechnerisch unvermeidliche Schlussrest von vier Zielen ist vor seiner Ausführung als Ausnahme kenntlich zu machen.
+
+Dieser aktuelle Body ersetzt die überholten 53er-/62er-Gruppenzahl-/Dreiergruppen-/4:1-/HG31-Warteangaben. Ältere Kommentare, Kandidaten und Freigaben bleiben als damaliger Stand erhalten, gelten aber nicht als neue Auswahl. **Dauerhafter Serienauftrag:** Jede Fünfergruppe endet zunächst bei der gesicherten Kandidatenvorlage. Sobald der Eigentümer **je Rätsel genau einen der gezeigten Kandidaten tatsächlich auswählt**, sind Integration, gezielte technische Eigenprüfung, Pflicht-CI, bedingter Squash-Merge nach `main`, enger Abschluss nach §9 und Fortschrittsaktualisierung **ohne zweiten Umsetzungs-/Review-/Mergeprompt ausdrücklich beauftragt**. Die separate unabhängige Reviewrunde mit ChatGPT und das bisherige zusätzliche unabhängige Reviewgate entfallen für die **ausschließlich bildbezogenen** Gruppen dieses Issues auf Eigentümerentscheid; Selbstprüfung wird nicht als unabhängiges Review bezeichnet. Kein ungeprüfter Merge: bei offenen Qualitäts-/Rechte-/CI-/Konfliktgates stoppen und Befunde melden. Repositoryschutz nicht umgehen. Nächste Fünfergruppe erst auf erneute Anforderung „nächste 5“.
+
+### Umfang und Zielzustand
+
+Historische Bestandsbasis ist [main@f540f539c88187281231c69e069bd4f7c9062050](https://github.com/venomenon328/picross/commit/f540f539c88187281231c69e069bd4f7c9062050): damals **62 sichtbare IDs: 53 `standard`, 9 `selected`, 0 `none`**. Nach Ausschluss der drei genannten Rätsel bleiben **59 feste Ziele**. Die neun damaligen individuellen Bestandsbilder sind 2304×576-PNGs im 4:1-Format; deren Neuproduktion bleibt ausdrücklich Teil des Auftrags, einschließlich Birne, Erdbeere, Fliegenpilz, Libelle, Marienkäfer, Radieschen, Schlüssel, Schnecke und Zitrone. Diese Bestandszahlen sind keine Behauptung über eine spätere, ungeprüfte Mainrevision.
+
+- Jedes Ziel erhält drei frisch gezeichnete **3:1-Einzelbilder**. Vorhandene 4:1-Bilder, alte Pilotangebote und deren alte 3:1-Rohoriginale erfüllen den Neuproduktionsauftrag nicht.
+- Die tatsächlich ausgewählte neue Fassung wird als **2304×768-PNG RGBA8** unter dem neuen Profil integriert. Bloßes Umformatieren, Aufhellen, Strecken oder Neuetikettieren alter Dateien ersetzt keine Neuproduktion.
+- Aktive Bestandsbilder bleiben bis zur ausgewählten und geprüften Ersetzung erhalten. Historische Originale, Auswahlbelege und Regeln ihrer Generation behalten ihre Bedeutung.
+- Das Ziel sind neue **rätselbezogene Hintergründe**. Rätsel-IDs, Keys, Slots, Raster, Revealbilder, Metadaten und Spielstände bleiben geschützt. Kategoriezeichnungen und sonstige UI-Grafiken gehören nicht zu dieser Bildserie.
+- Später neu integrierte Rätsel folgen ebenfalls den aktuellen 3:1-Regeln; sie erweitern diese feste Abschlusskohorte nicht automatisch.
+
+Quellen: [Inhaltsregistry](https://github.com/venomenon328/picross/blob/f540f539c88187281231c69e069bd4f7c9062050/content/registry.json), [Runtimekatalog](https://github.com/venomenon328/picross/blob/f540f539c88187281231c69e069bd4f7c9062050/game/data/registry.json), [aktuelle Hintergrundquellen](https://github.com/venomenon328/picross/tree/f540f539c88187281231c69e069bd4f7c9062050/content/backgrounds), [aktive Capability](https://github.com/venomenon328/picross/blob/f540f539c88187281231c69e069bd4f7c9062050/game/data/background-capability.json). Die Bestandsquellen stehen bereits auf Registry v5, Hintergrund v7 und Runtime v8. Eine vorgelagerte Quellenmigration ist nicht erforderlich.
+
+### Verbindliches Format und gestalterische Richtung
+
+**Format:** vollständige zusammenhängende transparente Einzelkomposition, tatsächliche PNG-Maße **Breite = 3 × Höhe**. Native Maße können variieren, zum Beispiel 2172×724. Keine Montage zweier Hälften, kein Seitenpadding, Stretch, Crop oder Motivverschieben zur Formatheilung. Bewusst gestalteter Freiraum ist Teil der Komposition. Die gemeinsame sichere Papierbreite und der untere mittige Anker bleiben erhalten.
+
+**Verbindlicher Randabschluss · Eigentümerentscheidung 16.11.2026:** Jeder gezeichnete Gegenstand und jeder zusammenhängende Szenenteil muss vollständig im Zeichenraum liegen oder an einer erreichten Bildkante **weich zeichnerisch in echte Transparenz auslaufen**. Harte Anschnitte etwa von Baumkronen, Stämmen, Gebäuden und Landschaftsformen oben, unten, links oder rechts sind nicht akzeptabel; offene/asymmetrische Kompositionen bleiben mit sauberem Auslauf möglich. Vor Vorlage jedes Kandidaten an Originalbytes nach Q-HG03/Q-HG04 prüfen, betroffene noch nicht abgenommene Kandidaten im bestehenden Korrekturbudget neu komponieren/korrigieren, neue Bildrevision zur tatsächlichen Wahl vorlegen. Keine bloßen Fade-Balken, Crop/Padding-Tricks oder zusätzliche feste Alpha-/Höhenquote. **H-07 ist eine harte Qualitätsschranke**, nicht durch `accepted_deviations`/ein positives Gesamturteil zu umgehen. Regeländerungen in [gemergtem Ersatz-PR #686](https://github.com/venomenon328/picross/pull/686) (ursprünglicher PR #684 wegen eines späteren Main-Konflikts ersetzt); historische bereits abgenommene/integrative Bildrevisionen nicht automatisch verändern.
+
+**Höhenverteilung – ausdrücklich unverbindliche Gestaltungshinweise:** Die größere vertikale Fläche ist Spielraum, kein Belegungsziel. Insbesondere in der horizontalen Bildmitte die volle Höhe nicht routinemäßig ausschöpfen; die Mitte darf eher niedrig und luftig bleiben. Auch links und rechts muss nicht die volle Höhe genutzt werden. Motivgerechte hohe Partien und eine hohe Mitte bleiben zulässig. Keine feste Höhenquote, keine verpflichtende U-Form und keine Ablehnung, Nacharbeit oder zusätzliche Ausnahmefreigabe allein aufgrund der Höhenverteilung.
+
+**Etwas hellerer Graphit:** Die neuen Bilder wirken insgesamt geringfügig heller und zurückhaltender, als würde ein minimal hellerer Bleistift verwendet. So konkurrieren sie weniger mit Raster, Hinweisen und UI. Feine Striche, natürliche Konturen und realistische Handschraffur bleiben erkennbar. Größere handschraffierte Objektfüllungen bleiben erlaubt. Keine neue Zahlenvorgabe für Helligkeit/Alpha und keine Änderung der Runtime-Deckkraft.
+
+Weiterhin gelten Kontext statt konkretem Rätselsubjekt/Lösungssilhouette/Motivname, echte Transparenz in freien Außen-/Zwischenräumen, keine eingebrannte UI, Papierkästen, Schrift oder Wasserzeichen sowie die datei- und revisionsgenauen Urteile Q-HG01–Q-HG04.
+
+## Technischer Stand und separates Regelpaket
+
+**HG31 ist integriert.** [PR #676](https://github.com/venomenon328/picross/pull/676) wurde nach main gemergt; der frühere technische Zwischenhalt ist beendet. [Der bestätigte Abschluss](https://github.com/venomenon328/picross/issues/675#issuecomment-6919304397) dokumentiert die tatsächlich bestandenen Nachweise und die vom Eigentümer aufgehobenen A01/A02-Gates. Nachweisverzicht wird nicht als bestandener Test umgedeutet und nicht als neue Sperre dieser Bildserie eingeführt.
+
+Für jede neue HP-W2-Ableitung ausdrücklich **`picross-background-png2304x768-v1`** wählen. Der vorhandene API-Default bleibt beim alten Profil; Weglassen der Profilauswahl ist deshalb keine sichere Abkürzung. Request, Entscheidung, Befund und `verify` müssen denselben Profilstand binden. Der Fertigimport erkennt die exakt validierten 2304×768-Bytes als `picross-prepared-background-png2304x768-v1`. Geschlossene Profilkörper, aktive Assetref-Felder und Runtime-Deckkraft bleiben unverändert.
+
+### HG-BESTAND-STIL · beauftragte Normänderung
+
+**Status: [PR #679](https://github.com/venomenon328/picross/pull/679) am 16.11.2026 per Squash in `main` gemergt**, Merge-Commit [`91869dad8db9f3b736facc0562bd5e7f0fb628c4`](https://github.com/venomenon328/picross/commit/91869dad8db9f3b736facc0562bd5e7f0fb628c4), geprüfter PR-Head `fedab938318998ae6d31c844c8cdad6e03bec0fd`. [Review R01](https://github.com/venomenon328/picross/pull/679#pullrequestreview-5922425480) dokumentiert die Mergefähigkeit. Dokumentprüfung, `git diff --check`, die 21 Tests des kleinen CI-Kerns, Snapshotaufnahme und Paketvalidierung sind bestanden und an den tatsächlichen Remote-Commit gebunden. Der [PR-Liefernachweis](https://github.com/venomenon328/picross/pull/679) bindet die Prüfungen an diesen Head. [Package CI 43893813328](https://github.com/venomenon328/picross/actions/runs/43893813328) ist ebenfalls erfolgreich: `docs`, `verify (source)` und `ci-required`; kein Playerbau. Ziel ist die konsistente Verankerung dieser Eigentümerentscheidung in Bildstil, Schritt 4, Qualitätsvertrag und Hintergrundvertrag sowie Projektprofil und aktueller Qualitätsrevisionsreferenz im PW-B-Vertrag.
+
+- Authoring bleibt **0.8.0 / Dokumentrevision 9**, mit unverändert acht Snapshotquellen. Der tatsächliche gemeinsame Quellcommit und die vollständigen Dateihashes unterscheiden den neuen Textstand.
+- Qualitätsvertrag wird **1.0 / Dokumentrevision 14**, Hintergrundvertrag **1.0 / Dokumentrevision 18**. Historische Snapshots und Urteile werden nicht neu versiegelt.
+- **CI-Plan:** eigener `.ci/package.json`, Paket `HG-BESTAND-STIL`, `modules=[]`, `evidence.mode=none`. Reiner Dokumentdiff, kleiner Quellen-/Plankern mit `docs` und `ci-required`, kein Playerbau.
+- **Gezielte Prüfung:** vollständiger Normdiff, Dokumentvalidator und vorhandener CI-Kern; neue Snapshotbindung am tatsächlichen Normcommit lesend prüfen. Keine neue Testfamilie.
+- **Umsetzung:** ChatGPT; **selbst umsetzbar: Ja**, da Dokumente, GitHub-Publikation und die nötigen eng begrenzten Prüfungen verfügbar sind. Für die anschließende normale Bildproduktion ist kein Entwicklungsmodellrouting nötig.
+- Der Regel-PR ist abgeschlossen, **nicht** aber dieses Serienissue. Für jede Gruppe den aktuellen Regelstand aus `main` und den verwendeten Quellcommit binden. Der historische Pilot HG-BESTAND-01 gehört nicht zur verbliebenen 59er-Restkohorte.
+
+## Abgrenzung des früheren Piloten HG-BESTAND-01
+Kaktus (`pz-a358a1bf1b994efcbebeb55abf825789`), Japanische Teekanne (`pz-51405ea1ad194507a60c9b6701d802f0`) und Qualle (`pz-20ecf7747bbf40828238ec26d1207172`) sind **nicht** Teil der jetzt zu bearbeitenden 59 Ziele. Der Eigentümer bewertet sie als erledigt; die bis dahin entstandenen Kandidaten-/Auswahl-/Integrationsnachweise bleiben unter [PR #680](https://github.com/venomenon328/picross/pull/680), [content/hg-bestand-01](https://github.com/venomenon328/picross/tree/content/hg-bestand-01) und früheren Issue-Kommentaren erhalten. **PR #680 war bei dieser Issue-Änderung noch als Draft offen**; daraus wird weder ein erfolgter Mainmerge noch ein neuer Auftrag für die Restserie abgeleitet. Sein eigener Abschlussstatus ist unabhängig zu prüfen.
+
+### Arbeitsbindung und Sicherung je neuer Fünfergruppe
+Je bestehender Rätsel-ID eigene Hintergrund-Zusatzarbeit unter `content/authoring/<bestehende-ID>/hg-bestand-<Gruppen-Nr>/` führen (für neue Gruppen fortlaufend ab `hg-bestand-02`), keine neue ID und kein neuer fünfstufiger Produktionsrecord. Der jeweils zugeordnete Inhaltsbranch wird gesichert und bei Wiederaufnahme abgeglichen; fremde oder noch offene Arbeit bleibt erhalten. `context.reveal` bindet unveränderte aktuell integrierte Revealbytes, die bestehende Rätselabnahme ersetzt keine neue Hintergrundwahl; historische Akteure/Entscheidungen nicht erfinden. Die aktuelle Revealreferenz tatsächlich öffnen.
+
+HP-W2 und Editorplan in eigenen getrennten Arbeitsverzeichnissen außerhalb des Inhaltscheckouts ausführen. Tatsächliche Originale, Kandidaten-/Manifestrevisionen, Urteile, Eigentümerwahl und Ableitungen bytegleich sichern; Angebote committen/pushen und unveränderliche Links auf **je drei einzeln groß öffnende PNGs pro Rätsel** prüfen. Kein Schema-/ZIP-Zwang. Zugeordnete Zusatzarbeit nach bestätigtem Mainstand mit `--completed-work` nach §9 abschließen; neue/offene/fremde Daten schützen.
+
+## Verbindlicher Ablauf je Gruppe
+
+1. **Kontext herstellen.** Aktuelle ID, Reveal und Kategorie laden; Reveal öffnen und Kontext, geschützte Merkmale und Ausschlüsse knapp festhalten. Ziele, offene Arbeit und tatsächlich verwendeten Regelcommit frisch prüfen.
+2. **Drei neue Kandidaten je Motiv.** Inhaltlich unterschiedliche echte ImageGen-Kontextzeichnungen nach Bildstil, Schritt 4 und Q-HG01–Q-HG04 erzeugen. Drei Auflösungen derselben Zeichnung sind kein Dreiersatz.
+3. **Prüfen und nötigenfalls korrigieren.** Tatsächliches 3:1, Graphitwirkung, Komposition, Kontextgrenze und Transparenz an den gespeicherten Dateien prüfen. Vier Q-HG-Urteile je Datei/Revision führen. Höhenhinweise bleiben weich. Formatfehler gemäß Schritt 4 §6.3.1 im laufenden Korrekturauftrag/-budget ohne zusätzliche Ausführungserlaubnis beheben; Rohoriginal erhalten.
+4. **Zur echten Wahl vorlegen und warten.** Für **fünf** Ziele je drei isolierte Einzelbilder (= 15) mit stabiler Kennung, Revision und knapper Beschreibung zustellen. Hier bis zur echten Auswahl durch den Eigentümer enden. Kreative Korrekturen betreffen die gezeigte Revision; keine automatische Wahl oder `none` aus Schweigen. Ein ausdrücklicher Verzicht wird als Eigentümerausnahme dokumentiert.
+5. **Gewählte Datei ableiten.** Nur das ausgewählte Original mit HP-W2 `describe/derive/verify` und ausdrücklich gewähltem `picross-background-png2304x768-v1` zu **2304×768 RGBA8** ableiten. Vollständige Leinwand proportional erhalten, Maße, Breitenwirkung, Striche und Alpha kontrollieren. Deterministische Größenableitung braucht keine zweite kreative Wahl; materielle kreative Änderungen brauchen die passende neue Entscheidung.
+6. **KI-Integration ohne erneuten Auftrag nach Wahl.** Sobald die tatsächliche Wahl für alle fünf Ziele dokumentiert ist, aktuellen `picross-editor-request-v2` und `editor_cli plan/apply` verwenden. Raster, Reveal und Metadaten im Request ungewählt lassen. Der aktuelle Writer übernimmt die fertigen Bytes und aktualisiert Bildquelle/Registry/Runtime. Vollständig vorbereitete autorisierte Jobs können alternativ über den bestehenden BA-B-`background_adopt`-Weg laufen; keine historischen Export-/Adoptionseingänge reaktivieren.
+7. **Gitabschluss, Eigenprüfung und direkter bedingter Merge.** Einen Integrations-PR für die Fünfergruppe führen; aktuellen Diff, ausgewählte Originalbytes/Ableitungen, Readback, Bildzuordnung und unveränderte Nutzdaten eigenständig prüfen. Pflicht-CI am aktuellen Head und konfliktfreien Merge prüfen. Bei bestandenen Gates **ohne gesonderten ChatGPT-/unabhängigen Reviewauftrag oder erneute Freigabefrage per Squash nach `main` mergen**; bei Blockern nicht mergen und diese benennen. Die Eigentümerauswahl plus dieser Serienauftrag bilden die ausdrückliche bedingte Integrations- und Mergefreigabe **nur für reine Bildinhaltsänderungen innerhalb dieser Kohorte**.
+8. **Nach bestätigtem Mainstand abschließen.** Aktive Bilder und aktuelle Nutzungsangaben erhalten. Gesicherte Zusatzarbeit über `retire-production` mit den tatsächlich beteiligten `--puzzle-id`-Werten und je `--completed-work <ID> <Arbeitsordner-der-Gruppe>` abschließen. Der tatsächliche Integrationscommit muss die Arbeitsdateien enthalten. Nur identische eigene abgeschlossene Arbeit entfernen; neue/offene/fremde Daten schützen. Den bestehenden engen Abschluss nach Schritt 5 §9 einschließlich dessen eigenem Prüf-/Mergeweg ohne zusätzlichen Routineprompt anwenden. Erst danach die fünf Checklistenpunkte abhaken und auf „nächste 5“ warten.
+
+## Überprüfbare Akzeptanz je Fünfergruppe
+
+- **K01 – feste Ziele:** Genau die nächsten fünf offenen Rätsel der 59er-Checkliste mit ihren bestehenden IDs (nur am Serienende rechnerisch vier); Vorher-/Nachher-Zuordnung belegt. Die drei ausgeschlossenen Piloträtsel und andere Inhalte bleiben unberührt.
+- **K02 – neue vollständige Auswahl:** Je Motiv drei frisch erzeugte, inhaltlich verschiedene und tatsächlich erreichbare 3:1-Einzelbilder nach aktuellem Stil. PNG-Maße und Q-HG01–Q-HG04 je Datei/Revision belegt. Die unverbindlichen Höhenhinweise erzeugen keine starre Ablehnungsquote. Alte Angebote/Urteile zählen nicht als Lieferung des neuen Kandidatensatzes.
+- **K03 – echte Entscheidungen:** Die Auswahl bindet die tatsächlich gezeigte neue Datei/Revision. Keine erfundenen Freigaben, kein vorzeitiger Import, keine Übertragung alter Wahl. Unveränderte Entscheidungen nicht nochmals verlangen.
+- **K04 – fertiges Ergebnis:** Je ausgewähltem Motiv das geprüfte 2304×768-RGBA8-PNG aus der ausdrücklich neuen HP-W2-Profilableitung. Sichturteile und tatsächliche Rechteklärung bleiben von Dateidiagnose getrennt.
+- **K05 – gezielte Übernahme:** Writer importiert exakt diese Bytes; Bildquelle, Registry und Runtime zeigen dieselbe Zuordnung. Bild-/Präferenz- und Quellenrevision passend fortschreiben. Spielstandrelevante Rätselrevision, Definition/Raster, Reveal, Hinweise/Palette, Modus, Schwierigkeit, Name/Kategorie, IDs/Slots und Hinzugefügt-Daten bleiben unverändert.
+- **K06 – abgeschlossene Lieferung:** Tatsächliche Mainintegration nach eigenständiger Diff-/Readbackprüfung, bestandenen Pflichtchecks und bedingter Eigentümer-Mergefreigabe sowie enger §9-Abschluss belegt. „Kandidaten vorhanden“, „gewählt“, „lokal übernommen“ und „in main/abgeschlossen“ bleiben unterscheidbar.
+
+Jeder erste Gruppenschritt liefert K01/K02 und die Grundlage für K03. Nach tatsächlicher Auswahl werden K03–K06 **ohne gesonderten Folgeprompt** erledigt; danach erst auf ausdrückliche Aufforderung die nächste Gruppe beginnen.
+
+## Prüfplan und Lebenszyklus der Bildserie
+
+**Bildproduktion und Integration:** einmalige bildbezogene Prüfungen an tatsächlichen Referenz-/Kandidatenbytes, Q-HG-Urteile, PNG-Maße/Alpha, Herkunft/Nutzungsgrundlage, Auswahlbindung, HP-W2-`derive/verify`, gezielter Readback des Editorimports und Diff der geschützten Bestandswerte. Unveränderte Logik löst keine Solver-/Proof-/Ratingwiederholung aus.
+
+**Je Inhalts-/Integrations-/Abschluss-PR:** eigener aktueller `.ci/package.json` mit passender Paketkennung, begründet `modules=[]`, `evidence.mode=none`; Quellen-/Plankern `docs` und `ci-required`, buildfreie reine Inhaltsänderung. Kein zusätzlicher Werkzeug-/Produktions-/Native-Volltest allein für die Bilder, kein Browserlauf und kein neues Testsnapshot. Etwaige erforderliche Werkzeugentwicklung separat vorbereiten; die Inhaltsausnahme deckt keinen Codediff.
+
+**Vor Integrationsmerge:** Für diese ausdrücklich abgegrenzten **reinen Hintergrund-Inhaltsgruppen** ist auf Eigentümerentscheidung vom 16.11.2026 die zuvor für #671 verlangte separate unabhängige Reviewrunde **kein Vor-Merge-Gate mehr**. Die ausführende KI führt stattdessen ihr eigenes (nicht unabhängiges) Review am tatsächlichen PR-Head anhand Diff, Eigentümerwahl, Originalen/Ableitungen, Import-/Readback und geschützten Bestandswerten durch. Originalbytes revisionsgenau verlinken und abrufen. Pflicht-CI, Rechte-/Bildgates, Konfliktfreiheit und etwaige tatsächliche Repositoryschutzregeln bleiben verbindlich. Keine zusätzliche persönliche Buch-/Spielabnahme je Rätsel. Fehlender Bildzugriff bleibt am betroffenen Sichtgate offen; Metadaten ersetzen keine Bildöffnung.
+
+Nach bestätigter Integration nur die dafür gebundene entbehrliche Zusatzarbeit gemäß §9 entfernen. Aktive Spielbilder und benötigte aktuelle Nutzungsinformationen bleiben Produktdaten. Keine neue Dauergalerie, keine zusätzliche lokale Checkoutbereinigung ohne Auftrag.
+
+## Serienfolge und Fortschritt
+
+**Aktueller Fortschritt: 20/59 abgeschlossen, 39 offen.** HG-BESTAND-02 bis HG-BESTAND-05 sind einschließlich §9 erledigt. Es verbleiben sieben reguläre Fünfergruppen und der unvermeidliche Schlussrest mit vier Zielen. Keine nächste Gruppe begonnen; Fortsetzung ausschließlich auf erneute Eigentümeraufforderung „nächste 5“.
+
+**Gesamtplanung der ursprünglichen Kohorte: 59 Ziele × 3 Erstkandidaten = 177 neue Erstkandidaten**, verteilt auf **11 reguläre Fünfergruppen mit je 15 Kandidaten und ein unvermeidlicher Abschlussrest mit vier Rätseln (= 12 Kandidaten)**. Bei ausdrücklich strikt fünf Zielen je Durchlauf ist die letzte Restgruppe rechnerisch nicht ohne Erweiterung der Kohorte möglich; daher vor dem letzten Durchlauf den Viererrest kenntlich machen, aber **kein zusätzliches Rätsel eigenmächtig aufnehmen**. Neue Fünfergruppen der Reihe nach und nur auf Eigentümeraufforderung beginnen, nicht alle parallel.
+
+Kästchen erst nach tatsächlicher Mainintegration und zugehörigem Abschluss der **neuen** Fassung markieren. Paket-, Auswahl- und PR-Zwischenstände separat belegen. Gesamtabschluss erst nach allen 59 verbliebenen Zielen; ausdrücklich akzeptierte Einzelverzichte oder Scopeänderungen mit tatsächlicher Eigentümerentscheidung festhalten. Norm- und Teilpaket-PRs schließen dieses Serienissue nicht automatisch.
+
+<details>
+<summary>Feste Kohorte: 59 Rätsel · 20 abgeschlossen, 39 offen (ohne Kaktus, Japanische Teekanne, Qualle)</summary>
+
+- [x] **Ankh** — `pz-b6f94e528b48444985d0561cb48a5bc7`
+- [x] **Balut** — `pz-0e0cbecdf3204063b6d008ab7ce92141`
+- [x] **Banane** — `pz-49a9e539419b48119e8f5f506fcf6dc7`
+- [x] **Birne** — `pz-birne` — vorhandenen 4:1-Hintergrund neu erstellen
+- [x] **Brandenburger Tor** — `pz-2a8481f61e6443bda174bd3da67c`
+- [x] **Buntspecht** — `pz-9a79befc7a834e2d9d5896a477328962`
+- [x] **Carabao – Kopf** — `pz-b5e2302bf71445c09caac76bbc2a7075`
+- [x] **Cầu Vàng** — `pz-86d1d588a88a46e6ac1285f0097afbca`
+- [x] **Chicken Adobo** — `pz-dbcf38395b9f4dda86c8b3d6cdae1f2c`
+- [x] **Chocolate Hills** — `pz-5f5a379b5abb4c979ee23f807aec9418`
+- [x] **Chupacabra** — `pz-1b7bf32b1fa140918c0692c90d998752`
+- [x] **Drachenfrucht** — `pz-00f37200bcee4d548e2c910ce551d077`
+- [x] **Efeutute** — `pz-8ea7f3dacdcc428a9fcff7a735bc`
+- [x] **Erbse** — `pz-7ec3dcd94bf84e698691ef4b5839`
+- [x] **Erdbeere** — `pz-erdbeere` — vorhandenen 4:1-Hintergrund neu erstellen
+- [x] **Fledermaus** — `pz-b19a0ccbe3164e1c8fd97267e57dd454`
+- [x] **Fliegenpilz** — `pz-fliegenpilz` — vorhandenen 4:1-Hintergrund neu erstellen
+- [x] **Game Boy** — `pz-9be288b9b5104da88fc8464184647ae7`
+- [x] **Gecko** — `pz-5ad1e06e19ab475baebc582d4999daa5`
+- [x] **Giraffe** — `pz-dbbebc72556d4f0c9a37ab69275480e9`
+- [ ] **Glas Bier mit Schaumkrone** — `pz-ad7164c2302a42e5953f6779a1c7`
+- [ ] **Hamburger** — `pz-b3368aea28ac4a11bf09e0dc9c48`
+- [ ] **Ho Chi Minh** — `pz-023b50b44d1c4698a6e17e65b6ea4337`
+- [ ] **Huhn** — `pz-419437f56aba4603bf7a84bf0b624ba5`
+- [ ] **Ingwer** — `pz-985d36c1634644fbb2c8a0bf7de3aa9f`
+- [ ] **Jinja** — `pz-d6cb06cb41854b1da84f0ba2f043aa14`
+- [ ] **José Rizal** — `pz-b180c25084a34b019f35ad2244f03c24`
+- [ ] **Klauenhammer** — `pz-22969714393847e697e8169a8b688efd`
+- [ ] **Knoblauch** — `pz-3a744ae1b7cb4d38b0ac29d030ef`
+- [ ] **Koboldmaki** — `pz-72eb9b188896440c8a9a833e803835ec`
+- [ ] **Kolibri** — `pz-25d245061b0c49c190788de8e5d0e45b`
+- [ ] **Kölner Dom** — `pz-e45e2e0d67a34f6aa8368f477454`
+- [ ] **Lemmy Kilmister** — `pz-d2d41fd0fc604172a7586f7f41c55320`
+- [ ] **Libelle** — `pz-libelle` — vorhandenen 4:1-Hintergrund neu erstellen
+- [ ] **Marie Curie** — `pz-d829eb9b83e94f9c9357ee5ab9c9e359`
+- [ ] **Marienkäfer** — `pz-marienkaefer` — vorhandenen 4:1-Hintergrund neu erstellen
+- [ ] **Om** — `pz-87bf2975c82540a399a3d0c7fa180a25`
+- [ ] **Pentagramm** — `pz-1e9cdac1f83a49d5982f93ded09e58de`
+- [ ] **Petronas Towers** — `pz-9d08697a30c749258b742ac979de9def`
+- [ ] **Pfirsich** — `pz-72561c715dd741f9b0082c7ad24802c1`
+- [ ] **Radieschen** — `pz-radieschen` — vorhandenen 4:1-Hintergrund neu erstellen
+- [ ] **Regenbogen** — `pz-dad34b8331914c909e8ded79491dac94`
+- [ ] **Regenwurm** — `pz-eedd1fe72af54714908d5b5aff34`
+- [ ] **Rote Nelke** — `pz-d7e68d1138a3448c8b2a4b07e8632350`
+- [ ] **Schachspringer** — `pz-82758295d5d34284bbae2716f64f`
+- [ ] **Schlüssel** — `pz-schluessel` — vorhandenen 4:1-Hintergrund neu erstellen
+- [ ] **Schnecke** — `pz-schnecke` — vorhandenen 4:1-Hintergrund neu erstellen
+- [ ] **Seepferdchen** — `pz-7635c2e042e349fc90ad9ae55681de0f`
+- [ ] **SEGA Game Gear** — `pz-9f7c59054ebb4f3f861e2bce3034320e`
+- [ ] **Silbermöwe** — `pz-bd2783fcd3eb428c933d15259961cfcd`
+- [ ] **Sonnenblume** — `pz-a13368590b744814915eb722f5b2c5f2`
+- [ ] **Stirnlappenbasilisk** — `pz-c71563f1b8c940de998afdd62f09`
+- [ ] **Tomate** — `pz-e2e5092925ce4821a9219be7816b5931`
+- [ ] **Torii** — `pz-f68e79ef419a4322b68d06817b39330d`
+- [ ] **Warnemünde** — `pz-8ecddf77e80c4543bf4ec714fe3d`
+- [ ] **Webcam** — `pz-6d980b0285604e22b8ecfce205aa008b`
+- [ ] **Windspiel** — `pz-20219e14dbe242689b9ef06297828f34`
+- [ ] **Yin-Yang** — `pz-3e97c042f0bf474e8608a84ea034c246`
+- [ ] **Zitrone** — `pz-zitrone` — vorhandenen 4:1-Hintergrund neu erstellen
+
+</details>
+
+## Wiederverwendbarer Produktionsauftrag für die gesamte Restserie
+
+```text
+Repository venomenon328/picross · main · Issue #671.
+Aktuelle AGENTS.md und Pflichtquellen je Durchlauf tatsächlich lesen. Bearbeite
+auf „nächste 5“ (beim ersten Aufruf sofort) die nächsten fünf noch offenen IDs
+der 59er-Checkliste in Listenreihenfolge. Kaktus, Japanische Teekanne und Qualle
+sind ausgeschlossen. Erzeuge je Ziel drei unterschiedliche neue 3:1-Hintergründe,
+prüfe/sichere sie und liefere 15 einzeln öffnende Bildlinks mit Kennungen.
+Dort bis zu meiner tatsächlichen Auswahl stoppen.
+
+Sobald ich für alle fünf Rätsel je einen Kandidaten ausgewählt habe, integriere
+die Auswahl gemäß Issue ohne neuen Arbeitsauftrag; führe Eigenprüfung, Readback,
+verbindliche Checks und PR durch. Bei erfüllten Gates direkt Squash-Merge nach
+main, dann §9-Abschluss einschließlich zulässigem Cleanup-Merge und Fortschritt
+im Issue erledigen. Kein separater ChatGPT-/unabhängiger Reviewauftrag und keine
+erneute Mergeabfrage; Blocker statt Scheinfreigaben melden.
+
+Erst auf erneutes „nächste 5“ weiterarbeiten. Den rechnerischen Schlussrest
+von vier anzeigen und keine fünfte ID ohne ausdrückliche Scopeänderung ergänzen.
+```
+
+## Maßgebliche Quellen
+
+- [AGENTS](https://github.com/venomenon328/picross/blob/f540f539c88187281231c69e069bd4f7c9062050/AGENTS.md), [Workflow](https://github.com/venomenon328/picross/blob/f540f539c88187281231c69e069bd4f7c9062050/docs/dev-rules/WORKFLOW.md), [Projektprofil](https://github.com/venomenon328/picross/blob/f540f539c88187281231c69e069bd4f7c9062050/docs/PROJECT_PROFILE.md), [CI v2](https://github.com/venomenon328/picross/blob/f540f539c88187281231c69e069bd4f7c9062050/docs/CI_WORKFLOW_V2.md).
+- [Authoringkern](https://github.com/venomenon328/picross/blob/f540f539c88187281231c69e069bd4f7c9062050/docs/ai-workflows/PUZZLE_AUTHORING.md), [Schritt 4](https://github.com/venomenon328/picross/blob/f540f539c88187281231c69e069bd4f7c9062050/docs/ai-workflows/PUZZLE_AUTHORING_STEP_4.md), [Bildstil](https://github.com/venomenon328/picross/blob/f540f539c88187281231c69e069bd4f7c9062050/docs/PUZZLE_IMAGE_STYLE.md), [Qualität §2/§9](https://github.com/venomenon328/picross/blob/f540f539c88187281231c69e069bd4f7c9062050/docs/PUZZLE_QUALITY.md), [Hintergrund / HG31](https://github.com/venomenon328/picross/blob/f540f539c88187281231c69e069bd4f7c9062050/docs/PUZZLE_BACKGROUNDS.md#hg31--zwei-geschlossene-bildprofile).
+- [PE §13](https://github.com/venomenon328/picross/blob/f540f539c88187281231c69e069bd4f7c9062050/docs/PUZZLE_EDITOR.md#13-pe-edit2-gezielte-pflege-statt-vollbestandsprüfung), [RI](https://github.com/venomenon328/picross/blob/f540f539c88187281231c69e069bd4f7c9062050/docs/PUZZLE_INTEGRATION.md), [Schritt 5 §9](https://github.com/venomenon328/picross/blob/f540f539c88187281231c69e069bd4f7c9062050/docs/ai-workflows/PUZZLE_AUTHORING_STEP_5.md#9-produktionsabschluss-und-bereinigung), [Arbeitsablage](https://github.com/venomenon328/picross/blob/f540f539c88187281231c69e069bd4f7c9062050/docs/dev-rules/WORKSPACE.md), [CI-/Originalzugang](https://github.com/venomenon328/picross/blob/f540f539c88187281231c69e069bd4f7c9062050/docs/dev-rules/CI_CONTRACT.md).
+
+Die Links dokumentieren die geprüfte technische Basis; den neuen Normstand liefert das oben zugeordnete Regelpaket. Vor Ausführung aktuelle Regeln und Zielquellen gemeinsam vom tatsächlichen Quellcommit lesen. Normale Bildproduktion benötigt weder Entwicklungsmodell-/Reasoningempfehlung noch Entwicklungs-HANDOFF-JSON.
