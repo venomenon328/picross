@@ -1,0 +1,4 @@
+author: OpenAI ImageGen
+changes: Wellenzüge in mehreren niedrigen Reihen durch die breite Mitte, unterbrochene Spiegelungen am Bambus und konzentrische Wellen um die Steine. Das neue native PNG ist unverändert gespeichert. Proportionale Vorbereitung als 2304 × 768 RGBA8 im HG31-Profil picross-background-png2304x768-v1.
+source: Issue #671, HG-BESTAND-14, ImageGen. Bildreferenz 00dd14f7cfdccf5c4debf07efe484205279367ae:content/authoring/pz-3e97c042f0bf474e8608a84ea034c246/current/background-y1-r01.png (SHA-256 b23a07b961061fe147a8401df1ce3dcb90c4bb7949f22bd02ec6720e2187423d).
+usage_basis: Neu gezeichnet im Projektauftrag für picross aus einem bereits im Projekt erzeugten Referenzbild.
