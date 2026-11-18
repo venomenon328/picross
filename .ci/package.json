@@ -5,7 +5,7 @@
   "modules": [
     "tools"
   ],
-  "purpose": "Begrenzte Publisherkompatibilität für die 26 gebundenen Altreleases. Tools prüft Autorität, Tagbindung und vorhandene Appabläufe.",
+  "purpose": "Begrenzte Publisherkompatibilität für die 26 gebundenen Altreleases. Tools prüft Autorität, Tagbindung und vorhandene Appabläufe. Zwei historische Git-Leser verwenden die identischen Originalbäume.",
   "omitted": "Kandidat, Refvergleich, Restore, Transportclones und Originalreleaseprüfung laufen einmalig isoliert. Keine Änderung an Solver, nativer Eingabe oder Webbetrieb.",
   "test_changes": [
     {

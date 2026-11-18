@@ -12,10 +12,11 @@ from pathlib import Path
 import p1_preflight as toolchain
 
 BASE = "ec99954268f1ad959d9ea779dbbd9e28edf7d8fa"
+BASE_TREE = "92b64b1bb484059fdfb69da4c9e13d9cd82cb83a"  # Immutable inputs for that original baseline.
 
 
 def before_project(root: Path, workspace: Path) -> Path:
-    archive = subprocess.run(["git", "archive", BASE, "prototypes/p1"], cwd=root,
+    archive = subprocess.run(["git", "archive", BASE_TREE, "prototypes/p1"], cwd=root,
                              capture_output=True, check=True).stdout
     destination = workspace / "zs1-before"
     with tarfile.open(fileobj=io.BytesIO(archive)) as bundle:
