@@ -25,6 +25,89 @@ REPOSITORY_ID = 1381196633
 MANIFEST = 'manifest.json'
 PREFIX = '/repos/' + REPOSITORY
 
+# Published release ID and SHA-256 of its original manifest -> tree-identical source.
+# Frozen REPO-SLIM-A transition, never consulted for a draft or a new publication.
+MIGRATED_RELEASE_TAGS = {
+    # pw-v0.1.23
+    (450092258, 'a8565cf78cd45369a3d5264456b5b0af89553a15e0b955ff507c4b2d3e493ea7'):
+        '00371996be76e525df8dfa7c93304d6c23273a94',
+    # pe-v0.2.3
+    (450092461, '9f1303e218a92f44b53f04ae30b4f28e34b76fd821fa356fc1ae6bfb49f97817'):
+        '00371996be76e525df8dfa7c93304d6c23273a94',
+    # pw-v0.1.22
+    (448846180, '566c8d969a4aefbcc2fceeb3f96546ca914b7636c86c0b6bc81a865a3a5a7e49'):
+        'a5d0e56b2628a12fcc6e3591f5f158db2bd427a5',
+    # pw-v0.1.21
+    (448598655, '78590f8208f8444cd4a431bcc7cb88f6809ba17a0ab7e2b8c55efa1fb918fc55'):
+        'd8c7009d79cd2521a37bfe9645916560f5f0ce05',
+    # pw-v0.1.20
+    (447829175, '46a7ed660c4acf43468a56852efbfb4c84349c89e621f4f09b1d2caa039cc98f'):
+        '761ca50ccf22f297329e8f1950cadae3d3542e0a',
+    # pe-v0.2.2
+    (448599104, '4bad747dcda7dcf5b0c0cf3fc238466a9726fb7becc3c31a0ff4be68175d4757'):
+        'd8c7009d79cd2521a37bfe9645916560f5f0ce05',
+    # pe-v0.2.1
+    (448454776, '742a9d1c6cbe5ec20656b1ae88ca3796a7f3b0fc851d11dc0b39e5f288f177f9'):
+        '6dbd58352c0db6713997a68fbae2f57d162fe6d3',
+    # pw-v0.1.19
+    (447760701, '981adc440ac80487c0a4a5e151bc3260cc00b25552d6a5b97a9588736d109f21'):
+        'a210423eedab26890925873bfe971ef32d2b9fda',
+    # pw-v0.1.18
+    (447683712, '0c2a4d2795b95fb56eaad9e2f676e086f916b62c8e3b29efdde8e5a536bb8bfe'):
+        '37f5eeb105ff38f05d038c6ac9a6262e5cd06917',
+    # pw-v0.1.17
+    (447333168, 'c63fe5ba76999eaf5872ed801b90a86773a87b20054f731d5e35c00372d68d2e'):
+        '794856ede73bfaedeefd9b3f20c76c52bd271b3e',
+    # pw-v0.1.16
+    (447294688, '8811f888b872cbff6aefe555b60b20926afc66b0e4a99e0ee709903d5bb82a12'):
+        'fe2afcca3e66e5a42d2f78420690a4a22c64ea4f',
+    # pw-v0.1.15
+    (446414366, '9674647f56a304068ca88ba3dd172ff63204cc7438c6f7a43b93a599d6767a04'):
+        '0d2ea7a012246b2c0861e985b16c91d9a7f48b34',
+    # pw-v0.1.14
+    (446207747, 'c7d0bf05b738304743dde05abd37ac5d1192b8919caa68496c55728e420cb868'):
+        '2b1faff4f9ad8fd03cd7b26681e26a4509543f85',
+    # pw-v0.1.13
+    (446069948, 'b03f7c42b11e831ae8198d4d1cc634bef401268db3cbb6687aec3d6c908ecfe5'):
+        '0c2a194493c69de7045d0b5b01844f8e99e167c2',
+    # pw-v0.1.12
+    (446002618, 'a06ea9edf4bab5d0d90ca3365e287f3fcf78d146be216132a9e10fc0c44e2b37'):
+        'd625c5aa3afee61d0e296bb29371678bb430b57f',
+    # pw-v0.1.11
+    (445924596, '027d10aea315e60bde6800a0f7abbfe7b0dce6786ce88d8b2d8600ec1360434c'):
+        'd015bc0e694832d90c6a2232ff1a782c24bd69da',
+    # pw-v0.1.10
+    (445731468, 'f0c7f4a6367ab1c54b76705285a7cb5a315761f5c3d34b4c77c4e1447848b497'):
+        '52dea4dae83a968f0e43243c31d1562b25986449',
+    # pw-v0.1.9
+    (445660244, '3660a390f66f871d3fe05eadbb43679e1819933bc8252625bafcee8caf1fc3d0'):
+        '71f63f906837aee5880f6001f4bc9d585f964794',
+    # pw-v0.1.8
+    (445621888, '2a0c4e4411ba8934d89a0187b406e197902249b7be976c1962799db57d497049'):
+        '694a894072e66f17bf7ea93e80edd3fdd8c9f46f',
+    # pw-v0.1.7
+    (445588978, 'bba409894fef07fc415177fa060766da4b36467b24626f97c4a46df952a1ba0d'):
+        '26a0c5fa53fe9c90f8cebc2b0a672676eb0d70db',
+    # pw-v0.1.6
+    (445565018, 'aacc8a8752fb1c806da146ee3cf9bf3d88f0b8d2fcef8c7e4f500ed4cf565323'):
+        'c9a97a7b5d0491195001e32d607eed0f694ae749',
+    # pw-v0.1.5
+    (445434781, '7565d876ed43a7ba9d00654e7d93678c76a8397a6ca2248a25c91d2aa46af2ea'):
+        'f186c94b36475fd886d069923f81c79d54edbca7',
+    # pw-v0.1.4
+    (445343199, '8b60e3c8beb2259eb48da3aafc41481e2850288c0f442e38d5eafa33e76a3991'):
+        'e462c6fc3e5841c621540f43dcfc8762f2bba3d0',
+    # pw-v0.1.3
+    (444653544, 'f4209df64ab24be18f3642a26b9f2ca1875af829c52ac111c7e87ec29af1adfd'):
+        '0be7ee188e8ef1d28d03ed80476cbc237d87ba8e',
+    # pw-v0.1.2
+    (444471369, '8f64a83b79e6b4bcdcad430a5128dcf7c7f7af6a6eb3e689f4670aac60f517b3'):
+        '3d97baecb32dd7da451aec785d32c2086627cd1a',
+    # pw-v0.1.1
+    (444365769, '522941cc8d1e4beadcf482ebc14e1f971f0e746110e0371a261a26738cc5e6a9'):
+        '3579c9004770fd055c8a4ff62492570e405f121c',
+}
+
 
 class SafeRedirect(urllib.request.HTTPRedirectHandler):
     def redirect_request(self, req, fp, code, msg, headers, newurl):
@@ -124,7 +207,10 @@ def release_files(api, entry, *, app=PW):
     signed = manifest['format'] == app.signed
     require(set(by_name) == set(manifest['assets']) | {MANIFEST} |
             ({update_verifier.SIGNATURE} if signed else set()), 'Unexpected release assets')
-    verify_tag(api, manifest, allow_missing=entry['draft'])
+    migrated = None
+    if signed and not entry['draft']:
+        migrated = MIGRATED_RELEASE_TAGS.get((entry['id'], digest(raw)))
+    verify_tag(api, manifest, allow_missing=entry['draft'], migrated_source=migrated)
     files = {name: api.asset(by_name[name]) for name in manifest['assets']}
     if signed:
         update_verifier.verify_candidate(raw, api.asset(by_name[update_verifier.SIGNATURE]), files, app=app)
@@ -189,14 +275,17 @@ def seal(build, inspection, planned, *, app=PW):
     return manifest
 
 
-def verify_tag(api, manifest, *, allow_missing):
+def verify_tag(api, manifest, *, allow_missing, migrated_source=None):
     ref = api.request(PREFIX + '/git/ref/tags/' + manifest['tag'])
     if ref is None:
         require(allow_missing, 'Published release tag missing')
         return
     obj = ref['object']
     # The publisher only creates lightweight tags; reject foreign/annotated refs.
-    require(obj['type'] == 'commit' and obj['sha'] == manifest['source_commit'], 'Conflicting PW release tag')
+    expected = {manifest['source_commit']}
+    if migrated_source is not None:
+        expected.add(migrated_source)
+    require(obj['type'] == 'commit' and obj['sha'] in expected, 'Conflicting PW release tag')
 
 
 def _candidate(build, planned, *, app=PW):

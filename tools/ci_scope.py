@@ -25,7 +25,8 @@ JOBS = ("docs", "product", "production", "preflight", "web", "delivery")
 FLAGS = ("product", "production", "preflight", "integration", "pilots", "visual", "perf_b", "web", "delivery")
 SHA = re.compile(r"[0-9a-f]{40}\Z")
 ZERO = "0" * 40
-INERT_SNAPSHOT = '7b7ea9ce6b5dc2e3ea024207a605cce31847f66b'
+# Root tree of the audited commit 7b7ea9ce6b5dc2e3ea024207a605cce31847f66b.
+INERT_SNAPSHOT = '25093b46e2755f584d276c0d5bc7601a249155cd'
 
 # Audited computation-only modules and their fixed synthetic tests. Importing a
 # common schema does not exempt that schema: contract, catalog, export, fixtures
