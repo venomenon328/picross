@@ -1,6 +1,4 @@
-Production ID: pz-fliegenpilz
-Background: B-A-b01
-Image revision: b01
-Artwork: OpenAI ImageGen im Codex-Chat
-Source: Native ImageGen-Ausgabe am 2026-11-12T20:36:02.040443+00:00 im ausdrücklichen Projektauftrag; ausschließlich eigener Textprompt.
-Usage basis: Vom Nutzer beauftragte KI-Ausgabe zur projektbezogenen Verwendung; keine eingebrachten Fremdbilder oder zusätzlichen Fremdlizenzen.
+author: OpenAI ImageGen
+changes: Unverändertes natives transparentes PNG ohne Retusche, Beschnitt oder Formatmanipulation. Proportionale Vorbereitung als 2304 × 768 RGBA8 im HG31-Profil picross-background-png2304x768-v1.
+source: Integriertes ImageGen-Werkzeug, Issue #671, HG-BESTAND-17, 2026-11-18.
+usage_basis: Im Projektauftrag für picross erzeugt. Keine fremden Bildteile oder Grafikvorlagen.
