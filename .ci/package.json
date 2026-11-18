@@ -8,7 +8,11 @@
   "purpose": "PE-MSI-Fix nach Actions 44315394733: PW-only motifs aus der PE-PyInstaller-Analysis ausschließen, ohne Fingerprint-/Frozen-Audit zu lockern; gemeinsamer PW-Bau unverändert.",
   "omitted": "Kein zusätzliches Spiel-Native-/Browser-/Production-Modul: reine Windows-PE-Packagingabgrenzung. Package CI prüft den Testkern, tools und wegen Codeänderung das reguläre Windows-Spielpaket, nicht selbst den separaten PE-MSI. Den echten PE-MSI samt Audit/Inspektion prüft der automatische PE-Releasefolgelauf nach Mainmerge. Persönliche Windows-11-R01-Probe bleibt außerhalb dieses kleinen Fixes.",
   "test_changes": [
-    "tools/test_production_installer.py: günstige Dauerregression für PE-Motifs-Ausschluss und unveränderte strenge PW-/PE-Inputklassifizierung (bestehende Audit-Negativprüfung bleibt)."
+    {
+      "path": "tools/test_production_installer.py",
+      "disposition": "change-scoped",
+      "reason": "Ein kleiner dauerhafter Regressionstest bewahrt die PE-only-Ausschlussgrenze gegen neue PW-Abhängigkeiten; vorhandener strenger Frozen-Audit und PW-Fingerprint bleiben aktiv."
+    }
   ],
   "core_change": "Unverändert (docs/ci-required und regulärer Windows-Spielbuild); keine weiteren Dauermodule.",
   "evidence": {
