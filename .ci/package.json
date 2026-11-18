@@ -1,12 +1,20 @@
 {
   "format": "development-ci-plan/v1",
-  "issue": "https://github.com/venomenon328/picross/issues/671",
-  "package": "HG-BESTAND-18",
-  "modules": [],
-  "purpose": "Die Eigentümerwahl GE1-r01, GI1-r01, BI1-r01, HC1-r02 als geprüfte 2304 × 768 RGBA8-Hintergründe integrieren.",
-  "omitted": "Reine Hintergrundpflege an Rätselbildern und ihren Referenzen. Der Quellen- und Plankern deckt die Änderung ab. Kein Playerbau, kein Solver- oder Browserlauf. Separate ChatGPT-Reviewrunde entfällt laut Auftrag.",
-  "test_changes": [],
-  "core_change": "CI-Kern unverändert. Editorimport und geschützte Bestandswerte getrennt geprüft.",
+  "issue": "https://github.com/venomenon328/picross/issues/691",
+  "package": "PE-APP-FROZEN-MOTIFS",
+  "modules": [
+    "tools"
+  ],
+  "purpose": "PE-MSI-Fix nach Actions 44315394733: PW-only motifs aus der PE-PyInstaller-Analysis ausschließen, ohne Fingerprint-/Frozen-Audit zu lockern; gemeinsamer PW-Bau unverändert.",
+  "omitted": "Kein zusätzliches Spiel-Native-/Browser-/Production-Modul: reine Windows-PE-Packagingabgrenzung. Package CI prüft den Testkern, tools und wegen Codeänderung das reguläre Windows-Spielpaket, nicht selbst den separaten PE-MSI. Den echten PE-MSI samt Audit/Inspektion prüft der automatische PE-Releasefolgelauf nach Mainmerge. Persönliche Windows-11-R01-Probe bleibt außerhalb dieses kleinen Fixes.",
+  "test_changes": [
+    {
+      "path": "tools/test_production_installer.py",
+      "disposition": "change-scoped",
+      "reason": "Ein kleiner dauerhafter Regressionstest bewahrt die PE-only-Ausschlussgrenze gegen neue PW-Abhängigkeiten; vorhandener strenger Frozen-Audit und PW-Fingerprint bleiben aktiv."
+    }
+  ],
+  "core_change": "Unverändert (docs/ci-required und regulärer Windows-Spielbuild); keine weiteren Dauermodule.",
   "evidence": {
     "mode": "none",
     "purpose": null,

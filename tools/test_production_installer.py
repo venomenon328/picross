@@ -506,6 +506,21 @@ class AppReleaseTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, 'Unsafe'):
             payload.fingerprint(root)
 
+    def test_pe_frozen_excludes_pw_motifs_but_retains_strict_source_binding(self):
+        # PROD-SLIM added a PW-only phase-label import to current_authoring.
+        # PyInstaller discovers imports in functions even when PE never calls them.
+        from tools.app_products import PE, PW
+        from tools.production_workspace import build_windows
+        self.assertIn('motifs', build_windows.PE_WORKSPACE_EXCLUDES)
+        self.assertEqual(len(build_windows.PE_WORKSPACE_EXCLUDES),
+                         len(set(build_windows.PE_WORKSPACE_EXCLUDES)))
+        self.assertFalse(payload.selected('tools/production_workspace/motifs.py', app=PE))
+        self.assertTrue(payload.selected('tools/production_workspace/motifs.py', app=PW))
+        self.assertTrue(payload.selected('tools/puzzle_production/current_authoring.py', app=PE))
+        self.assertTrue(payload.selected('tools/puzzle_production/editor_change.py', app=PE))
+        self.assertFalse(set(build_windows.PE_WORKSPACE_EXCLUDES) &
+                         {Path(name).stem for name in payload.PE_SHARED if name.endswith('.py')})
+
     def test_unknown_inputs_and_actual_collector_drift_are_errors(self):
         from tools.production_workspace import build_windows
         self.assertEqual(build_windows.FROZEN_EXCLUDES, ('tools.puzzle_production.za1_fixtures', 'tests'))

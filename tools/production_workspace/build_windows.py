@@ -26,6 +26,9 @@ PACKAGE = ROOT / 'tools/production_workspace'
 # Broad production-module collection must not freeze ZA-1's synthetic helpers.
 # Those helpers import tests.puzzle_production, which is not app source.
 FROZEN_EXCLUDES = ('tools.puzzle_production.za1_fixtures', 'tests')
+# current_authoring's PW-only projection code imports motifs for phase labels.
+# PE never runs that projection and must not freeze the PW job/history modules.
+PE_WORKSPACE_EXCLUDES = ('sources', 'current_view', 'presentation', 'projector', 'motifs')
 
 
 def sha(path):
@@ -112,7 +115,7 @@ def build(destination, *, version=None, app=PW):
         for name in PE_EXCLUDED:
             extra_args += ['--exclude-module', 'tools.puzzle_production.' + name]
         # PE uses current targeted readers, not PW's Git/presentation endpoints.
-        for name in ('sources', 'current_view', 'presentation', 'projector'):
+        for name in PE_WORKSPACE_EXCLUDES:
             extra_args += ['--exclude-module', 'tools.production_workspace.' + name]
         extra_args += ['--exclude-module', 'tools.puzzle_editor.diagnostic',
                        '--exclude-module', 'tools.puzzle_editor.frozen_diagnostic']
