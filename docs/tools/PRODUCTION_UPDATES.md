@@ -126,6 +126,24 @@ Für den freigegebenen PW-Betrieb gelten weiterhin alle Quellen-, Signatur- und
 Veröffentlichungsguards; der Betriebsentscheid steht unter „Geltung und Quellen“.
 
 
+### Historische Quellbindung bei REPO-SLIM-A
+
+Für die 23 veröffentlichten PW-Versionen bis 0.1.23 und die drei PE-Versionen
+bis 0.2.3 enthält der Publisher eine geschlossene Zuordnung je Release-ID
+und SHA-256 des ursprünglichen signierten Manifests. Bei diesen Releases darf
+der Lightweight-Tag auch auf den geprüften Commit mit identischem vollständigem
+Quellbaum und bereinigter Elternhistorie zeigen. Manifest, Signatur, Nutzassets
+und die ursprüngliche Source in Delivery, Inspektion und Releaseziel bleiben
+bytegebunden. Die höchste veröffentlichte Version bestimmt weiterhin die
+Autorität. Entwürfe und neue Publikationen erfordern den exakten ursprünglichen
+Tagvertrag. Bestehende Installationen lesen denselben signierten Release.
+
+Die Zuordnung wird erst mit der separat geprüften und freigegebenen Refumstellung
+wirksam. Vor dem Merge des Publisher-PRs beide Publisher für das Wartungsfenster
+koordinieren. Jede zusätzliche Publikation oder geänderte Quelle verlangt einen
+frischen Abgleich vor der Umschaltung. Refplan, Prüfbasis und Rückweg stehen in
+[REPO-SLIM-A](https://github.com/venomenon328/picross/issues/717#repo-slim-a).
+
 ## 6. APP-B1 · Signierte Autorität und feste Roots
 
 [`release_manifest.py`](../../tools/production_workspace/release_manifest.py) prüft
