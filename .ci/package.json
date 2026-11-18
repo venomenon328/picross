@@ -1,12 +1,12 @@
 {
   "format": "development-ci-plan/v1",
   "issue": "https://github.com/venomenon328/picross/issues/671",
-  "package": "HG-BESTAND-15",
+  "package": "HG-BESTAND-16",
   "modules": [],
-  "purpose": "Die Eigentümerwahl P1-r01, G3-r01, S1-r01, C2-r01, V2-r01 als geprüfte 2304 × 768 RGBA8-Hintergründe integrieren.",
+  "purpose": "Die Eigentümerwahl A1-r01, H1-r01, C2-r01, D2-r02, E1-r01 als geprüfte 2304 × 768 RGBA8-Hintergründe integrieren.",
   "omitted": "Reine Hintergrundpflege an Rätselbildern und ihren Referenzen. Der Quellen- und Plankern deckt die Änderung ab. Kein Playerbau, kein Solver- oder Browserlauf. Separate ChatGPT-Reviewrunde entfällt laut Auftrag.",
   "test_changes": [],
-  "core_change": "CI-Kern unverändert. Der Editorimport und geschützte Bestandswerte werden gezielt geprüft.",
+  "core_change": "CI-Kern unverändert. Editorimport und geschützte Bestandswerte getrennt geprüft.",
   "evidence": {
     "mode": "none",
     "purpose": null,
