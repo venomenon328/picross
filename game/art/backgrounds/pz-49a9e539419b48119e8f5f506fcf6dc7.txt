@@ -1,0 +1,4 @@
+author: OpenAI ImageGen
+changes: ausgewachsene Bananenpflanze mit kräftigem Scheinstamm aus Blattscheiden, großem Blattschopf, eingerissenen Blattspreiten und kleinerem Seitentrieb. Das neue native PNG ist unverändert gespeichert. Proportionale Vorbereitung als 2304 × 768 RGBA8 im HG31-Profil picross-background-png2304x768-v1.
+source: Issue #671, HG-BESTAND-14, ImageGen. Bildreferenz 00dd14f7cfdccf5c4debf07efe484205279367ae:content/authoring/pz-49a9e539419b48119e8f5f506fcf6dc7/current/background-n1-r01.png (SHA-256 ef110e1a6e0ebf550eb7cb00fff0865f0bc282557b1836c53e8f0c0dc1e8249f).
+usage_basis: Neu gezeichnet im Projektauftrag für picross aus einem bereits im Projekt erzeugten Referenzbild.

@@ -1,0 +1,4 @@
+author: OpenAI ImageGen
+changes: Kochplatte mit gedeckeltem Topf auf hölzernem Zweirad-Handkarren mit Stoffdach, links niedriger Bambustisch mit Essigflasche, Salzschälchen und Hocker. Das neue native PNG ist unverändert gespeichert. Proportionale Vorbereitung als 2304 × 768 RGBA8 im HG31-Profil picross-background-png2304x768-v1.
+source: Issue #671, HG-BESTAND-14, ImageGen. Bildreferenz 00dd14f7cfdccf5c4debf07efe484205279367ae:content/authoring/pz-0e0cbecdf3204063b6d008ab7ce92141/current/background-l2-r02.png (SHA-256 891b11dfd711f1f60710248421efe3da586ffa92165fa83d5225ab6963ef6747).
+usage_basis: Neu gezeichnet im Projektauftrag für picross aus einem bereits im Projekt erzeugten Referenzbild.

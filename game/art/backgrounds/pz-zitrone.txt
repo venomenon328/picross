@@ -1,6 +1,4 @@
-Production ID: pz-zitrone
-Background: H-A-b01
-Image revision: b01
-Artwork: OpenAI ImageGen · im Auftrag erzeugt
-Source: Eigenes tatsächliches image_gen.imagegen-Ergebnis im Codex-Auftrag vom 12.11.2026; ohne externe Bildreferenz.
-Usage basis: Eigene beauftragte generierte Illustration zur Projektverwendung, ohne bekannte fremde Asset- oder Attributionsbindung.
+author: OpenAI ImageGen
+changes: Unverändertes natives transparentes PNG ohne Retusche, Beschnitt oder Formatmanipulation. Proportionale Vorbereitung als 2304 × 768 RGBA8 im HG31-Profil picross-background-png2304x768-v1.
+source: Integriertes ImageGen-Werkzeug, Issue #671, HG-BESTAND-14, 2026-11-17.
+usage_basis: Im Projektauftrag für picross neu erzeugt. Keine fremden Bildteile oder Grafikvorlagen.

@@ -1,0 +1,4 @@
+author: OpenAI ImageGen
+changes: zwei Pylonwände, Papyrussäulen, Eingangsstufen und ein durch den Torbogen sichtbarer Säulenhof. Das neue native PNG ist unverändert gespeichert. Proportionale Vorbereitung als 2304 × 768 RGBA8 im HG31-Profil picross-background-png2304x768-v1.
+source: Issue #671, HG-BESTAND-14, ImageGen. Bildreferenz 00dd14f7cfdccf5c4debf07efe484205279367ae:content/authoring/pz-b6f94e528b48444985d0561cb48a5bc7/current/background-a1-r01.png (SHA-256 074445e9c06f7709938f1345826d82b4a364ff0d177d49e85b7077ad3c82d7d8).
+usage_basis: Neu gezeichnet im Projektauftrag für picross aus einem bereits im Projekt erzeugten Referenzbild.
