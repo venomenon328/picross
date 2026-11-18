@@ -287,6 +287,30 @@ class AppReleaseTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, 'exhausted'):
             channel.next_version({'sha256': 'new'}, previous)
 
+    def test_published_history_binding_is_specific_to_release_and_original_manifest(self):
+        planned, manifest = self.candidate()
+        self.publish(self.api, self.root, planned, enabled=True)
+        entry = self.api.entries[0]
+        signed = self.signed(manifest)
+        identity = (entry['id'], channel.digest(payload.canonical(signed)))
+        migrated = 'd' * 40
+        self.api.tags[manifest['tag']] = migrated
+        with patch.dict(channel.MIGRATED_RELEASE_TAGS, {identity: migrated}, clear=True):
+            self.assertEqual(channel.release_files(self.api, entry), signed)
+            with self.assertRaisesRegex(ValueError, 'Conflicting'):
+                channel.verify_tag(self.api, signed, allow_missing=True)
+            with self.assertRaisesRegex(ValueError, 'Conflicting'):
+                channel.release_files(self.api, {**entry, 'draft': True})
+            with patch.dict(channel.MIGRATED_RELEASE_TAGS, {(entry['id'], '0' * 64): migrated}, clear=True):
+                with self.assertRaisesRegex(ValueError, 'Conflicting'):
+                    channel.release_files(self.api, entry)
+            with patch.dict(channel.MIGRATED_RELEASE_TAGS, {(entry['id'] + 1, identity[1]): migrated}, clear=True):
+                with self.assertRaisesRegex(ValueError, 'Conflicting'):
+                    channel.release_files(self.api, entry)
+            self.api.tags[manifest['tag']] = 'e' * 40
+            with self.assertRaisesRegex(ValueError, 'Conflicting'):
+                channel.release_files(self.api, entry)
+
     def test_trust_gates_reject_pr_fork_dispatch_failed_and_nonmain(self):
         channel.trusted_run(self.api, 9, self.api.source)
         cases = [('event', 'pull_request'), ('event', 'workflow_dispatch'), ('conclusion', 'failure'),

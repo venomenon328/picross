@@ -1,20 +1,20 @@
 {
   "format": "development-ci-plan/v1",
-  "issue": "https://github.com/venomenon328/picross/issues/691",
-  "package": "PE-APP-FROZEN-MOTIFS",
+  "issue": "https://github.com/venomenon328/picross/issues/717",
+  "package": "REPO-SLIM-A",
   "modules": [
     "tools"
   ],
-  "purpose": "PE-MSI-Fix nach Actions 44315394733: PW-only motifs aus der PE-PyInstaller-Analysis ausschließen, ohne Fingerprint-/Frozen-Audit zu lockern; gemeinsamer PW-Bau unverändert.",
-  "omitted": "Kein zusätzliches Spiel-Native-/Browser-/Production-Modul: reine Windows-PE-Packagingabgrenzung. Package CI prüft den Testkern, tools und wegen Codeänderung das reguläre Windows-Spielpaket, nicht selbst den separaten PE-MSI. Den echten PE-MSI samt Audit/Inspektion prüft der automatische PE-Releasefolgelauf nach Mainmerge. Persönliche Windows-11-R01-Probe bleibt außerhalb dieses kleinen Fixes.",
+  "purpose": "Begrenzte Publisherkompatibilität für die 26 gebundenen Altreleases. Tools prüft Autorität, Tagbindung und vorhandene Appabläufe.",
+  "omitted": "Kandidat, Refvergleich, Restore, Transportclones und Originalreleaseprüfung laufen einmalig isoliert. Keine Änderung an Solver, nativer Eingabe oder Webbetrieb.",
   "test_changes": [
     {
       "path": "tools/test_production_installer.py",
       "disposition": "change-scoped",
-      "reason": "Ein kleiner dauerhafter Regressionstest bewahrt die PE-only-Ausschlussgrenze gegen neue PW-Abhängigkeiten; vorhandener strenger Frozen-Audit und PW-Fingerprint bleiben aktiv."
+      "reason": "Ein Regressionstest begrenzt den historischen Tagpfad auf die veröffentlichte ID und das unveränderte signierte Manifest."
     }
   ],
-  "core_change": "Unverändert (docs/ci-required und regulärer Windows-Spielbuild); keine weiteren Dauermodule.",
+  "core_change": "Bestehender Kern mit regulärem Windowsbau und vollständigem tools-Modul.",
   "evidence": {
     "mode": "none",
     "purpose": null,
