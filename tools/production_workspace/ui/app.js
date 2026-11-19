@@ -281,13 +281,9 @@ function chooseMotif(puzzleId){
 }
 function adopt(value){
  const keepDraft=draft?.id,keepId=active?.puzzle_id||$('jobs').value;
- // Match a confirmed delivery, not an ID or a vanished source alone. Its same
- // content may now be read from another commit/ref while open work shares the ID.
- const sameDelivery=job=>active?.binding&&['puzzle_id','revision','binding'].every(key=>job[key]===active[key]);
- const completed=!keepDraft&&value.completion?.confirmed&&!value.jobs.some(sameDelivery)&&
-  (active?value.completion.hidden_jobs?.some(sameDelivery):value.completion.completed_ids?.includes(keepId));
+ const completed=!keepDraft&&value.completion?.confirmed&&value.completion.completed_ids.includes(keepId);
  const retained=value.motifs.find(m=>m.puzzle_id===keepId);
- const notice=completed?`Die bisherige Produktion (${keepId}) wurde nach bestätigter Mainintegration aus der aktiven Liste entfernt. ${retained?'Die noch offene Arbeit zur gleichen ID bleibt ausgewählt.':value.motifs.length?'Die nächste offene Produktion ist ausgewählt.':'Die aktive Liste enthält keine offenen Produktionen. Gespeicherte Motivtexte bleiben erhalten.'}`:'';
+ const notice=completed?`Die bisherige Produktion (${keepId}) ist in main registriert. ${value.motifs.length?'Die nächste offene Produktion ist ausgewählt.':'Die aktive Liste enthält keine offenen Produktionen. Gespeicherte Motivtexte bleiben erhalten.'}`:'';
  if(!keepDraft)dispose();
  listing=value;pending=null;$('load').hidden=true;$('sourceStatus').textContent=[sourceStatus(value),notice].filter(Boolean).join(' · ');error(value.errors.join('\n'));$('jobs').replaceChildren();
  for(const motif of value.motifs){const option=node('option',motif.label);option.value=motif.puzzle_id;$('jobs').append(option);}
@@ -488,7 +484,7 @@ function showRemovalResult(result){
   button.onclick=()=>previewRemoval({receipt_id:result.receipt_id});
   body.append(node('p','Der lokale Branch bleibt zunächst erhalten; offene Lieferungen bleiben in der aktiven Auswahl sichtbar.','hint'),label,button);
  }
- body.append(node('p','Maininhalte und weitere lokale Stände bleiben erhalten. Nachweislich auf main abgeschlossene Lieferungen erscheinen nicht in der aktiven Auswahl.','hint'));
+ body.append(node('p','Maininhalte und weitere lokale Stände bleiben erhalten. In main registrierte Rätsel sind aus der aktiven Produktion ausgeblendet.','hint'));
  if(!dialog.open)dialog.showModal();
 }
 $('removalClose').onclick=()=>{if(!removalBusy)closeRemoval();};
@@ -505,7 +501,12 @@ async function checkSources(value){
  if(update.state==='running'){$('sourceStatus').textContent=`Arbeitsstände werden gesucht · ${Math.floor(update.elapsed_seconds||0)} Sekunden`;}
  else if(!listing&&value.snapshot){adopt(value);}
  else if(listing&&value.snapshot!==listing.snapshot&&value.snapshot!==pending?.snapshot){pending=value;$('load').hidden=false;$('sourceStatus').textContent=sourceStatus(value)+' · aktive Ansicht bleibt unverändert';error(value.errors.join('\n'));}
- if(update.state==='error')error(update.error||'Aktualisierung fehlgeschlagen. Erneut suchen.');
+ if(update.state==='error'){
+  if(value.snapshot===listing?.snapshot){pending=null;$('load').hidden=true;}
+  else if(value.snapshot===pending?.snapshot)pending=value;
+  $('sourceStatus').textContent=sourceStatus(value);
+  error([update.error||'Aktualisierung fehlgeschlagen. Erneut suchen.',...value.errors].filter((msg,i,all)=>all.indexOf(msg)===i).join('\n'));
+ }
  if(update.state==='running')pollTimer=setTimeout(pollSources,1000);
 }
 async function pollSources(){const epoch=++sourceRequest;try{const value=await(await request('/api/jobs')).json();if(epoch===sourceRequest)await checkSources(value);}catch(exc){if(epoch===sourceRequest){$('refresh').disabled=false;error(exc.message);}}}

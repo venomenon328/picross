@@ -10,6 +10,7 @@ import time
 import unittest
 from unittest.mock import patch
 
+from tests.puzzle_production.current_fixtures import checkout
 from tools.production_workspace.repository import Repository, ProductionRemoval, configure, github_identity
 from tools.production_workspace.server import Service, Server
 from tools.production_workspace.sources import git
@@ -42,7 +43,7 @@ class RemovalTests(unittest.TestCase):
         self.temp = tempfile.TemporaryDirectory(prefix='pw-p2-')
         self.addCleanup(self.temp.cleanup)
         self.root = Path(self.temp.name)
-        self.local = self.root / 'checkout'; self.local.mkdir()
+        self.local = checkout(self.root / 'checkout')
         git(self.local, 'init', '-q', '-b', 'main')
         current_fixture(self.local, self.root / 'r01', 'r01')
         current_fixture(self.local, self.root / 'r02', 'r02')

@@ -1,5 +1,4 @@
 """RI-ONE current delivery/list cases using real Git refs and the PW reader."""
-from copy import deepcopy
 from pathlib import Path
 import tempfile
 import unittest
@@ -7,7 +6,7 @@ from unittest.mock import patch
 from tools.production_workspace import current_view as cv, presentation as p
 from tools.production_workspace.repository import Repository, configure
 from tools.production_workspace.sources import GitSource, INDEX, git
-from tools.puzzle_production import catalog_io as io, content_registry as registry, current_content, catalog_integration
+from tools.puzzle_production import catalog_io as io, current_content, catalog_integration
 from tools.puzzle_production.authoring_finalization import RECORD_KEYS
 from tools.test_production_workspace import commit
 from tests.puzzle_production.current_fixtures import make, checkout
@@ -89,7 +88,7 @@ class DeliveryTests(unittest.TestCase):
         self.assertEqual(after['jobs'],[],after['errors']);self.assertEqual(after['completion']['main_commit'],main)
         self.assertEqual(git(self.repo,'rev-parse','HEAD').decode().strip(),self.head)
 
-    def test_squash_and_copy_require_same_actual_delivery(self):
+    def test_squash_and_copy_hide_registered_id(self):
         self.integrate('squash');self.assertEqual(self.reader.refresh()['jobs'],[])
         # Independent copied delivery is covered without relying on common merge ancestry.
         git(self.repo,'checkout','-q','main');git(self.repo,'checkout','--orphan','independent-main')
@@ -97,48 +96,106 @@ class DeliveryTests(unittest.TestCase):
         git(self.repo,'branch','-f','main','HEAD');git(self.repo,'checkout','-q',self.branch)
         self.integrate('copy');self.assertEqual(self.reader.refresh()['jobs'],[])
 
-    def test_actual_v4_branch_registry_ignores_removed_receipt(self):
+    def test_skip_registered_branches_and_main_rows_before_historical_reads(self):
+        self.integrate()
+        registered_branch_record = f'content/authoring/{ID}/r02/record.json'
+        put(self.repo, registered_branch_record, b'{broken')
+        publish_pointer(self.repo, ID, 'r02')
+        branch = commit(self.repo)
+        git(self.repo, 'checkout', '-q', 'main')
+        put(self.repo, registered_branch_record, b'old unreadable record')
+        metadata_job(self.repo, 'r01', puzzle_id='pz-open')
+        metadata_job(self.repo, 'r01', puzzle_id='pz-broken')
+        put(self.repo, 'content/authoring/pz-broken/r01/record.json', b'{broken')
+        commit(self.repo)
+        self.push()
+        original = GitSource.read
+
+        def trap(source, at, name, *args, **kwargs):
+            self.assertNotEqual(at, branch, 'Registered production branch was opened')
+            self.assertNotIn('/' + ID + '/', name)
+            self.assertNotIn('/packages/', name)
+            self.assertNotEqual(name, current_content.RUNTIME)
+            self.assertFalse(name.startswith(('game/', 'content/backgrounds/', 'content/reveals/')))
+            return original(source, at, name, *args, **kwargs)
+
+        with patch.object(GitSource, 'read', trap):
+            listing = self.reader.refresh()
+        self.assertEqual({j['puzzle_id'] for j in listing['jobs']}, {'pz-open'})
+        self.assertEqual(listing['completion']['completed_ids'], [ID])
+        self.assertEqual(len(listing['errors']), 1)
+        self.assertIn('pz-broken/r01', listing['errors'][0])
+
+    def test_later_live_changes_and_reopened_phases_stay_hidden(self):
         self.integrate('copy')
-        value=p.parse((self.repo/current_content.REGISTRY).read_bytes());value['format']='picross-content-registry-v4'
-        entry=value['entries'][0];mode=entry.pop('mode');entry['production']={'mode':mode,'package':'content/packages/'+ID+'/r02','package_sha256':'0'*64}
-        put(self.repo,current_content.REGISTRY,value)
-        put(self.repo,'content/packages/'+ID+'/r02/manifest.json',{'format':'picross-integrated-content-v4','unused':'never read'})
-        commit(self.repo);self.push()
-        original=GitSource.read
-        def trap(source,at,name,*args,**kwargs):
-            if '/packages/' in name or name.endswith('.zip'):raise AssertionError('Unrelated archive read')
-            return original(source,at,name,*args,**kwargs)
-        with patch.object(GitSource,'read',trap):self.assertEqual(self.reader.refresh()['jobs'],[])
+        metadata_job(self.repo, 'r99', state='raster_ready')
+        publish_pointer(self.repo, ID, 'early-alpha')
+        commit(self.repo)
+        git(self.repo, 'checkout', '-q', 'main')
+        value = p.parse((self.repo / current_content.REGISTRY).read_bytes())
+        value['metadata'][0]['name'] = 'Later name'
+        put(self.repo, current_content.REGISTRY, value)
+        put(self.repo, 'game/art/content/' + ID + '.png', b'Later live image bytes')
+        commit(self.repo)
+        self.push()
+        listing = self.reader.refresh()
+        self.assertEqual(listing['jobs'], [])
+        self.assertEqual(listing['errors'], [])
+        self.assertEqual(listing['completion']['completed_ids'], [ID])
 
-    def test_new_current_raster_phase_and_explicit_resumption_stay_visible(self):
-        self.integrate();metadata_job(self.repo,'r01',state='raster_ready');commit(self.repo);self.push()
-        self.assertIn('r01',{j['revision'] for j in self.reader.refresh()['jobs']})
-        publish_pointer(self.repo,ID,'early-alpha');commit(self.repo);self.push()
-        self.assertIn('early-alpha',{j['revision'] for j in self.reader.refresh()['jobs']})
+    def test_local_main_progress_cannot_hide_open_remote_work(self):
+        git(self.repo, 'checkout', '-q', 'main')
+        catalog_integration.integrate(self.input,self.repo,apply=True)
+        commit(self.repo)
+        value = self.reader.refresh()
+        self.assertEqual({j['puzzle_id'] for j in value['jobs']}, {ID})
+        self.assertNotIn(ID, value['completion']['completed_ids'])
 
-    def test_changed_live_image_cannot_borrow_completed_record(self):
-        self.integrate();put(self.repo,'game/art/content/'+ID+'.png',b'new actual image work');commit(self.repo);self.push()
-        self.assertIn('r02',{j['revision'] for j in self.reader.refresh()['jobs']})
+    def test_missing_invalid_and_offline_main_preserve_only_bound_list(self):
+        from tools.production_workspace.server import Service
+        self.integrate('copy')
+        git(self.repo, 'checkout', '-q', 'main')
+        metadata_job(self.repo, 'r01', puzzle_id='pz-open')
+        main = commit(self.repo)
+        self.push()
+        service = Service(self.reader)
+        first = service.listing(refresh=True)
+        self.assertEqual({j['puzzle_id'] for j in first['jobs']}, {'pz-open'})
+        self.assertTrue(first['completion']['confirmed'])
 
-    def test_new_metadata_under_old_phase_is_preserved(self):
-        self.integrate();name=f'content/authoring/{ID}/early-alpha/record.json';record=p.parse((self.repo/name).read_bytes())
-        record['next_action']='New independent work';ref=put(self.repo,name,record)
-        viewname=name.replace('record.json','workspace.json');view=p.parse((self.repo/viewname).read_bytes());view['record']={'commit':None,**ref};put(self.repo,viewname,view)
-        commit(self.repo);self.push()
-        self.assertIn('early-alpha',{j['revision'] for j in self.reader.refresh()['jobs']})
+        valid = p.parse((self.repo / current_content.REGISTRY).read_bytes())
+        valid['entries'].append(dict(valid['entries'][0]))
+        put(self.repo, current_content.REGISTRY, valid)
+        metadata_job(self.repo, 'r01', puzzle_id='pz-new')
+        commit(self.repo)
+        self.push()
 
-    def test_unconfirmed_main_and_bad_current_pointer_never_hide_work(self):
-        self.integrate();self.assertEqual(self.reader.refresh()['jobs'],[])
-        restarted=Repository(self.root/'state');self.assertTrue(restarted.listing()['jobs'])
-        put(self.repo,cv.path(ID),b'{}');commit(self.repo);self.push()
-        self.assertTrue(self.reader.refresh()['jobs'])
+        stale = service.listing(refresh=True)
+        self.assertEqual(stale['snapshot'], first['snapshot'])
+        self.assertEqual(stale['jobs'], first['jobs'])
+        self.assertEqual(stale['completion']['main_commit'], main)
+        self.assertFalse(stale['completion']['confirmed'])
+        self.assertIn('Mainkatalog', stale['sync_error'])
+        configure(self.repo, self.root / 'cold-invalid', remote=str(self.remote))
+        unknown = Service(Repository(self.root / 'cold-invalid')).listing(refresh=True)
+        self.assertIsNone(unknown['snapshot'])
+        self.assertFalse(unknown['completion']['complete'])
+        self.assertIn('Mainkatalog', unknown['sync_error'])
 
-    def test_listing_does_not_read_archives_and_status_does_not_run_git(self):
-        self.integrate();original=GitSource.read
-        def trap(source,at,name,*args,**kwargs):
-            self.assertNotIn('/packages/',name);self.assertFalse(name.endswith('.zip'))
-            return original(source,at,name,*args,**kwargs)
-        with patch.object(GitSource,'read',trap):self.assertEqual(self.reader.refresh()['jobs'],[])
-        self.assertTrue(self.reader.confirmed_main)
+        git(self.remote, 'update-ref', '-d', 'refs/heads/main')
+        stale = service.listing(refresh=True)
+        self.assertEqual(stale['snapshot'], first['snapshot'])
+        self.assertIn('Remote-main fehlt', stale['sync_error'])
 
-if __name__=='__main__':unittest.main()
+        reopened = Repository(self.root / 'state')
+        with patch.object(reopened, 'sync_remote', side_effect=ValueError('offline')):
+            offline = reopened.refresh()
+        self.assertFalse(offline['remote_confirmed'])
+        self.assertFalse(offline['completion']['confirmed'])
+        self.assertEqual(offline['completion']['main_commit'], main)
+        self.assertEqual(offline['synced_at'], first['synced_at'])
+        self.assertEqual({j['puzzle_id'] for j in offline['jobs']}, {'pz-open'})
+
+
+if __name__ == '__main__':
+    unittest.main()

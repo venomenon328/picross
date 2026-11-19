@@ -140,12 +140,12 @@ aus `pz-` und kleingeschriebenen Buchstaben/Ziffern mit optionalen Bindestrichen
 Standardauswahl: `main` und `content/pw/*`; ausdrücklich kleinere Auswahlen
 daraus sind zulässig. Andere Produktionsbranches werden weder synchronisiert
 noch inhaltlich durchsucht. Auf einem Produktionsbranch liest der Assistent
-nur Indexeinträge der im Branchnamen gebundenen Rätsel-ID. Auf `main` werden
-die dort veröffentlichten PW-Produktionen gelesen; die aktive Auswahl nimmt
-anschließend nur eindeutig nachgewiesene abgeschlossene Lieferungen gemäß
-PW2-C unten heraus. Der Produktionsakteur muss
-neue PW-Übergaben auf dem zugehörigen Branch veröffentlichen; PW-B übernimmt
-diese Vorgabe in seine Aufträge. Keine Umbenennung/Löschung alter Branches.
+nur Indexeinträge der im Branchnamen gebundenen Rätsel-ID. Der gültige Katalog am gebundenen
+`main` bestimmt die dauerhafte Ausblendung bereits registrierter IDs vor dem
+Scannen der Arbeitsbranches und dem Lesen der Main-Records (PW2-C). Für die
+Katalogbindung wird main auch bei einer engeren Arbeitsrefauswahl gelesen.
+Der Produktionsakteur veröffentlicht neue PW-Übergaben auf dem zugehörigen
+Branch und schließt ihn nach bestätigter Integration nach Authoring Schritt 5 §9 ab.
 
 Die unveränderte bisherige Standardeinrichtung `main` + `content/*` wird einmalig
 im eigenen Zustand auf den neuen Filter eingeengt. Abweichende alte Auswahlen
@@ -182,8 +182,9 @@ Remote und erlaubte Refs kommen aus der bewusst bestätigten Einrichtung, niemal
 aus einem Produktionspaket. Keine frei parametrierbare Git-/Shell-API. Kommandos
 als Argumentlisten, ohne Shellauswertung; Submodule, Hooks, externe Filter und
 beliebige Remote-Helper nicht als Teil des Lesepfads ausführen. Cachepflege darf
-keine fremden Gitrefs löschen. Bei Offline-/Authentifizierungsfehlern einen
-vorhandenen gebundenen Stand weiter anzeigen, aber Alter und Fehler klar nennen.
+keine fremden Gitrefs löschen. Bei Offline-, Authentifizierungs- oder Katalogfehlern zeigt PW den letzten
+erfolgreich gebundenen Listenstand als veraltet an. Beim Neustart gelten dessen
+gesicherte Commits. Ohne gebundenen Stand zeigt PW den Ladefehler.
 
 ### 4.3 Konsistenz
 
@@ -252,10 +253,9 @@ im Browser, Zustand oder Log. Erfolg verlangt danach das tatsächlich geprüfte
 Fehlen des exakten Remote-Refs. Push-/Timeout-/Berechtigungsfehler, unbekannter
 Ausgang und fehlgeschlagene Cachesynchronisierung bleiben getrennte Resultate.
 Erst verifizierter Erfolg aktualisiert die Remoteansichten.
-Mainquellen werden weiter gelesen; ihre aktive Auswahl folgt dem lieferbezogenen
-Abgleich und der Remoteautorität. Lokale Refreste bleiben für P2 prüfbar.
-Offene oder unklar zugeordnete Arbeit bleibt sichtbar. Bei Cachefehler wird eine
-stale Anzeige ausdrücklich benannt.
+Mainquellen bleiben mit dem ID-Filter nach PW2-C lesbar. Lokale Refreste
+bleiben für P2 prüfbar. Fehler offener Produktionen bleiben sichtbar. Bei
+Cachefehlern wird der letzte gebundene Listenstand als veraltet markiert.
 
 Bei v2-Records legt PW mit der eingerichteten HTTPS- oder SSH-Git-Anmeldung
 einen bedingten Auftragsref unter `work-prod-control/remove/` am bestätigten
@@ -462,14 +462,13 @@ unabgesendete menschliche Eingaben nicht unbemerkt überschreiben. Persönliche
 Arbeitswurzel und Merge bleiben eigene ausdrücklich angezeigte
 Auftragsparameter, keine aus einem Produktionsrecord abgeleiteten Rechte.
 Der Assistent fordert keine zusätzliche Bereinigung lokaler Arbeitsdaten an;
-eine frühere gespeicherte Bereinigungsoption hat keine Wirkung. Der separate
-fachliche Produktionsabschluss nach Authoring §9 bleibt unverändert. Bei neuem Job muss dessen Motivbriefing im kopierten Erstauftrag stehen;
+eine frühere gespeicherte Bereinigungsoption hat keine Wirkung. Der fachliche Produktionsabschluss folgt Authoring Schritt 5 §9. Bei neuem Job muss dessen Motivbriefing im kopierten Erstauftrag stehen;
 noch nicht vorhandene Repositorydaten werden nicht als existent behauptet.
 
-Die normalen beauftragten Produktionsakteure verwenden tools.work_publish nach PW-B für Originalassets und Git-Metadaten an den fälligen Übergängen. Merge bleibt entsprechend
-dem tatsächlichen Auftrag getrennt. Nach vollständiger Mainintegration gilt
-Authoring §9. Der Assistent zeigt danach den bestätigten Abschluss und gültige
-Runtime-/Belegbezüge, keine defekten Links auf entfernte Zwischenbilder.
+Die normalen beauftragten Produktionsakteure verwenden tools.work_publish nach PW-B für Originalassets und Git-Metadaten an den fälligen Übergängen. Die Befugnis zum Merge folgt dem tatsächlichen Auftrag. Nach bestätigter
+Mainintegration führt der Akteur den gebundenen Produktionsabschluss in
+Authoring Schritt 5 §9 direkt aus. Der nächste übernommene Listenstand blendet
+die integrierte ID aus.
 
 ## PW2-B · Schlussübersicht und gebundener Auftrag
 
@@ -477,8 +476,9 @@ Die normale Hintergrundentscheidung zeigt zuerst das tatsächlich gewählte Rast
 dessen Reveal und die vorgemerkte Hintergrunddatei beziehungsweise `none`. Der
 primäre Schlussauftrag erklärt diese konkrete Wahl, Endabnahme und Integration
 zusammen. Er enthält Commit/PR, unabhängiges Review, Squash-Merge erst nach
-aktuellen Vor-Merge-Gates und den bestehenden Produktionsabschluss nach Authoring
-§9. `content_ready`, echte äußere Endfreigabe, Finalizer, Export/Plan/Register und
+aktuellen Vor-Merge-Gates und den direkt anschließenden Arbeitsabschluss mit `tools.work_publish retire`
+nach Authoring Schritt 5 §9. Der Auftrag bindet den nach Completion veröffentlichten
+Arbeitscommit und fordert den Ref-, Release- und Tag-Readback. `content_ready`, echte äußere Endfreigabe, Finalizer, Export/Plan/Register und
 bestätigtes main bleiben getrennte technische Tatsachen; kein UI-Writer entsteht.
 
 Ohne gültigen gespeicherten Mergewert ist der bedingte Merge eingeschaltet. Ein
@@ -503,29 +503,29 @@ Snapshot-, Bildlade-, Quellwechsel-, P2- und Origin-Sicherheit bleibt erhalten.
 Der CMD-Fallback wird aus denselben Quellen regeneriert. Neue Originale der
 Browserprobe dienen nur PW2-B-T01/A01 im Liefer-PR, nicht einer Dauergalerie.
 
-## PW2-C · aktive Lieferungen und bestätigter Abschluss
+## PW2-C · aktive Produktionen und fachlicher Abschluss
 
-Die Liste bestätigt abgeschlossene Lieferungen anhand der tatsächlichen aktuellen
-Registry, Runtime und Livebytes am bestätigten `origin/main`. Ein unveränderter
-abgeschlossener Stand bleibt auch in alten Branchkopien ausgeblendet; ein alter
-Integrationshinweis allein genügt nicht. Dabei werden keine historischen ZIPs,
-Receipts oder Provenienzen geöffnet. Aktuelle Completion bindet das bestätigte Produktresultat; der Produktcommit
-muss keine Arbeitsdateien enthalten.
+[PW-DONE / #721](https://github.com/venomenon328/picross/issues/721) bindet den
+Listenfilter an die registrierten IDs aus dem gültigen aktuellen
+`content/registry.json` am Listen-Maincommit. Im Remotebetrieb entscheidet
+der gewählte Remote-main. PW ermittelt die IDs einmal pro gebundenem Stand.
+Bereits registrierte `content/pw/<id>`-Branches werden vor dem Scan übersprungen.
+In main überspringt PW entsprechende Indexeinträge vor dem Lesen ihrer Records.
+Das gilt für jede Produktionsphase, Revision und Hintergrundarbeit derselben
+ID. Spätere Katalog-, Bild- und Rasterpflege läuft über den Bestandseditor.
 
-Ausdrücklich neu übergebene Frühphasen, neue Bild-/Rasterarbeit, abweichende
-Livebytes, fehlende Mainbestätigung und defekte Ansichtsbindungen bleiben sichtbar.
-Es gibt keine Rangfolge nach numerischen Revisionen. Der explizite aktuelle
-Ansichtsverweis hat Vorrang vor der Vermutung, eine frühe Phase sei erledigt.
+Offene IDs und deren Fehler bleiben sichtbar. Ein fehlender oder ungültiger
+Mainkatalog lässt die Aktualisierung fehlschlagen. Die passive Suche erhält die
+aktive Ansicht und ihre Eingaben. Nach einer erfolgreichen Aktualisierung
+übernimmt der Benutzer den neuen Listenstand ausdrücklich.
 
-`projector.complete --input <current-input>` nutzt denselben erreichten aktuellen
-Integrationszustand wie Plan/Write/No-op. Danach entfernt `retire` nur nachweislich
-integrierte, ausdrücklich zugeordnete Arbeit: automatische registrierte Revisionen,
-explizite frühere Revisionen und explizite gemeinsame Arbeitsverzeichnisse.
-Die Prüfung vergleicht bestätigten Maininhalt und eigene Arbeitsbytes an ihrem Arbeitsref; fremde
-oder wiederaufgenommene Daten blockieren. Der aktuelle Pointer wird mit entfernt,
-wenn er genau auf die entfernte Arbeit verweist. Keine Abschlussreceipt,
-Zählerfortschreibung oder neue Bild-/Rasterfreigabe. Einzelheiten und Befehle in
-[Authoring Schritt 5](../production/authoring/PUZZLE_AUTHORING_STEP_5.md).
+Completion prüft weiterhin die tatsächliche Integration der gewählten
+Lieferung. Der Akteur führt nach bestätigter autorisierter Mainintegration
+den vorhandenen eng gebundenen Retirementweg nach
+[Authoring Schritt 5 §9](../production/authoring/PUZZLE_AUTHORING_STEP_5.md#9-produktionsabschluss-und-bereinigung)
+aus. Erst der verifizierte Abbau von eigenem Arbeitsref, Release und Tag
+schließt die Arbeitsgeneration ab. Bei einem Rest wird derselbe erwartete
+Arbeitscommit zur Wiederaufnahme verwendet.
 
 ## 9. Herkunft der Schnittstellen
 

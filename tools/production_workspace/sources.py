@@ -33,7 +33,7 @@ def production_path(value):
 def read_path(value):
     """Narrow internal completion evidence; never an HTTP path parameter."""
     ap.relative(value)
-    if value in ('content/registry.json','game/data/registry.json'):
+    if value in ('content/categories.json', 'content/registry.json', 'game/data/registry.json'):
         return value
     if re.fullmatch(r'content/(?:backgrounds|reveals|added)/pz-[a-z0-9][a-z0-9-]{0,59}\.json',value):
         return value

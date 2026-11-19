@@ -154,7 +154,7 @@ const PW = (()=>{
    else if(value.facts.state==='editorially_approved')lines.push('Schritt 5: Die bereits endabgenommene unveränderte Lieferung integrieren.');
    else lines.push('Schritt 5: Ich erteile die Endabnahme der gebundenen unveränderten Raster-, Reveal- und Hintergrundfassung (gegebenenfalls none) und beauftrage deren Integration.');
   }
-  if(n===5&&action!=='background_change')lines.push('Die ausgewählten finalen Nutzdaten mit explizitem Modus, gültigem Logiknachweis, aktueller Bewertung, Rechten und dieser tatsächlichen Entscheidung als aktuellen RI-ONE-Eingang vorbereiten. Planung, Übernahme und Wiederholung verwenden denselben Kern. Den Integrationsbranch vom aktuellen main aufbauen und ausschließlich finale gewählte Produktdaten übernehmen. Completion prüft diese tatsächliche Lieferung; abgeschlossene eigene Arbeitsdaten anschließend nach bestätigtem Mainergebnis entfernen.');
+  if(n===5&&action!=='background_change')lines.push('Die ausgewählten finalen Nutzdaten mit explizitem Modus, gültigem Logiknachweis, aktueller Bewertung, Rechten und dieser tatsächlichen Entscheidung als aktuellen RI-ONE-Eingang vorbereiten. Planung, Übernahme und Wiederholung verwenden denselben Kern. Den Integrationsbranch vom aktuellen main aufbauen und ausschließlich finale gewählte Produktdaten übernehmen. Completion prüft diese tatsächliche Lieferung. Den abgeschlossenen Record auf dem eigenen Produktionsbranch veröffentlichen.');
   const published=value?.facts.published;
   if(n===1&&intent.notes?.trim())lines.push(`Neue/zusätzliche Motivhinweise:\n${intent.notes.trim()}`);
   if(n<=2||(n===3&&action==='rework')){
@@ -167,7 +167,10 @@ const PW = (()=>{
   if((n===2||(n===3&&action==='rework'))&&intent.parameters?.trim())lines.push(`Neue/zusätzliche Wünsche zur Motivvorlage: ${intent.parameters.trim()}`);
   if(n===4&&intent.context?.trim())lines.push(`Kontextwunsch: ${intent.context.trim()}`);
   if(opts.workroot.trim())lines.push(`Lokale Codex-Arbeitswurzel: ${opts.workroot.trim()}.`);
-  if(closing(value,intent)&&opts.merge)lines.push('Commit, Push und PR; unabhängiges Review, danach Squash-Merge nur bei erfüllten aktuellen Vor-Merge-Gates. Bestätigten Mainabschluss und Produktionsabschluss nach Authoring §9 durchführen.');
+  if(closing(value,intent)&&opts.merge){
+   lines.push('Commit, Push und PR; unabhängiges Review, danach Squash-Merge nur bei erfüllten aktuellen Vor-Merge-Gates.');
+   lines.push(`Nach bestätigter Mainintegration gemäß Authoring Schritt 5 §9 den eigenen Produktionsstand direkt abschließen: python -m tools.work_publish retire ${value.puzzle_id} --expected <nach Completion veröffentlichter Arbeitscommit>. Fehlen des eigenen Produktionsbranches, Arbeitsreleases und Tags zurücklesen. Offenen Bereinigungsrest und Wiederholungsbefehl mit demselben Arbeitscommit getrennt vom Mainabschluss melden.`);
+  }
   else lines.push('Commit, Push und Draft-PR im beauftragten Umfang; kein Merge.');
   return lines.join('\n\n');
  }

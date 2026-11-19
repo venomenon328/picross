@@ -16,10 +16,10 @@ from urllib.request import Request, build_opener, HTTPRedirectHandler
 from tools.puzzle_production import authoring_package as ap, catalog_io as io
 from tools.puzzle_production.authoring_builder import index_value
 from tools.puzzle_production.contract import exact_keys
-from .sources import git, GitSource, INDEX, JSON_LIMIT, LRU
+from .sources import git, GitSource, INDEX, JSON_LIMIT, LRU, check_commit
 from tools.puzzle_production import current_authoring
 from tools.work_refs import CLEAN_MAIN
-from . import presentation as p
+from . import deliveries, presentation as p
 
 DEFAULT_REFS = ['main', 'content/pw/*']
 PRODUCTION_BRANCH = re.compile(r'content/pw/pz-[a-z0-9]+(?:-[a-z0-9]+)*\Z')
@@ -393,7 +393,9 @@ class Repository:
         self.cached = None
         self.sync_error, self.synced_at = None, None
         self.remote_confirmed = False
-        self.confirmed_main = None
+        self.last_listing = None
+        self.saved_refs = None
+        self.main_catalog = None
         self.lock = threading.RLock()
         self.scans = LRU(8 * 1024 * 1024)
         if self.remote:
@@ -414,7 +416,14 @@ class Repository:
             self.cached = GitSource(cache, self.fetch_object, self.fetch_commit)
             status = io.read(self.state, SYNC, JSON_LIMIT, missing=True)
             if status:
-                self.synced_at = p.parse(status)['synced_at']
+                saved = p.parse(status)
+                self.synced_at = saved['synced_at']
+                if 'refs' in saved:
+                    refs = saved['refs']
+                    ap.require(isinstance(refs, dict) and 'main' in refs and
+                               all(branch == 'main' or self.selected_branch(branch) for branch in refs),
+                               'Gespeicherte Quellbindung ist ungültig.')
+                    self.saved_refs = {branch: check_commit(sha) for branch, sha in refs.items()}
 
     def fetch(self, *specs, filtered=False, prune=False, shallow=False, refetch=False, depth=None):
         # All mutations are confined to this application's private bare cache.
@@ -444,56 +453,90 @@ class Repository:
         with self.lock:
             self.fetch(oid, filtered=True, shallow=True)
 
+    def selected_branch(self, branch):
+        return (branch == 'main' or PRODUCTION_BRANCH.fullmatch(branch)) and any(
+            branch == pattern or pattern.endswith('/*') and branch.startswith(pattern[:-1])
+            for pattern in self.refs)
+
+    def bound_refs(self, source, prefix):
+        selections = dict.fromkeys(['main', *self.refs])
+        raw = git(source.root, 'for-each-ref', '--format=%(refname) %(objectname)',
+                  *[prefix + ref for ref in selections])
+        result = {}
+        for line in raw.decode().splitlines():
+            ref, sha = line.split(' ')
+            branch = ref.removeprefix(prefix)
+            if branch == 'main' or self.selected_branch(branch):
+                result[branch] = check_commit(sha)
+        return result
+
+    def sync_remote(self):
+        # Main supplies catalog authority even when its authoring rows are
+        # outside the selected list. Fetch only the configured work refs.
+        selections = dict.fromkeys(['main', *self.refs])
+        advertised = git(self.cached.root, 'ls-remote', '--refs', '--', self.remote,
+                         *['refs/heads/' + ref for ref in selections]).decode().splitlines()
+        present = {line.split('\t')[1] for line in advertised}
+        missing = [ref for ref in selections if '*' not in ref and 'refs/heads/' + ref not in present]
+        ap.require('main' not in missing, 'Remote-main fehlt. Der Mainkatalog ist nicht bestätigt.')
+        specs = ['+refs/heads/' + ref + ':refs/pw/' + ref for ref in selections if ref not in missing]
+        # Atomic updates keep the previous refs intact on a failed fetch.
+        self.fetch(*specs, filtered=True, prune=True, shallow=True)
+        for ref in missing:
+            git(self.cached.root, 'update-ref', '-d', 'refs/pw/' + ref)
+
     def refresh(self):
         with self.lock:
-            self.sync_error = None
-            self.remote_confirmed = False
-            self.confirmed_main = None
-            if self.remote:
+            if not self.remote:
+                return self.listing()
+            try:
+                self.sync_remote()
+            except (ValueError, OSError) as exc:
+                self.sync_error = 'Remote-Aktualisierung fehlgeschlagen: ' + str(exc)
+            else:
                 try:
-                    # Fetch fails on an explicitly selected ref that disappeared.
-                    # Observe first, then prune only absent exact refs after a successful fetch.
-                    advertised = git(self.cached.root, 'ls-remote', '--refs', '--', self.remote,
-                                     *['refs/heads/' + ref for ref in self.refs]).decode().splitlines()
-                    present = {line.split('\t')[1] for line in advertised}
-                    missing = [ref for ref in self.refs if '*' not in ref and 'refs/heads/' + ref not in present]
-                    specs = ['+refs/heads/' + ref + ':refs/pw/' + ref for ref in self.refs if ref not in missing]
-                    # Prune only the destinations of these explicit refspecs. Atomic
-                    # ref updates keep the previous cache intact on a failed fetch.
-                    if specs:
-                        self.fetch(*specs, filtered=True, prune=True, shallow=True)
-                    for ref in missing:
-                        git(self.cached.root, 'update-ref', '-d', 'refs/pw/' + ref)
-                    self.synced_at = datetime.now(timezone.utc).isoformat()
-                    self.remote_confirmed = True
-                    if 'main' in self.refs and 'refs/heads/main' in present:
-                        self.confirmed_main = self.cached.resolve('refs/pw/main')
-                    raw = p.data({'synced_at': self.synced_at})
+                    refs = self.bound_refs(self.cached, 'refs/pw/')
+                    value = self._listing(self.cached, 'remote', refs, confirmed=True)
+                    synced_at = datetime.now(timezone.utc).isoformat()
+                    raw = p.data({'synced_at': synced_at, 'refs': refs})
                     temporary = io.safe(self.state, 'sync-pw-v1.tmp')
-                    temporary.write_bytes(raw)
-                    temporary.replace(io.safe(self.state, SYNC))
+                    try:
+                        temporary.write_bytes(raw)
+                        temporary.replace(io.safe(self.state, SYNC))
+                    finally:
+                        temporary.unlink(missing_ok=True)
                 except (ValueError, OSError) as exc:
-                    self.remote_confirmed = False
-                    self.confirmed_main = None
-                    self.sync_error = 'Remote nicht erreichbar oder Anmeldung fehlgeschlagen. Vorhandene Snapshots bleiben lesbar.'
+                    self.sync_error = 'Listenstand konnte nicht bestätigt werden: ' + str(exc)
+                else:
+                    self.synced_at, self.saved_refs = synced_at, refs
+                    self.last_listing = {**value, 'synced_at': synced_at}
+                    self.sync_error = None
+                    self.remote_confirmed = True
+                    return self.last_listing
+            self.remote_confirmed = False
             return self.listing()
 
-    def scan(self, source, commit, puzzle_id):
-        key = (str(source.root), commit, puzzle_id)
+    def scan(self, source, commit, puzzle_id, registered=frozenset()):
+        key = (str(source.root), commit, puzzle_id, registered)
         cached = self.scans.get(key)
         if cached is not None:
             return p.parse(cached, 8 * JSON_LIMIT)
         jobs, errors = [], []
+        hidden_count = 0
         index_raw = source.read(commit, INDEX, 8 * JSON_LIMIT, missing=True)
         if index_raw is not None:
             index = index_value(index_raw)
             for row in index['entries']:
+                if row['puzzle_id'] in registered:
+                    hidden_count += 1
+                    continue
                 if puzzle_id and row['puzzle_id'] != puzzle_id:
                     continue
                 file = row['record'].rsplit('/', 1)[0] + '/workspace.json'
                 try:
                     record_raw = source.read(commit, row['record'], JSON_LIMIT)
                     record = p.parse(record_raw)
+                    ap.require(isinstance(record, dict), 'Ungültiger Produktionsrecord.')
                     if record.get('format') in current_authoring.FORMATS:
                         projection = current_authoring.projection(record, record_raw)
                         ap.require(row['record'] == current_authoring.path(row['puzzle_id']), 'Noncanonical current job')
@@ -541,7 +584,7 @@ class Repository:
                     job['current_view'] = bool(current and current['revision'] == job['revision'])
                     job['current_error'] = message
                     job['_current_invalid'] = current_invalid
-        value = {'jobs': jobs, 'errors': errors}
+        value = {'jobs': jobs, 'errors': errors, 'hidden_count': hidden_count}
         # An offline object may become reachable on the next refresh. Do not
         # turn a transient read failure into a cached permanent failure.
         if not errors and not pointer_read_error:
@@ -550,68 +593,87 @@ class Repository:
 
     def listing(self):
         with self.lock:
-            return self._listing()
-
-    def _listing(self):
-        jobs, errors, sources = [], [], []
-        # A configured remote is the production authority, including offline
-        # cache views. Local refs remain available to P2/targeted diagnostics,
-        # but cannot introduce alternatives or block a published handoff.
-        candidates = ([('remote', self.cached, 'refs/pw/')] if self.cached else
-                      [('local', self.local, 'refs/heads/')])
-        bindings = {}
-        for origin, source, prefix in candidates:
-            raw = git(source.root, 'for-each-ref', '--format=%(refname)', *[prefix + ref for ref in self.refs])
-            for ref in raw.decode().splitlines():
-                branch = ref[len(prefix):]
-                if branch != 'main' and not PRODUCTION_BRANCH.fullmatch(branch):
-                    continue
-                if not any(branch == pattern or pattern.endswith('/*') and branch.startswith(pattern[:-1])
-                           for pattern in self.refs):
-                    continue
+            if not self.remote:
                 try:
-                    commit = source.resolve(ref)
-                    sources.append({'source': origin, 'ref': ref[len(prefix):], 'commit': commit})
-                    value = self.scan(source, commit, None if branch == 'main' else branch.rsplit('/', 1)[1])
-                    errors.extend(value['errors'])
-                    for job in value['jobs']:
-                        identity = (job['puzzle_id'], job['revision'], branch if job['_record'].get('format') in current_authoring.FORMATS else None)
-                        fingerprint = job.pop('_fingerprint')
-                        entry = {**job, 'binding': fingerprint, 'commit': commit, 'source': origin, 'ref': branch, '_source': source}
-                        if identity in bindings and bindings[identity] != fingerprint:
-                            for prior in jobs:
-                                if (prior['puzzle_id'], prior['revision']) == identity:
-                                    prior['conflict'] = True
-                            entry['conflict'] = True
-                        bindings.setdefault(identity, fingerprint)
-                        jobs.append(entry)
+                    refs = self.bound_refs(self.local, 'refs/heads/')
+                    return self._listing(self.local, 'local', refs, confirmed=True)
                 except (ValueError, OSError) as exc:
-                    errors.append('Quellstand konnte nicht geladen werden: ' + str(exc))
-        remote_commits = {s['commit'] for s in sources if s['source'] == 'remote'}
+                    return self.unavailable('Lokaler Listenstand konnte nicht bestätigt werden: ' + str(exc))
+            if self.remote_confirmed:
+                return self.last_listing
+            if self.last_listing is None and self.saved_refs is not None:
+                try:
+                    # Recover only the pins persisted by a successful list,
+                    # even if a later fetch updated the ordinary cache refs.
+                    self.last_listing = self._listing(self.cached, 'remote', self.saved_refs, confirmed=False)
+                except (ValueError, OSError):
+                    pass
+            if self.last_listing is None:
+                return self.unavailable(self.sync_error or 'Kein gebundener Remotestand verfügbar. Quellen aktualisieren.')
+            prior = self.last_listing
+            return {**prior, 'sync_error': self.sync_error, 'remote_confirmed': False,
+                    'completion': {**prior['completion'], 'confirmed': False,
+                                   'note': 'Letzter gebundener Listenstand ist veraltet.'},
+                    'jobs': [{**job, 'source_url': None,
+                              'publication': 'Remote nicht aktuell bestätigt; gespeicherter Snapshot bleibt lesbar'}
+                             for job in prior['jobs']]}
+
+    def unavailable(self, message):
+        return {'jobs': [], 'errors': [message], 'sources': [], 'synced_at': self.synced_at,
+                'completion': {'confirmed': False, 'complete': False, 'main_commit': None,
+                               'hidden_count': 0, 'completed_ids': [], 'note': message},
+                'relations': {}, 'remote_confirmed': False, 'sync_error': message,
+                'mode': 'remote' if self.remote else 'local'}
+
+    def _listing(self, source, origin, refs, *, confirmed):
+        main = refs.get('main')
+        ap.require(main is not None, 'Gebundener Mainkatalog fehlt.')
+        if self.main_catalog is None or self.main_catalog[0] != main:
+            try:
+                registered = deliveries.registered_ids(source, main)
+            except (ValueError, OSError, KeyError, TypeError) as exc:
+                raise ap.InvalidInput('Mainkatalog ist nicht lesbar oder ungültig. Quellen aktualisieren.') from exc
+            self.main_catalog = (main, registered)
+        registered = self.main_catalog[1]
+        jobs, errors, sources = [], [], []
+        bindings = {}
+        hidden_count = 0
         remote_match = re.fullmatch(r'(?:https://github\.com/|git@github\.com:)([A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+?)(?:\.git)?', self.remote or '')
         cloud_repository = 'https://github.com/' + remote_match[1] if remote_match else None
+        fresh_remote = origin == 'remote' and confirmed
+        for branch, commit in refs.items():
+            if not self.selected_branch(branch):
+                continue
+            sources.append({'source': origin, 'ref': branch, 'commit': commit})
+            puzzle_id = None if branch == 'main' else branch.rsplit('/', 1)[1]
+            if puzzle_id in registered:
+                hidden_count += 1
+                continue
+            try:
+                value = self.scan(source, commit, puzzle_id, registered if puzzle_id is None else frozenset())
+            except (ValueError, OSError) as exc:
+                errors.append('Quellstand konnte nicht geladen werden: ' + str(exc))
+                continue
+            errors.extend(value['errors'])
+            hidden_count += value['hidden_count']
+            for job in value['jobs']:
+                fingerprint = job.pop('_fingerprint')
+                identity = self.job_identity(job, branch)
+                bindings.setdefault(identity, set()).add(fingerprint)
+                publication = ('Im konfigurierten Remote gefunden' if fresh_remote else
+                               'Remote nicht aktuell bestätigt; gespeicherter Snapshot bleibt lesbar'
+                               if origin == 'remote' else 'Nur lokal nachgewiesen; Remote-Sicherung nicht bestätigt')
+                jobs.append({**job, 'binding': fingerprint, 'commit': commit, 'source': origin,
+                             'ref': branch, '_source': source, 'publication': publication,
+                             'source_url': cloud_repository + '/tree/' + commit
+                             if fresh_remote and cloud_repository else None})
         for job in jobs:
-            job['source_url'] = cloud_repository + '/tree/' + job['commit'] if self.remote_confirmed and cloud_repository and job['commit'] in remote_commits else None
-            job['publication'] = ('Im konfigurierten Remote gefunden' if job['commit'] in remote_commits else
-                                  'Nur lokal nachgewiesen; Remote-Sicherung nicht bestätigt')
-            if not self.remote_confirmed and job['source'] == 'remote':
-                job['publication'] = 'Remote nicht aktuell bestätigt; gespeicherter Snapshot bleibt lesbar'
-        from . import deliveries
-        jobs, completion = deliveries.active(self, sources, jobs)
-        errors.extend(completion.get('unresolved', []))
-        completion['complete'] = not errors
-        if errors:
-            completion['note'] += ' Aktualisierung unvollständig oder Lieferzuordnung ungeklärt; Fehlerhinweise beachten.'
-        # A removed historical copy must not leave a conflict marker on the
-        # only remaining, deliberately open version of the same revision.
-        active_bindings = {}
-        for job in jobs:
-            identity = (job['puzzle_id'], job['revision'], job['ref'] if job['_record'].get('format') in current_authoring.FORMATS else None)
-            active_bindings.setdefault(identity, set()).add(job['binding'])
-        for job in jobs:
-            job.pop('conflict', None)
-            if len(active_bindings[(job['puzzle_id'], job['revision'], job['ref'] if job['_record'].get('format') in current_authoring.FORMATS else None)]) > 1:
+            if len(bindings[self.job_identity(job, job['ref'])]) > 1:
                 job['conflict'] = True
+
+        completion = {'confirmed': confirmed, 'main_commit': main, 'hidden_count': hidden_count,
+                      'completed_ids': sorted(registered), 'complete': not errors,
+                      'note': 'Registrierte Rätsel sind aus der aktiven Produktion ausgeblendet.'}
         from .motifs import Relations
         history = Relations(self)
         comparisons = {}
@@ -623,6 +685,10 @@ class Repository:
                     comparisons[left + ':' + right] = relation
                     comparisons[right + ':' + left] = {'ahead': 'behind', 'behind': 'ahead'}.get(relation, relation)
         return {'jobs': jobs, 'errors': errors, 'sources': sources, 'synced_at': self.synced_at,
-                'completion': completion,
-                'relations': comparisons, 'remote_confirmed': self.remote_confirmed,
-                'sync_error': self.sync_error, 'mode': 'remote' if self.remote else 'local'}
+                'completion': completion, 'relations': comparisons, 'remote_confirmed': fresh_remote,
+                'sync_error': None, 'mode': origin}
+
+    @staticmethod
+    def job_identity(job, branch):
+        branch_scope = branch if job['_record'].get('format') in current_authoring.FORMATS else None
+        return job['puzzle_id'], job['revision'], branch_scope

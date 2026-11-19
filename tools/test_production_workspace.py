@@ -15,6 +15,7 @@ from unittest.mock import patch
 import zipfile
 
 from PIL import Image
+from tests.puzzle_production.current_fixtures import checkout
 from tools.production_workspace import presentation as p
 from tools.production_workspace.projector import project
 from tools.production_workspace.repository import configure, Repository
@@ -200,11 +201,9 @@ class MotifTests(unittest.TestCase):
         self.temp = tempfile.TemporaryDirectory(prefix='pw-b-motifs-')
         self.addCleanup(self.temp.cleanup)
         self.root = Path(self.temp.name)
-        self.repo = self.root / 'repo'; self.repo.mkdir()
+        self.repo = checkout(self.root / 'repo')
         git(self.repo, 'init', '-q', '-b', 'main')
         git(self.repo, 'config', 'core.autocrlf', 'false')
-        (self.repo / INDEX).parent.mkdir(parents=True)
-        (self.repo / INDEX).write_bytes(p.data({'format': 'picross-authoring-index-v1', 'entries': []}))
         commit(self.repo)
         git(self.repo, 'checkout', '-qb', 'content/pw/pz-workspace-test')
         self.serial = 0
@@ -396,7 +395,7 @@ class WorkspaceTests(unittest.TestCase):
         self.temp = tempfile.TemporaryDirectory(prefix='pw-a-unit-')
         self.addCleanup(self.temp.cleanup)
         self.root = Path(self.temp.name)
-        self.repo = self.root / 'repo'; self.repo.mkdir()
+        self.repo = checkout(self.root / 'repo')
         git(self.repo, 'init', '-q', '-b', 'main')
         self.request, self.png = fixture(self.repo)
         self.directory = self.repo / Path(self.request['record']['file']).parent
@@ -477,7 +476,7 @@ class WorkspaceTests(unittest.TestCase):
                     (directory / 'handoff.json').write_bytes(archive.read('handoff.json'))
 
     def test_current_ui_source_changes_late_details_and_separate_drafts(self):
-        self.repo = self.root / 'current-repo'; self.repo.mkdir()
+        self.repo = checkout(self.root / 'current-repo')
         git(self.repo, 'init', '-q', '-b', 'main')
         for revision, width in [('r01', 18), ('r02', 27)]:
             current_fixture(self.repo, self.root / revision, revision,
@@ -510,7 +509,7 @@ class WorkspaceTests(unittest.TestCase):
                 patch.object(repo.local, 'read', wraps=repo.local.read) as read:
             first = repo.listing()
             self.assertEqual({j['ref'] for j in first['jobs']}, {'main', 'content/pw/pz-workspace-test'})
-            self.assertEqual(resolve.call_count, 2)
+            self.assertEqual(resolve.call_count, 1, 'both refs bind the same commit')
             reads = read.call_count
             second = repo.listing()
             self.assertEqual(len(second['jobs']), 2)

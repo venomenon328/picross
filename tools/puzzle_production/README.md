@@ -49,8 +49,11 @@ Recovery folgen den Fachverträgen, ohne zusätzliches Kompatibilitätsversprech
 für abgelöste Writer.
 
 Serielle Integration verwendet [BA-B Plan v2](../../docs/tools/PRODUCTION_BATCH.md#8-ba-b-autorisierte-serielle-einzelintegration).
-Nach bestätigtem Mainmerge folgt der ausgewählte
-[Produktionsabschluss](../../docs/production/ZA1_ADAPTER.md#pw-retire--abschluss-mehrphasiger-produktion).
+Nach bestätigter autorisierter Mainintegration führt der Produktionsakteur den
+[v2-Produktionsabschluss](../../docs/production/authoring/PUZZLE_AUTHORING_STEP_5.md#9-produktionsabschluss-und-bereinigung)
+mit `python -m tools.work_publish retire ID --expected ARBEITSCOMMIT` aus.
+Der Publisher liest Branch-, Release- und Tagabwesenheit zurück. Bei Teilfehlern
+im selben Checkout mit derselben Arbeits-SHA wiederholen.
 
 ## Aktuelle Bestandsbearbeitung
 

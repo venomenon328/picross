@@ -22,7 +22,7 @@ Metadatenautorität. Veröffentlichungsformat `picross-authoring-current-v2`, ex
 - `work_release` bindet die numerische Release-ID (`id`) und den vollen bereinigten Tagzielcommit (`anchor`), auch bei leerem Angebot.
 - `revision=current`; Git bindet den jeweiligen veröffentlichten Stand. Keine Paketkette.
 - ID: `pz-[a-z0-9][a-z0-9-]{0,59}`; source_commit: volle 40-stellige kleine Git-SHA zur aktuellen Quellenzuordnung. Kein Snapshot oder historischer Erzeugerzugriff.
-- operation: production/background. target ist bei production null, bei reiner Hintergrundpflege exakt definition/reveal als aktive Refs und mode=mono|color. Unveränderte aktive Raster brauchen dafür keinen neuen Proof oder Difficulty. Das aktuelle Rasterpreview wird nur transient aus der Definition gerendert.
+- operation: production/background. target ist bei production null, bei reiner Hintergrundpflege exakt definition/reveal als aktive Refs und mode=mono|color. Unveränderte aktive Raster brauchen dafür keinen neuen Proof oder Difficulty. Das aktuelle Rasterpreview wird nur transient aus der Definition gerendert. Spätere Hintergrundpflege für registrierte IDs verwendet den gemeinsamen Editorweg.
 - budgets: exakt limits/used, jeweils raster_candidates/repair_rounds/image_corrections als ganze Zähler 0–1.000.000. Used bleibt monoton; Erhöhung eines Limits braucht eine echte budget-Entscheidung. Nur aktueller Budgetverbrauch, keine Versuchsliste oder interne Historie.
 - title: 1–128 Zeichen, brief: 1–16384, übrige Texte: 1–4096, ohne NUL; category_id nach Kategorienvertrag, bei ungeklärter Zuordnung null.
 - parameters: exakt `proposed,approved`, jeweils Liste mit höchstens acht gültigen vorhandenen Rasterparameterobjekten. Approved braucht eine tatsächliche Motiv-/Parameterentscheidung. Mehrere Objekte sind vollständige Alternativen: Ein Raster muss mindestens eine ganze passende Option erfüllen. Sein expliziter Checked-Modus muss zu einer solchen Option gehören; ohne Checked ist ein eindeutiger Modus nötig. Einzelne Felder verschiedener Optionen dürfen nicht vermischt werden.
@@ -88,7 +88,7 @@ Der Akteur führt vom eigenen Checkout aus folgende Befehle aus:
 python -m tools.work_publish publish <id> --expected new
 python -m tools.work_publish resume <id> --expected <arbeitscommit>
 python -m tools.work_publish publish <id> --expected <arbeitscommit>
-python -m tools.work_publish retire <id> --expected <abschlusscommit>
+python -m tools.work_publish retire <id> --expected <erwarteter-Arbeitscommit>
 ```
 
 Resume arbeitet auf einem eigenen Worktree am erwarteten Commit. Der Publisher
@@ -133,10 +133,18 @@ benötigte aktive Metadaten übernehmen; niemals den Arbeitsbranch mit Alternati
 und Protokollen nach Main mergen. Completion und jeder registered-Readback vergleichen die tatsächliche Lieferung einschließlich aktueller Reveal-/Hintergrundnotices und vollständiger ausgewählter Bewertung,
 auch wenn der Integrationscommit keine Arbeitsdateien enthält. Retirement prüft
 bestätigtes Mainergebnis und eigene ausgewählte aktuelle Arbeitsbytes am Arbeitsref;
-die Arbeitsdateien müssen nie zuvor in Main gelegen haben. Vor Ausblendung aktuelle Record-/Nutzdateibindungen am Arbeitsref frisch prüfen, ohne Solverlauf. Nach bestätigtem Mainergebnis beendet retire den eigenen Release, Tag und
-Arbeitsref einschließlich Record und Verweis. Ein abgebrochener Abschluss
-verwendet denselben erwarteten Arbeitscommit. Neue/offene Arbeit,
-fremde Bytes und echte Rechte bleiben erhalten. Kein neuer historischer Receipt.
+die Arbeitsdateien müssen nie zuvor in Main gelegen haben. Nach bestätigtem
+Mainergebnis führt der Akteur `retire` direkt mit dem erwarteten veröffentlichten
+Arbeitscommit aus. Der Publisher liest das Fehlen des eigenen Arbeitsrefs,
+des gebundenen Releases und des Tags zurück. Ein abgebrochener Abschluss
+verwendet im selben Checkout denselben Arbeitscommit. Geänderte Generationen
+und unklare Zuordnungen stoppen die Bereinigung.
+
+Die aktive PW-Liste blendet jede im gültigen gebundenen Mainkatalog registrierte
+ID vor der Prüfung ihrer Arbeitsdaten aus
+([PW2-C](PRODUCTION_WORKSPACE.md#pw2-c--aktive-produktionen-und-fachlicher-abschluss)).
+Auch höhere Revisionen, frühere Phasen und `operation=background` bleiben
+ausgeblendet. Der Listenfilter erteilt keine Befugnis zu Schreiboperationen.
 
 ## Historische Formen
 

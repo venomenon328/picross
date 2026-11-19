@@ -115,8 +115,22 @@ class WorkPublicationTests(unittest.TestCase):
         with patch.object(pub, 'api', side_effect=lost_delete), self.assertRaises(TimeoutError):
             pub.finish(self.root, 'pz-current', second, confirmed=True)
         self.assertIsNone(self.release)
-        self.assertEqual(guard.remote_head(self.root, 'refs/heads/content/pw/pz-current'), second)
+        branch = 'refs/heads/content/pw/pz-current'
+        tag = 'refs/tags/work-prod-pz-current'
+        self.assertEqual(guard.remote_head(self.root, branch), second)
+        real_delete_ref = pub.delete_ref
+
+        def interrupted_branch(root, ref, expected):
+            if ref == branch:
+                raise ConnectionError('Lost branch write')
+            return real_delete_ref(root, ref, expected)
+
+        with patch.object(pub, 'delete_ref', side_effect=interrupted_branch), self.assertRaises(ConnectionError):
+            pub.finish(self.root, 'pz-current', second, confirmed=True)
+        self.assertIsNone(guard.remote_head(self.root, tag))
+        self.assertEqual(guard.remote_head(self.root, branch), second)
         self.assertEqual(pub.finish(self.root,'pz-current',second,confirmed=True),'closed')
+        self.assertIsNone(guard.remote_head(self.root, branch))
         self.assertEqual(pub.finish(self.root,'pz-current',second,confirmed=True),'no-op')
         self.assertFalse(self.assets)
         self.assertIsNone(guard.remote_head(self.root,'refs/tags/work-prod-pz-current'))

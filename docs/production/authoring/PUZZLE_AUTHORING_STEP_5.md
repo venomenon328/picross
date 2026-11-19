@@ -35,16 +35,35 @@ Den aktuellen Arbeitsrecord danach mit tools.work_publish publish auf dem Arbeit
 
 Eigentümerentscheidung vom 14.10.2026: Ein final auf main integriertes Rätsel muss nicht erneut produzierbar sein. Produktionsunterlagen sind Arbeitsmaterial.
 
-1. Tatsächliche Endabnahme und Mainmerge prüfen, origin/main aktualisieren und
-   aktuellen Lieferzustand gegen den bestätigten Maincommit vergleichen.
-2. Für v2 `python -m tools.work_publish retire <id> --expected <abschlusscommit>` ausführen. Der Publisher beendet den Arbeitsrelease samt Tag und Arbeitsref. Für lokale v1-Arbeit gilt weiter: `retire-production --checkout <arbeitscheckout> --integrated-commit <main-SHA>
-   --puzzle-id <id>` prüft die eigene abgeschlossene Arbeit gegen ihren tatsächlichen
-   Arbeitscommit und das aktuelle Produkt gegen Main. Arbeitsdateien müssen nie
-   zuvor in Main gelegen haben. Der aktuelle Record und ausschließlich zugehörige
-   entbehrliche Nutzdateien samt Indexverweis entfallen. Fremde/neue/offene Arbeit
-   bleibt erhalten; unbekannte Dateien und offene Transaktionen blockieren.
-3. Dauerhaft bleiben aktuelle Definition/Matrix/Hinweise, aktive Bilder, Rechte/Notices, IDs, Save-Slots, Revisionen, Namen/Kategorien, Bewertungen und Added-Daten. Aktuelle Bildsources binden ausschließlich die aktuelle Identität und Bildbytes. Es entsteht kein neuer Receipt mit Originalexport-/Source-/Maincommit-Historie.
-4. Entbehrliche Arbeitsdateien entfernen. Verworfene Varianten wurden bereits nach ihrer Auswahlentscheidung ohne Archivierung entfernt. Unbekannte Dateien innerhalb einer ausgewählten Revision blockieren vor Mutation; nicht manuell vorlöschen. Ungewählte neue/offene Arbeit bleibt. Teilfehler mit tatsächlichen Resten melden und denselben Mainanker benutzen. Vollständige Wiederholung ist No-op.
-5. Diff und unveränderte Nutzdaten/Runtime kontrollieren, Cleanup committen/pushen, getrennt selbst prüfen und die bestehenden Pflichtchecks erfüllen. Eigentümerfreigabe vom 15.10.2026 beauftragt genau diesen engen Nachintegrations-Cleanup einschließlich Merge nach bestätigter Integration. Kein weiterer Routineprompt. Diese Befugnis gilt nicht für Werkzeug-/CI-Pakete; ein ausdrückliches „kein Merge“ bleibt maßgeblich. Eigener aktueller Paketplan mit begründet `modules=[]`, kein Playerbau oder rätselspezifischer Dauerfall.
+1. Tatsächliche Endabnahme und autorisierte Mainintegration prüfen, origin/main
+   aktualisieren und die gewählte Lieferung mit dem bestätigten Maincommit
+   vergleichen. Der Listenfilter nach PW-DONE blendet jede registrierte ID aus.
+2. Für v2 führt der ausführende Akteur direkt den bestehenden Befehl aus:
+   `python -m tools.work_publish retire <id> --expected <erwarteter-Arbeitscommit>`.
+   `--expected` ist die nach Completion veröffentlichte SHA der eigenen
+   Arbeitsgeneration. Der Publisher liest das Fehlen des Remote-Branches
+   `content/pw/<id>`, des gebundenen Arbeitsreleases und des Tags
+   `work-prod-<id>` zurück. Der autorisierte Schlussauftrag umfasst diesen
+   Akteursschritt bereits.
+3. Bei Fehlern oder fehlendem Schreibrecht Integration, konkrete offene
+   Bereinigungsreste und den Wiederholungsbefehl getrennt melden. Nach Klärung
+   im selben Checkout mit derselben Arbeits-SHA fortsetzen. Vollständig
+   abgebaute Arbeitsgenerationen ergeben nach Readback einen No-op. Fremde
+   oder geänderte Generationen werden erhalten.
+4. Für lokale v1-Arbeit gilt `retire-production --checkout <arbeitscheckout>
+   --integrated-commit <main-SHA> --puzzle-id <id>`. Der Befehl prüft eigene
+   Arbeit gegen den tatsächlichen Arbeitscommit und das aktuelle Produkt gegen
+   Main. Ausschließlich zugehörige entbehrliche Dateien und Indexverweise
+   entfallen. Unbekannte Dateien und offene Transaktionen blockieren.
+5. Wenn der lokale Abschluss einen Cleanup-PR benötigt, Diff und Produktdaten
+   prüfen, committen, pushen und die bestehenden Pflichtchecks erfüllen.
+   Die Eigentümerfreigabe vom 15.10.2026 umfasst den eng gebundenen
+   Nachintegrations-Cleanup einschließlich Merge. Ein ausdrücklicher
+   Draftauftrag gilt weiter. Für den Inhalts-Cleanup einen aktuellen
+   Paketplan mit begründetem `modules=[]` verwenden.
+
+Dauerhaft bleiben aktuelle Definition, Matrix, Hinweise, Bilder, Rechte, Notices,
+IDs, Save-Slots, Revisionen, Namen, Kategorien, Bewertungen und Added-Daten.
+Aktuelle Bildquellen binden die aktuelle Identität und Bildbytes.
 
 Spätere echte Änderungen bleiben eigene Aufträge. Fehlende frühere Arbeitsdateien sind kein Defekt. Raster-/Reveal-/Hintergrundänderungen verwenden den [gezielten Editorvertrag](../../tools/PUZZLE_EDITOR.md#13-pe-edit2-gezielte-pflege-statt-vollbestandsprüfung), keinen neuen alten Export. Gültige aktuelle Bilder und Korrekturbefugnisse bleiben erhalten. Ihre eindeutig zugeordneten Arbeitsdaten nach tatsächlich bestätigtem Mainstand gezielt abschließen; aktuelle Rechte/Notices erhalten. Lokale Checkoutbereinigung richtet sich gesondert nach WORKSPACE und Benutzerauftrag.

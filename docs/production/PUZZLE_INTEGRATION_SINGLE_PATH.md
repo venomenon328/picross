@@ -208,9 +208,14 @@ genügen die aktuellen Nutzdaten aus §2. Nicht mehr vorhandene alte
 Arbeitsdateien sind kein Inhaltsdefekt. Neue/offene Arbeit derselben ID,
 fremde Daten und benötigte Rechteinformationen bleiben erhalten.
 
-Die PW-Liste und Completion bestimmen den Abschluss aus der aktuellen
-Lieferung und dem tatsächlichen Mainzustand. Spätere Bild-/Rasterarbeit
-bleibt als eigene offene Arbeit erkennbar.
+Die PW-Liste blendet eine registrierte ID anhand der gültigen Inhaltsregistry
+am gebundenen Maincommit dauerhaft aus. Spätere Pflege verwendet den bestehenden
+Editor-/Revisionsweg. Completion und Retirement prüfen weiterhin das fachliche
+Ergebnis. Nach bestätigter autorisierter Integration führt der Produktionsakteur
+den gebundenen v2-Abschluss aus und liest das Fehlen des eigenen Branches,
+Arbeitsreleases und Tags zurück. Offene Reste werden mit der erwarteten
+Arbeits-SHA gemeldet. Der Ablauf steht in
+[Authoring Schritt 5 §9](authoring/PUZZLE_AUTHORING_STEP_5.md#9-produktionsabschluss-und-bereinigung).
 
 ## 6. Einmalige Bestandsüberführung
 

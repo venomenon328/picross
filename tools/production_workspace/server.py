@@ -92,10 +92,24 @@ class Service:
                                       'error': self.update_error}}
 
     def listing(self, refresh=False):
+        from .motifs import group
         value = self.repository.refresh() if refresh else self.repository.listing()
         snapshot = secrets.token_hex(16)
         ids, public = [], []
         with self.lock:
+            if value.get('sync_error'):
+                if self.current and self.current['snapshot']:
+                    # Keep the last bound public IDs and active detail requests.
+                    motifs = group(self.current['jobs'], self.current['relations'],
+                                   confirmed=False, remote=self.repository.remote)
+                    self.current = {**self.current, 'sync_error': value['sync_error'],
+                                    'remote_confirmed': False, 'motifs': motifs,
+                                    'completion': {**self.current['completion'], 'confirmed': False,
+                                                   'note': 'Letzter gebundener Listenstand ist veraltet.'}}
+                    return self.current
+                if value['completion']['main_commit'] is None:
+                    self.current = {**value, 'snapshot': None, 'motifs': []}
+                    return self.current
             for job in value['jobs']:
                 jid = secrets.token_hex(16)
                 ids.append(jid)
@@ -106,7 +120,6 @@ class Service:
                 _, expired = self.snapshots.popitem(last=False)
                 for jid in expired:
                     self.jobs.pop(jid, None)
-            from .motifs import group
             motifs = group(public, value.get('relations', {}), confirmed=value.get('remote_confirmed', False), remote=self.repository.remote)
             self.current = {**value, 'snapshot': snapshot, 'jobs': public, 'motifs': motifs}
             return self.current
