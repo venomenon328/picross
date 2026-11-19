@@ -74,8 +74,9 @@ def build(destination, *, version=None, app=PW):
     work = destination / 'work'; work.mkdir()
     generated = []
     helper = None
+    windows = Path(os.environ['SystemRoot'])
     if app in (PW, PE):
-        compiler = Path(os.environ['SystemRoot']) / 'Microsoft.NET/Framework64/v4.0.30319/csc.exe'
+        compiler = windows / 'Microsoft.NET/Framework64/v4.0.30319/csc.exe'
         helper = work / 'UpdateHelper.exe'
         subprocess.run([str(compiler), '/nologo', '/target:exe', '/platform:x64',
                         '/reference:System.Web.Extensions.dll', '/out:' + str(helper),
@@ -83,6 +84,9 @@ def build(destination, *, version=None, app=PW):
                         str(PACKAGE / 'packaging/UpdateHelper.cs')], check=True)
         generated.append(helper)
     env = os.environ.copy()
+    # PyInstaller also resolves DLL imports through PATH. Keep unrelated
+    # toolchains out of the payload while retaining Windows system DLL lookup.
+    env['PATH'] = os.pathsep.join((str(windows / 'System32'), str(windows)))
     env.update(PYINSTALLER_CONFIG_DIR=str(work / 'cache'), TEMP=str(work), TMP=str(work), PYTHONHASHSEED='0')
     resources = {f'ui/{name}': sha(package / 'ui' / name) for name in
                  (('index.html', 'app.js', 'workflow.js', 'style.css') if app == PW else ('index.html', 'app.js', 'style.css'))}
