@@ -43,6 +43,16 @@
       "path": "tests/puzzle_production/test_authoring_workflow.py",
       "disposition": "change-scoped",
       "reason": "Der bestehende Phasenübergabefall nutzt einen gültigen synthetischen Katalog."
+    },
+    {
+      "path": "tools/test_production_removal.py",
+      "disposition": "change-scoped",
+      "reason": "Die bestehenden P2-Schutztests laden einen gültigen synthetischen Mainkatalog."
+    },
+    {
+      "path": "tools/test_authoring_sheet.py",
+      "disposition": "change-scoped",
+      "reason": "Der Schlussauftragstest prüft erwartete Arbeits-SHA und Readbacks sowie die fehlende Retirementbeauftragung bei Draft und Wiederaufnahme."
     }
   ],
   "core_change": null,

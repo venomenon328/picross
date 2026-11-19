@@ -509,7 +509,7 @@ class WorkspaceTests(unittest.TestCase):
                 patch.object(repo.local, 'read', wraps=repo.local.read) as read:
             first = repo.listing()
             self.assertEqual({j['ref'] for j in first['jobs']}, {'main', 'content/pw/pz-workspace-test'})
-            self.assertEqual(resolve.call_count, 2)
+            self.assertEqual(resolve.call_count, 1, 'both refs bind the same commit')
             reads = read.call_count
             second = repo.listing()
             self.assertEqual(len(second['jobs']), 2)

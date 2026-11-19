@@ -215,14 +215,16 @@ assert.equal(P.orderStep(v),5);assert.equal(P.step(v),4,'copy does not advance d
 for(const intent of [selected,{selection:'none'}]){
  const before=JSON.stringify(v), text=P.prompt(v,intent,{});
  assert.match(text,/Schritt 5/);assert.match(text,/Ich erteile die Endabnahme/);assert.match(text,/Integration/);
- assert.match(text,/unabhängiges Review/);assert.match(text,/Squash-Merge.*Vor-Merge-Gates/);assert.match(text,/Authoring §9/);
+ assert.match(text,/unabhängiges Review/);assert.match(text,/Squash-Merge.*Vor-Merge-Gates/);assert.match(text,/Authoring Schritt 5 §9/);
+ assert.match(text,/work_publish retire pz-test --expected <nach Completion veröffentlichter Arbeitscommit>/);
+ assert.match(text,/Produktionsbranches, Arbeitsreleases und Tags zurücklesen/);
  assert.doesNotMatch(text,/Zur Endabnahme vorbereiten|Keine zusätzliche Abschlussbereinigung|SHA-256|workspace.json/);
  assert.equal(text.split(record.file).length,2);assert.equal(JSON.stringify(v),before);
- const draft=P.prompt(v,intent,{merge:false});assert.match(draft,/Draft-PR.*kein Merge/);assert.doesNotMatch(draft,/Squash-Merge/);
+ const draft=P.prompt(v,intent,{merge:false});assert.match(draft,/Draft-PR.*kein Merge/);assert.doesNotMatch(draft,/Squash-Merge|work_publish retire/);
 }
 for(const action of ['resume','rework']){
  const text=P.prompt(v,{...selected,action,feedback:'Striche korrigieren'},{merge:true});
- assert.doesNotMatch(text,/Ich erteile|Ich wähle|Squash-Merge/);assert.match(text,/kein Merge/);
+ assert.doesNotMatch(text,/Ich erteile|Ich wähle|Squash-Merge|work_publish retire/);assert.match(text,/kein Merge/);
 }
 for(const intent of [{},{selection:'missing',kind:'background'},{selection:'A',kind:'raster'}])assert.throws(()=>P.prompt(v,intent,{}));
 assert.throws(()=>P.prompt({...v,facts:{...v.facts,composition:null}},selected,{}),/Schlussübersicht/);
