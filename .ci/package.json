@@ -1,51 +1,21 @@
 {
   "format": "development-ci-plan/v1",
   "issue": "https://github.com/venomenon328/picross/issues/717",
-  "package": "REPO-SLIM-B",
+  "package": "REPO-SLIM-B-PW-INSTALLER",
   "modules": [
-    "tools",
-    "production.images",
-    "production.adapter",
-    "production.catalog"
+    "tools"
   ],
-  "purpose": "Externe Originalbytes, sichere Fortschreibung, Wiederaufnahme, RI-ONE und Abschluss; getrennte Reviewzustellung und Publikationsprüfung.",
-  "omitted": "Keine Änderung an Spielpfaden oder Lösungsalgorithmen. Betrieb und unabhängiger Originalzugang werden separat am Head geprüft.",
+  "purpose": "PW-Fingerprint und Git-Werkzeuggrenze prüfen. Einmaliger vollständiger Analysis-/PYZ-Abgleich und separater PW-Diagnosebau mit echter MSI-Inspektion.",
+  "omitted": "Fach-, Native- und Browsermodule sind bei der reinen Import- und Paketgrenze nicht erforderlich. Installation und produktive Veröffentlichung sind nicht Teil der Diagnose.",
   "test_changes": [
-    {
-      "path": "tools/test_ci_growth.py",
-      "disposition": "change-scoped",
-      "reason": "Bestandsänderungen und legitime Herstellungsinputs."
-    },
-    {
-      "path": "tools/test_ci_modular.py",
-      "disposition": "change-scoped",
-      "reason": "Explizite Originalauswahl im Paketplan."
-    },
-    {
-      "path": "tools/test_work_publish.py",
-      "disposition": "change-scoped",
-      "reason": "Synthetische Arbeitsoriginale, Releasegrenzen, Publikationskonflikte und ausgehende Gitobjekte."
-    },
     {
       "path": "tools/test_production_installer.py",
       "disposition": "change-scoped",
-      "reason": "Signierter App-Publisher unter gemeinsamem Kataloglimit und konkurrierender Release-Lease."
-    },
-    {
-      "path": "tools/test_production_removal.py",
-      "disposition": "change-scoped",
-      "reason": "Bestätigte v2-Entfernung und kontrollierte Transportfehler über die P2-Oberfläche."
+      "reason": "Der bestehende Fingerprinttest prüft den Quittungsanker und schließt Git-Publisher und CI-Helfer als Fingerprintinputs aus."
     }
   ],
-  "core_change": "Gezielte Dateiauswahl für Review und Prüfung geänderter Pfadklassen. Regulärer Windowsbau.",
+  "core_change": null,
   "evidence": {
-    "mode": "review",
-    "purpose": "A-717-B-R01: unabhängiger technischer Reviewer prüft das ausgewählte maschinenlesbare Lauforiginal für B-T02.",
-    "expires": "2026-11-26",
-    "files": {
-      "production.images": [
-        "production/production-result.json"
-      ]
-    }
+    "mode": "none"
   }
 }

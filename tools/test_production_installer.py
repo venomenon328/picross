@@ -575,12 +575,17 @@ class AppReleaseTests(unittest.TestCase):
         first = payload.fingerprint(root)
         write('tools/puzzle_production/za1_fixtures.py', b'test-only fixture\n'); commit()
         self.assertEqual(first, payload.fingerprint(root), 'Test-only code must not trigger an app update')
-        for name in ('content/a.json', 'game/main.gd', 'docs/NOT-PACKAGED.md', 'tools/ci_modular.py'):
+        for name in ('content/a.json', 'game/main.gd', 'docs/NOT-PACKAGED.md', 'tools/ci_modular.py',
+                     'tools/ci_growth.py', 'tools/work_ref_check.py', 'tools/publish_git.py', 'tools/work_publish.py'):
             write(name, b'irrelevant'); commit()
             self.assertEqual(first, payload.fingerprint(root))
+        write('tools/work_refs.py', b'CLEAN_MAIN = "anchor"\n'); commit()
+        with_anchor = payload.fingerprint(root)
+        self.assertNotEqual(first['sha256'], with_anchor['sha256'])
+        self.assertIn('tools/work_refs.py', {row['file'] for row in with_anchor['files']})
         write('tools/puzzle_production/new_reader.py', b'new=1\n'); commit()
         second = payload.fingerprint(root)
-        self.assertNotEqual(first['sha256'], second['sha256'])
+        self.assertNotEqual(with_anchor['sha256'], second['sha256'])
         payload.git(root, 'update-index', '--chmod=+x', 'tools/puzzle_production/new_reader.py')
         payload.git(root, '-c', 'user.name=synthetic', '-c', 'user.email=synthetic@example.invalid', 'commit', '-qm', 'mode')
         self.assertNotEqual(second['sha256'], payload.fingerprint(root)['sha256'])

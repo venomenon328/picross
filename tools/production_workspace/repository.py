@@ -18,6 +18,7 @@ from tools.puzzle_production.authoring_builder import index_value
 from tools.puzzle_production.contract import exact_keys
 from .sources import git, GitSource, INDEX, JSON_LIMIT, LRU
 from tools.puzzle_production import current_authoring
+from tools.work_refs import CLEAN_MAIN
 from . import presentation as p
 
 DEFAULT_REFS = ['main', 'content/pw/*']
@@ -67,7 +68,6 @@ def removal_request(job, expected, main, prs):
 def removal_receipt(expected, main):
     # Both endpoints are already public commits. Also distinguish the two states
     # if the operator is retiring a work ref pointing at the current main.
-    from tools.publish_git import CLEAN_MAIN
     receipt = expected if expected != main else CLEAN_MAIN
     ap.require(receipt != main, 'Kein eindeutiger Quittungsstand für diesen Maincommit.')
     return receipt
