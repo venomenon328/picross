@@ -86,9 +86,8 @@ def pe_selected(path):
 def selected(path, *, app=PW):
     if app == PE:
         return pe_selected(path)
-    if path in {'tools/app_products.py', 'tools/msi_database.py'}:
-        return True
-    if path in {'tools/__init__.py', 'tools/work_publish.py', 'tools/publish_git.py', 'tools/ci_growth.py', '.github/workflows/pw-installer.yml'}:
+    if path in {'tools/__init__.py', 'tools/app_products.py', 'tools/msi_database.py',
+                'tools/work_refs.py', '.github/workflows/pw-installer.yml'}:
         return True
     for scope in (WORKSPACE, PRODUCTION):
         if path.startswith(scope):

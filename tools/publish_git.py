@@ -8,10 +8,11 @@ from pathlib import Path
 
 try:
     from .ci_growth import forbidden, SHA
+    from .work_refs import CLEAN_MAIN
 except ImportError:
     from ci_growth import forbidden, SHA
+    from work_refs import CLEAN_MAIN
 
-CLEAN_MAIN = '9f23a7f9e2d0d4c64b96cd1bc5b709e63f8ccfb0'
 REMOTE = 'https://github.com/venomenon328/picross.git'
 
 
