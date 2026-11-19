@@ -87,7 +87,12 @@ Der Paketplan nennt für review/failure unter evidence.files genau die
 Laufdateien pro Matrixteil, beispielsweise {"tools": ["tools.log"]}. Namen
 sind relative Pfade im temporären Modul-Arbeitsordner. Fehlende Originale,
 Muster und indirekte Dateipfade sind Fehler. Für ausschließlich lokale
-Originale gilt die direkte Dateizustellung nach dem Zustellvertrag.
+Originale gilt die direkte Dateizustellung nach dem Zustellvertrag. Liegt
+das lokale Original bereits als aktueller Jobanhang vor, kann ein manueller
+Package-CI-Dispatch am Produkt-Head aus dem Eingabefeld review_attachment
+(eine vollständige PW-B-Dateireferenz) genau diese Datei als siebentägiges
+Reviewartefakt übernehmen. Der Dispatch liest und verifiziert die externen
+Bytes vor dem Upload. Er benötigt weder Playerbau noch technische Matrix.
 
 ## Lokale Arbeitsablage
 

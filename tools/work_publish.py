@@ -22,7 +22,7 @@ MIB = 1024**2
 
 
 def api(path, method='GET', value=None):
-    args = ['gh', 'api', '--hostname', 'github.com', '-X', method, 'repos/' + REPO + '/' + path]
+    args = ['gh', 'api', '--hostname', 'github.com', '-X', method, ('repos/' + REPO + '/' + path).rstrip('/')]
     if value is not None:
         args += ['--input', '-']
     raw = subprocess.check_output(args, input=json.dumps(value).encode() if value is not None else None, timeout=60)

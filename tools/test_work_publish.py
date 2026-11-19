@@ -60,7 +60,8 @@ class WorkPublicationTests(unittest.TestCase):
 
     def get(self,path,limit,*,binary=False):
         if binary:
-            return self.assets[int(path.rsplit('/',1)[1])]
+            row = next(a for a in self.release['assets'] if a['name'] == path.rsplit('/',1)[1])
+            return self.assets[row['id']]
         return json.dumps(self.release).encode()
 
     def record(self,commit):

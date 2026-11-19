@@ -189,6 +189,7 @@ SOURCE_GROUPS = {'tests/puzzle_production/background_catalog_fixtures.py': ('sol
  'tests/puzzle_production/test_sd2_rating.py': ('solver',),
  'tests/puzzle_production/test_stalled_color_adapter.py': ('adapter',),
  'tests/puzzle_production/test_target_adapter.py': ('adapter',),
+ 'tools/puzzle_production/work_assets.py': ('images', 'adapter', 'catalog'),
  'tools/puzzle_production/__init__.py': ('solver', 'images', 'adapter', 'catalog'),
  'tools/puzzle_production/__main__.py': ('solver', 'images', 'adapter', 'catalog'),
  'tools/puzzle_production/accepted_raster.py': ('solver', 'images', 'adapter', 'catalog'),

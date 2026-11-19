@@ -226,7 +226,7 @@ def review(value, criteria, *, ready, decisions=()):
 class Checked:
     """Fresh current files only. UI can omit proof execution but never byte checks."""
     def __init__(self, job, read, *, technical=True):
-        self.job=validate(deepcopy(job)); self.read=read; self.raw={}; self.rasters={}
+        self.job=validate(deepcopy(job)); self.read=read; self.raw={}; self.rasters={}; self.releases={}
         j=self.job; phase=PHASES.index(j['state']); selected=j['selected']
         decisions={d['scope']:d for d in j['decisions']}
         for ref in references(j): self.bound(ref,64*LIMIT)
@@ -284,7 +284,7 @@ class Checked:
         content.reference(expected,limit=limit)
         name=ref['file']
         if 'asset' in ref and name not in self.raw:
-            self.raw[name] = work_assets.read(ref, limit)
+            self.raw[name] = work_assets.read(ref, limit, releases=self.releases)
         if name not in self.raw: self.raw[name]=self.read(name,limit)
         raw=self.raw[name]
         ap.require(len(raw)<=limit and content.ref(name,raw)==expected, 'Current source missing/stale: '+name)

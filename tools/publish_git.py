@@ -24,6 +24,11 @@ def check_range(root, head, bases, *, anchor=None):
     anchor = anchor or CLEAN_MAIN
     if git(root, 'rev-parse', '--is-shallow-repository').strip() != b'false':
         raise ValueError('Complete Git history required')
+    partial = subprocess.run(['git', '-C', str(root), 'config', '--get-regexp',
+                              r'^(extensions\.partialclone|remote\..*\.(promisor|partialclonefilter))$'],
+                             capture_output=True)
+    if partial.returncode != 1:
+        raise ValueError('Full object database required for pre-publication verification')
     if not bases or not all(SHA.fullmatch(x) for x in [head, anchor, *bases]):
         raise ValueError('Full source and boundary commits required')
     git(root, 'merge-base', '--is-ancestor', anchor, head)

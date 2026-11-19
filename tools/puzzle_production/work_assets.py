@@ -1,6 +1,5 @@
 """Read published production originals by an immutable GitHub asset identity."""
 import json
-import re
 import time
 from urllib.parse import urlsplit
 from urllib.request import HTTPRedirectHandler, ProxyHandler, Request, build_opener
@@ -41,7 +40,10 @@ class AssetRedirect(HTTPRedirectHandler):
 
 
 def get(path, limit, *, binary=False):
-    request = Request(API + path, headers={'Accept': 'application/octet-stream' if binary else 'application/vnd.github+json',
+    # A byte request is derived from a validated release row and a hash-based
+    # name. Browser downloads do not consume one API request per offered file.
+    base = 'https://github.com/' + REPOSITORY if binary else API
+    request = Request(base + path, headers={'Accept': 'application/octet-stream' if binary else 'application/vnd.github+json',
                                           'Accept-Encoding': 'identity', 'User-Agent': 'picross-work-assets'})
     deadline = time.monotonic() + 60
     with build_opener(ProxyHandler({}), AssetRedirect()).open(request, timeout=10) as response:
@@ -54,15 +56,21 @@ def get(path, limit, *, binary=False):
     raise ValueError('Production asset exceeds its byte/time budget')
 
 
-def read(ref, limit):
+def read(ref, limit, *, releases=None):
     ident = ref['asset']
     validate(ref, ident['job'], limit)
-    release = json.loads(get('/releases/tags/work-prod-' + ident['job'], 4 * 1024**2))
+    tag = 'work-prod-' + ident['job']
+    releases = {} if releases is None else releases
+    if tag not in releases:
+        releases[tag] = json.loads(get('/releases/tags/' + tag, 4 * 1024**2))
+    release = releases[tag]
     require(release['id'] == ident['release_id'] and release['tag_name'] == 'work-prod-' + ident['job']
             and release['prerelease'] and not release['draft'], 'Original work release missing')
     rows = [a for a in release['assets'] if a['id'] == ident['asset_id']]
     require(len(rows) == 1 and rows[0]['size'] == ref['bytes'] and rows[0]['state'] == 'uploaded',
             'Original asset missing from bound release')
-    raw = get('/releases/assets/' + str(ident['asset_id']), ref['bytes'], binary=True)
+    name = 'original-' + ref['sha256']
+    require(rows[0]['name'] == name, 'Unexpected physical asset name')
+    raw = get('/releases/download/' + tag + '/' + name, ref['bytes'], binary=True)
     require(content.ref(ref['file'], raw) == local_ref(ref), 'Original asset bytes differ')
     return raw

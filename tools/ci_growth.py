@@ -62,7 +62,7 @@ def forbidden(path):
             set(parts) & {'.godot', '.venv', '__pycache__', 'node_modules', 'screenshots', 'captures', 'runs'}):
         return 'generated output class'
     suffix = Path(lower).suffix
-    if suffix in {'.log', '.pck', '.wasm', '.exe', '.dll', '.pyc', '.pyo'}:
+    if suffix in {'.log', '.pck', '.wasm', '.exe', '.dll', '.pyc', '.pyo', '.msi', '.msix'}:
         return 'runtime/build output'
     if parts[0] in {'review', 'review-originals', 'review-evidence', 'pe-app-evidence'}:
         return 'review delivery'
