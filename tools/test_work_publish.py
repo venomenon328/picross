@@ -288,7 +288,7 @@ class WorkPublicationTests(unittest.TestCase):
             with self.assertRaisesRegex(ValueError, 'Pull request facts changed'):
                 worker(delay)
 
-        with patch.object(pw.time, 'sleep', side_effect=new_pr):
+        with patch.object(pw, 'sleep', side_effect=new_pr):
             self.assertFalse(confirm()['removed'])
         self.assertTrue(self.assets)
         open_prs.clear()
@@ -302,12 +302,12 @@ class WorkPublicationTests(unittest.TestCase):
             with patch.object(pub, 'api', side_effect=interrupted), self.assertRaises(TimeoutError):
                 worker(delay)
 
-        with patch.object(pw.time, 'sleep', side_effect=lost_reply):
+        with patch.object(pw, 'sleep', side_effect=lost_reply):
             self.assertFalse(confirm()['removed'])
         self.assertFalse(self.assets)
         self.assertEqual(guard.remote_head(self.root, tag), self.main)
         self.assertEqual(guard.remote_head(self.root, 'refs/heads/' + branch), expected)
-        with patch.object(pw.time, 'sleep', side_effect=worker):
+        with patch.object(pw, 'sleep', side_effect=worker):
             self.assertTrue(confirm()['removed'])
         for ref in ('refs/heads/' + request, 'refs/heads/' + branch, tag):
             self.assertIsNone(guard.remote_head(self.root, ref))

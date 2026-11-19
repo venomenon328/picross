@@ -7,7 +7,7 @@ from pathlib import Path
 import re
 import subprocess
 import threading
-import time
+from time import monotonic, sleep
 from urllib.error import HTTPError
 from urllib.parse import urlsplit
 from urllib.parse import urlencode
@@ -249,10 +249,10 @@ class ProductionRemoval:
             if state is None:
                 # Only the main commit just observed on this same remote is sent.
                 self._push_refs([(request, '', main)])
-            deadline = time.monotonic() + 240
+            deadline = monotonic() + 240
             state = self.remote_head(request)
-            while state == main and time.monotonic() < deadline:
-                time.sleep(3)
+            while state == main and monotonic() < deadline:
+                sleep(3)
                 state = self.remote_head(request)
             ap.require(state == receipt, 'Actions-Auftrag unbestätigt. Quellen und Lauf prüfen, dann erneut bestätigen.')
             ap.require(self.probe(job) == facts, 'Vorprüfungsbefunde nach Releaseabbau geändert. Neu vorprüfen.')
