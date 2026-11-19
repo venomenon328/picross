@@ -1,11 +1,14 @@
 """Configured local refs and optional remote sync into a private bare cache."""
 from datetime import datetime, timezone
+import hashlib
 import json
 import os
 from pathlib import Path
 import re
 import subprocess
 import threading
+import time
+from urllib.error import HTTPError
 from urllib.parse import urlsplit
 from urllib.parse import urlencode
 from urllib.request import Request, build_opener, HTTPRedirectHandler
@@ -34,7 +37,7 @@ class NoRedirect(HTTPRedirectHandler):
         return None
 
 
-def github_get(path):
+def github_get(path, *, missing=False):
     """Only fixed public GitHub reads; no credential discovery or redirects."""
     try:
         request = Request('https://api.github.com/repos/venomenon328/picross' + path,
@@ -43,8 +46,31 @@ def github_get(path):
                                    'X-GitHub-Api-Version': '2022-11-28'})
         with build_opener(NoRedirect).open(request, timeout=10) as response:
             return p.parse(response.read(8 * JSON_LIMIT + 1), 8 * JSON_LIMIT)
+    except HTTPError as exc:
+        if missing and exc.code == 404:
+            return None
+        raise ap.InvalidInput('GitHub-Status nicht prüfbar (HTTP-Fehler). Entfernung gesperrt.') from exc
     except (ValueError, OSError) as exc:
         raise ap.InvalidInput('GitHub-Status nicht prüfbar (Zugang, Rate-Limit oder Netzwerk). Entfernung gesperrt.') from exc
+
+
+REMOVAL_PREFIX = 'work-prod-control/remove/'
+
+
+def removal_request(job, expected, main, prs):
+    # The original record SHA binds the release and all its assets. The digest
+    # binds the main and PR warnings actually presented to the operator.
+    snapshot = p.data([main, sorted(prs, key=lambda row: row['number'])])
+    return REMOVAL_PREFIX + job + '/' + expected + '/' + hashlib.sha256(snapshot).hexdigest()[:32]
+
+
+def removal_receipt(expected, main):
+    # Both endpoints are already public commits. Also distinguish the two states
+    # if the operator is retiring a work ref pointing at the current main.
+    from tools.publish_git import CLEAN_MAIN
+    receipt = expected if expected != main else CLEAN_MAIN
+    ap.require(receipt != main, 'Kein eindeutiger Quittungsstand für diesen Maincommit.')
+    return receipt
 
 
 class ProductionRemoval:
@@ -110,7 +136,8 @@ class ProductionRemoval:
         ap.require(actual == ref, 'Remote lieferte einen anderen Ref.')
         return check_commit(sha)
 
-    def pull_requests(self, branch):
+    @staticmethod
+    def pull_requests(branch):
         rows = []
         for page in range(1, 101):
             values = github_get('/pulls?' + urlencode({'state': 'all', 'head': 'venomenon328:' + branch,
@@ -196,15 +223,55 @@ class ProductionRemoval:
                 'local': local, 'prs': prs, 'main': main, 'warnings': warnings, 'blockers': blockers}
 
     def push_delete(self, facts):
-        # Explicit URL + single refspec: no named-remote mirror/refspec/pushurl defaults.
-        # Lease is enforced by receive-pack even if the tip changes AFTER the probe.
+        self._push_refs([(facts['ref'], facts['sha'], '')])
+
+    def _push_refs(self, updates):
+        leases = ['--force-with-lease=' + ref + ':' + old for ref, old, new in updates]
+        specs = [new + ':' + ref for ref, old, new in updates]
+        atomic = ['--atomic'] if len(updates) > 1 else []
         git(self.repository.cached.root, '-c', 'http.followRedirects=false', '-c', 'protocol.allow=never',
             '-c', 'protocol.https.allow=always', '-c', 'protocol.ssh.allow=always',
             '-c', 'protocol.file.allow=always', '-c', 'push.followTags=false',
-            'push', '--porcelain', '--no-verify', '--no-follow-tags', '--no-signed',
-            '--recurse-submodules=no', '--receive-pack=git-receive-pack',
-            '--force-with-lease=' + facts['ref'] + ':' + facts['sha'],
-            '--', self.repository.remote, ':' + facts['ref'])
+            'push', *atomic, '--porcelain', '--no-verify', '--no-follow-tags', '--no-signed',
+            '--recurse-submodules=no', '--receive-pack=git-receive-pack', *leases,
+            '--', self.repository.remote, *specs)
+
+    def remove_external(self, job, facts):
+        expected, main = facts['sha'], facts['main']['commit']
+        request = 'refs/heads/' + removal_request(facts['puzzle_id'], expected, main, facts['prs'])
+        receipt = removal_receipt(expected, main)
+        binding = job['_record']['work_release']
+        tag = 'work-prod-' + facts['puzzle_id']
+        tagref = 'refs/tags/' + tag
+        state = self.remote_head(request)
+        ap.require(state in (None, main, receipt), 'Fremder Auftragsref. Entfernung gesperrt.')
+        try:
+            if state is None:
+                # Only the main commit just observed on this same remote is sent.
+                self._push_refs([(request, '', main)])
+            deadline = time.monotonic() + 240
+            state = self.remote_head(request)
+            while state == main and time.monotonic() < deadline:
+                time.sleep(3)
+                state = self.remote_head(request)
+            ap.require(state == receipt, 'Actions-Auftrag unbestätigt. Quellen und Lauf prüfen, dann erneut bestätigen.')
+            ap.require(self.probe(job) == facts, 'Vorprüfungsbefunde nach Releaseabbau geändert. Neu vorprüfen.')
+            ap.require(github_get('/releases/' + str(binding['id']), missing=True) is None and
+                       github_get('/releases/tags/' + tag, missing=True) is None,
+                       'Entfernung des gebundenen Releases nicht bestätigt.')
+            anchor = self.remote_head(tagref)
+            ap.require(anchor in (None, binding['anchor']), 'Arbeitstag inzwischen geändert.')
+            updates = [(facts['ref'], expected, ''), (request, receipt, '')]
+            if anchor:
+                updates.append((tagref, anchor, ''))
+            self._push_refs(updates)
+            ap.require(self.remote_head(tagref) is None, 'Entfernung des Arbeitstags nicht bestätigt.')
+        finally:
+            # Withdraw a pending request or recover a receipt after an interrupted
+            # client. Compare-and-delete never cancels a different generation.
+            remaining = self.remote_head(request)
+            if remaining in (main, receipt):
+                self._push_refs([(request, remaining, '')])
 
     def remove(self, job, facts):
         fresh = self.probe(job)
@@ -212,10 +279,11 @@ class ProductionRemoval:
         ap.require(fresh == facts, 'Vorprüfungsbefunde haben sich geändert. Neu vorprüfen und bestätigen.')
         try:
             if facts['external_assets']:
-                from tools.work_publish import finish
-                finish(self.repository.local.root, facts['puzzle_id'], facts['sha'], confirmed=True)
+                self.remove_external(job, facts)
             else:
                 self.push_delete(facts)
+        except ap.InvalidInput as exc:
+            return {'removed': False, 'message': str(exc) + ' Entfernung nicht bestätigt.'}
         except (OSError, ValueError, subprocess.SubprocessError):
             return {'removed': False, 'message': 'Push abgelehnt oder nicht rechtzeitig bestätigt (Lease, Rechte oder Netzwerk). Ausgang nicht als Erfolg bestätigt; Quellen neu prüfen.'}
         try:

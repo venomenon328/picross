@@ -1,0 +1,30 @@
+name: Confirmed PW release removal
+on:
+  workflow_run:
+    workflows: [Working ref publication check]
+    types: [completed]
+    branches: ['work-prod-control/remove/**']
+
+permissions: {}
+jobs:
+  remove-release:
+    if: >-
+      github.repository == 'venomenon328/picross' && github.ref == 'refs/heads/main' &&
+      github.event.workflow_run.path == '.github/workflows/work-growth.yml' &&
+      github.event.workflow_run.event == 'push' && github.event.workflow_run.conclusion == 'success' &&
+      github.event.workflow_run.head_repository.full_name == github.repository &&
+      github.event.workflow_run.head_sha == github.sha
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Verify the live request and remove its bound release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: python3 -m tools.work_removal

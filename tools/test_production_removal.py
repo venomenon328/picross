@@ -125,7 +125,7 @@ class RemovalTests(unittest.TestCase):
             for error in (FileNotFoundError(), subprocess.TimeoutExpired('git', 30)):
                 plan = self.preview()
                 self.assertTrue(plan['external_assets'])
-                with patch('tools.work_publish.finish', side_effect=error):
+                with patch.object(self.writer, 'remove_external', side_effect=error):
                     result = self.confirm(plan)
                 self.assertFalse(result['removed'])
                 self.assertEqual(self.writer.remote_head(REF), self.sha)

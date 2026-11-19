@@ -150,7 +150,8 @@ def publish_locked(root, job, expected, main, checked):
     tag_ref = 'refs/tags/' + tag
     anchor = transport.remote_head(root, tag_ref)
     if release is None:
-        require(actual == expected and not old and anchor is None, 'Work release missing or tag occupied')
+        require(actual == expected and not (previous and 'work_release' in previous) and anchor is None,
+                'Work release missing or tag occupied')
         release = api('releases', 'POST', {'tag_name': tag, 'target_commitish': main, 'name': tag,
                       'body': 'Picross production job ' + job, 'draft':False, 'prerelease':True, 'make_latest':'false'})
         anchor = transport.remote_head(root, tag_ref)
@@ -221,61 +222,70 @@ def finish(root, job, expected, *, confirmed=False):
     main = transport.remote_head(root, 'refs/heads/main')
     transport.git(root,'fetch','--no-tags','--',transport.REMOTE,main)
     with catalog_writer(root, main):
-        branch = 'refs/heads/content/pw/' + job
-        actual = transport.remote_head(root, branch)
-        require(actual in (expected,None), 'Different production generation')
-        tag = 'work-prod-' + job
-        tagref = 'refs/tags/' + tag
-        rows, _ = catalog()
-        release = release_for(rows, tag)
-        anchor = transport.remote_head(root, tagref)
-        if actual is None and release is None and anchor is None:
+        targets = remove_bound_release(root, job, expected, main, confirmed=confirmed)
+        if targets is None:
             return 'no-op'
-        if actual:
-            transport.git(root,'fetch','--no-tags','--',transport.REMOTE,actual)
-        source = GitSource(root)
-        record = current.validate(io.json_bytes(source.read(expected,current.path(job),MIB),MIB))
-        require(record['format'] == work_assets.FORMAT and record['puzzle_id'] == job, 'Unexpected work record')
-        base = transport.git(root, 'merge-base', main, expected).decode().strip()
-        scope = transport.git(root, 'diff', '--no-renames', '--name-only', '-z', base, expected).split(b'\0')
-        require(set(scope) <= {b'', current.INDEX.encode(), current.path(job).encode()},
-                'Work ref also contains unrelated changes')
-        index = index_value(source.read(expected, current.INDEX, 8*MIB))
-        base_index = index_value(source.read(base, current.INDEX, 8*MIB))
-        require([r for r in index['entries'] if r['puzzle_id'] != job] ==
-                [r for r in base_index['entries'] if r['puzzle_id'] != job] and
-                [r for r in index['entries'] if r['puzzle_id'] == job] ==
-                [{'puzzle_id':job,'record':current.path(job),'revision':'current'}],
-                'Unexpected work index; preserve other work')
-        if not confirmed:
-            require(record['state'] == 'registered' and record['integration'], 'Registration required')
-            result = current_delivery.snapshot(lambda n,l,missing=False:source.read(main,n,l,missing),job)
-            require(current_delivery.same(result, record['integration']['result']), 'Different confirmed main result')
-            if release:
-                checked = current.Checked(record, lambda n, limit: source.read(expected, n, limit), technical=False)
-                checked.matches(result)
-        binding = record['work_release']
-        require(anchor is None or anchor == binding['anchor'], 'Different work tag generation')
-        require(release is None or release['id'] == binding['id'], 'Different release generation')
-        refs = [r['asset'] for r in current.references(record) if 'asset' in r]
-        if release:
-            owned_release(release,job)
-            require(release['target_commitish'] == anchor and all(r['release_id'] == release['id'] for r in refs)
-                    and {a['id'] for a in release['assets']} == {r['asset_id'] for r in refs},
-                    'Unexpected release contents; preserve other work')
+        branch, actual, tagref, anchor = targets
         if anchor:
-            transport.git(root,'merge-base','--is-ancestor',transport.CLEAN_MAIN,anchor)
-            transport.git(root,'merge-base','--is-ancestor',anchor,main)
-        # Keep the work ref until release/tag cleanup succeeds, so retries retain
-        # their sole authoritative record. All supported writers hold this lease.
-        if release:
-            api('releases/' + str(release['id']), 'DELETE')
-        if anchor:
-            delete_ref(root,tagref,anchor)
+            delete_ref(root, tagref, anchor)
         if actual:
-            delete_ref(root,branch,expected)
-        require(not release_for(catalog()[0], tag), 'Release removal not confirmed')
+            delete_ref(root, branch, expected)
         return 'closed'
+
+
+def remove_bound_release(root, job, expected, main, *, confirmed, before_delete=None):
+    """Under the catalog lease, validate the Git record and remove only its release."""
+    branch = 'refs/heads/content/pw/' + job
+    actual = transport.remote_head(root, branch)
+    require(actual in (expected,None), 'Different production generation')
+    tag = 'work-prod-' + job
+    tagref = 'refs/tags/' + tag
+    rows, _ = catalog()
+    release = release_for(rows, tag)
+    anchor = transport.remote_head(root, tagref)
+    if actual is None and release is None and anchor is None:
+        return None
+    if actual:
+        transport.git(root,'fetch','--no-tags','--',transport.REMOTE,actual)
+    source = GitSource(root)
+    record = current.validate(io.json_bytes(source.read(expected,current.path(job),MIB),MIB))
+    require(record['format'] == work_assets.FORMAT and record['puzzle_id'] == job, 'Unexpected work record')
+    base = transport.git(root, 'merge-base', main, expected).decode().strip()
+    scope = transport.git(root, 'diff', '--no-renames', '--name-only', '-z', base, expected).split(b'\0')
+    require(set(scope) <= {b'', current.INDEX.encode(), current.path(job).encode()},
+            'Work ref also contains unrelated changes')
+    index = index_value(source.read(expected, current.INDEX, 8*MIB))
+    base_index = index_value(source.read(base, current.INDEX, 8*MIB))
+    require([r for r in index['entries'] if r['puzzle_id'] != job] ==
+            [r for r in base_index['entries'] if r['puzzle_id'] != job] and
+            [r for r in index['entries'] if r['puzzle_id'] == job] ==
+            [{'puzzle_id':job,'record':current.path(job),'revision':'current'}],
+            'Unexpected work index; preserve other work')
+    if not confirmed:
+        require(record['state'] == 'registered' and record['integration'], 'Registration required')
+        result = current_delivery.snapshot(lambda n,l,missing=False:source.read(main,n,l,missing),job)
+        require(current_delivery.same(result, record['integration']['result']), 'Different confirmed main result')
+        if release:
+            checked = current.Checked(record, lambda n, limit: source.read(expected, n, limit), technical=False)
+            checked.matches(result)
+    binding = record['work_release']
+    require(anchor is None or anchor == binding['anchor'], 'Different work tag generation')
+    require(release is None or release['id'] == binding['id'], 'Different release generation')
+    refs = [r['asset'] for r in current.references(record) if 'asset' in r]
+    if release:
+        owned_release(release,job)
+        require(release['target_commitish'] == anchor and all(r['release_id'] == release['id'] for r in refs)
+                and {a['id'] for a in release['assets']} == {r['asset_id'] for r in refs},
+                'Unexpected release contents; preserve other work')
+    if anchor:
+        transport.git(root,'merge-base','--is-ancestor',transport.CLEAN_MAIN,anchor)
+        transport.git(root,'merge-base','--is-ancestor',anchor,main)
+    if before_delete is not None:
+        before_delete()
+    if release:
+        api('releases/' + str(release['id']), 'DELETE')
+    require(not release_for(catalog()[0], tag), 'Release removal not confirmed')
+    return branch, actual, tagref, anchor
 
 
 def resume(root, job, expected):

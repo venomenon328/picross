@@ -224,6 +224,111 @@ class WorkPublicationTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError,'production working file'):
             guard.check_range(root,head,[self.main])
 
+    def test_confirmed_p2_without_local_gh_recovers_and_closes_only_bound_job(self):
+        from datetime import datetime, timezone
+        import os
+        import shutil
+        from tools import work_removal
+        from tools.production_workspace import repository as pw
+        from tools.production_workspace.server import Service
+        from tools.test_production_installer import MemoryGitHub
+
+        self.fixture.approved()
+        expected = pub.push_job(self.root, 'pz-current', None)
+        branch = 'content/pw/pz-current'
+        request = pw.removal_request('pz-current', expected, self.main, [])
+        tag = 'refs/tags/work-prod-pz-current'
+        fixtures.git(self.remote, 'update-ref', 'refs/heads/content/pw/pz-other', self.main)
+        state = self.fixture.work / 'p2-state'
+        pw.configure(self.root, state, remote=self.remote)
+        app = Service(pw.Repository(state))
+        actor = {'full_name': pub.REPO}
+        event = {'action': 'completed', 'repository': actor, 'workflow_run': {
+            'path': '.github/workflows/work-growth.yml', 'event': 'push', 'conclusion': 'success',
+            'repository': actor, 'head_repository': actor, 'head_branch': request, 'head_sha': self.main,
+            'created_at': datetime.now(timezone.utc).isoformat()}}
+        lock_api = MemoryGitHub()
+        open_prs = []
+
+        def public(path, *, missing=False):
+            if path == '':
+                return {**actor, 'private': False}
+            if path.startswith('/pulls?'):
+                return list(open_prs)
+            self.assertIn(path, ('/releases/11', '/releases/tags/work-prod-pz-current'))
+            self.assertTrue(missing)
+            return self.release
+
+        def confirm():
+            listing = app.listing(refresh=True)
+            job = next(j for j in listing['jobs'] if j['ref'] == branch)
+            selected = {'snapshot': listing['snapshot'], 'job_id': job['id']}
+            plan = app.removal_preview(selected)
+            return app.removal_confirm({**selected, 'plan_id': plan['plan_id'], 'confirmation': branch})
+
+        real_git = Path(shutil.which('git')).resolve()
+        if os.name == 'nt':
+            git_path = real_git.parent
+        else:
+            git_path = self.fixture.work / 'git-only'
+            git_path.mkdir()
+            (git_path / 'git').symlink_to(real_git)
+        self.enterContext(patch.dict(os.environ, PATH=str(git_path)))
+        self.assertTrue(shutil.which('git'))
+        self.assertIsNone(shutil.which('gh'))
+        self.enterContext(patch.object(pw, 'github_identity', side_effect=lambda url: url == self.remote))
+        self.enterContext(patch.object(pw, 'github_get', side_effect=public))
+
+        def worker(_delay):
+            work_removal.service(self.root, event, lock_api)
+
+        def new_pr(delay):
+            open_prs.append({'state': 'open', 'number': 9, 'merged_at': None,
+                             'head': {'ref': branch, 'repo': actor}})
+            with self.assertRaisesRegex(ValueError, 'Pull request facts changed'):
+                worker(delay)
+
+        with patch.object(pw.time, 'sleep', side_effect=new_pr):
+            self.assertFalse(confirm()['removed'])
+        self.assertTrue(self.assets)
+        open_prs.clear()
+
+        def lost_reply(delay):
+            def interrupted(path, method='GET', value=None):
+                response = self.api(path, method, value)
+                if method == 'DELETE':
+                    raise TimeoutError('Release removed, response lost')
+                return response
+            with patch.object(pub, 'api', side_effect=interrupted), self.assertRaises(TimeoutError):
+                worker(delay)
+
+        with patch.object(pw.time, 'sleep', side_effect=lost_reply):
+            self.assertFalse(confirm()['removed'])
+        self.assertFalse(self.assets)
+        self.assertEqual(guard.remote_head(self.root, tag), self.main)
+        self.assertEqual(guard.remote_head(self.root, 'refs/heads/' + branch), expected)
+        with patch.object(pw.time, 'sleep', side_effect=worker):
+            self.assertTrue(confirm()['removed'])
+        for ref in ('refs/heads/' + request, 'refs/heads/' + branch, tag):
+            self.assertIsNone(guard.remote_head(self.root, ref))
+        self.assertEqual(guard.remote_head(self.root, 'refs/heads/content/pw/pz-other'), self.main)
+        self.assertEqual(guard.remote_head(self.root, 'refs/heads/main'), self.main)
+
+    def test_removal_worker_requires_own_push_and_exact_request_namespace(self):
+        from tools import work_removal
+        actor = {'full_name': pub.REPO}
+        expected = 'a' * 40
+        name = 'work-prod-control/remove/pz-current/' + expected + '/' + 'b' * 32
+        run = {'repository': actor, 'head_repository': actor, 'path': '.github/workflows/work-growth.yml',
+               'event': 'push', 'conclusion': 'success', 'head_sha': self.main, 'head_branch': name}
+        event = {'action': 'completed', 'repository': actor, 'workflow_run': run}
+        self.assertEqual(work_removal.request_event(event), (name, self.main, 'pz-current', expected))
+        for key, value in (('event', 'pull_request'), ('conclusion', 'skipped'), ('path', 'other.yml'),
+                           ('head_repository', {'full_name': 'other/repo'}), ('head_branch', 'main'),
+                           ('head_branch', name + '/extra'), ('head_branch', name.replace(expected, 'short'))):
+            with self.subTest(key=key, value=value), self.assertRaises(ValueError):
+                work_removal.request_event({**event, 'workflow_run': {**run, key: value}})
+
     def test_capacity_checks_existing_and_new_releases(self):
         capacity = pub.release_catalog.capacity
         rows = [{'tag_name': 'work-prod-' + str(n), 'assets': []} for n in range(398)]
