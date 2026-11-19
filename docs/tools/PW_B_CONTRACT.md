@@ -95,9 +95,15 @@ Resume arbeitet auf einem eigenen Worktree am erwarteten Commit. Der Publisher
 benötigt angemeldetes gh mit Repository-Schreibrecht und vollständige Gitbasis.
 Er prüft Rechte, Release-Mutierbarkeit und beide Generationen im Katalogbudget
 der installierten Appclients. Die kurzlebige Ref work-prod-control/catalog
-serialisiert konkurrierende Jobänderungen. Nach Prozessabbruch dieselbe Operation
-im selben Checkout wiederholen. Der lokale Besitzerbeleg identifiziert ihre
-Lease. Einen fremden Besitzer niemals überschreiben.
+serialisiert Arbeitsänderungen und signierte PW-/PE-Veröffentlichungen. Jeder
+Arbeitswriter reserviert zusätzlich zwei Releases mit je sieben Assets für die
+nächsten beiden App-Releases. Alle drei Writer prüfen Seitenzahl, Metadatenumfang
+und Abrufdauer innerhalb der Lease. Ein Appwriter prüft den vollständigen Draft
+erneut vor der Sichtbarschaltung. Nach Abbruch eines Arbeitswriters dieselbe
+Operation im selben Checkout wiederholen. Ein Appwriter wartet bis zu fünf
+Minuten auf die Lease. Bei hart beendetem Actions-Runner den beendeten Lauf und
+seinen Maincommit vor einer manuellen bedingten Freigabe der Lease abgleichen.
+Einen aktiven oder unklaren Besitzer niemals überschreiben.
 
 Ein Job besitzt den Prerelease work-prod-<id> mit make_latest=false und einem
 Tag am bereinigten Maincommit. Neue Originale werden einzeln hochgeladen und

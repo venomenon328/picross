@@ -77,6 +77,12 @@ außerhalb dieser Eingaben (insbesondere Inhalt, Spiel und allgemeiner CI-Kern)
 Dateien aus `Analysis-00.toc` gegen `inputs.json` ab; ein nicht inventarisierter
 eingefrorener Input oder abweichende Arbeitsbytes brechen den Bau ab.
 
+Vor Draftanlage und vor Sichtbarschaltung prüfen PW und PE unter derselben
+Remote-Lease wie der Arbeitsasset-Publisher die Grenzen bereits installierter
+Clients. Kapazitätsreserve, Wartezeit und Rückbau stehen im
+[PW-B-Vertrag](PW_B_CONTRACT.md). Ein gesperrter Versuch lässt die signierte
+Versionsautorität bestehen.
+
 [`release_channel.py`](../../tools/production_workspace/release_channel.py) liest
 den letzten gültigen veröffentlichten `pw-v0.1.x`-Release samt kanonischem
 `manifest.json` und lädt dessen gebundene Assets binär zurück. Unvollständige

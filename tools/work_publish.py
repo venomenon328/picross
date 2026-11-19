@@ -8,7 +8,6 @@ import re
 from pathlib import Path
 import subprocess
 import tempfile
-import time
 from uuid import uuid4
 
 from . import publish_git as transport
@@ -16,9 +15,9 @@ from .puzzle_production import current_authoring as current, current_delivery, c
 from .puzzle_production.authoring_builder import git_root, index_value, writer
 from .puzzle_production.authoring_package import require
 from .production_workspace.sources import GitSource
+from .production_workspace import release_catalog
 
 REPO = work_assets.REPOSITORY
-LOCK_BRANCH = 'work-prod-control/catalog'
 MIB = 1024**2
 
 
@@ -31,27 +30,7 @@ def api(path, method='GET', value=None):
 
 
 def catalog():
-    rows = []
-    started = time.monotonic()
-    for page in range(1, 5):
-        result = api(f'releases?per_page=100&page={page}')
-        require(isinstance(result, list) and len(result) <= 100, 'Invalid release catalog')
-        rows.extend(result)
-        if len(result) < 100:
-            return rows, time.monotonic() - started
-    raise ValueError('App catalog has no terminating page')
-
-
-def capacity(rows, elapsed, tag, additions):
-    # Reserve space for both generations. Use the largest possible page even if
-    # an insertion moves existing releases across a pagination boundary.
-    existing = next((r for r in rows if r['tag_name'] == tag), None)
-    require(len(rows) + (existing is None) < 400, 'App catalog requires a terminating page')
-    require(elapsed < 45, 'Insufficient margin in the installed 60-second metadata budget')
-    require(len((existing or {}).get('assets', [])) + additions <= 1000, 'GitHub release asset limit')
-    sizes = sorted((len(json.dumps(r, ensure_ascii=True).encode()) for r in rows), reverse=True)
-    require(sum(sizes[:100]) + 1024 + 16384 * (additions + (existing is None)) < 4*MIB,
-            'Insufficient installed-client metadata page capacity')
+    return release_catalog.catalog(api)
 
 
 def owned_release(row, job):
@@ -74,7 +53,7 @@ def catalog_writer(root, main):
     git_root(root)
     state = io.external(transport.git(root, 'rev-parse', '--absolute-git-dir').decode().strip())
     pending = state / 'work-production-catalog-owner'
-    ref = 'refs/heads/' + LOCK_BRANCH
+    ref = 'refs/heads/' + release_catalog.LOCK_BRANCH
     with writer(state / 'work-production.lock'):
         if not pending.exists():
             tree = transport.git(root, 'rev-parse', main + '^{tree}').decode().strip()
@@ -87,7 +66,7 @@ def catalog_writer(root, main):
         require(transport.SHA.fullmatch(nonce), 'Invalid local catalog owner identity')
         actual = transport.remote_head(root, ref)
         if actual is None:
-            transport.publish(root, LOCK_BRANCH, nonce, None)
+            transport.publish(root, release_catalog.LOCK_BRANCH, nonce, None)
         else:
             require(actual == nonce, 'Another production transaction owns the catalog')
         try:
@@ -167,7 +146,7 @@ def publish_locked(root, job, expected, main, checked):
     own = {r['sha256']:r for r in refs if current.own(job, r['file'])}
     present = {a['name'] for a in release['assets']} if release else set()
     additions = sum('original-' + h not in present for h in own)
-    capacity(rows, elapsed, tag, additions)
+    release_catalog.capacity(rows, elapsed, tag, additions, reserved_apps=2)
     tag_ref = 'refs/tags/' + tag
     anchor = transport.remote_head(root, tag_ref)
     if release is None:

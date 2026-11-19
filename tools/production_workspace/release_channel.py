@@ -4,6 +4,7 @@ GET failures fail closed. Mutations are never blindly retried: the next run
 reconciles a bound draft and byte-identical assets without overwriting anything.
 """
 import argparse
+from contextlib import contextmanager
 import json
 import os
 from pathlib import Path
@@ -17,7 +18,7 @@ from .payload import canonical, fingerprint, git
 from .release import release, version_tuple
 from .release_manifest import (FORMAT, SIGNED_FORMAT, REPOSITORY, require, digest, strict_json,
                                validate_manifest, verify_files)
-from . import update_verifier
+from . import release_catalog, update_verifier
 
 from tools.app_products import PW
 
@@ -119,6 +120,10 @@ class SafeRedirect(urllib.request.HTTPRedirectHandler):
         return redirected
 
 
+class RefAlreadyExists(RuntimeError):
+    """A competing publisher won atomic creation of the catalog ref."""
+
+
 class GitHub:
     def __init__(self, token):
         require(bool(token), 'GitHub token required')
@@ -138,11 +143,15 @@ class GitHub:
             try:
                 with urllib.request.build_opener(SafeRedirect()).open(req, timeout=90) as response:
                     result = response.read()
-                return result if binary or upload else strict_json(result)
+                return result if binary or upload else (strict_json(result) if result else None)
             except urllib.error.HTTPError as error:
                 if method == 'GET' and error.code in {429, 500, 502, 503, 504} and attempt < 2:
                     time.sleep(attempt + 1)
                     continue
+                if method == 'POST' and path == PREFIX + '/git/refs' and error.code == 422:
+                    # Only a positively identified collision is eligible for waiting.
+                    if strict_json(error.read(8192)).get('message') == 'Reference already exists':
+                        raise RefAlreadyExists('Catalog ref already exists') from None
                 if error.code == 404 and method == 'GET':
                     return None
                 raise RuntimeError(f'GitHub {method} failed ({error.code}); state must be reconciled on rerun') from None
@@ -325,12 +334,41 @@ def authorize(api, build, planned, *, enabled, signing_enabled, app=PW):
             'Signing environment must allow only the main branch')
 
 
+@contextmanager
+def app_catalog_writer(api, source):
+    ref = 'heads/' + release_catalog.LOCK_BRANCH
+    deadline = time.monotonic() + 300
+    while True:
+        if api.request(PREFIX + '/git/ref/' + ref) is None:
+            try:
+                # The pinned main commit is already on GitHub. Creating this ref
+                # uploads no objects and cannot replace a work or app owner's ref.
+                api.request(PREFIX + '/git/refs', method='POST', value={'ref': 'refs/' + ref, 'sha': source})
+                break
+            except RefAlreadyExists:
+                pass
+        require(time.monotonic() < deadline, 'Catalog lease busy; retry publication')
+        time.sleep(2)
+    try:
+        yield
+    finally:
+        owner = api.request(PREFIX + '/git/ref/' + ref)
+        require(owner and owner['object']['sha'] == source, 'Catalog lease changed')
+        api.request(PREFIX + '/git/refs/' + ref, method='DELETE')
+
+
 def publish(api, build, planned, *, enabled, signing_enabled=False, secret=None, app=PW):
     authorize(api, build, planned, enabled=enabled, signing_enabled=signing_enabled, app=app)
     provenance, files = _candidate(build, planned, app=app)
     manifest_raw, signature_raw = update_verifier.sign_candidate(provenance, files, secret, app=app)
     manifest = validate_manifest(strict_json(manifest_raw), app=app)
 
+    with app_catalog_writer(api, manifest['source_commit']):
+        return _publish_locked(api, build, planned, enabled, signing_enabled, app,
+                               manifest, manifest_raw, signature_raw, files)
+
+
+def _publish_locked(api, build, planned, enabled, signing_enabled, app, manifest, manifest_raw, signature_raw, files):
     def fresh():
         authorize(api, build, planned, enabled=enabled, signing_enabled=signing_enabled, app=app)
         # The signed bytes must still be trusted at the final publication check.
@@ -338,12 +376,16 @@ def publish(api, build, planned, *, enabled, signing_enabled=False, secret=None,
         verify_tag(api, manifest, allow_missing=True)
 
     fresh()
+    rows, elapsed = release_catalog.catalog(lambda path: api.request(PREFIX + '/' + path))
     # Read by tag including drafts. Never overwrite or delete a foreign draft/tag.
-    matches = [r for r in api.pages('/releases') if r['tag_name'] == manifest['tag']]
+    matches = [r for r in rows if r['tag_name'] == manifest['tag']]
     require(len(matches) <= 1, 'Ambiguous release candidate')
     body = (f'{app.key.upper()} APP-B1 {manifest["tag"]}\nSource: {manifest["source_commit"]}\n'
             f'Fingerprint: {manifest["payload_fingerprint"]}\nManifest: {digest(manifest_raw)}\n'
             f'Trust: {planned["trust_sha256"]}\nSignature: {digest(signature_raw)}')
+    uploads = {**files, MANIFEST: manifest_raw, update_verifier.SIGNATURE: signature_raw}
+    present = {a['name'] for a in matches[0]['assets']} if matches else set()
+    release_catalog.capacity(rows, elapsed, manifest['tag'], len(uploads.keys() - present), reserved_apps=0)
     if matches:
         entry = matches[0]
         require(entry['draft'] is True and entry['target_commitish'] == manifest['source_commit'] and
@@ -356,7 +398,6 @@ def publish(api, build, planned, *, enabled, signing_enabled=False, secret=None,
     existing = api.pages(f'/releases/{release_id}/assets')
     require(len({a['name'] for a in existing}) == len(existing), 'Duplicate draft assets')
     existing = {a['name']: a for a in existing}
-    uploads = {**files, MANIFEST: manifest_raw, update_verifier.SIGNATURE: signature_raw}
     require(set(existing) <= set(uploads), 'Foreign assets on candidate draft')
     for name, raw in uploads.items():
         if name in existing:
@@ -370,6 +411,8 @@ def publish(api, build, planned, *, enabled, signing_enabled=False, secret=None,
     require(release_files(api, current, app=app) == manifest,
             'Candidate round-trip mismatch')
     fresh()
+    rows, elapsed = release_catalog.catalog(lambda path: api.request(PREFIX + '/' + path))
+    release_catalog.capacity(rows, elapsed, manifest['tag'], 0, reserved_apps=0)
     published = api.request(PREFIX + f'/releases/{release_id}', method='PATCH',
                             value={'draft': False, 'make_latest': 'true'})
     require(not published['draft'] and release_files(api, published, app=app) == manifest, 'Publication not confirmed')

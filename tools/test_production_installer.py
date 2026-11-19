@@ -168,6 +168,7 @@ class MemoryGitHub(channel.GitHub):
                     'conclusion': 'success', 'repository': repo, 'head_repository': copy.deepcopy(repo), 'run_attempt': 1}
         self.jobs = [{'name': n, 'status': 'completed', 'conclusion': 'success'} for n in ('docs', 'ci-required')]
         self.entries, self.blobs, self.tags, self.writes = [], {}, {}, []
+        self.catalog_owner = None
         self.fail_upload = None
         self.change_main_after_upload = False
 
@@ -176,6 +177,18 @@ class MemoryGitHub(channel.GitHub):
         parts = urllib.parse.urlsplit(path)
         route = parts.path
         query = urllib.parse.parse_qs(parts.query)
+        ref = 'heads/' + channel.release_catalog.LOCK_BRANCH
+        if route == '/git/ref/' + ref:
+            return {'object': {'sha': self.catalog_owner}} if self.catalog_owner else None
+        if route == '/git/refs' and method == 'POST' and value['ref'] == 'refs/' + ref:
+            if self.catalog_owner:
+                raise channel.RefAlreadyExists('Catalog ref already exists')
+            self.catalog_owner = value['sha']
+            return {'ref': value['ref']}
+        if route == '/git/refs/' + ref and method == 'DELETE':
+            assert self.catalog_owner
+            self.catalog_owner = None
+            return None
         if method != 'GET':
             self.writes.append((method, route))
         if route == '/environments/' + self.app.environment:
@@ -198,7 +211,8 @@ class MemoryGitHub(channel.GitHub):
             return self.blobs[int(route.rsplit('/', 1)[-1])]
         if route == '/releases':
             if method == 'GET':
-                return copy.deepcopy(self.entries) if query.get('page', ['1']) == ['1'] else []
+                start = 100 * (int(query['page'][0]) - 1)
+                return copy.deepcopy(self.entries[start:start + 100])
             entry = {**value, 'id': len(self.entries) + 1, 'assets': [], 'html_url': 'https://github.com/synthetic/release'}
             self.entries.append(entry)
             return copy.deepcopy(entry)
@@ -286,6 +300,52 @@ class AppReleaseTests(unittest.TestCase):
         previous['manifest']['version'] = '0.1.65535'
         with self.assertRaisesRegex(ValueError, 'exhausted'):
             channel.next_version({'sha256': 'new'}, previous)
+
+    def test_signed_publication_checks_catalog_before_draft_and_at_visibility(self):
+        planned, _ = self.candidate()
+        self.api.entries = [{'id': i + 1, 'tag_name': 'work-prod-' + str(i), 'assets': []}
+                            for i in range(399)]
+        with self.assertRaisesRegex(ValueError, 'terminating page'):
+            self.publish(self.api, self.root, planned, enabled=True)
+        self.assertEqual(self.api.writes, [])
+        self.api.entries.pop()
+        self.api.entries[0]['body'] = 'x' * (4 * 1024**2 - 64000)
+        with self.assertRaisesRegex(ValueError, 'metadata page'):
+            self.publish(self.api, self.root, planned, enabled=True)
+        del self.api.entries[0]['body']
+        self.publish(self.api, self.root, planned, enabled=True)
+        self.assertEqual(len(self.api.entries), 399)
+        self.assertEqual(channel.authority(self.api)['manifest']['version'], planned['version'])
+
+    def test_work_then_both_signed_apps_remain_visible_to_installed_clients(self):
+        from tools.app_products import PW, PE
+        from tools.production_workspace import update_client
+        from unittest.mock import Mock
+        self.api.entries = [{'tag_name': 'work-prod-' + str(i), 'id': i + 1, 'assets': [],
+                             'prerelease': True, 'draft': False} for i in range(396)]
+        channel.release_catalog.capacity(self.api.entries, 1, 'work-prod-new', 1, reserved_apps=2)
+        self.api.entries.append(dict(self.api.entries[-1], tag_name='work-prod-new', id=397))
+        for app in (PW, PE):
+            self.api.app = app
+            self.trust, self.secret = test_identity(app=app)
+            planned, _ = self.candidate(app=app)
+            with patch.object(update_verifier, 'production_trust', return_value=self.trust):
+                self.publish(self.api, self.root, planned, enabled=True, app=app)
+        self.assertEqual(len(self.api.entries), 399)
+
+        def page(url, limit, cancel, deadline):
+            result = self.api.request(channel.PREFIX + '/releases?' + url.split('?')[1])
+            raw = payload.canonical(result)
+            self.assertLess(len(raw), limit)
+            return raw
+
+        transport = Mock(read=page)
+        for before_removal in (True, False):
+            if not before_removal:
+                del self.api.entries[:397]
+            for app, expected_id in ((PW, 398), (PE, 399)):
+                row = update_client.latest_release(transport, None, 60, app=app)
+                self.assertEqual(row['id'], expected_id)
 
     def test_published_history_binding_is_specific_to_release_and_original_manifest(self):
         planned, manifest = self.candidate()

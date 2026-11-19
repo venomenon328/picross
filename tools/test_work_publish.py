@@ -215,12 +215,51 @@ class WorkPublicationTests(unittest.TestCase):
             guard.check_range(root,head,[self.main])
 
     def test_capacity_checks_existing_and_new_releases(self):
-        rows=[{'tag_name':'work-prod-'+str(n),'assets':[]} for n in range(399)]
-        pub.capacity(rows,1,rows[0]['tag_name'],1)
-        with self.assertRaisesRegex(ValueError,'terminating page'):
-            pub.capacity(rows,1,'new',0)
-        with self.assertRaisesRegex(ValueError,'metadata budget'):
-            pub.capacity(rows,60,rows[0]['tag_name'],0)
-        rows[1]['body']='x'*(4*1024**2-10000)
-        with self.assertRaisesRegex(ValueError,'metadata page'):
-            pub.capacity(rows,1,rows[0]['tag_name'],1)
+        capacity = pub.release_catalog.capacity
+        rows = [{'tag_name': 'work-prod-' + str(n), 'assets': []} for n in range(398)]
+        # At 398, a new job must leave room for BOTH signed app releases.
+        with self.assertRaisesRegex(ValueError, 'terminating page'):
+            capacity(rows, 1, 'work-prod-new', 1, reserved_apps=2)
+        capacity(rows[:396], 1, 'work-prod-new', 1, reserved_apps=2)
+        capacity(rows, 1, 'pw-v1', 7, reserved_apps=0)
+        rows.append({'tag_name': 'pw-v1', 'assets': []})
+        with self.assertRaisesRegex(ValueError, 'terminating page'):
+            capacity(rows, 1, 'pe-v1', 7, reserved_apps=0)
+        rows = rows[:100]
+        with self.assertRaisesRegex(ValueError, 'metadata budget'):
+            capacity(rows, 45, rows[0]['tag_name'], 0, reserved_apps=2)
+        rows[1]['body'] = 'x' * (4 * 1024**2 - 180000)
+        capacity(rows, 1, rows[0]['tag_name'], 1, reserved_apps=0)
+        with self.assertRaisesRegex(ValueError, 'metadata page'):
+            capacity(rows, 1, rows[0]['tag_name'], 1, reserved_apps=2)
+
+    def test_app_writer_contends_with_actual_git_work_lease(self):
+        from tools.production_workspace import release_channel as channel
+        from unittest.mock import Mock
+        api = Mock(spec=channel.GitHub)
+        ref = 'refs/heads/' + pub.release_catalog.LOCK_BRANCH
+
+        def backed(path, **kwargs):
+            method = kwargs.get('method', 'GET')
+            if path.endswith('/git/ref/' + ref.removeprefix('refs/')):
+                owner = guard.remote_head(self.root, ref)
+                return {'object': {'sha': owner}} if owner else None
+            if path.endswith('/git/refs') and method == 'POST':
+                fixtures.git(self.remote, 'update-ref', ref, kwargs['value']['sha'], '0' * 40)
+                return {}
+            if method == 'DELETE' and path.endswith(ref.removeprefix('refs/')):
+                fixtures.git(self.remote, 'update-ref', '-d', ref, self.main)
+                return None
+            self.fail('Unexpected lease request: ' + path)
+
+        with patch.object(api, 'request', side_effect=backed):
+            with pub.catalog_writer(self.root, self.main):
+                with patch.object(channel.time, 'monotonic', side_effect=[0, 301]):
+                    with self.assertRaisesRegex(ValueError, 'lease busy'):
+                        with channel.app_catalog_writer(api, self.main):
+                            self.fail('App entered occupied lease')
+            with channel.app_catalog_writer(api, self.main):
+                with self.assertRaisesRegex(ValueError, 'owns the catalog'):
+                    with pub.catalog_writer(self.root, self.main):
+                        self.fail('Work publisher entered occupied lease')
+            self.assertIsNone(guard.remote_head(self.root, ref))
