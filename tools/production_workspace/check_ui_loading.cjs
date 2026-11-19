@@ -107,7 +107,7 @@ const run = code => vm.runInContext(code, context);
     const optional=nodes().find(e=>e.type==='checkbox');assert.equal(optional.checked,false);
     assert(nodes().find(e=>e.textContent==='Lokale Bereinigung vorprüfen').disabled);
     assert(nodes().some(e=>e.textContent?.includes('offene Lieferungen bleiben in der aktiven Auswahl sichtbar')));
-    assert(nodes().some(e=>e.textContent?.includes('Nachweislich auf main abgeschlossene Lieferungen erscheinen nicht in der aktiven Auswahl')));
+    assert(nodes().some(e=>e.textContent?.includes('In main registrierte Rätsel sind aus der aktiven Produktion ausgeblendet')));
     assert(!run('listing.jobs.some(j=>j.source==="local")'),'local remainder is diagnostic only');
     assert(!run('listing.jobs.some(j=>j.source==="remote"&&j.ref==="content/pw/pz-workspace-test")'));
     console.log('P2 controller: exact branch/revisions, typed confirmation, real HTTP deletion, local remainder and default-off cleanup passed. No browser-rendering claim.');
