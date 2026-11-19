@@ -30,6 +30,11 @@
       "path": "tools/test_production_installer.py",
       "disposition": "change-scoped",
       "reason": "Signierter App-Publisher unter gemeinsamem Kataloglimit und konkurrierender Release-Lease."
+    },
+    {
+      "path": "tools/test_production_removal.py",
+      "disposition": "change-scoped",
+      "reason": "Bestätigte v2-Entfernung und kontrollierte Transportfehler über die P2-Oberfläche."
     }
   ],
   "core_change": "Gezielte Dateiauswahl für Review und Prüfung geänderter Pfadklassen. Regulärer Windowsbau.",

@@ -4,6 +4,7 @@ import json
 import os
 from pathlib import Path
 import re
+import subprocess
 import threading
 from urllib.parse import urlsplit
 from urllib.parse import urlencode
@@ -215,11 +216,11 @@ class ProductionRemoval:
                 finish(self.repository.local.root, facts['puzzle_id'], facts['sha'], confirmed=True)
             else:
                 self.push_delete(facts)
-        except ValueError:
+        except (OSError, ValueError, subprocess.SubprocessError):
             return {'removed': False, 'message': 'Push abgelehnt oder nicht rechtzeitig bestätigt (Lease, Rechte oder Netzwerk). Ausgang nicht als Erfolg bestätigt; Quellen neu prüfen.'}
         try:
             absent = self.remote_head(facts['ref']) is None
-        except ValueError:
+        except (OSError, ValueError, subprocess.SubprocessError):
             absent = False
         if not absent:
             return {'removed': False, 'message': 'Push beendet, aber Fehlen des Remote-Refs nicht bestätigt. Quellen neu prüfen; kein Erfolg nachgewiesen.'}

@@ -106,6 +106,16 @@ class WorkPublicationTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError,'Unexpected release contents'):
             pub.finish(self.root,'pz-current',second,confirmed=True)
         self.api('releases/assets/'+str(self.next_id),'DELETE')
+        def lost_delete(path, method='GET', value=None):
+            response = self.api(path, method, value)
+            if path == 'releases/11' and method == 'DELETE':
+                raise TimeoutError('Release removed, response lost')
+            return response
+
+        with patch.object(pub, 'api', side_effect=lost_delete), self.assertRaises(TimeoutError):
+            pub.finish(self.root, 'pz-current', second, confirmed=True)
+        self.assertIsNone(self.release)
+        self.assertEqual(guard.remote_head(self.root, 'refs/heads/content/pw/pz-current'), second)
         self.assertEqual(pub.finish(self.root,'pz-current',second,confirmed=True),'closed')
         self.assertEqual(pub.finish(self.root,'pz-current',second,confirmed=True),'no-op')
         self.assertFalse(self.assets)
