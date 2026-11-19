@@ -104,6 +104,17 @@
               "bytes"
             ],
             "properties": {
+              "asset": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": ["repository", "job", "release_id", "asset_id"],
+                "properties": {
+                  "repository": {"const": "venomenon328/picross"},
+                  "job": {"type": "string", "pattern": "^pz-[a-z0-9][a-z0-9-]{0,59}$"},
+                  "release_id": {"type": "integer", "minimum": 1},
+                  "asset_id": {"type": "integer", "minimum": 1}
+                }
+              },
               "commit": {
                 "type": [
                   "string",

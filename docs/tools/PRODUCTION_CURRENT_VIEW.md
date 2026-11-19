@@ -7,7 +7,7 @@ Status: active · [PROD-SLIM / #700](https://github.com/venomenon328/picross/iss
 Neue Produktion verwendet einen kanonischen aktuellen Record und den gemeinsamen
 Verweisindex nach [PW-B](PW_B_CONTRACT.md). Es entsteht kein zweiter dauerhafter
 Ansichtssnapshot und kein Pointer pro Job. Liste, Angebote, Originalbilder und
-Folgeauftrag werden direkt aus demselben fixierten Gitstand abgeleitet.
+Folgeauftrag werden direkt aus dem Record am fixierten Gitstand abgeleitet. Für externe Originale bindet dessen Release-/Asset-ID die Messwerte der Datei.
 Der lesende Dienst erzeugt keine Dateien oder Entscheidungen im Inhaltscheckout.
 
 ## Lesen und Quellenrelation

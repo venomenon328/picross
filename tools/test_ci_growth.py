@@ -18,7 +18,7 @@ class GrowthTests(unittest.TestCase):
     def test_allowed_sources_rights_and_open_production_report_actual_growth(self):
         names = ['game/art/content/test.png', 'game/fonts/test.ttf', 'game/fonts/LICENSE.txt',
                  'docs/design/active-book/paper.png', 'docs/CI2_E_VERIFICATION.md',
-                 'content/authoring/pz-synthetic/r02/package.zip', 'content/packages/pz-synthetic/r01/manifest.json']
+                 'docs/font-inputs/source.zip', 'tests/puzzle_production/fixtures/input.zip']
         before = {'docs/evidence/hz-a/old.zip': entry(100), 'tools/code.py': entry(5)}
         after = {n: entry() for n in names} | {'tools/code.py': entry(7)}
         result = compare(before, after)
@@ -36,8 +36,9 @@ class GrowthTests(unittest.TestCase):
             with self.subTest(path=path), self.assertRaisesRegex(ValueError, 'Disallowed'):
                 compare({'old/name': entry()}, {path: entry()})
         # Existing active technical inputs stay usable; no suffix-only purge.
-        self.assertEqual(compare({'docs/evidence/kk/native-crops.json': entry()},
-                                 {'docs/evidence/kk/native-crops.json': entry(12)})['delta']['bytes'], 2)
+        with self.assertRaisesRegex(ValueError, 'Disallowed'):
+            compare({'docs/evidence/kk/native-crops.json': entry()},
+                    {'docs/evidence/kk/native-crops.json': entry(12)})
 
     def test_api_metadata_requires_complete_bounded_trees_and_never_reads_blobs(self):
         value = {'truncated': False, 'tree': [{'type': 'tree', 'path': 'docs', 'mode': '040000', 'sha': 'b'*40},

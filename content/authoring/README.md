@@ -1,7 +1,7 @@
 # Aktuelle Produktionsarbeit
 
 Neue Jobs verwenden genau einen aktuellen Record unter
-`<puzzle_id>/current/record.json` und nur aktuell benötigte Nutzdateien.
+`<puzzle_id>/current/record.json` mit Verweisen auf aktuell benötigte Originale im Arbeitsrelease.
 Der gemeinsame `index.json` enthält ausschließlich Verweise auf die Records.
 Ansichten und Folgeaufträge werden daraus abgeleitet.
 

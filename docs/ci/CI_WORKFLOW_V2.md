@@ -83,13 +83,11 @@ Prüfarbeitsdaten; deren Zuständigkeit steht im [Bestandswegweiser](../history/
 ### Gezielte Reviewdateien
 
 Für erforderliche unabhängige Abnahmen gilt der [Zustellvertrag](../dev-rules/CI_CONTRACT.md#zustellung-an-einen-unabhängigen-reviewer).
-Der aktuelle Package-Runner stellt mit `evidence.mode=review` die Logs und die von
-den gewählten Modulen bereitgestellten Diagnosedateien zusammen. Der Paketplan
-hat keinen Dateifilter. Vor Wahl dieses Wegs prüfen, welche Dateien tatsächlich
-im Download landen. Für gezielt lokal erzeugte PNGs oder wenn das Modul mehr
-Material liefern würde, die erforderlichen Dateien auf dem separaten Reviewbranch
-bereitstellen. Private lokale Laufwerkspfade werden dadurch für den Reviewer
-entbehrlich. Ein konkreter Reviewbedarf löst keine allgemeinen CI-Uploads aus.
+Der Paketplan nennt für review/failure unter evidence.files genau die
+Laufdateien pro Matrixteil, beispielsweise {"tools": ["tools.log"]}. Namen
+sind relative Pfade im temporären Modul-Arbeitsordner. Fehlende Originale,
+Muster und indirekte Dateipfade sind Fehler. Für ausschließlich lokale
+Originale gilt die direkte Dateizustellung nach dem Zustellvertrag.
 
 ## Lokale Arbeitsablage
 

@@ -29,7 +29,7 @@ Für die Integration einen sauberen Branch vom aktuellen Main verwenden und nur 
 python -m tools.production_workspace.projector --repository <checkout> --complete-record <recordpfad> --integration-commit <volle-SHA> --input <übergabe>
 ```
 
-Den aktuellen Arbeitsrecord danach auf dem Arbeitsref committen/pushen und Draft-PR im beauftragten Umfang erstellen. Reine Produktion erhält CI-Kern ohne Windowsbau und ohne neue rätselspezifische Tests. Vor Merge aktuellen Head/Basis, unabhängiges Review, Pflichtchecks, Konfliktfreiheit, erforderliche Abnahmen und tatsächliche Befugnis prüfen. Squash verwenden. Main erst am zurückgelesenen Mergecommit melden; lokaler Erfolg genügt nicht. Werkzeug-/CI-Pakete erben keine Produktions-Mergefreigabe.
+Den aktuellen Arbeitsrecord danach mit tools.work_publish publish auf dem Arbeitsref sichern, finale Produktcommits mit tools.publish_git veröffentlichen und Draft-PR im beauftragten Umfang erstellen. Reine Produktion erhält CI-Kern ohne Windowsbau und ohne neue rätselspezifische Tests. Vor Merge aktuellen Head/Basis, unabhängiges Review, Pflichtchecks, Konfliktfreiheit, erforderliche Abnahmen und tatsächliche Befugnis prüfen. Squash verwenden. Main erst am zurückgelesenen Mergecommit melden; lokaler Erfolg genügt nicht. Werkzeug-/CI-Pakete erben keine Produktions-Mergefreigabe.
 
 ## 9. Produktionsabschluss und Bereinigung
 
@@ -37,7 +37,7 @@ Eigentümerentscheidung vom 14.10.2026: Ein final auf main integriertes Rätsel 
 
 1. Tatsächliche Endabnahme und Mainmerge prüfen, origin/main aktualisieren und
    aktuellen Lieferzustand gegen den bestätigten Maincommit vergleichen.
-2. `retire-production --checkout <arbeitscheckout> --integrated-commit <main-SHA>
+2. Für v2 `python -m tools.work_publish retire <id> --expected <abschlusscommit>` ausführen. Der Publisher beendet den Arbeitsrelease samt Tag und Arbeitsref. Für lokale v1-Arbeit gilt weiter: `retire-production --checkout <arbeitscheckout> --integrated-commit <main-SHA>
    --puzzle-id <id>` prüft die eigene abgeschlossene Arbeit gegen ihren tatsächlichen
    Arbeitscommit und das aktuelle Produkt gegen Main. Arbeitsdateien müssen nie
    zuvor in Main gelegen haben. Der aktuelle Record und ausschließlich zugehörige

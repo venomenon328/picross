@@ -1,4 +1,4 @@
-"""Small Docs gate for new output/archive classes; tree metadata only."""
+"""Classify changed paths before Git publication and in the CI metadata check."""
 import argparse
 import json
 import os
@@ -64,20 +64,25 @@ def forbidden(path):
     suffix = Path(lower).suffix
     if suffix in {'.log', '.pck', '.wasm', '.exe', '.dll', '.pyc', '.pyo'}:
         return 'runtime/build output'
-    if suffix in ARCHIVES:
-        # Open authoring/export namespaces remain possible. Their actual open
-        # status needs production review, never binary inspection in this gate.
-        if not re.fullmatch(r'content/(authoring|packages)/pz-[a-z0-9][a-z0-9-]{0,59}/'
-                            r'[a-zA-Z0-9][a-zA-Z0-9._-]{0,31}/[a-zA-Z0-9_./ -]+', path):
-            return 'archive outside live production'
-        if any(p in {'.', '..'} or p.startswith('.') for p in parts):
-            return 'noncanonical production archive'
+    if parts[0] in {'review', 'review-originals', 'review-evidence', 'pe-app-evidence'}:
+        return 'review delivery'
+    if lower.startswith('content/authoring/') and not (
+            lower in ('content/authoring/readme.md', 'content/authoring/index.json') or
+            re.fullmatch(r'content/authoring/pz-[a-z0-9][a-z0-9-]{0,59}/current/record\.json', lower)):
+        return 'production working file'
+    if lower.startswith('content/packages/'):
+        return 'production export'
+    if suffix in ARCHIVES and not (
+            re.fullmatch(r'docs/font-inputs/[^/]+\.zip', lower) or
+            re.fullmatch(r'tests/puzzle_production/fixtures/[^/]+\.zip', lower)):
+        return 'archive outside product source or test fixtures'
     return None
 
 
 def compare(before, after):
     added = sorted(after.keys() - before.keys())
-    blocked = {p: forbidden(p) for p in added if forbidden(p)}
+    changed = [p for p in after if before.get(p) != after[p]]
+    blocked = {p: forbidden(p) for p in changed if forbidden(p)}
     if blocked:
         raise ValueError('Disallowed new repository outputs: ' + json.dumps(blocked, sort_keys=True))
     def totals(files):

@@ -1,0 +1,68 @@
+"""Read published production originals by an immutable GitHub asset identity."""
+import json
+import re
+import time
+from urllib.parse import urlsplit
+from urllib.request import HTTPRedirectHandler, ProxyHandler, Request, build_opener
+
+from . import current_content as content
+from .authoring_package import require, ID
+from .contract import exact_keys
+
+FORMAT = 'picross-authoring-current-v2'
+REPOSITORY = 'venomenon328/picross'
+API = 'https://api.github.com/repos/' + REPOSITORY
+FIELDS = {'repository', 'job', 'release_id', 'asset_id'}
+
+
+def local_ref(ref):
+    return {k: ref[k] for k in ('file', 'bytes', 'sha256')}
+
+
+def validate(ref, job, limit):
+    exact_keys(ref, {'file', 'bytes', 'sha256', 'asset'})
+    content.reference(local_ref(ref), limit=limit)
+    identity = ref['asset']
+    exact_keys(identity, FIELDS)
+    require(identity['repository'] == REPOSITORY and identity['job'] == job and ID.fullmatch(job)
+            and ref['file'].startswith('content/authoring/' + job + '/')
+            and ref['file'].split('/')[-1] not in ('record.json', '.current-operation.json'),
+            'Foreign production asset')
+    for key in ('release_id', 'asset_id'):
+        require(type(identity[key]) is int and 0 < identity[key] < 2**63, 'Invalid release/asset identity')
+
+
+class AssetRedirect(HTTPRedirectHandler):
+    def redirect_request(self, req, fp, code, msg, headers, newurl):
+        url = urlsplit(newurl)
+        require(url.scheme == 'https' and url.netloc == 'release-assets.githubusercontent.com',
+                'Unexpected asset redirect')
+        return super().redirect_request(req, fp, code, msg, headers, newurl)
+
+
+def get(path, limit, *, binary=False):
+    request = Request(API + path, headers={'Accept': 'application/octet-stream' if binary else 'application/vnd.github+json',
+                                          'Accept-Encoding': 'identity', 'User-Agent': 'picross-work-assets'})
+    deadline = time.monotonic() + 60
+    with build_opener(ProxyHandler({}), AssetRedirect()).open(request, timeout=10) as response:
+        result = bytearray()
+        while len(result) <= limit and time.monotonic() < deadline:
+            part = response.read(min(65536, limit + 1 - len(result)))
+            if not part:
+                return bytes(result)
+            result.extend(part)
+    raise ValueError('Production asset exceeds its byte/time budget')
+
+
+def read(ref, limit):
+    ident = ref['asset']
+    validate(ref, ident['job'], limit)
+    release = json.loads(get('/releases/tags/work-prod-' + ident['job'], 4 * 1024**2))
+    require(release['id'] == ident['release_id'] and release['tag_name'] == 'work-prod-' + ident['job']
+            and release['prerelease'] and not release['draft'], 'Original work release missing')
+    rows = [a for a in release['assets'] if a['id'] == ident['asset_id']]
+    require(len(rows) == 1 and rows[0]['size'] == ref['bytes'] and rows[0]['state'] == 'uploaded',
+            'Original asset missing from bound release')
+    raw = get('/releases/assets/' + str(ident['asset_id']), ref['bytes'], binary=True)
+    require(content.ref(ref['file'], raw) == local_ref(ref), 'Original asset bytes differ')
+    return raw

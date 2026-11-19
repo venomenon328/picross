@@ -7,3 +7,9 @@ web-deploy.local.json
 game/build/
 examples/rp5/baseline/
 /.picross-integration-batches/
+/content/authoring/pz-*/**
+!/content/authoring/pz-*/current/
+!/content/authoring/pz-*/current/record.json
+/content/packages/
+/review-originals/
+/review-evidence/

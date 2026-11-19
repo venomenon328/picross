@@ -27,7 +27,7 @@ class Deliveries:
         require(record.get("state")=="registered" and not job.get("_current_invalid"),
                 "Current work remains open")
         from tools.puzzle_production import current_authoring
-        if record.get('format') == current_authoring.FORMAT:
+        if record.get('format') in current_authoring.FORMATS:
             source=job['_source'];commit=job['commit']
             raw=source.read(commit,current_authoring.path(identifier),JSON_LIMIT)
             require(io.json_bytes(raw,JSON_LIMIT)==record,'Current work record differs from source')

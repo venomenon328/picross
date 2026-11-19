@@ -73,7 +73,12 @@ def validate(value, measured=True):
         ap.require(a['role'] in ROLES, 'Unbekannte Bildrolle.')
         text(a['caption'])
         loc = a['location']
-        exact_keys(loc, {'commit', 'storage', 'container', 'file'} | ({'sha256', 'bytes'} if measured else set()))
+        external = measured and value['revision']=='current' and 'asset' in loc
+        if external:
+            from tools.puzzle_production import work_assets
+            ap.require(loc['storage'] in ('repository','definition') and loc['commit'] is None, 'Unexpected external location')
+            work_assets.validate({**work_assets.local_ref(loc), 'asset':loc['asset']}, value['puzzle_id'], 32*JSON_LIMIT)
+        exact_keys(loc, ({'asset'} if external else set()) | {'commit', 'storage', 'container', 'file'} | ({'sha256', 'bytes'} if measured else set()))
         if loc['commit'] is not None:
             check_commit(loc['commit'])
         ap.relative(loc['file'])
@@ -537,8 +542,14 @@ class Record:
 
 def asset_bytes(source, snapshot, loc):
     commit = loc['commit'] if loc['commit'] is not None else snapshot
+    if 'asset' in loc:
+        from tools.puzzle_production import work_assets
+        raw = work_assets.read({**work_assets.local_ref(loc), 'asset': loc['asset']}, 32 * JSON_LIMIT)
+        if loc['storage'] != 'definition':
+            return raw
     if loc['storage'] == 'definition':
-        raw = bind(source.read(commit, loc['file'], 2 * JSON_LIMIT), loc)
+        if 'asset' not in loc:
+            raw = bind(source.read(commit, loc['file'], 2 * JSON_LIMIT), loc)
         from tools.puzzle_production.current_authoring import raster_preview
         return raster_preview(io.json_bytes(raw, 2 * JSON_LIMIT))
     if loc['storage'] == 'repository':
@@ -618,7 +629,7 @@ def inspect(source, snapshot, value):
     """Fresh independent detail inspection; never reuses another call's findings."""
     from tools.puzzle_production import current_authoring
     raw = source.read(snapshot, value['record']['file'], JSON_LIMIT)
-    if parse(raw).get('format') == current_authoring.FORMAT:
+    if parse(raw).get('format') in current_authoring.FORMATS:
         return current_authoring.detail(source, snapshot, value)
     with _Inspection(source, snapshot) as operation:
         result = operation.inspect(value)

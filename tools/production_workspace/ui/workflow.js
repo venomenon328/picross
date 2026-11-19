@@ -109,7 +109,7 @@ const PW = (()=>{
   if(!n)throw Error('Dieser Stand benötigt einen eigenen ausdrücklich beauftragten Folgeauftrag.');
   if(value&&value.facts.authoring_version!=='0.8.0')throw Error('Dieser historische Stand gehört nicht zum neuen 0.8-Produktionsweg.');
   const remote=value?.source_url?.match(/^https:\/\/github\.com\/([A-Za-z0-9_.-]+\/[A-Za-z0-9_.-]+)\/tree\/([a-f0-9]{40})$/);
-  if(value&&(!remote||value.commit!==remote[2]))throw Error('Remote-Sicherung nicht bestätigt. Originale und Projektion zuerst pushen, dann Quellen aktualisieren.');
+  if(value&&(!remote||value.commit!==remote[2]))throw Error('Remote-Sicherung nicht bestätigt. Arbeitsstand zuerst mit dem PW-B-Publisher sichern, dann Quellen aktualisieren.');
   if(!['continue','rework','resume','background_change'].includes(action))throw Error('Bitte eine gültige Aktion wählen.');
   const lines=[`Repository: ${remote?.[1]||'venomenon328/picross'} · Ziel: main. Lies AGENTS.md, den gemeinsamen Authoring-Kern und die dort für Schritt ${n} gerouteten Phasen- und Bildregeln im aktuellen main (Authoring 0.8.0).`];
   if(value){
@@ -120,7 +120,8 @@ const PW = (()=>{
    lines.push(`Neues Motiv: ${intent.brief.trim()}`);
    if(intent.inputImage)lines.push(`Eigene Eingangsdatei: ${intent.inputImage}. Ich füge die tatsächliche Datei diesem Auftrag bei; falls sie fehlt, vor Bildarbeit anfordern.`);
   }
-  lines.push('Arbeitsstand nach dem aktuellen PW-B-Vertrag in genau einem aktuellen Metadatensatz veröffentlichen; Ansichten daraus ableiten. Aktuelle Angebote bis zur Wahl erhalten, danach nicht mehr benötigte Varianten entfernen.');
+  lines.push('Arbeitsstand mit python -m tools.work_publish publish nach PW-B (erwarteter Arbeitscommit oder new) in genau einem aktuellen Metadatensatz veröffentlichen; Ansichten daraus ableiten. Aktuelle Angebote bis zur Wahl erhalten, danach nicht mehr benötigte Varianten entfernen.');
+  lines.push('Git-Produktcommits mit python -m tools.publish_git und erwarteter Remote-SHA veröffentlichen.');
   const selected=value?.offers.find(o=>o.id===intent.selection&&o.kind===intent.kind);
   if(action==='background_change'){
    if(value?.facts.state!=='registered')throw Error('Eine spätere Hintergrundrevision braucht einen tatsächlich registrierten Stand.');

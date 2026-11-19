@@ -235,7 +235,7 @@ class PackageContract(unittest.TestCase):
                       {'mode': 'forever', 'purpose': 'R01', 'expires': None}]:
             p['evidence'] = value
             with self.subTest(value=value), self.assertRaises(ValueError): self.validate(p)
-        p['evidence'] = {'mode': 'review', 'purpose': 'R01 reviewer for this implementation', 'expires': '2026-11-12'}
+        p['evidence'] = {'mode': 'review', 'purpose': 'R01 reviewer for this implementation', 'expires': '2026-11-12', 'files': {'source': ['tools.log']}}
         self.validate(p)
 
     def test_review_failure_and_expired_upload_selection(self):

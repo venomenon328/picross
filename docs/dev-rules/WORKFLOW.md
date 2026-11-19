@@ -59,6 +59,8 @@ ein Arbeitsbranch, einen neuen vom aktuellen Zielbranch (bei gestapelten Paketen
 von der vereinbarten Basis) anlegen. Bei einer Wiederaufnahme zuerst den laufenden
 Stand zuordnen. Eine fehlende Branchangabe autorisiert keine Umsetzung auf dem Zielbranch.
 
+Für Arbeits-, Integrations- und Reviewquellen vor der Veröffentlichung den gemeinsamen Einstieg `python -m tools.publish_git BRANCH --expected new` bzw. mit erwarteter Remote-SHA verwenden. Für einen einzelnen API-Commit auf bestehendem Branch denselben Einstieg mit `--api` verwenden. Unmittelbare Connector-Uploads oder Git-Data-API-Aufrufe umgehen die Objektprüfung und gehören nicht zu den unterstützten Wegen. Laufbelege und lokale Originale über den Zustellvertrag liefern.
+
 Vor Änderungen Arbeitsbaum und Fremdänderungen prüfen. Standardbranch `feat/<issue>-<kurzname>`, `fix/<issue>-<kurzname>` oder `chore/<issue>-<kurzname>`; vorhandene beauftragte Branches fortführen. Keine Leercommits für vorzeitige PRs. Relevante Scope-/Produktwidersprüche konkret lösen, ohne unabhängige Arbeit anzuhalten.
 
 Gezielte Prüfungen nutzen; abschließend den vereinbarten Kern und die tatsächlich gewählten Module erfolgreich ausführen. Fehlende, abgebrochene, übersprungene und fehlgeschlagene Pflichtprüfungen sind kein Erfolg. Ungeeignete Prüfungen dürfen nach begründeter Vertragsänderung verkleinert oder entfernt werden; ein aktueller Fehler darf nicht durch gefälschte Resultate oder stilles Weglassen verschwinden. Erforderliche Abdeckungsentscheidungen stehen vor ihrer Anwendung im Paket und im Diff.

@@ -15,10 +15,11 @@ erzeugt keine menschliche Erklärung. Es gibt keine neue persönliche Abnahmesch
 ## Geschlossene aktuelle Form
 
 `content/authoring/<puzzle_id>/current/record.json` ist die einzige aktuelle
-Metadatenautorität. Format `picross-authoring-current-v1`, exakt:
+Metadatenautorität. Veröffentlichungsformat `picross-authoring-current-v2`, exakt:
 
-`format,puzzle_id,revision,source_commit,operation,target,title,category_id,state,brief,parameters,assets,rasters,selected,decisions,budgets,blockers,test_only,integration`.
+`format,work_release,puzzle_id,revision,source_commit,operation,target,title,category_id,state,brief,parameters,assets,rasters,selected,decisions,budgets,blockers,test_only,integration`.
 
+- `work_release` bindet die numerische Release-ID (`id`) und den vollen bereinigten Tagzielcommit (`anchor`), auch bei leerem Angebot.
 - `revision=current`; Git bindet den jeweiligen veröffentlichten Stand. Keine Paketkette.
 - ID: `pz-[a-z0-9][a-z0-9-]{0,59}`; source_commit: volle 40-stellige kleine Git-SHA zur aktuellen Quellenzuordnung. Kein Snapshot oder historischer Erzeugerzugriff.
 - operation: production/background. target ist bei production null, bei reiner Hintergrundpflege exakt definition/reveal als aktive Refs und mode=mono|color. Unveränderte aktive Raster brauchen dafür keinen neuen Proof oder Difficulty. Das aktuelle Rasterpreview wird nur transient aus der Definition gerendert.
@@ -32,10 +33,14 @@ Metadatenautorität. Format `picross-authoring-current-v1`, exakt:
 - decisions: höchstens acht Objekte `scope,binding,actor,timestamp_utc,statement`, je Scope genau eine noch gültige echte Erklärung. scope reveal/motif/raster/background/final/integration/budget; binding ist H des aktuellen semantischen Auswahlscope nach `current_authoring.binding`. UTC explizit Z/+00:00; ein nicht überlieferter Prüfzeitpunkt im Urteil bleibt null. Keine separate kopierte Erklärung, Prompt- oder Korrekturdatei. Tatsächliche Inhaltsänderung invalidiert abhängige Entscheidungen; reine Pfad-/Beschriftungsumstellung gleicher Bytes erhält kreative Wahlen. Endabnahme/Integration binden zusätzlich aktuelles Briefing, Titel/Kategorie, Rechte, Sichturteile und technische Ausnahmen.
 - blockers: höchstens 64 konkrete aktuelle Texte. test_only: bool, unveränderlicher Scope. integration: null oder `commit,result` der tatsächlich erreichten aktuellen Lieferung nach RI-ONE; keine historische Receiptdatei.
 
-Ref: exakt `file,sha256,bytes`; sicherer repositoryrelativer POSIX-Pfad,
+Aktive Repositoryreferenz: exakt `file,sha256,bytes`; sicherer repositoryrelativer POSIX-Pfad,
 64 kleine Hexzeichen, positive tatsächliche Bytezahl. Zulässig sind eigene
-Dateien unter `content/authoring/<id>/` und tatsächlich benötigte aktive
-Produktdateien nach dem bestehenden gezielten Reader. Keine Links, Hardlinks,
+Produktressourcen im fixierten Gitbaum. Eine eigene Arbeitsdatei unter
+`content/authoring/<id>/` hat dieselben drei Messfelder und genau ein
+zusätzliches Objekt `asset` mit `repository,job,release_id,asset_id`.
+Repository ist venomenon328/picross, job dieselbe Rätsel-ID, beide numerischen
+IDs sind positiv. Der Reader prüft Zugehörigkeit zum eigenen Arbeitsrelease,
+Bytezahl und SHA-256 vor der fachlichen Dekodierung. Keine Links, Hardlinks,
 Reparsepunkte, Traversal, Windowsgeräte-, Case- oder Datei-/Ordneraliase.
 Record höchstens 1 MiB, Definition 2 MiB, Proof 64 MiB, Bild 32 MiB,
 sonstige JSON-Nutzdatei 8 MiB, insgesamt höchstens 512 MiB/2048 aktive Dateien.
@@ -75,19 +80,32 @@ API/CLI bleiben authoring_builder.build beziehungsweise build --request
 kein Benutzer pflegt JSON in der Oberfläche. Der Produktionsakteur erstellt den
 Request aus den aktuellen Ergebnissen und tatsächlichen Erklärungen.
 
-Der gemeinsame Authoringwriter prüft Quellen/Altbytes frisch, schreibt neue
-Nutzdateien zuerst, wechselt Record und den gemeinsamen Verweisindex atomar
-je Datei und entfernt nur entbehrliche zuvor gebundene eigene Nutzdateien.
-Ein temporäres geschlossenes Operationsjournal dient ausschließlich einer noch
-unvollständigen Publikation. Identischer Request vervollständigt nach Abbruch;
-fremde Bytes stoppen. Nach Abschluss Journal und ersetzte/verworfene Dateien
-entfernen. Keine Archivierung oder Wartepflicht auf Main. Dateien mit anderer
-aktueller Nutzung bleiben erhalten. No-op erhält Bytes und mtimes.
+Builder und Finalizer bearbeiten den lokalen Arbeitsstand. Die lokal messbare
+Form v1 hat dieselben Inhaltsfelder und Dateibindungen ohne Transportidentität.
+Der Akteur führt vom eigenen Checkout aus folgende Befehle aus:
 
-Der Finalizer benutzt dieselbe Fortschreibung und dieselben Guards. Ein aktueller
-Auftrag verlangt keine alte ZIP-/Handoff-/Inventar-/Regel-/Angebotskopie.
-Veraltete Formen werden ausdrücklich als historische Formen behandelt;
-keine automatische Migration oder Wiederherstellung gelöschter Historie.
+```text
+python -m tools.work_publish publish <id> --expected new
+python -m tools.work_publish resume <id> --expected <arbeitscommit>
+python -m tools.work_publish publish <id> --expected <arbeitscommit>
+python -m tools.work_publish retire <id> --expected <abschlusscommit>
+```
+
+Resume arbeitet auf einem eigenen Worktree am erwarteten Commit. Der Publisher
+benötigt angemeldetes gh mit Repository-Schreibrecht und vollständige Gitbasis.
+Er prüft Rechte, Release-Mutierbarkeit und beide Generationen im Katalogbudget
+der installierten Appclients. Die kurzlebige Ref work-prod-control/catalog
+serialisiert konkurrierende Jobänderungen. Nach Prozessabbruch dieselbe Operation
+im selben Checkout wiederholen. Der lokale Besitzerbeleg identifiziert ihre
+Lease. Einen fremden Besitzer niemals überschreiben.
+
+Ein Job besitzt den Prerelease work-prod-<id> mit make_latest=false und einem
+Tag am bereinigten Maincommit. Neue Originale werden einzeln hochgeladen und
+über den öffentlichen Leser geprüft. Der Arbeitsref enthält ausschließlich
+Record und Indexdelta. Die erwartete Remote-SHA bindet die Veröffentlichung.
+Erst danach entfallen ersetzte Originale. Aktive Auswahlen haben keine
+technische Siebentagesfrist. Rollout und Produktionsfreigabe setzen einen
+tatsächlich verfügbaren v2-Reader und bestätigten Originalzugriff voraus.
 
 ## Veröffentlichung und Ansichten
 
@@ -109,7 +127,9 @@ benötigte aktive Metadaten übernehmen; niemals den Arbeitsbranch mit Alternati
 und Protokollen nach Main mergen. Completion und jeder registered-Readback vergleichen die tatsächliche Lieferung einschließlich aktueller Reveal-/Hintergrundnotices und vollständiger ausgewählter Bewertung,
 auch wenn der Integrationscommit keine Arbeitsdateien enthält. Retirement prüft
 bestätigtes Mainergebnis und eigene ausgewählte aktuelle Arbeitsbytes am Arbeitsref;
-die Arbeitsdateien müssen nie zuvor in Main gelegen haben. Vor Ausblendung aktuelle Record-/Nutzdateibindungen am Arbeitsref frisch prüfen, ohne Solverlauf. Retirement darf nach eigenem Teilabbruch fehlende eigene Dateien nur aus dem gesicherten Arbeitscommit prüfen; vorhandene fremde oder geänderte Bytes blockieren. Neue/offene Arbeit,
+die Arbeitsdateien müssen nie zuvor in Main gelegen haben. Vor Ausblendung aktuelle Record-/Nutzdateibindungen am Arbeitsref frisch prüfen, ohne Solverlauf. Nach bestätigtem Mainergebnis beendet retire den eigenen Release, Tag und
+Arbeitsref einschließlich Record und Verweis. Ein abgebrochener Abschluss
+verwendet denselben erwarteten Arbeitscommit. Neue/offene Arbeit,
 fremde Bytes und echte Rechte bleiben erhalten. Kein neuer historischer Receipt.
 
 ## Historische Formen

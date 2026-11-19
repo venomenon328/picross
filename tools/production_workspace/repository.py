@@ -13,6 +13,7 @@ from tools.puzzle_production import authoring_package as ap, catalog_io as io
 from tools.puzzle_production.authoring_builder import index_value
 from tools.puzzle_production.contract import exact_keys
 from .sources import git, GitSource, INDEX, JSON_LIMIT, LRU
+from tools.puzzle_production import current_authoring
 from . import presentation as p
 
 DEFAULT_REFS = ['main', 'content/pw/*']
@@ -186,7 +187,10 @@ class ProductionRemoval:
             warnings.append('Geschlossener, nicht gemergter PR vorhanden. Seine Produktion wird durch die Branchentfernung nicht integriert.')
         if main['revisions'] or main['registered'] or any(row['merged'] for row in prs):
             warnings.append('Mainintegration bzw. gemergter PR vorhanden: integrierte Inhalte bleiben auf main erhalten.')
-        return {'repository': repository, 'source': 'remote', 'branch': branch, 'ref': ref,
+        external = job.get('_record', {}).get('format') == current_authoring.work_assets.FORMAT
+        if external:
+            warnings.append('Die bestätigte Entfernung beendet auch den gebundenen Arbeitsrelease mit Originalen und Tag.')
+        return {'external_assets': external, 'repository': repository, 'source': 'remote', 'branch': branch, 'ref': ref,
                 'sha': expected, 'puzzle_id': job['puzzle_id'], 'title': job['title'], 'revisions': revisions,
                 'local': local, 'prs': prs, 'main': main, 'warnings': warnings, 'blockers': blockers}
 
@@ -206,7 +210,11 @@ class ProductionRemoval:
         ap.require(not fresh['blockers'], ' '.join(fresh['blockers']))
         ap.require(fresh == facts, 'Vorprüfungsbefunde haben sich geändert. Neu vorprüfen und bestätigen.')
         try:
-            self.push_delete(facts)
+            if facts['external_assets']:
+                from tools.work_publish import finish
+                finish(self.repository.local.root, facts['puzzle_id'], facts['sha'], confirmed=True)
+            else:
+                self.push_delete(facts)
         except ValueError:
             return {'removed': False, 'message': 'Push abgelehnt oder nicht rechtzeitig bestätigt (Lease, Rechte oder Netzwerk). Ausgang nicht als Erfolg bestätigt; Quellen neu prüfen.'}
         try:
@@ -415,10 +423,9 @@ class Repository:
                     continue
                 file = row['record'].rsplit('/', 1)[0] + '/workspace.json'
                 try:
-                    from tools.puzzle_production import current_authoring
                     record_raw = source.read(commit, row['record'], JSON_LIMIT)
                     record = p.parse(record_raw)
-                    if record.get('format') == current_authoring.FORMAT:
+                    if record.get('format') in current_authoring.FORMATS:
                         projection = current_authoring.projection(record, record_raw)
                         ap.require(row['record'] == current_authoring.path(row['puzzle_id']), 'Noncanonical current job')
                         from .motifs import PHASES
@@ -447,7 +454,7 @@ class Repository:
                     errors.append('Ungültige Projektion für ' + row['puzzle_id'] + '/' + row['revision'] + ': ' + str(exc))
         from . import current_view
         pointer_read_error = False
-        for identity in {j['puzzle_id'] for j in jobs if j['_record'].get('format') != 'picross-authoring-current-v1'}:
+        for identity in {j['puzzle_id'] for j in jobs if j['_record'].get('format') not in current_authoring.FORMATS}:
             current, message = None, None
             current_invalid = False
             try:
@@ -499,7 +506,7 @@ class Repository:
                     value = self.scan(source, commit, None if branch == 'main' else branch.rsplit('/', 1)[1])
                     errors.extend(value['errors'])
                     for job in value['jobs']:
-                        identity = (job['puzzle_id'], job['revision'], branch if job['_record'].get('format') == 'picross-authoring-current-v1' else None)
+                        identity = (job['puzzle_id'], job['revision'], branch if job['_record'].get('format') in current_authoring.FORMATS else None)
                         fingerprint = job.pop('_fingerprint')
                         entry = {**job, 'binding': fingerprint, 'commit': commit, 'source': origin, 'ref': branch, '_source': source}
                         if identity in bindings and bindings[identity] != fingerprint:
@@ -530,11 +537,11 @@ class Repository:
         # only remaining, deliberately open version of the same revision.
         active_bindings = {}
         for job in jobs:
-            identity = (job['puzzle_id'], job['revision'], job['ref'] if job['_record'].get('format') == 'picross-authoring-current-v1' else None)
+            identity = (job['puzzle_id'], job['revision'], job['ref'] if job['_record'].get('format') in current_authoring.FORMATS else None)
             active_bindings.setdefault(identity, set()).add(job['binding'])
         for job in jobs:
             job.pop('conflict', None)
-            if len(active_bindings[(job['puzzle_id'], job['revision'], job['ref'] if job['_record'].get('format') == 'picross-authoring-current-v1' else None)]) > 1:
+            if len(active_bindings[(job['puzzle_id'], job['revision'], job['ref'] if job['_record'].get('format') in current_authoring.FORMATS else None)]) > 1:
                 job['conflict'] = True
         from .motifs import Relations
         history = Relations(self)

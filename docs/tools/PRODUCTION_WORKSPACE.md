@@ -444,7 +444,7 @@ eine frühere gespeicherte Bereinigungsoption hat keine Wirkung. Der separate
 fachliche Produktionsabschluss nach Authoring §9 bleibt unverändert. Bei neuem Job muss dessen Motivbriefing im kopierten Erstauftrag stehen;
 noch nicht vorhandene Repositorydaten werden nicht als existent behauptet.
 
-Die normalen beauftragten Produktionsakteure committen/pushen Index, aktuellen Record und benötigte Nutzdateien an den fälligen Übergängen. Merge bleibt entsprechend
+Die normalen beauftragten Produktionsakteure verwenden tools.work_publish nach PW-B für Originalassets und Git-Metadaten an den fälligen Übergängen. Merge bleibt entsprechend
 dem tatsächlichen Auftrag getrennt. Nach vollständiger Mainintegration gilt
 Authoring §9. Der Assistent zeigt danach den bestätigten Abschluss und gültige
 Runtime-/Belegbezüge, keine defekten Links auf entfernte Zwischenbilder.

@@ -156,8 +156,7 @@ bleiben begrenzt; Wiederaufnahme setzt sie nicht zurück und verlangt kein
 Versuchstagebuch. Aktuelle offene Blocker und noch relevante Entscheidungen
 kompakt im Record führen; fehlende Erklärungen niemals erfinden.
 
-Record, aktuell angebotene/gewählte Nutzdateien und gemeinsamen Index committen
-und pushen; feste Remotequelle tatsächlich prüfen. Ungesicherte lokale Dateien
+Den Arbeitsstand mit `python -m tools.work_publish publish <id> --expected <new-oder-arbeitscommit>` sichern. Der Publisher liefert Originale als Releaseassets und den Record mit Index im Arbeitsref. Feste Remotequelle tatsächlich prüfen. Ungesicherte lokale Dateien
 sind keine Cloudquelle. Wiederaufnahme prüft aktuelle Dateien, Freigaben,
 Parameter und offene Arbeit. Reine Pfadumstellung gleicher Bytes erhält die
 Auswahl; materiell geänderte Inhalte invalidieren abhängige Freigaben.

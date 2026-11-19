@@ -10,6 +10,8 @@ from . import authoring_package as ap, catalog_io as io, current_content as cont
 from .contract import exact_keys, canonical_bytes, digest, Budget, integer
 
 FORMAT = 'picross-authoring-current-v1'
+from . import work_assets
+FORMATS = (FORMAT, work_assets.FORMAT)
 REQUEST = 'picross-authoring-current-request-v1'
 LIMIT = 1024 * 1024
 INDEX = 'content/authoring/index.json'
@@ -101,8 +103,15 @@ def references(job):
 
 
 def validate(job):
-    exact_keys(job, FIELDS)
-    ap.require(job['format'] == FORMAT and job['revision'] == 'current', 'Current job format required; legacy originals are not migrated')
+    published = job.get('format') == work_assets.FORMAT
+    exact_keys(job, FIELDS | ({'work_release'} if published else set()))
+    if published:
+        release = job['work_release']
+        exact_keys(release, {'id', 'anchor'})
+        ap.require(type(release['id']) is int and 0 < release['id'] < 2**63 and
+                   isinstance(release['anchor'],str) and re.fullmatch('[0-9a-f]{40}',release['anchor']),
+                   'Invalid work release binding')
+    ap.require(job['format'] in FORMATS and job['revision'] == 'current', 'Current job format required; legacy originals are not migrated')
     path(job['puzzle_id'])
     ap.require(job['operation'] in ('production','background'), 'Unknown current operation')
     if job['operation']=='background':
@@ -179,7 +188,11 @@ def validate(job):
         ap.require(role in seen, 'Actual '+role+' choice required before selection')
     all_refs={}
     for ref in references(job):
-        content.reference(ref,limit=64*LIMIT)
+        if job['format'] == work_assets.FORMAT and own(job['puzzle_id'], ref['file']):
+            work_assets.validate(ref, job['puzzle_id'], 64*LIMIT)
+            ap.require(ref['asset']['release_id'] == release['id'], 'Foreign release identity')
+        else:
+            content.reference(ref,limit=64*LIMIT)
         ap.require(own(job['puzzle_id'],ref['file']) or ref['file'].startswith(('game/art/content/','game/art/backgrounds/','game/data/content/')),
                    'Foreign production source')
         ap.require(all_refs.setdefault(ref['file'],ref)==ref, 'Conflicting file bindings')
@@ -267,11 +280,14 @@ class Checked:
             self.matches(j['integration']['result'])
 
     def bound(self, ref, limit):
-        content.reference(ref,limit=limit)
+        expected = work_assets.local_ref(ref)
+        content.reference(expected,limit=limit)
         name=ref['file']
+        if 'asset' in ref and name not in self.raw:
+            self.raw[name] = work_assets.read(ref, limit)
         if name not in self.raw: self.raw[name]=self.read(name,limit)
         raw=self.raw[name]
-        ap.require(len(raw)<=limit and content.ref(name,raw)==ref, 'Current source missing/stale: '+name)
+        ap.require(len(raw)<=limit and content.ref(name,raw)==expected, 'Current source missing/stale: '+name)
         return raw
 
     def raster(self, raster, *, technical, ready):
@@ -331,7 +347,10 @@ class Checked:
         return matches(self.job,result,rating=rating)
 
     def recheck(self):
-        for name,raw in self.raw.items(): ap.require(self.read(name,max(len(raw),1))==raw, 'Current input changed: '+name)
+        external = {r['file'] for r in references(self.job) if 'asset' in r}
+        for name,raw in self.raw.items():
+            if name not in external:
+                ap.require(self.read(name,max(len(raw),1))==raw, 'Current input changed: '+name)
 
 
 def checkpoint(name):
@@ -413,7 +432,7 @@ def build(request, source_root, root):
                 ap.require(old['operation']==job['operation'] and all(job['budgets']['used'][k]>=v for k,v in old['budgets']['used'].items()), 'Current job cannot reset consumed budgets')
                 if any(job['budgets']['limits'][k]>v for k,v in old['budgets']['limits'].items()):
                     ap.require(any(d['scope']=='budget' and d['binding']==binding(job,'budget') for d in job['decisions']), 'Budget increase needs actual authorization')
-            remove={ref['file']:ref for ref in references(old) if own(job['puzzle_id'],ref['file']) and ref['file'] not in wanted} if old else {}
+            remove={ref['file']:ref for ref in references(old) if own(job['puzzle_id'],ref['file']) and 'asset' not in ref and ref['file'] not in wanted} if old else {}
             # Other current jobs may intentionally share an input; never delete their refs.
             for other in index['entries']:
                 if other['record']==name: continue
@@ -452,12 +471,14 @@ def build(request, source_root, root):
         if before!=after: _atomic(root,name,after)
         checkpoint('record')
         ap.require(io.read(root,name,LIMIT)==after, 'Published current record changed')
-        for ref in references(job): ap.require(content.ref(ref['file'],io.read(root,ref['file'],64*LIMIT))==ref,'Published current input changed')
+        for ref in references(job):
+            if 'asset' not in ref: ap.require(content.ref(ref['file'],io.read(root,ref['file'],64*LIMIT))==ref,'Published current input changed')
         ap.require(io.read(root,INDEX,8*LIMIT,missing=True)==index_raw, 'Current index changed')
         if index_raw!=index_after: _atomic(root,INDEX,index_after)
         checkpoint('index')
         ap.require(io.read(root,name,LIMIT)==after and io.read(root,INDEX,8*LIMIT)==index_after,'Published current state changed')
-        for ref in references(job): ap.require(content.ref(ref['file'],io.read(root,ref['file'],64*LIMIT))==ref,'Published current input changed')
+        for ref in references(job):
+            if 'asset' not in ref: ap.require(content.ref(ref['file'],io.read(root,ref['file'],64*LIMIT))==ref,'Published current input changed')
         for ref in journal['remove']:
             raw=io.read(root,ref['file'],64*LIMIT,missing=True)
             if raw is not None:
@@ -465,7 +486,7 @@ def build(request, source_root, root):
         checkpoint('pruned')
         ap.require(io.read(root,journal_name,20*LIMIT)==pending_raw, 'Operation journal changed')
         io.safe(root,journal_name).unlink()
-        return {'format':FORMAT,'status':'built','record':name}
+        return {'format':job['format'],'status':'built','record':name}
 
 
 def projection(job, record_raw):
@@ -719,7 +740,7 @@ def retire(root, ids, integrated_commit, *, source_commits=None):
             checked.matches(result);checked.recheck()
             expected={record_path:io.read(root,record_path,LIMIT,missing=True)}
             for ref in references(job):
-                if own(identity_id,ref['file']):
+                if own(identity_id,ref['file']) and 'asset' not in ref:
                     data=io.read(root,ref['file'],64*LIMIT,missing=True)
                     # A prior interrupted removal may have deleted only own declared files.
                     if data is not None: ap.require(content.ref(ref['file'],data)==ref,'Completed current file changed')
