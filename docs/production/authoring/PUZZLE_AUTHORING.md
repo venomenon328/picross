@@ -89,7 +89,9 @@ Revealwahl → Motiv-/Parameterfreigabe → qualifizierte Raster → Rasterwahl 
 Kontexte/Wahl oder none → Endabnahme → Finalizer → Export → frischer Plan →
 autorisiertes Register → Git/Draft-PR → bestätigtes main → Schritt 5 §9.
 PW2-B verbindet Hintergrundwahl/none, Endabnahme und Integration samt Commit/PR,
-unabhängigem Review und bedingtem Squash-Merge nach aktuellen Vor-Merge-Gates/§9.
+unabhängigem Review und bedingtem Squash-Merge nach aktuellen Vor-Merge-Gates.
+Nach bestätigter autorisierter Integration führt der Akteur den gebundenen
+Abschluss samt Branch, Arbeitsrelease und Tag direkt nach Schritt 5 §9 aus.
 Ausdrücklicher Draftumfang bleibt. Erst Absenden erklärt Rechte, Gitdaten belegen Erfolg.
 
 ## Darstellungen und Sichtung
@@ -164,7 +166,9 @@ Auswahl; materiell geänderte Inhalte invalidieren abhängige Freigaben.
 Integration erhält einen eigenen sauberen Branch vom aktuellen Main und übernimmt
 nur gewählte finale Produktdaten und wirklich benötigte aktive Metadaten. Der
 Arbeitsbranch mit Alternativen wird nicht nach Main gemergt. Abschluss prüft das
-tatsächliche aktuelle Ergebnis, ohne zuvor Arbeitsarchive in Main zu verlangen.
+tatsächliche aktuelle Ergebnis. Der gültige Mainkatalog blendet registrierte
+IDs dauerhaft im Produktionsassistenten aus. Spätere Pflege folgt dem
+bestehenden Editor-/Revisionsweg.
 
 ## 7. Freigaben und Abschlussausgabe
 

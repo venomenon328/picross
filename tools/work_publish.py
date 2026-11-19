@@ -220,16 +220,22 @@ def finish(root, job, expected, *, confirmed=False):
     current.path(job)
     require(transport.SHA.fullmatch(expected or ''), 'Expected work commit required')
     main = transport.remote_head(root, 'refs/heads/main')
+    require(main is not None, 'Remote main missing; integration cannot be confirmed')
     transport.git(root,'fetch','--no-tags','--',transport.REMOTE,main)
     with catalog_writer(root, main):
         targets = remove_bound_release(root, job, expected, main, confirmed=confirmed)
         if targets is None:
             return 'no-op'
         branch, actual, tagref, anchor = targets
+        require(transport.remote_head(root, branch) in (actual, None) and
+                transport.remote_head(root, tagref) in (anchor, None),
+                'Different production generation after release removal')
         if anchor:
             delete_ref(root, tagref, anchor)
         if actual:
             delete_ref(root, branch, expected)
+        require(transport.remote_head(root, branch) is None and transport.remote_head(root, tagref) is None,
+                'Production branch or work tag absence not confirmed')
         return 'closed'
 
 
@@ -243,13 +249,16 @@ def remove_bound_release(root, job, expected, main, *, confirmed, before_delete=
     rows, _ = catalog()
     release = release_for(rows, tag)
     anchor = transport.remote_head(root, tagref)
-    if actual is None and release is None and anchor is None:
-        return None
     if actual:
         transport.git(root,'fetch','--no-tags','--',transport.REMOTE,actual)
     source = GitSource(root)
     record = current.validate(io.json_bytes(source.read(expected,current.path(job),MIB),MIB))
     require(record['format'] == work_assets.FORMAT and record['puzzle_id'] == job, 'Unexpected work record')
+    binding = record['work_release']
+    require(not any(row['id'] == binding['id'] and row['tag_name'] != tag for row in rows),
+            'Bound release has a different tag')
+    if actual is None and release is None and anchor is None:
+        return None
     base = transport.git(root, 'merge-base', main, expected).decode().strip()
     scope = transport.git(root, 'diff', '--no-renames', '--name-only', '-z', base, expected).split(b'\0')
     require(set(scope) <= {b'', current.INDEX.encode(), current.path(job).encode()},
@@ -268,7 +277,6 @@ def remove_bound_release(root, job, expected, main, *, confirmed, before_delete=
         if release:
             checked = current.Checked(record, lambda n, limit: source.read(expected, n, limit), technical=False)
             checked.matches(result)
-    binding = record['work_release']
     require(anchor is None or anchor == binding['anchor'], 'Different work tag generation')
     require(release is None or release['id'] == binding['id'], 'Different release generation')
     refs = [r['asset'] for r in current.references(record) if 'asset' in r]
@@ -283,8 +291,14 @@ def remove_bound_release(root, job, expected, main, *, confirmed, before_delete=
     if before_delete is not None:
         before_delete()
     if release:
+        require(transport.remote_head(root, branch) == actual and
+                transport.remote_head(root, tagref) == anchor and
+                transport.remote_head(root, 'refs/heads/main') == main,
+                'Main, production branch or work tag changed during retirement')
         api('releases/' + str(release['id']), 'DELETE')
-    require(not release_for(catalog()[0], tag), 'Release removal not confirmed')
+    remaining, _ = catalog()
+    require(not any(row['tag_name'] == tag or row['id'] == binding['id'] for row in remaining),
+            'Release removal not confirmed')
     return branch, actual, tagref, anchor
 
 
@@ -322,13 +336,28 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('operation', choices=['publish','resume','retire'])
     parser.add_argument('job')
-    parser.add_argument('--expected', required=True, help='Expected remote work commit, or new')
+    parser.add_argument('--expected', required=True, help='Full published work commit (new only for first publication)')
     args = parser.parse_args()
     expected = None if args.expected == 'new' else args.expected
     if expected is not None and not transport.SHA.fullmatch(expected):
-        parser.error('full commit required')
-    operation = {'publish':push_job, 'retire':finish, 'resume':resume}[args.operation]
-    print(operation(Path.cwd(), args.job, expected))
+        parser.error('--expected must be a full commit SHA')
+    if args.operation == 'retire' and expected is None:
+        parser.error('retire requires the full published work commit as --expected')
+    root = Path.cwd()
+    if args.operation == 'retire':
+        current.path(args.job)
+        try:
+            print(finish(root, args.job, expected))
+        except (ValueError, OSError, subprocess.SubprocessError) as exc:
+            detail = str(exc) if isinstance(exc, ValueError) else type(exc).__name__
+            tag = 'work-prod-' + args.job
+            parser.exit(1, f'Produktionsabschluss offen ({detail}). '
+                        f'Produktionsbranch content/pw/{args.job}, Arbeitsrelease und Tag {tag} prüfen.\n'
+                        f'Nach Klärung im selben Checkout wiederholen: '
+                        f'python -m tools.work_publish retire {args.job} --expected {expected}\n')
+        return
+    operation = {'publish':push_job, 'resume':resume}[args.operation]
+    print(operation(root, args.job, expected))
 
 
 if __name__ == '__main__':

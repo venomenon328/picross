@@ -1,7 +1,6 @@
 """Current completion, explicit earlier phases and fresh-main list filtering."""
 from copy import deepcopy
 from pathlib import Path
-from types import SimpleNamespace
 import json
 import subprocess
 import tempfile
@@ -9,7 +8,8 @@ import unittest
 from unittest.mock import patch
 from tests.puzzle_production.current_fixtures import checkout,make,json_file,put,fingerprints
 from tools.puzzle_production import catalog_integration,integrated_content,current_content,current_delivery,catalog_io
-from tools.production_workspace import projector,deliveries,presentation,current_view
+from tools.production_workspace import projector, presentation, current_view
+from tools.production_workspace.repository import Repository, configure
 from tools.production_workspace.sources import GitSource
 
 
@@ -128,24 +128,24 @@ class CurrentCompletionTests(unittest.TestCase):
             integrated_content.retire(self.root,['pz-current'],main,completed_revisions=[('pz-current','r01')])
         self.assertEqual(before,fingerprints(self.root))
 
-    def test_list_current_and_old_branch_copies_keep_new_work_or_unconfirmed_main(self):
-        main=self.close();source=GitSource(self.root)
-        record=json.loads((self.root/'content/authoring/pz-current/r04/record.json').read_bytes())
-        job={'puzzle_id':'pz-current','revision':'r04','binding':'synthetic','commit':main,'source':'remote','ref':'content/pw/test',
-             '_record':record,'_source':source}
-        repo=SimpleNamespace(confirmed_main=main,cached=source)
-        sources=[{'source':'remote','ref':'main','commit':main}]
-        self.assertEqual(deliveries.active(repo,sources,[job])[0],[])
-        old=deepcopy(record);old['integration'].pop('result')
-        # A former v4 receipt claim is ignored, only actual live bytes count.
-        old['integration']['package']={'format':'picross-integrated-content-v4','false':'ignored'}
-        self.assertEqual(deliveries.active(repo,sources,[{**job,'_record':old}])[0],[])
-        newer=deepcopy(record);newer['state']='raster_ready';newer['integration']=None
-        self.assertEqual(len(deliveries.active(repo,sources,[{**job,'_record':newer}])[0]),1)
-        self.assertEqual(len(deliveries.active(repo,[],[job])[0]),1)
-        put(self.root,'game/art/content/pz-current.png',b'Later changed image')
-        later=self.commit()
-        self.assertEqual(len(deliveries.active(repo,sources,[{**job,'commit':later}])[0]),1)
+    def test_list_hides_registered_id_while_completion_stays_bound_to_live_result(self):
+        main = self.close()
+        source = GitSource(self.root)
+        baseline = current_delivery.snapshot(lambda n, l, missing=False: source.read(main, n, l, missing),
+                                             'pz-current')
+        configure(self.root, self.work / 'state')
+        reader = Repository(self.work / 'state')
+        self.assertEqual(reader.listing()['jobs'], [])
+        put(self.root, 'game/art/content/pz-current.png', b'Later changed image')
+        self.phase('r99', 'raster_review')
+        later = self.commit()
+        self.assertNotEqual(main, later)
+        value = reader.listing()
+        self.assertEqual(value['jobs'], [])
+        self.assertEqual(value['completion']['completed_ids'], ['pz-current'])
+        edited = current_delivery.snapshot(lambda n, l, missing=False: source.read(later, n, l, missing),
+                                           'pz-current')
+        self.assertFalse(current_delivery.same(edited, baseline))
 
 
 if __name__=='__main__':unittest.main()

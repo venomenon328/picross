@@ -96,6 +96,17 @@ class Service:
         snapshot = secrets.token_hex(16)
         ids, public = [], []
         with self.lock:
+            if value.get('sync_error'):
+                if self.current and self.current['snapshot']:
+                    # Keep the last bound public IDs and active detail requests.
+                    self.current = {**self.current, 'sync_error': value['sync_error'],
+                                    'remote_confirmed': False,
+                                    'completion': {**self.current['completion'], 'confirmed': False,
+                                                   'note': 'Letzter gebundener Listenstand ist veraltet.'}}
+                    return self.current
+                if value['completion']['main_commit'] is None:
+                    self.current = {**value, 'snapshot': None, 'motifs': []}
+                    return self.current
             for job in value['jobs']:
                 jid = secrets.token_hex(16)
                 ids.append(jid)

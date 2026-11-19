@@ -15,9 +15,9 @@ Der lesende Dienst erzeugt keine Dateien oder Entscheidungen im Inhaltscheckout.
 Die Hauptauswahl gruppiert nach ID. Im konfigurierten Remotebetrieb führt die
 aktuelle gültige Spitze von `content/pw/<id>` vor Main. Ohne offenen Arbeitsbranch
 bleibt tatsächlich offene Mainarbeit sichtbar. Lokale Refs dienen Diagnose und
-P2, ohne Remoteangebote zu ersetzen. Fehler, fehlende Dateien, Konflikte und
-unbestätigter Remotestand bleiben sichtbar. Offline wird nur der letzte gebundene
-Remotecache angezeigt, keine frische Bestätigung behauptet.
+P2, ohne Remoteangebote zu ersetzen. Offene Arbeit zeigt Fehler, fehlende Dateien und Konflikte. Bei gescheiterter
+Aktualisierung bleibt der letzte gültig gebundene Listenstand als veraltet
+erhalten. Ohne solchen Stand erscheint der Ladefehler.
 
 Passive Suche erhält Ansicht und Eingaben. Erst ausdrückliches Laden oder
 Job-/Quellwechsel verwirft ungesendete Auswahlabsichten. Öffnen und Kopieren
@@ -26,14 +26,17 @@ Rolle und Datei-/Inhaltsbytes. Kein Verzeichnisscan rät Angebote oder Auswahl.
 
 ## Abschluss und Prüfgrenzen
 
-Completion bindet die tatsächlich registrierte aktuelle Lieferung. Die aktive
-Liste vergleicht dieses Produktresultat mit dem frisch bestätigten Remote-Main
-nach [RI-ONE](../production/PUZZLE_INTEGRATION_SINGLE_PATH.md). Das funktioniert
-auch bei einem sauberen Produktcommit ohne Arbeitsarchive und nach Squash.
-Abweichender Inhalt, neue/offene Arbeit oder fehlende Mainbestätigung bleibt
-sichtbar. Nach bestätigtem Abschluss entfernt Retirement ausschließlich eigene
-zugeordnete aktuelle Arbeit und ihren Indexverweis. Keine defekten Ansichtslinks
-und keine neue historische Receiptdatei.
+Der gültige Mainkatalog schließt jede registrierte ID dauerhaft aus der aktiven
+PW-Liste aus. Der Filter greift vor dem Scannen ihres Produktionsbranches und
+vor den Recordzugriffen in main. Spätere Pflege derselben ID nutzt den
+Bestandseditor. In der aktiven Ansicht wird der aktualisierte Listenstand erst
+nach ausdrücklicher Übernahme wirksam.
+
+Completion bindet die tatsächlich registrierte aktuelle Lieferung nach
+[RI-ONE](../production/PUZZLE_INTEGRATION_SINGLE_PATH.md). Der Akteur schließt
+nach bestätigter autorisierter Integration die eigene Arbeitsgeneration mit
+`tools.work_publish retire` ab und überprüft das Fehlen von Branch, Release und
+Tag. Details stehen in [Authoring Schritt 5 §9](../production/authoring/PUZZLE_AUTHORING_STEP_5.md#9-produktionsabschluss-und-bereinigung).
 
 Die konkrete sichere Publikation, Zustände, Invalidierung und Completionform
 besitzt PW-B; Remote-/Origin-/P2-Schutz und Bedienung besitzt [PW](PRODUCTION_WORKSPACE.md).

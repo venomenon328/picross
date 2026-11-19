@@ -319,8 +319,12 @@ class CurrentAuthoringTests(unittest.TestCase):
         self.job['selected']['reveal']='active-reveal';self.publish();commit(self.root,'current active SVG work')
         configure(self.root,self.work/'svg-state',refs=['main']);service=Service(Repository(self.work/'svg-state'))
         listing=service.listing();self.assertEqual(listing['errors'],[])
-        jid=listing['jobs'][0]['id'];self.assertEqual(service.detail(jid)['facts']['composition']['reveal'],'active-reveal')
-        self.assertEqual(service.picture(jid,'active-reveal'),(svg,'image/svg+xml'))
+        self.assertEqual(listing['jobs'], [])
+        raw = (self.root / current.path('pz-current')).read_bytes()
+        projection = current.projection(json.loads(raw), raw)
+        source = LocalSource(self.root)
+        self.assertEqual(presentation.inspect(source, None, projection)['composition']['reveal'], 'active-reveal')
+        self.assertEqual(presentation.asset_bytes(source, None, projection['assets'][0]['location']), svg)
         self.job['target']['reveal']['file']='game/'+entry['reveal']
         with self.assertRaises(InvalidInput):self.publish()
 
@@ -336,17 +340,6 @@ class CurrentAuthoringTests(unittest.TestCase):
                 'file':self.file('context-'+str(n)+'.png',stream.getvalue()),'rights':self.incoming['reveal']['rights'],
                 'review':judgment(current.CRITERIA['background'])})
         self.job['state']='background_review';self.publish()
-
-    def delivery_reader(self,work_commit):
-        from types import SimpleNamespace
-        from tools.production_workspace.deliveries import Deliveries
-        source=LocalSource(self.root);product=git(self.root,'rev-parse','origin/main')
-        reader=Deliveries(SimpleNamespace(cached=source,confirmed_main=product),[{'source':'remote','ref':'main','commit':product}])
-        raw=source.read(work_commit,current.path('pz-current'));record=json.loads(raw)
-        job={'puzzle_id':'pz-current','revision':'current','binding':io.checksum(raw),'commit':work_commit,
-             'source':'remote','ref':'content/pw/pz-current','_record':record,'_source':source,'current_view':True,
-             '_current_invalid':False,'_projection':current.projection(record,raw)}
-        return reader,job
 
     def test_selection_requires_decision_before_any_candidate_is_pruned(self):
         from tests.puzzle_production.current_fixtures import fingerprints
@@ -377,20 +370,25 @@ class CurrentAuthoringTests(unittest.TestCase):
                 remaining=case.job['rasters'] if role=='raster' else [a for a in case.job['assets'] if a['role']==role]
                 self.assertEqual([a['id'] for a in remaining],[candidates[0]['id']])
 
-    def test_completed_listing_checks_actual_work_files_without_solver(self):
-        _,completed=self.registered();reader,job=self.delivery_reader(completed)
-        with patch('tools.puzzle_production.verifier.verify',side_effect=AssertionError('Listing must not execute proof')):
-            self.assertEqual(reader.filter([job])[1]['hidden_count'],1)
-            selected=self.root/self.job['assets'][0]['file']['file'];original=selected.read_bytes()
-            swapped=(self.root/self.job['rasters'][0]['preview']['file']).read_bytes()
-            for mutation in ('missing','swapped','changed'):
+    def test_completed_work_checks_actual_files_without_solver(self):
+        _, completed = self.registered()
+        source = LocalSource(self.root)
+        record = json.loads(source.read(completed, current.path('pz-current')))
+        with patch('tools.puzzle_production.verifier.verify', side_effect=AssertionError('No solver for closure')):
+            current.Checked(record, lambda n, limit: source.read(completed, n, limit),
+                            technical=False).matches(record['integration']['result'])
+            selected = self.root / self.job['assets'][0]['file']['file']
+            original = selected.read_bytes()
+            swapped = (self.root / self.job['rasters'][0]['preview']['file']).read_bytes()
+            for mutation in ('missing', 'swapped', 'changed'):
                 selected.write_bytes(original)
-                if mutation=='missing':selected.unlink()
-                else:selected.write_bytes(swapped if mutation=='swapped' else b'foreign work bytes')
-                wrong=commit(self.root,'published '+mutation+' selected work')
-                reader,job=self.delivery_reader(wrong);remaining,result=reader.filter([job])
-                self.assertEqual(remaining,[job]);self.assertEqual(result['hidden_count'],0)
-                self.assertTrue(result['unresolved'])
+                if mutation == 'missing':
+                    selected.unlink()
+                else:
+                    selected.write_bytes(swapped if mutation == 'swapped' else b'foreign work bytes')
+                wrong = commit(self.root, 'published ' + mutation + ' selected work')
+                with self.assertRaises(InvalidInput):
+                    current.Checked(record, lambda n, limit: source.read(wrong, n, limit), technical=False)
 
     def test_parameter_alternatives_are_complete_options_and_keep_corridor(self):
         self.raster_ready();original=deepcopy(self.job['parameters']['approved'][0])
@@ -460,9 +458,8 @@ class CurrentAuthoringTests(unittest.TestCase):
             for ref in current.references(self.job):
                 if ref['file'].endswith('/reassessment.json'):
                     target=self.root/ref['file'];target.parent.mkdir(parents=True,exist_ok=True);target.write_bytes((self.sources/'reassessment.json').read_bytes())
-            (self.root/current.path('pz-current')).write_bytes(current.encoded(self.job));wrong=commit(self.root,'published unintegrated '+change)
-            reader,job=self.delivery_reader(wrong);remaining,result=reader.filter([job])
-            self.assertEqual(remaining,[job]);self.assertEqual(result['hidden_count'],0)
+            (self.root/current.path('pz-current')).write_bytes(current.encoded(self.job))
+            commit(self.root, 'published unintegrated ' + change)
             with self.assertRaisesRegex(InvalidInput,'Completion .* differ'):current.retire(self.root,['pz-current'],product)
             self.assertTrue((self.root/current.path('pz-current')).is_file())
             (self.root/current.path('pz-current')).write_bytes(current.encoded(original));commit(self.root,'restore original completed job')

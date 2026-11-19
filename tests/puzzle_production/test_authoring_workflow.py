@@ -296,8 +296,12 @@ class WorkflowTests(unittest.TestCase):
         from tools.production_workspace import current_view as cv
         from tools.production_workspace.repository import configure, Repository
         from tools.production_workspace.server import Service
+        from tests.puzzle_production.current_fixtures import checkout
+        catalog = checkout(f.root / 'catalog')
+        for name in ('content/categories.json', 'content/registry.json'):
+            put(f.helper.output, name, (catalog / name).read_bytes())
         cv.handoff(f.helper.output, 'pz-hp-synthetic', 'r01')
-        f.commit()
+        git(f.helper.output, 'branch', 'main', f.commit())
         configure(f.helper.output, f.root / 'view-state')
         service = Service(Repository(f.root / 'view-state'))
         motif = service.listing()['motifs'][0]
