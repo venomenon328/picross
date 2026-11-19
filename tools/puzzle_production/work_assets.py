@@ -67,6 +67,14 @@ def read(ref, limit, *, releases=None):
     require(release['id'] == ident['release_id'] and release['tag_name'] == 'work-prod-' + ident['job']
             and release['prerelease'] and not release['draft'], 'Original work release missing')
     rows = [a for a in release['assets'] if a['id'] == ident['asset_id']]
+    if not rows:
+        # GitHub may cache the tag response across an upload. A new physical ID
+        # has a distinct metadata lookup; never substitute a similarly named file.
+        fresh = json.loads(get('/releases/tags/' + tag + '?asset_id=' + str(ident['asset_id']), 4 * 1024**2))
+        require(fresh['id'] == release['id'] and fresh['tag_name'] == tag and fresh['prerelease']
+                and not fresh['draft'], 'Work release changed')
+        releases[tag] = fresh
+        rows = [a for a in fresh['assets'] if a['id'] == ident['asset_id']]
     require(len(rows) == 1 and rows[0]['size'] == ref['bytes'] and rows[0]['state'] == 'uploaded',
             'Original asset missing from bound release')
     name = 'original-' + ref['sha256']

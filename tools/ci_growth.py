@@ -93,6 +93,7 @@ def compare(before, after):
             'added': {'files': len(added), 'bytes': sum(after[p]['bytes'] for p in added)},
             'removed': {'files': len(before.keys() - after.keys()),
                         'bytes': sum(before[p]['bytes'] for p in before.keys() - after.keys())},
+            'changed_blobs': totals({after[p]['oid']: after[p] for p in changed}),
             'modified_files': sum(before[p] != after[p] for p in before.keys() & after.keys())}
 
 
@@ -104,6 +105,9 @@ def main():
     args = parser.parse_args()
     remote = {'repository': os.environ['GITHUB_REPOSITORY'], 'token': os.environ['GH_TOKEN']} if os.environ.get('GITHUB_ACTIONS') == 'true' else {}
     result = compare(tree(args.base, **remote), tree(args.head, **remote))
+    if remote:
+        from work_ref_check import check
+        result['outgoing_commits'] = check(args.base, args.head)
     result.update(base_commit=args.base, source_head=args.head)
     args.output.write_text(json.dumps(result, indent=2) + '\n', encoding='utf-8')
     print(json.dumps(result, sort_keys=True))

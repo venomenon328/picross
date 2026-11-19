@@ -110,8 +110,14 @@ def publish(root, branch, head, expected, *, api=False):
                    'variables': {'input': {'branch': {'repositoryNameWithOwner': 'venomenon328/picross', 'branchName': branch},
                                  'expectedHeadOid': actual, 'message': {'headline': message[0], 'body': message[2]},
                                  'fileChanges': {'additions': additions, 'deletions': deletions}}}}
-        response = subprocess.check_output(['gh', 'api', 'graphql', '--input', '-'], input=json.dumps(payload).encode())
+        response = subprocess.check_output(['gh', 'api', '--hostname', 'github.com', 'graphql', '--input', '-'], input=json.dumps(payload).encode())
         result = json.loads(response)['data']['createCommitOnBranch']['commit']['oid']
+        if not SHA.fullmatch(result):
+            raise ValueError('Invalid API commit response')
+        git(root, 'fetch', '--no-tags', '--no-write-fetch-head', '--', REMOTE, result)
+        if (git(root, 'rev-parse', result + '^{tree}') != git(root, 'rev-parse', head + '^{tree}') or
+                git(root, 'show', '-s', '--format=%P', result).decode().strip() != actual):
+            raise ValueError('API commit differs from inspected tree or expected parent')
     else:
         git(root, '-c', 'push.followTags=false', 'push', '--no-verify', '--no-follow-tags', '--recurse-submodules=no',
             '--force-with-lease=' + ref + ':' + (expected or ''), '--', REMOTE, head + ':' + ref)

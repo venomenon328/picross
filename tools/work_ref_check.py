@@ -17,6 +17,8 @@ def check(base, head):
         raise ValueError('Invalid event commits')
     if base == '0' * 40:
         base = api('commits/main')['sha']
+    if head == base:
+        return 0
     if api(f'compare/{CLEAN_MAIN}...{head}?per_page=1')['status'] not in ('ahead', 'identical'):
         raise ValueError('Working ref uses an unclean base')
     page = 1

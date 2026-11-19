@@ -55,7 +55,7 @@ class WorkPublicationTests(unittest.TestCase):
     def upload(self,tag,name,data):
         self.assertEqual(tag, self.release['tag_name'])
         self.next_id += 1
-        self.release['assets'].append({'id':self.next_id,'name':name,'size':len(data),'state':'uploaded'})
+        self.release['assets'].append({'id':self.next_id,'name':name,'size':len(data),'state':'uploaded','label':'picross-original:'+tag})
         self.assets[self.next_id] = data
 
     def get(self,path,limit,*,binary=False):
@@ -111,6 +111,73 @@ class WorkPublicationTests(unittest.TestCase):
         self.assertFalse(self.assets)
         self.assertIsNone(guard.remote_head(self.root,'refs/tags/work-prod-pz-current'))
 
+    def test_selection_prunes_only_the_superseded_physical_identity(self):
+        from io import BytesIO
+        from PIL import Image
+        f = self.fixture
+        selected, discarded = f.asset('selected','reveal'), f.asset('discarded','reveal')
+        buf = BytesIO()
+        Image.new('RGBA',(2,3),(80,120,30,255)).save(buf,format='PNG')
+        discarded['file'] = f.file('other.png',buf.getvalue())
+        f.job.update(state='reveal_review',assets=[selected,discarded])
+        f.publish()
+        head = pub.push_job(self.root,'pz-current',None)
+        _, _, old = self.record(head)
+        chosen, gone = [a['file'] for a in old['assets']]
+        self.upload(self.release['tag_name'],'foreign-original',b'foreign')
+        foreign = self.next_id
+        f.job['selected']['reveal'] = 'selected'
+        fixtures.decide(f.job,'reveal')
+        f.publish()
+        next_head = pub.push_job(self.root,'pz-current',head)
+        self.assertNotEqual(head,next_head)
+        self.assertEqual(set(self.assets),{chosen['asset']['asset_id'],foreign})
+        with self.assertRaisesRegex(ValueError,'Original asset missing'):
+            work_assets.read(gone,1024)
+        self.assertEqual(work_assets.read(chosen,1024),f.payload['selected.png'])
+
+    def test_background_preparation_completion_and_confirmed_main_closure(self):
+        from tools.puzzle_production import editor_change, editor_cli
+        from tools.production_workspace import projector
+        f = self.fixture
+        f.test_background_only_uses_active_references_and_shared_editor()
+        name = current.path('pz-current')
+        registered = json.loads((self.root/name).read_bytes())
+        active = fixtures.git(self.root,'log','--format=%H','--grep=^active product$','-1')
+        fixtures.git(self.root,'push',self.remote,active + ':refs/heads/main')
+        self.main = active
+        draft = deepcopy(registered)
+        draft.update(state='background_review', integration=None, decisions=[])
+        draft['selected']['background'] = None
+        other = deepcopy(draft['assets'][-1])
+        other.update(id='other-context',label='Other synthetic offer')
+        draft['assets'].append(other)
+        (self.root/name).write_bytes(current.encoded(draft))
+        first = pub.push_job(self.root,'pz-current',None)
+        source,raw,record = self.record(first)
+        self.assertEqual(len(current.projection(record,raw)['offers']),2)
+        draft = deepcopy(registered)
+        draft.update(state='editorially_approved',integration=None)
+        (self.root/name).write_bytes(current.encoded(draft))
+        second = pub.push_job(self.root,'pz-current',first)
+        product_root = f.work/'product'
+        fixtures.git(self.root,'worktree','add','-q','--detach',str(product_root),active)
+        work_root = f.work/'external'
+        fixtures.git(self.root,'worktree','add','-q','--detach',str(work_root),second)
+        incoming = f.work/'external-input'
+        current.prepare(work_root,name,incoming)
+        plan = f.work/'external-plan.json'
+        editor_cli.plan_file(product_root,incoming/'request.json',plan)
+        editor_change.apply(product_root,json.loads(plan.read_bytes()))
+        product = fixtures.commit(product_root,'Only selected final background')
+        projector.complete(work_root,name,product,current_input=incoming)
+        last = pub.push_job(work_root,'pz-current',second)
+        with self.assertRaisesRegex(ValueError,'Different confirmed main'):
+            pub.finish(work_root,'pz-current',last)
+        fixtures.git(product_root,'push',self.remote,product + ':refs/heads/main')
+        self.assertEqual(pub.finish(work_root,'pz-current',last),'closed')
+        self.assertEqual(pub.finish(work_root,'pz-current',last),'no-op')
+
     def test_outgoing_checks_include_transient_outputs_and_renames(self):
         root=self.root
         file=root/'review-originals'/'local.png'
@@ -133,6 +200,19 @@ class WorkPublicationTests(unittest.TestCase):
             subprocess.run(['git','clone','-q','--depth=1',root.as_uri(),tmp],check=True)
             with self.assertRaisesRegex(ValueError,'Complete Git history'):
                 guard.check_range(tmp,head,[self.main])
+
+    def test_imported_parent_and_renamed_repository_output_are_rejected(self):
+        root = self.root
+        tree = fixtures.git(root,'rev-parse','HEAD^{tree}')
+        imported = fixtures.git(root,'commit-tree',tree,'-m','unrelated historic root')
+        merged = fixtures.git(root,'commit-tree',tree,'-p',self.main,'-p',imported,'-m','import')
+        with self.assertRaises(subprocess.CalledProcessError):
+            guard.check_range(root,merged,[self.main])
+        fixtures.git(root,'mv','content/registry.json','content/authoring/output.json')
+        fixtures.git(root,'commit','-qm','rename to a working output')
+        head = fixtures.git(root,'rev-parse','HEAD')
+        with self.assertRaisesRegex(ValueError,'production working file'):
+            guard.check_range(root,head,[self.main])
 
     def test_capacity_checks_existing_and_new_releases(self):
         rows=[{'tag_name':'work-prod-'+str(n),'assets':[]} for n in range(399)]

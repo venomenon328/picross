@@ -4,6 +4,7 @@ from contextlib import contextmanager
 from copy import deepcopy
 import json
 import os
+import re
 from pathlib import Path
 import subprocess
 import tempfile
@@ -113,7 +114,7 @@ def upload(tag, asset_name, data):
     with tempfile.TemporaryDirectory(prefix='work-upload-') as tmp:
         file = Path(tmp) / asset_name
         file.write_bytes(data)
-        subprocess.run(['gh', 'release', 'upload', tag, str(file), '--repo', REPO], check=True, timeout=300)
+        subprocess.run(['gh', 'release', 'upload', tag, str(file) + '#picross-original:' + tag, '--repo', REPO], check=True, timeout=300)
 
 
 def release_for(rows, tag):
@@ -164,7 +165,9 @@ def publish_locked(root, job, expected, main, checked):
     old = {r['sha256']:r for r in current.references(previous) if 'asset' in r} if previous else {}
     refs = current.references(draft)
     own = {r['sha256']:r for r in refs if current.own(job, r['file'])}
-    capacity(rows, elapsed, tag, len(own.keys() - old.keys()))
+    present = {a['name'] for a in release['assets']} if release else set()
+    additions = sum('original-' + h not in present for h in own)
+    capacity(rows, elapsed, tag, additions)
     tag_ref = 'refs/tags/' + tag
     anchor = transport.remote_head(root, tag_ref)
     if release is None:
@@ -191,6 +194,12 @@ def publish_locked(root, job, expected, main, checked):
         else:
             asset_name = 'original-' + digest
             asset = attachments.get(asset_name)
+            if asset is not None:
+                require(asset.get('label') == 'picross-original:' + tag, 'Physical asset name already occupied')
+                if asset['state'] == 'starter' and asset['size'] == 0:
+                    require(actual == expected, 'Only the current transaction can recover an incomplete upload')
+                    api('releases/assets/' + str(asset['id']), 'DELETE')
+                    asset = None
             if asset is None:
                 require(actual == expected, 'A competing record won publication')
                 upload(tag, asset_name, checked.raw[r['file']])
@@ -216,12 +225,12 @@ def publish_locked(root, job, expected, main, checked):
         actual = transport.publish(root, branch, head, expected)
     require(actual and transport.remote_head(root, ref) == actual, 'Publication not confirmed')
     retained = {r['asset']['asset_id'] for r in current.references(result) if 'asset' in r}
-    for r in old.values():
-        a = r['asset']
-        if a['asset_id'] not in retained:
-            require(a['release_id'] == release['id'], 'Foreign retired asset')
-            if any(row['id'] == a['asset_id'] for row in attachments.values()):
-                api('releases/assets/' + str(a['asset_id']), 'DELETE')
+    previous_ids = {r['asset']['asset_id'] for r in old.values() if r['asset']['release_id'] == release['id']}
+    for asset in attachments.values():
+        owned = (asset.get('label') == 'picross-original:' + tag and
+                 re.fullmatch(r'original-[0-9a-f]{64}',asset['name']))
+        if asset['id'] not in retained and (asset['id'] in previous_ids or owned):
+            api('releases/assets/' + str(asset['id']), 'DELETE')
     return actual
 
 
@@ -248,10 +257,24 @@ def finish(root, job, expected, *, confirmed=False):
         source = GitSource(root)
         record = current.validate(io.json_bytes(source.read(expected,current.path(job),MIB),MIB))
         require(record['format'] == work_assets.FORMAT and record['puzzle_id'] == job, 'Unexpected work record')
+        base = transport.git(root, 'merge-base', main, expected).decode().strip()
+        scope = transport.git(root, 'diff', '--no-renames', '--name-only', '-z', base, expected).split(b'\0')
+        require(set(scope) <= {b'', current.INDEX.encode(), current.path(job).encode()},
+                'Work ref also contains unrelated changes')
+        index = index_value(source.read(expected, current.INDEX, 8*MIB))
+        base_index = index_value(source.read(base, current.INDEX, 8*MIB))
+        require([r for r in index['entries'] if r['puzzle_id'] != job] ==
+                [r for r in base_index['entries'] if r['puzzle_id'] != job] and
+                [r for r in index['entries'] if r['puzzle_id'] == job] ==
+                [{'puzzle_id':job,'record':current.path(job),'revision':'current'}],
+                'Unexpected work index; preserve other work')
         if not confirmed:
             require(record['state'] == 'registered' and record['integration'], 'Registration required')
             result = current_delivery.snapshot(lambda n,l,missing=False:source.read(main,n,l,missing),job)
             require(current_delivery.same(result, record['integration']['result']), 'Different confirmed main result')
+            if release:
+                checked = current.Checked(record, lambda n, limit: source.read(expected, n, limit), technical=False)
+                checked.matches(result)
         binding = record['work_release']
         require(anchor is None or anchor == binding['anchor'], 'Different work tag generation')
         require(release is None or release['id'] == binding['id'], 'Different release generation')
