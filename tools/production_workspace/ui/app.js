@@ -464,6 +464,7 @@ async function previewRemoval(binding){
   confirm.onclick=async()=>{
    if(removalBusy||input.value!==plan.branch)return;
    removalBusy=true;confirm.disabled=true;input.disabled=true;$('removalClose').disabled=true;
+   if(!local&&plan.external_assets)confirm.textContent='Warte auf den bestätigten Releaseabbau …';
    try{
     const result=await removalPost('confirm',{plan_id:plan.plan_id,job_id:plan.job_id,snapshot:plan.snapshot,confirmation:input.value});
     if(epoch!==removalEpoch)return;

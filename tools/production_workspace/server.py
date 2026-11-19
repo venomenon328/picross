@@ -224,7 +224,7 @@ class Service:
         if raw is None:
             raw = p.asset_bytes(job['_source'], job['commit'], loc)
             from tools.puzzle_production import current_authoring
-            if job['_record'].get('format')==current_authoring.FORMAT:
+            if job['_record'].get('format') in current_authoring.FORMATS:
                 current_authoring.image_info(raw,loc['file'],job['_record'])
             else:p.image(raw)
             self.views.put(cache_key, raw)

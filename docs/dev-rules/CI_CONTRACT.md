@@ -34,78 +34,21 @@ diese Dateien vor dem Review bereit. Bei einer Layoutprüfung können das etwa
 die benannten Original-PNGs und eine kleine Zuordnung von Auflösung und UI-Skala
 zum geprüften Produkt-Head sein.
 
-- **Eigener temporärer Reviewbranch.** Einen separaten Ref, etwa
-  `review/<issue>-<paket>`, vom geprüften Produkt-Head abzweigen und die Belege nur
-  dort committen und pushen. Der Produkt-PR behält seinen Head. Er erhält Links
-  auf die Dateien am konkreten Belegcommit. Der Belegbranch hat keinen Merge-PR
-  nach main und wird weder in den Produktbranch gemergt noch dorthin übernommen.
-- **Befristetes CI-Artefakt.** Wenn der Lauf die geforderten Originale erzeugt,
-  ausschließlich die im Paket benannten Dateien samt notwendiger Zuordnung
-  bereitstellen. Im PR den direkten Artefaktlink mit Lauf/Versuch und Ablauf
-  nennen. Liefert der verfügbare Uploader weitere, für diesen Review irrelevante
-  Daten oder fehlen die lokalen Originale im Lauf, den separaten Reviewbranch
-  verwenden.
+Im Lauf erzeugte Originale über die exakte Dateiauswahl des Paketplans als
+befristetes Actions-Artefakt zustellen. Für lokal erzeugte Originale die
+Originaldatei direkt in die Nachricht an den benannten Reviewer anhängen.
+Bei GitHub-PR-Kommentaren unterstützt der Webeditor den Dateianhang durch
+Ziehen der Datei in den Kommentar. Für ein zeitlich begrenztes Review einen
+Kanal mit überprüfbarer Löschung bzw. befristetem Zugriff verwenden. Das
+Entfernen eines Links allein bestätigt keine Löschung hochgeladener Bytes.
 
-Im Lieferkommentar den geprüften Produkt-Head und gegebenenfalls Test-Merge,
-Szenarien/Dateinamen, Empfänger und Endpunkt festhalten. Zugriff auf die
-veröffentlichten Bytes testen. Wer im eigenen Konto prüft, benennt eine bekannte
-Zugriffsbeschränkung für den Empfänger. Die Sichtprüfung selbst bleibt Aufgabe
-des Reviewers. Ein lokaler Pfad, eine Hashliste oder ein erfolgreich gebauter
-Spieler allein liefert ihm keine Bilder. Fehlende, abgelaufene oder zum neuen
-Head unpassende Originale gezielt nachliefern, das erforderliche Gate bis dahin
-offen führen.
-
-### Binäre Revieworiginale und textgebundene Zugriffe
-
-Ist für ein unabhängiges Review durch ChatGPT oder einen anderen Reviewer die
-**Sicht auf unveränderte Bild-/Binäroriginale** erforderlich, muss der tatsächlich
-verfügbare Abrufweg die *Bytes* liefern, nicht nur eine GitHub-Seite, Dateimetadaten,
-einen Hash oder eine verkleinerte Vorschau.
-
-- **Bevorzugter Abruf:** Originaldatei vom konkreten, unveränderlichen Belegcommit
-  binär herunterladen, beispielsweise mit einem dafür geeigneten HTTP-/GitHub-Client
-  über die GitHub Contents API mit
-  `Accept: application/vnd.github.raw+json`, per entsprechendem
-  `raw.githubusercontent.com/<owner>/<repo>/<commit>/<path>`-Download oder über
-  einen echten Git-Checkout. Binärfähige CI-Artefaktdownloads sind ebenfalls
-  geeignet, wenn sie ausschließlich die benötigten befristeten Originale enthalten.
-  Einen bloßen Link nicht als erfolgreichen Download ausgeben.
-- **Werkzeuggrenze beachten:** Der normale Contents-API-Objektabruf liefert bei
-  GitHub-Dateien über etwa **1 MiB** gegebenenfalls ein leeres `content`-Feld
-  statt Base64-Bytes. Ein textorientierter Connector, der nur UTF-8-Antworten
-  akzeptiert, kann auch am Raw-Endpunkt scheitern. **Leerer Inhalt ist weder eine
-  fehlende Datei noch ein geöffnetes Bild.** Den gewählten Weg tatsächlich
-  auf Download und Bildöffnung prüfen, unabhängig davon, ob GitHub die Datei
-  im Browser anzeigt.
-- **Unverändert prüfen:** Heruntergeladene Bytes mit der im PR verlinkten
-  Originalzuordnung abgleichen (mindestens Dateipfad, Produkt-/Belegcommit,
-  Bytezahl und SHA-256), anschließend die Originalbilder tatsächlich öffnen.
-  Vorschauen unterhalb einer Werkzeuggrenze dürfen die Orientierung erleichtern,
-  ersetzen aber nicht die Sichtung geforderter Originale. Keine Umkodierung,
-  Verkleinerung oder Neuaufnahme als vermeintlich identischer Originalbeleg.
-- **Archiv nur mit passendem Downloader:** Ein ZIP im Git-Reviewbranch umgeht
-  einen textgebundenen Dateizugriff **nicht**. Ein ZIP ist nur ein zulässiger
-  Transport, wenn ein binärfähiges Werkzeug es wirklich herunterladen, entpacken
-  und die einzelnen unveränderten Originale gegen ihr Manifest prüfen kann.
-  Es entsteht daraus keine Pflicht zu einem zusätzlichen ZIP oder Dauerupload.
-- **Fehlender Zugang:** Falls die ausführende ChatGPT-/Reviewumgebung keinen
-  binärfähigen Abruf besitzt, den konkreten Fehler dokumentieren und die
-  erforderlichen Originale über einen für sie tatsächlich zugänglichen Weg
-  bereitstellen (z. B. gezieltes binäres Reviewartefakt oder direkte Original-
-  dateianhänge). Das unabhängige Sichtgate bleibt bis zur **wirklich
-  durchgeführten** Prüfung offen; technische Logs und Hashlisten allein
-  ersetzen sie nicht.
-
-Die vorhandenen Regeln zu Zweck, Ablauf, separatem Reviewref und Rückbau
-gelten dabei unverändert; dieser Abschnitt verlangt keine routinemäßigen
-Originaluploads oder Doppelverpackungen.
-
-Bereinigungszeitpunkt und Zuständigkeit im PR festhalten. Eigene Belege bis
-zur erforderlichen Prüfung verfügbar halten. Bei Fristablauf und weiter offenem
-Gate den Bedarf und die Zustellung erneut prüfen. Den eigenen temporären Ref im
-beauftragten Rückbau entfernen bzw. das CI-Artefakt auslaufen lassen. Vor Merge
-prüfen, dass der Produktdiff und seine zu integrierenden Commits frei von reinen
-Übergabedateien sind. Im PR bleibt die knappe Entscheidung mit ihrem Stand.
+Am PR Produkt-Head, Empfänger, Szenario, Dateiname, Bytezahl, SHA-256,
+Downloadzugang und Ablauf festhalten. Der Reviewer lädt die Datei im eigenen
+Zielsystem herunter (Actions beispielsweise mit `gh run download RUN -n NAME`),
+vergleicht Länge und SHA-256 und öffnet sie mit dem vorgesehenen Decoder.
+Vorschau und Log genügen dafür nicht. Fehlenden Originalzugang konkret
+melden und das Sichtgate offen halten. Belege gehören außerhalb von Git.
+Die technische Aufbewahrung endet spätestens nach sieben Tagen.
 
 ## Zeit und Ergebnis
 

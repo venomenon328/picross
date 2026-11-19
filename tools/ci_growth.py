@@ -1,4 +1,4 @@
-"""Small Docs gate for new output/archive classes; tree metadata only."""
+"""Classify changed paths before Git publication and in the CI metadata check."""
 import argparse
 import json
 import os
@@ -55,6 +55,9 @@ def forbidden(path):
     """Path classes, not file contents or a growing historic file manifest."""
     lower = path.lower()
     parts = lower.split('/')
+    # The KK diagnostic consumes this manifest and its measured native card crops.
+    if re.fullmatch(r'docs/evidence/kk/(?:native-crops\.json|readme\.md|kk-[a-z0-9_-]+-card\.png)', lower):
+        return None
     if (lower.startswith(('docs/evidence/', 'docs/design/at_b_integration/')) or
             re.match(r'content/authoring/[^/]+/at-b-r01/', lower)):
         return 'completed evidence/production class'
@@ -62,22 +65,27 @@ def forbidden(path):
             set(parts) & {'.godot', '.venv', '__pycache__', 'node_modules', 'screenshots', 'captures', 'runs'}):
         return 'generated output class'
     suffix = Path(lower).suffix
-    if suffix in {'.log', '.pck', '.wasm', '.exe', '.dll', '.pyc', '.pyo'}:
+    if suffix in {'.log', '.pck', '.wasm', '.exe', '.dll', '.pyc', '.pyo', '.msi', '.msix'}:
         return 'runtime/build output'
-    if suffix in ARCHIVES:
-        # Open authoring/export namespaces remain possible. Their actual open
-        # status needs production review, never binary inspection in this gate.
-        if not re.fullmatch(r'content/(authoring|packages)/pz-[a-z0-9][a-z0-9-]{0,59}/'
-                            r'[a-zA-Z0-9][a-zA-Z0-9._-]{0,31}/[a-zA-Z0-9_./ -]+', path):
-            return 'archive outside live production'
-        if any(p in {'.', '..'} or p.startswith('.') for p in parts):
-            return 'noncanonical production archive'
+    if parts[0] in {'review', 'review-originals', 'review-evidence', 'pe-app-evidence'}:
+        return 'review delivery'
+    if lower.startswith('content/authoring/') and not (
+            lower in ('content/authoring/readme.md', 'content/authoring/index.json') or
+            re.fullmatch(r'content/authoring/pz-[a-z0-9][a-z0-9-]{0,59}/current/record\.json', lower)):
+        return 'production working file'
+    if lower.startswith('content/packages/'):
+        return 'production export'
+    if suffix in ARCHIVES and not (
+            re.fullmatch(r'docs/font-inputs/[^/]+\.zip', lower) or
+            re.fullmatch(r'tests/puzzle_production/fixtures/[^/]+\.zip', lower)):
+        return 'archive outside product source or test fixtures'
     return None
 
 
 def compare(before, after):
     added = sorted(after.keys() - before.keys())
-    blocked = {p: forbidden(p) for p in added if forbidden(p)}
+    changed = [p for p in after if before.get(p) != after[p]]
+    blocked = {p: forbidden(p) for p in changed if forbidden(p)}
     if blocked:
         raise ValueError('Disallowed new repository outputs: ' + json.dumps(blocked, sort_keys=True))
     def totals(files):
@@ -88,6 +96,7 @@ def compare(before, after):
             'added': {'files': len(added), 'bytes': sum(after[p]['bytes'] for p in added)},
             'removed': {'files': len(before.keys() - after.keys()),
                         'bytes': sum(before[p]['bytes'] for p in before.keys() - after.keys())},
+            'changed_blobs': totals({after[p]['oid']: after[p] for p in changed}),
             'modified_files': sum(before[p] != after[p] for p in before.keys() & after.keys())}
 
 
@@ -99,6 +108,9 @@ def main():
     args = parser.parse_args()
     remote = {'repository': os.environ['GITHUB_REPOSITORY'], 'token': os.environ['GH_TOKEN']} if os.environ.get('GITHUB_ACTIONS') == 'true' else {}
     result = compare(tree(args.base, **remote), tree(args.head, **remote))
+    if remote:
+        from work_ref_check import check
+        result['outgoing_commits'] = check(args.base, args.head)
     result.update(base_commit=args.base, source_head=args.head)
     args.output.write_text(json.dumps(result, indent=2) + '\n', encoding='utf-8')
     print(json.dumps(result, sort_keys=True))

@@ -162,6 +162,7 @@ Der Akteur erstellt den Auftrag aus tatsächlichen Ergebnissen und Erklärungen;
 keine manuelle JSON-Pflege im Benutzerablauf. Finalize-background verarbeitet
 denselben aktuellen Fortschreibungsauftrag. Identische Wiederaufnahme vollendet
 nur die eigene offene Operation; nach Abschluss verschwindet ihr Journal.
+Der Akteur sichert das lokale Ergebnis mit `python -m tools.work_publish publish ID --expected new` bzw. der erwarteten Arbeits-SHA. Wiederaufnahme, Originalabruf und Abschluss folgen PW-B.
 
 `prepare-integration --repository ARBEITSCHECKOUT --record RECORD --output-dir NEU`
 leitet den aktuellen RI-ONE-Eingang ab. Eine reine Hintergrundpflege erzeugt

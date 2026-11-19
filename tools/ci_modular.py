@@ -86,13 +86,23 @@ def validate_package(plan, changed, *, repository, today=None):
     if required - seen:
         raise ValueError('Missing lifecycle decisions: ' + ', '.join(sorted(required - seen)))
     evidence = plan['evidence']
-    if not isinstance(evidence, dict) or set(evidence) != {'mode', 'purpose', 'expires'}:
+    if not isinstance(evidence, dict) or set(evidence) != ({'mode', 'purpose', 'expires'} if evidence.get('mode') == 'none' else {'mode', 'purpose', 'expires', 'files'}):
         raise ValueError('Missing evidence lifecycle')
     if evidence['mode'] == 'none':
         if evidence['purpose'] is not None or evidence['expires'] is not None:
             raise ValueError('Unused evidence must not declare retention')
     elif evidence['mode'] in {'failure', 'review'}:
         text(evidence['purpose'], 'evidence recipient and purpose')
+        files = evidence['files']
+        parts = {'player', 'source', *plan['modules']}
+        if not isinstance(files, dict) or not files or set(files) - parts:
+            raise ValueError('Select exact review files by execution part')
+        for paths in files.values():
+            if (not isinstance(paths, list) or not paths or
+                    any(not isinstance(p, str) or not re.fullmatch(r'[A-Za-z0-9_-][A-Za-z0-9._/-]*', p)
+                        or any(part in ('', '.', '..') for part in p.split('/')) for p in paths)
+                    or len(set(paths)) != len(paths)):
+                raise ValueError('Select unique relative filenames without patterns')
         expires = date.fromisoformat(text(evidence['expires'], 'evidence deadline'))
         if expires.isoformat() != evidence['expires'] or expires <= (today or date.today()):
             raise ValueError('Expired evidence request')
@@ -361,19 +371,14 @@ def execute(plan, output, cache, *, part=None):
                 error = str(exc)
             finally:
                 if retain_evidence(package['evidence'], success):
-                    diagnostics.mkdir()
-                    for log in work.glob('*.log'):
-                        copy_file(log, diagnostics / log.name)
-                    if (work / 'native/technical').exists():
-                        from native_delivery import stage
-                        from p1_evidence import source_identity
-                        stage(work / 'native', diagnostics / 'native', 'success' if success else 'failure', source_identity(ROOT))
-                    if (work / 'production/production-result.json').is_file():
-                        from production_results import files
-                        for row in files(work / 'production', staging=True):
-                            copy_file(work / 'production' / row['file'], diagnostics / 'production' / row['file'])
-                        copy_file(work / 'production/production-result.json', diagnostics / 'production/production-result.json')
-                    (diagnostics / 'request.json').write_text(json.dumps(package['evidence'], indent=2) + '\n')
+                    requested = package['evidence']['files']
+                    parts = [part] if part else execution_parts(plan)
+                    for item in parts:
+                        for name in requested.get(item, []):
+                            source = work / name
+                            if source.resolve() != source.absolute() or not source.is_file():
+                                raise ValueError('Selected review original missing or indirect: ' + name)
+                            copy_file(source, diagnostics / item / name)
     except Exception as exc:
         success, error = False, str(exc)
     finally:

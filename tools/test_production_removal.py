@@ -118,6 +118,20 @@ class RemovalTests(unittest.TestCase):
         self.assertIn('Offener Pull', ' '.join(self.preview()['blockers']))
         self.assertEqual(self.writer.remote_head(REF), self.sha)
 
+    def test_v2_transport_failure_preserves_ref_and_requires_fresh_confirmation(self):
+        job = self.service.selected(self.jid, self.binding['snapshot'])
+        from tools.puzzle_production import work_assets
+        with patch.dict(job['_record'], format=work_assets.FORMAT):
+            for error in (FileNotFoundError(), subprocess.TimeoutExpired('git', 30)):
+                plan = self.preview()
+                self.assertTrue(plan['external_assets'])
+                with patch.object(self.writer, 'remove_external', side_effect=error):
+                    result = self.confirm(plan)
+                self.assertFalse(result['removed'])
+                self.assertEqual(self.writer.remote_head(REF), self.sha)
+                with self.assertRaisesRegex(ValueError, 'verwendet'):
+                    self.confirm(plan)
+
     def test_changed_head_and_actual_receive_pack_lease_race(self):
         plan = self.preview()
         (self.local / 'advance').write_text('advance')

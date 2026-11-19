@@ -218,7 +218,7 @@ def complete(root, record_path, commit, *, current_input):
     root = io.external(root)
     from tools.puzzle_production import current_authoring
     current = p.parse(io.read(root, record_path, JSON_LIMIT))
-    if current.get('format') == current_authoring.FORMAT:
+    if current.get('format') in current_authoring.FORMATS:
         return current_authoring.complete(root, record_path, commit, current_input=current_input)
     from tools.puzzle_production import catalog_integration, integration_input, current_delivery
     incoming = integration_input.Input(current_input)

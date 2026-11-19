@@ -245,7 +245,7 @@ kurzlebigen Sitzungsplan, gebunden an Job, Snapshot, Ziel und Vorprüfungsbefund
 Vor dem Push werden diese Prüfungen frisch wiederholt. Refresh und Transaktionen
 laufen seriell; die reine Statusabfrage bleibt erreichbar.
 
-Git erhält ohne Shell genau eine Lösch-Refspec und eine explizite
+Bei bisherigen Git-Records erhält Git ohne Shell genau eine Lösch-Refspec und eine explizite
 `--force-with-lease=<voller Ref>:<erwartete SHA>`. Hooks werden abgeschaltet;
 nur vorhandene nichtinteraktive Anmeldung wird benutzt. Keine neuen Credentials
 im Browser, Zustand oder Log. Erfolg verlangt danach das tatsächlich geprüfte
@@ -256,6 +256,28 @@ Mainquellen werden weiter gelesen; ihre aktive Auswahl folgt dem lieferbezogenen
 Abgleich und der Remoteautorität. Lokale Refreste bleiben für P2 prüfbar.
 Offene oder unklar zugeordnete Arbeit bleibt sichtbar. Bei Cachefehler wird eine
 stale Anzeige ausdrücklich benannt.
+
+Bei v2-Records legt PW mit der eingerichteten HTTPS- oder SSH-Git-Anmeldung
+einen bedingten Auftragsref unter `work-prod-control/remove/` am bestätigten
+Maincommit an. Job, Arbeits-SHA und die bei Bestätigung sichtbaren PR-Befunde
+binden den Auftrag. Der erfolgreiche Arbeitsref-Check löst auf main den
+[Actions-Auftrag](../../.github/workflows/work-removal.yml) aus. Nur dessen
+Ausführungsjob erhält `contents: write` mit dem eingebauten Repositorytoken.
+Er führt ausschließlich Code des bestätigten Mainstands aus. Unter der gemeinsamen
+Katalogsperre prüft er erneut Main, Arbeitsref, offene und geschlossene PRs,
+Record, Indexdelta, Release-ID, Tag und zugehörige Asset-IDs. Nach dem gezielten
+Releaseabbau quittiert er am Auftragsref. PW benötigt lokal ausschließlich Git.
+
+PW wartet bis zu vier Minuten, wiederholt seine Vorprüfung und liest die
+öffentliche Release-ID und den Tagnamen zurück. Nach bestätigtem Fehlen entfernt
+der Client Arbeitsref, vorhandenen gebundenen Tag und Quittung gemeinsam per
+atomarem Lease-Push und prüft das Ergebnis. Bei Ablehnung, abgelaufenem Auftrag
+oder unbekanntem Ausgang die Quellen aktualisieren und denselben Job neu
+vorprüfen und bestätigen. Bis zum letzten Push bleibt der Arbeitsref erhalten.
+Ein bereits abgebauter Release und eine zum selben Stand gehörige Quittung
+sind wiederaufnehmbar. Der Client räumt seinen temporären Auftrag auch bei
+kontrolliertem Abbruch bedingt auf. Die spätere lokale Refentfernung bleibt
+separat bestätigt.
 
 Ein noch vorhandener identischer lokaler Branchref kann erst danach separat
 vorgeprüft und ausdrücklich bestätigt entfernt werden. Die Option ist anfangs
@@ -444,7 +466,7 @@ eine frühere gespeicherte Bereinigungsoption hat keine Wirkung. Der separate
 fachliche Produktionsabschluss nach Authoring §9 bleibt unverändert. Bei neuem Job muss dessen Motivbriefing im kopierten Erstauftrag stehen;
 noch nicht vorhandene Repositorydaten werden nicht als existent behauptet.
 
-Die normalen beauftragten Produktionsakteure committen/pushen Index, aktuellen Record und benötigte Nutzdateien an den fälligen Übergängen. Merge bleibt entsprechend
+Die normalen beauftragten Produktionsakteure verwenden tools.work_publish nach PW-B für Originalassets und Git-Metadaten an den fälligen Übergängen. Merge bleibt entsprechend
 dem tatsächlichen Auftrag getrennt. Nach vollständiger Mainintegration gilt
 Authoring §9. Der Assistent zeigt danach den bestätigten Abschluss und gültige
 Runtime-/Belegbezüge, keine defekten Links auf entfernte Zwischenbilder.

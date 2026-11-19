@@ -1,10 +1,14 @@
 """Configured local refs and optional remote sync into a private bare cache."""
 from datetime import datetime, timezone
+import hashlib
 import json
 import os
 from pathlib import Path
 import re
+import subprocess
 import threading
+from time import monotonic, sleep
+from urllib.error import HTTPError
 from urllib.parse import urlsplit
 from urllib.parse import urlencode
 from urllib.request import Request, build_opener, HTTPRedirectHandler
@@ -13,6 +17,7 @@ from tools.puzzle_production import authoring_package as ap, catalog_io as io
 from tools.puzzle_production.authoring_builder import index_value
 from tools.puzzle_production.contract import exact_keys
 from .sources import git, GitSource, INDEX, JSON_LIMIT, LRU
+from tools.puzzle_production import current_authoring
 from . import presentation as p
 
 DEFAULT_REFS = ['main', 'content/pw/*']
@@ -32,7 +37,7 @@ class NoRedirect(HTTPRedirectHandler):
         return None
 
 
-def github_get(path):
+def github_get(path, *, missing=False):
     """Only fixed public GitHub reads; no credential discovery or redirects."""
     try:
         request = Request('https://api.github.com/repos/venomenon328/picross' + path,
@@ -41,8 +46,31 @@ def github_get(path):
                                    'X-GitHub-Api-Version': '2022-11-28'})
         with build_opener(NoRedirect).open(request, timeout=10) as response:
             return p.parse(response.read(8 * JSON_LIMIT + 1), 8 * JSON_LIMIT)
+    except HTTPError as exc:
+        if missing and exc.code == 404:
+            return None
+        raise ap.InvalidInput('GitHub-Status nicht prüfbar (HTTP-Fehler). Entfernung gesperrt.') from exc
     except (ValueError, OSError) as exc:
         raise ap.InvalidInput('GitHub-Status nicht prüfbar (Zugang, Rate-Limit oder Netzwerk). Entfernung gesperrt.') from exc
+
+
+REMOVAL_PREFIX = 'work-prod-control/remove/'
+
+
+def removal_request(job, expected, main, prs):
+    # The original record SHA binds the release and all its assets. The digest
+    # binds the main and PR warnings actually presented to the operator.
+    snapshot = p.data([main, sorted(prs, key=lambda row: row['number'])])
+    return REMOVAL_PREFIX + job + '/' + expected + '/' + hashlib.sha256(snapshot).hexdigest()[:32]
+
+
+def removal_receipt(expected, main):
+    # Both endpoints are already public commits. Also distinguish the two states
+    # if the operator is retiring a work ref pointing at the current main.
+    from tools.publish_git import CLEAN_MAIN
+    receipt = expected if expected != main else CLEAN_MAIN
+    ap.require(receipt != main, 'Kein eindeutiger Quittungsstand für diesen Maincommit.')
+    return receipt
 
 
 class ProductionRemoval:
@@ -108,7 +136,8 @@ class ProductionRemoval:
         ap.require(actual == ref, 'Remote lieferte einen anderen Ref.')
         return check_commit(sha)
 
-    def pull_requests(self, branch):
+    @staticmethod
+    def pull_requests(branch):
         rows = []
         for page in range(1, 101):
             values = github_get('/pulls?' + urlencode({'state': 'all', 'head': 'venomenon328:' + branch,
@@ -186,32 +215,80 @@ class ProductionRemoval:
             warnings.append('Geschlossener, nicht gemergter PR vorhanden. Seine Produktion wird durch die Branchentfernung nicht integriert.')
         if main['revisions'] or main['registered'] or any(row['merged'] for row in prs):
             warnings.append('Mainintegration bzw. gemergter PR vorhanden: integrierte Inhalte bleiben auf main erhalten.')
-        return {'repository': repository, 'source': 'remote', 'branch': branch, 'ref': ref,
+        external = job.get('_record', {}).get('format') == current_authoring.work_assets.FORMAT
+        if external:
+            warnings.append('Die bestätigte Entfernung beendet auch den gebundenen Arbeitsrelease mit Originalen und Tag.')
+        return {'external_assets': external, 'repository': repository, 'source': 'remote', 'branch': branch, 'ref': ref,
                 'sha': expected, 'puzzle_id': job['puzzle_id'], 'title': job['title'], 'revisions': revisions,
                 'local': local, 'prs': prs, 'main': main, 'warnings': warnings, 'blockers': blockers}
 
     def push_delete(self, facts):
-        # Explicit URL + single refspec: no named-remote mirror/refspec/pushurl defaults.
-        # Lease is enforced by receive-pack even if the tip changes AFTER the probe.
+        self._push_refs([(facts['ref'], facts['sha'], '')])
+
+    def _push_refs(self, updates):
+        leases = ['--force-with-lease=' + ref + ':' + old for ref, old, new in updates]
+        specs = [new + ':' + ref for ref, old, new in updates]
+        atomic = ['--atomic'] if len(updates) > 1 else []
         git(self.repository.cached.root, '-c', 'http.followRedirects=false', '-c', 'protocol.allow=never',
             '-c', 'protocol.https.allow=always', '-c', 'protocol.ssh.allow=always',
             '-c', 'protocol.file.allow=always', '-c', 'push.followTags=false',
-            'push', '--porcelain', '--no-verify', '--no-follow-tags', '--no-signed',
-            '--recurse-submodules=no', '--receive-pack=git-receive-pack',
-            '--force-with-lease=' + facts['ref'] + ':' + facts['sha'],
-            '--', self.repository.remote, ':' + facts['ref'])
+            'push', *atomic, '--porcelain', '--no-verify', '--no-follow-tags', '--no-signed',
+            '--recurse-submodules=no', '--receive-pack=git-receive-pack', *leases,
+            '--', self.repository.remote, *specs)
+
+    def remove_external(self, job, facts):
+        expected, main = facts['sha'], facts['main']['commit']
+        request = 'refs/heads/' + removal_request(facts['puzzle_id'], expected, main, facts['prs'])
+        receipt = removal_receipt(expected, main)
+        binding = job['_record']['work_release']
+        tag = 'work-prod-' + facts['puzzle_id']
+        tagref = 'refs/tags/' + tag
+        state = self.remote_head(request)
+        ap.require(state in (None, main, receipt), 'Fremder Auftragsref. Entfernung gesperrt.')
+        try:
+            if state is None:
+                # Only the main commit just observed on this same remote is sent.
+                self._push_refs([(request, '', main)])
+            deadline = monotonic() + 240
+            state = self.remote_head(request)
+            while state == main and monotonic() < deadline:
+                sleep(3)
+                state = self.remote_head(request)
+            ap.require(state == receipt, 'Actions-Auftrag unbestätigt. Quellen und Lauf prüfen, dann erneut bestätigen.')
+            ap.require(self.probe(job) == facts, 'Vorprüfungsbefunde nach Releaseabbau geändert. Neu vorprüfen.')
+            ap.require(github_get('/releases/' + str(binding['id']), missing=True) is None and
+                       github_get('/releases/tags/' + tag, missing=True) is None,
+                       'Entfernung des gebundenen Releases nicht bestätigt.')
+            anchor = self.remote_head(tagref)
+            ap.require(anchor in (None, binding['anchor']), 'Arbeitstag inzwischen geändert.')
+            updates = [(facts['ref'], expected, ''), (request, receipt, '')]
+            if anchor:
+                updates.append((tagref, anchor, ''))
+            self._push_refs(updates)
+            ap.require(self.remote_head(tagref) is None, 'Entfernung des Arbeitstags nicht bestätigt.')
+        finally:
+            # Withdraw a pending request or recover a receipt after an interrupted
+            # client. Compare-and-delete never cancels a different generation.
+            remaining = self.remote_head(request)
+            if remaining in (main, receipt):
+                self._push_refs([(request, remaining, '')])
 
     def remove(self, job, facts):
         fresh = self.probe(job)
         ap.require(not fresh['blockers'], ' '.join(fresh['blockers']))
         ap.require(fresh == facts, 'Vorprüfungsbefunde haben sich geändert. Neu vorprüfen und bestätigen.')
         try:
-            self.push_delete(facts)
-        except ValueError:
+            if facts['external_assets']:
+                self.remove_external(job, facts)
+            else:
+                self.push_delete(facts)
+        except ap.InvalidInput as exc:
+            return {'removed': False, 'message': str(exc) + ' Entfernung nicht bestätigt.'}
+        except (OSError, ValueError, subprocess.SubprocessError):
             return {'removed': False, 'message': 'Push abgelehnt oder nicht rechtzeitig bestätigt (Lease, Rechte oder Netzwerk). Ausgang nicht als Erfolg bestätigt; Quellen neu prüfen.'}
         try:
             absent = self.remote_head(facts['ref']) is None
-        except ValueError:
+        except (OSError, ValueError, subprocess.SubprocessError):
             absent = False
         if not absent:
             return {'removed': False, 'message': 'Push beendet, aber Fehlen des Remote-Refs nicht bestätigt. Quellen neu prüfen; kein Erfolg nachgewiesen.'}
@@ -415,10 +492,9 @@ class Repository:
                     continue
                 file = row['record'].rsplit('/', 1)[0] + '/workspace.json'
                 try:
-                    from tools.puzzle_production import current_authoring
                     record_raw = source.read(commit, row['record'], JSON_LIMIT)
                     record = p.parse(record_raw)
-                    if record.get('format') == current_authoring.FORMAT:
+                    if record.get('format') in current_authoring.FORMATS:
                         projection = current_authoring.projection(record, record_raw)
                         ap.require(row['record'] == current_authoring.path(row['puzzle_id']), 'Noncanonical current job')
                         from .motifs import PHASES
@@ -447,7 +523,7 @@ class Repository:
                     errors.append('Ungültige Projektion für ' + row['puzzle_id'] + '/' + row['revision'] + ': ' + str(exc))
         from . import current_view
         pointer_read_error = False
-        for identity in {j['puzzle_id'] for j in jobs if j['_record'].get('format') != 'picross-authoring-current-v1'}:
+        for identity in {j['puzzle_id'] for j in jobs if j['_record'].get('format') not in current_authoring.FORMATS}:
             current, message = None, None
             current_invalid = False
             try:
@@ -499,7 +575,7 @@ class Repository:
                     value = self.scan(source, commit, None if branch == 'main' else branch.rsplit('/', 1)[1])
                     errors.extend(value['errors'])
                     for job in value['jobs']:
-                        identity = (job['puzzle_id'], job['revision'], branch if job['_record'].get('format') == 'picross-authoring-current-v1' else None)
+                        identity = (job['puzzle_id'], job['revision'], branch if job['_record'].get('format') in current_authoring.FORMATS else None)
                         fingerprint = job.pop('_fingerprint')
                         entry = {**job, 'binding': fingerprint, 'commit': commit, 'source': origin, 'ref': branch, '_source': source}
                         if identity in bindings and bindings[identity] != fingerprint:
@@ -530,11 +606,11 @@ class Repository:
         # only remaining, deliberately open version of the same revision.
         active_bindings = {}
         for job in jobs:
-            identity = (job['puzzle_id'], job['revision'], job['ref'] if job['_record'].get('format') == 'picross-authoring-current-v1' else None)
+            identity = (job['puzzle_id'], job['revision'], job['ref'] if job['_record'].get('format') in current_authoring.FORMATS else None)
             active_bindings.setdefault(identity, set()).add(job['binding'])
         for job in jobs:
             job.pop('conflict', None)
-            if len(active_bindings[(job['puzzle_id'], job['revision'], job['ref'] if job['_record'].get('format') == 'picross-authoring-current-v1' else None)]) > 1:
+            if len(active_bindings[(job['puzzle_id'], job['revision'], job['ref'] if job['_record'].get('format') in current_authoring.FORMATS else None)]) > 1:
                 job['conflict'] = True
         from .motifs import Relations
         history = Relations(self)

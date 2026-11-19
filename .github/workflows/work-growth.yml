@@ -1,0 +1,21 @@
+name: Working ref publication check
+on:
+  push:
+    branches-ignore: [main]
+permissions:
+  contents: read
+jobs:
+  outgoing:
+    if: ${{ !github.event.deleted }}
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          fetch-depth: 1
+          persist-credentials: false
+      - name: Inspect outgoing commit metadata
+        env:
+          BEFORE: ${{ github.event.before }}
+          HEAD: ${{ github.sha }}
+          GH_TOKEN: ${{ github.token }}
+        run: python3 tools/work_ref_check.py

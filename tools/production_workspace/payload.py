@@ -45,7 +45,7 @@ def git(root, *args):
 PE_SHARED = {
     '__init__.py',
     'release.py', 'payload.py', 'release_manifest.py', 'update_verifier.py',
-    'release_channel.py', 'build_windows.py', 'build_installer.py',
+    'release_channel.py', 'release_catalog.py', 'build_windows.py', 'build_installer.py',
     'verify_installer.py', 'smoke_installer.py', 'install_interlock.py',
     'requirements-windows.txt', 'requirements-update.txt', 'packaging/Guard.cs',
     'assets/launcher.ico', 'packaging/UpdateHelper.cs', 'app_updates.py', 'update_client.py',
@@ -88,7 +88,7 @@ def selected(path, *, app=PW):
         return pe_selected(path)
     if path in {'tools/app_products.py', 'tools/msi_database.py'}:
         return True
-    if path in {'tools/__init__.py', '.github/workflows/pw-installer.yml'}:
+    if path in {'tools/__init__.py', 'tools/work_publish.py', 'tools/publish_git.py', 'tools/ci_growth.py', '.github/workflows/pw-installer.yml'}:
         return True
     for scope in (WORKSPACE, PRODUCTION):
         if path.startswith(scope):

@@ -10,6 +10,10 @@ on:
         description: Explicit optional modules, comma separated; empty runs only the core
         type: string
         default: ''
+      review_attachment:
+        description: Optional PW-B asset reference JSON for delivery of one local original
+        type: string
+        default: ''
 
 permissions:
   contents: read
@@ -20,6 +24,7 @@ concurrency:
 
 jobs:
   docs:
+    if: ${{ !inputs.review_attachment }}
     runs-on: ubuntu-24.04
     outputs:
       started_at: ${{ steps.clock.outputs.started_at }}
@@ -122,7 +127,7 @@ jobs:
 
   ci-required:
     needs: [docs, verify]
-    if: always()
+    if: ${{ always() && !inputs.review_attachment }}
     runs-on: ubuntu-24.04
     steps:
       - name: Require the core and every requested source-bound execution part
@@ -140,3 +145,32 @@ jobs:
           print('All requested execution parts succeeded: ' + ', '.join(parts))
           PY
 
+
+  review-attachment:
+    if: ${{ github.event_name == 'workflow_dispatch' && inputs.review_attachment != '' }}
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - name: Read one measured original attachment
+        env:
+          REVIEW_ATTACHMENT: ${{ inputs.review_attachment }}
+        run: |
+          python3 - <<'PY'
+          import json, os
+          from pathlib import Path
+          from tools.puzzle_production import work_assets
+          ref = json.loads(os.environ['REVIEW_ATTACHMENT'])
+          raw = work_assets.read(ref, 64 * 1024**2)
+          dest = Path(os.environ['RUNNER_TEMP']) / 'review-attachment'
+          dest.mkdir()
+          (dest / Path(ref['file']).name).write_bytes(raw)
+          print(ref['file'], len(raw), ref['sha256'])
+          PY
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: review-original-${{ github.sha }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/review-attachment/
+          if-no-files-found: error
+          retention-days: 7

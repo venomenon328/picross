@@ -1,5 +1,7 @@
 # Ein aktueller Integrationsweg für neue Rätsel
 
+Finale Produktcommits werden mit `python -m tools.publish_git BRANCH --expected SHA` veröffentlicht. Für neue Branches gilt `--expected new`. Arbeitsassets und Wiederaufnahme folgen dem [PW-B-Vertrag](../tools/PW_B_CONTRACT.md).
+
 ## Geltung und Quellen
 
 - **Status:** aktiver fachlicher Vertrag für genau einen aktuellen Integrationsweg und eine aktuelle Inhaltsautorität.

@@ -1,23 +1,51 @@
 {
   "format": "development-ci-plan/v1",
   "issue": "https://github.com/venomenon328/picross/issues/717",
-  "package": "REPO-SLIM-A",
+  "package": "REPO-SLIM-B",
   "modules": [
-    "tools"
+    "tools",
+    "production.images",
+    "production.adapter",
+    "production.catalog"
   ],
-  "purpose": "Begrenzte Publisherkompatibilität für die 26 gebundenen Altreleases. Tools prüft Autorität, Tagbindung und vorhandene Appabläufe. Zwei historische Git-Leser verwenden die identischen Originalbäume.",
-  "omitted": "Kandidat, Refvergleich, Restore, Transportclones und Originalreleaseprüfung laufen einmalig isoliert. Keine Änderung an Solver, nativer Eingabe oder Webbetrieb.",
+  "purpose": "Externe Originalbytes, sichere Fortschreibung, Wiederaufnahme, RI-ONE und Abschluss; getrennte Reviewzustellung und Publikationsprüfung.",
+  "omitted": "Keine Änderung an Spielpfaden oder Lösungsalgorithmen. Betrieb und unabhängiger Originalzugang werden separat am Head geprüft.",
   "test_changes": [
+    {
+      "path": "tools/test_ci_growth.py",
+      "disposition": "change-scoped",
+      "reason": "Bestandsänderungen und legitime Herstellungsinputs."
+    },
+    {
+      "path": "tools/test_ci_modular.py",
+      "disposition": "change-scoped",
+      "reason": "Explizite Originalauswahl im Paketplan."
+    },
+    {
+      "path": "tools/test_work_publish.py",
+      "disposition": "change-scoped",
+      "reason": "Synthetische Arbeitsoriginale, Releasegrenzen, Publikationskonflikte und ausgehende Gitobjekte."
+    },
     {
       "path": "tools/test_production_installer.py",
       "disposition": "change-scoped",
-      "reason": "Ein Regressionstest begrenzt den historischen Tagpfad auf die veröffentlichte ID und das unveränderte signierte Manifest."
+      "reason": "Signierter App-Publisher unter gemeinsamem Kataloglimit und konkurrierender Release-Lease."
+    },
+    {
+      "path": "tools/test_production_removal.py",
+      "disposition": "change-scoped",
+      "reason": "Bestätigte v2-Entfernung und kontrollierte Transportfehler über die P2-Oberfläche."
     }
   ],
-  "core_change": "Bestehender Kern mit regulärem Windowsbau und vollständigem tools-Modul.",
+  "core_change": "Gezielte Dateiauswahl für Review und Prüfung geänderter Pfadklassen. Regulärer Windowsbau.",
   "evidence": {
-    "mode": "none",
-    "purpose": null,
-    "expires": null
+    "mode": "review",
+    "purpose": "A-717-B-R01: unabhängiger technischer Reviewer prüft das ausgewählte maschinenlesbare Lauforiginal für B-T02.",
+    "expires": "2026-11-26",
+    "files": {
+      "production.images": [
+        "production/production-result.json"
+      ]
+    }
   }
 }
