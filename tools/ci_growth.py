@@ -55,6 +55,9 @@ def forbidden(path):
     """Path classes, not file contents or a growing historic file manifest."""
     lower = path.lower()
     parts = lower.split('/')
+    # The KK diagnostic consumes this manifest and its measured native card crops.
+    if re.fullmatch(r'docs/evidence/kk/(?:native-crops\.json|readme\.md|kk-[a-z0-9_-]+-card\.png)', lower):
+        return None
     if (lower.startswith(('docs/evidence/', 'docs/design/at_b_integration/')) or
             re.match(r'content/authoring/[^/]+/at-b-r01/', lower)):
         return 'completed evidence/production class'
