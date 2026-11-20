@@ -248,6 +248,10 @@ bleiben davon unberührt. Escape bleibt der vereinbarte Abbruch einer Mausgeste.
 
 ### 5.4 Abschluss und detaillierteres Ergebnisbild
 
+Die Ergänzungen zu Hintergrund, gelöster Buchöffnung und Dancing-Script-Motivname
+aus [VIS-A / #728](https://github.com/venomenon328/picross/issues/728) sind
+freigegebenes Soll; ihre Umsetzung und Abnahme sind noch offen.
+
 Nach einer übernommenen Aktion ist das Rätsel genau dann gelöst, wenn jede
 Motivzelle in der richtigen Farbe gefüllt ist und jeder Lösungshintergrund
 unbekannt oder leer markiert ist. Zusatzfüllung, fehlende/falsche Füllung oder
@@ -266,8 +270,13 @@ Die EA-Präsentation dauert insgesamt 2,15 s:
 
 Der neutrale Titel „Blatt NN · W × H“ bleibt an derselben Stelle und nutzt die
 HZ-Schriftrolle. Bild und Raster behalten unabhängig ihr Seitenverhältnis;
-Name, Reset und Abschlussumschalter sind von Anfang an reserviert. Gelöste
-Blätter öffnen sofort den stabilen Endzustand ohne Replay. Commit, History und
+Name, Reset und Abschlussumschalter sind von Anfang an reserviert. Der Motivname
+verwendet die eigene vergrößerte Dancing-Script-Rolle nach HZ.
+
+Gelöste Blätter öffnen über die reguläre Buchanimation nach BOOK_INTEGRATION
+in den stabilen Endzustand in Bildansicht, ohne Replay der Abschlusspräsentation.
+Die zugelassene Hintergrundzeichnung bleibt während der Präsentation und in
+beiden stabilen Ansichten gemäß PUZZLE_BACKGROUNDS sichtbar. Commit, History und
 Schema-1-Sicherung bleiben sofortig; Präsentation wird nicht gespeichert.
 Fokusverlust, Resize und UI-Skalierung zeigen das stabile Ende. Navigation
 beendet die Präsentation ohne verspätete Rückkehr. Keine Vergleichsüberschriften,

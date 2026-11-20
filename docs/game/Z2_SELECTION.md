@@ -33,6 +33,34 @@ Windows-/Webexport verwenden die tatsächlich geprüften aktiven Ressourcen samt
 zugehörigen Nutzungshinweisen. Eine historische unbenutzte Standardtextschrift
 wird dadurch nicht als zweite aktive Rolle exportiert.
 
+## Freigegebene Erweiterung: Dancing Script
+
+Für die Abschlussrolle nach HZ ist die unveränderte variable Originalschrift
+**Dancing Script** freigegeben. Produktintegration, lokale Provisionierung und
+tatsächliche Lieferung im Windows-/Webexport sind in
+[VIS-A / #728](https://github.com/venomenon328/picross/issues/728) noch offen;
+die folgenden Quellen sind keine bereits aktiven Produktressourcen.
+
+Beide Originale sind an `googlefonts/DancingScript` bei Commit
+`291f87c05206179b6bfd53735a5638b5cc84e3b3` gebunden:
+
+| Original | Bytes | SHA-256 |
+| --- | ---: | --- |
+| [DancingScript[wght].ttf](https://github.com/googlefonts/DancingScript/blob/291f87c05206179b6bfd53735a5638b5cc84e3b3/fonts/variable/DancingScript%5Bwght%5D.ttf) | 133636 | `21808625578fe8d8cd10cb684be546dca077b27cd03a53a2f1ec11dc743c924c` |
+| [OFL.txt](https://github.com/googlefonts/DancingScript/blob/291f87c05206179b6bfd53735a5638b5cc84e3b3/OFL.txt) | 4443 | `6f090277c00af96651ce6dbcc38ff1591047a3bffef486e80b6a32e8276a8201` |
+
+Die [Google-Fonts-Metadaten](https://github.com/google/fonts/blob/f391eb5d1f3c7d64eab1bf992b1aee045ac48ffb/ofl/dancingscript/METADATA.pb)
+weisen denselben Upstream-Pin, die Gewichtsachse 400–700 und die Bereiche
+latin, latin-ext und vietnamese aus. Download und lokale Bündelung erhalten die
+Originalbytes einschließlich ihrer Zeilenenden. Zeichenabdeckung und sichtbare
+Akzenthüllen werden zusätzlich mit der eingebundenen Ressource nach HZ geprüft.
+
+Die SIL Open Font License 1.1 erlaubt lokale Bündelung und kommerzielle Verwendung
+unter ihren Bedingungen. Copyright- und vollständiger Lizenztext werden
+mitgeliefert; der Reserved Font Name „Dancing Script“ bleibt beim unveränderten
+Original erhalten. Produkt und Webexport verwenden lokale Bytes ohne externe
+Fontanfrage. Historische Fontpakete werden nicht umgeschrieben.
+
 ## Bereitstellung
 
 ```sh

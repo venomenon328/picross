@@ -1167,6 +1167,11 @@ Verträgen erhalten.
 
 ## 13. HP-I2 · Runtime, Darstellung und Besuch
 
+[VIS-A / #728](https://github.com/venomenon328/picross/issues/728) erweitert
+§§13.2–13.3 als freigegebenes Soll: Sichtbarkeit über den gesamten Rätselbesuch
+und begrenzte asynchrone Bereitschaft vor dem ersten Zielcapture. Diese Änderung
+ist noch nicht implementiert oder abgenommen; der Lieferstatus steht im Paket.
+
 Vertrag vor konsumierendem Code, 10.11.2026,
 [HP-I2-K01–K12 und Prüfplan](https://github.com/venomenon328/picross/issues/561#issuecomment-6770077470),
 Basis `main@964cfe2422a45871961760e65dcd863fe68ee5e0`.
@@ -1210,6 +1215,18 @@ gewählte vollständige Leinwand ihres HG31-Profils; none entfernt die Zeichnung
 Nulltextur. Legacy erhält den bisherigen Kategoriepilot einschließlich seiner
 bisherigen Regeln. Hilfe, Katalog und Einstellungen bleiben unverändert.
 
+Arbeitsdarstellung, laufende Abschlusspräsentation und stabiler Abschluss in
+Bild- oder Rasteransicht gehören zum selben Rätselbesuch. Eine für diesen Besuch
+zugelassene Hintergrundzeichnung bleibt in allen diesen Zuständen papiergebunden
+sichtbar. Ihre Sichtbarkeit hängt nicht von der Sichtbarkeit der editierbaren
+Arbeitsdarstellung ab. Abschluss, Bild-/Rasterwechsel und bloßer Reflow beginnen
+weder einen neuen Besuch noch einen neuen Bildrequest.
+
+Dies gilt auch beim Öffnen eines bereits gelösten Rätsels aus dem Katalog.
+`none` bleibt ohne Zeichnung; `standard` und Legacy behalten ihre zuständigen
+Auswahl- und Geometrieregeln. Allein der Abschlusszustand ist kein Ausblendgrund.
+Ein fehlgeschlagenes `selected` erhält weiterhin keinen Kategorieersatz.
+
 Die neue Leinwand verwendet für jedes Rätsel denselben proportionalen Fit in
 eine gemeinsame Fläche im unteren sichtbaren Papierbereich, denselben Falz-/
 Randabstand und den unteren mittigen Anker. Keine per-ID-Offsets, Crops, Masken
@@ -1242,35 +1259,67 @@ auf. `publish_background_visit()` ruft `publish(token)`,
 `leave_background_visit()` ruft `leave()`. Die Hintergrundkomponente verarbeitet
 ihre begrenzten Ladeergebnisse mit `PROCESS_MODE_ALWAYS`, auch wenn die
 Content-Elternverarbeitung während des Übergangs deaktiviert ist; das erteilt
-keine Eingaberoute. Ihre Sichtbarkeit bleibt an die Arbeitsansicht gebunden.
+keine Eingaberoute. Ihre Sichtbarkeit folgt dem gesamten Rätselbesuch nach §13.2;
+das Verbergen der editierbaren Arbeitsdarstellung verdeckt den Hintergrund nicht.
 
 `book.request_open()` beginnt den Besuch nach erfolgreichem `activate()` und
-vor `_begin()`. `content.open_puzzle()` publiziert **vor** `super.open_puzzle()`
-und dem ersten Ziellayout. Die vorhandenen Aufrufe aus `_prepare()` und
-`_settle()` benutzen denselben bestehenden Besuch und dieselbe einmalige
-Publikationsentscheidung. `present_album()` beendet den Besuch.
+vor `_begin()`. Vor der ersten sichtbaren Publikation der Zielseite ist für
+`selected` eine zeitlich begrenzte asynchrone Vorbereitung zulässig. Ein gültiges
+Ergebnis wird nach vollständiger Bindungsprüfung übernommen; ein tatsächlicher
+Ladefehler oder das Ende der dokumentierten Vorbereitungsfrist führt zur
+diagnostizierten Auslassung. Erzwungene Zielstabilisierung hat die unten definierte
+Vorrangregel. Das bloße Fehlen der Textur im ersten
+Vorbereitungsframe ist kein Auslassgrund.
+
+Die Frist ist endlich und gilt für den gesamten aktuellen Vorbereitungsversuch
+einschließlich eines gegebenenfalls noch auslaufenden veralteten Requests.
+Interne Wiederholungen starten sie nicht erneut. Erfolgreiche Bereitstellung,
+Fehler, Abbruch oder Ablösung beenden die Vorbereitung unmittelbar. Keine synchrone
+Bilddekodierung, blockierende Warteschleife oder unbeschränkte Verlängerung.
+Die bisherige Quelle bleibt bis zur vorbereiteten Übergabe konsistent;
+es entsteht kein zusätzlicher Ladebildschirm. Das konkrete Fristbudget wird
+bei der Umsetzung benannt und am kalten ersten Zielbesuch nachgewiesen.
+
+Die Publikationsentscheidung fällt genau einmal vor dem ersten sichtbaren
+Zielcapture. Vorbereitung und Settlement benutzen denselben Besuch.
+`content.open_puzzle()` darf einen noch vorbereiteten Besuch nicht allein durch
+seinen Aufruf vorzeitig als ausgelassen festschreiben. Eine fehlende Besuchsbindung
+wird vor der Publikation regulär hergestellt; auch dieser Weg unterliegt
+derselben begrenzten Vorbereitung.
+
+Erzwungene Zielstabilisierung nach dem Buch-Unterbrechungsvertrag hat Vorrang
+vor weiterer Ladebereitschaft, insbesondere bei Escape auf der Informationsrückkehr
+sowie Resize, UI-Wechsel oder Fokusverlust während der Vorbereitung. Eine schon
+publizierte Entscheidung bleibt erhalten. Vor Publikation wird ein vollständig
+bereitstehendes und passend gebundenes Bild verwendet; andernfalls wird für diesen
+Besuch mit eigener Stabilisierungsdiagnose ausgelassen. Keine neue Wartefrist und
+kein späteres Pop-in. Dieser Ausnahmeweg ist kein regulärer Öffnungsweg und darf
+die Bereitschaft beim normalen kalten Öffnen nicht umgehen. Ein Abbruch zum
+Quellkatalog verlässt dagegen den Zielbesuch und invalidiert dessen Ergebnisse.
+
+`present_album()` beendet den Besuch.
 `information_routes.present(settings/help)` beendet ihn nach dem Source-Capture
 und vor dem Informationsziel; dessen begrenzte alte Seitencapture bleibt dem
 bestehenden Übergang zugeordnet. `information_routes.request_return()` beginnt
-für work/ending vor `_begin()` einen neuen Besuch. Erreicht Rückkehr oder Abbruch
-die Arbeit ohne noch aktiven Besuch, legt `open_puzzle()` sicher einen neuen an
-und friert ihn unmittelbar ein; eine frühere Textur wird dadurch nicht wieder
-gültig. Kein zusätzlicher Frame oder Wartezustand wird für Dekoration eingefügt.
+für work/ending vor `_begin()` einen neuen Besuch. Die eigentlichen Bewegungsdauern
+nach BOOK_INTEGRATION bleiben unverändert; erforderliche Bereitschaft gehört
+zur Vorbereitung, nicht zur Bewegungszeit.
 
 | Ereignis / Zustand | Verbindliche Wirkung |
 | --- | --- |
-| Zielbesuch vorbereiten | Alten Besuch invalidieren, neue ID-/Revisions-/Besuchsbindung anlegen und selected früh anfordern. Legacy/none benötigen keinen neuen Bildrequest. Buch- und Eingabephase warten nicht auf Dekoration. |
+| Zielbesuch vorbereiten | Alten Besuch invalidieren, neue ID-/Revisions-/Besuchsbindung anlegen und selected früh anfordern. Standard/Legacy/none benötigen keinen neuen Bildrequest. Für selected die begrenzte asynchrone Bereitschaft vor der ersten Zielpublikation berücksichtigen; Eingaben und Abbruch folgen dem bestehenden Übergangsvertrag. |
 | Ergebnis vor Publikation | Nur zur aktuellen vollständigen Bindung passende, vollständig gültige Textur bereitstellen. Falsche, veraltete oder defekte Ergebnisse nicht installieren. |
-| Erste sichtbare Publikation der Zielseite | Vor jedem sichtbaren Zielcapture denselben Besuch einmalig festschreiben: rechtzeitig bereitgestellte gültige Textur sichtbar, andernfalls für diesen Besuch ausgelassen. Kein zusätzlicher Wartebildschirm oder längere bestehende Eingabesperre. |
-| Settlement desselben Zielbesuchs | Genau die bereits festgeschriebene Auswahl erhalten; weder Request noch Publikationsentscheidung wiederholen. |
+| Erste sichtbare Publikation der Zielseite | Vor dem ersten sichtbaren Zielcapture denselben Besuch einmalig festschreiben: innerhalb der Vorbereitung vollständig bereitgestellte gültige Textur sichtbar, bei tatsächlichem Fehler, Fristende oder erzwungener Zielstabilisierung ohne Bereitschaft diagnostiziert ausgelassen. Zielcapture und spätere direkte Darstellung verwenden diese identische Entscheidung. |
+| Settlement desselben Zielbesuchs | Genau die bereits festgeschriebene Auswahl über Arbeit, Abschlusspräsentation, stabiles Bild und Abschlussraster erhalten; weder Request noch Publikationsentscheidung wiederholen. |
 | Verspätetes Ergebnis | Nach festgeschriebener Auslassung nicht mehr anzeigen. Kein sichtbares Nachspringen; frühestens bei einem neuen tatsächlichen Besuch erneut versuchen. |
-| Verlassen, Informationswechsel oder Abbruch | Besuch invalidieren, eigene Textur-/Requestreferenzen freigeben und spätere Resultate verwerfen. Bestehende zeitlich begrenzte Übergangscaptures nach ihrem Settlement-/Abbruchende freigeben. |
+| Verlassen, Informationswechsel oder Abbruch mit Verlassen des Zielbesuchs | Besuch invalidieren, eigene Textur-/Requestreferenzen freigeben und spätere Resultate verwerfen. Bestehende zeitlich begrenzte Übergangscaptures nach ihrem Settlement-/Abbruchende freigeben. |
 
 Die festgeschriebene Besuchsansicht und sämtliche sichtbaren Übergangscaptures
 müssen dieselbe Entscheidung zeigen. A→B→A, Rückkehr, Abbruch und Revisionwechsel
 werden über die vollständige Bindung behandelt, nicht allein über Pfad oder ID.
-Ein Diagnosebefund unterscheidet bereit, ausgelassen wegen Zeit und fehlgeschlagen;
-er ist kein neuer persistenter Produktionsstatus oder Spielerauswahldialog.
+Ein Diagnosebefund unterscheidet bereit, ausgelassen wegen Zeit, ausgelassen bei
+erzwungener Stabilisierung und fehlgeschlagen; er ist kein neuer persistenter
+Produktionsstatus oder Spielerauswahldialog.
 
 Es gibt höchstens einen aktuellen aktiven Request und einen bereits laufenden
 veralteten Request. Bei weiteren Wechseln bleibt nur der neueste Zielwunsch

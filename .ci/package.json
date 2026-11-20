@@ -1,20 +1,12 @@
 {
   "format": "development-ci-plan/v1",
-  "issue": "https://github.com/venomenon328/picross/issues/725",
-  "package": "GAME-APP-B",
-  "modules": [
-    "tools"
-  ],
-  "purpose": "Prüft den festen PG-Start- und Updateweg, Signatur- und Stageentscheidungen sowie die gemeinsamen PW-/PE-Regressionen. Die gebaute Windows-Laufzeit wird im getrennten Installerdiagnoseweg geprüft.",
-  "omitted": "Native Zusatzmodule, Preflight, Produktionsfachmodule, Delivery und Browser betreffen die Verpackungsänderung nicht. Der reguläre Windows-Player bleibt Teil des Kerns.",
-  "test_changes": [
-    {
-      "path": "tools/test_game_installer.py",
-      "disposition": "change-scoped",
-      "reason": "PG-Zustimmung, Skip/Close/Helferübergabe und feste Eingangs- und MSI-Bindungen."
-    }
-  ],
-  "core_change": "Der gemischte Werkzeug-/Paketierungsdiff verlangt den regulären Windows-Playerbuild. Der PG-MSI-/Helferbau bleibt im separat aufrufbaren Installerworkflow.",
+  "issue": "https://github.com/venomenon328/picross/issues/728",
+  "package": "VIS-A",
+  "modules": [],
+  "purpose": "Prüft ausschließlich die freigegebene Spezifikation und Paketvorbereitung für transparente Hervorhebungen, persistente Hintergründe, gelöste Buchöffnungen, vollständige Seitenschatten und Dancing Script.",
+  "omitted": "Noch keine Produktimplementierung: keine nativen Module, Tools-Zusatzsuite, Preflight, Produktionsmodule, Delivery oder Browser. Vor der Umsetzung auf demselben Branch gilt der Prüfplan in #728 mit native.catalog, native.completion und native.graphics; tools nur bei tatsächlich geänderter Python-Prüflogik.",
+  "test_changes": [],
+  "core_change": "Reiner Dokument-/Paketplandiff, daher kein Playerbau. Pflichtkern docs/ci-required bleibt aktiv. Produktcode, Fontbytes und Laufzeittests sind mit diesem Vorbereitungsschritt nicht geändert.",
   "evidence": {
     "mode": "none",
     "purpose": null,

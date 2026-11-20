@@ -84,8 +84,17 @@ reine Orientierungskontext darf insbesondere keine editierbare Zelle vortäusche
 Die Regel gilt auch bei vollständigen Folgen ohne Overlay und ohne Dragmöglichkeit.
 Hinweiswerte, Farben und Erledigtzustände ändern die Quellenzuordnung nicht.
 
-Die vorhandene dezente Bandgestaltung bleibt: unter lesbaren Füllungen, X und
-Rasterlinien, ohne neue Warnfarbe, doppelte Kreuzungsstärke oder neue Animation.
+Die transparente Bandgestaltung ist freigegebenes Soll aus
+[VIS-A / #728](https://github.com/venomenon328/picross/issues/728);
+Umsetzung und Abnahme sind dort noch offen.
+Die Bänder verwenden teiltransparente Flächen in der bisherigen zurückhaltenden
+Farbfamilie. Papiertextur und eine zugelassene Hintergrundzeichnung bleiben
+durch Zeilen- und Spaltenbänder sichtbar. Füllungen, X, Rasterlinien und
+Hinweiszeichen behalten ihre eigene Deckkraft und bleiben lesbar; die
+Transparenz gilt der Hervorhebungsfläche, nicht dem gesamten Raster oder
+Hinweisbereich. Der Schnittpunkt erhält dieselbe Deckkraft wie ein einzelnes
+Band. Keine neue Warnfarbe, doppelte Kreuzungsstärke oder neue Animation.
+
 Keine Hervorhebung außerhalb der gültigen Raster-/Hinweisgeometrie. Ein Wechsel
 zwischen Raster, Zeilenhinweisen und Spaltenhinweisen entfernt die alte zweite Achse
 unmittelbar; keine dauerhaft gepinnte Auswahl.
