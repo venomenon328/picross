@@ -5,12 +5,13 @@ checked against this inventory before a build can be delivered.
 """
 import ast
 import hashlib
+from importlib import import_module
 import json
 from pathlib import Path, PurePosixPath
 import subprocess
 import re
 
-from tools.app_products import PW, PE
+from tools.app_products import PG, PW, PE
 
 WORKSPACE = 'tools/production_workspace/'
 PRODUCTION = 'tools/puzzle_production/'
@@ -84,8 +85,13 @@ def pe_selected(path):
 
 
 def selected(path, *, app=PW):
+    if app == PG:
+        # Producer-only code stays outside the existing PW/PE PyInstaller graphs.
+        return import_module('tools.game_app.inputs').selected(path)
     if app == PE:
         return pe_selected(path)
+    if app != PW:
+        raise ValueError('Unknown application identity')
     if path in {'tools/__init__.py', 'tools/app_products.py', 'tools/msi_database.py',
                 'tools/work_refs.py', '.github/workflows/pw-installer.yml'}:
         return True

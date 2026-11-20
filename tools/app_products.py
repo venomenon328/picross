@@ -1,4 +1,4 @@
-"""Two fixed program identities. Never configured by checkout or update requests."""
+"""Fixed program identities. Never configured by checkout or update requests."""
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -10,13 +10,14 @@ class Product:
     install_directory: str
     state_directory: str
     anchor: str
+    directory: str
+    msi_title: str
+    icon_resource: str
 
     @property
-    def package(self): return 'tools/' + ('production_workspace' if self.key == 'pw' else 'puzzle_editor')
+    def package(self): return 'tools/' + self.directory
     @property
     def source(self): return Path(__file__).resolve().parents[1] / self.package
-    @property
-    def icon_resource(self): return 'assets/launcher.ico' if self.key == 'pw' else 'assets/editor.ico'
     @property
     def registry(self): return 'Software\\' + self.state_directory
     @property
@@ -36,5 +37,10 @@ class Product:
     @property
     def line(self): return tuple(map(int, self.anchor.split('.')[:2]))
 
-PW = Product('pw', 'Picross-Produktionsassistent', 'Picross-Start', 'Picross-Produktionsassistent', 'PicrossProductionWorkspace', '0.1.0')
-PE = Product('pe', 'Picross-Bestandseditor', 'Picross-Bestandseditor', 'PicrossPuzzleEditor', 'PicrossPuzzleEditor', '0.2.0')
+PW = Product('pw', 'Picross-Produktionsassistent', 'Picross-Start', 'Picross-Produktionsassistent', 'PicrossProductionWorkspace', '0.1.0',
+             'production_workspace', 'Picross-Produktionsassistent', 'assets/launcher.ico')
+PE = Product('pe', 'Picross-Bestandseditor', 'Picross-Bestandseditor', 'PicrossPuzzleEditor', 'PicrossPuzzleEditor', '0.2.0',
+             'puzzle_editor', 'Picross-Bestandseditor', 'assets/editor.ico')
+PG = Product('pg', 'Picross', 'Picross-Game', 'PicrossGame', 'PicrossGame', '0.1.0',
+             'game_app', 'Picross-Spiel', 'assets/game.ico')
+PRODUCTS = (PW, PE, PG)

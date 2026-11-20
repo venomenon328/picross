@@ -14,7 +14,7 @@ import uuid
 from .build_windows import build, sha, ROOT, PACKAGE
 from .release import release
 
-from tools.app_products import PW, PE
+from tools.app_products import PG, PW, PE
 
 NS = 'http://schemas.microsoft.com/wix/2006/wi'
 ET.register_namespace('', NS)
@@ -99,7 +99,7 @@ def wix_source(image, product, guard, *, app=PW):
     ui = element(p, 'UI')
     element(ui, 'Error', Id='1722').text = ('App läuft oder Zugriff ist unklar. ' +
         ('Assistent regulär beenden und Produktionsentfernung abwarten. ' if app == PW else
-         'Editor regulär beenden und laufende Fachoperation abwarten. ') +
+         'Editor regulär beenden und laufende Fachoperation abwarten. ' if app == PE else 'Picross regulär beenden. ') +
         'Dann Installer erneut starten. Kein Prozess wird beendet.')
     element(ui, 'TextStyle', Id='WixUI_Font_Normal', FaceName='Segoe UI', Size='9')
     element(ui, 'TextStyle', Id='WixUI_Font_Bigger', FaceName='Segoe UI', Size='12')
@@ -129,7 +129,11 @@ def write_checksum(msi):
 
 def run(output, *, version=None, app=PW):
     product = release(version=version, app=app)
-    build(output, version=version, app=app)  # Pins interpreter, components, clean commit, onedir and licenses.
+    if app == PG:
+        from tools.game_app.build import build_player_image
+        build_player_image(output, product)
+    else:
+        build(output, version=version, app=app)  # Private Python runtime, clean source and licenses.
     work = output / 'work'
     archive = work / 'wix.zip'
     urllib.request.urlretrieve(product['wix_url'], archive)
@@ -141,7 +145,8 @@ def run(output, *, version=None, app=PW):
     compiler = Path(os.environ['SystemRoot']) / 'Microsoft.NET/Framework64/v4.0.30319/csc.exe'
     guard = work / 'Guard.exe'
     image = output / 'dist' / app.executable
-    shutil.copyfile(wix / 'LICENSE.TXT', image / 'LICENSES/WiX.txt')
+    license_path = image / ('licenses' if app == PG else 'LICENSES')
+    shutil.copyfile(wix / 'LICENSE.TXT', license_path / 'WiX.txt')
     files = [{'file': f.relative_to(image).as_posix(), 'bytes': f.stat().st_size, 'sha256': sha(f)}
              for f in sorted(image.rglob('*')) if f.is_file() and f.name != 'inventory.json']
     (image / 'inventory.json').write_text(json.dumps({'commit': json.loads((image / 'components.json').read_text(encoding='utf-8'))['commit'],
@@ -150,16 +155,18 @@ def run(output, *, version=None, app=PW):
     payload.write_text('\n'.join(f.relative_to(image).as_posix() for f in sorted(image.rglob('*')) if f.is_file()) + '\n', encoding='utf-8')
     guard_source = work / 'Guard.cs'
     guard_text = (PACKAGE / 'packaging/Guard.cs').read_text(encoding='utf-8')
-    if app == PE:
+    if app != PW:
         guard_text = guard_text.replace('Picross-Produktionsassistent', app.install_directory).replace('PicrossProductionWorkspace', app.state_directory)
     guard_source.write_text(guard_text, encoding='utf-8')
-    subprocess.run([str(compiler), '/nologo', '/target:winexe', '/platform:x64', '/out:' + str(guard),
-                    '/resource:' + str(payload) + ',Payload.txt', str(guard_source)], check=True)
+    definitions = ['/define:PG'] if app == PG else []
+    subprocess.run([str(compiler), '/nologo', '/codepage:65001', '/target:winexe', '/platform:x64', '/out:' + str(guard),
+                    '/resource:' + str(payload) + ',Payload.txt', *definitions, str(guard_source)], check=True)
     portable = output / (app.executable + '-windows-x64.zip')
-    with zipfile.ZipFile(portable, 'w', zipfile.ZIP_DEFLATED) as archive:
-        for file in sorted(image.rglob('*')):
-            if file.is_file():
-                archive.write(file, app.executable + '/' + file.relative_to(image).as_posix())
+    if app != PG:
+        with zipfile.ZipFile(portable, 'w', zipfile.ZIP_DEFLATED) as archive:
+            for file in sorted(image.rglob('*')):
+                if file.is_file():
+                    archive.write(file, app.executable + '/' + file.relative_to(image).as_posix())
     source = work / 'installer.wxs'
     wix_source(image, product, guard, app=app).write(source, encoding='utf-8', xml_declaration=True)
     obj = work / 'installer.wixobj'
@@ -170,12 +177,14 @@ def run(output, *, version=None, app=PW):
     subprocess.run([str(wix / 'light.exe'), '-nologo', '-sice:ICE91', '-ext', str(wix / 'WixUIExtension.dll'),
                     '-cultures:de-de', '-out', str(msi), str(obj)], check=True)
     checksum = write_checksum(msi)
-    shutil.copyfile(PACKAGE / 'START-WINDOWS.txt' if app == PW else app.source / 'README.md', output / 'START.txt')
+    start = {PW: PACKAGE / 'START-WINDOWS.txt', PE: PE.source / 'README.md', PG: PG.source / 'START.txt'}
+    shutil.copyfile(start[app], output / 'START.txt')
     report = json.loads((output / 'delivery.json').read_text(encoding='utf-8'))
     report.update(msi_file=msi.name, msi_sha256=checksum, msi_bytes=msi.stat().st_size,
                   wix_package=product['wix_package'], wix_sha256=product['wix_sha256'],
-                  guard_sha256=sha(guard), guard_compiler_sha256=sha(compiler),
-                  zip_bytes=portable.stat().st_size, zip_sha256=sha(portable))
+                  guard_sha256=sha(guard), guard_compiler_sha256=sha(compiler))
+    if app != PG:
+        report.update(zip_bytes=portable.stat().st_size, zip_sha256=sha(portable))
     (output / 'delivery.json').write_text(json.dumps(report, indent=2) + '\n', encoding='utf-8')
     print(json.dumps(report))
 

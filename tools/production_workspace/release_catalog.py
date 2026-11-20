@@ -1,4 +1,4 @@
-"""Catalog limits shared by work publishers and both signed application publishers."""
+"""Catalog limits shared by work publishers and signed application publishers."""
 import json
 import time
 

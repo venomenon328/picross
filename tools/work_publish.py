@@ -11,6 +11,7 @@ import tempfile
 from uuid import uuid4
 
 from . import publish_git as transport
+from .app_products import PRODUCTS
 from .puzzle_production import current_authoring as current, current_delivery, catalog_io as io, work_assets
 from .puzzle_production.authoring_builder import git_root, index_value, writer
 from .puzzle_production.authoring_package import require
@@ -146,7 +147,7 @@ def publish_locked(root, job, expected, main, checked):
     own = {r['sha256']:r for r in refs if current.own(job, r['file'])}
     present = {a['name'] for a in release['assets']} if release else set()
     additions = sum('original-' + h not in present for h in own)
-    release_catalog.capacity(rows, elapsed, tag, additions, reserved_apps=2)
+    release_catalog.capacity(rows, elapsed, tag, additions, reserved_apps=len(PRODUCTS))
     tag_ref = 'refs/tags/' + tag
     anchor = transport.remote_head(root, tag_ref)
     if release is None:
