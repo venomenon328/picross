@@ -6,6 +6,9 @@ from urllib.parse import quote, urlsplit
 from p1_preflight import PreflightError
 
 
+EXPECTED_PROJECT_NAME = "picross · P1"
+
+
 def player_extras(root: Path, output: Path) -> dict[str, Path]:
     extras = {}
     for name, source in (

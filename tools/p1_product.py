@@ -22,7 +22,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 import p1_preflight as toolchain
-from player_delivery_texts import player_extras, player_guide, project_name
+from player_delivery_texts import EXPECTED_PROJECT_NAME, player_extras, player_guide, project_name
 import p14_integration
 import z2_resources
 import gp48_delivery
@@ -34,7 +34,6 @@ import kat2_product
 import ea_product
 from p1_evidence import Evidence, bound_log, native_failure_sources, source_identity
 
-EXPECTED_PROJECT_NAME = "picross · P1"
 RENDER_STAGES = ("layout", "cells-f1", "cells-f2", "axis", "h1")
 
 

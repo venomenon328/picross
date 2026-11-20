@@ -20,7 +20,7 @@ from .release_manifest import (FORMAT, SIGNED_FORMAT, REPOSITORY, require, diges
                                validate_manifest, verify_files)
 from . import release_catalog, update_verifier
 
-from tools.app_products import PG, PW, PRODUCTS
+from tools.app_products import PG, PW
 
 REPOSITORY_ID = 1381196633
 MANIFEST = 'manifest.json'
@@ -387,8 +387,7 @@ def _publish_locked(api, build, planned, enabled, signing_enabled, app, manifest
             f'Trust: {planned["trust_sha256"]}\nSignature: {digest(signature_raw)}')
     uploads = {**files, MANIFEST: manifest_raw, update_verifier.SIGNATURE: signature_raw}
     present = {a['name'] for a in matches[0]['assets']} if matches else set()
-    reserved_apps = len(PRODUCTS) - 1
-    release_catalog.capacity(rows, elapsed, manifest['tag'], len(uploads.keys() - present), reserved_apps=reserved_apps)
+    release_catalog.capacity(rows, elapsed, manifest['tag'], len(uploads.keys() - present), reserved_apps=0)
     if matches:
         entry = matches[0]
         require(entry['draft'] is True and entry['target_commitish'] == manifest['source_commit'] and
@@ -415,7 +414,7 @@ def _publish_locked(api, build, planned, enabled, signing_enabled, app, manifest
             'Candidate round-trip mismatch')
     fresh()
     rows, elapsed = release_catalog.catalog(lambda path: api.request(PREFIX + '/' + path))
-    release_catalog.capacity(rows, elapsed, manifest['tag'], 0, reserved_apps=reserved_apps)
+    release_catalog.capacity(rows, elapsed, manifest['tag'], 0, reserved_apps=0)
     published = api.request(PREFIX + f'/releases/{release_id}', method='PATCH',
                             value={'draft': False, 'make_latest': 'true'})
     require(not published['draft'] and release_files(api, published, app=app) == manifest, 'Publication not confirmed')
