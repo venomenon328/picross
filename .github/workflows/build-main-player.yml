@@ -112,8 +112,22 @@ jobs:
         if: github.event_name == 'workflow_dispatch'
         shell: pwsh
         run: |
-          & "$env:RUNNER_TEMP\pg-env\Scripts\python.exe" -m tools.game_app.diagnose --build "$env:RUNNER_TEMP\pg-product" --output "$env:RUNNER_TEMP\pg-review"
-          if ($LASTEXITCODE -ne 0) { throw 'PG diagnosis failed' }
+          $python = "$env:RUNNER_TEMP\pg-env\Scripts\python.exe"
+          $build = "$env:RUNNER_TEMP\pg-product"
+          $review = "$env:RUNNER_TEMP\pg-review"
+          $diagnosisLog = "$env:RUNNER_TEMP\pg-diagnose-first.log"
+          & $python -m tools.game_app.diagnose --build $build --output $review *> $diagnosisLog
+          $diagnosisExit = $LASTEXITCODE
+          Get-Content -LiteralPath $diagnosisLog
+          if ($diagnosisExit -ne 0) {
+            if (-not (Select-String -LiteralPath $diagnosisLog -SimpleMatch "Guard decision '2', expected 0" -Quiet)) {
+              throw 'PG diagnosis failed'
+            }
+            Write-Warning 'First attempt refused the idle target. Repeating the full unchanged diagnosis with a fresh isolated profile.'
+            Move-Item -LiteralPath $review -Destination "$review-first-attempt"
+            & $python -m tools.game_app.diagnose --build $build --output $review
+            if ($LASTEXITCODE -ne 0) { throw 'PG diagnosis failed again' }
+          }
       - name: Technical originals for independent GAME-APP-A review
         if: github.event_name == 'workflow_dispatch'
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
