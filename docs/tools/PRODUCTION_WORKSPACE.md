@@ -261,12 +261,16 @@ Bei v2-Records legt PW mit der eingerichteten HTTPS- oder SSH-Git-Anmeldung
 einen bedingten Auftragsref unter `work-prod-control/remove/` am bestätigten
 Maincommit an. Job, Arbeits-SHA und die bei Bestätigung sichtbaren PR-Befunde
 binden den Auftrag. Der erfolgreiche Arbeitsref-Check löst auf main den
-[Actions-Auftrag](../../.github/workflows/work-removal.yml) aus. Nur dessen
-Ausführungsjob erhält `contents: write` mit dem eingebauten Repositorytoken.
-Er führt ausschließlich Code des bestätigten Mainstands aus. Unter der gemeinsamen
-Katalogsperre prüft er erneut Main, Arbeitsref, offene und geschlossene PRs,
-Record, Indexdelta, Release-ID, Tag und zugehörige Asset-IDs. Nach dem gezielten
-Releaseabbau quittiert er am Auftragsref. PW benötigt lokal ausschließlich Git.
+[Actions-Auftrag](../../.github/workflows/work-removal.yml) aus. Dessen
+Ausführungsjob verwendet das eingebaute Repositorytoken mit `contents: write`
+und `pull-requests: read`. Er führt ausschließlich Code des bestätigten
+Mainstands aus und authentifiziert seine PR-Prüfungen mit diesem Token.
+Unter der gemeinsamen Katalogsperre prüft er erneut Main, Arbeitsref, offene
+und geschlossene PRs, Record, Indexdelta, Release-ID, Tag und zugehörige
+Asset-IDs. Nach dem gezielten Releaseabbau quittiert er am Auftragsref.
+PW benötigt lokal ausschließlich Git und liest öffentliche API-Daten weiterhin
+anonym. Die Worker-Authentifizierung wird mit dem Workflow auf main wirksam
+und erfordert für PW-Installationen mit v2-Entfernung kein neues MSI.
 
 PW wartet bis zu vier Minuten, wiederholt seine Vorprüfung und liest die
 öffentliche Release-ID und den Tagnamen zurück. Nach bestätigtem Fehlen entfernt
