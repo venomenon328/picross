@@ -1,6 +1,6 @@
 """Private launcher update decisions and owned, flat staging (no checkout I/O)."""
 from pathlib import Path
-from tools.app_products import PW
+from tools.app_products import PG, PW
 import os
 import secrets
 import stat
@@ -93,6 +93,26 @@ class Stage:
         self.path.rmdir()  # Unknown files cause refusal, never recursive deletion.
 
 
+def accepted_handoff(directory):
+    """PG settings defer while the accepted READY helper owns its stage."""
+    marker = directory / 'update-accepted.json'
+    if not marker.exists():
+        return False
+    value = read_small(marker)
+    shape(value, 'nonce', 'Invalid PG handoff marker')
+    nonce = value['nonce']
+    require(type(nonce) is str and len(nonce) == 48 and
+            all(c in '0123456789abcdef' for c in nonce), 'Invalid PG handoff nonce')
+    active = no_links(directory / 'update-staging' / nonce / 'active')
+    try:
+        with active.open('rb'):
+            return False  # The exclusive FileShare.None handle has ended.
+    except FileNotFoundError:
+        return False
+    except PermissionError:
+        return True
+
+
 def recover(launcher, *, app=PW):
     """Read a result, remove only listed completed handoff files, never resume MSI."""
     launcher = no_links(launcher)
@@ -121,6 +141,8 @@ def recover(launcher, *, app=PW):
             report['status'] in ('installed', 'failed', 'reboot', 'unconfirmed', 'cancelled'), 'Unbound update result')
     # FileShare.None held by the helper blocks opening while it is still alive.
     if stage.exists():
+        if app == PG:
+            require({p.name for p in stage.iterdir()} <= expected, 'Foreign PG stage files')
         with no_links(stage / 'active').open('a+b'):
             for name in value['files']:
                 if name != 'active':
@@ -128,9 +150,16 @@ def recover(launcher, *, app=PW):
         (stage / 'active').unlink(missing_ok=True)
         stage.rmdir()
     pending.unlink()
+    if app == PG:
+        marker = launcher / 'update-accepted.json'
+        if marker.exists() and read_small(marker) == {'nonce': value['nonce']}:
+            marker.unlink()
+        result.unlink()
     messages = {'installed': 'Installation bestätigt; Anwendung neu gestartet.',
                 'failed': 'Update fehlgeschlagen. Installation prüfen und bei Bedarf manuell erneut installieren.',
                 'reboot': 'Windows meldet erforderlichen Neustart. Update noch nicht als erfolgreich bestätigt.',
                 'unconfirmed': 'Update oder Wiederanlauf unbestätigt. Installation prüfen und manuell starten.',
                 'cancelled': 'Update abgebrochen; kein automatischer Wiederholungsversuch.'}
+    if app == PG:
+        messages['installed'] = 'Installation und Spielstart bestätigt.'
     return messages[report['status']]

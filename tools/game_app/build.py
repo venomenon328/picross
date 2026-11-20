@@ -1,32 +1,18 @@
-"""Build the existing debug player and its PG launcher/installer on Windows."""
+"""Build the bound Godot debug player and the separate PG launcher and MSI."""
 import argparse
 import json
 import os
 from pathlib import Path
 import shutil
-import subprocess
 import sys
 
 from tools.app_products import PG
 from tools.production_workspace.build_installer import run
-from tools.production_workspace.build_windows import ROOT, sha
-from tools.production_workspace.payload import canonical, fingerprint, git
+from tools.production_workspace.build_windows import ROOT, build, sha
+from tools.production_workspace.payload import canonical
 
 
-def build_player_image(output, product):
-    if os.name != 'nt':
-        raise RuntimeError('PG installer build needs Windows x64')
-    commit = git(ROOT, 'rev-parse', 'HEAD').decode().strip()
-    if git(ROOT, 'status', '--porcelain'):
-        raise ValueError('PG installer build needs a clean source checkout')
-    output.mkdir(parents=True, exist_ok=False)
-    work = output / 'work'
-    image = output / 'dist' / PG.executable
-    image.mkdir(parents=True)
-    work.mkdir()
-    inputs = fingerprint(ROOT, app=PG)
-    (output / 'inputs.json').write_bytes(canonical(inputs))
-
+def export_player(output, work, inputs):
     # The normal entry point runs with tools/ on the module search path.
     sys.path.insert(0, str(ROOT / 'tools'))
     try:
@@ -40,41 +26,31 @@ def build_player_image(output, product):
     finally:
         sys.path.pop(0)
 
+    player, pack = (staged / name for name in ('picross-p1.exe', 'picross-p1.pck'))
+    export_audit = json.loads(audit.read_bytes())
+    return {
+        'engine': export_audit['engine'], 'templates': export_audit['templates'],
+        'export_audit_sha256': sha(audit),
+        'player_bytes': player.stat().st_size, 'player_sha256': sha(player),
+        'pck_bytes': pack.stat().st_size, 'pck_sha256': sha(pack),
+    }
+
+
+def finish_image(output, work, image, manifest):
+    staged = work / 'player'
     for name in ('picross-p1.exe', 'picross-p1.pck', 'SPIELANLEITUNG.md'):
         shutil.copyfile(staged / name, image / name)
-    shutil.copytree(staged / 'licenses', image / 'licenses')
-    shutil.copyfile(PG.source / 'START.txt', image / 'START.txt')
-    player, pack = (image / name for name in ('picross-p1.exe', 'picross-p1.pck'))
-    version = product['version']
-    identity = work / 'BuildIdentity.cs'
-    # PE file/product resources support the complete MSI patch range.
-    # The CLR assembly identity reserves 65535 and is private to the launcher.
-    identity.write_text(
-        f'[assembly: System.Reflection.AssemblyFileVersion("{version}.0")]\n'
-        f'[assembly: System.Reflection.AssemblyInformationalVersion("{version}.0")]\n'
-        '[assembly: System.Reflection.AssemblyTitle("Picross")]\n'
-        'internal static class BuildIdentity {\n'
-        f'    internal const string PlayerHash = "{sha(player)}";\n'
-        f'    internal const string PackHash = "{sha(pack)}";\n'
-        '}\n', encoding='utf-8')
+    shutil.copytree(staged / 'licenses', image / 'licenses', dirs_exist_ok=True)
     launcher = image / (PG.executable + '.exe')
-    compiler = Path(os.environ['SystemRoot']) / 'Microsoft.NET/Framework64/v4.0.30319/csc.exe'
-    subprocess.run([str(compiler), '/nologo', '/codepage:65001', '/target:winexe', '/platform:x64',
-                    '/out:' + str(launcher), '/win32icon:' + str(PG.source / PG.icon_resource),
-                    str(PG.source / 'Launcher.cs'), str(identity)], check=True)
-    export_audit = json.loads(audit.read_bytes())
     report = {
-        'format': 'picross-pg-build-v1', 'commit': commit, 'version': version,
-        'product_code': product['product_code'], 'upgrade_code': product['upgrade_code'],
-        'architecture': 'windows-x64', 'payload_fingerprint': inputs['sha256'],
-        'engine': export_audit['engine'], 'templates': export_audit['templates'],
-        'export_audit_sha256': sha(audit), 'launcher_compiler_sha256': sha(compiler),
-        'exe_bytes': launcher.stat().st_size, 'exe_sha256': sha(launcher),
-        'player_bytes': player.stat().st_size, 'player_sha256': sha(player),
-        'pck_bytes': pack.stat().st_size, 'pck_sha256': sha(pack), 'signed': False,
+        **manifest, 'exe_bytes': launcher.stat().st_size, 'exe_sha256': sha(launcher),
+        'frozen_audit_sha256': sha(output / 'frozen-audit.json'),
     }
-    (image / 'components.json').write_bytes(canonical(report))
     (output / 'delivery.json').write_bytes(canonical(report))
+
+
+def build_player_image(output, product):
+    build(output, version=product['version'], app=PG)
 
 
 def main():

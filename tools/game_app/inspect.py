@@ -1,10 +1,12 @@
 """Read the real PG MSI tables and extracted bytes. No installation."""
 import argparse
+import json
 from pathlib import Path
 
 from tools import p1_preflight as toolchain
 from tools.app_products import PG
 from tools.msi_database import msi_rows
+from tools.production_workspace.update_verifier import production_trust
 from tools.production_workspace.verify_installer import NS, require, verify
 
 from .inputs import GODOT_NOTICES, runtime
@@ -35,28 +37,71 @@ def verify_audit(build, audit, inputs, report):
 
 
 def verify_payload(build, root, payload, components, report, compare_build):
-    require(components['format'] == 'picross-pg-build-v1' and
+    require(components['format'] == 'picross-pg-build-v2' and
             all(report[key] == value for key, value in components.items()) and
             components['architecture'] == 'windows-x64' and components['signed'] is False,
             'Foreign or unbound embedded game build')
+    base = '_internal/' + PG.package + '/'
     expected = {'Picross-Game.exe', 'picross-p1.exe', 'picross-p1.pck', 'SPIELANLEITUNG.md',
                 'START.txt', 'components.json', 'inventory.json'}
+    require(expected <= set(payload) and
+            all(name.startswith(('_internal/', 'licenses/')) for name in payload.keys() - expected),
+            'Unexpected PG MSI payload')
+    require(payload[base + 'build.json'].read_bytes() == payload['components.json'].read_bytes() and
+            binding(payload['Picross-Game.exe']) == {k: report['exe_' + k] for k in ('bytes', 'sha256')},
+            'Unbound PG frozen build or executable')
+    for name in ('release.json', 'update-trust.json', PG.icon_resource):
+        require(payload[base + name].read_bytes() == (PG.source / name).read_bytes() and
+                binding(payload[base + name])['sha256'] == components['resources'][name],
+                'Foreign PG resource: ' + name)
+    production_trust(app=PG)
+    require(binding(payload[base + 'UpdateHelper.exe'])['sha256'] == components['resources']['UpdateHelper.exe'],
+            'Unbound PG helper')
+    require(not any('/puzzle_editor/' in name or '/puzzle_production/' in name or '/PIL/' in name
+                    for name in payload), 'PG includes another app or production algorithm')
+    require(all(any(name.startswith(prefix) for name in payload) for prefix in (
+                'licenses/Python.txt', 'licenses/PyInstaller/', 'licenses/cryptography/',
+                'licenses/cffi/', 'licenses/pycparser/', 'licenses/tcl8.6-', 'licenses/tk8.6-',
+                'licenses/OpenSSL-4.0.3.txt')), 'Missing PG runtime license')
     if compare_build:
         staged = build / 'work/player'
-        expected |= {'licenses/' + f.relative_to(staged / 'licenses').as_posix()
-                     for f in (staged / 'licenses').rglob('*') if f.is_file()}
-        require(set(payload) == expected | {'licenses/WiX.txt'}, 'Unexpected PG MSI payload')
-        for name in expected - {'Picross-Game.exe', 'START.txt', 'components.json', 'inventory.json'}:
+        for name in ('picross-p1.exe', 'picross-p1.pck', 'SPIELANLEITUNG.md'):
             require(binding(payload[name]) == binding(staged / name), 'Export member mismatch: ' + name)
-    elif not expected <= set(payload) or any(not name.startswith('licenses/') for name in payload.keys() - expected):
-        raise RuntimeError('Unexpected PG MSI payload')
+        for file in (staged / 'licenses').rglob('*'):
+            if file.is_file():
+                require(binding(payload[file.relative_to(staged).as_posix()]) == binding(file),
+                        'Export license mismatch: ' + file.name)
+        frozen = build / 'frozen-audit.json'
+        audit = json.loads(frozen.read_bytes())
+        inputs = json.loads((build / 'inputs.json').read_bytes())
+        require(binding(frozen)['sha256'] == report['frozen_audit_sha256'] and
+                audit['fingerprint'] == report['payload_fingerprint'] and
+                set(audit['repository_inputs']) <= {row['file'] for row in inputs['files']},
+                'Unbound frozen input audit')
+        native = [{'file': name, **binding(file)} for name, file in sorted(payload.items())
+                  if name.startswith('_internal/') and Path(name).suffix.lower() in ('.dll', '.pyd', '.exe')]
+        require({row['file']: row for row in native} ==
+                {row['file']: row for row in audit['native_inventory']},
+                'MSI native inventory differs from the frozen build')
+        from PyInstaller.archive.readers import CArchiveReader
+        embedded = CArchiveReader(str(payload['Picross-Game.exe'])).open_embedded_archive('PYZ.pyz')
+        modules = sorted(name for name in embedded.toc if name.startswith('tools.'))
+        require(modules == audit['frozen_modules'], 'MSI PYZ differs from the frozen module audit')
     for prefix, name in [('player', 'picross-p1.exe'), ('pck', 'picross-p1.pck')]:
         require(binding(payload[name]) == {k: report[prefix + '_' + k] for k in ('bytes', 'sha256')},
                 'Foreign player resource: ' + name)
     for target, digest in GODOT_NOTICES.values():
         require(binding(payload['licenses/' + target])['sha256'] == digest, 'Unbound Godot license: ' + target)
     verify_write_scope(root)
-    verify_database(build / report['msi_file'])
+    msi = build / report['msi_file']
+    verify_database(msi)
+    registry = msi_rows(msi, 'Registry', ('Root', 'Key', 'Name', 'Value'))
+    identity = {name: (kind, path, value) for kind, path, name, value in registry
+                if name in ('Version', 'ProductCode')}
+    require(identity == {
+        'Version': ('1', PG.registry + '\\Installer', components['version']),
+        'ProductCode': ('1', PG.registry + '\\Installer', '{' + components['product_code'] + '}'),
+    }, 'PG application registration mismatch')
 
 
 def verify_write_scope(root):
@@ -66,9 +111,13 @@ def verify_write_scope(root):
                for child in node.findall('w:Directory', NS)}
     require(parents['INSTALLFOLDER'] == 'LocalAppDataFolder' and parents['AppMenu'] == 'ProgramMenuFolder'
             and directories['AppMenu'].get('Name') == 'Picross', 'Foreign MSI directory')
-    for uid, directory in (('MenuShortcutLink', 'AppMenu'), ('DesktopShortcutLink', 'DesktopFolder')):
+    shortcuts = [('MenuShortcutLink', 'AppMenu', 'Picross'),
+                 ('DesktopShortcutLink', 'DesktopFolder', 'Picross'),
+                 ('UpdateSettingsLink', 'AppMenu', 'Picross – Update-Einstellungen')]
+    for uid, directory, name in shortcuts:
         link = directories[directory].find(f'w:Component/w:Shortcut[@Id="{uid}"]', NS)
-        require(link is not None and link.get('Name') == 'Picross' and link.get('WorkingDirectory') == 'INSTALLFOLDER',
+        require(link is not None and link.get('Name') == name and link.get('WorkingDirectory') == 'INSTALLFOLDER'
+                and link.get('Icon') == 'AppIcon',
                 'Unexpected PG shortcut location or name')
     allowed = {'INSTALLFOLDER', 'AppMenu'}
     for directory in parents:
@@ -78,7 +127,7 @@ def verify_write_scope(root):
             if ancestor == 'INSTALLFOLDER':
                 allowed.add(directory)
                 break
-    require(len(root.findall('.//w:Shortcut', NS)) == 2 and
+    require(len(root.findall('.//w:Shortcut', NS)) == 3 and
             all(node.get('Directory') in allowed for node in root.findall('.//w:RemoveFolder', NS)) and
             all(not root.findall('.//w:' + name, NS) for name in
                 ('RemoveFile', 'CopyFile', 'MoveFile', 'RemoveRegistryKey', 'RemoveRegistryValue',
@@ -107,6 +156,7 @@ def verify_database(msi):
     require(sorted(shortcuts) == [
         ['DesktopShortcutLink', 'DesktopFolder', '[INSTALLFOLDER]Picross-Game.exe', ''],
         ['MenuShortcutLink', 'AppMenu', '[INSTALLFOLDER]Picross-Game.exe', ''],
+        ['UpdateSettingsLink', 'AppMenu', '[INSTALLFOLDER]Picross-Game.exe', '--update-settings'],
     ], 'MSI shortcut target/arguments mismatch')
 
 

@@ -37,7 +37,9 @@ def window(pid):
 
 
 def close(handle):
-    if not ctypes.windll.user32.PostMessageW(handle, 0x10, 0, 0):  # WM_CLOSE
+    send = ctypes.windll.user32.PostMessageW
+    send.argtypes = [wintypes.HWND, wintypes.UINT, wintypes.WPARAM, wintypes.LPARAM]
+    if not send(handle, 0x10, 0, 0):  # WM_CLOSE
         raise RuntimeError('Could not close isolated diagnostic window')
 
 
@@ -68,7 +70,7 @@ def player_child(pid, env):
     return json.loads(path) if path else None
 
 
-def guard_check(guard, local, image, code):
+def guard_result(guard, local, image):
     command = """$ErrorActionPreference='Stop'
     $guard=[Reflection.Assembly]::LoadFile($env:PG_DIAG_GUARD).GetType('Guard')
     $check=$guard.GetMethod('Check',[Reflection.BindingFlags]'Static,NonPublic')
@@ -77,8 +79,27 @@ def guard_check(guard, local, image, code):
     """
     result = powershell(command, {**os.environ, 'PG_DIAG_GUARD': str(guard),
                                   'PG_DIAG_TARGET': str(image), 'PG_DIAG_ROOT': str(local)})
-    if result != str(code):
+    if result not in ('0', '2'):
+        raise RuntimeError(f'Unexpected guard decision {result!r}')
+    return int(result)
+
+
+def guard_check(guard, local, image, code):
+    result = guard_result(guard, local, image)
+    if result != code:
         raise RuntimeError(f'Guard decision {result!r}, expected {code}')
+
+
+def guard_release(guard, local, image):
+    started_at = time.monotonic()
+    samples = []
+    while time.monotonic() - started_at < 15:
+        code = guard_result(guard, local, image)
+        samples.append({'seconds_since_exit': round(time.monotonic() - started_at, 3), 'decision': code})
+        if code == 0:
+            return samples
+        time.sleep(0.25)
+    raise RuntimeError(f'Guard remained blocked after actual process exit: {samples}')
 
 
 @contextmanager
@@ -140,7 +161,7 @@ def diagnose(build, output):
                 close(handle)
             if normal.wait(timeout=30) != 0:
                 raise RuntimeError('Launcher did not observe a clean child exit')
-        guard_check(guard, local, image, 0)
+        launcher_release = guard_release(guard, local, image)
 
         with started(player, foreign_cwd, env) as direct:
             handle, _ = wait(lambda: window(direct.pid), 'direct player window')
@@ -150,7 +171,7 @@ def diagnose(build, output):
                 close(handle)
             if direct.wait(timeout=30) != 0:
                 raise RuntimeError('Direct player did not exit cleanly')
-        guard_check(guard, local, image, 0)
+        direct_release = guard_release(guard, local, image)
 
         # A damaged PCK yields a native error instead of spawning the player.
         pck.rename(image / 'original.pck')
@@ -169,6 +190,7 @@ def diagnose(build, output):
         'launcher_sha256': report['exe_sha256'], 'pck_sha256': report['pck_sha256'],
         'catalog_marker': 'P1_START_OK', 'observed_window_title': title,
         'guard': 'idle allowed; foreign target, open PCK, active launcher and direct player refused',
+        'post_exit_guard_observations': {'launcher': launcher_release, 'direct_player': direct_release},
         'damaged_payload': 'launcher dialog and exit 1, no child',
         'isolated_profile_sentinel_unchanged': True,
         'limits': 'Automated Windows diagnosis of build bytes. No installation or personal catalog/controls probe.',

@@ -180,6 +180,15 @@ Produktretention; bei Reviewref dessen Zweck/Endpunkt benennen, kein automatisch
 Ablaufversprechen. Kein App-Binary im Produktdiff. Technikdaten nur bei konkretem
 Reviewbedarf, höchstens sieben Tage. Abgelaufenen Kandidaten gezielt neu zustellen.
 
+## GAME-APP-B · gemeinsam gepflegter Laufzeitbau
+
+Der [Spiel-Installer](../../docs/operations/WINDOWS_GAME_APP.md) verwendet die
+gebundene x64-Python-/PyInstaller-/Tk-/Kryptografiekette für seinen eigenen
+Einstieg. Analysis und PYZ binden die verwendeten gemeinsamen Clientmodule.
+Der Helfer entsteht mit `/define:PG`. Öffentliche Produkt- und Trustressourcen,
+native Erweiterungen und die zugehörigen Lizenzen liegen im Spiel-MSI.
+Die reguläre Godot-Exportprüfung läuft zusätzlich.
+
 ## Lizenzen und Signatur
 
 `LICENSES/Python.txt` stammt aus der verwendeten CPython-Distribution und enthält

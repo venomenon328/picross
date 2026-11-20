@@ -205,9 +205,11 @@ Linux-Runner nicht geprüft. Der separate CI-Playerexport bleibt unverändert.
 dein Windows-Benutzerkonto. **Picross** im Startmenü oder die optionale
 Desktopverknüpfung öffnet das Spiel. Beende das Spiel vor dem Installieren
 einer neueren Version oder dem Deinstallieren. Vorhandene Spielstände und
-Einstellungen findest du im gleichen Godot-Profil. GAME-APP-A startet das
-Spiel direkt. Die [Windows-App-Dokumentation](../docs/operations/WINDOWS_GAME_APP.md)
-beschreibt den technischen Kanal und seine Betriebsfreigabe.
+Einstellungen findest du im gleichen Godot-Profil. Beim ersten normalen Start kannst du
+automatische Updates aktivieren oder ablehnen. **Picross – Update-Einstellungen**
+ändert die Entscheidung für spätere Starts. Während der Prüfung öffnet
+**Ohne Update spielen** die installierte Fassung. Ein bestätigtes Update
+öffnet das Spiel anschließend automatisch.
 
 ## Portablen Windows-Player starten
 

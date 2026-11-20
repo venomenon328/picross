@@ -13,9 +13,11 @@ TOOLS = {
 }
 COMMON = {
     '__init__.py', 'build_installer.py', 'build_windows.py', 'verify_installer.py',
-    'packaging/Guard.cs',
+    'packaging/Guard.cs', 'packaging/UpdateHelper.cs',
     'payload.py', 'release.py', 'release_manifest.py', 'release_channel.py',
-    'release_catalog.py', 'update_verifier.py', 'requirements-update.txt',
+    'release_catalog.py', 'update_verifier.py', 'requirements-update.txt', 'requirements-windows.txt',
+    'app_updates.py', 'update_client.py', 'update_storage.py', 'update_windows.py',
+    'instance.py', 'install_interlock.py', 'processes.py',
 }
 BACKGROUND = {
     '__init__', 'analysis_contract', 'analysis_io', 'authoring_package', 'background_contract', 'catalog_added',
@@ -25,7 +27,8 @@ BACKGROUND = {
 }
 GAME_APP = {
     '__init__.py', 'assets/game.ico', 'build.py', 'inputs.py', 'inspect.py',
-    'Launcher.cs', 'release.json', 'release_channel.py', 'update-trust.json', 'START.txt',
+    'desktop_entry.py', 'gate.py', 'player.py', 'restart.py',
+    'release.json', 'release_channel.py', 'update-trust.json', 'START.txt',
 }
 LICENSES = {
     'game/art/drawing/NOTICES.md', 'game/art/drawing/Bakso-NOTICES.md',
@@ -58,6 +61,7 @@ def selected(path):
             or re.fullmatch(r'content/backgrounds/pz-[a-z0-9][a-z0-9-]{0,59}\.json', path) is not None
             or path.removeprefix('tools/game_app/') in GAME_APP
             or path.removeprefix('tools/production_workspace/') in COMMON
+            or (path.startswith('tools/production_workspace/licenses/') and Path(path).suffix == '.txt')
             or (path.startswith('tools/puzzle_production/') and path.count('/') == 2
                 and Path(path).suffix == '.py' and Path(path).stem in BACKGROUND))
 
