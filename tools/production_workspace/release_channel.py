@@ -20,7 +20,7 @@ from .release_manifest import (FORMAT, SIGNED_FORMAT, REPOSITORY, require, diges
                                validate_manifest, verify_files)
 from . import release_catalog, update_verifier
 
-from tools.app_products import PW
+from tools.app_products import PG, PW
 
 REPOSITORY_ID = 1381196633
 MANIFEST = 'manifest.json'
@@ -208,12 +208,13 @@ def release_files(api, entry, *, app=PW):
     assets = api.pages('/releases/' + str(entry['id']) + '/assets')
     require(len({a['name'] for a in assets}) == len(assets), 'Duplicate release assets')
     by_name = {a['name']: a for a in assets}
-    require(MANIFEST in by_name, 'Published PW release missing manifest')
+    require(MANIFEST in by_name, 'Published application release missing manifest')
     raw = api.asset(by_name[MANIFEST])
     manifest = validate_manifest(strict_json(raw), app=app)
     require(canonical(manifest) == raw and entry['tag_name'] == manifest['tag'] and
             entry['target_commitish'] == manifest['source_commit'] and not entry['prerelease'], 'Release identity mismatch')
     signed = manifest['format'] == app.signed
+    require(app != PG or signed, 'PG authority requires signed releases')
     require(set(by_name) == set(manifest['assets']) | {MANIFEST} |
             ({update_verifier.SIGNATURE} if signed else set()), 'Unexpected release assets')
     migrated = None
@@ -233,13 +234,13 @@ def authority(api, *, app=PW):
     seen = set()
     for entry in entries:
         require(re.fullmatch(re.escape(app.prefix + '.'.join(map(str, app.line)) + '.') + r'(0|[1-9][0-9]*)', entry['tag_name']) and not entry['prerelease'],
-                'Invalid published PW release')
-        require(version_tuple(entry['tag_name'][4:]) > version_tuple(app.anchor), 'Published version is not above the start anchor')
+                'Invalid published application release')
+        require(version_tuple(entry['tag_name'][len(app.prefix):]) > version_tuple(app.anchor), 'Published version is not above the start anchor')
         require(entry['tag_name'] not in seen, 'Duplicate published version')
         seen.add(entry['tag_name'])
     if not entries:
         return None
-    latest = max(entries, key=lambda r: version_tuple(r['tag_name'][4:]))
+    latest = max(entries, key=lambda r: version_tuple(r['tag_name'][len(app.prefix):]))
     manifest = release_files(api, latest, app=app)
     return {'id': latest['id'], 'manifest': manifest, 'sha256': digest(canonical(manifest))}
 
@@ -261,7 +262,7 @@ def plan(api, root, source, run_id=None, *, app=PW):
             'Clean pinned source checkout required')
     attempt = trusted_run(api, run_id, source) if run_id else None
     inputs = fingerprint(root, app=app)
-    previous = authority(api, app=app)
+    previous = None if app == PG and run_id is None else authority(api, app=app)
     version = next_version(inputs, previous, app=app)
     return {'format': 'picross-' + app.key + '-plan-v1', 'source_commit': source, 'run_id': run_id, 'run_attempt': attempt,
             'payload_fingerprint': inputs['sha256'], 'authority': previous, 'version': version,
@@ -280,7 +281,11 @@ def seal(build, inspection, planned, *, app=PW):
                 'assets': {name: {'bytes': len(raw), 'sha256': digest(raw)} for name, raw in files.items()},
                 'inspection': strict_json(inspection.read_bytes())}
     verify_files(manifest, files, app=app)
-    (build / MANIFEST).write_bytes(canonical(manifest))
+    manifest_raw = canonical(manifest)
+    (build / MANIFEST).write_bytes(manifest_raw)
+    if app == PG:
+        total = len(manifest_raw) + sum(len(raw) for raw in files.values())
+        print(f'PG diagnostic/publisher candidate assets: {total} bytes including build manifest')
     return manifest
 
 
@@ -294,7 +299,8 @@ def verify_tag(api, manifest, *, allow_missing, migrated_source=None):
     expected = {manifest['source_commit']}
     if migrated_source is not None:
         expected.add(migrated_source)
-    require(obj['type'] == 'commit' and obj['sha'] in expected, 'Conflicting PW release tag')
+    product = manifest['tag'].split('-', 1)[0].upper()
+    require(obj['type'] == 'commit' and obj['sha'] in expected, f'Conflicting {product} release tag')
 
 
 def _candidate(build, planned, *, app=PW):
@@ -380,7 +386,8 @@ def _publish_locked(api, build, planned, enabled, signing_enabled, app, manifest
     # Read by tag including drafts. Never overwrite or delete a foreign draft/tag.
     matches = [r for r in rows if r['tag_name'] == manifest['tag']]
     require(len(matches) <= 1, 'Ambiguous release candidate')
-    body = (f'{app.key.upper()} APP-B1 {manifest["tag"]}\nSource: {manifest["source_commit"]}\n'
+    stage = 'APP-A' if app == PG else 'APP-B1'
+    body = (f'{app.key.upper()} {stage} {manifest["tag"]}\nSource: {manifest["source_commit"]}\n'
             f'Fingerprint: {manifest["payload_fingerprint"]}\nManifest: {digest(manifest_raw)}\n'
             f'Trust: {planned["trust_sha256"]}\nSignature: {digest(signature_raw)}')
     uploads = {**files, MANIFEST: manifest_raw, update_verifier.SIGNATURE: signature_raw}

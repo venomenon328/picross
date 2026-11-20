@@ -1,0 +1,221 @@
+name: Picross game installer
+
+on:
+  workflow_run:
+    workflows: [Package CI]
+    types: [completed]
+    branches: [main]
+  workflow_dispatch:
+
+# Dispatch is ALWAYS diagnostic. Publication requires the separately
+# authorized PG_RELEASE_ENABLED AND PG_UPDATE_SIGNING_ENABLED variables.
+# Production keys are provisioned later, only in the main-only pg-app-release environment.
+permissions:
+  contents: read
+  actions: read
+
+concurrency:
+  group: pg-app-release
+  cancel-in-progress: false
+
+jobs:
+  plan:
+    if: >-
+      github.repository == 'venomenon328/picross' &&
+      (github.event_name == 'workflow_dispatch' ||
+       (github.event.workflow_run.conclusion == 'success' &&
+        github.event.workflow_run.event == 'push' &&
+        github.event.workflow_run.head_branch == 'main' &&
+        github.event.workflow_run.head_repository.full_name == github.repository))
+    runs-on: ubuntu-24.04
+    outputs:
+      changed: ${{ steps.plan.outputs.changed }}
+      version: ${{ steps.plan.outputs.version }}
+      source: ${{ steps.source.outputs.commit }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        timeout-minutes: 10
+        with:
+          ref: ${{ github.event.workflow_run.head_sha || github.sha }}
+          fetch-depth: 1
+          persist-credentials: false
+      - id: source
+        env:
+          PG_EXPECTED_SOURCE: ${{ github.event.workflow_run.head_sha || github.sha }}
+        run: |
+          commit="$(git rev-parse HEAD)"
+          test "$commit" = "$PG_EXPECTED_SOURCE"
+          echo "commit=$commit" >> "$GITHUB_OUTPUT"
+      - uses: actions/setup-python@83679a892e2d95755f2dac6acb0bfd1e9ac5d548
+        with:
+          python-version: '3.13.14'
+      - name: Pinned signed-authority reader
+        run: >-
+          python -m pip install --only-binary=:all: -r tools/production_workspace/requirements-update.txt
+      - name: Verify main CI, fingerprint and published authority
+        id: plan
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: python -m tools.game_app.release_channel plan --plan "$RUNNER_TEMP/plan.json"
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: pg-plan
+          path: ${{ runner.temp }}/plan.json
+          retention-days: 7
+          if-no-files-found: error
+
+  installer:
+    needs: plan
+    if: needs.plan.outputs.changed == 'true'
+    runs-on: windows-2025
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        timeout-minutes: 10
+        with:
+          ref: ${{ needs.plan.outputs.source }}
+          fetch-depth: 1
+          persist-credentials: false
+      - uses: actions/download-artifact@634f93cb2916e3fdff6788551b99b062d0335ce0
+        with:
+          name: pg-plan
+          path: ${{ runner.temp }}/pg-plan
+      - uses: actions/setup-python@83679a892e2d95755f2dac6acb0bfd1e9ac5d548
+        with:
+          python-version: '3.13.14'
+          architecture: x64
+      - name: Pinned private build environment
+        shell: pwsh
+        run: |
+          python -m venv "$env:RUNNER_TEMP\pg-env"
+          & "$env:RUNNER_TEMP\pg-env\Scripts\python.exe" -m pip install pip==26.1.2
+          if ($LASTEXITCODE -ne 0) { throw 'pip setup failed' }
+          & "$env:RUNNER_TEMP\pg-env\Scripts\python.exe" -m pip install --only-binary=:all: pefile==2024.8.26
+          if ($LASTEXITCODE -ne 0) { throw 'Pinned dependency setup failed' }
+      - name: Build and inspect actual MSI bytes without installation
+        shell: pwsh
+        env:
+          PG_VERSION: ${{ needs.plan.outputs.version }}
+          PG_SOURCE: ${{ needs.plan.outputs.source }}
+        run: |
+          $python = "$env:RUNNER_TEMP\pg-env\Scripts\python.exe"
+          & $python -m tools.game_app.build --output "$env:RUNNER_TEMP\pg-product" --version $env:PG_VERSION
+          if ($LASTEXITCODE -ne 0) { throw 'Installer build failed' }
+          & $python -m tools.game_app.inspect --build "$env:RUNNER_TEMP\pg-product" --output "$env:RUNNER_TEMP\pg-inspection" --expected-commit $env:PG_SOURCE --version $env:PG_VERSION --compare-build
+          if ($LASTEXITCODE -ne 0) { throw 'MSI inspection failed' }
+          & $python -m tools.game_app.release_channel seal --plan "$env:RUNNER_TEMP\pg-plan\plan.json" --build "$env:RUNNER_TEMP\pg-product" --inspection "$env:RUNNER_TEMP\pg-inspection\result.json"
+          if ($LASTEXITCODE -ne 0) { throw 'Candidate binding failed' }
+          Get-Content "$env:RUNNER_TEMP\pg-product\delivery.json"
+          Get-Content "$env:RUNNER_TEMP\pg-inspection\result.json"
+          if ((git status --porcelain)) { throw 'Build changed source checkout' }
+      - name: GAME-APP-A candidate and bound delivery sidecars
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: Picross-Spiel-${{ needs.plan.outputs.source }}
+          path: |
+            ${{ runner.temp }}/pg-product/*.msi
+            ${{ runner.temp }}/pg-product/*.msi.sha256
+            ${{ runner.temp }}/pg-product/START.txt
+            ${{ runner.temp }}/pg-product/delivery.json
+            ${{ runner.temp }}/pg-product/inputs.json
+            ${{ runner.temp }}/pg-product/manifest.json
+          if-no-files-found: error
+          retention-days: 14
+          compression-level: 0
+      - name: Isolated native launcher, catalog and guard diagnosis
+        if: github.event_name == 'workflow_dispatch'
+        shell: pwsh
+        run: |
+          & "$env:RUNNER_TEMP\pg-env\Scripts\python.exe" -m tools.game_app.diagnose --build "$env:RUNNER_TEMP\pg-product" --output "$env:RUNNER_TEMP\pg-review"
+          if ($LASTEXITCODE -ne 0) { throw 'PG diagnosis failed' }
+      - name: Technical originals for independent GAME-APP-A review
+        if: github.event_name == 'workflow_dispatch'
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: pg-review-${{ needs.plan.outputs.source }}
+          path: |
+            ${{ runner.temp }}/pg-review/*
+            ${{ runner.temp }}/pg-product/input-audit.json
+            ${{ runner.temp }}/pg-inspection/result.json
+          retention-days: 7
+          if-no-files-found: error
+
+  publication-gate:
+    needs: [plan, installer]
+    if: >-
+      github.event_name == 'workflow_run' && github.ref == 'refs/heads/main' &&
+      github.repository == 'venomenon328/picross' &&
+      vars.PG_RELEASE_ENABLED == 'true' && vars.PG_UPDATE_SIGNING_ENABLED == 'true'
+    runs-on: ubuntu-24.04
+    outputs:
+      authorized: ${{ steps.authorize.outputs.authorized }}
+    steps:
+      # No environment reference: a disabled/unprovisioned run cannot create it.
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        timeout-minutes: 10
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 1
+          persist-credentials: false
+      - uses: actions/setup-python@83679a892e2d95755f2dac6acb0bfd1e9ac5d548
+        with:
+          python-version: '3.13.14'
+      - name: Pinned signed-authority reader
+        run: >-
+          python -m pip install --only-binary=:all: -r tools/production_workspace/requirements-update.txt
+      - uses: actions/download-artifact@634f93cb2916e3fdff6788551b99b062d0335ce0
+        with:
+          name: pg-plan
+          path: ${{ runner.temp }}/pg-plan
+      - uses: actions/download-artifact@634f93cb2916e3fdff6788551b99b062d0335ce0
+        with:
+          name: Picross-Spiel-${{ needs.plan.outputs.source }}
+          path: ${{ runner.temp }}/pg-product
+      - name: Check source, candidate, provisioned trust and existing main-only environment
+        id: authorize
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PG_RELEASE_ENABLED: ${{ vars.PG_RELEASE_ENABLED }}
+          PG_UPDATE_SIGNING_ENABLED: ${{ vars.PG_UPDATE_SIGNING_ENABLED }}
+        run: python -m tools.game_app.release_channel authorize --plan "$RUNNER_TEMP/pg-plan/plan.json" --build "$RUNNER_TEMP/pg-product"
+
+  publish:
+    needs: [plan, installer, publication-gate]
+    if: >-
+      github.event_name == 'workflow_run' && github.ref == 'refs/heads/main' &&
+      github.repository == 'venomenon328/picross' &&
+      vars.PG_RELEASE_ENABLED == 'true' && vars.PG_UPDATE_SIGNING_ENABLED == 'true' &&
+      needs.publication-gate.outputs.authorized == 'true'
+    environment: pg-app-release
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: write
+      actions: read
+    steps:
+      # Only default-branch code ever runs with write access. No PR artifacts.
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        timeout-minutes: 10
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 1
+          persist-credentials: false
+      - uses: actions/setup-python@83679a892e2d95755f2dac6acb0bfd1e9ac5d548
+        with:
+          python-version: '3.13.14'
+      - name: Pinned signing environment
+        run: >-
+          python -m pip install --only-binary=:all: -r tools/production_workspace/requirements-update.txt
+      - uses: actions/download-artifact@634f93cb2916e3fdff6788551b99b062d0335ce0
+        with:
+          name: pg-plan
+          path: ${{ runner.temp }}/pg-plan
+      - uses: actions/download-artifact@634f93cb2916e3fdff6788551b99b062d0335ce0
+        with:
+          name: Picross-Spiel-${{ needs.plan.outputs.source }}
+          path: ${{ runner.temp }}/pg-product
+      - name: Recheck source CI, main, authority, draft and every uploaded byte
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PG_RELEASE_ENABLED: ${{ vars.PG_RELEASE_ENABLED }}
+          PG_UPDATE_SIGNING_ENABLED: ${{ vars.PG_UPDATE_SIGNING_ENABLED }}
+          PG_UPDATE_SIGNING_KEY: ${{ secrets.PG_UPDATE_SIGNING_KEY }}
+        run: python -m tools.game_app.release_channel publish --plan "$RUNNER_TEMP/pg-plan/plan.json" --build "$RUNNER_TEMP/pg-product"

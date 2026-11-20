@@ -37,7 +37,15 @@ public static class Guard {
     public static int Main(string[] args) {
         try {
             // Reject property-based path redirection, also during upgrade/uninstall.
-            var local = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
+            return Check(args, Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData));
+        } catch (Exception) {
+            return 2;
+        }
+    }
+
+    // The diagnostic invokes this private routine against an isolated directory.
+    static int Check(string[] args, string local) {
+        try {
             var expected = Path.Combine(local, "Programs", "Picross-Produktionsassistent");
             if (args.Length != 1) return 2;
             var target = Path.GetFullPath(args[0]).TrimEnd('\\');
@@ -49,6 +57,7 @@ public static class Guard {
             if (marker != IntPtr.Zero) CloseHandle(marker);
             if (marker != IntPtr.Zero || error != 2)
                 throw new IOException("Eine App-Instanz läuft oder ihr Zustand ist unklar.");
+#if !PG
             // Older portable P3 has no product marker. Never trust its PID/port.
             var state = Path.Combine(local, "PicrossProductionWorkspace", ".launcher");
             NoLinks(state);
@@ -59,6 +68,7 @@ public static class Guard {
                     throw new IOException("Instanzlock enthält einen Link.");
                 using (var stream = new FileStream(stateLock, FileMode.Open, FileAccess.ReadWrite, FileShare.None)) { }
             }
+#endif
             // Also detect unrelated processes holding ANY installed payload file.
             // No RmShutdown/RmRestart. An inconclusive query is a hard refusal.
             uint rm;
@@ -75,6 +85,11 @@ public static class Guard {
                         if (attributes.HasValue) {
                             if ((attributes.Value & FileAttributes.ReparsePoint) != 0)
                                 throw new IOException("Programmdatei enthält einen Link.");
+#if PG
+                            // Check handles even if Restart Manager cannot name a PCK holder.
+                            if (relative == "picross-p1.pck" || relative == "picross-p1.exe")
+                                using (var probe = new FileStream(file, FileMode.Open, FileAccess.Read, FileShare.None)) { }
+#endif
                             paths.Add(file);
                         }
                     }

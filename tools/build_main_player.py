@@ -10,6 +10,10 @@ import sys
 import tempfile
 import zipfile
 
+if not __package__:
+    # Direct script entry: background validation also uses the tools package.
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+
 import p1_preflight as toolchain
 
 
@@ -71,7 +75,7 @@ def stage_player(build: Path, destination: Path, source_commit: str,
     return sorted(files)
 
 
-def main(argv: list[str] | None = None) -> int:
+def main(argv: list[str] | None = None, *, app_inputs=None, audit=None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--cache-dir", type=Path, required=True)
     parser.add_argument("--output-dir", type=Path, required=True)
@@ -100,9 +104,13 @@ def main(argv: list[str] | None = None) -> int:
             toolchain.extract_windows_templates(cache / toolchain.TEMPLATES.name,
                                                 toolchain.template_directory(workspace, host))
             project = workspace / "game"
-            shutil.copytree(root / "game", project,
-                            ignore=shutil.ignore_patterns(".godot", "build"))
-            from p1_product import player_extras, player_guide, project_name
+            if app_inputs is None:
+                shutil.copytree(root / "game", project,
+                                ignore=shutil.ignore_patterns(".godot", "build"))
+            else:
+                from tools.game_app.inputs import stage_project
+                stage_project(root, project, app_inputs)
+            from player_delivery_texts import player_extras, player_guide, project_name
             import background_import
             background_sources = background_import.source_inventory(root)
             background_import.prepare_import(project, background_sources)
@@ -118,17 +126,21 @@ def main(argv: list[str] | None = None) -> int:
             (project / "build/windows").mkdir(parents=True, exist_ok=True)
             for name, command, marker in commands:
                 result = toolchain.run_command(name, command, env,
-                                               args.process_timeout_seconds)
+                                               args.process_timeout_seconds, full_output=app_inputs is not None)
                 toolchain.require_success(result, marker)
                 if "SCRIPT ERROR:" in result["output"] or "ERROR:" in result["output"]:
                     raise toolchain.PreflightError(f"{name} logged a Godot error")
                 if name == "import":
-                    background_import.verify_import(project, background_sources)
+                    imported_backgrounds = background_import.verify_import(project, background_sources)
             extra_dir = workspace / "extras"
             extra_dir.mkdir()
             files = stage_player(project / "build/windows", args.output_dir.resolve(),
                                  source_commit, player_guide(root, source_commit),
                                  player_extras(root, extra_dir))
+            if audit is not None:
+                from tools.game_app.inputs import write_export_audit
+                write_export_audit(audit, app_inputs, source_commit, cache, editor,
+                                   imported_backgrounds, args.output_dir.resolve(), result["output"])
             print(f"PLAYER SOURCE {source_commit}", flush=True)
             print("PLAYER FILES " + ", ".join(files), flush=True)
             print("PLAYER BUILD PASS (Windows launch not run on Linux)", flush=True)

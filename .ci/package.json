@@ -1,20 +1,30 @@
 {
   "format": "development-ci-plan/v1",
-  "issue": "https://github.com/venomenon328/picross/issues/691",
-  "package": "PE-APP-ICON1",
+  "issue": "https://github.com/venomenon328/picross/issues/725",
+  "package": "GAME-APP-A",
   "modules": [
     "tools"
   ],
-  "purpose": "Feste PW-/PE-Iconwahl, Fingerprinttrennung und vorhandene Paket- und Releaseregressionen prüfen. Ein separater Windows-x64-Diagnosebau inspiziert den tatsächlichen PE-MSI.",
-  "omitted": "Spiel- und Editorfachfunktionen bleiben unverändert. Fachmodule, native Zusatzmodule, Preflight, Delivery und Browserdiagnostik sind nicht angefordert. Das reguläre Windows-Spielpaket bleibt Teil der Package CI.",
+  "purpose": "Prüft PG-Produktbindung, Runtime-Eingänge, signierte Autorität, Katalogbudget und bestehende PW-/PE-Verträge. Separater Windowsdiagnosebau mit echter MSI-Inspektion und isolierter Start-/Guardprobe.",
+  "omitted": "Native Zusatzmodule, Preflight, Produktionsfachmodule, Delivery und Browser betreffen die Verpackungsänderung nicht. Der reguläre Windows-Player bleibt Teil des Kerns.",
   "test_changes": [
     {
-      "path": "tools/test_editor_installer.py",
+      "path": "tools/test_game_installer.py",
       "disposition": "change-scoped",
-      "reason": "Prüft die feste Produktzuordnung der ICO-Dateien im Fingerprint und in der WiX-Quelle für den Programmeintrag und beide Verknüpfungen."
+      "reason": "PG-Inputprojektion, feste MSI-Schreibbereiche und Produkt-/Versionsbindung mit kleinen synthetischen Fällen."
+    },
+    {
+      "path": "tools/test_production_installer.py",
+      "disposition": "change-scoped",
+      "reason": "Dritte Signaturdomäne, Main-Push-Gates sowie gemeinsame Kataloggrenzen und Lease mit bestehenden Clients prüfen."
+    },
+    {
+      "path": "tools/test_work_publish.py",
+      "disposition": "change-scoped",
+      "reason": "Drei App-Reserven im Seiten- und Metadatenbudget prüfen."
     }
   ],
-  "core_change": null,
+  "core_change": "Der reguläre Playerexport teilt Anleitung, Laufzeit-/Importweg und optionale Bauaudit-Erfassung mit dem eigenständigen PG-Installerbau. Der Portable-Einstieg und die Modulauswahl bleiben erhalten.",
   "evidence": {
     "mode": "none",
     "purpose": null,

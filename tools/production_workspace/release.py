@@ -29,5 +29,5 @@ def release(path=None, *, version=None, app=PW):
         value['version'] = version
     code = uuid.UUID(value['upgrade_code'])
     value['product_code'] = str(uuid.uuid5(code, value['version'])).upper()
-    value['filename'] = app.title + '-' + value['version'] + '-windows-x64.msi'
+    value['filename'] = app.msi_title + '-' + value['version'] + '-windows-x64.msi'
     return value

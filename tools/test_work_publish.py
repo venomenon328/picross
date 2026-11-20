@@ -461,21 +461,21 @@ class WorkPublicationTests(unittest.TestCase):
     def test_capacity_checks_existing_and_new_releases(self):
         capacity = pub.release_catalog.capacity
         rows = [{'tag_name': 'work-prod-' + str(n), 'assets': []} for n in range(398)]
-        # At 398, a new job must leave room for BOTH signed app releases.
+        # A new job must leave room for all three signed app channels.
         with self.assertRaisesRegex(ValueError, 'terminating page'):
-            capacity(rows, 1, 'work-prod-new', 1, reserved_apps=2)
-        capacity(rows[:396], 1, 'work-prod-new', 1, reserved_apps=2)
+            capacity(rows, 1, 'work-prod-new', 1, reserved_apps=len(pub.PRODUCTS))
+        capacity(rows[:395], 1, 'work-prod-new', 1, reserved_apps=len(pub.PRODUCTS))
         capacity(rows, 1, 'pw-v1', 7, reserved_apps=0)
         rows.append({'tag_name': 'pw-v1', 'assets': []})
         with self.assertRaisesRegex(ValueError, 'terminating page'):
             capacity(rows, 1, 'pe-v1', 7, reserved_apps=0)
         rows = rows[:100]
         with self.assertRaisesRegex(ValueError, 'metadata budget'):
-            capacity(rows, 45, rows[0]['tag_name'], 0, reserved_apps=2)
+            capacity(rows, 45, rows[0]['tag_name'], 0, reserved_apps=len(pub.PRODUCTS))
         rows[1]['body'] = 'x' * (4 * 1024**2 - 180000)
         capacity(rows, 1, rows[0]['tag_name'], 1, reserved_apps=0)
         with self.assertRaisesRegex(ValueError, 'metadata page'):
-            capacity(rows, 1, rows[0]['tag_name'], 1, reserved_apps=2)
+            capacity(rows, 1, rows[0]['tag_name'], 1, reserved_apps=len(pub.PRODUCTS))
 
     def test_app_writer_contends_with_actual_git_work_lease(self):
         from tools.production_workspace import release_channel as channel

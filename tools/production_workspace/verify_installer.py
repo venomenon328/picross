@@ -14,7 +14,7 @@ from .release import release
 from .payload import fingerprint
 from .update_verifier import production_trust
 from tools.msi_database import msi_properties
-from tools.app_products import PW, PE
+from tools.app_products import PG, PW, PE
 
 NS = {'w': 'http://schemas.microsoft.com/wix/2006/wi'}
 
@@ -66,9 +66,13 @@ def verify(build, output, expected_commit, wix_archive=None, compare_build=False
         require(report['payload_fingerprint'] == inputs['sha256'], 'Source fingerprint mismatch')
         require(json.loads((build / 'inputs.json').read_bytes()) == inputs, 'Input inventory mismatch')
         audit = json.loads((build / 'input-audit.json').read_bytes())
-        require(audit['fingerprint'] == inputs['sha256'] and audit['repository_inputs'], 'Frozen input audit missing')
-        portable = build / (app.executable + '-windows-x64.zip')
-        require(portable.stat().st_size == report['zip_bytes'] and sha(portable) == report['zip_sha256'], 'ZIP byte mismatch')
+        if app == PG:
+            from tools.game_app.inspect import verify_audit
+            verify_audit(build, audit, inputs, report)
+        else:
+            require(audit['fingerprint'] == inputs['sha256'] and audit['repository_inputs'], 'Frozen input audit missing')
+            portable = build / (app.executable + '-windows-x64.zip')
+            require(portable.stat().st_size == report['zip_bytes'] and sha(portable) == report['zip_sha256'], 'ZIP byte mismatch')
     properties = msi_properties(msi)  # Actual Windows Installer database, not sidecar metadata.
     for field, key in (('ProductVersion', 'version'), ('ProductCode', 'product_code'), ('UpgradeCode', 'upgrade_code')):
         require(properties[field].strip('{}') == product[key], 'MSI property mismatch: ' + field)
@@ -144,28 +148,32 @@ def verify(build, output, expected_commit, wix_archive=None, compare_build=False
                 require(original.is_relative_to(image.resolve()) and sha(original) == row['sha256'],
                         'MSI payload differs from original build: ' + row['file'])
         components = json.loads(payload['components.json'].read_text(encoding='utf-8'))
-        for key in ('commit', 'version', 'product_code', 'upgrade_code', 'payload_fingerprint', 'architecture', 'python',
-                    'components', 'runtime_components', 'resources', 'signed'):
-            require(components[key] == report[key], 'Embedded components mismatch: ' + key)
-        require(sha(payload[app.executable + '.exe']) == report['exe_sha256'], 'Embedded EXE mismatch')
-        icon_payload = payload['_internal/' + app.package + '/' + app.icon_resource]
-        require(icon_payload.read_bytes() == icon and sha(icon_payload) == components['resources'][app.icon_resource],
-                'Bundled window icon mismatch')
-        for name in ('release.json', 'update-trust.json'):
-            relative = '_internal/' + app.package + '/' + name
-            require(sha(payload[relative]) == components['resources'][name] and
-                    payload[relative].read_bytes() == (app.source / name).read_bytes(),
-                    'Packaged public trust/product identity mismatch: ' + name)
-        production_trust(app=app)
-        if app in (PW, PE):
-            helper = payload['_internal/' + app.package + '/UpdateHelper.exe']
-            require(sha(helper) == components['resources']['UpdateHelper.exe'], 'MSI independent helper mismatch')
-        require(payload['_internal/' + app.package + '/build.json'].read_bytes() ==
-                payload['components.json'].read_bytes(), 'Frozen build/components identity mismatch')
-        extensions = [name for name in payload if name.endswith('.pyd')]
-        require(any(name.endswith('cryptography/hazmat/bindings/_rust.pyd') for name in extensions) and
-                any(Path(name).name.startswith('_cffi_backend.') for name in extensions),
-                'MSI lacks native cryptography extensions')
+        if app == PG:
+            from tools.game_app.inspect import verify_payload
+            verify_payload(build, root, payload, components, report, compare_build)
+        else:
+            for key in ('commit', 'version', 'product_code', 'upgrade_code', 'payload_fingerprint', 'architecture', 'python',
+                        'components', 'runtime_components', 'resources', 'signed'):
+                require(components[key] == report[key], 'Embedded components mismatch: ' + key)
+            require(sha(payload[app.executable + '.exe']) == report['exe_sha256'], 'Embedded EXE mismatch')
+            icon_payload = payload['_internal/' + app.package + '/' + app.icon_resource]
+            require(icon_payload.read_bytes() == icon and sha(icon_payload) == components['resources'][app.icon_resource],
+                    'Bundled window icon mismatch')
+            for name in ('release.json', 'update-trust.json'):
+                relative = '_internal/' + app.package + '/' + name
+                require(sha(payload[relative]) == components['resources'][name] and
+                        payload[relative].read_bytes() == (app.source / name).read_bytes(),
+                        'Packaged public trust/product identity mismatch: ' + name)
+            production_trust(app=app)
+            if app in (PW, PE):
+                helper = payload['_internal/' + app.package + '/UpdateHelper.exe']
+                require(sha(helper) == components['resources']['UpdateHelper.exe'], 'MSI independent helper mismatch')
+            require(payload['_internal/' + app.package + '/build.json'].read_bytes() ==
+                    payload['components.json'].read_bytes(), 'Frozen build/components identity mismatch')
+            extensions = [name for name in payload if name.endswith('.pyd')]
+            require(any(name.endswith('cryptography/hazmat/bindings/_rust.pyd') for name in extensions) and
+                    any(Path(name).name.startswith('_cffi_backend.') for name in extensions),
+                    'MSI lacks native cryptography extensions')
         require(payload[app.executable + '.exe'].stat().st_size == report['exe_bytes'], 'Embedded EXE size mismatch')
         # Inspect the actual PE version resource, independently of sidecar JSON.
         import pefile
@@ -182,17 +190,23 @@ def verify(build, output, expected_commit, wix_archive=None, compare_build=False
         guard_file = Path(guard.get('SourceFile')).resolve()
         require(guard_file.is_relative_to(extracted.resolve()) and sha(guard_file) == report['guard_sha256'],
                 'Embedded safety guard mismatch')
-        licenses = [r['file'] for r in rows if r['file'].startswith('LICENSES/')]
-        require({'LICENSES/Python.txt', 'LICENSES/WiX.txt'}.issubset(licenses), 'Missing license originals')
-        for package in ('cryptography', 'cffi', 'pycparser'):
-            require(any(name.startswith('LICENSES/' + package + '/') for name in licenses), 'Missing crypto license: ' + package)
-        require('LICENSES/OpenSSL-4.0.3.txt' in licenses, 'Missing cryptography OpenSSL license')
+        license_prefix = 'licenses/' if app == PG else 'LICENSES/'
+        licenses = [r['file'] for r in rows if r['file'].startswith(license_prefix)]
+        if app == PG:
+            require({'licenses/Godot-MIT.txt', 'licenses/Godot-COPYRIGHT.txt', 'licenses/WiX.txt'}.issubset(licenses),
+                    'Missing original Godot/WiX licenses')
+        else:
+            require({'LICENSES/Python.txt', 'LICENSES/WiX.txt'}.issubset(licenses), 'Missing license originals')
+            for package in ('cryptography', 'cffi', 'pycparser'):
+                require(any(name.startswith('LICENSES/' + package + '/') for name in licenses), 'Missing crypto license: ' + package)
+            require('LICENSES/OpenSSL-4.0.3.txt' in licenses, 'Missing cryptography OpenSSL license')
     result = {'format': 'picross-installer-inspection-v1', 'commit': expected_commit, 'version': report['version'],
               'payload_fingerprint': report['payload_fingerprint'],
               'msi_sha256': report['msi_sha256'], 'msi_bytes': report['msi_bytes'],
               'product_code': product['product_code'], 'upgrade_code': product['upgrade_code'],
               'inventory_files': len(rows), 'license_files': len(licenses), 'compared_to_build': compare_build,
-              'limits': 'Actual MSI database and all unpacked bytes verified. No installation; T02 requires a non-elevated Windows client.'}
+              'limits': ('Actual MSI database and all unpacked bytes verified. No MSI installation; GAME-APP-R01 is separate.' if app == PG else
+                         'Actual MSI database and all unpacked bytes verified. No installation; T02 requires a non-elevated Windows client.')}
     (output / 'result.json').write_text(json.dumps(result, indent=2) + '\n', encoding='utf-8')
     print(json.dumps(result))
     return result
