@@ -5,8 +5,6 @@ from ctypes import wintypes as w
 import hashlib
 import threading
 import time
-import tkinter as tk
-from tkinter import ttk
 
 from tools.app_products import PG
 from tools.production_workspace.app_updates import Updates
@@ -31,7 +29,7 @@ class Cancellation:
         kernel.WaitForSingleObject.restype = w.DWORD
         kernel.CloseHandle.argtypes = [w.HANDLE]
         binding = hashlib.sha256(str(state).casefold().encode('utf-8')).hexdigest()
-        self.handle = kernel.CreateEventW(None, True, False, 'Local\\PicrossGame.UpdateCancel.' + binding)
+        self.handle = kernel.CreateEventW(None, True, False, 'Global\\PicrossGame.UpdateCancel.' + binding)
         if not self.handle:
             raise ctypes.WinError(ctypes.get_last_error())
 
@@ -47,6 +45,9 @@ class Cancellation:
 
 
 def window(title):
+    import tkinter as tk
+    from tkinter import ttk
+
     root = tk.Tk()
     root.title(title)
     root.resizable(False, False)
@@ -57,6 +58,12 @@ def window(title):
     buttons = ttk.Frame(panel, padding=(0, 14, 0, 0))
     buttons.grid(sticky='w')
     return root, status, buttons
+
+
+def add_button(panel, caption, command, index):
+    from tkinter import ttk
+
+    ttk.Button(panel, text=caption, command=command).grid(row=0, column=index, padx=(0, 6))
 
 
 def settings(state):
@@ -93,7 +100,7 @@ def settings(state):
                 root.destroy()
 
         for index, (caption, value) in enumerate((('Aktivieren', True), ('Ausschalten', False))):
-            ttk.Button(buttons, text=caption, command=lambda v=value: choose(v)).grid(row=0, column=index, padx=(0, 6))
+            add_button(buttons, caption, lambda v=value: choose(v), index)
         root.mainloop()
     finally:
         lock.close()
@@ -132,7 +139,7 @@ class StartupGate:
         actions = (('Aktivieren', lambda: self.choose(True)), ('Ablehnen', lambda: self.choose(False))) if first else (
             ('Ohne Update spielen', lambda: self.stop('play')), ('Updates ausschalten', lambda: self.choose(False)))
         for index, (caption, callback) in enumerate(actions):
-            ttk.Button(self.buttons, text=caption, command=callback).grid(row=0, column=index, padx=(0, 6))
+            add_button(self.buttons, caption, callback, index)
 
     def stop(self, action):
         if self.handoff is not None:
