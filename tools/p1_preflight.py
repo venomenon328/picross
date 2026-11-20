@@ -227,6 +227,8 @@ def run_command(
     command: list[str],
     environment: dict[str, str],
     timeout_seconds: int,
+    *,
+    full_output: bool = False,
 ) -> dict[str, object]:
     print(f"RUN {name}: {' '.join(command)}", flush=True)
     try:
@@ -243,7 +245,7 @@ def run_command(
         raise PreflightError(f"{name} exceeded {timeout_seconds}s") from exc
     output = result.stdout or ""
     print(output, end="" if output.endswith("\n") else "\n", flush=True)
-    return {"name": name, "exit_code": result.returncode, "output": output[-4000:]}
+    return {"name": name, "exit_code": result.returncode, "output": output if full_output else output[-4000:]}
 
 
 def require_success(result: dict[str, object], marker: str | None = None) -> None:

@@ -94,7 +94,8 @@ def write_export_audit(output, inputs, commit, cache, editor, backgrounds, playe
     with pack.open('rb') as stream:
         if stream.read(4) != b'GDPC':
             raise ValueError('Player did not emit a separate Godot pack')
-    entries = sorted(set(re.findall(r'Storing File: res://([^\r\n]+)', export_log)))
+    plain_log = re.sub(r'\x1b\[[0-9;]*m', '', export_log)
+    entries = sorted(set(re.findall(r'Storing File: res://([^\r\n]+)', plain_log)))
     if not entries or 'project.binary' not in entries or any(
         entry.startswith(('tests/', 'study/', 'full_view_study/', 'perf_a/')) for entry in entries
     ):

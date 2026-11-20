@@ -122,7 +122,7 @@ def main(argv: list[str] | None = None, *, app_inputs=None, audit=None) -> int:
             (project / "build/windows").mkdir(parents=True, exist_ok=True)
             for name, command, marker in commands:
                 result = toolchain.run_command(name, command, env,
-                                               args.process_timeout_seconds)
+                                               args.process_timeout_seconds, full_output=app_inputs is not None)
                 toolchain.require_success(result, marker)
                 if "SCRIPT ERROR:" in result["output"] or "ERROR:" in result["output"]:
                     raise toolchain.PreflightError(f"{name} logged a Godot error")

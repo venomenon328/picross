@@ -24,7 +24,7 @@
       "reason": "Drei App-Reserven im Seiten- und Metadatenbudget prüfen."
     }
   ],
-  "core_change": null,
+  "core_change": "Der reguläre Playerexport teilt Anleitung, Laufzeit-/Importweg und optionale Bauaudit-Erfassung mit dem eigenständigen PG-Installerbau. Der Portable-Einstieg und die Modulauswahl bleiben erhalten.",
   "evidence": {
     "mode": "none",
     "purpose": null,
