@@ -46,7 +46,7 @@ void fragment() {
 	// Local occlusion between the two actual rising shoulders, not a UI overlay.
 	curvature_light *= 1.0-0.20*(1.0-smoothstep(0.0,0.20,abs(original.x)));
 	float cast_shadow = shadow*exp(-pow((UV.x-0.10-shadow*0.35)*4.2, 2.0));
-	float lighting = curvature_light - 0.18*sin(turn*3.14159265) - 0.20*cast_shadow;
+	float lighting = curvature_light - 0.18*sin(turn*3.14159265);
 	vec2 location = front ? original : vec2(-original.x, original.y);
 	vec4 region = front ? content_rect : back_rect;
 	vec2 ink_uv = vec2((location.x-region.x)/region.z, 1.0-(location.y-region.y)/region.w);
@@ -55,5 +55,6 @@ void fragment() {
 	if (inside && front && has_content) { ink = texture(content, ink_uv); }
 	if (inside && !front && has_back) { ink = texture(back_content, ink_uv); }
 	// Premultiplied viewport colors: do not multiply their AA edges twice.
-	ALBEDO = paper*lighting*(1.0-ink.a) + ink.rgb;
+	vec3 page = paper*lighting*(1.0-ink.a) + ink.rgb;
+	ALBEDO = page*(1.0-0.20*cast_shadow);
 }

@@ -2,6 +2,10 @@
 
 ## Geltung und Zuständigkeit
 
+[VIS-A / #728](https://github.com/venomenon328/picross/issues/728) ergänzt den
+freigegebenen Sollvertrag für gelöste Öffnungsziele, persistente Hintergründe
+und vollständige Seitenschatten. Lieferstand und unabhängige Sichtung werden im Paket geführt.
+
 Dieses Dokument besitzt den regulären Buchroot, Material-/Papiergeometrie,
 Navigation, Übergänge, Eingabebarrieren und Informationsbesuche. Es enthält
 außerdem die Struktur und Typografie der Spielerhilfe. Regeln im aktuellen
@@ -108,7 +112,7 @@ Randbefehle bewegen nichts.
 | Route | Dauer | Gebundene Darstellung |
 | --- | ---: | --- |
 | Katalogseite wechseln | 0,85 s | Vorwärts rechts→links, rückwärts umgekehrt. Ziel beginnt mit beiden Offsets null; Abbruch erhält beide Quellwerte. |
-| Neues/begonnenes Rätsel öffnen | 3,0 s | Drei getrennte Blätter nach links; Kamera fährt im zweiten Teil nah auf die rechte Arbeitsseite. Zusätzliche Blätter bleiben neutral. |
+| Neues, begonnenes oder gelöstes Rätsel öffnen | 3,0 s | Drei getrennte Blätter nach links; Kamera fährt im zweiten Teil nah auf die rechte Rätselseite. Zusätzliche Blätter bleiben neutral. Ungelöste Ziele zeigen die Arbeit, gelöste den stabilen Abschluss in Bildansicht. |
 | Arbeit/stabiler Abschluss → Katalog | 1,8 s | Herauszoomen mit drei Blättern links→rechts; Quellsnapshot enthält aktuelle Bearbeitung. |
 | Katalog/Arbeit → Information oder zurück | 0,85 s | Ein Blatt; nah links für Einstellungen, nah rechts für Hilfe, weit mittig für Katalog. |
 | Einstellungen ↔ Hilfe | 0,65 s | Reiner Kamerapan zwischen den beiden nahen Seiten. |
@@ -119,7 +123,10 @@ untere Kante bleibt außerhalb des Arbeitsausschnitts, der Katalog zeigt das
 ganze Buch. Raster-, Hinweis-, Schrift-, Sidebar- und Trefferbudgets bleiben.
 Kleine Rätsel werden nicht künstlich vergrößert.
 
-Gelöste Blätter öffnen unmittelbar den stabilen Abschluss nach P1 §5.4.
+Gelöste Blätter verwenden beim Öffnen aus dem Katalog dieselbe Buchanimation
+und dieselben Vorbereitungs-, Capture-, Eingabe- und Abbruchregeln wie neue
+oder begonnene Blätter. Ihr Ziel ist der stabile Abschluss nach P1 §5.4;
+die eigenständige 2,15-s-Abschlusspräsentation wird nicht erneut abgespielt.
 Bestätigter Reset dort öffnet dasselbe leere Blatt ohne Buchanimation. Die
 aktive Abschlusspräsentation nimmt noch keinen Rückkehrbefehl an.
 `show_album()` bleibt für Start, Reset, Information und interne Stabilisierung
@@ -167,6 +174,10 @@ Aktive Bildprofile, Hintergrundzustände, Quellenbindung, Besuchstoken,
 Publikationspunkt und begrenzte Bildreferenzen folgen ausschließlich
 PUZZLE_BACKGROUNDS. Die Darstellung ist Teil der tatsächlichen Seiten-/
 Capturehierarchie; Layout, Trefferflächen und Übergangsdauer bleiben unverändert.
+Der Hintergrund gehört auch während der Abschlusspräsentation und im stabilen
+Bild-/Rasterabschluss zu dieser Seite. Seine Besuchsbindung und begrenzte
+Bereitschaft vor dem ersten Zielcapture folgen PUZZLE_BACKGROUNDS §13;
+die Sichtbarkeit eines Arbeits-Controls darf ihn nicht aus dem Capture entfernen.
 Legacy-/Hilfepilot und deren Platzierungsgrenzen stehen in UI_DRAWING_STYLE/ZS-D04.
 Die Ebene ignoriert Pointer, Fokus und Scrollen.
 
@@ -178,6 +189,16 @@ Quelle wird einmal aufgenommen, Zielpräsentation verwendet denselben angenommen
 Zustand. Beim Katalogblättern trägt die Rückseite die andere Zielhälfte; beim
 Rätselöffnen bleibt sie neutral. Premultiplizierte Alpha-Komposition erhält
 Text-/Rasterkanten. Auf keiner Fläche werden unverdiente Namen/Reveals sichtbar.
+
+Der dynamische Schlagschatten umblätternder Seiten wirkt auf die vollständig
+zusammengesetzte empfangende Seite: Papiertextur, Hintergrundzeichnung,
+Abschlussbild, Raster, Schrift und übrige aufgenommene Seitenelemente.
+Er bleibt auf dieselbe Papierfläche ausgerichtet und berücksichtigt auch
+teiltransparente Bild- und Glyphenränder. Opake Bildbereiche sparen den Schatten
+nicht aus. Bereits vormultiplizierte Inhaltsfarben werden nicht nochmals mit
+ihrem Alpha multipliziert. Ohne dynamischen Schlagschatten bleibt die bisherige
+neutrale Farbwiedergabe einschließlich der Textur-/Direktübergabegrenzen erhalten;
+keine pauschale Abdunklung der Bild- oder Schriftfarben außerhalb des Schattens.
 
 Maximal drei bewegte Blätter, ein wiederverwendeter Capture-Viewport und drei
 Informationssnapshots (Quelle plus höchstens zwei Zielseiten) sind gleichzeitig
@@ -205,6 +226,11 @@ mit der tatsächlichen Tastenmaske ab.
 | Escape bei Informationsrückkehr | Ursprüngliches Ziel sofort zeigen. |
 | Normales Ende | Gebundenes Ziel; Releasebarriere bleibt bis zum Loslassen bestehen. |
 | Beenden | Generation entwerten und Ressourcen lösen, anschließend Pflichtflush/Schließvertrag ausführen. |
+
+Erzwungene Zielstabilisierung wartet nicht auf einen noch ungeladenen Hintergrund.
+Bereits publizierte Hintergründe bleiben erhalten; für noch nicht publizierte
+Besuche gilt die Bereitschafts-/Auslassentscheidung bei Stabilisierung aus
+PUZZLE_BACKGROUNDS §13.3. Keine neue Wartefrist und kein späteres Nachspringen.
 
 Jede Stabilisierung entwertet alte Awaits. Fokusmeldungen während Reparenting
 werden außerhalb des reentranten Baumumbaus generationsgebunden behandelt;

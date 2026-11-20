@@ -77,8 +77,10 @@ func present(endpoint: String) -> void:
 		book.settling = false
 	else:
 		# No session reload/snapshot restore: explicit settings changes survive.
-		app.open_puzzle()
-		book.page_identity(book.paper_material,"work/"+origin.id)
+		var generation_token: int = book.generation
+		await app.open_puzzle()
+		if generation_token == book.generation:
+			book.page_identity(book.paper_material,"work/"+origin.id)
 
 func prepare(token: int) -> void:
 	book.capture = SubViewport.new()
@@ -115,7 +117,8 @@ func prepare(token: int) -> void:
 			textures[endpoint] = ImageTexture.create_from_image(book.capture.get_texture().get_image())
 		present(target)
 	else:
-		present(target)
+		await present(target)
+		if not book.valid_motion(token): return
 		await book.get_tree().process_frame
 		if not book.valid_motion(token): return
 		await RenderingServer.frame_post_draw

@@ -19,12 +19,17 @@ und persönliche Abnahme werden am jeweiligen Head im Issue/PR nachgewiesen.
 
 ## HZ-D01 · Schriftrollen
 
-| Rolle | Aktiver Vertrag |
+Die eigene Abschlussrolle in Dancing Script und ihre Layoutregeln sind
+freigegebenes Soll aus [VIS-A / #728](https://github.com/venomenon328/picross/issues/728).
+Die Abschlussrolle verwendet 50 logische Pixel bei UI100 und Gewicht 600. Die unabhängige Sichtung wird in VIS-A-R01 geführt.
+
+| Rolle | Vertrag |
 | --- | --- |
 | Normale Spielertexte | Pangolin Regular auf sämtlichen normalen Textpfaden, auch direkter Zeichnung: Hilfe, Legenden, Katalogkategorien/-metadaten, Blatt-/Statuszeilen, Textbuttons, geschlossene/offene Auswahlen, Einstellungen, Dialoginhalt, Tooltips, Warn- und Recoverytexte. Kein Hilfe-only-Font und keine wählbare Schriftoption. |
 | Bildhaupttitel | „Rätselkatalog“, „Hilfe“ und „Einstellungen“ verwenden die Bildschriftzüge aus [VIEW_TITLE_ART](VIEW_TITLE_ART.md). Die zugehörigen Fontrollen bleiben Ressourcenfallbacks. |
 | Bakso Daging | Arbeits-Blatttitel und Kachelüberschriften (Motivtitel oder neutrale Blattkennung); Einstellungsgruppen „Anzeige“ und „Rätselansicht“ bei 20 × UI; Hilfe-Abschnitts- und Werkzeugüberschriften gemäß [HIL-TYPO-D01](https://github.com/venomenon328/picross/issues/535). |
-| Fraunces 600 | Bestehende übrige Informations-/Abschlussüberschriften sowie „Vollständiger Hinweis“ bei 13 × UI. |
+| Fraunces 600 | Bestehende übrige Informationsüberschriften sowie „Vollständiger Hinweis“ bei 13 × UI. |
+| Motivname im Abschluss | Dancing Script als eigene, sichtbar größere kalligrafische Rolle während der Namenseinblendung und im stabilen Bild-/Rasterabschluss. Arbeits-Blatttitel, Katalogtitel und übrige Rollen bleiben ihren vorhandenen Verträgen zugeordnet. Lokale Originalressource und Lizenz nach [Z2](Z2_SELECTION.md#freigegebene-erweiterung-dancing-script). |
 | Hinweisziffern und ausdrücklich daran gebundene Zähler | Delight Coffee und kontrolliert gebündelte Plex-Marker gemäß [CLUE_TYPOGRAPHY](CLUE_TYPOGRAPHY.md). |
 | Native Dialogtitel und lokale fehlende Zeichen | Gebündeltes Plex; keine Systemfontsuche und keine zweite allgemeine Textrolle. |
 
@@ -32,6 +37,11 @@ Rollen, Größen, Fallbacks und Originalbytes bleiben über Ansichtswechsel,
 Dialogöffnung, Resize und UI100→125→100 konsistent. HZ-D08 bindet das aktive
 Pangolin-Original. Historische Tidy-Hand-Auswahl und -Nachweise begründen keine
 parallele aktive Standardtextrolle.
+
+Die Abschlussrolle muss bei gleicher UI-Skalierung erkennbar größere sichtbare
+Buchstaben als der bisherige Motivname ergeben. Ein größerer nominaler Fontwert
+allein genügt wegen abweichender Glyphenproportionen nicht. Reversible Startwerte
+und die konkrete Sichtprüfung stehen im Umsetzungspaket.
 
 ## HZ-D02 · Zeichenabdeckung und gemessenes Textlayout
 
@@ -45,6 +55,18 @@ Normale Zeichenketten, automatische Auslassung, Popup und Tooltip stimmen übere
 Bakso-Kacheltitel behalten ihre besondere native Dreipunkt-Auslassung, weil
 Bakso U+2026 falsch zeichnet. Diese Ausnahme gilt ausschließlich für Bakso;
 Standardtext nutzt die echte Pangolin-Ellipse.
+
+Die Abschlussrolle wird mit deutschen Umlauten und `ß`, verwendeten lateinischen
+Akzenten sowie vietnamesischen Motivnamen geprüft. Vorhandene Zeichen bleiben
+in Dancing Script; fehlende tatsächlich benötigte Zeichen verwenden ausschließlich
+einen gebündelten kontrollierten Fallback. Originalglyphen, kombinierende Zeichen
+und Akzenthüllen dürfen beim Umbruch oder Clipping nicht abgeschnitten werden.
+Dies ist keine Zusage einer vollständigen Abdeckung sämtlicher Schriftsysteme.
+
+Das Abschlusslayout misst die tatsächliche Dancing-Script-Glyphenhülle samt
+Ober-/Unterlängen und Akzenten. Name, Bild-/Rasterumschalter und Reset bleiben
+kollisionsfrei und vollständig bedienbar. Der Bild-/Rasterbereich berücksichtigt
+den realen Titelbedarf; keine pauschale Fontverkleinerung ersetzt passende Budgets.
 
 Textbreite, sichtbare Glyphenhülle samt Fallback, Kerning, Zeilenhöhe, Umbruch,
 Auslassung, Innenabstände und Scrollenden werden mit der tatsächlich verwendeten

@@ -106,6 +106,9 @@ def verify():
     manifest["standard_text"] = dict(file="art/drawing/Pangolin-Regular.ttf", sha256=font_hash,
         license="art/drawing/pangolin/OFL.txt", license_sha256=license_hash,
         notice="art/drawing/pangolin/NOTICE.txt", notice_sha256=hashlib.sha256(source.read_bytes()).hexdigest())
+    dancing = ROOT / "game/art/drawing/dancing-script"
+    assert hashlib.sha256((dancing / "DancingScript.ttf").read_bytes()).hexdigest() == "21808625578fe8d8cd10cb684be546dca077b27cd03a53a2f1ec11dc743c924c", "Dancing Script font bytes"
+    assert hashlib.sha256((dancing / "OFL.txt").read_bytes()).hexdigest() == "6f090277c00af96651ce6dbcc38ff1591047a3bffef486e80b6a32e8276a8201", "Dancing Script OFL bytes"
     return manifest
 
 

@@ -94,9 +94,6 @@ func _build() -> void:
 	page.add_child(puzzle_background)
 	page.move_child(puzzle_background,1)
 	puzzle_background.hide()
-	# Completion can hide work without another layout pass. Keep the passive
-	# layer tied to the actual work view, including that existing lifecycle.
-	work.visibility_changed.connect(func() -> void: puzzle_background.visible = work.visible)
 
 func _background_binding() -> Dictionary:
 	if session == null: return {}
@@ -109,13 +106,13 @@ func begin_background_visit() -> void:
 	background_binding = _background_binding()
 	puzzle_background.begin_visit(Registry.by_id(str(session.definition.id)),background_visit)
 
-func publish_background_visit() -> void:
+func publish_background_visit(forced: bool = false) -> void:
 	if puzzle_background == null or session == null: return
 	# Preparation and settlement publish the SAME visit. A restored source or
-	# changed image binding instead begins a fresh visit and freezes it now.
+	# changed image binding instead begins a fresh bounded attempt.
 	if background_binding.is_empty() or background_binding != _background_binding():
 		begin_background_visit()
-	puzzle_background.publish(background_visit)
+	puzzle_background.publish(background_visit, forced)
 
 func leave_background_visit() -> void:
 	background_binding.clear()
@@ -125,7 +122,14 @@ func leave_background_visit() -> void:
 
 func open_puzzle() -> void:
 	# Freeze before super exposes the destination or lays it out in a capture.
-	publish_background_visit()
+	if session == null: return
+	publish_background_visit(book.settling)
+	var visit := background_visit
+	var generation_token: int = book.generation
+	while not puzzle_background.frozen:
+		await get_tree().process_frame
+		if visit != background_visit or background_binding.is_empty() or generation_token != book.generation: return
+		puzzle_background.publish(visit)
 	super.open_puzzle()
 
 func _process(_delta: float) -> void:
@@ -252,14 +256,14 @@ func _layout_book(prepare_board: bool = false) -> void:
 func _layout_marginalia() -> void:
 	if marginalia == null or book == null: return
 	if puzzle_background != null:
-		puzzle_background.visible = work.visible
+		puzzle_background.visible = (work.visible or ending.visible) and puzzle_background.frozen
 		puzzle_background.arrange(book.projected_paper(true),size,ui_scale)
 	var key: String = ""
 	var paper: Rect2
 	var hard: Array[Rect2] = []
 	var soft: Array[Rect2] = []
 	var controls: Array[Control] = [status_label,layout_warning,work_repair_button,save_retry]
-	if work.visible and session != null:
+	if (work.visible or ending.visible) and session != null:
 		var entry: Dictionary = Registry.by_id(str(session.definition.id))
 		# selected (including omitted/failed loads) and explicit none never
 		# borrow a category drawing. Standard follows the current category,

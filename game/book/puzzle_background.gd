@@ -5,6 +5,9 @@ const NativeLoader = preload("res://book/puzzle_background_loader.gd")
 const WebLoader = preload("res://book/puzzle_background_web.gd")
 const IMAGE_SIZES: Array = [Vector2i(2304, 576), Vector2i(2304, 768)]
 var image_size := Vector2i(2304, 576)
+# Covers the whole selected visit, including draining the previous native request.
+const PREPARE_USEC := 750000
+var deadline_usec: int
 const OPACITY: float = 0.48
 
 var backend: RefCounted = NativeLoader.new()
@@ -50,15 +53,17 @@ func begin_visit(entry: Dictionary, token: int) -> void:
 			state = "failed"
 			diagnostic = "invalid_background_declaration"
 		else:
+			deadline_usec = Time.get_ticks_usec() + PREPARE_USEC
 			state = "loading"
 			desired = binding.duplicate(true)
 			_poll()
 			_start_desired()
 	queue_redraw()
 
-func publish(token: int) -> void:
+func publish(token: int, forced: bool = false) -> void:
 	if binding.is_empty() or int(binding.token) != token or frozen: return
-	_poll()
+	_advance(forced)
+	if state == "loading" and not forced: return
 	frozen = true
 	desired.clear()
 	if binding.status == "selected":
@@ -68,7 +73,7 @@ func publish(token: int) -> void:
 			state = "visible"
 		else:
 			state = "omitted"
-			if diagnostic.is_empty(): diagnostic = "not_ready_at_publication"
+			if diagnostic.is_empty(): diagnostic = "forced_stabilization"
 			_retire_request()
 	queue_redraw()
 
@@ -92,8 +97,16 @@ func _retire_request() -> void:
 		request.clear()
 
 func _process(_delta: float) -> void:
+	_advance(false)
+
+func _advance(forced: bool) -> void:
+	if not forced and state == "loading" and Time.get_ticks_usec() >= deadline_usec:
+		state = "expired"
+		diagnostic = "preparation_timeout"
+		desired.clear()
+		_retire_request()
 	_poll()
-	_start_desired()
+	if not forced: _start_desired()
 
 func _start_desired() -> void:
 	if not request.is_empty() or desired.is_empty() or frozen or desired != binding: return
@@ -117,7 +130,7 @@ func _poll() -> void:
 	request = {}
 	completed_count += 1
 	last_load_usec = Time.get_ticks_usec() - _request_started
-	if finished != binding or frozen:
+	if finished != binding or frozen or state == "expired":
 		discarded_count += 1
 		return
 	if result.get("status") != "loaded" or not result.get("texture") is Texture2D:

@@ -25,6 +25,7 @@ def player_extras(root: Path, output: Path) -> dict[str, Path]:
         ("licenses/Chalkboard-NOTICES.md", "game/art/drawing/NOTICES.md"),
         ("licenses/Bakso-NOTICES.md", "game/art/drawing/Bakso-NOTICES.md"),
         ("licenses/pangolin/NOTICE.txt", "game/art/drawing/pangolin/NOTICE.txt"),
+        ("licenses/dancing-script/OFL.txt", "game/art/drawing/dancing-script/OFL.txt"),
         ("licenses/pangolin/OFL.txt", "game/art/drawing/pangolin/OFL.txt"),
         ("licenses/DelightCoffee-NOTICES.md", "game/art/drawing/DelightCoffee-NOTICES.md"),
         ("licenses/delight-coffee/More Info.txt", "game/art/drawing/delight-coffee/More Info.txt"),

@@ -31,9 +31,11 @@ func backgrounds() -> void:
 		var path: String = "res://" + str(background.asset.file)
 		var notice: String = path.get_basename() + ".txt"
 		wanted.append(path.get_file())
-		wanted.append(notice.get_file())
+		var has_notice := FileAccess.file_exists(notice)
+		# Current registries omit notice metadata. Bind optional notices to the external source inventory.
+		if has_notice: wanted.append(notice.get_file())
+		elif expected_path.is_empty(): check(false, "PCK background notice absence requires bound inventory " + entry.id)
 		check(FileAccess.file_exists(path + ".import"), "PCK background import remap " + entry.id)
-		check(FileAccess.file_exists(notice), "PCK background notice " + entry.id)
 		check(not FileAccess.file_exists(path), "PCK does not duplicate raw background PNG " + entry.id)
 		var config := ConfigFile.new()
 		if config.load(path + ".import") != OK:
@@ -76,12 +78,15 @@ func backgrounds() -> void:
 			"remap":imported, "imported_bytes":imported_bytes.size(),
 			"base_rgba_sha256":digest(base), "decoded_base_bytes":base.size(),
 			"decoded_with_mips_bytes":total_bytes, "mipmap_count":mipmaps,
-			"notice_sha256":digest(FileAccess.get_file_as_bytes(notice))}
+			"notice_sha256":FileAccess.get_sha256(notice) if has_notice else null}
 		if not expected_path.is_empty():
 			check(expected_rows.has(entry.id), "PCK selected background matches external inventory " + entry.id)
 			if expected_rows.has(entry.id):
 				var source: Dictionary = expected_rows[entry.id]
-				check(source.asset == background.asset and source.image_revision == background.image_revision and source.notice.sha256 == row.notice_sha256 and int(source.notice.bytes) == FileAccess.get_file_as_bytes(notice).size(), "PCK background/notice source binding " + entry.id)
+				check(source.asset == background.asset and source.image_revision == background.image_revision, "PCK background source binding " + entry.id)
+				check(has_notice == (source.notice != null), "PCK background notice presence " + entry.id)
+				if source.notice != null and has_notice:
+					check(source.notice.sha256 == row.notice_sha256 and int(source.notice.bytes) == FileAccess.get_file_as_bytes(notice).size(), "PCK background notice bytes " + entry.id)
 				if source.has("rgba_sha256"):
 					check(source.rgba_sha256 == row.base_rgba_sha256, "PCK background lossless base RGBA " + entry.id)
 		reports.append(row)
@@ -178,6 +183,12 @@ func run() -> void:
 		for direction: String in ["increment","decrement"]:
 			check(scrollbar_theme.get_icon(direction,type).get_size() == Vector2(28,28),"PCK imported SBR triangle "+type+direction)
 	check(FileAccess.file_exists("res://art/book/KB-168-NOTICE.txt"), "PCK KB icon provenance notice")
+	var dancing: FontFile = load("res://art/drawing/dancing-script/DancingScript.ttf")
+	var dancing_hash := HashingContext.new()
+	dancing_hash.start(HashingContext.HASH_SHA256)
+	dancing_hash.update(dancing.data)
+	check(dancing_hash.finish().hex_encode() == "21808625578fe8d8cd10cb684be546dca077b27cd03a53a2f1ec11dc743c924c","PCK original Dancing Script")
+	check(FileAccess.get_sha256("res://art/drawing/dancing-script/OFL.txt") == "6f090277c00af96651ce6dbcc38ff1591047a3bffef486e80b6a32e8276a8201","PCK Dancing Script OFL")
 	# Actual exported font bytes/role, with controlled local fallbacks.
 	var ui_text = load("res://ui/ui_text.gd")
 	var normal: FontFile = ui_text.font()

@@ -278,7 +278,14 @@ func _build() -> void:
 	ending.add_child(reveal_view)
 	reveal_view.progressed.connect(_completion_progress)
 	reveal_view.finished.connect(_completion_finished)
-	completion_title = label("", 28)
+	completion_title = label("", 50)
+	var caption_font := FontVariation.new()
+	var dancing: FontFile = preload("res://art/drawing/dancing-script/DancingScript.ttf")
+	dancing.allow_system_fallback = false
+	caption_font.base_font = dancing
+	caption_font.variation_opentype = {"wght":600.0}
+	caption_font.fallbacks = UiText.font().fallbacks
+	completion_title.add_theme_font_override("font",caption_font)
 	completion_title.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	completion_title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	ending.add_child(completion_title)
@@ -477,6 +484,17 @@ func _layout_completion() -> void:
 		top = maxf(top, paper.position.y+85+78*u+(56*u if _save_action_visible() else 0.0))
 	_place(ending, Rect2(Vector2.ZERO, size))
 	_place(reveal_view, Rect2(Vector2.ZERO, size))
+	# Include ink above/below native line metrics and cursive side bearings
+	# before Label shapes and wraps the name into its actual available width.
+	var typeface := completion_title.get_theme_font("font")
+	var fs := completion_title.get_theme_font_size("font_size")
+	var name_ink := UiText.ink(typeface,completion_title.text,fs)
+	var padding := StyleBoxEmpty.new()
+	padding.content_margin_top = ceilf(maxf(0,-name_ink.position.y-typeface.get_ascent(fs)))+1
+	padding.content_margin_bottom = ceilf(maxf(0,name_ink.end.y-typeface.get_descent(fs)))+1
+	padding.content_margin_left = ceilf(maxf(0,-name_ink.position.x))+u
+	padding.content_margin_right = ceilf(maxf(0,name_ink.end.x-typeface.get_string_size(completion_title.text,HORIZONTAL_ALIGNMENT_LEFT,-1,fs).x))+u
+	completion_title.add_theme_stylebox_override("normal",padding)
 	completion_title.size = Vector2(width, 0)
 	var caption_height := completion_title.get_minimum_size().y
 	var bottom := paper.end.y - 68*u

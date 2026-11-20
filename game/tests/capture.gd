@@ -69,7 +69,7 @@ func fill_patch_region(box: Rect2) -> Rect2i:
 	var b: Vector2i = Vector2i(floorf(box.end.x-margin),floorf(box.end.y-margin))
 	return Rect2i(a,b-a)
 
-func fill_patch(picture: Image, material: Image, box: Rect2, palette: Color, alpha: float, band: bool = false) -> Dictionary:
+func fill_patch(picture: Image, material: Image, box: Rect2, palette: Color, alpha: float) -> Dictionary:
 	# V3 moves the light traces. Do not require one formerly blank coordinate
 	# to stay blank: retain real palette pixels across at least 1/4 of the core,
 	# and bound EVERY other core pixel by the existing 12%-white texture budget.
@@ -80,7 +80,7 @@ func fill_patch(picture: Image, material: Image, box: Rect2, palette: Color, alp
 	var first_bad: Dictionary = {}
 	for y: int in range(region.position.y,region.end.y):
 		for x: int in range(region.position.x,region.end.x):
-			var base: Color = Color("e8e9d9") if band else material.get_pixel(x,y)
+			var base: Color = material.get_pixel(x,y)
 			base = base.blend(Color(palette,alpha))
 			var actual: Color = picture.get_pixel(x,y)
 			var delta: Vector3 = Vector3(actual.r-base.r,actual.g-base.g,actual.b-base.b)
@@ -93,17 +93,17 @@ func fill_patch(picture: Image, material: Image, box: Rect2, palette: Color, alp
 
 func snapshot(app: Main, name: String, crop: bool = false) -> Image:
 	var material: Image
-	if name.contains("preview-color"):
+	if name.contains("preview-color") or name.begins_with("g1-"):
 		# Complete pending board redraws before hiding its separate ink layer.
 		app.refresh()
 		await process_frame
 		await process_frame
 		await RenderingServer.frame_post_draw
-		app.board.marks.hide()
+		app.board.marks.transitions.hide()
 		await process_frame
 		await RenderingServer.frame_post_draw
 		material = surface.get_texture().get_image()
-		app.board.marks.show()
+		app.board.marks.transitions.show()
 	if (name.begins_with("separation-") and name.ends_with("-confirmed")) or name == "t06-grid-focus":
 		var focus_before_hide: Vector2i = app.board.hover
 		app.board.hide()
@@ -152,12 +152,10 @@ func snapshot(app: Main, name: String, crop: bool = false) -> Image:
 		var preview_center: Vector2i = Vector2i(app.board.global_position + preview_cell.position + preview_cell.size * Vector2(0.5, 0.38))
 		var preview_moat: Vector2i = Vector2i(app.board.global_position + preview_cell.position + Vector2(1, preview_cell.size.y / 2))
 		var gap: Color = picture.get_pixelv(preview_moat)
-		# Paper varies spatially, so measure it at this exact pixel with marks
-		# hidden. The active band, when present, is the flat moat color.
-		var underlay: Color = gap if gap.is_equal_approx(Color("e8e9d9")) else material.get_pixelv(preview_center)
+		var underlay: Color = material.get_pixelv(preview_center)
 		var expected_fill: Color = underlay.blend(Color(Color(app.session.definition.palette[color_index - 1].color), 0.56))
 		preview_cell.position+=app.board.global_position
-		var patch: Dictionary = fill_patch(picture,material,preview_cell,Color(app.session.definition.palette[color_index - 1].color),0.56,gap.is_equal_approx(Color("e8e9d9")))
+		var patch: Dictionary = fill_patch(picture,material,preview_cell,Color(app.session.definition.palette[color_index - 1].color),0.56)
 		if not patch.valid or absf(gap.r - expected_fill.r) + absf(gap.g - expected_fill.g) + absf(gap.b - expected_fill.b) < 0.1:
 			fail_capture("Rendered preview fill/moat regression: %s patch=%s expected=%s gap=%s" % [name,patch,expected_fill,gap], 5)
 			return picture
@@ -168,10 +166,12 @@ func snapshot(app: Main, name: String, crop: bool = false) -> Image:
 		var column_point: Vector2i = Vector2i(app.board.global_position + app.board.view.cell_rect(focus + Vector2i(0, 2)).get_center())
 		var intersection: Vector2i = Vector2i(app.board.global_position + app.board.view.cell_rect(focus).get_center())
 		var outside: Vector2i = Vector2i(app.board.global_position + app.board.view.cell_rect(focus + Vector2i(2, 2)).get_center())
-		var band: Color = Color("e8e9d9")
-		if not picture.get_pixelv(row_point).is_equal_approx(band) or not picture.get_pixelv(column_point).is_equal_approx(band) or not picture.get_pixelv(intersection).is_equal_approx(band) or not picture.get_pixelv(outside).is_equal_approx(material.get_pixelv(outside)):
-			fail_capture("Rendered grid focus regression", 5)
-			return picture
+		for point: Vector2i in [row_point,column_point,intersection,outside]:
+			var expected := material.get_pixelv(point)
+			if point != outside: expected = expected.blend(Color("87997940"))
+			if not close_color(picture.get_pixelv(point),expected):
+				fail_capture("Rendered grid focus regression at "+str(point), 5)
+				return picture
 		pixel_checks += 4
 	if name == "gesture-counter-8" or name.begins_with("g1-counter-"):
 		var caption: String = "8" if name == "gesture-counter-8" else name.get_slice("-", 2)
@@ -255,25 +255,28 @@ func capture_axis_reset(app: Main, fixture_index: int, pitch: float, color: int)
 	app.board.pointer_move(app.board.view.cell_rect(old).get_center(), true)
 	var label: String = "g1-t%02d" % (fixture_index + 1)
 	var old_image: Image = await snapshot(app, label + "-old-arm")
+	var old_material: Image = recent_frames.back().material
 	app.board.pointer_move(app.board.view.cell_rect(start).get_center(), true)
 	if app.board.gesture_length() != 1:
 		fail_capture("Origin counter did not reset to one: " + label, 5)
 		return
 	var origin_image: Image = await snapshot(app, "g1-counter-1-" + label)
+	var origin_material: Image = recent_frames.back().material
 	app.board.pointer_move(app.board.view.cell_rect(next).get_center(), true)
 	if app.board.gesture_length() != 4:
 		fail_capture("New axis counter has wrong length: " + label, 5)
 		return
 	var new_image: Image = await snapshot(app, "g1-counter-4-" + label)
+	var new_material: Image = recent_frames.back().material
 	var old_box: Rect2 = app.board.view.cell_rect(old)
 	var new_box: Rect2 = app.board.view.cell_rect(next)
 	old_box.position+=app.board.global_position
 	new_box.position+=app.board.global_position
 	var palette: Color = Color(app.session.definition.palette[color - 1].color)
-	var patches: Array[Dictionary] = [fill_patch(old_image,old_image,old_box,palette,0.56,true),
-		fill_patch(origin_image,origin_image,old_box,palette,0.56,true),
-		fill_patch(new_image,new_image,old_box,palette,0.56,true),
-		fill_patch(new_image,new_image,new_box,palette,0.56,true)]
+	var patches: Array[Dictionary] = [fill_patch(old_image,old_material,old_box,palette,0.56),
+		fill_patch(origin_image,origin_material,old_box,palette,0.56),
+		fill_patch(new_image,new_material,old_box,palette,0.56),
+		fill_patch(new_image,new_material,new_box,palette,0.56)]
 	if not patches[0].valid or patches[1].valid or patches[2].valid or not patches[3].valid:
 		fail_capture("Rendered old/new arm pixel mismatch: %s %s" % [label,patches], 5)
 		return

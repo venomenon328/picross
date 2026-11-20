@@ -2,6 +2,8 @@ extends Control
 ## Bounded Canvas command caches. No raster bitmap, cell nodes or cell timers.
 const Atlas = preload("res://ui/cell_atlas.gd")
 const CHUNK_SIZE = 64
+const GRID_BAND := Color("87997940")
+const CLUE_BAND := Color("71846648")
 var board: Control
 var chunks: Array[Control] = []
 var transitions: Control
@@ -63,19 +65,19 @@ class Cursor extends Control:
 			# Same clue bands as Board; below the cached clue glyphs.
 			if has_row:
 				var hint: Rect2 = b.row_clue_area().intersection(Rect2(b.row_clue_area().position.x, box.position.y, b.row_clue_area().size.x, box.size.y))
-				if hint.has_area(): draw_rect(hint, Color("d8ddcc"))
+				if hint.has_area(): draw_rect(hint, CLUE_BAND)
 			if has_column:
 				var hint: Rect2 = b.column_clue_area().intersection(Rect2(box.position.x, b.column_clue_area().position.y, box.size.x, b.column_clue_area().size.y))
-				if hint.has_area(): draw_rect(hint, Color("d8ddcc"))
+				if hint.has_area(): draw_rect(hint, CLUE_BAND)
 			var row: Rect2 = Rect2(grid.position.x, box.position.y, grid.size.x, box.size.y).intersection(grid) if has_row else Rect2()
 			var column: Rect2 = Rect2(box.position.x, grid.position.y, box.size.x, grid.size.y).intersection(grid) if has_column else Rect2()
-			if row.has_area(): draw_rect(row, Color("e8e9d9"))
+			if row.has_area(): draw_rect(row, GRID_BAND)
 			if column.has_area():
 				if row.has_area():
-					draw_rect(Rect2(column.position, Vector2(column.size.x, maxf(0, row.position.y-column.position.y))), Color("e8e9d9"))
-					draw_rect(Rect2(Vector2(column.position.x, row.end.y), Vector2(column.size.x, maxf(0, column.end.y-row.end.y))), Color("e8e9d9"))
+					draw_rect(Rect2(column.position, Vector2(column.size.x, maxf(0, row.position.y-column.position.y))), GRID_BAND)
+					draw_rect(Rect2(Vector2(column.position.x, row.end.y), Vector2(column.size.x, maxf(0, column.end.y-row.end.y))), GRID_BAND)
 				else:
-					draw_rect(column, Color("e8e9d9"))
+					draw_rect(column, GRID_BAND)
 		owner_marks.record_time(began)
 
 func _ready() -> void:
