@@ -346,11 +346,6 @@ def execute(plan, output, cache, *, part=None):
                     if 'export' in binding['native_groups']:
                         extract_player(work / 'native/picross-p1-windows-x86_64.zip', player)
                         player_ready = True
-                # Temporary #728 originals. Only the originating VIS-A review request runs the book probe.
-                if ('completion' in binding['native_groups'] and package.get('package') == 'VIS-A'
-                        and package['evidence'].get('mode') == 'review'):
-                    command([sys.executable, '.ci/vis-a/book_review.py', str(work / 'vis-a'), str(cache)],
-                            'vis-a-book', work, rows)
                 if binding['production_groups']:
                     command([sys.executable, 'tools/production_ci.py', '--groups', ','.join(binding['production_groups']),
                              '--output-dir', str(work / 'production')], 'production', work, rows)
