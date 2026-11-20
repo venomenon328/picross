@@ -1,87 +1,28 @@
 {
   "format": "development-ci-plan/v1",
   "issue": "https://github.com/venomenon328/picross/issues/728",
-  "package": "VIS-A",
+  "package": "VIS-B",
   "modules": [
-    "native.catalog",
-    "native.completion",
-    "native.graphics",
     "tools"
   ],
-  "purpose": "Hintergrundbesuch und Navigation, Enthüllung und Schriftlayout, Hinweisband-Pixel sowie geänderte unabhängige Pixel- und Ressourcenprüfung.",
-  "omitted": "Keine Änderung an Saveformat, Adaptern, Produktion oder Hosting. Kein zusätzlicher Export-, Browser- oder historischer Lifecycle-Lauf. Betroffene Buchübergänge werden einmal am regulären Root geprüft.",
+  "purpose": "Prüft den Rückbau der einmaligen VIS-A-Buchprüfung mit der vollständigen Python-Werkzeugsuite, einschließlich Planbindung, Modulausführung, Reader- und Ergebnisprüfung sowie temporärer Ablage und Evidencebehandlung.",
+  "omitted": "Native Module, Preflight, Produktionsmodule, Delivery, Chromium und der manuelle Buch-Lifecycle bleiben außerhalb des Prüfumfangs. VIS-A-R01 deckt die einmalige Buch-, Schatten- und Bewegungsprobe bereits ab.",
   "test_changes": [
     {
-      "path": "game/tests/background_tests.gd",
-      "disposition": "change-scoped",
-      "reason": "Kontrollierter Lader mit Frist und sofortiger Stabilisierung."
-    },
-    {
-      "path": "game/tests/capture.gd",
-      "disposition": "change-scoped",
-      "reason": "Gemessene Unterlage für Preview und einfache Banddeckung."
-    },
-    {
-      "path": "game/tests/ea_probe.gd",
-      "disposition": "change-scoped",
-      "reason": "Gerenderte mehrzeilige Originalglyphen und Akzente."
-    },
-    {
-      "path": "game/tests/hn192_probe.gd",
-      "disposition": "change-scoped",
-      "reason": "Zwei kontrastierende Untergründe im bestehenden Pixelpaar."
-    },
-    {
-      "path": "game/tests/completion_cases.gd",
-      "disposition": "change-scoped",
-      "reason": "Eine sichtbare Hintergrundbindung durch Enthüllung, Bild und Raster."
-    },
-    {
-      "path": "tools/test_z2_delivery.py",
-      "disposition": "change-scoped",
-      "reason": "Hashbindung von Originalschrift und OFL."
-    },
-    {
-      "path": "tools/test_ci_c.py",
-      "disposition": "change-scoped",
-      "reason": "Nachvollzug des nativen Bandpixels im Reader."
-    },
-    {
       "path": ".ci/vis-a/book_review.py",
-      "disposition": "temporary",
-      "reason": "Nur die befristete R01-Anforderung in VIS-A startet die Probe. Beim Paketabschluss entfernen."
+      "disposition": "remove",
+      "reason": "Die paketgebundene Erzeugung der Buchprüforiginale endet nach der unabhängigen VIS-A-R01-Abnahme."
     },
     {
       "path": ".ci/vis-a/review.gd",
-      "disposition": "temporary",
-      "reason": "Nur die befristete R01-Anforderung in VIS-A startet die Probe. Beim Paketabschluss entfernen."
-    },
-    {
-      "path": "game/tests/content_pack_probe.gd",
-      "disposition": "change-scoped",
-      "reason": "Prüft Originalschrift und vollständige OFL im tatsächlichen Windows- oder Web-PCK beim bestehenden Exportcheck."
+      "disposition": "remove",
+      "reason": "Die Szenen- und Capturehilfe diente ausschließlich der abgeschlossenen VIS-A-R01-Buchprüfung."
     }
   ],
-  "core_change": "Gemischter Produktdiff mit regulärem Windows-x64-Spielerbau und mitgelieferter Original-OFL.",
+  "core_change": "Der gemeinsame CI-Runner verliert gezielt den paketgebundenen Buchprüfaufruf. Der Werkzeug-/CI-Diff einschließlich der Löschungen verlangt den regulären Windows-x64-Spielerbau.",
   "evidence": {
-    "mode": "review",
-    "purpose": "Originale der echten Buchprobe für unabhängiges VIS-A-R01 am Produkt-Head. Probe und Capturehilfen enden mit diesem Paket.",
-    "expires": "2026-11-27",
-    "files": {
-      "native.completion": [
-        "vis-a-book.log",
-        "vis-a/first-target.png",
-        "vis-a/title-short.png",
-        "vis-a/highlight.png",
-        "vis-a/reveal.png",
-        "vis-a/image.png",
-        "vis-a/grid.png",
-        "vis-a/shadow-image.png",
-        "vis-a/shadow-grid.png",
-        "vis-a/capture.png",
-        "vis-a/direct.png",
-        "vis-a/motion.gif"
-      ]
-    }
+    "mode": "none",
+    "purpose": null,
+    "expires": null
   }
 }
