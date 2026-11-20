@@ -49,3 +49,13 @@ def player_guide(root: Path, source_commit: str) -> str:
         return "[" + match.group(1) + "](" + bound + ("#" + url.fragment if url.fragment else "") + ")"
     return re.sub(r"\[([^\]\n]*)\]\(([^)\n]*)\)", bound_link,
                   (root / "game/README.md").read_text(encoding="utf-8"))
+
+
+def project_name(project_file: Path) -> str:
+    for line in project_file.read_text(encoding="utf-8").splitlines():
+        if line.startswith('config/name="') and line.endswith('"'):
+            value = line[len('config/name="'):-1]
+            if value != EXPECTED_PROJECT_NAME:
+                raise PreflightError(f"Unexpected project name: {value!r}")
+            return value
+    raise PreflightError("Missing project name")

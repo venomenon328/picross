@@ -22,7 +22,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 import p1_preflight as toolchain
-from player_delivery_texts import player_extras, player_guide
+from player_delivery_texts import player_extras, player_guide, project_name
 import p14_integration
 import z2_resources
 import gp48_delivery
@@ -36,16 +36,6 @@ from p1_evidence import Evidence, bound_log, native_failure_sources, source_iden
 
 EXPECTED_PROJECT_NAME = "picross · P1"
 RENDER_STAGES = ("layout", "cells-f1", "cells-f2", "axis", "h1")
-
-
-def project_name(project_file: Path) -> str:
-    for line in project_file.read_text(encoding="utf-8").splitlines():
-        if line.startswith('config/name="') and line.endswith('"'):
-            value = line[len('config/name="'):-1]
-            if value != EXPECTED_PROJECT_NAME:
-                raise toolchain.PreflightError(f"Unexpected project name: {value!r}")
-            return value
-    raise toolchain.PreflightError("Missing project name")
 
 
 def require_clean_output(result: dict, marker: str | None = None) -> None:
