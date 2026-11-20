@@ -140,6 +140,7 @@ class LauncherWindow:
         self.amount.grid(row=3, column=0, columnspan=2, sticky='w')
         panel.rowconfigure(2, minsize=self.bar.winfo_reqheight())
         panel.rowconfigure(3, minsize=self.amount.winfo_reqheight())
+        self.bar.grid_remove()
 
         settings_panel = ttk.LabelFrame(panel, text='Automatische Updates', padding=padding // 2)
         settings_panel.grid(row=4, column=0, columnspan=2, sticky='ew', pady=(padding, 0))
@@ -160,7 +161,8 @@ class LauncherWindow:
         self.mode = None
 
     def controls(self, enabled, available, *, idle, checking):
-        self.preference.configure(text={True: 'Ein', False: 'Aus', None: 'Noch keine Entscheidung'}[enabled])
+        label = {True: 'Ein', False: 'Aus', None: 'Noch keine Entscheidung'}[enabled]
+        self.preference.configure(text=label if available else 'Nicht verfügbar')
         self.setting.configure(text='Updates ausschalten' if enabled is True else 'Updates aktivieren',
                                state='normal' if available and (idle or checking) else 'disabled')
         self.primary.configure(text='Ohne Updates spielen' if available and enabled is None else 'Spielen',
