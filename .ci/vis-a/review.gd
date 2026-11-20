@@ -53,6 +53,29 @@ func sampled_motion(prefix: String, duration: float) -> void:
 		await drawn()
 		movement_frames["motion-"+prefix+"-"+str(i)] = root.get_texture().get_image()
 
+func capture_highlight() -> void:
+	var board: Control = app.board
+	var motion := InputEventMouseMotion.new()
+	motion.position = Vector2(5,5)
+	root.push_input(motion,true)
+	await drawn()
+	var baseline := root.get_texture().get_image()
+	var cell := Vector2i(17,32)
+	motion = InputEventMouseMotion.new()
+	motion.position = board.global_position+board.view.cell_rect(cell).get_center()
+	root.push_input(motion,true)
+	await drawn()
+	var marked := root.get_texture().get_image()
+	check(board.cursor_context() == cell,"bound mouse hover")
+	for offset: Vector2i in [Vector2i.ZERO,Vector2i(3,0),Vector2i(0,-4),Vector2i(3,-4)]:
+		var pixel := Vector2i(board.global_position+board.view.cell_rect(cell+offset).get_center())
+		var before := baseline.get_pixelv(pixel)
+		var after := marked.get_pixelv(pixel)
+		if offset.x == 0 or offset.y == 0:
+			check(before.r-after.r > 0.05,"visible band in original "+str(offset))
+		else: check(before == after,"unchanged neighboring cell")
+	check(marked.save_png(output.path_join("highlight.png")) == OK,"rendered highlight original")
+
 func shadow_case(label: String) -> void:
 	var artwork: Rect2 = app.reveal_view.raster_rect() if label == "grid" else app.reveal_view.artwork_rect()
 	var drawing: Rect2 = app.puzzle_background.box
@@ -188,9 +211,7 @@ func run() -> void:
 	var visit: Dictionary = ink.binding.duplicate(true)
 	var count: int = ink.request_count
 	app.session.definition.reveal.name = "Süße Grüße aus Đà Nẵng – Églantine, đượm und leuchtende Blüten am Fluss"
-	var b = app.board
-	b.update_pointer_hover(b.view.cell_rect(Vector2i(17,32)).get_center())
-	await frame("highlight")
+	await capture_highlight()
 	var changes: Array[Dictionary] = []
 	for y: int in range(app.session.player.height):
 		for x: int in range(app.session.player.width):
