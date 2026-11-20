@@ -72,20 +72,29 @@ def private_directory(path):
 
 
 class StateLock:
-    def __init__(self, state, *, app=None):
+    def __init__(self, state, *, app=None, decision=False):
         # Standalone PW CMD keeps its source-independent default.
-        self.editor = app is not None and app.key == "pe"
+        self.game = app is not None and app.key == 'pg'
+        self.native = app is not None and app.key in ('pe', 'pg')
+        if decision and not self.game:
+            raise ValueError('Entscheidungslock nur für die Spiel-App.')
+        if self.game:
+            from .update_storage import no_links
+            state = no_links(state)
         self.state = Path(state).resolve()
-        if any((parent / '.git').exists() for parent in (self.state, *self.state.parents)):
+        if not self.game and any((parent / '.git').exists() for parent in (self.state, *self.state.parents)):
             raise ValueError('Zustandsordner muss außerhalb eines Git-Arbeitsbaums liegen.')
-        self.directory = self.state / ('.updates' if self.editor else '.launcher')
+        self.directory = self.state / ('.updates' if self.native else '.launcher')
+        self.lock_name = 'decision.lock' if decision else 'lock'
+        if self.game:
+            no_links(self.directory)
         private_directory(self.directory)
         self.metadata = self.directory / 'instance.json'
         self.file = None
 
     def acquire(self):
-        path = self.directory / 'lock'
-        if self.editor:
+        path = self.directory / self.lock_name
+        if self.native:
             from .update_storage import no_links
             no_links(path)
         if path.is_symlink():
@@ -108,7 +117,7 @@ class StateLock:
         self.file = stream
         # Acquired OS lock proves the previous owner has ended, irrespective of
         # PID reuse. Stale state is never used to kill or open anything.
-        if not self.editor:
+        if not self.native:
             self.metadata.unlink(missing_ok=True)
             (self.directory / 'instance.tmp').unlink(missing_ok=True)
         return True
@@ -135,7 +144,7 @@ class StateLock:
 
     def close(self):
         if self.file:
-            if not self.editor:
+            if not self.native:
                 self.metadata.unlink(missing_ok=True)
             self.file.close()
             self.file = None

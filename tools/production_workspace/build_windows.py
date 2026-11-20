@@ -18,7 +18,7 @@ from .release import release, version_tuple
 from .payload import fingerprint, audit_analysis
 from .update_verifier import production_trust
 
-from tools.app_products import PW, PE
+from tools.app_products import PG, PW, PE
 
 ROOT = Path(__file__).resolve().parents[2]
 PACKAGE = ROOT / 'tools/production_workspace'
@@ -74,14 +74,18 @@ def build(destination, *, version=None, app=PW):
     destination.mkdir(parents=True)
     work = destination / 'work'; work.mkdir()
     generated = []
+    game = {}
+    if app == PG:
+        from tools.game_app.build import export_player
+        game = export_player(destination, work, inputs)
     helper = None
     windows = Path(os.environ['SystemRoot'])
-    if app in (PW, PE):
+    if app in (PW, PE, PG):
         compiler = windows / 'Microsoft.NET/Framework64/v4.0.30319/csc.exe'
         helper = work / 'UpdateHelper.exe'
         subprocess.run([str(compiler), '/nologo', '/target:exe', '/platform:x64',
                         '/reference:System.Web.Extensions.dll', '/out:' + str(helper),
-                        *(['/define:PE'] if app == PE else []),
+                        *(['/define:' + app.key.upper()] if app in (PE, PG) else []),
                         str(PACKAGE / 'packaging/UpdateHelper.cs')], check=True)
         generated.append(helper)
     env = os.environ.copy()
@@ -89,8 +93,9 @@ def build(destination, *, version=None, app=PW):
     # toolchains out of the payload while retaining Windows system DLL lookup.
     env['PATH'] = os.pathsep.join((str(windows / 'System32'), str(windows)))
     env.update(PYINSTALLER_CONFIG_DIR=str(work / 'cache'), TEMP=str(work), TMP=str(work), PYTHONHASHSEED='0')
-    resources = {f'ui/{name}': sha(package / 'ui' / name) for name in
-                 (('index.html', 'app.js', 'workflow.js', 'style.css') if app == PW else ('index.html', 'app.js', 'style.css'))}
+    ui = {PW: ('index.html', 'app.js', 'workflow.js', 'style.css'),
+          PE: ('index.html', 'app.js', 'style.css'), PG: ()}[app]
+    resources = {f'ui/{name}': sha(package / 'ui' / name) for name in ui}
     resources[app.icon_resource] = sha(icon)
     if helper:
         resources['UpdateHelper.exe'] = sha(helper)
@@ -124,15 +129,19 @@ def build(destination, *, version=None, app=PW):
             extra_args += ['--exclude-module', 'tools.production_workspace.' + name]
         extra_args += ['--exclude-module', 'tools.puzzle_editor.diagnostic',
                        '--exclude-module', 'tools.puzzle_editor.frozen_diagnostic']
+    if app == PG:
+        extra_args += [argument for name in ('PIL', 'tools.puzzle_production', 'tools.puzzle_editor')
+                       for argument in ('--exclude-module', name)]
     from cryptography.hazmat.backends.openssl.backend import backend
     runtime_versions['cryptography OpenSSL'] = backend.openssl_version_text()
     if runtime_versions['cryptography OpenSSL'] != 'OpenSSL 4.0.3 29 Sep 2026':
         raise RuntimeError('Kryptografie-Runtime passt nicht zum geprüften Wheel-/Lizenzinventar.')
-    manifest = {'format': 'picross-windows-app-v1', 'version': product['version'], 'commit': commit,
+    manifest = {'format': 'picross-pg-build-v2' if app == PG else 'picross-windows-app-v1',
+                'version': product['version'], 'commit': commit,
                 'payload_fingerprint': inputs['sha256'],
                 'upgrade_code': product['upgrade_code'], 'product_code': product['product_code'],
                 'architecture': 'windows-x64', 'python': platform.python_version(), 'components': versions,
-                'runtime_components': runtime_versions, 'resources': resources, 'signed': False}
+                'runtime_components': runtime_versions, 'resources': resources, 'signed': False, **game}
     manifest_file = work / 'build.json'
     manifest_file.write_text(json.dumps(manifest, indent=2) + '\n', encoding='utf-8')
     file_version = work / 'version.txt'
@@ -154,7 +163,7 @@ def build(destination, *, version=None, app=PW):
                     '--hidden-import', 'tools.production_workspace.update_verifier',
                     '--hidden-import', 'cryptography.hazmat.primitives.asymmetric.ed25519',
                     '--hidden-import', '_cffi_backend',
-                    '--add-data', str(package / 'ui') + ':' + app.package + '/ui',
+                    *(['--add-data', str(package / 'ui') + ':' + app.package + '/ui'] if ui else []),
                     '--add-data', str(icon) + ':' + app.package + '/assets',
                     '--add-data', str(manifest_file) + ':' + app.package,
                     *(['--add-data', str(helper) + ':' + app.package] if helper else []),
@@ -166,14 +175,17 @@ def build(destination, *, version=None, app=PW):
     (destination / 'inputs.json').write_text(json.dumps(inputs, indent=2) + '\n', encoding='utf-8')
     image = destination / 'dist' / app.executable
     verify_update_payload(image, work / 'pyinstaller' / app.executable / 'PYZ-00.pyz', audit, app=app)
-    (destination / 'input-audit.json').write_text(json.dumps(audit, indent=2) + '\n', encoding='utf-8')
-    shutil.copyfile(PACKAGE / 'START-WINDOWS.txt' if app == PW else package / 'README.md', image / 'START.txt')
+    audit_name = 'frozen-audit.json' if app == PG else 'input-audit.json'
+    (destination / audit_name).write_text(json.dumps(audit, indent=2) + '\n', encoding='utf-8')
+    instructions = {PW: PACKAGE / 'START-WINDOWS.txt', PE: package / 'README.md', PG: package / 'START.txt'}
+    shutil.copyfile(instructions[app], image / 'START.txt')
     shutil.copyfile(manifest_file, image / 'components.json')
-    licenses = image / 'LICENSES'; licenses.mkdir()
+    licenses = image / ('licenses' if app == PG else 'LICENSES')
+    licenses.mkdir()
     shutil.copyfile(Path(sys.base_prefix) / 'LICENSE.txt', licenses / 'Python.txt')
     for notice in (PACKAGE / 'licenses').glob('*.txt'):
         shutil.copyfile(notice, licenses / notice.name)
-    for name in ('Pillow', 'PyInstaller', 'cryptography', 'cffi', 'pycparser'):
+    for name in ('PyInstaller', 'cryptography', 'cffi', 'pycparser') + (() if app == PG else ('Pillow',)):
         dist = metadata.distribution(name)
         copied = False
         for file in dist.files:
@@ -197,6 +209,10 @@ def build(destination, *, version=None, app=PW):
                 raise RuntimeError('Tcl/Tk-Lizenz fehlt: ' + name)
         for file in candidates:
             shutil.copyfile(file, licenses / (name + '-' + file.name + '.txt'))
+    if app == PG:
+        from tools.game_app.build import finish_image
+        finish_image(destination, work, image, manifest)
+        return
     files = [{'file': f.relative_to(image).as_posix(), 'bytes': f.stat().st_size, 'sha256': sha(f)}
              for f in sorted(image.rglob('*')) if f.is_file()]
     (image / 'inventory.json').write_text(json.dumps({'commit': commit, 'files': files}, indent=2) + '\n', encoding='utf-8')
@@ -218,7 +234,7 @@ def verify_update_payload(image, pyz, audit, *, app=PW):
     required = {'tools.production_workspace.update_verifier', 'tools.production_workspace.release_manifest',
                 'tools.production_workspace.release', 'tools.app_products',
                 'cryptography.hazmat.primitives.asymmetric.ed25519'}
-    if app in (PW, PE):
+    if app in (PW, PE, PG):
         required |= {'tools.production_workspace.update_client', 'tools.production_workspace.update_storage',
                      'tools.production_workspace.update_windows', 'tools.production_workspace.app_updates'}
     if app == PE:
@@ -229,6 +245,15 @@ def verify_update_payload(image, pyz, audit, *, app=PW):
                {'release', 'payload', 'release_manifest', 'update_verifier', 'install_interlock',
                 'app_updates', 'update_client', 'update_storage', 'update_windows', 'instance', 'processes'} for name in names):
             raise RuntimeError('PE includes unrelated PW application code')
+    if app == PG:
+        required |= {'tools.game_app.gate', 'tools.game_app.restart', 'tools.game_app.player',
+                     'tools.production_workspace.install_interlock'}
+        supported = required | {'tools', 'tools.game_app', 'tools.production_workspace',
+                                'tools.production_workspace.instance', 'tools.production_workspace.payload',
+                                'tools.production_workspace.processes'}
+        if any(name.startswith('tools.') and name not in supported for name in names):
+            raise RuntimeError('PG includes unrelated tooling: ' + repr(sorted(
+                name for name in names if name.startswith('tools.') and name not in supported)))
     if not required <= names or any('tools.production_workspace.' + name in names for name in ('update_diagnostic', 'helper_diagnostic')):
         raise RuntimeError('Frozen Verifier-/Kryptografieinventar fehlt oder enthält den Testadapter.')
     if 'tools.puzzle_production.za1_fixtures' in names or any(
@@ -247,6 +272,16 @@ def verify_update_payload(image, pyz, audit, *, app=PW):
         raise RuntimeError('Native Kryptografiemodule fehlen im Frozen-Payload.')
     audit['update_modules'] = sorted(required)
     audit['crypto_extensions'] = sorted(p for p in files if 'cryptography/' in p or '_cffi_backend.' in p)
+    if app == PG:
+        observed = set(audit['repository_inputs'])
+        if 'tools/game_app/desktop_entry.py' not in observed:
+            raise RuntimeError('PG entry missing in real Analysis')
+        audit['frozen_modules'] = sorted(name for name in names if name.startswith('tools.'))
+        audit['native_inventory'] = [
+            {'file': member.relative_to(image).as_posix(), 'bytes': member.stat().st_size, 'sha256': sha(member)}
+            for member in sorted((image / '_internal').rglob('*'))
+            if member.is_file() and member.suffix.lower() in ('.dll', '.pyd', '.exe')
+        ]
 
 
 if __name__ == '__main__':

@@ -1,5 +1,5 @@
 """One opt-in startup operation, owned by the native GUI and its stop lifecycle."""
-from tools.app_products import PW
+from tools.app_products import PG, PW
 import threading
 import subprocess
 
@@ -9,11 +9,11 @@ from .update_verifier import production_trust
 
 
 class Updates:
-    def __init__(self, runtime, *, app=PW):
+    def __init__(self, runtime, *, app=PW, cancelled=None):
         self.runtime = runtime
         self.app = app
         self.app_args = {} if app == PW else {"app": app}
-        self.cancelled = threading.Event()
+        self.cancelled = threading.Event() if cancelled is None else cancelled
         # GUI owns choose/start/cancel/take; the worker shares only the short
         # helper-spawn/publication transition. Never hold this over network I/O.
         self.transition = threading.Lock()
@@ -32,7 +32,12 @@ class Updates:
             if runtime.lock.state.is_relative_to(self.identity.executable.parent):
                 raise ValueError('Updatezustand muss außerhalb des installierten Programms liegen.')
             self.preferences = Preferences(runtime.lock.directory)
-            self.enabled = self.preferences.read()
+            try:
+                self.enabled = self.preferences.read()
+            except (ValueError, OSError):
+                if app != PG:
+                    raise
+                self.status = 'Gespeicherte Updateentscheidung ungültig. Bitte erneut entscheiden.'
             previous = recover(runtime.lock.directory, **self.app_args)
             if previous:
                 self.status = previous + ' Nächster automatischer Versuch erst nach erneutem Start.'
@@ -110,7 +115,8 @@ class Updates:
                 if self.cancelled.is_set() or self.preferences.read() is not True or self.runtime.stop_requested.is_set():
                     handoff.abort()
                     raise client.Cancelled()
-                self.status = 'App-Update bereit. Laufende Arbeit wird geordnet abgeschlossen …'
+                self.status = ('Spiel-Update bereit …' if self.app == PG else
+                               'App-Update bereit. Laufende Arbeit wird geordnet abgeschlossen …')
         except client.Cancelled:
             self.cancelled.set()
             self.status = 'App-Update abgebrochen; vorhandene App bleibt verfügbar.'
@@ -135,6 +141,12 @@ class Updates:
         with self.transition:
             if (self.thread and not self.thread.is_alive() and self.handoff and not self.taken and
                     not self.cancelled.is_set() and self.enabled is True and not self.runtime.stop_requested.is_set()):
+                if self.app == PG:
+                    try:
+                        if self.preferences.read() is not True:
+                            return None
+                    except (ValueError, OSError):
+                        return None
                 self.taken = True
                 return self.handoff
         return None

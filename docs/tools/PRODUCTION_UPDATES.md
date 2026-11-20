@@ -6,7 +6,7 @@
 - **Betriebsautorität:** [Issue #612](https://github.com/venomenon328/picross/issues/612); die [Abschlussentscheidung](https://github.com/venomenon328/picross/issues/612#issuecomment-6878665809) aktiviert den PW-Betrieb. Ein Implementierungsmerge allein erteilt keine neue Betriebsbefugnis.
 - **Vertrauenswurzel:** [APP-ROOT1](https://github.com/venomenon328/picross/issues/612#issuecomment-6851636493) und [öffentlicher Root mit Eigentümerfreigabe](https://github.com/venomenon328/picross/issues/612#issuecomment-6852316923); feste technische Bindung in Abschnitt 6.
 - **PE-Mitnutzung:** derselbe technische Kern mit festen getrennten Produktidentitäten; [PE-Vertrag](PUZZLE_EDITOR.md#15-pe-app-b--startgate-und-sicherer-wiederanlauf). PW-Betrieb aktiviert keinen PE-Betrieb.
-- **PG-Produzent:** feste dritte Identität mit eigenem [Windows-Spielvertrag](../operations/WINDOWS_GAME_APP.md) und eigenem Runtime-Fingerprint. Zustimmung und installierter Game-Updateclient sind Folgepaket B.
+- **PG:** feste dritte Produzenten-, Client- und Helferidentität mit eigenem [Windows-Spielvertrag](../operations/WINDOWS_GAME_APP.md), Runtime-Fingerprint und zustimmungsgebundenem Startgate. PG verwendet die gemeinsamen Netz-, Byte- und Zeitgrenzen aus diesem Vertrag.
 - **Lieferhistorie und Abnahmen:** zuständige Issues, Pull Requests und Releases. Dieser Vertrag ersetzt keine historischen [P4-Liefernachweise](https://github.com/venomenon328/picross/issues/588).
 
 ## 1. Autorität und Grenzen

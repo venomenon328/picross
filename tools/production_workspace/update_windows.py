@@ -1,5 +1,5 @@
 """Installed-image identity and private pipe/real-handle helper handoff."""
-from tools.app_products import PW, PE
+from tools.app_products import PG, PW, PE
 import ctypes
 from ctypes import wintypes as w
 from dataclasses import dataclass
@@ -62,12 +62,22 @@ def installation(*, app=PW):
     package = PACKAGE if app == PW else app.source
     built = read_small(package / 'build.json')
     components = read_small(expected.parent / 'components.json')
-    require(built == components and built['format'] == 'picross-windows-app-v1' and
+    build_format = 'picross-pg-build-v2' if app == PG else 'picross-windows-app-v1'
+    require(built == components and built['format'] == build_format and
             built['architecture'] == 'windows-x64' and hex_string(built['commit'], 40) and
             hex_string(built['payload_fingerprint'], 64), 'Invalid installed build identity')
     product = release(version=built['version'], app=app)
     require(all(built[k] == product[k] for k in ('version', 'product_code', 'upgrade_code')) and
             installed_version(product['product_code']) == built['version'], 'Installed MSI version mismatch')
+    if app == PG:
+        import winreg
+        registry = app.registry + r'\Installer'
+        with winreg.OpenKey(winreg.HKEY_CURRENT_USER, registry, 0, winreg.KEY_READ | winreg.KEY_WOW64_64KEY) as key:
+            require(winreg.QueryValueEx(key, 'Version')[0] == built['version'] and
+                    winreg.QueryValueEx(key, 'ProductCode')[0] == '{' + built['product_code'] + '}',
+                    'Registered PG application identity mismatch')
+        for name in ('release.json', 'update-trust.json'):
+            require(sha(no_links(package / name)) == built['resources'][name], 'Unbound PG product resource')
     helper = package / 'UpdateHelper.exe'
     require(hex_string(built['resources'].get('UpdateHelper.exe'), 64) and
             sha(helper) == built['resources']['UpdateHelper.exe'], 'Installed helper binding mismatch')
@@ -94,6 +104,9 @@ class Handoff:
     def commit(self, runtime):
         require(runtime.stop_requested.is_set() and runtime.stopped.is_set() and not runtime.error,
                 'Complete successful runtime/P2 drain required')
+        self.go()
+
+    def go(self):
         require(self.process.poll() is None and not self.committed, 'Update helper unavailable')
         self.process.stdin.write(('GO ' + self.nonce + '\n').encode('ascii'))
         self.process.stdin.flush(); self.process.stdin.close()
@@ -104,14 +117,27 @@ class Handoff:
             self.process.stdin.close()  # EOF means refusal, never implicit installation.
 
 
+def staged_bytes(stage, name, limit):
+    with no_links(stage.path / name).open('rb') as stream:
+        raw = stream.read(limit + 1)
+    require(len(raw) <= limit, 'Staged file exceeds its verified size limit')
+    return raw
+
+
 def prepare(candidate, stage, identity, runtime, *, cancelled=None, transition=None, app=PW):
     require(type(candidate) is VerifiedCandidate, 'Full verified candidate required')
     # Revalidate bytes, packaged roots and actual installed identity at the final boundary.
     require((installation() if app == PW else installation(app=app)) == identity, 'Installed application changed')
     manifest = strict_json(candidate.manifest_bytes)
-    files = {name: no_links(stage.path / name).read_bytes() for name in manifest['assets']}
-    verified = verify_candidate(no_links(stage.path / 'manifest.json').read_bytes(),
-                                no_links(stage.path / 'manifest.sig.json').read_bytes(), files, app=app)
+    if app == PG:
+        files = {name: staged_bytes(stage, name, row['bytes']) for name, row in manifest['assets'].items()}
+        raw = staged_bytes(stage, 'manifest.json', len(candidate.manifest_bytes))
+        signature = staged_bytes(stage, 'manifest.sig.json', len(candidate.signature_bytes))
+    else:
+        files = {name: no_links(stage.path / name).read_bytes() for name in manifest['assets']}
+        raw = no_links(stage.path / 'manifest.json').read_bytes()
+        signature = no_links(stage.path / 'manifest.sig.json').read_bytes()
+    verified = verify_candidate(raw, signature, files, app=app)
     require(verified == candidate and assess_update(verified, identity.version, app=app) == 'update', 'Candidate changed')
     report = strict_json(files['delivery.json'])
     require(hex_string(report.get('exe_sha256'), 64) and type(report.get('exe_bytes')) is int and report['exe_bytes'] > 0,
@@ -120,20 +146,34 @@ def prepare(candidate, stage, identity, runtime, *, cancelled=None, transition=N
     require(hashlib.sha256(helper_raw).hexdigest() == identity.helper_sha256, 'Helper changed')
     stage.write('UpdateHelper.exe', helper_raw)
     nonce = stage.path.name
-    bindings = {name: {'bytes': (stage.path / name).stat().st_size, 'sha256': sha(stage.path / name)}
-                for name in manifest['assets'].keys() | {'manifest.json', 'manifest.sig.json'}}
+    if app == PG:
+        # Compute the helper's lock expectations from verified bytes, never
+        # from a second read of files that have not been locked yet.
+        bindings = {**manifest['assets'],
+                    'manifest.json': {'bytes': len(raw), 'sha256': hashlib.sha256(raw).hexdigest()},
+                    'manifest.sig.json': {'bytes': len(signature), 'sha256': hashlib.sha256(signature).hexdigest()}}
+    else:
+        bindings = {name: {'bytes': (stage.path / name).stat().st_size, 'sha256': sha(stage.path / name)}
+                    for name in manifest['assets'].keys() | {'manifest.json', 'manifest.sig.json'}}
     state = runtime.lock.state
-    state_names = ('config.json', '.launcher/address.json', '.launcher/app-updates.json') if app == PW else ('config.json', '.updates/app-updates.json')
+    state_names = {PW: ('config.json', '.launcher/address.json', '.launcher/app-updates.json'),
+                   PE: ('config.json', '.updates/app-updates.json'),
+                   PG: ('.updates/app-updates.json',)}[app]
     state_hashes = {name: sha(state / name) if no_links(state / name).exists() else None for name in state_names}
     if app == PW:
         require(all(state_hashes.values()), 'Missing launcher state')
-    value = {'format': 'picross-update-handoff-v1' if app == PW else 'picross-pe-update-handoff-v1', 'nonce': nonce, 'state': str(state),
-             'pid': os.getpid(), 'instance': runtime.metadata['instance'], 'old_version': identity.version,
+    formats = {PW: 'picross-update-handoff-v1', PE: 'picross-pe-update-handoff-v1', PG: 'picross-pg-update-handoff-v1'}
+    value = {'format': formats[app], 'nonce': nonce, 'state': str(state),
+             'pid': os.getpid(), 'old_version': identity.version,
              'old_product': identity.product_code, 'old_commit': identity.commit, 'old_exe_sha256': sha(identity.executable),
              'version': candidate.version, 'product': manifest['product_code'], 'upgrade': manifest['upgrade_code'],
              'commit': candidate.source_commit, 'binding': candidate.binding, 'files': bindings,
-             'state_hashes': state_hashes, 'exe_sha256': report['exe_sha256'], 'exe_bytes': report['exe_bytes'],
-             'no_browser': runtime.no_browser}
+             'state_hashes': state_hashes, 'exe_sha256': report['exe_sha256'], 'exe_bytes': report['exe_bytes']}
+    if app == PG:
+        value['old_fingerprint'] = identity.payload_fingerprint
+        value['fingerprint'] = candidate.payload_fingerprint
+    else:
+        value.update(instance=runtime.metadata['instance'], no_browser=runtime.no_browser)
     if app == PE:
         value['selection'] = runtime.selection
     stage.target('active')

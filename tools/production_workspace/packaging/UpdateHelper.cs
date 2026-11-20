@@ -19,7 +19,12 @@ using System.IO.Pipes;
 public static class UpdateHelper {
     static readonly JavaScriptSerializer Json = new JavaScriptSerializer { MaxJsonLength = 32768, RecursionLimit = 20 };
     static string User = WindowsIdentity.GetCurrent().User.Value;
-#if PE
+#if PG
+    const string ProductTitle="Picross-Spiel", InstallFolder="PicrossGame", Executable="Picross-Game.exe", UpdateFolder=".updates";
+    const string Upgrade="C1DB6F47-0935-41B8-978E-627D4015B360", RegistryPath=@"Software\PicrossGame\Installer";
+    const string HandoffFormat="picross-pg-update-handoff-v1";
+    const int Minor=1;
+#elif PE
     const string ProductTitle="Picross-Bestandseditor", InstallFolder="PicrossPuzzleEditor", Executable="Picross-Bestandseditor.exe", UpdateFolder=".updates";
     const string Upgrade="6A6CBDE3-60BA-4A72-A44E-D1F3AF186985", RegistryPath=@"Software\PicrossPuzzleEditor\Installer";
     const string HandoffFormat="picross-pe-update-handoff-v1";
@@ -30,7 +35,8 @@ public static class UpdateHelper {
     const string HandoffFormat="picross-update-handoff-v1";
     const int Minor=1;
 #endif
-    static string Install = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Programs", InstallFolder);
+    static readonly string Local = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
+    static string Install = Path.Combine(Local, "Programs", InstallFolder);
     static string Exe = Path.Combine(Install, Executable);
     [DllImport("kernel32.dll", SetLastError=true)] static extern uint WaitForSingleObject(IntPtr h, uint ms);
     [DllImport("kernel32.dll")] static extern uint GetProcessId(IntPtr h);
@@ -96,6 +102,12 @@ public static class UpdateHelper {
     static void Installed(string product, string version) {
         uint size=128; var text=new StringBuilder(128);
         Need(MsiGetProductInfoEx("{"+product+"}", null, 2, "VersionString", text, ref size) == 0 && text.ToString() == version);
+#if PG
+        using(var key=Microsoft.Win32.Registry.CurrentUser.OpenSubKey(RegistryPath)) {
+            Need(key!=null && Object.Equals(key.GetValue("Version"),version) &&
+                 Object.Equals(key.GetValue("ProductCode"),"{"+product+"}"));
+        }
+#endif
     }
     static void MsiIdentity(string path, string version, string product, string upgrade) {
         uint db; Need(MsiOpenDatabase(path, IntPtr.Zero, out db) == 0);
@@ -145,6 +157,10 @@ public static class UpdateHelper {
         var components=Read(Path.Combine(Install,"components.json"));
         Need(Text(components,"version")==Text(d,"old_version") && Text(components,"commit")==Text(d,"old_commit") &&
              Text(components,"product_code")==Text(d,"old_product") && Text(components,"upgrade_code")==Text(d,"upgrade"));
+#if PG
+        Need(Text(components,"format")=="picross-pg-build-v2" &&
+             Text(components,"payload_fingerprint")==Text(d,"old_fingerprint"));
+#endif
     }
     static void WaitParent(IntPtr handle) {
         // Only called after explicit drain acknowledgement. A live handle remains
@@ -154,7 +170,9 @@ public static class UpdateHelper {
     static void State(Dictionary<string,object> d) {
         string state=Text(d,"state"); NoLinks(state);
         var hashes=Map(d["state_hashes"]);
-#if PE
+#if PG
+        Shape(hashes,".updates/app-updates.json");
+#elif PE
         Shape(hashes,"config.json .updates/app-updates.json");
 #else
         Shape(hashes,"config.json .launcher/address.json .launcher/app-updates.json");
@@ -183,14 +201,16 @@ public static class UpdateHelper {
         using(var h=new HMACSHA256(Encoding.ASCII.GetBytes(key)))
             return BitConverter.ToString(h.ComputeHash(Encoding.ASCII.GetBytes(prefix+Json.Serialize(value)))).Replace("-","").ToLowerInvariant();
     }
-#if PE
+#if PE || PG
     [DllImport("kernel32.dll",SetLastError=true)] static extern bool GetNamedPipeClientProcessId(IntPtr pipe,out uint pid);
     static string RandomHex() { byte[] b=new byte[24]; using(var r=RandomNumberGenerator.Create()) r.GetBytes(b); return BitConverter.ToString(b).Replace("-","").ToLowerInvariant(); }
     [DllImport("kernel32.dll",CharSet=CharSet.Unicode,SetLastError=true)] static extern IntPtr OpenEvent(uint access,bool inherit,string name);
     static void RunningMarker() {
-        IntPtr h=OpenEvent(0x100000,false,@"Global\PicrossPuzzleEditor.Running."+User);
+        IntPtr h=OpenEvent(0x100000,false,@"Global\"+InstallFolder+".Running."+User);
         Need(h!=IntPtr.Zero); CloseHandle(h);
     }
+#endif
+#if PE
     static void Selection(string raw) {
         Need(raw.Length<=32768 && raw.All(c=>c<128));
         var value=Map(Json.DeserializeObject(raw)); Shape(value,"checkout port");
@@ -231,6 +251,99 @@ public static class UpdateHelper {
         }
     }
 #endif
+#if PG
+    [DllImport("kernel32.dll",SetLastError=true)] static extern IntPtr OpenProcess(uint access,bool inherit,uint pid);
+    [DllImport("user32.dll")] static extern uint GetWindowThreadProcessId(IntPtr window,out uint pid);
+    [DllImport("user32.dll")] static extern bool IsWindowVisible(IntPtr window);
+
+    static void UserImage(IntPtr process, string expected) {
+        var image=new StringBuilder(32768); uint length=32768;
+        Need(WaitForSingleObject(process,0)==258 && QueryFullProcessImageName(process,0,image,ref length) &&
+             String.Equals(image.ToString(),expected,StringComparison.OrdinalIgnoreCase));
+        IntPtr token; Need(OpenProcessToken(process,8,out token));
+        try { using(var identity=new WindowsIdentity(token)) Need(identity.User.Value==User); }
+        finally { CloseHandle(token); }
+    }
+
+    static Dictionary<string,object> Reply(StreamReader reader, int timeout, string key, string domain, string fields) {
+        var response=Task.Factory.StartNew(()=> {
+            var text=new StringBuilder();
+            while(true) {
+                int c=reader.Read();
+                if(c<0) throw new EndOfStreamException();
+                if(c=='\n') return text.ToString();
+                Need(text.Length<4096); text.Append((char)c);
+            }
+        });
+        Need(response.Wait(timeout));
+        var reply=Map(Json.DeserializeObject(response.Result));
+        Shape(reply,fields+" proof");
+        string proof=Text(reply,"proof"); reply.Remove("proof");
+        string expected=Mac(key,domain,new SortedDictionary<string,object>(reply,StringComparer.Ordinal));
+        Need(Hex(proof,expected.Length));
+        int difference=0;
+        for(int i=0;i<proof.Length;i++) difference|=proof[i]^expected[i];
+        Need(difference==0);
+        return reply;
+    }
+    static void GameReady(NamedPipeServerStream pipe, Process launched, Dictionary<string,object> d, string key, IAsyncResult connected) {
+        Need(connected.AsyncWaitHandle.WaitOne(30000)); pipe.EndWaitForConnection(connected);
+        uint pid;
+        Need(GetNamedPipeClientProcessId(pipe.SafePipeHandle.DangerousGetHandle(),out pid) && pid==launched.Id);
+        UserImage(launched.Handle,Exe);
+        string challenge=RandomHex();
+        string state=Hash(new MemoryStream(Encoding.UTF8.GetBytes(Text(d,"state"))));
+        string preference=Text(Map(d["state_hashes"]),".updates/app-updates.json");
+        var expected=new SortedDictionary<string,object>(StringComparer.Ordinal){
+            {"pid",launched.Id},{"commit",Text(d,"commit")},{"version",Text(d,"version")},{"fingerprint",Text(d,"fingerprint")},
+            {"state",state},{"preference",preference},{"challenge",challenge}
+        };
+        const string Fields="pid commit version fingerprint state preference challenge";
+        using(var writer=new StreamWriter(pipe,new UTF8Encoding(false),1024,true))
+        using(var reader=new StreamReader(pipe,new UTF8Encoding(false,true),false,1024,true)) {
+            writer.NewLine="\n"; writer.WriteLine(challenge); writer.Flush();
+            var ready=Reply(reader,20000,key,"pg-ready:",Fields);
+            Need(expected.All(pair=>Object.Equals(pair.Value,ready[pair.Key])));
+            State(d);
+            UserImage(launched.Handle,Exe);
+            writer.WriteLine(Json.Serialize(new Dictionary<string,object>{{"proof",Mac(key,"pg-play:",expected)}}));
+            writer.Flush();
+
+            var started=Reply(reader,45000,key,"pg-started:",Fields+" player window");
+            Need(expected.All(pair=>Object.Equals(pair.Value,started[pair.Key])));
+            uint player=checked((uint)Number(started,"player"));
+            var window=new IntPtr(Number(started,"window"));
+            IntPtr process=OpenProcess(0x101000,false,player);
+            Need(process!=IntPtr.Zero);
+            try {
+                UserImage(process,Path.Combine(Install,"picross-p1.exe"));
+                Need(!launched.HasExited && GetWindowThreadProcessId(window,out pid)!=0 &&
+                     pid==GetProcessId(process) && IsWindowVisible(window));
+            } finally { CloseHandle(process); }
+        }
+    }
+
+    static void RestartGame(Dictionary<string,object> d) {
+        string nonce=RandomHex(), key=RandomHex();
+        var security=new PipeSecurity();
+        security.SetAccessRuleProtection(true,false);
+        security.AddAccessRule(new PipeAccessRule(new SecurityIdentifier(User),PipeAccessRights.FullControl,AccessControlType.Allow));
+        security.AddAccessRule(new PipeAccessRule(new SecurityIdentifier("S-1-5-18"),PipeAccessRights.FullControl,AccessControlType.Allow));
+        using(var pipe=new NamedPipeServerStream("PicrossPGReady-"+nonce,PipeDirection.InOut,1,PipeTransmissionMode.Byte,
+                                                 PipeOptions.Asynchronous,4096,4096,security)) {
+            var info=new ProcessStartInfo(Exe,"--update-restart") { UseShellExecute=false, WorkingDirectory=Install };
+            info.EnvironmentVariables["PYINSTALLER_RESET_ENVIRONMENT"]="1";
+            info.EnvironmentVariables["PICROSS_PG_RESTART_PIPE"]=nonce;
+            info.EnvironmentVariables["PICROSS_PG_RESTART_KEY"]=key;
+            info.EnvironmentVariables["PICROSS_PG_RESTART_PID"]=Process.GetCurrentProcess().Id.ToString(System.Globalization.CultureInfo.InvariantCulture);
+            info.EnvironmentVariables["PICROSS_PG_RESTART_STAGE"]=Text(d,"nonce");
+            var connected=pipe.BeginWaitForConnection(null,null);
+            using(var launched=Process.Start(info)) GameReady(pipe,launched,d,key,connected);
+        }
+    }
+#endif
+
+#if !PG
     static bool Ready(Process launched, Dictionary<string,object> d) {
         string state=Text(d,"state");
         int port=Convert.ToInt32(Read(Path.Combine(state,UpdateFolder,"address.json"))["port"]);
@@ -276,6 +389,7 @@ public static class UpdateHelper {
         info.EnvironmentVariables["PYINSTALLER_RESET_ENVIRONMENT"]="1";
         return info;
     }
+#endif
     public static int Main(string[] args) {
         string state=null, nonce=null, version=null, outcome="unconfirmed";
         IntPtr parent=IntPtr.Zero; var streams=new List<FileStream>(); FileStream active=null;
@@ -285,23 +399,38 @@ public static class UpdateHelper {
             Need(args.Length==0 && !new WindowsPrincipal(WindowsIdentity.GetCurrent()).IsInRole(WindowsBuiltInRole.Administrator));
             string line=BoundedLine(32768,20000); Need(line!=null);
             var d=Map(Json.DeserializeObject(line));
-            Shape(d,"format nonce state pid instance old_version old_product old_commit old_exe_sha256 version product upgrade commit binding files state_hashes exe_sha256 exe_bytes no_browser parent_handle"
+            Shape(d,"format nonce state pid old_version old_product old_commit old_exe_sha256 version product upgrade commit binding files state_hashes exe_sha256 exe_bytes parent_handle"
+#if PG
+                +" old_fingerprint fingerprint"
+#else
+                +" instance no_browser"
 #if PE
                 +" selection"
 #endif
+#endif
                 );
-            Need(Text(d,"format")==HandoffFormat && d["no_browser"] is bool);
+            Need(Text(d,"format")==HandoffFormat);
+#if PG
+            Need(Hex(Text(d,"old_fingerprint"),64) && Hex(Text(d,"fingerprint"),64));
+#else
+            Need(d["no_browser"] is bool);
+#endif
             nonce=Text(d,"nonce"); state=Text(d,"state"); version=Text(d,"version");
             Need(Hex(nonce,48) && Path.IsPathRooted(state) && Path.GetFullPath(state)==state &&
                  !String.Equals(state,Install,StringComparison.OrdinalIgnoreCase) && !state.StartsWith(Install+"\\",StringComparison.OrdinalIgnoreCase) &&
                  Hex(Text(d,"binding"),64) && Hex(Text(d,"commit"),40) && Hex(Text(d,"exe_sha256"),64) && Number(d,"exe_bytes")>0 &&
                  VersionOf(version)>VersionOf(Text(d,"old_version")));
             Need(Text(d,"upgrade")==Upgrade && Text(d,"product")==ProductCode(version) && Text(d,"old_product")==ProductCode(Text(d,"old_version")));
+#if PG
+            Need(String.Equals(state,Path.Combine(Local,InstallFolder),StringComparison.OrdinalIgnoreCase));
+#endif
             string stage=Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             Need(String.Equals(stage,Path.Combine(state,UpdateFolder,"update-staging",nonce),StringComparison.OrdinalIgnoreCase));
             Private(stage); Private(Path.Combine(state,UpdateFolder)); NoLinks(Install);
             parent=new IntPtr(Number(d,"parent_handle")); Parent(parent,d); State(d);
-#if PE
+#if PG
+            RunningMarker();
+#elif PE
             Need((bool)d["no_browser"] && Hex(Text(d,"instance"),48));
             Selection(Text(d,"selection")); RunningMarker();
 #else
@@ -327,6 +456,10 @@ public static class UpdateHelper {
             committed=true;
             WaitParent(parent); CloseHandle(parent); parent=IntPtr.Zero;
             State(d); Installed(Text(d,"old_product"),Text(d,"old_version"));
+#if PG
+            var accepted=Read(Path.Combine(state,UpdateFolder,"update-accepted.json"));
+            Shape(accepted,"nonce"); Need(Text(accepted,"nonce")==nonce);
+#endif
             // Rehash every locked candidate immediately before invoking system MSI.
             int index=0; foreach(var pair in files) Need(Hash(streams[index++])==Text(Map(pair.Value),"sha256"));
             MsiIdentity(Path.Combine(stage,msi),version,Text(d,"product"),Text(d,"upgrade"));
@@ -346,7 +479,11 @@ public static class UpdateHelper {
             Need(HashFile(Exe)==Text(d,"exe_sha256") && new FileInfo(Exe).Length==Number(d,"exe_bytes"));
             var pe=FileVersionInfo.GetVersionInfo(Exe);
             Need(pe.FileMajorPart==0 && pe.FileMinorPart==Minor && pe.FileBuildPart==VersionOf(version).Build && pe.FilePrivatePart==0);
-#if PE
+#if PG
+            Need(Text(components,"format")=="picross-pg-build-v2" && Text(components,"upgrade_code")==Upgrade &&
+                 Text(components,"payload_fingerprint")==Text(d,"fingerprint"));
+            RestartGame(d);
+#elif PE
             RestartEditor(d);
 #else
             using(var launched=Process.Start(RestartInfo(state,(bool)d["no_browser"]))) Need(Ready(launched,d));
@@ -362,6 +499,7 @@ public static class UpdateHelper {
                 if(committed && outcome!="installed") MessageBox(IntPtr.Zero,
                     "App-Update nicht erfolgreich bestätigt ("+outcome+"). Windowsinstallation prüfen. Danach die Anwendung manuell starten oder einen geprüften neueren Installer erneut ausführen. Es wurde kein Prozess beendet und kein automatischer Wiederholungsversuch gestartet.",
                     "Picross · App-Update",0x10);
+#if !PG
                 // Delete only the seven fixed inputs after the installer has ended.
                 // This running EXE and its lock are reclaimed by the next launcher.
                 try {
@@ -371,6 +509,7 @@ public static class UpdateHelper {
                         string path=Path.Combine(stage,name); NoLinks(path); File.Delete(path);
                     }
                 } catch(Exception) { }
+#endif
             }
             if(active!=null) active.Dispose();
         }

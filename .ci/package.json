@@ -1,30 +1,20 @@
 {
   "format": "development-ci-plan/v1",
   "issue": "https://github.com/venomenon328/picross/issues/725",
-  "package": "GAME-APP-A",
+  "package": "GAME-APP-B",
   "modules": [
     "tools"
   ],
-  "purpose": "Prüft PG-Produktbindung, Runtime-Eingänge, signierte Autorität, Katalogbudget und bestehende PW-/PE-Verträge. Separater Windowsdiagnosebau mit echter MSI-Inspektion und isolierter Start-/Guardprobe.",
+  "purpose": "Prüft den festen PG-Start- und Updateweg, Signatur- und Stageentscheidungen sowie die gemeinsamen PW-/PE-Regressionen. Die gebaute Windows-Laufzeit wird im getrennten Installerdiagnoseweg geprüft.",
   "omitted": "Native Zusatzmodule, Preflight, Produktionsfachmodule, Delivery und Browser betreffen die Verpackungsänderung nicht. Der reguläre Windows-Player bleibt Teil des Kerns.",
   "test_changes": [
     {
       "path": "tools/test_game_installer.py",
       "disposition": "change-scoped",
-      "reason": "PG-Inputprojektion, feste MSI-Schreibbereiche und Produkt-/Versionsbindung mit kleinen synthetischen Fällen."
-    },
-    {
-      "path": "tools/test_production_installer.py",
-      "disposition": "change-scoped",
-      "reason": "Dritte Signaturdomäne, Main-Push-Gates sowie gemeinsame Kataloggrenzen und Lease mit bestehenden Clients prüfen."
-    },
-    {
-      "path": "tools/test_work_publish.py",
-      "disposition": "change-scoped",
-      "reason": "Drei App-Reserven im Seiten- und Metadatenbudget prüfen."
+      "reason": "PG-Zustimmung, Skip/Close/Helferübergabe und feste Eingangs- und MSI-Bindungen."
     }
   ],
-  "core_change": "Der reguläre Playerexport teilt Anleitung, Laufzeit-/Importweg und optionale Bauaudit-Erfassung mit dem eigenständigen PG-Installerbau. Der Portable-Einstieg und die Modulauswahl bleiben erhalten.",
+  "core_change": "Der gemischte Werkzeug-/Paketierungsdiff verlangt den regulären Windows-Playerbuild. Der PG-MSI-/Helferbau bleibt im separat aufrufbaren Installerworkflow.",
   "evidence": {
     "mode": "none",
     "purpose": null,
