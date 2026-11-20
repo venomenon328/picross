@@ -716,8 +716,12 @@ class Pixels(unittest.TestCase):
                     count=0
                     for y in range(50):
                         for x in range(50):
-                            if x==context[0] or y==context[1]:
-                                image.putpixel((x,y),(214,211,195,255));count+=1
+                            base = (240,230,220) if x < 25 else (173,148,118)
+                            image.putpixel((x,y+50), (*base,255))
+                            marked = x==context[0] or y==context[1]
+                            rgb = tuple(round(b+(ink-b)*64/255) for b,ink in zip(base,(135,153,121))) if marked else base
+                            image.putpixel((x,y), (*rgb,255))
+                            count += int(marked)
                     name=f'hn-{width}-ui{ui}-{kind}.png'
                     image.save(root/name)
                     rows.append(dict(kind='pixels',file=name,context=context,marked=count,unmarked=2500-count,

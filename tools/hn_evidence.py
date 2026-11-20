@@ -36,6 +36,8 @@ def verify(directory, report):
         bx,by,bw,bh = row['board']
         ex,ey,ew,eh = row['overlay']
         counts = [0,0]
+        marked_base_red = []
+        marked_result_red = []
         for y in range(50):
             for x in range(50):
                 px = ox+(x+.4)*row['cell']
@@ -52,10 +54,16 @@ def verify(directory, report):
                 if marked:
                     # The same single source-over operation covers both bands and their intersection.
                     base = pixel(x, y+50)
+                    marked_base_red.append(base[0])
+                    marked_result_red.append(pixel(x,y)[0])
                     expected = [round(b + (ink-b)*64/255) for b, ink in zip(base[:3], (135, 153, 121))]
                     if max(abs(a-b) for a, b in zip(pixel(x,y)[:3], expected)) > 3:
                         raise ValueError('HN band lost underlay contrast or painted intersection twice')
                 counts[0 if marked else 1] += 1
+        if kind in ('row','drag-row','grid') and (not marked_base_red
+                or max(marked_base_red)-min(marked_base_red) < 32
+                or max(marked_result_red)-min(marked_result_red) < 24):
+            raise ValueError('HN probe lost its two contrasting visible surfaces')
         if counts != [row['marked'],row['unmarked']] or counts[0] <= 0 or counts[1] <= 100:
             raise ValueError('Incomplete HN original pixel coverage')
     return len(rows)

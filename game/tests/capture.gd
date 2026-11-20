@@ -93,7 +93,7 @@ func fill_patch(picture: Image, material: Image, box: Rect2, palette: Color, alp
 
 func snapshot(app: Main, name: String, crop: bool = false) -> Image:
 	var material: Image
-	if name.contains("preview-color"):
+	if name.contains("preview-color") or name.begins_with("g1-"):
 		# Complete pending board redraws before hiding its separate ink layer.
 		app.refresh()
 		await process_frame
@@ -255,25 +255,28 @@ func capture_axis_reset(app: Main, fixture_index: int, pitch: float, color: int)
 	app.board.pointer_move(app.board.view.cell_rect(old).get_center(), true)
 	var label: String = "g1-t%02d" % (fixture_index + 1)
 	var old_image: Image = await snapshot(app, label + "-old-arm")
+	var old_material: Image = recent_frames.back().material
 	app.board.pointer_move(app.board.view.cell_rect(start).get_center(), true)
 	if app.board.gesture_length() != 1:
 		fail_capture("Origin counter did not reset to one: " + label, 5)
 		return
 	var origin_image: Image = await snapshot(app, "g1-counter-1-" + label)
+	var origin_material: Image = recent_frames.back().material
 	app.board.pointer_move(app.board.view.cell_rect(next).get_center(), true)
 	if app.board.gesture_length() != 4:
 		fail_capture("New axis counter has wrong length: " + label, 5)
 		return
 	var new_image: Image = await snapshot(app, "g1-counter-4-" + label)
+	var new_material: Image = recent_frames.back().material
 	var old_box: Rect2 = app.board.view.cell_rect(old)
 	var new_box: Rect2 = app.board.view.cell_rect(next)
 	old_box.position+=app.board.global_position
 	new_box.position+=app.board.global_position
 	var palette: Color = Color(app.session.definition.palette[color - 1].color)
-	var patches: Array[Dictionary] = [fill_patch(old_image,old_image,old_box,palette,0.56,true),
-		fill_patch(origin_image,origin_image,old_box,palette,0.56,true),
-		fill_patch(new_image,new_image,old_box,palette,0.56,true),
-		fill_patch(new_image,new_image,new_box,palette,0.56,true)]
+	var patches: Array[Dictionary] = [fill_patch(old_image,old_material,old_box,palette,0.56),
+		fill_patch(origin_image,origin_material,old_box,palette,0.56),
+		fill_patch(new_image,new_material,old_box,palette,0.56),
+		fill_patch(new_image,new_material,new_box,palette,0.56)]
 	if not patches[0].valid or patches[1].valid or patches[2].valid or not patches[3].valid:
 		fail_capture("Rendered old/new arm pixel mismatch: %s %s" % [label,patches], 5)
 		return

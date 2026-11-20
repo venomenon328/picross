@@ -165,7 +165,10 @@ func run() -> void:
 	await opening()
 	var ink = app.puzzle_background
 	check(ink.is_visible_in_tree() and ink.frozen and ink.texture != null and app.ending.visible,"first target capture has selected ink")
-	check(book.capture.get_texture().get_image().save_png(output.path_join("first-target.png")) == OK,"first captured content")
+	var captured := book.capture.get_texture().get_image()
+	var line: Vector2i = Vector2i(ink.box.position+ink.box.size*Vector2(190.0/2304,520.0/576))
+	check(captured.get_pixelv(line).a > 0.20 and captured.get_pixelv(line+Vector2i(0,-8)).a == 0,"native background line in first transparent target")
+	check(captured.save_png(output.path_join("first-target.png")) == OK,"first captured content")
 	await sampled_motion("a",book.DURATION)
 	await settle()
 	print("VIS_A_COLD preparation_s=",book.preparation_seconds," motion_s=",book.motion_wall_seconds," load_us=",ink.last_load_usec)

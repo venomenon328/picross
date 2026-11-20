@@ -120,7 +120,7 @@ func run() -> void:
 			at_measurements.append({"window":context,"final":alpha_final,"reopen":alpha_reopen,"blend":alpha_blend})
 		# Rectangular eight-colour raster, long title, independent image aspect.
 		var rectangle_last := prepare(5)
-		app.session.definition.reveal.name = "Ärger über süße Grüße – Églantine, Đà Nẵng und đượm im Abendlicht auf der schmalen Papierseite"
+		app.session.definition.reveal.name = "Ähren, Öl und süße Grüße – Über den Tälern von Đà Nẵng blühen Églantine, đượm und Blüten im Abendlicht"
 		surface.size = Vector2i(1280,720)
 		app.set_ui_scale(1.25)
 		await frames()
@@ -164,7 +164,7 @@ func run() -> void:
 		var caption := app.completion_title
 		var face := caption.get_theme_font("font") as FontVariation
 		check(face.base_font.get_font_name() == "Dancing Script" and caption.get_line_count() > 1, "VIS-A long title wraps in the original font")
-		for symbol: String in "ÄöüßÉĐđẵượ":
+		for symbol: String in "ÄÖÜäöüßÉĐđẵượ":
 			check(face.base_font.has_char(symbol.unicode_at(0)), "VIS-A original glyph "+symbol)
 		var with_title: Image = surface.get_texture().get_image()
 		caption.hide()

@@ -3,7 +3,6 @@ import json
 import os
 from pathlib import Path
 import platform
-import subprocess
 import sys
 from tempfile import TemporaryDirectory
 
@@ -13,6 +12,7 @@ ROOT = Path(__file__).resolve().parents[2]
 sys.path[:0] = [str(ROOT), str(ROOT / "tools")]
 import background_import
 import p1_preflight as tc
+from p1_product import require_clean_output, run_phase
 from product_background_fixtures import write_image
 from product_fixtures import copy_regression_game
 
@@ -49,6 +49,11 @@ def prepare(project):
     return item["save_slot"], saved
 
 
+def handover_error(captured, direct):
+    difference = ImageChops.difference(captured, direct)
+    return max(high for _, high in difference.getextrema()), sum(ImageStat.Stat(difference).mean)/3
+
+
 def review(output, cache=None, *, local_engine=None):
     output.mkdir(parents=True, exist_ok=True)
     host = platform.system()
@@ -67,22 +72,26 @@ def review(output, cache=None, *, local_engine=None):
         (saves / (key+".json")).write_text(json.dumps(saved), encoding="utf-8")
         env.update(VIS_A_OUTPUT=str(output), P1_TEST_SAVE_ROOT=str(saves), LIBGL_ALWAYS_SOFTWARE="1")
         base = [engine, "--path", str(project)]
-        subprocess.run(base + ["--headless","--import"],env=env,check=True,timeout=180,stdout=subprocess.DEVNULL)
-        command = base + ["--resolution","1920x1080","--script",str(Path(__file__).with_name("review.gd")),"--","--p1-capture"]
+        require_clean_output(run_phase("vis-a-import", base + ["--headless","--import"], env, 180, workspace))
+        command = base + ["--audio-driver","Dummy","--rendering-driver","opengl3","--resolution","1920x1080","--script",str(Path(__file__).with_name("review.gd")),"--","--p1-capture"]
         if host == "Linux":
             command = ["xvfb-run","-a","-s","-screen 0 1920x1080x24"] + command
-        result = subprocess.run(command,env=env,timeout=180,stdout=subprocess.PIPE,stderr=subprocess.STDOUT)
-        log = result.stdout.decode("utf-8", errors="replace")
-        print(log, flush=True)
-        if result.returncode or "VIS_A_BOOK_OK" not in log or "SCRIPT ERROR" in log or "ERROR:" in log:
-            raise ValueError("VIS-A book scenario failed")
+        result = run_phase("vis-a-book-root",command,env,180,workspace)
+        require_clean_output(result,"VIS_A_BOOK_OK")
     with Image.open(output/"capture.png") as captured, Image.open(output/"direct.png") as direct:
-        delta = ImageChops.difference(captured.convert("RGB"), direct.convert("RGB"))
-        peak = max(high for _,high in delta.getextrema())
-        mean = sum(ImageStat.Stat(delta).mean)/3
+        captured, direct = captured.convert("RGB"), direct.convert("RGB")
+        peak, mean = handover_error(captured, direct)
         print("VIS_A_HANDOVER", peak, mean)
         if peak > 4 or mean > 0.1:
             raise ValueError("Capture/direct handover differs")
+        changed = direct.copy()
+        color = direct.getpixel((0,0))
+        changed.putpixel((0,0),(color[0] ^ 8, *color[1:]))
+        if handover_error(changed,direct)[0] <= 4:
+            raise ValueError("Missed a one-pixel handover defect")
+        veiled = Image.blend(direct, Image.new("RGB",direct.size), 1/255)
+        if handover_error(veiled,direct)[1] <= 0.1:
+            raise ValueError("Missed a subtle full-page alpha defect")
     frames = []
     for path in sorted(output.glob("motion-*.png")):
         with Image.open(path) as frame:

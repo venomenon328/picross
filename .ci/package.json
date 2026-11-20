@@ -55,6 +55,11 @@
       "path": ".ci/vis-a/review.gd",
       "disposition": "temporary",
       "reason": "Nur die befristete R01-Anforderung in VIS-A startet die Probe. Beim Paketabschluss entfernen."
+    },
+    {
+      "path": "game/tests/content_pack_probe.gd",
+      "disposition": "change-scoped",
+      "reason": "Prüft Originalschrift und vollständige OFL im tatsächlichen Windows- oder Web-PCK beim bestehenden Exportcheck."
     }
   ],
   "core_change": "Gemischter Produktdiff mit regulärem Windows-x64-Spielerbau und mitgelieferter Original-OFL.",

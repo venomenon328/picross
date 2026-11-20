@@ -178,6 +178,12 @@ func run() -> void:
 		for direction: String in ["increment","decrement"]:
 			check(scrollbar_theme.get_icon(direction,type).get_size() == Vector2(28,28),"PCK imported SBR triangle "+type+direction)
 	check(FileAccess.file_exists("res://art/book/KB-168-NOTICE.txt"), "PCK KB icon provenance notice")
+	var dancing: FontFile = load("res://art/drawing/dancing-script/DancingScript.ttf")
+	var dancing_hash := HashingContext.new()
+	dancing_hash.start(HashingContext.HASH_SHA256)
+	dancing_hash.update(dancing.data)
+	check(dancing_hash.finish().hex_encode() == "21808625578fe8d8cd10cb684be546dca077b27cd03a53a2f1ec11dc743c924c","PCK original Dancing Script")
+	check(FileAccess.get_sha256("res://art/drawing/dancing-script/OFL.txt") == "6f090277c00af96651ce6dbcc38ff1591047a3bffef486e80b6a32e8276a8201","PCK Dancing Script OFL")
 	# Actual exported font bytes/role, with controlled local fallbacks.
 	var ui_text = load("res://ui/ui_text.gd")
 	var normal: FontFile = ui_text.font()
