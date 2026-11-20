@@ -40,7 +40,7 @@ def wix_source(image, product, guard, *, app=PW):
     element(p, 'Property', Id='ARPNOMODIFY', Value='1')
     element(p, 'Property', Id='ARPNOREPAIR', Value='1')
     element(p, 'Property', Id='INSTALLDESKTOP', Secure='yes')
-    element(p, 'Icon', Id='AppIcon', SourceFile=str(PACKAGE / 'assets/launcher.ico'))
+    element(p, 'Icon', Id='AppIcon', SourceFile=str(app.source / app.icon_resource))
     element(p, 'Property', Id='ARPPRODUCTICON', Value='AppIcon')
     target = element(p, 'Directory', Id='TARGETDIR', Name='SourceDir')
     local = element(target, 'Directory', Id='LocalAppDataFolder')

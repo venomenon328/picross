@@ -3,6 +3,7 @@ import argparse
 import json
 from pathlib import Path, PurePosixPath
 import re
+import struct
 import subprocess
 import tempfile
 import xml.etree.ElementTree as ET
@@ -21,6 +22,29 @@ NS = {'w': 'http://schemas.microsoft.com/wix/2006/wi'}
 def require(condition, message):
     if not condition:
         raise RuntimeError(message)
+
+
+def verify_executable_icon(executable, ico):
+    """Compare the primary Windows icon group and each referenced image to the ICO."""
+    def data(resource):
+        language, = resource.directory.entries
+        entry = language.data.struct
+        return executable.get_data(entry.OffsetToData, entry.Size)
+
+    resources = {entry.id: entry.directory.entries for entry in executable.DIRECTORY_ENTRY_RESOURCE.entries}
+    group, = resources[14]  # RT_GROUP_ICON
+    images = {entry.id: data(entry) for entry in resources[3]}  # RT_ICON
+    directory = data(group)
+    count = struct.unpack_from('<H', ico, 4)[0]
+    require(directory[:6] == ico[:6] and len(directory) == 6 + 14 * count,
+            'EXE icon directory differs from source ICO')
+    for index in range(count):
+        source_offset = 6 + 16 * index
+        group_offset = 6 + 14 * index
+        length, offset = struct.unpack_from('<II', ico, source_offset + 8)
+        resource_id = struct.unpack_from('<H', directory, group_offset + 12)[0]
+        require(directory[group_offset:group_offset + 12] == ico[source_offset:source_offset + 12] and
+                images[resource_id] == ico[offset:offset + length], 'EXE icon image differs from source ICO')
 
 
 def verify(build, output, expected_commit, wix_archive=None, compare_build=False, version=None, *, app=PW):
@@ -50,6 +74,7 @@ def verify(build, output, expected_commit, wix_archive=None, compare_build=False
         require(properties[field].strip('{}') == product[key], 'MSI property mismatch: ' + field)
     require(properties['ProductName'] == app.title, 'Foreign MSI product name')
     require(not properties.get('ALLUSERS'), 'MSI is not per-user')
+    require(properties.get('ARPPRODUCTICON') == 'AppIcon', 'MSI Programs and Features icon mismatch')
     wix_archive = wix_archive or build / 'work/wix.zip'
     require(report['wix_sha256'] == product['wix_sha256'] and
             sha(wix_archive) == product['wix_sha256'], 'Unbound WiX inspector')
@@ -65,6 +90,15 @@ def verify(build, output, expected_commit, wix_archive=None, compare_build=False
         subprocess.run([str(wix / 'dark.exe'), '-nologo', '-x', str(extracted),
                         '-o', str(source), str(msi)], check=True)
         root = ET.parse(source).getroot()
+        icon = (app.source / app.icon_resource).read_bytes()
+        icon_node = root.find('.//w:Icon[@Id="AppIcon"]', NS)
+        require(icon_node is not None, 'Missing MSI AppIcon')
+        icon_file = Path(icon_node.get('SourceFile')).resolve()
+        require(icon_file.is_relative_to(extracted.resolve()) and icon_file.read_bytes() == icon, 'MSI AppIcon byte mismatch')
+        for shortcut_id in ('MenuShortcutLink', 'DesktopShortcutLink'):
+            shortcut = root.find(f'.//w:Shortcut[@Id="{shortcut_id}"]', NS)
+            require(shortcut is not None and shortcut.get('Icon') == 'AppIcon' and
+                    shortcut.get('IconIndex', '0') == '0', 'MSI shortcut icon mismatch: ' + shortcut_id)
         package = root.find('.//w:Package', NS)
         require(package.get('Platform') == 'x64' and package.get('InstallPrivileges') == 'limited',
                 'Unexpected MSI architecture/privileges')
@@ -114,6 +148,9 @@ def verify(build, output, expected_commit, wix_archive=None, compare_build=False
                     'components', 'runtime_components', 'resources', 'signed'):
             require(components[key] == report[key], 'Embedded components mismatch: ' + key)
         require(sha(payload[app.executable + '.exe']) == report['exe_sha256'], 'Embedded EXE mismatch')
+        icon_payload = payload['_internal/' + app.package + '/' + app.icon_resource]
+        require(icon_payload.read_bytes() == icon and sha(icon_payload) == components['resources'][app.icon_resource],
+                'Bundled window icon mismatch')
         for name in ('release.json', 'update-trust.json'):
             relative = '_internal/' + app.package + '/' + name
             require(sha(payload[relative]) == components['resources'][name] and
@@ -134,6 +171,7 @@ def verify(build, output, expected_commit, wix_archive=None, compare_build=False
         import pefile
         with pefile.PE(str(payload[app.executable + '.exe'])) as pe:
             fixed = pe.VS_FIXEDFILEINFO[0]
+            verify_executable_icon(pe, icon)
         expected = tuple(map(int, product['version'].split('.'))) + (0,)
         for prefix in ('FileVersion', 'ProductVersion'):
             ms, ls = getattr(fixed, prefix + 'MS'), getattr(fixed, prefix + 'LS')

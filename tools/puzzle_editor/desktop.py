@@ -7,6 +7,7 @@ import threading
 import sys
 import webbrowser
 
+from tools.app_products import PE
 from tools.puzzle_production import catalog_io as io
 from . import VERSION
 from .server import Service
@@ -27,6 +28,8 @@ class Window:
         self.state, self.service, self.closing = io.external(state), None, False
         self.stop_failed = False
         self.window = tk.Tk(); self.window.title("Picross · Bestandseditor " + VERSION)
+        if sys.platform == "win32":
+            self.window.iconbitmap(str(PE.source / PE.icon_resource))
         self.window.geometry("760x490"); self.window.minsize(700, 450)
         self.path, self.port, self.status = tk.StringVar(value=initial or ""), tk.StringVar(value=str(port)), tk.StringVar(value="Vorhandenes lokales Picross-Checkout bewusst auswählen.")
         frame = ttk.Frame(self.window, padding=24); frame.pack(fill="both", expand=True)
@@ -239,7 +242,6 @@ def _main():
 
 
 def main():
-    from tools.app_products import PE
     from tools.production_workspace.install_interlock import InstallInterlock
     interlock = InstallInterlock(app=PE)
     try:

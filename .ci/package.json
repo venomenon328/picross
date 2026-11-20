@@ -1,17 +1,17 @@
 {
   "format": "development-ci-plan/v1",
-  "issue": "https://github.com/venomenon328/picross/issues/717",
-  "package": "B-K08-PW-REMOVAL-AUTH",
+  "issue": "https://github.com/venomenon328/picross/issues/691",
+  "package": "PE-APP-ICON1",
   "modules": [
     "tools"
   ],
-  "purpose": "Den authentifizierten PR-Abruf des Actions-Workers und die vollständige P2-Transaktion mit synthetischem Bare-Remote prüfen.",
-  "omitted": "Der Fix ändert den PR-Transport des Workers. Spielpfade, Fachmodule, Browsermatrix und MSI-Bau gehören nicht zum Prüfbedarf. Die produktive B-K08-Entfernung bleibt als Betriebsprobe offen.",
+  "purpose": "Feste PW-/PE-Iconwahl, Fingerprinttrennung und vorhandene Paket- und Releaseregressionen prüfen. Ein separater Windows-x64-Diagnosebau inspiziert den tatsächlichen PE-MSI.",
+  "omitted": "Spiel- und Editorfachfunktionen bleiben unverändert. Fachmodule, native Zusatzmodule, Preflight, Delivery und Browserdiagnostik sind nicht angefordert. Das reguläre Windows-Spielpaket bleibt Teil der Package CI.",
   "test_changes": [
     {
-      "path": "tools/test_work_publish.py",
+      "path": "tools/test_editor_installer.py",
       "disposition": "change-scoped",
-      "reason": "Der synthetische Durchstich prüft Worker-Authentifizierung, anonyme Clientabfragen, Abbruch bei PR-Fehlern oder Konflikten, Quittung und anschließenden Abbau."
+      "reason": "Prüft die feste Produktzuordnung der ICO-Dateien im Fingerprint und in der WiX-Quelle für den Programmeintrag und beide Verknüpfungen."
     }
   ],
   "core_change": null,

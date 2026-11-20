@@ -4,12 +4,13 @@ from pathlib import Path
 import tempfile
 import unittest
 from unittest.mock import patch
+import xml.etree.ElementTree as ET
 from tools.app_products import PW, PE
 from tools.production_workspace import payload, release_channel as channel, update_verifier as verifier
 from tools.production_workspace.release import release
 from tools.production_workspace.update_diagnostic import test_identity
 from tools import test_production_installer as fixtures
-from tools.production_workspace.build_installer import wix_source
+from tools.production_workspace.build_installer import NS, wix_source
 
 class EditorInstallerTests(unittest.TestCase):
     def test_product_signatures_assets_and_versions(self):
@@ -99,6 +100,21 @@ class EditorInstallerTests(unittest.TestCase):
         self.assertNotIn('secrets.',workflow.split('  publish:')[0]);self.assertNotIn('PW_',workflow)
         self.assertIn("vars.PE_UPDATE_SIGNING_ENABLED == 'true'",workflow)
         self.assertIn("github.event_name == 'workflow_run' && github.ref == 'refs/heads/main'",workflow)
+
+    def test_icon_binding_is_product_specific(self):
+        for app, other, path in ((PE, PW, 'assets/editor.ico'), (PW, PE, 'assets/launcher.ico')):
+            with self.subTest(app=app.key), tempfile.TemporaryDirectory() as folder:
+                image = Path(folder)
+                icon_path = app.package + '/' + path
+                self.assertTrue(payload.selected(icon_path, app=app))
+                self.assertFalse(payload.selected(icon_path, app=other))
+                tree = wix_source(image, release(app=app), image / 'Guard.exe', app=app)
+                ns = {'w': NS}
+                icon = tree.find('.//w:Icon[@Id="AppIcon"]', ns)
+                self.assertEqual(Path(icon.get('SourceFile')), app.source / path)
+                self.assertTrue(Path(icon.get('SourceFile')).is_file())
+                self.assertEqual(tree.find('.//w:Property[@Id="ARPPRODUCTICON"]', ns).get('Value'), 'AppIcon')
+                self.assertEqual([link.get('Icon') for link in tree.findall('.//w:Shortcut', ns)], ['AppIcon', 'AppIcon'])
 
     @unittest.skipUnless(os.name=='nt','Windows liveness event')
     def test_pe_product_wide_liveness(self):

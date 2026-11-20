@@ -37,6 +37,7 @@ def sha(path):
 
 def build(destination, *, version=None, app=PW):
     package = app.source
+    icon = package / app.icon_resource
     if sys.platform != 'win32' or platform.machine().lower() not in ('amd64', 'x86_64') or platform.python_version() != '3.13.14':
         raise RuntimeError('Build benötigt CPython 3.13.14 Windows x64.')
     import tkinter
@@ -90,7 +91,7 @@ def build(destination, *, version=None, app=PW):
     env.update(PYINSTALLER_CONFIG_DIR=str(work / 'cache'), TEMP=str(work), TMP=str(work), PYTHONHASHSEED='0')
     resources = {f'ui/{name}': sha(package / 'ui' / name) for name in
                  (('index.html', 'app.js', 'workflow.js', 'style.css') if app == PW else ('index.html', 'app.js', 'style.css'))}
-    resources['assets/launcher.ico'] = sha(PACKAGE / 'assets/launcher.ico')
+    resources[app.icon_resource] = sha(icon)
     if helper:
         resources['UpdateHelper.exe'] = sha(helper)
     production_trust(app=app)
@@ -144,7 +145,7 @@ def build(destination, *, version=None, app=PW):
         repr(product['version']) + '), StringStruct("Comments", ' + repr(commit) + ')])]), '
         'VarFileInfo([VarStruct("Translation", [1031, 1200])])])', encoding='utf-8')
     subprocess.run([sys.executable, '-m', 'PyInstaller', '--clean', '--noconfirm', '--onedir', '--windowed',
-                    '--noupx', '--name', app.executable, '--icon', str(PACKAGE / 'assets/launcher.ico'),
+                    '--noupx', '--name', app.executable, '--icon', str(icon),
                     '--version-file', str(file_version),
                     '--distpath', str(destination / 'dist'),
                     '--workpath', str(work / 'pyinstaller'), '--specpath', str(work), '--paths', str(ROOT),
@@ -154,7 +155,7 @@ def build(destination, *, version=None, app=PW):
                     '--hidden-import', 'cryptography.hazmat.primitives.asymmetric.ed25519',
                     '--hidden-import', '_cffi_backend',
                     '--add-data', str(package / 'ui') + ':' + app.package + '/ui',
-                    '--add-data', str(PACKAGE / 'assets/launcher.ico') + ':tools/production_workspace/assets',
+                    '--add-data', str(icon) + ':' + app.package + '/assets',
                     '--add-data', str(manifest_file) + ':' + app.package,
                     *(['--add-data', str(helper) + ':' + app.package] if helper else []),
                     '--add-data', str(package / 'release.json') + ':' + app.package,
@@ -238,6 +239,8 @@ def verify_update_payload(image, pyz, audit, *, app=PW):
     sources |= {app.package + '/release.json', app.package + '/update-trust.json'}
     if not sources <= observed:
         raise RuntimeError('Verifier-/Trustquellen fehlen im tatsächlichen PyInstaller-Inputabgleich.')
+    if app.package + '/' + app.icon_resource not in observed:
+        raise RuntimeError('App-Icon fehlt im tatsächlichen PyInstaller-Inputabgleich.')
     files = [p.relative_to(image).as_posix() for p in image.rglob('*.pyd')]
     if not any(p.endswith('cryptography/hazmat/bindings/_rust.pyd') for p in files) or not any(
             Path(p).name.startswith('_cffi_backend.') for p in files):

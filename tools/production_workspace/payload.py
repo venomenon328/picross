@@ -48,7 +48,7 @@ PE_SHARED = {
     'release_channel.py', 'release_catalog.py', 'build_windows.py', 'build_installer.py',
     'verify_installer.py', 'smoke_installer.py', 'install_interlock.py',
     'requirements-windows.txt', 'requirements-update.txt', 'packaging/Guard.cs',
-    'assets/launcher.ico', 'packaging/UpdateHelper.cs', 'app_updates.py', 'update_client.py',
+    'packaging/UpdateHelper.cs', 'app_updates.py', 'update_client.py',
     'update_storage.py', 'update_windows.py', 'instance.py', 'processes.py',
 }
 PE_EXCLUDED = {'images_cli', 'metadata_cli', 'raster_cli', 'editor_cli', 'za1_fixtures'}
@@ -63,7 +63,7 @@ def pe_selected(path):
         if local in PE_DIAGNOSTIC:
             return False
         if (local.endswith('.py') or local.startswith('ui/') or
-                local in {'README.md', 'requirements-windows.txt', 'release.json', 'update-trust.json'}):
+                local in {PE.icon_resource, 'README.md', 'requirements-windows.txt', 'release.json', 'update-trust.json'}):
             return True
         raise ValueError('Unclassified potential package input: ' + path)
     if path.startswith(WORKSPACE):
@@ -97,7 +97,7 @@ def selected(path, *, app=PW):
             if local.endswith('.py'):
                 return True
             if scope == WORKSPACE and (local.startswith('ui/') or local.startswith('licenses/') or
-                                      local in {'assets/launcher.ico', 'packaging/Guard.cs', 'packaging/UpdateHelper.cs', 'release.json',
+                                      local in {PW.icon_resource, 'packaging/Guard.cs', 'packaging/UpdateHelper.cs', 'release.json',
                                                 'requirements-windows.txt', 'requirements-update.txt',
                                                 'update-trust.json', 'START-WINDOWS.txt'}):
                 return True
