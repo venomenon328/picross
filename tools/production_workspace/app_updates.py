@@ -23,6 +23,7 @@ class Updates:
         self.started = False
         self.taken = False
         self.status = 'App-Updates sind ausgeschaltet.'
+        self.progress = None
         self.enabled = None
         self.identity = None
         self.preferences = None
@@ -49,17 +50,24 @@ class Updates:
             self.status = 'App-Updates in diesem Start nicht verfügbar. Installierte App und geschützten Updatezustand prüfen.'
             self.started = True
 
-    def choose(self, enabled):
+    def save_preference(self, enabled):
         if self.preferences is None or self.taken or self.runtime.stop_requested.is_set():
-            return
+            return False
         try:
             self.preferences.write(enabled)
         except (ValueError, OSError):
-            self.cancel()
-            self.status = 'Updateentscheidung konnte nicht sicher gespeichert werden. Automatik bleibt aus.'
             self.enabled = False
-            return
+            self.status = 'Updateentscheidung konnte nicht sicher gespeichert werden. Automatik bleibt aus.'
+            return False
         self.enabled = enabled
+        return True
+
+    def choose(self, enabled):
+        if self.preferences is None or self.taken or self.runtime.stop_requested.is_set():
+            return
+        if not self.save_preference(enabled):
+            self.cancel()
+            return
         if not enabled:
             self.cancel()
             self.status = 'App-Updates ausgeschaltet. Ein laufender Download wird verworfen.'
@@ -85,6 +93,10 @@ class Updates:
             return bool(not self.cancelled.is_set() and not self.taken and
                         (self.thread and self.thread.is_alive() or self.handoff))
 
+    def report_progress(self, phase, received, total):
+        # Publish a single immutable snapshot for the GUI thread.
+        self.progress = (phase, received, total)
+
     def _run(self):
         try:
             self.status = 'Signierten App-Updatekanal prüfen …'
@@ -104,7 +116,8 @@ class Updates:
                 return
             self.stage = Stage(self.runtime.lock.directory)
             self.status = 'Geprüfte neuere Appversion herunterladen …'
-            candidate = client.download(metadata, assets, self.stage, self.cancelled, **self.app_args)
+            progress = {'progress': self.report_progress} if self.app == PG else {}
+            candidate = client.download(metadata, assets, self.stage, self.cancelled, **self.app_args, **progress)
             if self.cancelled.is_set() or self.preferences.read() is not True or self.runtime.stop_requested.is_set():
                 raise client.Cancelled()
             self.status = 'Vollständigen Kandidaten und unabhängigen Updatehelfer prüfen …'
@@ -129,6 +142,7 @@ class Updates:
             self.status = ('App-Update nicht möglich: Kanal, Signatur, Version, Download oder Übergabe nicht bestätigt. '
                            'Vorhandene App bleibt verfügbar; beim nächsten Start erneut prüfen oder manuell installieren.')
         finally:
+            self.progress = None
             # A started helper owns its lifetime. Pending staging is recovered only
             # after its actual exit; never delete files from under an unknown child.
             if self.stage and self.stage.path.exists() and not (self.runtime.lock.directory / 'update-pending.json').exists():

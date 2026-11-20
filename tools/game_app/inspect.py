@@ -94,14 +94,7 @@ def verify_payload(build, root, payload, components, report, compare_build):
         require(binding(payload['licenses/' + target])['sha256'] == digest, 'Unbound Godot license: ' + target)
     verify_write_scope(root)
     msi = build / report['msi_file']
-    verify_database(msi)
-    registry = msi_rows(msi, 'Registry', ('Root', 'Key', 'Name', 'Value'))
-    identity = {name: (kind, path, value) for kind, path, name, value in registry
-                if name in ('Version', 'ProductCode')}
-    require(identity == {
-        'Version': ('1', PG.registry + '\\Installer', components['version']),
-        'ProductCode': ('1', PG.registry + '\\Installer', '{' + components['product_code'] + '}'),
-    }, 'PG application registration mismatch')
+    verify_database(msi, components)
 
 
 def verify_write_scope(root):
@@ -112,8 +105,7 @@ def verify_write_scope(root):
     require(parents['INSTALLFOLDER'] == 'LocalAppDataFolder' and parents['AppMenu'] == 'ProgramMenuFolder'
             and directories['AppMenu'].get('Name') == 'Picross', 'Foreign MSI directory')
     shortcuts = [('MenuShortcutLink', 'AppMenu', 'Picross'),
-                 ('DesktopShortcutLink', 'DesktopFolder', 'Picross'),
-                 ('UpdateSettingsLink', 'AppMenu', 'Picross – Update-Einstellungen')]
+                 ('DesktopShortcutLink', 'DesktopFolder', 'Picross')]
     for uid, directory, name in shortcuts:
         link = directories[directory].find(f'w:Component/w:Shortcut[@Id="{uid}"]', NS)
         require(link is not None and link.get('Name') == name and link.get('WorkingDirectory') == 'INSTALLFOLDER'
@@ -127,7 +119,7 @@ def verify_write_scope(root):
             if ancestor == 'INSTALLFOLDER':
                 allowed.add(directory)
                 break
-    require(len(root.findall('.//w:Shortcut', NS)) == 3 and
+    require(len(root.findall('.//w:Shortcut', NS)) == len(shortcuts) and
             all(node.get('Directory') in allowed for node in root.findall('.//w:RemoveFolder', NS)) and
             all(not root.findall('.//w:' + name, NS) for name in
                 ('RemoveFile', 'CopyFile', 'MoveFile', 'RemoveRegistryKey', 'RemoveRegistryValue',
@@ -149,15 +141,24 @@ def verify_write_scope(root):
             'Guard must run before upgrade/uninstall changes')
 
 
-def verify_database(msi):
+def verify_database(msi, components):
     # Dark treats formatted MSI shortcut targets as advertised, so read the
     # authoritative Shortcut table for the target/arguments.
     shortcuts = msi_rows(msi, 'Shortcut', ('Shortcut', 'Directory_', 'Target', 'Arguments'))
     require(sorted(shortcuts) == [
         ['DesktopShortcutLink', 'DesktopFolder', '[INSTALLFOLDER]Picross-Game.exe', ''],
         ['MenuShortcutLink', 'AppMenu', '[INSTALLFOLDER]Picross-Game.exe', ''],
-        ['UpdateSettingsLink', 'AppMenu', '[INSTALLFOLDER]Picross-Game.exe', '--update-settings'],
     ], 'MSI shortcut target/arguments mismatch')
+    registry = msi_rows(msi, 'Registry', ('Root', 'Key', 'Name', 'Value', 'Component_'))
+    key = PG.registry + '\\Installer'
+    identity = [row for row in registry if row[1] == key or row[2] in ('Version', 'ProductCode')]
+    require(sorted(identity) == sorted([
+        ['1', key, 'EmptyFolders', '#1', 'EmptyFolders'],
+        ['1', key, 'MenuShortcut', '#1', 'MenuShortcut'],
+        ['1', key, 'DesktopShortcut', '#1', 'DesktopShortcut'],
+        ['1', key, 'Version', components['version'], 'ProductRegistration'],
+        ['1', key, 'ProductCode', '{' + components['product_code'] + '}', 'ProductRegistration'],
+    ]), 'PG application registration mismatch')
 
 
 def main():

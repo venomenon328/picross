@@ -84,12 +84,11 @@ def wix_source(image, product, guard, *, app=PW):
             element(component, 'RemoveFolder', Id='RemoveMenu', On='uninstall')
         element(feature, 'ComponentRef', Id=cid)
     if app == PG:
-        cid = 'UpdateSettings'
-        update = element(menu, 'Component', Id=cid,
+        # The major upgrade removes the old Settings shortcut with its component.
+        # Give the replacement registration its own identity and no shortcut.
+        cid = 'ProductRegistration'
+        update = element(install, 'Component', Id=cid,
                          Guid=str(uuid.uuid5(uuid.UUID(product['upgrade_code']), cid)), Win64='yes')
-        element(update, 'Shortcut', Id=cid + 'Link', Name='Picross – Update-Einstellungen',
-                Target='[INSTALLFOLDER]Picross-Game.exe', Arguments='--update-settings',
-                WorkingDirectory='INSTALLFOLDER', Icon='AppIcon', Advertise='no')
         for name, value in (('Version', product['version']), ('ProductCode', '{' + product['product_code'] + '}')):
             element(update, 'RegistryValue', Root='HKCU', Key=app.registry + '\\Installer',
                     Name=name, Type='string', Value=value, KeyPath='yes' if name == 'Version' else 'no')

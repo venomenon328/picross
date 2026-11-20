@@ -18,7 +18,7 @@ def probe(work):
     state = work / PG.state_directory
     preferences = Preferences(state / '.updates')
     calls, starts, observations = [], [], []
-    native_window = gate.window
+    native_window = gate.LauncherWindow
     scenario = ''
 
     def discover(version, cancel, **_):
@@ -31,33 +31,42 @@ def probe(work):
             raise client.Cancelled()
         raise OSError('Isolated offline diagnosis')
 
-    def open_window(title):
-        root, status, buttons = native_window(title)
-        seen = {'scenario': scenario, 'title': title}
+    def open_window(version, play, choose, skip, close):
+        view = native_window(version, play, choose, skip, close)
+        root = view.root
+        seen = {'scenario': scenario, 'title': root.title()}
         observations.append(seen)
 
-        def act():
+        def observe():
             seen['window'] = visible_window(os.getpid())
-            seen['status'] = status.get()
-            captions = {button.cget('text'): button for button in buttons.winfo_children()}
-            seen['buttons'] = sorted(captions)
-            if scenario == 'close':
+            seen['status'] = view.status.cget('text')
+            seen['buttons'] = [button.cget('text') for button in (view.primary, view.setting, view.skip)
+                               if button.winfo_ismapped()]
+            if scenario == 'skip':
+                view.skip.invoke()
+            elif scenario == 'close':
                 root.tk.call(root.protocol('WM_DELETE_WINDOW'))
-            elif scenario != 'offline':
-                gesture = {'first': 'Ablehnen', 'settings': 'Aktivieren', 'skip': 'Ohne Update spielen'}[scenario]
-                captions[gesture].invoke()
+
+        def act():
+            if scenario == 'settings':
+                observe()
+                view.setting.invoke()
+                close()
+            elif scenario in ('first', 'declined'):
+                observe()
+                view.primary.invoke()
+            else:
+                view.primary.invoke()
+                root.after(400, observe)
 
         root.after(400, act)
-        return root, status, buttons
+        return view
 
     identity = SimpleNamespace(executable=directory / (PG.executable + '.exe'), version=PG.anchor)
-    with patch.object(gate, 'window', open_window), patch.object(windows, 'installation', return_value=identity), \
+    with patch.object(gate, 'LauncherWindow', open_window), patch.object(windows, 'installation', return_value=identity), \
             patch.object(client, 'discover', discover):
         for scenario in ('first', 'declined', 'settings', 'skip', 'close', 'offline'):
-            if scenario == 'settings':
-                gate.settings(state)
-            else:
-                gate.startup(state, directory, lambda: starts.append(scenario))
+            gate.startup(state, directory, lambda: starts.append(scenario), version=PG.anchor)
             if scenario == 'first':
                 require(preferences.read() is False, 'First decline not atomically stored')
             if scenario in ('settings', 'skip', 'close'):

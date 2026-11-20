@@ -41,8 +41,16 @@ class MemoryTransport:
         client.checkpoint(cancel, deadline)
         return canonical(self.rows) if url.startswith(client.API + '?') else self.files[url.rsplit('/', 1)[1]]
 
-    def transfer(self, url, output, limit, cancel, deadline, *, expected=None):
-        output.write(self.read(url, limit, cancel, deadline))
+    def transfer(self, url, output, limit, cancel, deadline, *, expected=None, received=None):
+        raw = self.read(url, limit, cancel, deadline)
+        if received is None:
+            output.write(raw)
+        else:
+            for offset in range(0, len(raw), 64):
+                client.checkpoint(cancel, deadline)
+                size = output.write(raw[offset:offset + 64])
+                received(size)
+            client.checkpoint(cancel, deadline)
 
 
 class ChannelTests(unittest.TestCase):
@@ -76,6 +84,40 @@ class ChannelTests(unittest.TestCase):
             self.assertEqual(len(list(stage.path.iterdir())), 7)
         finally:
             stage.cleanup()
+
+    def test_progress_aggregates_authenticated_assets_and_stops_on_cancel(self):
+        metadata, assets = self.discover()
+        total = sum(len(raw) for raw in self.files.values())
+        for abort in (False, True):
+            with self.subTest(abort=abort):
+                observed = []
+                cancel = threading.Event()
+                stage = Stage(self.root / '.launcher')
+
+                def progress(phase, received, expected):
+                    observed.append((phase, received, expected))
+                    if abort and received:
+                        cancel.set()
+
+                authenticate = Mock(side_effect=lambda raw, sig, files: verifier._verify(raw, sig, files, self.trust))
+                try:
+                    if abort:
+                        with self.assertRaises(client.Cancelled):
+                            client._download(metadata, assets, stage, cancel, self.transport,
+                                             authenticate, progress=progress)
+                        self.assertEqual(len(observed), 2)
+                        self.assertLess(observed[-1][1], total)
+                        authenticate.assert_not_called()
+                    else:
+                        client._download(metadata, assets, stage, cancel, self.transport, authenticate, progress=progress)
+                        self.assertEqual(observed[-2:], [('download', total, total), ('verify', total, total)])
+                        self.assertEqual(sorted({row[1] for row in observed[:-1]}),
+                                         [row[1] for row in observed[:-1]])
+                        authenticate.assert_called_once()
+                    self.assertEqual(observed[0], ('download', 0, total))
+                    self.assertTrue(all(row[2] == total for row in observed))
+                finally:
+                    stage.cleanup()
 
     def test_empty_production_root_and_v1_never_authorize(self):
         with self.assertRaises(ValueError):
