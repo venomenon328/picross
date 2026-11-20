@@ -10,7 +10,7 @@ from tools.game_app.player import play
 from tools.game_app.restart import ENV, restart
 from tools.production_workspace.install_interlock import InstallInterlock
 from tools.production_workspace.update_storage import no_links, read_small
-from tools.production_workspace.update_windows import local_appdata
+from tools.production_workspace.update_windows import installation, local_appdata
 
 
 def main():
@@ -20,6 +20,7 @@ def main():
     directory = no_links(Path(sys.executable)).parent
     state = no_links(local_appdata() / PG.state_directory)
     if mode == ['--update-settings']:
+        installation(app=PG)
         settings(state)
         return
     build = read_small(PG.source / 'build.json')

@@ -13,6 +13,7 @@ from tools.game_app.inspect import verify_database
 from tools.production_workspace import payload
 from tools.production_workspace.release import release
 from tools.production_workspace.release_channel import next_version
+from tools.production_workspace.update_storage import atomic_json, recover
 
 
 class GameInstallerTests(unittest.TestCase):
@@ -89,6 +90,32 @@ class GameInstallerTests(unittest.TestCase):
         self.assertFalse(selected('tools/game_app/diagnose.py'))
         self.assertFalse(selected('tools/production_workspace/helper_diagnostic.py'))
         self.assertFalse(selected('tools/puzzle_editor/desktop.py'))
+
+    def test_pending_is_unconfirmed_and_requires_end_before_cleanup(self):
+        with tempfile.TemporaryDirectory(prefix='pg-pending-') as folder:
+            launcher = Path(folder)
+            nonce = '0' * 48
+            stage = launcher / 'update-staging' / nonce
+            stage.mkdir(parents=True)
+            msi = release(version='0.1.1', app=PG)['filename']
+            pending = {'format': 'picross-update-pending-v1', 'nonce': nonce, 'stage': nonce,
+                       'version': '0.1.1', 'files': [msi, msi + '.sha256', 'START.txt', 'delivery.json',
+                            'inputs.json', 'manifest.json', 'manifest.sig.json', 'UpdateHelper.exe', 'active']}
+            atomic_json(launcher / 'update-pending.json', pending)
+            (stage / 'active').write_bytes(b'')
+            foreign = stage / 'foreign'
+            foreign.write_bytes(b'external')
+            self.assertIn('unbestätigt', recover(launcher, app=PG))
+            self.assertEqual(foreign.read_bytes(), b'external')
+            atomic_json(launcher / 'update-result.json', {'format': 'picross-update-result-v1',
+                        'nonce': nonce, 'status': 'cancelled', 'version': '0.1.1'})
+            with self.assertRaisesRegex(ValueError, 'Foreign PG'):
+                recover(launcher, app=PG)
+            self.assertTrue((stage / 'active').exists())
+            foreign.unlink()
+            self.assertIn('abgebrochen', recover(launcher, app=PG))
+            self.assertFalse(stage.exists())
+            self.assertIsNone(recover(launcher, app=PG))
 
     def test_start_gate_ignores_a_late_skip_after_ready_take(self):
         # Drive the GUI-owned transition with a READY worker, without requiring a Tk display.

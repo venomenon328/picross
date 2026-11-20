@@ -85,9 +85,13 @@ python -m tools.game_app.inspect --build <build> --output <inspection> --expecte
 python -m tools.game_app.diagnose --build <build> --output <diagnose>
 ```
 
-Für die Inspektion wird `pefile==2024.8.26` benötigt. Die Diagnose prüft
-regulären Exportstart, den nativen Launcher und die Guard-Entscheidungen
-mit isoliertem Profil. MSI-Inspektion, automatisierte Startbeobachtung,
+Bau und Inspektion verwenden die [gebundene Windows-Bauumgebung](../../tools/production_workspace/WINDOWS_BUILD.md#gebundener-bau-und-version).
+Die Startdiagnose prüft den regulären Export, den nativen Launcher und
+die Guard-Entscheidungen mit isoliertem Profil. Der Diagnosedispatch prüft
+außerdem den konkreten Kandidaten mit flüchtiger synthetischer Signatur,
+den PG-Helfer und die private Startfreigabe mit einem echten Playerfenster.
+Der ausgeschlossene Diagnosetreiber liefert dafür den isolierten Kontext
+nach einem simulierten MSI-Erfolg. MSI-Inspektion, automatisierte Startbeobachtung,
 persönliche Sicht-/Bedienprobe und echte Installation sind eigene Belege.
 Die persönliche nicht erhöhte Installations-/Update-/Fortsetzenprobe
 [GAME-APP-R01](https://github.com/venomenon328/picross/issues/725#game-app-c-und-abschlussgate-game-app-r01)

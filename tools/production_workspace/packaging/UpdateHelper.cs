@@ -136,16 +136,19 @@ public static class UpdateHelper {
         Console.Out.NewLine="\n"; Console.WriteLine("READY "+nonce); Console.Out.Flush();
         return BoundedLine(80,1800000)=="GO "+nonce;
     }
-    static void Parent(IntPtr handle, Dictionary<string,object> d) {
-        Need(handle!=IntPtr.Zero && GetProcessId(handle)==Number(d,"pid") && WaitForSingleObject(handle,0)==258);
+    static void ProcessParent(uint child, uint expected) {
         var snapshot=CreateToolhelp32Snapshot(2,0); Need(snapshot!=new IntPtr(-1));
         try {
             var entry=new ProcessEntry(); entry.size=(uint)Marshal.SizeOf(entry); bool found=false;
             if(Process32First(snapshot,ref entry)) do {
-                if(entry.pid==Process.GetCurrentProcess().Id) { Need(entry.parent==Number(d,"pid")); found=true; break; }
+                if(entry.pid==child) { Need(entry.parent==expected); found=true; break; }
             } while(Process32Next(snapshot,ref entry));
             Need(found);
         } finally { CloseHandle(snapshot); }
+    }
+    static void Parent(IntPtr handle, Dictionary<string,object> d) {
+        Need(handle!=IntPtr.Zero && GetProcessId(handle)==Number(d,"pid") && WaitForSingleObject(handle,0)==258);
+        ProcessParent((uint)Process.GetCurrentProcess().Id, checked((uint)Number(d,"pid")));
         var image=new StringBuilder(32768); uint n=32768;
         Need(QueryFullProcessImageName(handle,0,image,ref n) && String.Equals(image.ToString(),Exe,StringComparison.OrdinalIgnoreCase));
         IntPtr token; Need(OpenProcessToken(handle,8,out token));
@@ -317,6 +320,7 @@ public static class UpdateHelper {
             Need(process!=IntPtr.Zero);
             try {
                 UserImage(process,Path.Combine(Install,"picross-p1.exe"));
+                ProcessParent(GetProcessId(process),(uint)launched.Id);
                 Need(!launched.HasExited && GetWindowThreadProcessId(window,out pid)!=0 &&
                      pid==GetProcessId(process) && IsWindowVisible(window));
             } finally { CloseHandle(process); }
@@ -482,7 +486,11 @@ public static class UpdateHelper {
 #if PG
             Need(Text(components,"format")=="picross-pg-build-v2" && Text(components,"upgrade_code")==Upgrade &&
                  Text(components,"payload_fingerprint")==Text(d,"fingerprint"));
-            RestartGame(d);
+            NoLinks(Exe);
+            using(var launcher=new FileStream(Exe,FileMode.Open,FileAccess.Read,FileShare.Read)) {
+                Need(launcher.Length==Number(d,"exe_bytes") && Hash(launcher)==Text(d,"exe_sha256"));
+                RestartGame(d);
+            }
 #elif PE
             RestartEditor(d);
 #else

@@ -65,10 +65,12 @@ def verify_payload(build, root, payload, components, report, compare_build):
                 'licenses/OpenSSL-4.0.3.txt')), 'Missing PG runtime license')
     if compare_build:
         staged = build / 'work/player'
-        for file in staged.rglob('*'):
-            if file.is_file() and file.name != 'picross-p1.console.exe':
+        for name in ('picross-p1.exe', 'picross-p1.pck', 'SPIELANLEITUNG.md'):
+            require(binding(payload[name]) == binding(staged / name), 'Export member mismatch: ' + name)
+        for file in (staged / 'licenses').rglob('*'):
+            if file.is_file():
                 require(binding(payload[file.relative_to(staged).as_posix()]) == binding(file),
-                        'Export member mismatch: ' + file.name)
+                        'Export license mismatch: ' + file.name)
         frozen = build / 'frozen-audit.json'
         audit = json.loads(frozen.read_bytes())
         inputs = json.loads((build / 'inputs.json').read_bytes())
@@ -81,13 +83,25 @@ def verify_payload(build, root, payload, components, report, compare_build):
         require({row['file']: row for row in native} ==
                 {row['file']: row for row in audit['native_inventory']},
                 'MSI native inventory differs from the frozen build')
+        from PyInstaller.archive.readers import CArchiveReader
+        embedded = CArchiveReader(str(payload['Picross-Game.exe'])).open_embedded_archive('PYZ.pyz')
+        modules = sorted(name for name in embedded.toc if name.startswith('tools.'))
+        require(modules == audit['frozen_modules'], 'MSI PYZ differs from the frozen module audit')
     for prefix, name in [('player', 'picross-p1.exe'), ('pck', 'picross-p1.pck')]:
         require(binding(payload[name]) == {k: report[prefix + '_' + k] for k in ('bytes', 'sha256')},
                 'Foreign player resource: ' + name)
     for target, digest in GODOT_NOTICES.values():
         require(binding(payload['licenses/' + target])['sha256'] == digest, 'Unbound Godot license: ' + target)
     verify_write_scope(root)
-    verify_database(build / report['msi_file'])
+    msi = build / report['msi_file']
+    verify_database(msi)
+    registry = msi_rows(msi, 'Registry', ('Root', 'Key', 'Name', 'Value'))
+    identity = {name: (kind, path, value) for kind, path, name, value in registry
+                if name in ('Version', 'ProductCode')}
+    require(identity == {
+        'Version': ('1', PG.registry + '\\Installer', components['version']),
+        'ProductCode': ('1', PG.registry + '\\Installer', '{' + components['product_code'] + '}'),
+    }, 'PG application registration mismatch')
 
 
 def verify_write_scope(root):
