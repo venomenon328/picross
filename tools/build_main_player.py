@@ -136,7 +136,7 @@ def main(argv: list[str] | None = None, *, app_inputs=None, audit=None) -> int:
             if audit is not None:
                 from tools.game_app.inputs import write_export_audit
                 write_export_audit(audit, app_inputs, source_commit, cache, editor,
-                                   imported_backgrounds, args.output_dir.resolve())
+                                   imported_backgrounds, args.output_dir.resolve(), result["output"])
             print(f"PLAYER SOURCE {source_commit}", flush=True)
             print("PLAYER FILES " + ", ".join(files), flush=True)
             print("PLAYER BUILD PASS (Windows launch not run on Linux)", flush=True)

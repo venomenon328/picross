@@ -281,7 +281,11 @@ def seal(build, inspection, planned, *, app=PW):
                 'assets': {name: {'bytes': len(raw), 'sha256': digest(raw)} for name, raw in files.items()},
                 'inspection': strict_json(inspection.read_bytes())}
     verify_files(manifest, files, app=app)
-    (build / MANIFEST).write_bytes(canonical(manifest))
+    manifest_raw = canonical(manifest)
+    (build / MANIFEST).write_bytes(manifest_raw)
+    if app == PG:
+        total = len(manifest_raw) + sum(len(raw) for raw in files.values())
+        print(f'PG diagnostic/publisher candidate assets: {total} bytes including build manifest')
     return manifest
 
 
@@ -295,7 +299,8 @@ def verify_tag(api, manifest, *, allow_missing, migrated_source=None):
     expected = {manifest['source_commit']}
     if migrated_source is not None:
         expected.add(migrated_source)
-    require(obj['type'] == 'commit' and obj['sha'] in expected, 'Conflicting application release tag')
+    product = manifest['tag'].split('-', 1)[0].upper()
+    require(obj['type'] == 'commit' and obj['sha'] in expected, f'Conflicting {product} release tag')
 
 
 def _candidate(build, planned, *, app=PW):

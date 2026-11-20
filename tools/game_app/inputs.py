@@ -83,7 +83,7 @@ GODOT_NOTICES = {
 }
 
 
-def write_export_audit(output, inputs, commit, cache, editor, backgrounds, player):
+def write_export_audit(output, inputs, commit, cache, editor, backgrounds, player, export_log):
     for name, (target, digest) in GODOT_NOTICES.items():
         url = f'https://raw.githubusercontent.com/godotengine/godot/{GODOT_NOTICE_COMMIT}/{name}'
         cached = cache / target
@@ -94,6 +94,11 @@ def write_export_audit(output, inputs, commit, cache, editor, backgrounds, playe
     with pack.open('rb') as stream:
         if stream.read(4) != b'GDPC':
             raise ValueError('Player did not emit a separate Godot pack')
+    entries = sorted(set(re.findall(r'Storing File: res://([^\r\n]+)', export_log)))
+    if not entries or 'project.binary' not in entries or any(
+        entry.startswith(('tests/', 'study/', 'full_view_study/', 'perf_a/')) for entry in entries
+    ):
+        raise ValueError('Regular pack inventory missing or includes technical resources')
     report = {
         'format': 'picross-pg-export-audit-v1',
         'commit': commit, 'fingerprint': inputs['sha256'],
@@ -102,6 +107,7 @@ def write_export_audit(output, inputs, commit, cache, editor, backgrounds, playe
         'export': {'preset': 'P1 Windows x86_64', 'mode': 'debug', 'app_name': 'picross · P1'},
         'project_inputs': [row['file'] for row in inputs['files'] if runtime(row['file'])],
         'generated_background_import': backgrounds,
+        'exported_resources': entries,
         'player_files': [
             {'file': member.relative_to(player).as_posix(), 'bytes': member.stat().st_size,
              'sha256': toolchain.sha256_file(member)}

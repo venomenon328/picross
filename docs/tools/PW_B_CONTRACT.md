@@ -95,9 +95,9 @@ Resume arbeitet auf einem eigenen Worktree am erwarteten Commit. Der Publisher
 benötigt angemeldetes gh mit Repository-Schreibrecht und vollständige Gitbasis.
 Er prüft Rechte, Release-Mutierbarkeit und beide Generationen im Katalogbudget
 der installierten Appclients. Die kurzlebige Ref work-prod-control/catalog
-serialisiert Arbeitsänderungen und signierte PW-/PE-Veröffentlichungen. Jeder
-Arbeitswriter reserviert zusätzlich zwei Releases mit je sieben Assets für die
-nächsten beiden App-Releases. Alle drei Writer prüfen Seitenzahl, Metadatenumfang
+serialisiert Arbeitsänderungen und signierte PW-/PE-/PG-Veröffentlichungen. Jeder
+Arbeitswriter reserviert zusätzlich drei Releases mit je sieben Assets für die
+Appkanäle. Alle Writer prüfen Seitenzahl, Metadatenumfang
 und Abrufdauer innerhalb der Lease. Ein Appwriter prüft den vollständigen Draft
 erneut vor der Sichtbarschaltung. Nach Abbruch eines Arbeitswriters dieselbe
 Operation im selben Checkout wiederholen. Ein Appwriter wartet bis zu fünf

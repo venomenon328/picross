@@ -199,7 +199,17 @@ aus dem regulären Spielbestand. Sie startet weder die Product-Testmatrix
 noch ein Release/Deployment; ein tatsächlicher Windows-GUI-Start wird auf dem
 Linux-Runner nicht geprüft. Der separate CI-Playerexport bleibt unverändert.
 
-## Windows starten
+## Installiertes Picross unter Windows
+
+Öffne den `Picross-Spiel-X.Y.Z-windows-x64.msi`-Kandidaten und installiere für
+dein Windows-Benutzerkonto. **Picross** im Startmenü oder die optionale
+Desktopverknüpfung öffnet das Spiel. Beende das Spiel vor dem Installieren
+einer neueren Version oder dem Deinstallieren. Vorhandene Spielstände und
+Einstellungen findest du im gleichen Godot-Profil. GAME-APP-A startet das
+Spiel direkt. Die [Windows-App-Dokumentation](../docs/operations/WINDOWS_GAME_APP.md)
+beschreibt den technischen Kanal und seine Betriebsfreigabe.
+
+## Portablen Windows-Player starten
 
 Das vollständige ZIP entpacken und `picross-p1.exe` starten. Die EXE und
 `picross-p1.pck` müssen im selben Ordner bleiben. Keine Godot-Installation

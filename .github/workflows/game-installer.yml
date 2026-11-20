@@ -104,10 +104,23 @@ jobs:
           if ($LASTEXITCODE -ne 0) { throw 'MSI inspection failed' }
           & $python -m tools.game_app.release_channel seal --plan "$env:RUNNER_TEMP\pg-plan\plan.json" --build "$env:RUNNER_TEMP\pg-product" --inspection "$env:RUNNER_TEMP\pg-inspection\result.json"
           if ($LASTEXITCODE -ne 0) { throw 'Candidate binding failed' }
-          Get-Content "$env:RUNNER_TEMP\pg-product\input-audit.json"
           Get-Content "$env:RUNNER_TEMP\pg-product\delivery.json"
           Get-Content "$env:RUNNER_TEMP\pg-inspection\result.json"
           if ((git status --porcelain)) { throw 'Build changed source checkout' }
+      - name: GAME-APP-A candidate and bound delivery sidecars
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: Picross-Spiel-${{ needs.plan.outputs.source }}
+          path: |
+            ${{ runner.temp }}/pg-product/*.msi
+            ${{ runner.temp }}/pg-product/*.msi.sha256
+            ${{ runner.temp }}/pg-product/START.txt
+            ${{ runner.temp }}/pg-product/delivery.json
+            ${{ runner.temp }}/pg-product/inputs.json
+            ${{ runner.temp }}/pg-product/manifest.json
+          if-no-files-found: error
+          retention-days: 14
+          compression-level: 0
       - name: Isolated native launcher, catalog and guard diagnosis
         if: github.event_name == 'workflow_dispatch'
         shell: pwsh
@@ -125,20 +138,6 @@ jobs:
             ${{ runner.temp }}/pg-inspection/result.json
           retention-days: 7
           if-no-files-found: error
-      - name: GAME-APP-A candidate and bound delivery sidecars
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
-        with:
-          name: Picross-Spiel-${{ needs.plan.outputs.source }}
-          path: |
-            ${{ runner.temp }}/pg-product/*.msi
-            ${{ runner.temp }}/pg-product/*.msi.sha256
-            ${{ runner.temp }}/pg-product/START.txt
-            ${{ runner.temp }}/pg-product/delivery.json
-            ${{ runner.temp }}/pg-product/inputs.json
-            ${{ runner.temp }}/pg-product/manifest.json
-          if-no-files-found: error
-          retention-days: 14
-          compression-level: 0
 
   publication-gate:
     needs: [plan, installer]

@@ -4,6 +4,7 @@ from pathlib import Path
 
 from tools import p1_preflight as toolchain
 from tools.app_products import PG
+from tools.msi_database import msi_rows
 from tools.production_workspace.verify_installer import NS, require, verify
 
 from .inputs import GODOT_NOTICES, runtime
@@ -22,6 +23,7 @@ def verify_audit(build, audit, inputs, report):
                 'name': editor.name, 'sha256': editor.sha256, 'version': toolchain.EXPECTED_VERSION} and
             audit['templates'] == report['templates'] == {
                 'name': toolchain.TEMPLATES.name, 'sha256': toolchain.TEMPLATES.sha256} and
+            'project.binary' in audit['exported_resources'] and
             audit['export'] == {'preset': 'P1 Windows x86_64', 'mode': 'debug', 'app_name': 'picross · P1'} and
             toolchain.sha256_file(build / 'input-audit.json') == report['export_audit_sha256'],
             'Unbound regular Windows export audit')
@@ -54,6 +56,7 @@ def verify_payload(build, root, payload, components, report, compare_build):
     for target, digest in GODOT_NOTICES.values():
         require(binding(payload['licenses/' + target])['sha256'] == digest, 'Unbound Godot license: ' + target)
     verify_write_scope(root)
+    verify_database(build / report['msi_file'])
 
 
 def verify_write_scope(root):
@@ -65,8 +68,8 @@ def verify_write_scope(root):
             and directories['AppMenu'].get('Name') == 'Picross', 'Foreign MSI directory')
     for uid, directory in (('MenuShortcutLink', 'AppMenu'), ('DesktopShortcutLink', 'DesktopFolder')):
         link = directories[directory].find(f'w:Component/w:Shortcut[@Id="{uid}"]', NS)
-        require(link is not None and link.get('Target') == '[INSTALLFOLDER]Picross-Game.exe',
-                'Shortcut does not target the fixed PG launcher')
+        require(link is not None and link.get('Name') == 'Picross' and link.get('WorkingDirectory') == 'INSTALLFOLDER',
+                'Unexpected PG shortcut location or name')
     allowed = {'INSTALLFOLDER', 'AppMenu'}
     for directory in parents:
         ancestor = directory
@@ -81,11 +84,30 @@ def verify_write_scope(root):
                 ('RemoveFile', 'CopyFile', 'MoveFile', 'RemoveRegistryKey', 'RemoveRegistryValue',
                  'ServiceInstall', 'ServiceControl', 'IniFile', 'RemoveIniFile', 'Environment')),
             'Unexpected MSI write/remove operation')
+    require({node.get('Id') for node in root.findall('.//w:CustomAction', NS)} ==
+            {'SetINSTALLFOLDER', 'CheckStopped'}, 'Unexpected MSI custom action')
+    redirect = root.find('.//w:CustomAction[@Id="SetINSTALLFOLDER"]', NS)
+    require(redirect.get('Property') == 'INSTALLFOLDER' and
+            redirect.get('Value') == r'[LocalAppDataFolder]Programs\PicrossGame', 'Foreign MSI target')
+    for prop, value in [('REBOOT', 'ReallySuppress'), ('MSIRESTARTMANAGERCONTROL', 'Disable')]:
+        node = root.find(f'.//w:Property[@Id="{prop}"]', NS)
+        require(node is not None and node.get('Value') == value, 'Unexpected MSI restart policy')
     guard = root.find('.//w:CustomAction[@Id="CheckStopped"]', NS)
     require(guard is not None and guard.get('BinaryKey') == 'Guard' and guard.get('ExeCommand') == '"[INSTALLFOLDER]."',
             'Missing compiled MSI liveness guard')
     action = root.find('.//w:InstallExecuteSequence/w:Custom[@Action="CheckStopped"]', NS)
-    require(action is not None and (action.text or '').strip() == '1', 'Guard must also run for upgrade/uninstall')
+    require(action is not None and (action.text or '').strip() == '1' and action.get('Before') == 'InstallValidate',
+            'Guard must run before upgrade/uninstall changes')
+
+
+def verify_database(msi):
+    # Dark treats formatted MSI shortcut targets as advertised, so read the
+    # authoritative Shortcut table for the target/arguments.
+    shortcuts = msi_rows(msi, 'Shortcut', ('Shortcut', 'Directory_', 'Target', 'Arguments'))
+    require(sorted(shortcuts) == [
+        ['DesktopShortcutLink', 'DesktopFolder', '[INSTALLFOLDER]Picross-Game.exe', ''],
+        ['MenuShortcutLink', 'AppMenu', '[INSTALLFOLDER]Picross-Game.exe', ''],
+    ], 'MSI shortcut target/arguments mismatch')
 
 
 def main():

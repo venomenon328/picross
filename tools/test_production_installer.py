@@ -317,15 +317,15 @@ class AppReleaseTests(unittest.TestCase):
         self.assertEqual(len(self.api.entries), 399)
         self.assertEqual(channel.authority(self.api)['manifest']['version'], planned['version'])
 
-    def test_work_then_both_signed_apps_remain_visible_to_installed_clients(self):
-        from tools.app_products import PW, PE
+    def test_work_then_three_signed_apps_remain_visible_to_installed_clients(self):
+        from tools.app_products import PW, PE, PG, PRODUCTS
         from tools.production_workspace import update_client
         from unittest.mock import Mock
         self.api.entries = [{'tag_name': 'work-prod-' + str(i), 'id': i + 1, 'assets': [],
-                             'prerelease': True, 'draft': False} for i in range(396)]
-        channel.release_catalog.capacity(self.api.entries, 1, 'work-prod-new', 1, reserved_apps=2)
-        self.api.entries.append(dict(self.api.entries[-1], tag_name='work-prod-new', id=397))
-        for app in (PW, PE):
+                             'prerelease': True, 'draft': False} for i in range(395)]
+        channel.release_catalog.capacity(self.api.entries, 1, 'work-prod-new', 1, reserved_apps=len(PRODUCTS))
+        self.api.entries.append(dict(self.api.entries[-1], tag_name='work-prod-new', id=396))
+        for app in (PW, PE, PG):
             self.api.app = app
             self.trust, self.secret = test_identity(app=app)
             planned, _ = self.candidate(app=app)
@@ -342,10 +342,31 @@ class AppReleaseTests(unittest.TestCase):
         transport = Mock(read=page)
         for before_removal in (True, False):
             if not before_removal:
-                del self.api.entries[:397]
-            for app, expected_id in ((PW, 398), (PE, 399)):
+                del self.api.entries[:396]
+            for app, expected_id in ((PW, 397), (PE, 398)):
                 row = update_client.latest_release(transport, None, 60, app=app)
                 self.assertEqual(row['id'], expected_id)
+
+    def test_pg_authority_requires_signed_correct_product_and_main_push(self):
+        from tools.app_products import PE, PG, PW
+        self.api.app = PG
+        self.trust, self.secret = test_identity(app=PG)
+        with patch.object(update_verifier, 'production_trust', return_value=self.trust):
+            planned, provenance = self.candidate(app=PG)
+            for app in (PW, PE):
+                with self.assertRaises(ValueError):
+                    channel.validate_manifest(provenance, app=app)
+            self.api.run['event'] = 'pull_request'
+            with self.assertRaisesRegex(ValueError, 'main pushes'):
+                self.publish(self.api, self.root, planned, enabled=True, app=PG)
+            self.assertEqual(self.api.writes, [])
+            self.api.run['event'] = 'push'
+            self.publish(self.api, self.root, planned, enabled=True, app=PG)
+            previous = channel.authority(self.api, app=PG)
+            self.assertEqual(previous['manifest']['format'], 'picross-pg-release-v2')
+            self.assertIsNone(channel.next_version({'sha256': planned['payload_fingerprint']}, previous, app=PG))
+            self.assertEqual(channel.next_version({'sha256': 'runtime-change'}, previous, app=PG), '0.1.2')
+            self.assertIsNone(channel.authority(self.api, app=PE))
 
     def test_published_history_binding_is_specific_to_release_and_original_manifest(self):
         planned, manifest = self.candidate()

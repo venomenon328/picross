@@ -87,7 +87,7 @@ Für normale Inhalte gilt stattdessen die Authoringroute.
 | Entwicklungs-JSON und Sheet | [HANDOFF](dev-rules/HANDOFF.md), [Entwicklungssheet](workflow/Entwicklungsworkflow_Cheat-Sheet.html) |
 | Noch anstehende Ausführungsentscheidung | [MODEL_SELECTION](dev-rules/MODEL_SELECTION.md), [MODEL_CATALOG](dev-rules/MODEL_CATALOG.md) |
 | Herkunft der lokalen Workflowregeln | [DEV_RULES_ADOPTION](project/DEV_RULES_ADOPTION.md) |
-| PW-/PE-Installer und Updateprotokoll | [PRODUCTION_UPDATES](tools/PRODUCTION_UPDATES.md), [PE-Appvertrag](tools/PUZZLE_EDITOR.md#14-pe-app-a--feste-windows-produkt--und-releasebindung), [WINDOWS_BUILD](../tools/production_workspace/WINDOWS_BUILD.md) |
+| PW-/PE-/PG-Installer und Updateprotokoll | [PRODUCTION_UPDATES](tools/PRODUCTION_UPDATES.md), [PE-Appvertrag](tools/PUZZLE_EDITOR.md#14-pe-app-a--feste-windows-produkt--und-releasebindung), [WINDOWS_BUILD](../tools/production_workspace/WINDOWS_BUILD.md), [WINDOWS_GAME_APP](operations/WINDOWS_GAME_APP.md) |
 
 Keine Modell-/Reasoning-Empfehlung für normale Rätselproduktion. Eine erforderliche
 Empfehlung für noch anstehende Entwicklung richtet sich nach den Modellregeln;

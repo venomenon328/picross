@@ -31,7 +31,7 @@ Pflichtquellen des aktuellen Aufgabenbereichs und die unmittelbar benötigte Nor
 | [tools/](tools/PRODUCTION_WORKSPACE.md) | Produktionsworkspace, Batch, Bestandseditor, Anzeigeverträge und App-Updates. |
 | [difficulty/](difficulty/PUZZLE_DIFFICULTY_V2.md) | Aktuelle und weiterhin lesbare Bewertungsmethoden, Analyzer und Kalibrierung. |
 | [ci/](ci/CI_WORKFLOW_V2.md) | Projektspezifische Modulauswahl, Toolchain und tatsächliche Prüfgruppen. |
-| [operations/](operations/WEB_HOSTING.md) | Webbuild, Persistenz und manuelles Deployment. |
+| [operations/](operations/WEB_HOSTING.md) | Webbuild, Persistenz, manuelles Deployment und [Windows-Spielinstaller](operations/WINDOWS_GAME_APP.md). |
 | [workflow/](workflow/Entwicklungsworkflow_Cheat-Sheet.html) | Offline-Bedienhilfe für den Entwicklungsworkflow. |
 | [design/](design/README.md) | Benötigte Originale, Freigaben, Nutzungsrechte und Ressourcenherkunft. |
 | [font-inputs/](font-inputs/delight_coffee.zip) | Unveränderte Schriftoriginale als gebundene Herstellungsinputs. |

@@ -6,6 +6,7 @@
 - **Betriebsautorität:** [Issue #612](https://github.com/venomenon328/picross/issues/612); die [Abschlussentscheidung](https://github.com/venomenon328/picross/issues/612#issuecomment-6878665809) aktiviert den PW-Betrieb. Ein Implementierungsmerge allein erteilt keine neue Betriebsbefugnis.
 - **Vertrauenswurzel:** [APP-ROOT1](https://github.com/venomenon328/picross/issues/612#issuecomment-6851636493) und [öffentlicher Root mit Eigentümerfreigabe](https://github.com/venomenon328/picross/issues/612#issuecomment-6852316923); feste technische Bindung in Abschnitt 6.
 - **PE-Mitnutzung:** derselbe technische Kern mit festen getrennten Produktidentitäten; [PE-Vertrag](PUZZLE_EDITOR.md#15-pe-app-b--startgate-und-sicherer-wiederanlauf). PW-Betrieb aktiviert keinen PE-Betrieb.
+- **PG-Produzent:** feste dritte Identität mit eigenem [Windows-Spielvertrag](../operations/WINDOWS_GAME_APP.md) und eigenem Runtime-Fingerprint. Zustimmung und installierter Game-Updateclient sind Folgepaket B.
 - **Lieferhistorie und Abnahmen:** zuständige Issues, Pull Requests und Releases. Dieser Vertrag ersetzt keine historischen [P4-Liefernachweise](https://github.com/venomenon328/picross/issues/588).
 
 ## 1. Autorität und Grenzen
@@ -14,8 +15,9 @@ Der Windows-Produktionsassistent ist eine installierte lokale Anwendung mit
 fester vertrauenswürdiger Python-/Reader-/UI-Laufzeit und eigenen Zustandsdaten.
 Ein `main`-Commit oder eine Gitdatenaktualisierung ist kein installierbares
 Update. Nur eine erfolgreich verifizierte, veröffentlichte höhere Appversion
-kann zur Aktualisierung dienen. Game-Export, Inhalts-/Bildproduktion, Godot,
-das eigenständige Entwicklungs-HTML und Produktionsbranches bleiben außerhalb.
+kann zur Aktualisierung dienen. Der PW-Fingerprint schließt Game-Export,
+Inhalts-/Bildproduktion, Godot, Entwicklungs-HTML und Produktionsbranches aus.
+PG verwendet seine eigene Auswahl für den regulären Windows-Spielinhalt.
 
 Die Installations-, Zustands- und Erstumstiegsregeln stehen ausschließlich in
 Abschnitt 7. Insbesondere autorisiert ein Produktionscheckout keine Programmbytes.
@@ -77,7 +79,7 @@ außerhalb dieser Eingaben (insbesondere Inhalt, Spiel und allgemeiner CI-Kern)
 Dateien aus `Analysis-00.toc` gegen `inputs.json` ab; ein nicht inventarisierter
 eingefrorener Input oder abweichende Arbeitsbytes brechen den Bau ab.
 
-Vor Draftanlage und vor Sichtbarschaltung prüfen PW und PE unter derselben
+Vor Draftanlage und vor Sichtbarschaltung prüfen PW, PE und PG unter derselben
 Remote-Lease wie der Arbeitsasset-Publisher die Grenzen bereits installierter
 Clients. Kapazitätsreserve, Wartezeit und Rückbau stehen im
 [PW-B-Vertrag](PW_B_CONTRACT.md). Ein gesperrter Versuch lässt die signierte
