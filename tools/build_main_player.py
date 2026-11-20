@@ -10,6 +10,10 @@ import sys
 import tempfile
 import zipfile
 
+if not __package__:
+    # Direct script entry: background validation also uses the tools package.
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+
 import p1_preflight as toolchain
 
 
