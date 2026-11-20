@@ -16,6 +16,8 @@ class Product:
     @property
     def source(self): return Path(__file__).resolve().parents[1] / self.package
     @property
+    def icon_resource(self): return 'assets/launcher.ico' if self.key == 'pw' else 'assets/editor.ico'
+    @property
     def registry(self): return 'Software\\' + self.state_directory
     @property
     def marker(self): return 'Global\\' + self.state_directory + '.Running.'

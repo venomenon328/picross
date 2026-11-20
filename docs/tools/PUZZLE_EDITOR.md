@@ -691,6 +691,11 @@ Der Fingerprint bindet alle wirksamen Code-/Daten-/Collector-/Analysisinputs,
 Papier-/Randressourcen, Anleitung, Pins und Lizenzen; unbekannte mögliche Inputs
 stoppen. Testfixtures werden weder eingefroren noch als Methodenquellen kopiert.
 
+Das [PE-App-Symbol](../../tools/puzzle_editor/assets/editor.ico) ist ein eigener
+Fingerprintinput. Die Windows-EXE, das native Auswahlfenster, der
+MSI-Programmeintrag und beide Verknüpfungen verwenden dieselben Symbolbilder.
+Der gemeinsame Builder wählt die ICO-Datei aus der festen Produktidentität.
+
 Die technischen und persönlichen Einführungsnachweise werden in
 [#691](https://github.com/venomenon328/picross/issues/691) geführt. Eine MSI-Inspektion
 ersetzt keine persönliche Installations-/Bedienprobe und keine Betriebsfreigabe.

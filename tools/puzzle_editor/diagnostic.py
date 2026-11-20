@@ -134,17 +134,29 @@ def signatures(build, output):
         except ValueError: pass
         else: raise ValueError('Negative signature case accepted')
     api=MemoryGitHub(app=PE);api.source=provenance['source_commit'];api.run['head_sha']=api.source
+    major, minor, patch_number = channel.version_tuple(candidate.version)
+    predecessor = None
+    if patch_number > 1:
+        predecessor = {'manifest': {'version': f'{major}.{minor}.{patch_number - 1}',
+                                    'payload_fingerprint': '0' * 64}}
     with patch.object(verifier,'production_trust',return_value=trust):
-        plan=channel.plan(api,Path(__file__).resolve().parents[2],api.source,9,app=PE)
-        require(plan['payload_fingerprint']==provenance['payload_fingerprint'],'Plan differs from real build')
-        api.fail_upload='START.txt'
-        try: channel.publish(api,build,plan,enabled=True,signing_enabled=True,secret=secret,app=PE)
-        except RuntimeError: pass
-        else: raise ValueError('Expected lost synthetic upload response')
-        channel.publish(api,build,plan,enabled=True,signing_enabled=True,secret=secret,app=PE)
+        # Supply the predecessor only during the in-memory publication test.
+        # Read back and verify the newly published synthetic release normally.
+        with patch.object(channel, 'authority', return_value=predecessor):
+            plan=channel.plan(api,Path(__file__).resolve().parents[2],api.source,9,app=PE)
+            require(plan['version'] == candidate.version and
+                    plan['payload_fingerprint'] == provenance['payload_fingerprint'], 'Plan differs from real build')
+            api.fail_upload='START.txt'
+            try: channel.publish(api,build,plan,enabled=True,signing_enabled=True,secret=secret,app=PE)
+            except RuntimeError: pass
+            else: raise ValueError('Expected lost synthetic upload response')
+            require(api.fail_upload is None, 'Synthetic upload failure did not occur')
+            channel.publish(api,build,plan,enabled=True,signing_enabled=True,secret=secret,app=PE)
         previous=channel.authority(api,app=PE)
         require(channel.next_version({'sha256':plan['payload_fingerprint']},previous,app=PE) is None,'Identical payload not noop')
-        require(channel.next_version({'sha256':'changed'},previous,app=PE)=='0.2.2','Next patch incorrect')
+        if patch_number < 65535:
+            require(channel.next_version({'sha256':'changed'},previous,app=PE)
+                    == f'{major}.{minor}.{patch_number + 1}', 'Next patch incorrect')
     del secret
     for name,value in [('test-manifest.json',raw),('test-signature.json',sig),('public-test-trust.json',canonical(trust))]:
         (output/name).write_bytes(value)
