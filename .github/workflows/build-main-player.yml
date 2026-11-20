@@ -23,12 +23,12 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         timeout-minutes: 10
         with:
-          ref: 552f31b4a2bf761841c8b5938cd53ee12f4c4d16
+          ref: 77a3767d1dd27dfe05012e21456916b3168b41cc
           fetch-depth: 1
           persist-credentials: false
       - id: source
         env:
-          PG_EXPECTED_SOURCE: 552f31b4a2bf761841c8b5938cd53ee12f4c4d16
+          PG_EXPECTED_SOURCE: 77a3767d1dd27dfe05012e21456916b3168b41cc
         run: |
           commit="$(git rev-parse HEAD)"
           test "$commit" = "$PG_EXPECTED_SOURCE"
