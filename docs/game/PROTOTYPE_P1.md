@@ -250,7 +250,7 @@ bleiben davon unberührt. Escape bleibt der vereinbarte Abbruch einer Mausgeste.
 
 Die Ergänzungen zu Hintergrund, gelöster Buchöffnung und Dancing-Script-Motivname
 aus [VIS-A / #728](https://github.com/venomenon328/picross/issues/728) sind
-freigegebenes Soll; ihre Umsetzung und Abnahme sind noch offen.
+Bestandteil der regulären Buchpräsentation. Den Abnahmestand führt das Paket.
 
 Nach einer übernommenen Aktion ist das Rätsel genau dann gelöst, wenn jede
 Motivzelle in der richtigen Farbe gefüllt ist und jeder Lösungshintergrund

@@ -120,7 +120,7 @@ func run() -> void:
 			at_measurements.append({"window":context,"final":alpha_final,"reopen":alpha_reopen,"blend":alpha_blend})
 		# Rectangular eight-colour raster, long title, independent image aspect.
 		var rectangle_last := prepare(5)
-		app.session.definition.reveal.name = "TEST ONLY Ein besonders langer deutscher Motivname mit mehreren Wörtern für einen Zeilenumbruch auf der schmalen Papierseite"
+		app.session.definition.reveal.name = "Ärger über süße Grüße – Églantine, Đà Nẵng und đượm im Abendlicht auf der schmalen Papierseite"
 		surface.size = Vector2i(1280,720)
 		app.set_ui_scale(1.25)
 		await frames()
@@ -161,6 +161,25 @@ func run() -> void:
 		app.reveal_view.finish()
 		await frames()
 		final_checks()
+		var caption := app.completion_title
+		var face := caption.get_theme_font("font") as FontVariation
+		check(face.base_font.get_font_name() == "Dancing Script" and caption.get_line_count() > 1, "VIS-A long title wraps in the original font")
+		for symbol: String in "ÄöüßÉĐđẵượ":
+			check(face.base_font.has_char(symbol.unicode_at(0)), "VIS-A original glyph "+symbol)
+		var with_title: Image = surface.get_texture().get_image()
+		caption.hide()
+		await RenderingServer.frame_post_draw
+		var without_title := surface.get_texture().get_image()
+		caption.show()
+		var region := Rect2i(caption.get_global_rect()).grow(5)
+		var ink_bounds := Rect2i()
+		for y: int in range(region.position.y,region.end.y):
+			for x: int in range(region.position.x,region.end.x):
+				var point := Vector2i(x,y)
+				if with_title.get_pixelv(point) != without_title.get_pixelv(point):
+					var pixel := Rect2i(point,Vector2i.ONE)
+					ink_bounds = ink_bounds.merge(pixel) if ink_bounds.has_area() else pixel
+		check(ink_bounds.size.y > caption.get_theme_font_size("font_size") and Rect2i(caption.get_global_rect()).encloses(ink_bounds), "VIS-A rendered multiline accents inside reserved area")
 		var landscape := app.reveal_view.artwork
 		var portrait_image := Image.create(30,80,false,Image.FORMAT_RGB8)
 		portrait_image.fill(Color("6d9dad"))

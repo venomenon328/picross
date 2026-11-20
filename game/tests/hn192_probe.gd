@@ -254,6 +254,15 @@ func captures() -> void:
 		b.clear_pointer_hover()
 		b.marks.sync_cursor()
 		await settle()
+		# Deliberately different underlying tones at the sampled cell centres.
+		var contrast := ColorRect.new()
+		contrast.color = Color("ad9476")
+		contrast.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		b.get_parent().add_child(contrast)
+		b.get_parent().move_child(contrast,b.get_index())
+		contrast.position = b.position+b.view.visible_bounds().position
+		contrast.size = b.view.visible_bounds().size*Vector2(0.5,1)
+		await settle()
 		var baseline: Image = root.get_texture().get_image()
 		var prefix: String = "hn-%d-ui%d" % [config.x,roundi(config.z*100)]
 		for axis: String in ["row","column"]:

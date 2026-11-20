@@ -4,8 +4,7 @@
 
 [VIS-A / #728](https://github.com/venomenon328/picross/issues/728) ergänzt den
 freigegebenen Sollvertrag für gelöste Öffnungsziele, persistente Hintergründe
-und vollständige Seitenschatten. Diese Änderungen sind noch nicht implementiert
-oder abgenommen; der tatsächliche Lieferstand wird im Paket geführt.
+und vollständige Seitenschatten. Lieferstand und unabhängige Sichtung werden im Paket geführt.
 
 Dieses Dokument besitzt den regulären Buchroot, Material-/Papiergeometrie,
 Navigation, Übergänge, Eingabebarrieren und Informationsbesuche. Es enthält

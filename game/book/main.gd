@@ -234,13 +234,6 @@ func request_open(id: String) -> bool:
 	app.begin_background_visit()
 	selected_id = id
 	return_context = prior.duplicate(true)
-	if app.sessions[int(app.session_indices[id])].completed:
-		app.open_puzzle()
-		state = State.WORK
-		motion_kind = ""
-		page_identity(paper_material,"work/"+id)
-		_pose(1)
-		return true
 	direction = 1
 	_begin("open",prior)
 	return true
@@ -311,7 +304,9 @@ func _prepare(token: int) -> void:
 	_ink(leaf_material,catalog_texture,source_rect)
 	_ink(left_material,catalog_texture,source_rect)
 	_ink(paper_material,catalog_texture,source_rect)
-	if motion_kind == "open": app.open_puzzle()
+	if motion_kind == "open":
+		await app.open_puzzle()
+		if not valid_motion(token): return
 	elif motion_kind == "return":
 		settling = true
 		app.present_album()

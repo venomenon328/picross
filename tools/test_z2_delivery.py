@@ -25,6 +25,7 @@ class Z2DeliveryTests(unittest.TestCase):
             shutil.copyfile(source / "tidy-hand/NOTICE.txt", notice)
             shutil.copyfile(source / "Pangolin-Regular.ttf", drawing / "Pangolin-Regular.ttf")
             shutil.copytree(source / "pangolin", drawing / "pangolin")
+            shutil.copytree(source / "dancing-script", drawing / "dancing-script")
             with patch.object(z2_resources, "ROOT", root):
                 z2_resources.verify()
                 font.write_bytes(font.read_bytes() + b"changed")
@@ -44,7 +45,8 @@ class Z2DeliveryTests(unittest.TestCase):
             shutil.copytree(z2_resources.ROOT / "game/art/drawing", drawing)
             with patch.object(z2_resources, "ROOT", root):
                 z2_resources.verify()
-                for name, message in [("Pangolin-Regular.ttf", "font bytes"), ("pangolin/OFL.txt", "OFL bytes")]:
+                for name, message in [("Pangolin-Regular.ttf", "font bytes"), ("pangolin/OFL.txt", "OFL bytes"),
+                                      ("dancing-script/DancingScript.ttf", "font bytes"), ("dancing-script/OFL.txt", "OFL bytes")]:
                     path = drawing / name
                     original = path.read_bytes()
                     path.write_bytes(original + b"changed")

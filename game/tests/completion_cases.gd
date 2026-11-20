@@ -27,6 +27,24 @@ static func run(p: SceneTree) -> Array:
 		p.surface.size = Vector2i(context[1],context[2])
 		app.set_ui_scale(context[3])
 		var last: Vector2i = p.prepare(context[0])
+		var ink: Control = app.puzzle_background
+		var previous_backend: RefCounted = ink.backend
+		if result.is_empty():
+			# The geometry fixture predates selected backgrounds. Bind a synthetic
+			# drawing to this visit, then drive the actual completion controls.
+			var fixtures = preload("res://tests/background_tests.gd")
+			var controlled = fixtures.ControlledLoader.new()
+			ink.backend = controlled
+			ink.begin_visit(fixtures.entry(),app.background_visit)
+			var image := Image.create(2304,576,false,Image.FORMAT_RGBA8)
+			image.fill(Color(0.2,0.1,0.1,0.5))
+			image.generate_mipmaps()
+			controlled.finish(ImageTexture.create_from_image(image))
+			ink.publish(app.background_visit)
+			app._layout_marginalia()
+			p.check(ink.visible and ink.state == "visible","VIS-A selected work page")
+		var binding: Dictionary = ink.binding.duplicate(true)
+		var count: int = ink.request_count
 		if context[0] == 5:
 			app.session.definition.reveal.name = "TEST ONLY Ein besonders langer deutscher Motivname mit mehreren Wörtern für den sicheren Zeilenumbruch"
 		await p.frames()
@@ -36,6 +54,10 @@ static func run(p: SceneTree) -> Array:
 		p.check(not app.completion_switch.visible and app.completion_switch.disabled,"AR switch unavailable during reveal")
 		app._select_completion(true)
 		p.check(not view.grid_selected,"AR early selection rejected")
+		if result.is_empty():
+			view.elapsed = 1.1
+			view.apply_time()
+			p.check(ink.is_visible_in_tree() and ink.texture != null and ink.binding == binding and ink.request_count == count,"VIS-A same selected visit during reveal")
 		var initial_area: Rect2 = view.area
 		var gated: bool = not app.completion_switch.visible and app.completion_switch.disabled and not view.grid_selected
 		view.finish()
@@ -53,6 +75,8 @@ static func run(p: SceneTree) -> Array:
 			if view.grid_selected != selected: p.click(app.completion_switch)
 			await p.frames()
 			p.check(view.grid_selected == selected and not view.active and not view.is_processing(),"AR real pointer switch without replay")
+			if result.is_empty():
+				p.check(ink.is_visible_in_tree() and ink.texture != null and ink.binding == binding and ink.request_count == count,"VIS-A selected image and raster share one request")
 			row.selections.append(view.grid_selected)
 			row.slider_positions.append(app.completion_switch.slider_rect().get_center().x/app.ui_scale)
 			p.check(view.stable_ink.visible == selected and view.art.visible != selected and not app.work.visible,"AR passive layer only")
@@ -162,11 +186,15 @@ static func run(p: SceneTree) -> Array:
 		row.slots_after = hashes(p.save_bytes())
 		p.check(row.unchanged,"AR switch layout cancel preserve session history view and all disk bytes")
 		app.show_album()
+		if result.is_empty():
+			p.check(not ink.visible and ink.texture == null and ink.binding.is_empty(),"VIS-A catalog releases drawing")
+			ink.backend = previous_backend
 		p.check(view.solved.is_empty() and view.stable_ink.commands.is_empty() and view.strokes.is_empty() and view.stable_ink.material == null,"AR leave releases stable data")
 		app.select_puzzle(context[0])
 		p.check(not view.grid_selected and not app.completion_switch.button_pressed,"AR catalog reentry image")
 		app._select_completion(true)
 		app.show_information("settings")
+		p.check(not ink.visible and ink.binding.is_empty(),"VIS-A information releases puzzle drawing")
 		app.return_to_work()
 		p.check(not view.grid_selected,"AR information reentry image")
 		row.reentry_image = not view.grid_selected

@@ -1169,8 +1169,9 @@ Verträgen erhalten.
 
 [VIS-A / #728](https://github.com/venomenon328/picross/issues/728) erweitert
 §§13.2–13.3 als freigegebenes Soll: Sichtbarkeit über den gesamten Rätselbesuch
-und begrenzte asynchrone Bereitschaft vor dem ersten Zielcapture. Diese Änderung
-ist noch nicht implementiert oder abgenommen; der Lieferstatus steht im Paket.
+und begrenzte asynchrone Bereitschaft vor dem ersten Zielcapture. Die Laufzeit setzt beim Besuchsbeginn eine gemeinsame Frist von 750 ms.
+Sie lässt mehrere asynchrone Frames für Laden und auslaufende Altrequests zu
+und begrenzt den zusätzlichen Aufschub auf weniger als eine Sekunde.
 
 Vertrag vor konsumierendem Code, 10.11.2026,
 [HP-I2-K01–K12 und Prüfplan](https://github.com/venomenon328/picross/issues/561#issuecomment-6770077470),

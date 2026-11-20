@@ -36,10 +36,10 @@ wird dadurch nicht als zweite aktive Rolle exportiert.
 ## Freigegebene Erweiterung: Dancing Script
 
 Für die Abschlussrolle nach HZ ist die unveränderte variable Originalschrift
-**Dancing Script** freigegeben. Produktintegration, lokale Provisionierung und
-tatsächliche Lieferung im Windows-/Webexport sind in
-[VIS-A / #728](https://github.com/venomenon328/picross/issues/728) noch offen;
-die folgenden Quellen sind keine bereits aktiven Produktressourcen.
+**Dancing Script** unter [dancing-script](../../game/art/drawing/dancing-script/)
+lokal gebündelt. Windows- und Webpaket verwenden dieselben Fontbytes und liefern
+die Original-OFL unter `licenses/dancing-script/OFL.txt`. Den Liefernachweis führt
+[VIS-A / #728](https://github.com/venomenon328/picross/issues/728).
 
 Beide Originale sind an `googlefonts/DancingScript` bei Commit
 `291f87c05206179b6bfd53735a5638b5cc84e3b3` gebunden:

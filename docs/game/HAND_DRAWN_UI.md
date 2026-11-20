@@ -21,7 +21,7 @@ und persönliche Abnahme werden am jeweiligen Head im Issue/PR nachgewiesen.
 
 Die eigene Abschlussrolle in Dancing Script und ihre Layoutregeln sind
 freigegebenes Soll aus [VIS-A / #728](https://github.com/venomenon328/picross/issues/728).
-Die Integration und sichtbare Größen-/Layoutabnahme sind noch offen.
+Die Abschlussrolle verwendet 50 logische Pixel bei UI100 und Gewicht 600. Die unabhängige Sichtung wird in VIS-A-R01 geführt.
 
 | Rolle | Vertrag |
 | --- | --- |

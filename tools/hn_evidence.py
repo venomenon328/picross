@@ -49,6 +49,12 @@ def verify(directory, report):
                 marked = x==cx or y==cy
                 if (pixel(x,y) != pixel(x,y+50)) != marked:
                     raise ValueError('HN original band/phantom pixels failed')
+                if marked:
+                    # The same single source-over operation covers both bands and their intersection.
+                    base = pixel(x, y+50)
+                    expected = [round(b + (ink-b)*64/255) for b, ink in zip(base[:3], (135, 153, 121))]
+                    if max(abs(a-b) for a, b in zip(pixel(x,y)[:3], expected)) > 3:
+                        raise ValueError('HN band lost underlay contrast or painted intersection twice')
                 counts[0 if marked else 1] += 1
         if counts != [row['marked'],row['unmarked']] or counts[0] <= 0 or counts[1] <= 100:
             raise ValueError('Incomplete HN original pixel coverage')

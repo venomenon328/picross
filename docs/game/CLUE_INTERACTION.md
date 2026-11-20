@@ -85,8 +85,7 @@ Die Regel gilt auch bei vollständigen Folgen ohne Overlay und ohne Dragmöglich
 Hinweiswerte, Farben und Erledigtzustände ändern die Quellenzuordnung nicht.
 
 Die transparente Bandgestaltung ist freigegebenes Soll aus
-[VIS-A / #728](https://github.com/venomenon328/picross/issues/728);
-Umsetzung und Abnahme sind dort noch offen.
+[VIS-A / #728](https://github.com/venomenon328/picross/issues/728).
 Die Bänder verwenden teiltransparente Flächen in der bisherigen zurückhaltenden
 Farbfamilie. Papiertextur und eine zugelassene Hintergrundzeichnung bleiben
 durch Zeilen- und Spaltenbänder sichtbar. Füllungen, X, Rasterlinien und

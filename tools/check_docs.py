@@ -20,7 +20,9 @@ SKIP_DIRS = {".git", "__pycache__", ".venv", "node_modules"}
 # Per-puzzle documents/proofs are checked once in production, not on every CI run.
 SKIP_CONTENT = {"content/authoring", "content/packages", "game/data/content", "game/art/content"}
 # Byte-bound upstream notices retain their original whitespace/line endings.
-ORIGINAL_NOTICES = {"game/art/drawing/delight-coffee/More Info.txt":
+ORIGINAL_NOTICES = {"game/art/drawing/dancing-script/OFL.txt":
+                    "6f090277c00af96651ce6dbcc38ff1591047a3bffef486e80b6a32e8276a8201",
+                    "game/art/drawing/delight-coffee/More Info.txt":
                     "b6a4bf8aa33a02a4f1cbbf5335db113bfad3e3171e9d733c2c1a4356b48a3da0",
                     "game/art/drawing/pangolin/OFL.txt":
                     "414e35e9875605ea0dfe549a6bdad6d1f1f3d5427c97af2060213adb6709484c"}
