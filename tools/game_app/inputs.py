@@ -12,7 +12,8 @@ TOOLS = {
     'tools/background_import.py', '.github/workflows/game-installer.yml', '.gitattributes',
 }
 COMMON = {
-    '__init__.py', 'build_installer.py', 'verify_installer.py', 'packaging/Guard.cs',
+    '__init__.py', 'build_installer.py', 'build_windows.py', 'verify_installer.py',
+    'packaging/Guard.cs',
     'payload.py', 'release.py', 'release_manifest.py', 'release_channel.py',
     'release_catalog.py', 'update_verifier.py', 'requirements-update.txt',
 }

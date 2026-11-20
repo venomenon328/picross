@@ -9,6 +9,7 @@ from tools.app_products import PE, PG, PW
 from tools.game_app.inspect import verify_database
 from tools.production_workspace import payload
 from tools.production_workspace.release import release
+from tools.production_workspace.release_channel import next_version
 
 
 class GameInstallerTests(unittest.TestCase):
@@ -22,7 +23,7 @@ class GameInstallerTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             release(version='0.2.1', app=PG)
 
-    def test_committed_runtime_change_rename_and_unshipped_noop(self):
+    def test_committed_packaging_and_runtime_changes_and_unshipped_noop(self):
         with tempfile.TemporaryDirectory(prefix='pg-inputs-') as folder:
             root = Path(folder)
 
@@ -41,17 +42,27 @@ class GameInstallerTests(unittest.TestCase):
 
             git('init')
             path = 'game/data/content/one.json'
+            packaging = 'tools/production_workspace/build_windows.py'
             put(path, b'a')
+            put(packaging, b'# original packaging')
             original = commit()
+            previous = {'manifest': {'version': '0.1.1', 'payload_fingerprint': original['sha256']}}
             put('content/authoring/wip.jpg', b'work in progress')
             put('game/tests/fixture.png', b'synthetic')
             put('docs/operations/trial.md', b'unshipped')
-            self.assertEqual(original, commit())
+            unchanged = commit()
+            self.assertEqual(original, unchanged)
+            self.assertIsNone(next_version(unchanged, previous, app=PG))
+            put(packaging, b'# changed packaging')
+            changed = commit()
+            self.assertNotEqual(original['sha256'], changed['sha256'])
+            self.assertEqual(next_version(changed, previous, app=PG), '0.1.2')
             put(path, b'b')
             put('game/art/content/one.png', b'image')
             second = commit()
-            self.assertNotEqual(original['sha256'], second['sha256'])
-            self.assertEqual({row['file'] for row in second['files']}, {path, 'game/art/content/one.png'})
+            self.assertNotEqual(changed['sha256'], second['sha256'])
+            self.assertEqual({row['file'] for row in second['files']},
+                             {path, 'game/art/content/one.png', packaging})
             (root / path).rename(root / 'game/data/content/two.json')
             self.assertNotEqual(second['sha256'], commit()['sha256'])
 
