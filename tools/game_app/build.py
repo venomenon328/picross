@@ -47,8 +47,9 @@ def build_player_image(output, product):
     player, pack = (image / name for name in ('picross-p1.exe', 'picross-p1.pck'))
     version = product['version']
     identity = work / 'BuildIdentity.cs'
+    # PE file/product resources support the complete MSI patch range.
+    # The CLR assembly identity reserves 65535 and is private to the launcher.
     identity.write_text(
-        f'[assembly: System.Reflection.AssemblyVersion("{version}.0")]\n'
         f'[assembly: System.Reflection.AssemblyFileVersion("{version}.0")]\n'
         f'[assembly: System.Reflection.AssemblyInformationalVersion("{version}.0")]\n'
         '[assembly: System.Reflection.AssemblyTitle("Picross")]\n'
