@@ -239,11 +239,22 @@ class WorkPublicationTests(unittest.TestCase):
             guard.check_range(root,head,[self.main])
 
     def test_confirmed_p2_without_local_gh_recovers_and_closes_only_bound_job(self):
+        self.confirmed_p2(lose_delete_reply=True)
+
+    def test_confirmed_p2_worker_authenticates_and_fails_closed_before_deletion(self):
+        self.confirmed_p2(lose_delete_reply=False)
+
+    def confirmed_p2(self, *, lose_delete_reply):
         from datetime import datetime, timezone
+        from io import BytesIO
         import os
         import shutil
+        from types import SimpleNamespace
+        from urllib.error import HTTPError
+        from urllib.parse import parse_qs, urlsplit
         from tools import work_removal
         from tools.production_workspace import repository as pw
+        from tools.production_workspace.release_channel import GitHub
         from tools.production_workspace.server import Service
         from tools.test_production_installer import MemoryGitHub
 
@@ -261,17 +272,43 @@ class WorkPublicationTests(unittest.TestCase):
             'path': '.github/workflows/work-growth.yml', 'event': 'push', 'conclusion': 'success',
             'repository': actor, 'head_repository': actor, 'head_branch': request, 'head_sha': self.main,
             'created_at': datetime.now(timezone.utc).isoformat()}}
-        lock_api = MemoryGitHub()
-        open_prs = []
+        lock_api = GitHub('synthetic-worker-token')
+        self.enterContext(patch.object(lock_api, 'request', side_effect=MemoryGitHub().request))
+        worker_pages = []
+        request_ref = 'refs/heads/' + request
+        work_ref = 'refs/heads/' + branch
+        receipt = pw.removal_receipt(expected, self.main)
+        worker_prs = []
+        fail_at = None
+        in_worker = False
 
-        def public(path, *, missing=False):
-            if path == '':
-                return {**actor, 'private': False}
-            if path.startswith('/pulls?'):
-                return list(open_prs)
-            self.assertIn(path, ('/releases/11', '/releases/tags/work-prod-pz-current'))
-            self.assertTrue(missing)
-            return self.release
+        def open_api(req, *, timeout):
+            url = urlsplit(req.full_url)
+            self.assertEqual((url.scheme, url.netloc, timeout), ('https', 'api.github.com', 10))
+            prefix = '/repos/' + pub.REPO
+            self.assertTrue(url.path.startswith(prefix))
+            endpoint = url.path.removeprefix(prefix)
+            self.assertEqual(req.get_method(), 'GET')
+            self.assertEqual(req.get_header('Authorization'),
+                             'Bearer synthetic-worker-token' if in_worker else None)
+            if in_worker:
+                self.assertEqual(endpoint, '/pulls')
+            if endpoint == '/pulls':
+                self.assertEqual(parse_qs(url.query), {
+                    'state': ['all'], 'head': ['venomenon328:' + branch], 'per_page': ['100'], 'page': ['1']})
+                if in_worker:
+                    worker_pages.append(req.full_url)
+                    if len(worker_pages) == fail_at:
+                        raise HTTPError(req.full_url, 403, 'rate limit exceeded', {}, None)
+                value = worker_prs if in_worker else []
+            elif endpoint == '':
+                value = {**actor, 'private': False}
+            else:
+                self.assertIn(endpoint, ('/releases/11', '/releases/tags/work-prod-pz-current'))
+                if self.release is None:
+                    raise HTTPError(req.full_url, 404, 'not found', {}, None)
+                value = self.release
+            return BytesIO(json.dumps(value).encode())
 
         def confirm():
             listing = app.listing(refresh=True)
@@ -288,42 +325,85 @@ class WorkPublicationTests(unittest.TestCase):
             git_path.mkdir()
             (git_path / 'git').symlink_to(real_git)
         self.enterContext(patch.dict(os.environ, PATH=str(git_path)))
+        os.environ.pop('GH_TOKEN', None)
+        os.environ.pop('GITHUB_TOKEN', None)
         self.assertTrue(shutil.which('git'))
         self.assertIsNone(shutil.which('gh'))
         self.enterContext(patch.object(pw, 'github_identity', side_effect=lambda url: url == self.remote))
-        self.enterContext(patch.object(pw, 'github_get', side_effect=public))
+        self.enterContext(patch.object(pw, 'build_opener', return_value=SimpleNamespace(open=open_api)))
 
-        def worker(_delay):
-            work_removal.service(self.root, event, lock_api)
+        def worker():
+            nonlocal in_worker
+            worker_pages.clear()
+            in_worker = True
+            try:
+                work_removal.service(self.root, event, lock_api)
+            finally:
+                in_worker = False
 
-        def new_pr(delay):
-            open_prs.append({'state': 'open', 'number': 9, 'merged_at': None,
-                             'head': {'ref': branch, 'repo': actor}})
-            with self.assertRaisesRegex(ValueError, 'Pull request facts changed'):
-                worker(delay)
+        def reject_worker(error):
+            def rejected(_delay):
+                with self.assertRaisesRegex(ValueError, error):
+                    worker()
+                self.assertIsNone(guard.remote_head(self.root, request_ref))
 
-        with patch.object(pw, 'sleep', side_effect=new_pr):
-            self.assertFalse(confirm()['removed'])
-        self.assertTrue(self.assets)
-        open_prs.clear()
+            with patch.object(pw, 'sleep', side_effect=rejected):
+                result = confirm()
+            self.assertFalse(result['removed'])
+            self.assertNotIn('receipt_id', result)
+            self.assertEqual(guard.remote_head(self.root, work_ref), expected)
+            self.assertEqual(guard.remote_head(self.root, tag), self.main)
+            self.assertIsNotNone(self.release)
+            self.assertTrue(self.assets)
 
-        def lost_reply(delay):
+        if not lose_delete_reply:
+            for fail_at in (1, 2):
+                with self.subTest(failed_pr_check=fail_at):
+                    reject_worker('GitHub-Status nicht prüfbar')
+                    self.assertEqual(len(worker_pages), fail_at)
+            fail_at = None
+            for state, head, error in (
+                    ('open', {'ref': branch, 'repo': actor}, 'Pull request facts changed'),
+                    ('closed', {'ref': branch, 'repo': actor}, 'Pull request facts changed'),
+                    ('closed', {'ref': branch, 'repo': {'full_name': 'other/picross'}}, 'PR-Quelle'),
+                    ('closed', {'ref': 'content/pw/pz-other', 'repo': actor}, 'PR-Quelle')):
+                with self.subTest(state=state, head=head):
+                    worker_prs[:] = [{'state': state, 'number': 9, 'merged_at': None, 'head': head}]
+                    reject_worker(error)
+            worker_prs.clear()
+
+        def lost_reply(_delay):
             def interrupted(path, method='GET', value=None):
                 response = self.api(path, method, value)
                 if method == 'DELETE':
                     raise TimeoutError('Release removed, response lost')
                 return response
             with patch.object(pub, 'api', side_effect=interrupted), self.assertRaises(TimeoutError):
-                worker(delay)
+                worker()
+            self.assertIsNone(guard.remote_head(self.root, request_ref))
 
-        with patch.object(pw, 'sleep', side_effect=lost_reply):
-            self.assertFalse(confirm()['removed'])
-        self.assertFalse(self.assets)
-        self.assertEqual(guard.remote_head(self.root, tag), self.main)
-        self.assertEqual(guard.remote_head(self.root, 'refs/heads/' + branch), expected)
-        with patch.object(pw, 'sleep', side_effect=worker):
+        if lose_delete_reply:
+            with patch.object(pw, 'sleep', side_effect=lost_reply):
+                result = confirm()
+            self.assertFalse(result['removed'])
+            self.assertNotIn('receipt_id', result)
+            self.assertIsNone(self.release)
+            self.assertFalse(self.assets)
+            self.assertEqual(guard.remote_head(self.root, tag), self.main)
+            self.assertEqual(guard.remote_head(self.root, work_ref), expected)
+
+        def acknowledge(_delay):
+            worker()
+            self.assertEqual(len(worker_pages), 3)
+            self.assertEqual(guard.remote_head(self.root, request_ref), receipt)
+            self.assertIsNone(self.release)
+            self.assertFalse(self.assets)
+            self.assertEqual(guard.remote_head(self.root, tag), self.main)
+            self.assertEqual(guard.remote_head(self.root, work_ref), expected)
+
+        with patch.object(pw, 'sleep', side_effect=acknowledge):
             self.assertTrue(confirm()['removed'])
-        for ref in ('refs/heads/' + request, 'refs/heads/' + branch, tag):
+        for ref in (request_ref, work_ref, tag):
             self.assertIsNone(guard.remote_head(self.root, ref))
         self.assertEqual(guard.remote_head(self.root, 'refs/heads/content/pw/pz-other'), self.main)
         self.assertEqual(guard.remote_head(self.root, 'refs/heads/main'), self.main)
@@ -342,6 +422,41 @@ class WorkPublicationTests(unittest.TestCase):
                            ('head_branch', name + '/extra'), ('head_branch', name.replace(expected, 'short'))):
             with self.subTest(key=key, value=value), self.assertRaises(ValueError):
                 work_removal.request_event({**event, 'workflow_run': {**run, key: value}})
+
+    def test_removal_worker_rejects_stale_or_unbound_requests_before_pr_lookup(self):
+        from datetime import datetime, timedelta, timezone
+        from tools import work_removal
+
+        actor = {'full_name': pub.REPO}
+        expected = 'a' * 40
+        name = work_removal.pw.removal_request('pz-current', expected, self.main, [])
+        request = 'refs/heads/' + name
+        main = 'refs/heads/main'
+        work = 'refs/heads/content/pw/pz-current'
+        refs = {main: self.main, request: self.main, work: expected}
+        now = datetime.now(timezone.utc)
+        run = {'repository': actor, 'head_repository': actor, 'path': '.github/workflows/work-growth.yml',
+               'event': 'push', 'conclusion': 'success', 'head_sha': self.main, 'head_branch': name}
+        for ref, changed, offset in (
+                (main, 'b' * 40, 0), (request, None, 0), (work, 'b' * 40, 0),
+                (main, self.main, -601), (main, self.main, 60)):
+            with self.subTest(ref=ref, changed=changed, offset=offset):
+                event = {'action': 'completed', 'repository': actor, 'workflow_run': {
+                    **run, 'created_at': (now + timedelta(seconds=offset)).isoformat()}}
+                live = {**refs, ref: changed}
+                with (patch.object(guard, 'remote_head', side_effect=lambda _root, target: live[target]),
+                      patch.object(guard, 'git', return_value=self.main.encode()) as git,
+                      patch.object(work_removal.pw.ProductionRemoval, 'pull_requests') as prs,
+                      patch.object(work_removal, 'app_catalog_writer') as lock):
+                    with self.assertRaisesRegex(ValueError, 'Request expired, withdrawn or superseded'):
+                        work_removal.service(self.root, event, None)
+                prs.assert_not_called()
+                lock.assert_not_called()
+                if live[request] == self.main:
+                    self.assertEqual(git.call_args.args[-1], ':' + request)
+                    self.assertIn('--force-with-lease=' + request + ':' + self.main, git.call_args.args)
+                else:
+                    git.assert_called_once_with(self.root, 'rev-parse', 'HEAD')
 
     def test_capacity_checks_existing_and_new_releases(self):
         capacity = pub.release_catalog.capacity

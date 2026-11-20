@@ -39,7 +39,7 @@ def service(root, event, api):
                 and transport.remote_head(root, ref) == main
                 and transport.remote_head(root, 'refs/heads/' + branch) == expected,
                 'Request expired, withdrawn or superseded')
-        prs = pw.ProductionRemoval.pull_requests(branch)
+        prs = pw.ProductionRemoval.pull_requests(branch, token=api.token)
         require(not any(row['state'] == 'open' for row in prs)
                 and pw.removal_request(job, expected, main, prs) == name,
                 'Pull request facts changed')

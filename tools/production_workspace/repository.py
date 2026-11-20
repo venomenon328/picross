@@ -38,13 +38,16 @@ class NoRedirect(HTTPRedirectHandler):
         return None
 
 
-def github_get(path, *, missing=False):
-    """Only fixed public GitHub reads; no credential discovery or redirects."""
+def github_get(path, *, missing=False, token=None):
+    """Read the fixed GitHub repository without redirects or credential discovery."""
+    headers = {'Accept': 'application/vnd.github+json',
+               'User-Agent': 'Picross-Production-Workspace',
+               'X-GitHub-Api-Version': '2022-11-28'}
+    if token is not None:
+        headers['Authorization'] = 'Bearer ' + token
     try:
         request = Request('https://api.github.com/repos/venomenon328/picross' + path,
-                          headers={'Accept': 'application/vnd.github+json',
-                                   'User-Agent': 'Picross-Production-Workspace',
-                                   'X-GitHub-Api-Version': '2022-11-28'})
+                          headers=headers)
         with build_opener(NoRedirect).open(request, timeout=10) as response:
             return p.parse(response.read(8 * JSON_LIMIT + 1), 8 * JSON_LIMIT)
     except HTTPError as exc:
@@ -137,11 +140,11 @@ class ProductionRemoval:
         return check_commit(sha)
 
     @staticmethod
-    def pull_requests(branch):
+    def pull_requests(branch, *, token=None):
         rows = []
         for page in range(1, 101):
             values = github_get('/pulls?' + urlencode({'state': 'all', 'head': 'venomenon328:' + branch,
-                                                       'per_page': 100, 'page': page}))
+                                                       'per_page': 100, 'page': page}), token=token)
             ap.require(isinstance(values, list), 'GitHub-PR-Antwort ist ungültig.')
             for value in values:
                 ap.require(isinstance(value, dict) and value.get('state') in ('open', 'closed') and
