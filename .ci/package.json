@@ -1,10 +1,10 @@
 {
   "format": "development-ci-plan/v1",
-  "issue": "https://github.com/venomenon328/picross/issues/660",
-  "package": "PROD-LOTUSWURZEL",
+  "issue": "https://github.com/venomenon328/picross/issues/700",
+  "package": "PROD-FALAFEL-REVEAL",
   "modules": [],
-  "purpose": "Erstintegration der endabgenommenen Lotuswurzel pz-lotuswurzel über RI-ONE mit Monoraster, Reveal samt Katalogprofilen, gewählter 3:1-Kontextzeichnung und Inhaltsmetadaten.",
-  "omitted": "Reine Rätselproduktion. Proof, Bewertung und tatsächliche Lieferung werden im Produktionsweg geprüft. Der CI-Quellenkern läuft ohne Player-Build und Zusatzmodule.",
+  "purpose": "Draft zur Auswahl der drei veröffentlichten Falafel-Abschlussbilder. Der PR bindet den aktuellen PW-B-Record und seinen Indexeintrag.",
+  "omitted": "Reine Authoringablage zur Bildwahl. Bildsichtung und Originalabruf erfolgen über den Produktionsweg. Der PR benötigt den Quellen- und Plankern ohne Player-Build oder Zusatzmodule.",
   "test_changes": [],
   "core_change": null,
   "evidence": {
