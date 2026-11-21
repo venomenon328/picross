@@ -1,10 +1,10 @@
 {
   "format": "development-ci-plan/v1",
-  "issue": "https://github.com/venomenon328/picross/issues/660",
-  "package": "PROD-LOTUSWURZEL",
+  "issue": "https://github.com/venomenon328/picross/issues/700",
+  "package": "PINGUIN-MOTIF-REVIEW",
   "modules": [],
-  "purpose": "Erstintegration der endabgenommenen Lotuswurzel pz-lotuswurzel über RI-ONE mit Monoraster, Reveal samt Katalogprofilen, gewählter 3:1-Kontextzeichnung und Inhaltsmetadaten.",
-  "omitted": "Reine Rätselproduktion. Proof, Bewertung und tatsächliche Lieferung werden im Produktionsweg geprüft. Der CI-Quellenkern läuft ohne Player-Build und Zusatzmodule.",
+  "purpose": "Quellen- und Paketplanprüfung für das Motivangebot zu pz-pinguin. Der Draft zeigt den veröffentlichten PW-B-Record zum Vergleich von Reveal und Motivvorlage.",
+  "omitted": "Reine Rätselproduktion. Die Bildsichtung und der Abruf der gebundenen Originale erfolgen im PW-B-Arbeitsstand. Der CI-Quellenkern läuft ohne Player-Build und Zusatzmodule.",
   "test_changes": [],
   "core_change": null,
   "evidence": {
