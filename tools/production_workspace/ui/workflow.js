@@ -168,7 +168,7 @@ const PW = (()=>{
   if(n===4&&intent.context?.trim())lines.push(`Kontextwunsch: ${intent.context.trim()}`);
   if(opts.workroot.trim())lines.push(`Lokale Codex-Arbeitswurzel: ${opts.workroot.trim()}.`);
   if(closing(value,intent)&&opts.merge){
-   lines.push('Commit, Push und PR; unabhängiges Review, danach Squash-Merge nur bei erfüllten aktuellen Vor-Merge-Gates.');
+   lines.push('Commit, Push und PR; PR-Diff einschließlich Lieferdaten selbst prüfen. Squash-Merge nur bei erfüllten aktuellen Vor-Merge-Gates; unabhängiges PR-Zweitreview nur bei ausdrücklicher Beauftragung.');
    lines.push(`Nach bestätigter Mainintegration gemäß Authoring Schritt 5 §9 den eigenen Produktionsstand direkt abschließen: python -m tools.work_publish retire ${value.puzzle_id} --expected <nach Completion veröffentlichter Arbeitscommit>. Fehlen des eigenen Produktionsbranches, Arbeitsreleases und Tags zurücklesen. Offenen Bereinigungsrest und Wiederholungsbefehl mit demselben Arbeitscommit getrennt vom Mainabschluss melden.`);
   }
   else lines.push('Commit, Push und Draft-PR im beauftragten Umfang; kein Merge.');
