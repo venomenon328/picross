@@ -1,10 +1,10 @@
 {
   "format": "development-ci-plan/v1",
   "issue": "https://github.com/venomenon328/picross/issues/700",
-  "package": "MACARON-MOTIF-REVIEW",
+  "package": "MACARON-RASTER-REVIEW",
   "modules": [],
-  "purpose": "Prüft Quellen und Paketplan der Macaron-Motivfreigabe. Der Entwurf verweist auf das gewählte Abschlussbild und die daraus abgeleitete Motivvorlage im PW-B-Arbeitsstand.",
-  "omitted": "Reine Authoringdaten. Die Bildsichtung und Originalprüfung erfolgen am PW-B-Arbeitsstand. Player-Build und Zusatzmodule entfallen.",
+  "purpose": "Prüft Quellen und Paketplan der Rasterauswahl für pz-macaron. Der Draft zeigt den PW-B-Arbeitsstand raster_ready mit Raster, Proof, Bewertung und Sichturteilen.",
+  "omitted": "Reine Authoringdaten. Deduktion, Endmatrix, Bewertung, Palette und Sichtung wurden im Produktionsweg geprüft. Player-Build und Zusatzmodule entfallen.",
   "test_changes": [],
   "core_change": null,
   "evidence": {
