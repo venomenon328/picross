@@ -1,0 +1,4 @@
+author: OpenAI ImageGen, eingesetzt durch Codex
+changes: Unveränderte Original-PNG-Bytes.
+source: Native Bildgenerierung aus dem Shiitake-Textbriefing.
+usage_basis: Für den beauftragten Picross-Produktionsstand neu erzeugtes Bild ohne externe Vorlage.

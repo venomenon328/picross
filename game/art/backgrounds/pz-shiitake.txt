@@ -1,0 +1,4 @@
+author: OpenAI ImageGen, eingesetzt durch Codex
+changes: Deterministische Skalierung der vollständigen 2172 × 724 Leinwand auf 2304 × 768 nach picross-background-png2304x768-v1. Keine Retusche oder Kompositionsänderung.
+source: Native Bildgenerierung aus dem Kontextbriefing für Shiitake. Gewähltes unverändertes Original background-c, SHA-256 56519e2a368f3fec1a64eee899acea7186a74792e8a6d6d0530186e8d1b062ae.
+usage_basis: Für diese Picross-Produktion neu erzeugt, ohne externe Bildvorlage.
