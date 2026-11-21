@@ -9,7 +9,7 @@ Belegbindungen, Prüfzeitpunkte, harte Voraussetzungen, redaktionelle
 Einzelfallentscheidungen und die numerische Farbprüfung.
 
 - Gestalterische Normen: ausschließlich die [Bildtypverträge](images/README.md).
-- Ablauf, Kandidatenzahl, Budgets, Sicherung und tatsächliche Freigaben: [Authoring 0.8.0, Dokumentrevision 10](authoring/PUZZLE_AUTHORING.md).
+- Ablauf, Kandidatenzahl, Budgets, Sicherung und tatsächliche Freigaben: [Authoring 0.8.0, Dokumentrevision 11](authoring/PUZZLE_AUTHORING.md).
 - Datenformen: [PW-B](../tools/PW_B_CONTRACT.md), [ZA-1](ZA1_ADAPTER.md) und die tatsächlich benutzten technischen Einzelverträge.
 - §7 und §§8.1–8.3.1 sind historische Entscheidungs-/Referenzbeispiele; keine neuen Produktionsaufträge oder zusätzlichen Pflichtprüfungen. Operative Farbpflichtquelle ist ausschließlich §8.4–8.5.
 - Technische Prüfung erzeugt kein Sichturteil und keine menschliche Entscheidung. Historische Originale, Freigaben und Bewertungen werden nicht migriert.
