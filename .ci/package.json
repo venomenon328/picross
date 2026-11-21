@@ -1,25 +1,30 @@
 {
   "format": "development-ci-plan/v1",
-  "issue": "https://github.com/venomenon328/picross/issues/728",
-  "package": "VIS-B",
+  "issue": "https://github.com/venomenon328/picross/issues/731",
+  "package": "GAME-APP-D",
   "modules": [
     "tools"
   ],
-  "purpose": "Prüft den Rückbau der einmaligen VIS-A-Buchprüfung mit der vollständigen Python-Werkzeugsuite, einschließlich Planbindung, Modulausführung, Reader- und Ergebnisprüfung sowie temporärer Ablage und Evidencebehandlung.",
-  "omitted": "Native Module, Preflight, Produktionsmodule, Delivery, Chromium und der manuelle Buch-Lifecycle bleiben außerhalb des Prüfumfangs. VIS-A-R01 deckt die einmalige Buch-, Schatten- und Bewegungsprobe bereits ab.",
+  "purpose": "Prüft den PG-Launcher, Änderungen am gemeinsamen Updateclient und den MSI-Vertrag einschließlich vorhandener PW-/PE-Regressionen. Der getrennte PG-Diagnosebau inspektiert das tatsächliche MSI und liefert den Kandidaten für die gezielte native Probe.",
+  "omitted": "Native Module, Preflight, Produktionsmodule, Delivery und Chromium sind nicht gewählt. Die Spiel-, Save- und Weblogik gehören nicht zum geänderten Umfang. Native Launcheransichten und der MSI-Übergang werden einmalig am Produkt-Head geprüft.",
   "test_changes": [
     {
-      "path": ".ci/vis-a/book_review.py",
-      "disposition": "remove",
-      "reason": "Die paketgebundene Erzeugung der Buchprüforiginale endet nach der unabhängigen VIS-A-R01-Abnahme."
+      "path": "tools/test_app_updates.py",
+      "disposition": "change-scoped",
+      "reason": "Sichert die Aggregation signiert gebundener Nutzassetbytes und den Abbruch der beobachteten Übertragung."
     },
     {
-      "path": ".ci/vis-a/review.gd",
-      "disposition": "remove",
-      "reason": "Die Szenen- und Capturehilfe diente ausschließlich der abgeschlossenen VIS-A-R01-Buchprüfung."
+      "path": "tools/test_game_installer.py",
+      "disposition": "change-scoped",
+      "reason": "Sichert PG-Zustimmung, einmaligen Spielwunsch, Abbruch vor READY-Übernahme und das Shortcut-/Registrierungsinventar auf Werkzeugebene."
+    },
+    {
+      "path": "tools/game_app/gate_diagnostic.py",
+      "disposition": "change-scoped",
+      "reason": "Führt die bestehende Windows-Startdiagnose durch die neue Hauptaktion und prüft weiterhin den nativen Abbruch."
     }
   ],
-  "core_change": "Der gemeinsame CI-Runner verliert gezielt den paketgebundenen Buchprüfaufruf. Der Werkzeug-/CI-Diff einschließlich der Löschungen verlangt den regulären Windows-x64-Spielerbau.",
+  "core_change": "Der Werkzeugdiff verlangt den regulären Windows-x64-Spielerbau. Pflichtkern und Modulauswahl bleiben unverändert.",
   "evidence": {
     "mode": "none",
     "purpose": null,

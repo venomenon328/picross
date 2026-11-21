@@ -65,7 +65,7 @@ class Transport:
         # No environment proxies, .netrc, cookies, credentials or private token.
         self.opener = urllib.request.build_opener(urllib.request.ProxyHandler({}), Redirects())
 
-    def transfer(self, url, output, limit, cancel, deadline, *, expected=None):
+    def transfer(self, url, output, limit, cancel, deadline, *, expected=None, received=None):
         require(url.startswith(API + '?') or url.startswith(DOWNLOAD), 'Foreign channel')
         allowed_url(url, initial=url)
         checkpoint(cancel, deadline)
@@ -89,6 +89,9 @@ class Transport:
                 count += len(chunk)
                 require(count <= limit, 'Update response exceeds limit')
                 output.write(chunk)
+                if received is not None:
+                    checkpoint(cancel, deadline)
+                    received(len(chunk))
             checkpoint(cancel, deadline)
             require((length is None or count == int(length)) and (expected is None or count == expected),
                     'Truncated update response')
@@ -181,15 +184,30 @@ def _discover(local_version, cancel, transport, authenticate, *, installation=No
     return metadata, assets
 
 
-def download(metadata, assets, stage, cancel, *, transport=None, app=PW):
+def download(metadata, assets, stage, cancel, *, transport=None, app=PW, progress=None):
     return _download(metadata, assets, stage, cancel, transport or Transport(),
-                     lambda raw, sig, files: verifier.verify_candidate(raw, sig, files, app=app))
+                     lambda raw, sig, files: verifier.verify_candidate(raw, sig, files, app=app),
+                     progress=progress)
 
 
-def _download(metadata, assets, stage, cancel, transport, authenticate):
+def _download(metadata, assets, stage, cancel, transport, authenticate, *, progress=None):
     require(type(metadata) is verifier.VerifiedMetadata, 'Authenticated metadata required')
     manifest = strict_json(metadata.manifest_bytes)
     deadline = time.monotonic() + 300
+    total = sum(asset['bytes'] for asset in manifest['assets'].values())
+    count = 0
+    transfer_options = {}
+
+    if progress is not None:
+        def received(size):
+            nonlocal count
+            count += size
+            progress('download', count, total)
+
+        checkpoint(cancel, deadline)
+        progress('download', 0, total)
+        transfer_options['received'] = received
+
     stage.write('manifest.json', metadata.manifest_bytes)
     stage.write(verifier.SIGNATURE, metadata.signature_bytes)
     files = {}
@@ -198,13 +216,15 @@ def _download(metadata, assets, stage, cancel, transport, authenticate):
         path = stage.target(name)
         with path.open('xb') as stream:
             transport.transfer(assets[name]['browser_download_url'], stream, binding['bytes'], cancel, deadline,
-                               expected=binding['bytes'])
+                               expected=binding['bytes'], **transfer_options)
             stream.flush()
         no_links(path)
         raw = path.read_bytes()
         require(len(raw) == binding['bytes'] and hashlib.sha256(raw).hexdigest() == binding['sha256'], 'Download hash mismatch')
         files[name] = raw
     checkpoint(cancel, deadline)
+    if progress is not None:
+        progress('verify', count, total)
     candidate = authenticate(metadata.manifest_bytes, metadata.signature_bytes, files)
     require(type(candidate) is verifier.VerifiedCandidate and candidate.binding == metadata.binding, 'Candidate changed')
     return candidate

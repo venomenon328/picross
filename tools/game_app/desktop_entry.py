@@ -35,7 +35,7 @@ def main():
             # Any stale private launch data must stay out of the game process.
             for field in ENV:
                 os.environ.pop(field, None)
-            startup(state, directory, lambda: play(directory, build))
+            startup(state, directory, lambda: play(directory, build), version=build['version'])
     finally:
         marker.close()
 

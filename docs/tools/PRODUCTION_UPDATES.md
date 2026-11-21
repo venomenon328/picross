@@ -6,7 +6,7 @@
 - **Betriebsautorität:** [Issue #612](https://github.com/venomenon328/picross/issues/612); die [Abschlussentscheidung](https://github.com/venomenon328/picross/issues/612#issuecomment-6878665809) aktiviert den PW-Betrieb. Ein Implementierungsmerge allein erteilt keine neue Betriebsbefugnis.
 - **Vertrauenswurzel:** [APP-ROOT1](https://github.com/venomenon328/picross/issues/612#issuecomment-6851636493) und [öffentlicher Root mit Eigentümerfreigabe](https://github.com/venomenon328/picross/issues/612#issuecomment-6852316923); feste technische Bindung in Abschnitt 6.
 - **PE-Mitnutzung:** derselbe technische Kern mit festen getrennten Produktidentitäten; [PE-Vertrag](PUZZLE_EDITOR.md#15-pe-app-b--startgate-und-sicherer-wiederanlauf). PW-Betrieb aktiviert keinen PE-Betrieb.
-- **PG:** feste dritte Produzenten-, Client- und Helferidentität mit eigenem [Windows-Spielvertrag](../operations/WINDOWS_GAME_APP.md), Runtime-Fingerprint und zustimmungsgebundenem Startgate. PG verwendet die gemeinsamen Netz-, Byte- und Zeitgrenzen aus diesem Vertrag.
+- **PG:** feste dritte Produzenten-, Client- und Helferidentität mit eigenem [Windows-Spielvertrag](../operations/WINDOWS_GAME_APP.md), Runtime-Fingerprint und zustimmungsgebundenem Startgate. PG verwendet die gemeinsamen Netz-, Byte- und Zeitgrenzen aus diesem Vertrag. [GAME-APP-D](https://github.com/venomenon328/picross/issues/731) legt für PG die integrierte Startansicht, den expliziten Spielstartwunsch und die passive MSI-Anzeige fest.
 - **Lieferhistorie und Abnahmen:** zuständige Issues, Pull Requests und Releases. Dieser Vertrag ersetzt keine historischen [P4-Liefernachweise](https://github.com/venomenon328/picross/issues/588).
 
 ## 1. Autorität und Grenzen
@@ -357,7 +357,9 @@ Maximal 512 MiB zusammen, Sidecars jeweils 8 MiB, 300 Sekunden Downloadbudget;
 das sind lokale Ressourcenschutzgrenzen, keine CI-Erfolgsgates. Keine Extraktion.
 Links/Reparsepfade, unvollständige Längen und Hashabweichungen werden abgewiesen.
 Alle tatsächlichen Bytes durchlaufen danach den unveränderten vollständigen
-B1-Vertrag `verify_candidate`, erneut unmittelbar vor Übergabe.
+B1-Vertrag `verify_candidate`, erneut unmittelbar vor Übergabe. PG zeigt den
+Downloadfortschritt nur für die fünf signiert gebundenen Nutzassets an. Der
+Metadatenabruf und die anschließende Verifikation sind eigene Statusphasen.
 
 [`UpdateHelper.cs`](../../tools/production_workspace/packaging/UpdateHelper.cs)
 wird als eigenständige x64-.NET-Framework-EXE gebaut und im Ressourceninventar
@@ -373,7 +375,9 @@ Desktop-finally/InstallInterlock. EOF oder unbekannter Ausgang autorisieren nich
 Alle Kandidaten bleiben mit Schreib-/Löschsperre geöffnet. Vor System-msiexec werden
 Hashes und echte MSI-Datenbankidentität erneut geprüft. Feste per-user-Argumente,
 keine Shell, Elevation, Kill- oder Rebootaktion. Der bestehende MSI-Guard entscheidet
-weiter über parallele Starts, Locks und Fremdbelegung. Eine installierte Desktop-
+weiter über parallele Starts, Locks und Fremdbelegung. PG verwendet hier
+`/passive` für die native Windows-Installer-Fortschrittsanzeige. PW und PE
+verwenden weiterhin `/qn`. Eine installierte Desktop-
 Verknüpfung wird beim Upgrade erhalten. Erfolg verlangt MSI-Exit 0, nachgelesene
 neue MSI-/EXE-Version und Bytebindung sowie einen tatsächlich authentisierten
 Wiederanlauf auf dem unveränderten Port mit demselben `--state`/Browsermodus.

@@ -40,27 +40,44 @@ gilt beim Spielen.
 
 ## Zustimmung, Update und Wiederanlauf
 
-[GAME-APP-B](https://github.com/venomenon328/picross/issues/725#game-app-b)
-verwaltet die Erstentscheidung in der privaten
-`%LOCALAPPDATA%/PicrossGame/.updates/app-updates.json`. Dort liegen auch Stage,
-Pending und Ergebnis. **Picross – Update-Einstellungen** öffnet allein die
-Zustimmungsverwaltung. Ohne sicher gespeichertes Opt-in folgt der Spielstart
-direkt auf die Entscheidung.
+[GAME-APP-D / #731](https://github.com/venomenon328/picross/issues/731)
+ersetzt den normalen Startablauf aus GAME-APP-B. **Picross** öffnet bei jedem
+normalen Start den Launcher mit fester, Windows-skalierter Breite,
+Appversion und integrierter Update-Einstellung. Bei Neuinstallation und
+regulärem Upgrade ist **Picross** der einzige Startmenüeintrag. Das Upgrade
+entfernt die frühere Einstellungen-Verknüpfung über die MSI-Komponenten
+der alten Version. Die optionale Desktopverknüpfung öffnet denselben Launcher.
 
-Mit Opt-in prüft das Fenster einmal nebenläufig den festen anonymen PG-Kanal.
-**Ohne Update spielen** behält die Zustimmung und startet die vorhandene
-Fassung. Ausschalten speichert Aus und verwirft die laufende Prüfung.
-Schließen vor Helferübernahme beendet den Start. Kanal-, Netz- und Prüffehler
-zeigen einen Status mit anschließendem Spielstart. Eine passende signierte
-Gleichversion wird frisch lokal geprüft und benötigt keine Nutzdateien.
+Öffnen und Ändern der Einstellung bleiben lokal. Automatische Updates
+benötigen eine gültige gespeicherte Zustimmung in
+`%LOCALAPPDATA%/PicrossGame/.updates/app-updates.json`. Dort liegen auch Stage,
+Pending und Ergebnis. **Updates aktivieren** speichert die Zustimmung.
+Solange keine gültige Entscheidung vorliegt, speichert **Ohne Updates spielen**
+die Ablehnung und startet das Spiel offline. Nach der Entscheidung heißt die
+Hauptaktion **Spielen**. Ein Speicherfehler wird angezeigt und lässt den
+Spielstart ohne Updateprüfung zu.
+
+Erst **Spielen** mit Opt-in löst einmal nebenläufig die Prüfung des festen
+anonymen PG-Kanals aus. Der Launcher zeigt Metadatensuche, Download und
+Kandidatenprüfung getrennt. Der Download zählt empfangene Nutzassetbytes gegen
+die signiert gebundenen Gesamtbytes. Nach dem Download werden der Kandidat
+und die Helferübergabe geprüft. **Ohne Update spielen** behält die Zustimmung
+und verwirft den laufenden Versuch. **Updates ausschalten** speichert Aus
+und verwirft ihn ebenfalls. In beiden Fällen startet die vorhandene Fassung
+einmal. Schließen vor der Helferübernahme verwirft den Startwunsch. Kanal-,
+Netz- und Prüffehler zeigen einen Status mit anschließendem Spielstart. Eine
+passende signierte Gleichversion wird frisch lokal geprüft und benötigt keine
+Nutzdateien.
 
 Nur eine vollständig verifizierte höhere Version gelangt in die
 noncegebundene READY/GO-Übergabe. Der fest kompilierte PG-Helfer prüft den
-Elternprozess, die Zustimmung, Kandidaten und MSI-Identität. Er wartet auf
-das tatsächliche Ende des Launchers. Laufender Player und Dateibelegung
-sperren den Austausch. Nach bestätigtem MSI-Erfolg prüft der Helfer die neue
-installierte Identität. Die private PG-Pipe authentisiert erst den wartenden
-Launcher und erlaubt danach einmal den Start. Eine zweite authentisierte
+Elternprozess, die Zustimmung, Kandidaten und MSI-Identität. Ab der Übernahme
+sind Einstellungen, Abbruch und Schließen gesperrt. Der Helfer wartet auf das
+tatsächliche Ende des Launchers und startet die native passive MSI-Anzeige.
+Laufender Player und Dateibelegung sperren den Austausch. Nach bestätigtem
+MSI-Erfolg prüft der Helfer die neue installierte Identität. Die private PG-Pipe
+authentisiert erst den wartenden Launcher und übergibt den bestehenden
+Spielstartwunsch einmal direkt an den Player. Eine zweite authentisierte
 Antwort bindet den laufenden Player und dessen sichtbares Fenster. Bei
 unbestätigtem Ergebnis bleibt der manuelle Start. Pending löst keine
 Wiederholung aus.

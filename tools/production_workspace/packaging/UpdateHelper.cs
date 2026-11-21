@@ -470,8 +470,13 @@ public static class UpdateHelper {
             bool desktop=false;
             using(var key=Microsoft.Win32.Registry.CurrentUser.OpenSubKey(RegistryPath))
                 desktop=key!=null && Object.Equals(key.GetValue("DesktopShortcut"),1);
+#if PG
+            const string installerUi = "/passive";
+#else
+            const string installerUi = "/qn";
+#endif
             var info=new ProcessStartInfo(Path.Combine(Environment.SystemDirectory,"msiexec.exe"),
-                "/i "+Quote(Path.Combine(stage,msi))+" /qn /norestart ALLUSERS=2 MSIINSTALLPERUSER=1 REBOOT=ReallySuppress MSIRESTARTMANAGERCONTROL=Disable"+(desktop?" INSTALLDESKTOP=1":"")) {
+                "/i "+Quote(Path.Combine(stage,msi))+" "+installerUi+" /norestart ALLUSERS=2 MSIINSTALLPERUSER=1 REBOOT=ReallySuppress MSIRESTARTMANAGERCONTROL=Disable"+(desktop?" INSTALLDESKTOP=1":"")) {
                 UseShellExecute=false, CreateNoWindow=true, WorkingDirectory=stage };
             int code;
             using(var installer=Process.Start(info)) { installer.WaitForExit(); code=installer.ExitCode; }

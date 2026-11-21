@@ -1,9 +1,11 @@
 Picross für Windows x64
 Die MSI-Datei installiert Picross für dein Windows-Benutzerkonto.
-Starte das Spiel im Startmenü über „Picross“. Die Desktopverknüpfung ist optional.
-Beim ersten Start kannst du automatische Updates aktivieren oder ablehnen.
-„Picross – Update-Einstellungen“ öffnet allein diese Einstellung.
-Während einer Prüfung startet „Ohne Update spielen“ die installierte Fassung.
+Öffne den Launcher im Startmenü über „Picross“. Die Desktopverknüpfung ist optional.
+Automatische Updates lassen sich im Launcher jederzeit vor dem Spielstart ändern.
+Beim ersten Start speichert „Ohne Updates spielen“ die Ablehnung und spielt offline.
+Danach ist „Spielen“ die Startaktion. Bei aktivierten Updates prüft sie zuerst den Updatekanal.
+Während der Prüfung oder des Downloads startet „Ohne Update spielen“ die installierte Fassung.
+Ein bestätigtes Update zeigt den Installationsfortschritt und öffnet das Spiel automatisch.
 Vorhandene Spielstände und Einstellungen findest du nach dem Start wie gewohnt.
 Beende Picross vor einer Installation einer neueren Version oder der Deinstallation.
 Spielanleitung und Lizenzen liegen im Programmverzeichnis.
