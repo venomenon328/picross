@@ -81,7 +81,6 @@ func _draw() -> void:
 			draw_line(center-Vector2(0,6)*u,center+Vector2(0,2)*u,Color("925348"),2*u,true)
 			draw_circle(center+Vector2(0,6)*u,u,Color("925348"))
 		"unknown":
-			draw_rect(Rect2(Vector2.ZERO,size),Color("faf3e3"))
 			# A deliberately asymmetric outlined pencil sketch, 56/112 of image height.
 			var scale_value: float = size.y/112.0
 			draw_set_transform(center-Vector2(20,28)*scale_value,0,Vector2.ONE*scale_value)

@@ -13,6 +13,8 @@ const Preference = preload("res://model/catalog_preference.gd")
 const Filter = preload("res://model/catalog_filter.gd")
 const FilterPanel = preload("res://ui/catalog_filters.gd")
 const PAGE_SIZE: int = 24
+const CARD_PAPER := Color("fff8e8")
+const CARD_STROKES := {"normal": 1.15, "hover": 2.1, "pressed": 3.0, "hover_pressed": 3.0, "disabled": 1.15}
 signal opened(id: String)
 signal reset_requested(id: String)
 signal repair_requested(id: String)
@@ -400,15 +402,13 @@ func _add_card(id: String) -> void:
 	card.focus_mode = Control.FOCUS_ALL
 	card.pressed.connect(func() -> void: opened.emit(id))
 	card.recovery_activated.connect(func() -> void: opened.emit(id))
-	for state: String in ["normal", "hover", "pressed", "focus", "disabled"]:
-		var paper = PaperStyle.make("card/"+id,ui_scale,Color("fff8e8") if state == "normal" else Color("c5d6cd") if state == "pressed" else Color("e0e9d9"))
-		if state == "disabled": paper.paper = Color("eadbd1")
-		paper.selected = id == selected_id
-		if state == "focus":
-			paper.focus = true
-			paper.paper = Color.TRANSPARENT
-			paper.ink = BookButton.INK
+	for state: String in CARD_STROKES:
+		var paper = PaperStyle.make("card/"+id, ui_scale, CARD_PAPER)
+		paper.stroke_width = CARD_STROKES[state]
+		if state == "disabled": paper.ink = Color("a59486")
 		card.add_theme_stylebox_override(state, paper)
+	# Native focus still drives keyboard input. Only the card overlay is empty.
+	card.add_theme_stylebox_override("focus", StyleBoxEmpty.new())
 	card.disabled = statuses[id] == "error"
 	column.add_child(card)
 	choices.append(card)
@@ -491,7 +491,7 @@ func _layout_cards() -> void:
 		card.ui_scale = ui_scale
 		card.side_by_side = sideways
 		card.side_width_budget = side_minimum
-		for state: String in ["normal","hover","pressed","disabled","focus"]:
+		for state: String in CARD_STROKES:
 			card.get_theme_stylebox(state).ui_scale = ui_scale
 		card.custom_minimum_size.x = card_width
 		card.size.x = card_width

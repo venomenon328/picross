@@ -339,8 +339,22 @@ Begonnen-Stift. Sie verändert keine Zell-/Hinweisrenderer oder EA-Zeitfolge.
 Beim regulären Blättern wandert der vorbereitete Zielbestand aus dem Capture
 direkt in den Katalog. Seite, Filter, Reihenfolge, Kartengeneration und
 Geometrie binden die Übernahme. Dadurch behalten höchstens 24 Karten ihre
-lokalen Revealreferenzen. Der bestehende Kartenhover wird auch unter einem
-ruhenden Zeiger wiederhergestellt.
+lokalen Revealreferenzen. Der Kartenhover wird auch unter einem ruhenden
+Zeiger wiederhergestellt.
+
+## Kartenzustände · KAT-HOVER-C
+
+Die ID-gebundene handgezeichnete Vollkontur bleibt bei Hover und Druck in
+Form und Position stabil. Bei Hover wird sie entlang aller vier Seiten und
+Ecken kräftiger, bei Druck nochmals stärker. Die Fläche bleibt in jedem
+Zustand warmes Kartenpapier (#fff8e8). Deaktivierte Fehlerkarten verwenden
+gedämpfte Konturstriche, behalten ihre Diagnose und zeigen keinen aktiven
+Hover oder Druck. Reset und Recovery behalten ihre eigenen Trefferflächen.
+
+Die Karte zeichnet für Auswahl und Fokus weder Zusatzstriche noch eine
+Auswahl- oder Fokusinnenkontur. Auswahl-ID, nativer Fokus und Öffnen per
+Tastatur bleiben bedienbar. Der etwas dunklere Metadatenstreifen und der
+neutrale Untergrund der eigenen Füllminiatur bleiben erhalten.
 
 Die Dimensionsstudie für [#735](https://github.com/venomenon328/picross/issues/735)
 ergab seitlich 112 × 112 bzw. 140 × 140 Pixel. Gestapelt begrenzen die
@@ -377,8 +391,8 @@ Zellwerte bedeuten Begonnen, sonst Neu.
 
 Das Fragezeichen ist eine eigene Zeichnung in warmem Graphit mit leicht
 unregelmäßiger Kontur und dezenter Bleistiftschraffur, kein Zeichen einer normalen
-Schrift. Es steht mit großzügigem Freiraum auf warmem Papier und nimmt ungefähr
-die halbe Bildhöhe ein. Es bleibt statisch und identisch für alle neuen Rätsel,
+Schrift. Es steht mit großzügigem Freiraum direkt auf dem warmen Kartenpapier
+und nimmt ungefähr die halbe Bildhöhe ein. Es bleibt statisch und identisch für alle neuen Rätsel,
 ohne Leuchten, Pulsieren, Schattenmotiv oder andere Lösungshinweise.
 
 Begonnene Vorschauen zeigen auch falsche eigene Füllungen unverändert. X und
