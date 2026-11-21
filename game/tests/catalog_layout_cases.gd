@@ -138,6 +138,7 @@ static func run(probe) -> void:
 	album._render(0)
 	await probe.frames()
 	await compact(probe)
+	await card_ink(probe)
 
 static func compact(probe) -> void:
 	var app = probe.app
@@ -198,3 +199,135 @@ static func compact(probe) -> void:
 	probe.check(app.ending.visible and str(app.session.definition.id) == first.action_id,"KL-CARD real focus accept opens earned stable ID")
 	app.show_album()
 	await probe.frames()
+
+
+static func move_pointer(probe, point: Vector2, held: bool = false) -> void:
+	var motion := InputEventMouseMotion.new()
+	motion.position = point
+	if held: motion.button_mask = MOUSE_BUTTON_MASK_LEFT
+	probe.surface.push_input(motion, true)
+
+static func press_pointer(probe, point: Vector2, down: bool) -> void:
+	var event := InputEventMouseButton.new()
+	event.position = point
+	event.button_index = MOUSE_BUTTON_LEFT
+	event.pressed = down
+	probe.surface.push_input(event, true)
+
+static func card_pixels(probe, bounds: Rect2i) -> Image:
+	await probe.frames()
+	await RenderingServer.frame_post_draw
+	return probe.surface.get_texture().get_image().get_region(bounds)
+
+static func ink_strength(image: Image, region: Rect2i) -> float:
+	var strength: float = 0.0
+	for y: int in range(region.position.y, region.end.y):
+		for x: int in range(region.position.x, region.end.x):
+			strength += 1.0 - image.get_pixel(x, y).get_luminance()
+	return strength
+
+static func card_ink(probe) -> void:
+	var app = probe.app
+	var album = app.album
+	var outside := Vector2(2, 2)
+	var original_size: Vector2i = probe.surface.size
+	var original_scale: float = app.ui_scale
+	var selected_before: String = album.selected_id
+	var saved: Dictionary = probe.save_bytes()
+	for scale: float in [1.0, 1.25]:
+		move_pointer(probe, outside)
+		probe.surface.size = Vector2i(2560, 1440) if scale == 1.0 else Vector2i(1920, 1200)
+		app.set_ui_scale(scale)
+		album.selected_id = ""
+		album._render(0)
+		await probe.frames()
+		var card: Card
+		for candidate: Card in album.choices:
+			if candidate.unknown.visible:
+				card = candidate
+				break
+		probe.check(card != null, "KAT-HOVER-C synthetic new card exists")
+		if card == null: return
+		album.ensure_control_visible(card)
+		await probe.frames()
+		var bounds := Rect2i(card.get_global_rect())
+		var point: Vector2 = card.get_global_rect().position + Vector2(6, 24) * scale
+		var normal: Image = await card_pixels(probe, bounds)
+		var free_pixel := Vector2i(card.unknown.global_position + Vector2(5, 5) * scale) - bounds.position
+		var mark_center := Vector2i(card.unknown.get_global_rect().get_center()) - bounds.position
+		var paper := Color("fff8e8")
+		probe.check(normal.get_pixelv(free_pixel).is_equal_approx(paper)
+			and normal.get_pixelv(free_pixel + Vector2i(roundi(7 * scale), 0)).is_equal_approx(paper)
+			and ink_strength(normal, Rect2i(mark_center - Vector2i(10, 16), Vector2i(20, 32))) > 30,
+			"KAT-HOVER-C intact question mark on adjacent warm paper")
+
+		move_pointer(probe, point)
+		var hover: Image = await card_pixels(probe, bounds)
+		probe.check(card.is_hovered(), "KAT-HOVER-C actual card hover")
+		press_pointer(probe, point, true)
+		var pressed: Image = await card_pixels(probe, bounds)
+		probe.check(card.has_focus() and card.get_draw_mode() == BaseButton.DRAW_PRESSED,
+			"KAT-HOVER-C actual focused pointer press")
+		var band: int = roundi(14 * scale)
+		var extent: Vector2i = bounds.size
+		var sides: Array[Rect2i] = [
+			Rect2i(band, 0, extent.x - 2 * band, band),
+			Rect2i(band, extent.y - band, extent.x - 2 * band, band),
+			Rect2i(0, band, band, extent.y - 2 * band),
+			Rect2i(extent.x - band, band, band, extent.y - 2 * band)]
+		for side: Rect2i in sides:
+			probe.check(ink_strength(normal, side) + 2 < ink_strength(hover, side)
+				and ink_strength(hover, side) + 2 < ink_strength(pressed, side),
+				"KAT-HOVER-C each side gains ink from normal to hover to press")
+		var interior := Rect2i(Vector2i.ONE * band, extent - Vector2i.ONE * 2 * band)
+		probe.check(normal.get_region(interior).get_data() == hover.get_region(interior).get_data()
+			and normal.get_region(interior).get_data() == pressed.get_region(interior).get_data()
+			and Rect2i(card.get_global_rect()) == bounds, "KAT-HOVER-C stable paper, content and hit rect")
+		move_pointer(probe, outside, true)
+		press_pointer(probe, outside, false)
+		probe.check((await card_pixels(probe, bounds)).get_data() == normal.get_data(),
+			"KAT-HOVER-C focus alone leaves normal drawing intact")
+		card.disabled = true
+		var disabled: Image = await card_pixels(probe, bounds)
+
+		var id: String = card.action_id
+		var position: int = album.scroll_vertical
+		album.selected_id = id
+		album._render(position)
+		await probe.frames()
+		card = album.choices[album.visible_ids.find(id)]
+		probe.check(album.selected_id == id and Rect2i(card.get_global_rect()) == bounds
+			and (await card_pixels(probe, bounds)).get_data() == normal.get_data(),
+			"KAT-HOVER-C selection alone keeps ID and normal drawing after rebuild")
+		card.grab_focus()
+		move_pointer(probe, point)
+		probe.check((await card_pixels(probe, bounds)).get_data() == hover.get_data(),
+			"KAT-HOVER-C selected and focused hover has no extra decoration")
+		press_pointer(probe, point, true)
+		probe.check((await card_pixels(probe, bounds)).get_data() == pressed.get_data(),
+			"KAT-HOVER-C selected and focused press has no extra decoration")
+		move_pointer(probe, outside, true)
+		press_pointer(probe, outside, false)
+		card.disabled = true
+		move_pointer(probe, point)
+		press_pointer(probe, point, true)
+		probe.check((await card_pixels(probe, bounds)).get_data() == disabled.get_data()
+			and disabled.get_pixelv(free_pixel).is_equal_approx(paper),
+			"KAT-HOVER-C disabled drawing ignores selection and attempted press")
+		press_pointer(probe, point, false)
+		card.disabled = false
+		card.release_focus()
+		move_pointer(probe, outside)
+		if scale == 1.25:
+			app.set_ui_scale(1.0)
+			app.set_ui_scale(1.25)
+			await probe.frames()
+			probe.check(Rect2i(card.get_global_rect()) == bounds
+				and (await card_pixels(probe, bounds)).get_data() == normal.get_data(),
+				"KAT-HOVER-C UI roundtrip restores identical selected card drawing")
+	probe.surface.size = original_size
+	app.set_ui_scale(original_scale)
+	album.selected_id = selected_before
+	album._render(0)
+	await probe.frames()
+	probe.check(probe.save_bytes() == saved, "KAT-HOVER-C passive pointer and focus preserve saves")

@@ -5,6 +5,7 @@ var identity: String = "paper"
 var ui_scale: float = 1.0
 var paper: Color = Color("fffaf0")
 var ink: Color = Color("78674f")
+var stroke_width: float = 1.15
 var selected: bool = false
 var focus: bool = false
 var opaque_bounds: bool = false
@@ -58,7 +59,7 @@ func _draw(canvas: RID, rect: Rect2) -> void:
 		RenderingServer.canvas_item_add_polygon(canvas,polygon,PackedColorArray([paper]))
 	var color: Color = Color("376a60") if selected else ink
 	for i: int in range(4):
-		RenderingServer.canvas_item_add_polyline(canvas,lines[i],PackedColorArray([color]),(1.65 if selected else 1.15)*ui_scale,true)
+		RenderingServer.canvas_item_add_polyline(canvas,lines[i],PackedColorArray([color]),(1.65 if selected else stroke_width)*ui_scale,true)
 	# Short, deliberately offset retracing; never a second mechanical rectangle.
 	if not focus:
 		for i: int in [0,3]:

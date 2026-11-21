@@ -656,6 +656,16 @@ Folgeziels, dessen Invalidierung und die Identität der übernommenen Controls.
 Die reale Reihenfolge von Down, normaler Direktübergabe und Up wurde separat
 für das Paket am unbeschleunigten Windows-Buchroot geprüft.
 
+## Katalogkontur · KAT-HOVER-C / #735
+
+Der vorhandene Checkpoint `catalog-layout` vergleicht bei UI100/125 echte
+Renderpixel aller vier Kartenseiten bei Normal, Hover und Druck. Er prüft das
+warme Kartenpapier mit dem direkt gezeichneten Fragezeichen, die gleiche
+Zeichnung bei Auswahl/Fokus und einen Rebuild-/UI-Rundweg. Der vorhandene
+AT-Fall vergleicht die Alphakomposition mit dem tatsächlich gerenderten
+Kartenpapier. Der unverlangsamte Windows-Buchlauf bleibt einmaliger
+paketgebundener Reviewnachweis.
+
 ## Historische Quellen
 
 Der [vollständige Vorgänger](https://github.com/venomenon328/picross/blob/f3626f28899a48fa4d783716925f7425a3eb1784/docs/CI_C_NATIVE_GROUPS.md)

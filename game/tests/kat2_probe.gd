@@ -295,6 +295,11 @@ func transparent_reveals() -> void:
 		await create_timer(0.6).timeout
 		var hover := await preload("res://tests/at_alpha.gd").sample(self,card.picture,"hover-%d" % spec[0])
 		check(card.is_hovered(), "AT actual card hover reached")
+		for measurement: Dictionary in [before, hover]:
+			for row: Dictionary in measurement.samples:
+				var bg: Array = row.background
+				check(Color(bg[0], bg[1], bg[2]).is_equal_approx(Color("fff8e8")),
+					"AT measured warm catalog paper in normal and hover")
 		check(app.choices[0].picture.artwork == null and app.choices[1].picture.artwork == null,"AT begun/new remain spoiler-free alongside solved image")
 		at_measurements.append({"window":spec,"small":before,"hover":hover})
 	app.select_puzzle(0)

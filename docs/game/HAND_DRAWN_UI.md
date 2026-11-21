@@ -103,6 +103,10 @@ deaktiviert und Fokus bleiben klar erkennbar. Eine Auswahl besitzt auch eine
 Form-/Markierungsunterscheidung. Die dekorative Grundform bleibt beim Zustandswechsel
 stabil; vorhandene Zustandsflächen und zusätzliche Markierungen dürfen wechseln.
 Gezeichnete Fokus- und Auswahlmarkierungen gehören zur gemeinsamen Stilfamilie.
+Für Katalogkarten gilt die Ausnahme aus KAT-HOVER-C: Auswahl und nativer
+Fokus bleiben funktional, während die Karte ausschließlich ihre Normal-,
+Hover-, Druck- oder deaktivierte Kontur zeigt. Auswahlunterstrich,
+Auswahlfarbe und Fokusinnenkontur entfallen für die Karte.
 
 Layout, Zentrierung und Trefferflächen bleiben regelmäßig. Vorhandene Buttons
 und Kartenaktionen behalten ihre rechteckigen Mindesttrefferflächen von
@@ -306,12 +310,15 @@ StyleBox-Pfad verwendet nur die stabile Identitätsfunktion aus `scribble.gd`,
 keine für große Papierflächen ausgelegten Kantenbögen. Buchmaterialien, Schriftrollen und übrige Icons behalten ihre jeweils
 zuständigen Fachverträge. Herkunft und Exportbindung folgen [Z2](Z2_SELECTION.md).
 
-## Kataloghoverstudie · #735
+## Katalogkarten · KAT-HOVER-C / #735
 
-Die isolierte native Studie vergleicht eine verstärkte vollständige Buchkontur
-(A) mit inneren Graphit-Eckklammern (B) auf warmem Papier. Tobias wählt nach
-Ansicht der Originale die Gestaltung für KAT-HOVER-C. KAT-UX-A nutzt im Spiel
-weiter die bestehenden Hoverfarben und das hinterlegte Fragezeichen.
+Die isolierte native Studie verglich die Verstärkung der vollständigen Buchkontur
+(A) mit inneren Graphit-Eckklammern (B). Für das Spiel wurde
+[Variante A gewählt](https://github.com/venomenon328/picross/issues/735#issuecomment-7061354953).
+Hover und Druck verstärken dieselben vier Konturseiten samt Ecken bei stabiler
+ID-Geometrie. Die Kartenfläche behält in jedem Zustand warmes Papier
+(#fff8e8). Für deaktivierte Karten bleibt die Kontur gedämpft. Das gezeichnete
+Fragezeichen liegt direkt auf dem Kartenpapier.
 
 ## Herkunft und Nachweise
 

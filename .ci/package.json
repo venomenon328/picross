@@ -1,87 +1,25 @@
 {
   "format": "development-ci-plan/v1",
   "issue": "https://github.com/venomenon328/picross/issues/735",
-  "package": "KAT-IMG-B",
+  "package": "KAT-HOVER-C",
   "modules": [
-    "tools",
-    "production.images",
-    "production.adapter",
-    "production.catalog",
-    "native.catalog",
-    "native.completion",
-    "native.export",
-    "delivery"
+    "native.catalog"
   ],
-  "purpose": "Prüft gebundene PNG-/SVG-Profile, Writer und Recovery, Katalog/Abschluss, private Werkzeuge und beide tatsächlichen Spielerpakete. native.export liefert den Windows-Pflichtbau.",
-  "omitted": "Solver, native.core/history/graphics/adapters, gesondertes Preflight, Chromium und vollständige Buchrundreise entfallen. Windowsbuch, vergleichbare Messungen, Kohorte und private PW-/PE-Laufzeit werden einmalig geprüft. Technische Originale für R01 höchstens sieben Tage, Windowsplayer vierzehn Tage.",
+  "purpose": "Prüft alle elf Katalogmodi mit realen Render- und Eingabeassertions für Kontur, Kartenpapier, Fokus und ID-Bindung. Der Pflichtkern erstellt separat den regulären Windows-x64-Spieler.",
+  "omitted": "Übrige native Module, tools, production.*, preflight, delivery, Chromium und vollständiger Buch-Lifecycle entfallen. Ein kurzer unverlangsamter Windows-Buchlauf sichert Fit, Eingabe und Direktübergabe am finalen Head. Temporäre Hilfen bleiben außerhalb von Git und enden nach Zustellung, spätestens nach R01. Technische Originale für den unabhängigen Reviewer höchstens sieben Tage, Windowsplayer vierzehn Tage.",
   "test_changes": [
-    {
-      "path": "tests/puzzle_production/test_images.py",
-      "disposition": "change-scoped",
-      "reason": "Synthetische Maß-, Gamma-, Alpha- und Determinismusfälle."
-    },
-    {
-      "path": "tests/puzzle_production/test_current_integration.py",
-      "disposition": "change-scoped",
-      "reason": "Exakte Zielmengen, No-op und Transaktionsschutz."
-    },
-    {
-      "path": "game/tests/content_pack_probe.gd",
-      "disposition": "change-scoped",
-      "reason": "Vollständige Profilnamen und tatsächliche Texturgrößen in beiden Exporten."
-    },
     {
       "path": "game/tests/catalog_layout_cases.gd",
       "disposition": "change-scoped",
-      "reason": "Profilwahl, natürliche Geometrie und Freigabe der Texturen im vorhandenen Katalogcheckpoint."
+      "reason": "Synthetische Render- und Eingabestichprobe für alle Konturseiten, stabiles Papier, Fragezeichen sowie Auswahl/Fokus und UI-Rundweg."
     },
     {
-      "path": "tests/puzzle_production/test_current_consumers.py",
+      "path": "game/tests/kat2_probe.gd",
       "disposition": "change-scoped",
-      "reason": "Gebundene Profile im Katalogjournal."
-    },
-    {
-      "path": "tests/puzzle_production/test_current_completion.py",
-      "disposition": "change-scoped",
-      "reason": "Registrierte Lieferung enthält Revealquelle und Profilbytes."
-    },
-    {
-      "path": "tests/puzzle_production/test_registration_budgets.py",
-      "disposition": "change-scoped",
-      "reason": "Gesamtjournal wird vor der ersten Mutation begrenzt."
-    },
-    {
-      "path": "tests/puzzle_production/test_editor_change.py",
-      "disposition": "change-scoped",
-      "reason": "Aktive Profilziele bei echter Bildwahl."
-    },
-    {
-      "path": "tools/test_puzzle_editor.py",
-      "disposition": "change-scoped",
-      "reason": "Aktuelle Runtimegeneration in den bestehenden Editortests."
-    },
-    {
-      "path": "tools/test_background_import.py",
-      "disposition": "change-scoped",
-      "reason": "Aktuelle v9-Projektion und historische v5-Fixierung im bestehenden Prüffall."
-    },
-    {
-      "path": "tools/test_p1_product.py",
-      "disposition": "change-scoped",
-      "reason": "Aktuelle v9-Projektion und historische v5-Fixierung im bestehenden Prüffall."
-    },
-    {
-      "path": "tools/test_categories.py",
-      "disposition": "change-scoped",
-      "reason": "Aktuelle v9-Projektion und historische v5-Fixierung im bestehenden Prüffall."
-    },
-    {
-      "path": "tests/puzzle_production/catalog_fixtures.py",
-      "disposition": "change-scoped",
-      "reason": "Aktuelle v9-Projektion und historische v5-Fixierung im bestehenden Prüffall."
+      "reason": "Vorhandene AT-Kompositionsmessung bindet Normal und Hover zusätzlich an das warme Kartenpapier."
     }
   ],
-  "core_change": "Beide festen PNG-Profilpfade zählen als reine Produktionsinhalte; Generator, Importmetadaten und andere Pfade bleiben buildpflichtig.",
+  "core_change": null,
   "evidence": {
     "mode": "none",
     "purpose": null,
