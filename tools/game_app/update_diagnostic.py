@@ -132,7 +132,7 @@ def legacy_helper(build, work):
                     '-o', str(source), str(msi)], check=True)
     files = ET.parse(source).findall('.//{*}File[@Name="UpdateHelper.exe"]')
     require(len(files) == 1, 'Ambiguous legacy helper')
-    path = Path(files[0].get('SourceFile')).resolve()
+    path = Path(files[0].attrib['Source']).resolve()
     require(path.is_relative_to(extracted.resolve()), 'Unexpected legacy member')
     return path
 

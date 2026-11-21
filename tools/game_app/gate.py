@@ -203,6 +203,8 @@ class StartupGate:
         self.restarting = False
         self.installing = False
         self.timer = None
+        self.drain = None
+        self.cancel_status = None
         self.configure_updates(updates)
         self.view = LauncherWindow(version, self.play, self.toggle, self.install, lambda: self.stop('close'))
         self.root = self.view.root
@@ -266,10 +268,14 @@ class StartupGate:
         saved = self.save(enable)
         if not enable and self.updates.started:
             self.updates.cancel()
+            self.cancel_status = ('Automatische Update-Suche ausgeschaltet.' if saved else
+                                  'Ausschalten nicht gespeichert. Dieser Updateversuch wurde verworfen.')
         self.controls()
         if saved:
-            self.view.show('Automatische Update-Suche ausgeschaltet.' if not enable else
-                           'Automatische Update-Suche aktiviert.')
+            if enable and self.updates.started:
+                self.cancel_status = 'Update-Suche aktiviert. Erneute Prüfung beim nächsten Öffnen.'
+            self.view.show(self.cancel_status or ('Automatische Update-Suche aktiviert.' if enable else
+                                                  'Automatische Update-Suche ausgeschaltet.'))
             if enable:
                 self.search()
 
@@ -308,8 +314,14 @@ class StartupGate:
         if self.updates is not None:
             self.updates.cancel()
         self.controls()
-        if self.installing and self.updates.thread.is_alive():
-            self.view.show('Download wird abgebrochen …', busy=True)
+        if self.installing:
+            self.view.show('Updateversuch wird beendet …', busy=True)
+            # Wait for the discarded download and any still-uncommitted READY
+            # helper to release their files before dispatching the player.
+            self.drain = threading.Thread(target=self.updates.close, name='PG-update-cancel')
+            self.drain.start()
+            if self.timer is None:
+                self.timer = self.root.after(75, self.poll)
         else:
             self.destroy()
 
@@ -345,11 +357,21 @@ class StartupGate:
 
     def poll(self):
         self.timer = None
+        if self.drain is not None:
+            if self.drain.is_alive():
+                self.timer = self.root.after(75, self.poll)
+            else:
+                self.destroy()
+            return
         if self.updates.thread.is_alive():
             if self.result is None:
                 progress = self.updates.progress
-                if progress and progress[0] == 'download':
+                if self.enabled is False and self.updates.cancelled.is_set():
+                    self.view.show('Updateversuch wird beendet …', busy=True)
+                elif progress and progress[0] == 'download':
                     self.view.show('Update herunterladen …', progress[1:])
+                elif progress:
+                    self.view.show('Heruntergeladenes Update prüfen …', busy=True)
                 else:
                     self.view.show(self.updates.status, busy=not self.updates.cancelled.is_set())
             self.timer = self.root.after(75, self.poll)
@@ -363,7 +385,7 @@ class StartupGate:
                 self.destroy()
                 return
         else:
-            self.view.show(self.updates.status)
+            self.view.show(self.cancel_status or self.updates.status)
         self.installing = False
         self.controls()
 

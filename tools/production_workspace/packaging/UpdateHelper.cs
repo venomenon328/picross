@@ -255,7 +255,6 @@ public static class UpdateHelper {
     }
 #endif
 #if PG
-    [DllImport("kernel32.dll",SetLastError=true)] static extern IntPtr OpenProcess(uint access,bool inherit,uint pid);
     [DllImport("user32.dll")] static extern uint GetWindowThreadProcessId(IntPtr window,out uint pid);
     [DllImport("user32.dll")] static extern bool IsWindowVisible(IntPtr window);
 

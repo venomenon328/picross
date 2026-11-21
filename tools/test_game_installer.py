@@ -201,6 +201,8 @@ class GameInstallerTests(unittest.TestCase):
                         gate.toggle()
                         self.assertIsNone(gate.result)
                     release_worker.set()
+                    if gate.drain:
+                        gate.drain.join(2)
                     updates.close()
                     self.assertEqual(fetch.call_count, int(action == 'download'))
                     self.assertIs(updates.preferences.read(), action != 'opt_out')
