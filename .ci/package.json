@@ -3,8 +3,8 @@
   "issue": "https://github.com/venomenon328/picross/issues/700",
   "package": "PZ-WALNUSS-S3-SICHTUNG",
   "modules": [],
-  "purpose": "Bindet den Draft zur Sichtung des aktuellen Walnuss-Arbeitsstands an den Quellenkern. Reine Authoring-Metadaten.",
-  "omitted": "Authoringablage ohne Spielcode, registrierte Rätseldaten oder gemeinsame Assets. Rätselspezifische Sicht- und Logikprüfung erfolgt in der Produktion. Quell- und Plankern genügen für den Draft.",
+  "purpose": "Bindet den Draft zur Sichtung der symmetrisch korrigierten Walnuss in Schritt 3 an den Quellen- und Plankern. Die aktuellen Produktionsdaten liegen im PW-B-Arbeitsref.",
+  "omitted": "Reine Rastersuchung und redaktionelle Sichtung ohne Spielcode, registrierte Rätseldaten oder gemeinsame Assets. Die Produktionswerkzeuge prüfen Definition und Proof. Der Draft braucht weder Player-Build noch Zusatzmodule.",
   "test_changes": [],
   "core_change": null,
   "evidence": {
