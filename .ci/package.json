@@ -1,10 +1,10 @@
 {
   "format": "development-ci-plan/v1",
-  "issue": "https://github.com/venomenon328/picross/issues/660",
-  "package": "PROD-WALNUSS",
+  "issue": "https://github.com/venomenon328/picross/issues/700",
+  "package": "PROD-DURIAN-STEP4",
   "modules": [],
-  "purpose": "Erstintegration der endabgenommenen Walnuss pz-walnuss über RI-ONE. Der Katalog erhält das gewählte Monoraster, Reveal samt Katalogprofilen, den 3:1-Kontext und die gebundenen aktuellen Inhaltsmetadaten.",
-  "omitted": "Reine Rätselproduktion. Keine Änderungen an Spieler, Resolvern, Werkzeugen, gemeinsamen Laufzeitressourcen oder Tests. Proof und Inhaltsprüfung erfolgen im Produktionsweg. Der Docs- und CI-Quellenkern genügt ohne Player-Build und Zusatzmodule.",
+  "purpose": "Buildfreier Review der drei Kontextzeichnungen für pz-durian im veröffentlichten PW-B-Stand background_review. Der Draft verlinkt den gebundenen Arbeitsdatensatz und die drei Originale zur Auswahl.",
+  "omitted": "Reine Produktionssichtung. Die PNG- und Rasterbindungen werden im Authoring-Publisher geprüft. Der CI-Quellen- und Plankern genügt. Spieler, Werkzeuge, gemeinsame Laufzeitressourcen und Tests sind vom Auftrag unberührt.",
   "test_changes": [],
   "core_change": null,
   "evidence": {
