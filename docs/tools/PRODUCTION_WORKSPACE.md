@@ -486,7 +486,7 @@ die integrierte ID aus.
 Die normale Hintergrundentscheidung zeigt zuerst das tatsächlich gewählte Raster,
 dessen Reveal und die vorgemerkte Hintergrunddatei beziehungsweise `none`. Der
 primäre Schlussauftrag erklärt diese konkrete Wahl, Endabnahme und Integration
-zusammen. Er enthält Commit/PR, unabhängiges Review, Squash-Merge erst nach
+zusammen. Er enthält Commit/PR, PR-Diff-Selbstprüfung, Squash-Merge erst nach
 aktuellen Vor-Merge-Gates und den direkt anschließenden Arbeitsabschluss mit `tools.work_publish retire`
 nach Authoring Schritt 5 §9. Der Auftrag bindet den nach Completion veröffentlichten
 Arbeitscommit und fordert den Ref-, Release- und Tag-Readback. `content_ready`, echte äußere Endfreigabe, Finalizer, Export/Plan/Register und
@@ -497,6 +497,7 @@ explizites gespeichertes `false` bleibt erhalten. Die Option und die Wirkung des
 konkreten Schlussauftrags sind sichtbar; Kopieren ist noch kein Absenden.
 Korrektur und Wiederaufnahme erzeugen weder eine neue Endabnahme noch eine neue
 Mergefreigabe. Vorhandene passende Endabnahmen werden nicht erneut erklärt.
+Ein unabhängiges PR-Zweitreview wird bei normaler Rätselintegration nicht automatisch angefordert (Authoring Schritt 5 §8).
 Unveränderte Quellenwerte und allgemeine Regeln werden nicht im Prompt wiederholt;
 Auftrag, feste Recordquelle, neue Absichten und persönliche Arbeitswurzel bleiben.
 
