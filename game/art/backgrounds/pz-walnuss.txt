@@ -1,0 +1,4 @@
+author: OpenAI ImageGen, erstellt mit Codex
+changes: Technische, proportionale Skalierung der gesamten transparenten Leinwand von 2172 × 724 auf 2304 × 768 nach picross-background-png2304x768-v1. Die Zeichnung blieb unverändert.
+source: Native Bildgenerierung für das Kontextbriefing. Gewähltes Original walnuss-hg-b, SHA-256 a9835b743f995bc17cfc98362772540ff256dfe2530e814bb60d05954d2c1c86.
+usage_basis: Für die beauftragte Rätselproduktion neu erzeugt, ohne fremde Bildvorlage.
