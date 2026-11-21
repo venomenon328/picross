@@ -1,19 +1,11 @@
 {
   "format": "development-ci-plan/v1",
-  "issue": "https://github.com/venomenon328/picross/issues/761",
-  "package": "PROD-REVIEW-A · Unabhängiges PR-Zweitreview nicht pauschal verlangen",
-  "modules": [
-    "tools"
-  ],
-  "purpose": "Stellt die Eigentümerentscheidung zu normaler Rätsel-Erstintegration in den Produktionsnormen, PW-Prompt und Completion-Status konsistent her. Unabhängiger fachlicher Linienproof und tatsächliche Vor-Merge-Gates bleiben verpflichtend. Der bestehende deterministische Windows-Einzeldateistarter ist zur aktualisierten gebündelten Promptquelle neu erzeugt.",
-  "omitted": "Keine zusätzlich gewählten Fach-/Browser- oder nativen Testmodule: geänderte Produktionsnormen, PW-Abschluss-/Statusformulierung, bestehende Prompt-Regression und regenerierter deterministischer Windows-Einzeldateistarter. Kein Eingriff in Spiel-, Registrierungs- oder CI-Logik. Wegen der Toolcodedateien bleibt der von CI v2 vorgeschriebene Windows-Player-Build erforderlich; das ausgewählte `tools`-Modul prüft Prompt, Projektor und Starter-Bytegleichheit.",
-  "test_changes": [
-    {
-      "path": "tools/test_authoring_sheet.py",
-      "disposition": "change-scoped",
-      "reason": "Bestehende Prompt-Regression aktualisiert: Standardintegration ohne vorgeschriebenes unabhängiges PR-Zweitreview, bedingter Squash-Merge bleibt erhalten. Weiterhin im tools-Modul bei passenden Änderungen."
-    }
-  ],
+  "issue": "https://github.com/venomenon328/picross/issues/660",
+  "package": "PROD-WALNUSS",
+  "modules": [],
+  "purpose": "Erstintegration der endabgenommenen Walnuss pz-walnuss über RI-ONE. Der Katalog erhält das gewählte Monoraster, Reveal samt Katalogprofilen, den 3:1-Kontext und die gebundenen aktuellen Inhaltsmetadaten.",
+  "omitted": "Reine Rätselproduktion. Keine Änderungen an Spieler, Resolvern, Werkzeugen, gemeinsamen Laufzeitressourcen oder Tests. Proof und Inhaltsprüfung erfolgen im Produktionsweg. Der Docs- und CI-Quellenkern genügt ohne Player-Build und Zusatzmodule.",
+  "test_changes": [],
   "core_change": null,
   "evidence": {
     "mode": "none",

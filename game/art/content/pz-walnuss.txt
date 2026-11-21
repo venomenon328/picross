@@ -1,0 +1,4 @@
+author: OpenAI ImageGen, erstellt mit Codex
+changes: Unveränderte generierte PNG-Originaldatei.
+source: Native Bildgenerierung anhand des Motivbriefings ohne fremde Bildvorlage.
+usage_basis: Für die beauftragte Rätselproduktion aus der textlichen Motivbeschreibung neu generiert.
