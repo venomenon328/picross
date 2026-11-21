@@ -1,10 +1,10 @@
 {
   "format": "development-ci-plan/v1",
-  "issue": "https://github.com/venomenon328/picross/issues/660",
-  "package": "PROD-WALNUSS",
+  "issue": "https://github.com/venomenon328/picross/issues/700",
+  "package": "Onigiri Schritt 4 · Kontextzeichnungen",
   "modules": [],
-  "purpose": "Erstintegration der endabgenommenen Walnuss pz-walnuss über RI-ONE. Der Katalog erhält das gewählte Monoraster, Reveal samt Katalogprofilen, den 3:1-Kontext und die gebundenen aktuellen Inhaltsmetadaten.",
-  "omitted": "Reine Rätselproduktion. Keine Änderungen an Spieler, Resolvern, Werkzeugen, gemeinsamen Laufzeitressourcen oder Tests. Proof und Inhaltsprüfung erfolgen im Produktionsweg. Der Docs- und CI-Quellenkern genügt ohne Player-Build und Zusatzmodule.",
+  "purpose": "Prüft Quellen- und Planintegrität für den aus PW-B übernommenen Onigiri-Record mit gewähltem Raster raster-c und drei Kontextzeichnungen zur Wahl.",
+  "omitted": "Reine Authoring-Metadaten mit Indexverweis. Originale, Bildurteile, Rasterproof und Endmatrix wurden im Produktionsweg geprüft. Der CI-Quellenkern genügt ohne Player-Build, Zusatzmodule und technische Aufbewahrung.",
   "test_changes": [],
   "core_change": null,
   "evidence": {
