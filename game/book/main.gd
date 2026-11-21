@@ -1,5 +1,6 @@
 extends Node3D
 ## Shared book presentation; the regular content owns persistence and lifecycle.
+const BookButton = preload("res://ui/book_button.gd")
 const Content = preload("res://book/content.gd")
 const PAGE = preload("res://book/page.gdshader")
 const Binding = preload("res://book/binding.gd")
@@ -38,6 +39,17 @@ var source_context: Dictionary = {}
 var transition_id: String = ""
 var target_page: int = 0
 var preparation_started: int = 0
+# Ownership outlives the normal capture -> direct handoff. The input barrier
+# stays in front of the real Button until the owned release is consumed.
+var pressed_page_step: int = 0
+var queued_page: int = -1
+var prepared_generation: int = -1
+var prepared_size: Vector2
+var prepared_filters: Dictionary
+var prepared_criterion: String
+var prepared_sort_direction: String
+var prepared_scale: float
+var free_page_step: int = 0
 var settling: bool = false
 var return_context: Dictionary = {}
 var material_catalog_page: int = -1
@@ -59,6 +71,7 @@ func _ready() -> void:
 	app.opening_requested.connect(request_open)
 	app.return_requested.connect(request_return)
 	app.album.page_requested.connect(request_page)
+	app.album.diagnosis_changed.connect(func() -> void: interrupt("catalog-change"))
 	app.catalog_shown.connect(_catalog)
 	app.scale_changing.connect(func() -> void: interrupt("ui-scale"))
 	app.exit_requested.connect(request_quit)
@@ -189,6 +202,9 @@ func _pose(progress: float) -> void:
 
 func _catalog() -> void:
 	if settling: return
+	if prepared_generation >= 0: _clear_page_buttons()
+	_clear_page_input()
+	prepared_generation = -1
 	if state in [State.PREPARING,State.OPENING]: interrupt("leave")
 	state = State.CATALOG
 	selected_id = ""
@@ -199,7 +215,7 @@ func _catalog() -> void:
 
 func _resize() -> void:
 	if app == null: return
-	if state in [State.PREPARING,State.OPENING]: interrupt("resize")
+	interrupt("resize")
 	app.size = Vector2(get_viewport().size)
 	_pose(1.0 if state == State.WORK else 0.0)
 	app._layout_book()
@@ -210,6 +226,8 @@ func context() -> Dictionary:
 		"selection":app.album.selected_id,"session":str(app.session.definition.id) if app.session != null else ""}
 
 func _begin(kind: String, prior: Dictionary = {}) -> void:
+	_clear_page_input()
+	prepared_generation = -1
 	source_context = context() if prior.is_empty() else prior.duplicate(true)
 	motion_kind = kind
 	generation += 1
@@ -313,7 +331,15 @@ func _prepare(token: int) -> void:
 		app.album.selected_id = return_context.get("selection",selected_id)
 		app.album.commit_page(target_page,int(return_context.get("scroll",0)),int(return_context.get("right_scroll",0)))
 		settling = false
-	else: app.album.commit_page(target_page)
+	else:
+		app.album.commit_page(target_page)
+		prepared_generation = app.album.generation
+		prepared_size = app.size
+		prepared_scale = app.ui_scale
+		prepared_filters = app.album.filters.duplicate()
+		prepared_criterion = app.album.preference.criterion
+		prepared_sort_direction = app.album.preference.direction
+		_update_page_buttons()
 	await get_tree().process_frame
 	if not valid_motion(token): return
 	await RenderingServer.frame_post_draw
@@ -341,8 +367,82 @@ func _prepare(token: int) -> void:
 	last_frame_usec = wall_started
 	state = State.OPENING
 
+func _prepared_page_valid() -> bool:
+	# All changes to the rendered order, visible IDs or card population go
+	# through Catalog._render, which advances generation. Save errors can
+	# also update the existing cards in place while the catalog is visible.
+	return prepared_generation == app.album.generation and app.album.page_index == target_page \
+		and app.album.visible and app.size == prepared_size and app.ui_scale == prepared_scale \
+		and prepared_filters == app.album.filters and prepared_criterion == app.album.preference.criterion \
+		and prepared_sort_direction == app.album.preference.direction
+
+func _valid_step(step: int) -> bool:
+	var destination := target_page + step
+	return absi(step) == 1 and destination >= 0 and destination * app.album.PAGE_SIZE < app.album.filtered_ids.size()
+
+func _page_button(step: int) -> BookButton:
+	return app.album.next_button if step == 1 else app.album.previous_button
+
+func _exposed_step(turn: float) -> int:
+	# Only the stationary destination half opposite the turning front has
+	# destination ink. Project the actual 65 shader columns onto that half.
+	if not _valid_step(direction): return 0
+	var rect := _page_button(direction).get_global_rect()
+	var page := projected_paper(false,direction)
+	if not page.encloses(rect) or not get_viewport().get_visible_rect().encloses(rect): return 0
+	var angle := turn*PI
+	var cosine := cos(angle)
+	var curl := 0.65*sin(angle)*sin(angle)
+	var outer: float = 0.0
+	for i in range(65):
+		var d := Binding.column(i)
+		var fold := 1.0-clampf(d/0.75,0.0,1.0)
+		outer = maxf(outer,(d+0.004*fold*fold)*cosine+sin(d*PI/10.0)*curl)
+	var edge := outer*page.size.x/10.0
+	var clearance := rect.position.x-page.position.x if direction > 0 else page.end.x-rect.end.x
+	return direction if clearance > edge else 0
+
+func _clear_page_input() -> void:
+	free_page_step = 0
+	pressed_page_step = 0
+	queued_page = -1
+
+func _update_page_buttons() -> void:
+	var pointer := get_viewport().get_mouse_position()
+	for step in [-1,1]:
+		var button := _page_button(step)
+		var active: bool = queued_page < 0 and _valid_step(step) and (step == free_page_step or state == State.CATALOG)
+		button.disabled = not active
+		var mode := BaseButton.DRAW_NORMAL
+		if active and button.get_global_rect().has_point(pointer):
+			mode = BaseButton.DRAW_PRESSED if pressed_page_step == step else BaseButton.DRAW_HOVER
+		button.page_pointer_mode = mode
+
+func _clear_page_buttons() -> void:
+	for step in [-1,1]:
+		var button := _page_button(step)
+		button.disabled = app.album.page_index + step < 0 or (app.album.page_index + step)*app.album.PAGE_SIZE >= app.album.filtered_ids.size()
+		button.page_pointer_mode = -1
+
+func _page_pointer(event: InputEventMouseButton, previous_mask: int) -> void:
+	if event.button_index != MOUSE_BUTTON_LEFT or queued_page >= 0: return
+	if not _prepared_page_valid():
+		_clear_page_input()
+		return
+	if event.pressed:
+		if previous_mask == 0 and free_page_step != 0 and _page_button(free_page_step).get_global_rect().has_point(event.position):
+			pressed_page_step = free_page_step
+	elif pressed_page_step != 0:
+		var step := pressed_page_step
+		pressed_page_step = 0
+		if (state == State.CATALOG or step == free_page_step) and _valid_step(step) and _page_button(step).get_global_rect().has_point(event.position):
+			queued_page = target_page + step
+	_update_page_buttons()
+
 func _process(_delta: float) -> void:
 	if state in [State.PREPARING,State.OPENING] and not valid_motion(generation): return
+	if prepared_generation >= 0 and not _prepared_page_valid(): interrupt("catalog-change")
+	if state == State.CATALOG and pressed_page_step != 0: _update_page_buttons()
 	if state == State.CATALOG and material_catalog_page != app.album.page_index: catalog_materials(app.album.page_index)
 	if state == State.OPENING:
 		var now: int = Time.get_ticks_usec()
@@ -351,6 +451,10 @@ func _process(_delta: float) -> void:
 		var duration: float = information_routes.duration() if information_routes.moving() else DURATION if motion_kind == "open" else RETURN_DURATION if motion_kind == "return" else PAGE_DURATION
 		elapsed = minf(duration,(now-wall_started)/1000000.0)
 		_pose(elapsed/duration)
+		if motion_kind == "page" and elapsed < duration:
+			free_page_step = _exposed_step(smoothstep(0,1,elapsed/duration))
+			if pressed_page_step != free_page_step: pressed_page_step = 0
+			_update_page_buttons()
 		if elapsed >= duration:
 			motion_wall_seconds = (Time.get_ticks_usec()-wall_started)/1000000.0
 			_settle(true)
@@ -358,19 +462,35 @@ func _process(_delta: float) -> void:
 		release_barrier = false
 		app.album.locked = false
 		app.process_mode = Node.PROCESS_MODE_INHERIT
+		if prepared_generation >= 0:
+			var follow := queued_page
+			_clear_page_input()
+			prepared_generation = -1
+			_clear_page_buttons()
+			if follow >= 0:
+				request_page(follow)
+				return
+		get_viewport().update_mouse_cursor_state()
 
 func _input(event: InputEvent) -> void:
 	# Track only events owned by this input barrier. During normal work Board
 	# can consume a release before its parent sees it; retaining that old Down
 	# would incorrectly block the next page forever.
 	if (state in [State.PREPARING,State.OPENING] or release_barrier) and event is InputEventMouseButton and event.button_index in [MOUSE_BUTTON_LEFT,MOUSE_BUTTON_RIGHT,MOUSE_BUTTON_MIDDLE,MOUSE_BUTTON_XBUTTON1,MOUSE_BUTTON_XBUTTON2]:
+		var previous_mask := held_buttons
 		var mask: int = 1 << (event.button_index-1)
 		held_buttons = (held_buttons | mask) if event.pressed else (held_buttons & ~mask)
+		if (state == State.OPENING and motion_kind == "page") or (state == State.CATALOG and pressed_page_step != 0):
+			_page_pointer(event,previous_mask)
 	if state in [State.PREPARING,State.OPENING] or release_barrier: get_viewport().set_input_as_handled()
 	if event is InputEventKey and event.pressed and event.keycode == KEY_ESCAPE:
-		if state in [State.PREPARING,State.OPENING]: interrupt("leave")
+		if state in [State.PREPARING,State.OPENING] or release_barrier: interrupt("leave")
 
 func interrupt(reason: String) -> void:
+	_clear_page_input()
+	if prepared_generation >= 0:
+		prepared_generation = -1
+		_clear_page_buttons()
 	if state not in [State.PREPARING,State.OPENING]: return
 	interrupted = reason
 	generation += 1
@@ -400,6 +520,12 @@ func _settle(target: bool) -> void:
 	app.position = Vector2.ZERO
 	app.size = Vector2(get_viewport().size)
 	if work: app.open_puzzle()
+	elif target and motion_kind == "page" and _prepared_page_valid():
+		# Capture contains the live target controls. Reparenting changes only
+		# their viewport; the same scroll containers, cards and textures survive.
+		free_page_step = 0
+		_update_page_buttons()
+		catalog_materials(app.album.page_index)
 	else:
 		app.present_album()
 		var destination: Dictionary = return_context if motion_kind == "return" else source_context
@@ -447,6 +573,9 @@ func _focus_interrupt(token: int) -> void:
 
 func _notification(what: int) -> void:
 	if what == NOTIFICATION_APPLICATION_FOCUS_OUT:
+		# Drop input immediately even if a normal handoff changes the token
+		# before the deferred presentation interrupt can safely run.
+		_clear_page_input()
 		_focus_interrupt.call_deferred(generation)
 	if what == NOTIFICATION_APPLICATION_FOCUS_IN:
 		# Releases outside the unfocused window may not arrive here. Reconcile

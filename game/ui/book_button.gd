@@ -18,6 +18,12 @@ var paper_transparent: bool = false:
 			if value: add_theme_color_override(state,Color.TRANSPARENT)
 			else: remove_theme_color_override(state)
 		queue_redraw()
+## The book owns pointer input while the button is drawn into its page capture.
+var page_pointer_mode: int = -1:
+	set(value):
+		if value != page_pointer_mode:
+			page_pointer_mode = value
+			queue_redraw()
 var selected: bool = false:
 	set(value):
 		selected = value
@@ -84,16 +90,18 @@ func swatch_strokes() -> Array:
 
 func _draw() -> void:
 	if content_surface: return
+	var hovered: bool = is_hovered() if page_pointer_mode < 0 else page_pointer_mode == DRAW_HOVER
+	var pressed_visual: bool = is_pressed() if page_pointer_mode < 0 else page_pointer_mode == DRAW_PRESSED
 	var u: float = ui_scale
 	var box: Rect2 = Rect2(Vector2.ZERO, size)
 	var body: Color = Color("f6eedb")
 	if disabled:
 		body = Color("e9e2d4")
 	elif selected:
-		body = Color("42645b") if is_pressed() else Color("34514d") if is_hovered() else Color("293f3e")
-	elif is_pressed():
+		body = Color("42645b") if pressed_visual else Color("34514d") if hovered else Color("293f3e")
+	elif pressed_visual:
 		body = Color("c5d6cd")
-	elif is_hovered():
+	elif hovered:
 		body = Color("e0ece6")
 	if swatch.a > 0:
 		draw_colored_polygon(points(box.grow(-1.5*u), 3*u), body)
@@ -106,14 +114,14 @@ func _draw() -> void:
 		if paper_transparent:
 			style.selected = selected
 			if disabled: style.ink = Color("8a887d")
-			elif is_pressed(): style.ink = Color("173e35")
-			elif is_hovered(): style.ink = Color("376a60")
+			elif pressed_visual: style.ink = Color("173e35")
+			elif hovered: style.ink = Color("376a60")
 		draw_style_box(style,box)
-		if paper_transparent and not disabled and (is_hovered() or is_pressed()):
+		if paper_transparent and not disabled and (hovered or pressed_visual):
 			# Retrace the existing contour continuously: hover and pressure belong
 			# to the button edge, with no floating short stroke above the caption.
 			for line: PackedVector2Array in style.contours(box):
-				draw_polyline(line,style.ink,(2.4 if is_pressed() else 1.6)*u,true)
+				draw_polyline(line,style.ink,(2.4 if pressed_visual else 1.6)*u,true)
 	if swatch.a > 0:
 		draw_rect(box.grow(-5*u), swatch)
 		if selected:
@@ -122,7 +130,7 @@ func _draw() -> void:
 				draw_polyline(corner, PAPER, u, true)
 	elif image != null:
 		var ink: Color = PAPER if selected and not paper_transparent else (Color("757970") if disabled else INK)
-		var offset: Vector2 = (size-Vector2(26,26)*u)/2 + Vector2(0,u if is_pressed() else 0)
+		var offset: Vector2 = (size-Vector2(26,26)*u)/2 + Vector2(0,u if pressed_visual else 0)
 		if not text.is_empty(): offset.x = 10*u
 		draw_texture_rect(image, Rect2(offset,Vector2(26,26)*u), false, ink)
 		if selected:

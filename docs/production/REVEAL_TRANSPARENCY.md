@@ -35,6 +35,26 @@ Revealvorschau und kein neues Preload. Fragezeichen, eigene Füllminiatur,
 Spoiler-/Recoverygrenzen und der bestehende Abschlussübergang bleiben erhalten.
 Der Papieruntergrund wird nicht durch eine neue Ersatzfläche überdeckt.
 
+### Größenstudie für die spätere Katalogableitung · #735
+
+Die Windowsmessung am synthetischen Katalog deckt die nativen Presetgeometrien
+bis 3840 × 2160, beide UI-Faktoren, den 2560 × 1440-Desktop bei 96 DPI und
+zwei freie Canvasgrößen ab. Im gestapelten Layout beträgt die Bildbreite
+höchstens Kartenminimum + 8 × UI minus beide Innenränder. Eine breitere freie
+Fläche führt bei genügend Platz zum seitlichen Layout und zu weiteren Spalten.
+Die gezielten freien Canvasmessungen prüfen diesen Layoutweg ohne Browserlauf.
+
+Für KAT-IMG-B folgen daraus zwei proportionale Einpassprofile, UI100 mit
+264 × 112 und UI125 mit 329 × 140 Pixeln. Die Seitendarstellung passt in
+denselben Rahmen. Die Ableitung soll PNG mit erhaltenem Alpha ausgeben, die
+gesamte Quelle einpassen und das Seitenverhältnis bis auf Pixelrundung
+erhalten. PNGs nur verkleinern (Alpha-Randbehandlung und Lanczos), kleinere
+Originale in ihrer Quellauflösung belassen. SVGs aus ihrer natürlichen
+Zeichenfläche proportional in das Profil rasterisieren. Bei künftig größerem
+Bildraum das größte Profil proportional darstellen. Diese Profilmaße begrenzen
+weder Fenstergrößen noch die Originale für den Abschluss. Der exakte
+Versions- und Integrationsvertrag folgt in KAT-IMG-B.
+
 ## 3. Reine Bildrevision: Identität und historische Bindungen
 
 Eine reine Bildrevision ersetzt das freigegebene Abschlussbild und die dafür

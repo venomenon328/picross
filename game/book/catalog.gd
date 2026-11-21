@@ -1,6 +1,7 @@
 extends "res://ui/catalog.gd"
 ## Shared spread: global filter/order/page, independent half-page scroll.
 signal page_requested(target: int)
+signal diagnosis_changed
 signal help_requested
 var locked: bool = false
 var right_scroll: ScrollContainer
@@ -120,6 +121,11 @@ func present(sessions: Array[Session], slot_status: Array[String], slot_errors: 
 	# right half explicitly on redisplay; a real filter/sort still resets both.
 	next_right_position = right_scroll.scroll_vertical
 	super.present(sessions,slot_status,slot_errors,error,selection)
+
+func show_error(id: String, message: String) -> void:
+	var changed: bool = errors.get(id,"") != message
+	super.show_error(id,message)
+	if changed: diagnosis_changed.emit()
 
 func restore_positions(pair: Vector2i, expected_generation: int) -> void:
 	# A partial -> full spread changes Grid minima in a deferred container pass.
