@@ -6,7 +6,7 @@
     "tools"
   ],
   "purpose": "Stellt die Eigentümerentscheidung zu normaler Rätsel-Erstintegration in den Produktionsnormen, PW-Prompt und Completion-Status konsistent her. Unabhängiger fachlicher Linienproof und tatsächliche Vor-Merge-Gates bleiben verpflichtend.",
-  "omitted": "Kein Player-Build und keine nativen/Fach-/Browsermodule: nur redaktionelle Produktionsnormen sowie Formulierungen im PW-Prompt, Completion-Status und bestehende Prompt-Regression; keine Spiel-, Registrierungs- oder CI-Engineänderung. `tools` deckt die bestehenden Prompt-/Projektorregressionen ab.",
+  "omitted": "Keine zusätzlich gewählten Native-/Fach-/Browsermodule: nur Produktionsnormen, zwei kleine Tooltextstellen und bestehende Prompt-Regression; keine Spiel-, Registrierungs- oder CI-Logikänderung. Wegen der Toolcode-Dateien greift die buildfreie Änderungsklasse nicht; ein vom verpflichtenden CI-Kern angeforderter Windows-Player-Build bleibt erforderlich und wird nicht übersprungen. Das ausgewählte `tools`-Modul prüft den Prompt und den Projektor.",
   "test_changes": [
     {
       "path": "tools/test_authoring_sheet.py",
