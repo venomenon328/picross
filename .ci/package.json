@@ -5,18 +5,13 @@
   "modules": [
     "tools"
   ],
-  "purpose": "Stellt die Eigentümerentscheidung zu normaler Rätsel-Erstintegration in den Produktionsnormen, PW-Prompt und Completion-Status konsistent her. Unabhängiger fachlicher Linienproof und tatsächliche Vor-Merge-Gates bleiben verpflichtend.",
-  "omitted": "Keine zusätzlich gewählten Native-/Fach-/Browsermodule: nur Produktionsnormen, zwei kleine Tooltextstellen und bestehende Prompt-Regression; keine Spiel-, Registrierungs- oder CI-Logikänderung. Wegen der Toolcode-Dateien greift die buildfreie Änderungsklasse nicht; ein vom verpflichtenden CI-Kern angeforderter Windows-Player-Build bleibt erforderlich und wird nicht übersprungen. Das ausgewählte `tools`-Modul prüft den Prompt und den Projektor.",
+  "purpose": "Stellt die Eigentümerentscheidung zu normaler Rätsel-Erstintegration in den Produktionsnormen, PW-Prompt und Completion-Status konsistent her. Unabhängiger fachlicher Linienproof und tatsächliche Vor-Merge-Gates bleiben verpflichtend. Der bestehende deterministische Windows-Einzeldateistarter ist zur aktualisierten gebündelten Promptquelle neu erzeugt.",
+  "omitted": "Keine zusätzlich gewählten Fach-/Browser- oder nativen Testmodule: geänderte Produktionsnormen, PW-Abschluss-/Statusformulierung, bestehende Prompt-Regression und regenerierter deterministischer Windows-Einzeldateistarter. Kein Eingriff in Spiel-, Registrierungs- oder CI-Logik. Wegen der Toolcodedateien bleibt der von CI v2 vorgeschriebene Windows-Player-Build erforderlich; das ausgewählte `tools`-Modul prüft Prompt, Projektor und Starter-Bytegleichheit.",
   "test_changes": [
     {
       "path": "tools/test_authoring_sheet.py",
       "disposition": "change-scoped",
       "reason": "Bestehende Prompt-Regression aktualisiert: Standardintegration ohne vorgeschriebenes unabhängiges PR-Zweitreview, bedingter Squash-Merge bleibt erhalten. Weiterhin im tools-Modul bei passenden Änderungen."
-    },
-    {
-      "path": "tools/test_production_workspace.py",
-      "disposition": "temporary",
-      "reason": "Einmaliger Lauf der bestehenden Paket-Konsistenzprüfung mit Ausgabe der deterministischen Starterbytes zur Rekonstruktion; Debugausgabe wird vor Endlieferung wieder entfernt."
     }
   ],
   "core_change": null,
