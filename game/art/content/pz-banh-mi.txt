@@ -1,0 +1,4 @@
+author: OpenAI ImageGen, eingesetzt durch Codex
+changes: Unbearbeitete PNG-Originalbytes.
+source: Native Bildgenerierung aus dem Bánh-Mì-Motivbriefing, ohne Fremdbildvorlage.
+usage_basis: Eigenständig für den beauftragten Picross-Produktionsstand erzeugt und zur Veröffentlichung beauftragt.

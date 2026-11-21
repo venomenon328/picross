@@ -1,10 +1,10 @@
 {
   "format": "development-ci-plan/v1",
   "issue": "https://github.com/venomenon328/picross/issues/660",
-  "package": "PROD-DURIAN",
+  "package": "PROD-BANH-MI",
   "modules": [],
-  "purpose": "Erstintegration der endabgenommenen Durian pz-durian über RI-ONE. Die Lieferung umfasst das ausgewählte Monoraster, das Reveal mit beiden Katalogprofilen, den gewählten 3:1-Kontext und die aktuellen Inhaltsmetadaten.",
-  "omitted": "Reine Rätselproduktion. Der vollständige Logiknachweis und die Inhaltsprüfung laufen im Produktionsweg. Package CI prüft den Quellenkern ohne Zusatzmodule und ohne Player-Build. Spieler, Werkzeuge und Tests sind unverändert.",
+  "purpose": "Erstintegration des endabgenommenen Bánh Mì pz-banh-mi über RI-ONE mit Farbraster R-D, Reveal RV-E und HG31-Hintergrund HG-A.",
+  "omitted": "Reine Rätselproduktion. Der vollständige Logiknachweis und die Inhaltsprüfung laufen im Produktionsweg. Package CI prüft den Quellenkern ohne Zusatzmodule und ohne Player-Build.",
   "test_changes": [],
   "core_change": null,
   "evidence": {
