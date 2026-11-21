@@ -1,10 +1,10 @@
 {
   "format": "development-ci-plan/v1",
   "issue": "https://github.com/venomenon328/picross/issues/700",
-  "package": "TAIYAKI-REVEAL-REVIEW",
+  "package": "TAIYAKI-MOTIF-REVIEW",
   "modules": [],
-  "purpose": "Prüft Quellen und Paketplan des Entwurfs für die Taiyaki-Bildauswahl. Die drei Originale liegen im gebundenen PW-B-Arbeitsrelease.",
-  "omitted": "Der Entwurf umfasst reine Authoringdaten. Bildsichtung und Originalabruf erfolgen an den PW-B-Dateien. Playerbau und technische Zusatzmodule entfallen.",
+  "purpose": "Prüft Quellen und Paketplan des Taiyaki-Drafts für Motivvorlage und Parameterkorridor. Der Record bindet das gewählte Reveal und die Motivvorlage im PW-B-Release.",
+  "omitted": "Der Entwurf umfasst Authoringdaten. Bildsichtung und Originalabruf erfolgen an den PW-B-Dateien. Playerbau und technische Zusatzmodule entfallen.",
   "test_changes": [],
   "core_change": null,
   "evidence": {
