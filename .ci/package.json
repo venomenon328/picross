@@ -1,10 +1,10 @@
 {
   "format": "development-ci-plan/v1",
-  "issue": "https://github.com/venomenon328/picross/issues/753",
-  "package": "QH02-SCOPE-A",
+  "issue": "https://github.com/venomenon328/picross/issues/700",
+  "package": "PZ-BANH-MI-RASTER",
   "modules": [],
-  "purpose": "Präzisiert die redaktionelle Q-H02-Zuständigkeit: rätselspezifische Farb-/Hinweislesbarkeit bleibt, allgemeine X-/Schrift-/Slotgeometrie gehört zum Spieler. Reine Dokumentänderung ohne Spiel- oder Toolverhalten.",
-  "omitted": "Keine Zusatzmodule: Gameplay, Rasterdaten, Rendercode, Solver, Adapter und Tests ändern sich nicht. Daher weder Player-Build noch native, Produktions-, Preflight- oder Delivery-Prüfungen; der schlanke Docs-/CI-Quellenkern bleibt verpflichtend. Kein neuer/entfernter Dauertest.",
+  "purpose": "Buildfreie Quellen- und Planprüfung für das Rasterangebot zu Bánh Mì aus Authoring Schritt 3.",
+  "omitted": "Der Draft stellt die veröffentlichten PW-B-Metadaten und den Paketplan zur Sichtung bereit. Der aktuelle Reader prüfte die gebundenen Rasterdaten, den Proof mit Endmatrix, die SD2-Bewertung und die fälligen Sichturteile. Zusatzmodule und Playerbau entfallen für diesen Inhaltsstand.",
   "test_changes": [],
   "core_change": null,
   "evidence": {
