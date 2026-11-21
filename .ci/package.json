@@ -3,8 +3,8 @@
   "issue": "https://github.com/venomenon328/picross/issues/700",
   "package": "Onigiri Schritt 3 · symmetrische Rasterkorrektur",
   "modules": [],
-  "purpose": "Hält den aus dem aktuellen PW-B-Arbeitsstand übernommenen Onigiri-Record für die Rasterwahl fest und prüft Quellen- und Planintegrität.",
-  "omitted": "Reine Authoring-Metadaten mit Indexverweis. Die Rasterqualifikation einschliesslich Proof und 0.4-Bewertung erfolgt mit den Produktionswerkzeugen. Der Quellenkern läuft ohne Player-Build, zusätzliche Prüffamilien und technische Aufbewahrung.",
+  "purpose": "Prüft Quellen- und Planintegrität für den bytegleich aus PW-B übernommenen Onigiri-Record mit dem offenen Rasterangebot raster-c, Revision 4.",
+  "omitted": "Reine Authoring-Metadaten mit Indexverweis. Paarliniennachweis, unabhängige Endmatrixprüfung, 0.4-Bewertung und visuelle Qualifikation wurden am Raster in der Produktion geprüft. Nur der Quellenkern ist erforderlich. Player-Build, Zusatzmodule und technische Aufbewahrung entfallen.",
   "test_changes": [],
   "core_change": null,
   "evidence": {
