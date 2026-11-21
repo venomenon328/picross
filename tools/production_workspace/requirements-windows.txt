@@ -1,5 +1,6 @@
 # CPython 3.13.14 x64, pip 26.1.2. Build only; end users install none of these.
 Pillow==12.3.0
+resvg_py==0.5.0
 PyInstaller==6.22.3
 pyinstaller-hooks-contrib==2026.10
 altgraph==0.17.5

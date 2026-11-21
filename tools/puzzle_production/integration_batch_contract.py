@@ -130,7 +130,7 @@ def tool_binding(value):
     inventory(value["files"])
     nonempty(value["python"], 128)
     nonempty(value["pillow"], 128)
-    exact_keys(value["codecs"], {"zlib", "littlecms", "jpeg", "jpeg_turbo"})
+    exact_keys(value["codecs"], {"zlib", "littlecms", "jpeg", "jpeg_turbo", "resvg_py", "resvg"})
     for item in value["codecs"].values(): text(item, nullable=True, maximum=128)
 
 

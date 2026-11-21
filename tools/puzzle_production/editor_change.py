@@ -17,8 +17,8 @@ from . import catalog_io as io, categories, content_registry as registry, curren
 from . import catalog_publication as publication, catalog_metadata as metadata
 from . import catalog_background as bg, editor_raster as raster, catalog_rating as rating, catalog_method
 
-PLAN = "picross-editor-change-plan-v1"
-JOURNAL = "picross-editor-change-journal-v1"
+PLAN = "picross-editor-change-plan-v2"
+JOURNAL = "picross-editor-change-journal-v2"
 LOCK = "content/.registration-pending.json"
 STAGE = "content/.editor-change-journal.tmp"
 INDEXES = (registry.REGISTRY, categories.PATH, registry.RUNTIME)
@@ -74,7 +74,7 @@ def unpack(value):
     if value is None: return None
     require(isinstance(value, str) and len(value) <= 4*((FILE_LIMIT+2)//3), "Oversized change side")
     raw = base64.b64decode(value, validate=True)
-    require(pack(raw) == value, "Noncanonical change side")
+    require(len(raw) <= FILE_LIMIT and pack(raw) == value, "Noncanonical change side")
     return raw
 
 
@@ -109,7 +109,7 @@ class Inputs:
         cats = categories.validate(self.json(categories.PATH, categories.MAX_BYTES))
         value = validate_index(self.json(registry.REGISTRY), cats)
         registry.require_current(value)
-        runtime = self.json(registry.RUNTIME)
+        runtime = self.json(registry.RUNTIME, current_content.RUNTIME_LIMIT)
         exact_keys(runtime, {"format", "categories", "entries"})
         require(runtime["format"] in (registry.METADATA_RUNTIME_FORMAT, registry.IMAGE_RUNTIME_FORMAT),
                 "Explicit metadata migration required")
@@ -122,6 +122,8 @@ class Inputs:
                     and row["name"] == meta["name"] and row["category_id"] == meta["category_id"],
                     "Current runtime metadata differs")
             relative("game/"+row["reveal"])
+            if runtime["format"] == registry.IMAGE_RUNTIME_FORMAT:
+                current_content.catalog_profiles.validate_projection(row)
         require(not pending(self.root), "Publication started while reading indices")
         return value, cats, runtime
 
@@ -143,7 +145,7 @@ def readback(raw, identifier):
     """Project the bytes actually read under lock / after the changed writes."""
     value = io.json_bytes(raw[registry.REGISTRY], 8*1024*1024)
     cats = io.json_bytes(raw[categories.PATH], categories.MAX_BYTES)
-    runtime = io.json_bytes(raw[registry.RUNTIME], 8*1024*1024)
+    runtime = io.json_bytes(raw[registry.RUNTIME], current_content.RUNTIME_LIMIT)
     return {"catalog": {"format": "picross-pe-api-v1", "entries": value["metadata"],
             "categories": categories.ordered(cats), "snapshot": token(raw), "runtime_format": runtime["format"],
             "migration_required": runtime["format"] != registry.IMAGE_RUNTIME_FORMAT},
@@ -185,10 +187,11 @@ def source(inputs, entry, kind):
         require((value is None) == (declared is None), "Background source/index differ")
         if declared is not None: require(ref(name, inputs.raw[name]) == declared, "Background index binding differs")
     if slim(value):
-        runtime = inputs.json(registry.RUNTIME)
+        runtime = inputs.json(registry.RUNTIME, current_content.RUNTIME_LIMIT)
         row = next(r for r in runtime["entries"] if r["id"] == entry["id"])
         if kind == "reveal":
-            require(value["current"]["asset"]["file"] == "game/"+row["reveal"], "Current reveal projection differs")
+            require(current_content.catalog_profiles.project(value["catalog"]) == row["catalog_reveal"] and
+                    value["current"]["asset"]["file"] == "game/"+row["reveal"], "Current reveal projection differs")
         else:
             projected = deepcopy(value["current"])
             if projected["asset"]: projected["asset"]["file"] = projected["asset"]["file"].removeprefix("game/")
@@ -229,9 +232,9 @@ def _summary(value, runtime, identifier):
             "runtime": deepcopy(row), "reveal": row["reveal"], "background": deepcopy(row["background"])}
 
 
-def _record(entry, definition_raw, previous, kind, current):
+def _record(entry, definition_raw, previous, kind, current, catalog=None):
     return current_content.source(entry, definition_raw, current, kind,
-                                  record_revision=previous["record_revision"]+1)
+                                  record_revision=previous["record_revision"]+1, catalog=catalog)
 
 
 
@@ -297,6 +300,7 @@ def plan(root, request, *, uploads=None, work=None, expected=None, expected_defi
             previous = source(inputs, entry, kind)
             require(slim(previous), "Current image sources require external migration: issue #641 M2")
             current = None
+            catalog = previous.get("catalog")
             if kind == "reveal":
                 old_name = "game/"+row["reveal"]
                 if part is not None:
@@ -309,7 +313,16 @@ def plan(root, request, *, uploads=None, work=None, expected=None, expected_defi
                     name = Path("game/"+entry["reveal"]).with_suffix("."+suffix).as_posix()
                     old = inputs.read(old_name, 32*1024*1024)
                     if raw != old or name != old_name:
-                        if name != old_name: put(old_name, None)
+                        require(ref(old_name, old) == previous["current"]["asset"], "Previous reveal bytes differ")
+                        catalog, profiles = current_content.catalog_profiles.generate(identifier, ref(name, raw), raw)
+                        for profile in previous["catalog"]["profiles"]:
+                            asset = profile["asset"]
+                            require(ref(asset["file"], inputs.read(asset["file"])) == asset, "Previous catalog bytes differ")
+                            put(asset["file"], profiles[asset["file"]])
+                        target_row["catalog_reveal"] = current_content.catalog_profiles.project(catalog)
+                        if name != old_name:
+                            require(inputs.read(name, 32*1024*1024, missing=True) is None, "New original path is occupied")
+                            put(old_name, None)
                         put(name, raw)
                         old_revision = (previous.get("current", {}).get("image_revision", 0) if previous else 0)
                         current = {"image_revision": old_revision+1, "asset": ref(name, raw)}
@@ -356,7 +369,7 @@ def plan(root, request, *, uploads=None, work=None, expected=None, expected_defi
                     current = deepcopy(row["background"])
                     if current["asset"]: current["asset"]["file"] = "game/"+current["asset"]["file"]
             if current is not None:
-                record = _record(target_entry, definition_raw, previous, kind, current)
+                record = _record(target_entry, definition_raw, previous, kind, current, catalog)
                 name = "content/"+("reveals" if kind == "reveal" else "backgrounds")+"/"+identifier+".json"
                 put(name, encoded(record))
                 if kind == "background":
@@ -433,6 +446,7 @@ def validate(value, *, journal=False):
     if value["action"] in ("images", "raster"):
         require(entry is not None, "Puzzle action requires ID")
         allowed |= {"game/"+entry["definition"], "content/reveals/"+identifier+".json", bg.path(identifier), bg.asset_path(identifier), "game/art/backgrounds/"+identifier+".txt", bg.CAPABILITY}
+        allowed.update(current_content.catalog_profiles.path(identifier, label) for label, _, _ in current_content.catalog_profiles.PROFILES)
         allowed |= {Path("game/"+entry["reveal"]).with_suffix(s).as_posix() for s in (".png", ".svg")}
     if value["action"] == "raster":
         from .catalog_method import PATH
@@ -478,8 +492,8 @@ def validate_targets(value, sides, actual):
                 [e for e in after["backgrounds"] if e["id"] != identifier], "Unrelated background index changed")
         require([e for e in before["metadata"] if e["id"] != identifier] ==
                 [e for e in after["metadata"] if e["id"] != identifier], "Unrelated metadata changed")
-    old_runtime = io.json_bytes(actual[registry.RUNTIME], 8*1024*1024)
-    runtime = io.json_bytes(target[registry.RUNTIME], 8*1024*1024)
+    old_runtime = io.json_bytes(actual[registry.RUNTIME], current_content.RUNTIME_LIMIT)
+    runtime = io.json_bytes(target[registry.RUNTIME], current_content.RUNTIME_LIMIT)
     exact_keys(runtime, {"format", "categories", "entries"})
     require(runtime["categories"] == categories.ordered(cats), "Runtime category projection differs")
     require(runtime["format"] == registry.IMAGE_RUNTIME_FORMAT, "Invalid runtime generation")
@@ -487,7 +501,7 @@ def validate_targets(value, sides, actual):
     for old, new, meta in zip(old_runtime["entries"], runtime["entries"], after["metadata"]):
         expected = {**old, "name": meta["name"], "category_id": meta["category_id"]}
         if identifier == old["id"] and action in ("images", "raster"):
-            for key in ("reveal", "background") + (("difficulty",) if action == "raster" else ()):
+            for key in ("reveal", "catalog_reveal", "background") + (("difficulty",) if action == "raster" else ()):
                 expected[key] = new[key]
         require(expected == new, "Unexpected runtime delta")
     for name, (_, raw) in sides.items():
@@ -501,12 +515,16 @@ def validate_targets(value, sides, actual):
         for kind, field in (("reveal", "reveal"), ("background", "background")):
             source_path = "content/"+("reveals" if kind == "reveal" else "backgrounds")+"/"+identifier+".json"
             old_row = next(r for r in old_runtime["entries"] if r["id"] == identifier)
-            if row[field] != old_row[field] or definition_path in sides:
+            if row[field] != old_row[field] or definition_path in sides or (kind == "reveal" and row["catalog_reveal"] != old_row["catalog_reveal"]):
                 require(source_path in sides, "Changed runtime/definition lacks current image source")
             if kind == "background" and before["backgrounds"] != after["backgrounds"]:
                 require(source_path in sides, "Background index changed without source")
         for name, (old_raw, new_raw) in sides.items():
             if not name.startswith("game/art/"): continue
+            if name.startswith("game/art/catalog/"):
+                require(current_content.source_path(identifier, "reveal") in sides and new_raw is not None,
+                        "Profile change requires its reveal source")
+                continue
             if name == "game/art/backgrounds/"+identifier+".txt":
                 from .reveal_source import make_notice
                 require(new_raw is not None and row["background"]["status"] == "selected", "Notice needs current selected background")
@@ -537,7 +555,26 @@ def validate_targets(value, sides, actual):
                         {k: v for k, v in previous_image.items() if k != "image_revision"}), "Invalid image revision")
             if image["asset"] and image["asset"]["file"] in sides:
                 require(ref(image["asset"]["file"], target[image["asset"]["file"]]) == image["asset"], "New image bytes differ")
-            if kind == "reveal": require(row["reveal"] == image["asset"]["file"].removeprefix("game/"), "New reveal projection differs")
+            if kind == "reveal":
+                require(row["reveal"] == image["asset"]["file"].removeprefix("game/") and
+                        row["catalog_reveal"] == current_content.catalog_profiles.project(current["catalog"]),
+                        "New reveal projection differs")
+                if image == previous_image:
+                    require(current["catalog"] == old["catalog"], "Raster rebind changes catalog profiles")
+                else:
+                    new_path = image["asset"]["file"]
+                    old_path = previous_image["asset"]["file"]
+                    require(new_path in sides, "Reveal switch lacks prepared original")
+                    if new_path != old_path:
+                        require(sides[new_path][0] is None and old_path in sides and sides[old_path][1] is None,
+                                "Reveal suffix switch requires a free destination and deletion of the previous original")
+                for old_profile, new_profile in zip(old["catalog"]["profiles"], current["catalog"]["profiles"]):
+                    asset = new_profile["asset"]
+                    path = asset["file"]
+                    if path in sides or image != previous_image:
+                        require(path in actual and ref(path, actual[path]) == old_profile["asset"] and
+                                ref(path, target[path]) == asset, "Catalog profile bytes differ")
+                        current_content.catalog_profiles.validate_png(new_profile, target[path])
             else:
                 projected = deepcopy(image)
                 if projected["asset"]: projected["asset"]["file"] = projected["asset"]["file"].removeprefix("game/")

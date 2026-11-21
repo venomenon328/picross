@@ -24,7 +24,7 @@ PREVIOUS_FORMAT = "picross-catalog-difficulty-report-v2"
 AT_FORMAT = "picross-catalog-difficulty-report-v3"
 SD2_FORMAT = "picross-catalog-difficulty-report-v4"
 FORMAT = "picross-catalog-difficulty-report-v5"
-IMAGE_FORMAT = "picross-catalog-difficulty-report-v6"
+IMAGE_FORMAT = "picross-catalog-difficulty-report-v7"
 SOURCE_FORMATS = (IMAGE_FORMAT, FORMAT, SD2_FORMAT, AT_FORMAT, PREVIOUS_FORMAT)
 METHOD_FORMATS = (IMAGE_FORMAT, FORMAT, SD2_FORMAT)
 REPORT_LIMIT = 16 * 1024 * 1024
@@ -121,7 +121,7 @@ def validate_report(report):
                    ({"method"} if report["format"] in METHOD_FORMATS else set()))
     if report["format"] in SOURCE_FORMATS:
         from .authoring_package import relative
-        require(isinstance(r["sources"], dict) and len(r["sources"]) <= (80004 if report["format"] in METHOD_FORMATS else 80003 if report["format"] == AT_FORMAT else 70003), "Invalid report sources")
+        require(isinstance(r["sources"], dict) and len(r["sources"]) <= (110005 if report["format"] == IMAGE_FORMAT else 80004 if report["format"] in METHOD_FORMATS else 80003 if report["format"] == AT_FORMAT else 70003), "Invalid report sources")
         for name, value in r["sources"].items():
             relative(name)
             if value is not None: sha(value)
@@ -278,7 +278,7 @@ def check_repeat(report, snapshot):
         require(set(current) == set(r["sources"]), "Checkout sources changed since preview")
     # Restore only the selected pre-adoption projections in memory. Adoption
     # intentionally changed those fields; all other runtime bytes must agree.
-    runtime = rating.bytes_json(snapshot["texts"][tx.RUNTIME], 8 * 1024 * 1024)
+    runtime = rating.bytes_json(snapshot["texts"][tx.RUNTIME], tx.content.RUNTIME_LIMIT)
     projections = {e["id"]: e for e in runtime["entries"]}
     for row in r["entries"]:
         name = rating.path(row["id"])
@@ -294,7 +294,7 @@ def check_repeat(report, snapshot):
                 if modern: current[name] = r["sources"][name]
         projections[row["id"]]["difficulty"] = row["old"]
     candidates = [runtime]
-    if report["format"] in METHOD_FORMATS and runtime["format"] not in ("picross-runtime-registry-v6", "picross-runtime-registry-v7", "picross-runtime-registry-v8"):
+    if report["format"] in METHOD_FORMATS and runtime["format"] not in ("picross-runtime-registry-v6", "picross-runtime-registry-v7", "picross-runtime-registry-v8", "picross-runtime-registry-v9"):
         for version in (2, 3, 4):
             old = deepcopy(runtime)
             old["format"] = "picross-runtime-registry-v" + str(version)

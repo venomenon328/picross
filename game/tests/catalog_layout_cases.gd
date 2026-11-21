@@ -38,7 +38,42 @@ static func centred(probe, half: Container, line: Array[Rect2]) -> void:
 	for index: int in range(1,line.size()):
 		probe.check(line[index].position.x >= line[index-1].end.x+roundi(12*probe.app.ui_scale)-1, "KL distinct nonoverlapping card targets")
 
+static func catalog_profiles(probe) -> void:
+	var view = preload("res://ui/reveal.gd").new()
+	var small_path := "res://art/book/reset.svg"
+	var large_path := "res://book/paper.png"
+	# Two available fixture textures stand in for profile selection; export
+	# coverage independently verifies actual catalog PNG files and dimensions.
+	view.fit_available = true
+	view.catalog_profile = {"source_width":1024, "source_height":64, "profiles":[
+		{"width":26,"height":26,"asset":{"file":small_path.trim_prefix("res://")}},
+		{"width":load(large_path).get_width(),"height":load(large_path).get_height(),"asset":{"file":large_path.trim_prefix("res://")}}]}
+	view.payload = {"image":"res://missing-original.png"}
+	probe.check(view.artwork == null, "catalog profile loading waits for render geometry")
+	for width: int in [26, 27, 500, 16]:
+		view.size = Vector2(width, 140)
+		var rect: Rect2 = view.artwork_rect()
+		probe.check(is_equal_approx(rect.size.x / rect.size.y, 16.0), "original aspect survives rounding")
+		view.display_texture(rect)
+		probe.check(view.artwork.resource_path == (small_path if width <= 26 else large_path), "smallest sufficient profile")
+	view.payload = {}
+	probe.check(view.artwork == null and view.filtered_artwork == null, "hidden profile references released")
+	view.payload = {"image":small_path}
+	probe.check(view.artwork != null and view.artwork.resource_path == small_path, "legacy reveal loads its original")
+	view.free()
+	var registry = preload("res://model/content_registry.gd")
+	var row := {"id":"pz-compat","key":"pz-compat","save_slot":"pz-compat","definition":"data/compat.json",
+		"reveal":"art/book/reset.svg","visible":true,"name":"Kompatibilität","category_id":"test",
+		"difficulty":null,"added_at":null,"background":{"status":"standard","asset":null,"image_revision":1}}
+	var data := {"format":"picross-runtime-registry-v8","categories":[{"id":"test","name":"Test","order":1}],"entries":[row]}
+	probe.check(registry.validate(data).is_empty(), "v8 accepts its original-only row")
+	data.format = registry.CATALOG_FORMAT
+	probe.check(not registry.validate(data).is_empty(), "v9 rejects the same row without profiles")
+	row.catalog_reveal = {}
+	probe.check(not registry.validate(data).is_empty(), "v9 rejects an incomplete profile binding")
+
 static func run(probe) -> void:
+	catalog_profiles(probe)
 	var app = probe.app
 	var album = app.album
 	var original: Dictionary = album.items.duplicate()

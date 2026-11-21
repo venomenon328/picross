@@ -435,7 +435,10 @@ func _add_card(id: String) -> void:
 	card.preview.style_identity = id + "/miniature"
 	previews.append(card.preview)
 	# Session.reveal remains the only gate; unearned resources are never loaded.
-	card.picture.payload = item.reveal() if statuses[id] != "error" else {}
+	var earned_payload: Dictionary = item.reveal() if statuses[id] != "error" else {}
+	if not earned_payload.is_empty():
+		card.picture.catalog_profile = metadata.get(id, {}).get("catalog_reveal", {})
+	card.picture.payload = earned_payload
 	reveals.append(card.picture)
 	notes.append(card.note)
 	if statuses[id] in ["recovered", "backup_invalid"]:

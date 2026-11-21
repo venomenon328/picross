@@ -24,18 +24,15 @@ Alpha vom tatsächlich freigegebenen PNG beziehungsweise zulässigen bestehenden
 SVG über Export, Integration, Import und Darstellung erhalten. Keine JPEG- oder
 deckende Zwischenstufe, keine Runtimefreistellung und kein globaler Weiß-/Farbfilter.
 
-Katalog und Abschluss verwenden dieselbe aktuelle Bilddatei, lediglich in
-unterschiedlichen Anzeigegrößen. Bestehende proportionale Darstellung und
-lokale Lanczos-/Linear-Glättung bleiben abgeleitete Anzeige; sie verändern die
-Originalbytes nicht. Ressourcenlimits und erlaubte PNG-/SVG-Formen stehen im
-zuständigen aktuellen Import-/Editorvertrag.
+Die Abschlussansicht lädt das gewählte Original. Die Katalogkarte erhält nach
+der Freigabe durch die Session ein gebundenes PNG aus derselben Quelle.
 
 Neue/begonnene Rätsel zeigen nur zulässige eigene Spielerdaten. Keine vorzeitige
 Revealvorschau und kein neues Preload. Fragezeichen, eigene Füllminiatur,
 Spoiler-/Recoverygrenzen und der bestehende Abschlussübergang bleiben erhalten.
 Der Papieruntergrund wird nicht durch eine neue Ersatzfläche überdeckt.
 
-### Größenstudie für die spätere Katalogableitung · #735
+### Profilwahl und Katalogableitung · #735
 
 Die Windowsmessung am synthetischen Katalog deckt die nativen Presetgeometrien
 bis 3840 × 2160, beide UI-Faktoren, den 2560 × 1440-Desktop bei 96 DPI und
@@ -44,16 +41,28 @@ höchstens Kartenminimum + 8 × UI minus beide Innenränder. Eine breitere freie
 Fläche führt bei genügend Platz zum seitlichen Layout und zu weiteren Spalten.
 Die gezielten freien Canvasmessungen prüfen diesen Layoutweg ohne Browserlauf.
 
-Für KAT-IMG-B folgen daraus zwei proportionale Einpassprofile, UI100 mit
-264 × 112 und UI125 mit 329 × 140 Pixeln. Die Seitendarstellung passt in
-denselben Rahmen. Die Ableitung soll PNG mit erhaltenem Alpha ausgeben, die
-gesamte Quelle einpassen und das Seitenverhältnis bis auf Pixelrundung
-erhalten. PNGs nur verkleinern (Alpha-Randbehandlung und Lanczos), kleinere
-Originale in ihrer Quellauflösung belassen. SVGs aus ihrer natürlichen
-Zeichenfläche proportional in das Profil rasterisieren. Bei künftig größerem
-Bildraum das größte Profil proportional darstellen. Diese Profilmaße begrenzen
-weder Fenstergrößen noch die Originale für den Abschluss. Der exakte
-Versions- und Integrationsvertrag folgt in KAT-IMG-B.
+Der Generator `picross-catalog-reveal-1` erzeugt je ID aus denselben validierten
+Originalbytes die Profile `catalog-ui100-v1` (264 × 112) und `catalog-ui125-v1`
+(329 × 140). Der Dateiname lautet `game/art/catalog/<id>-ui100.png` bzw.
+`-ui125.png`. Je Achse gilt aufrundende proportionale Einpassung der gesamten
+natürlichen Zeichenfläche. Bei PNG ist der Faktor höchstens eins. Bei SVG
+zählen auch gebrochene Quellmaße und die ursprüngliche ViewBox.
+
+Pillow 12.3.0 decodiert die Originalsamples. Eine wirksame gAMA wird gemäß
+libpng für die 2,2-Anzeigegamma umgerechnet. Alpha bleibt linear. Der Generator
+wendet keine ICC- oder EXIF-Transformation an. Lanczos läuft nur bei einer
+Verkleinerung in vormultipliziertem RGBa. Kleine PNGs behalten die RGBA-Samples.
+resvg_py 0.5.0 rasterisiert das validierte SVG mit 96 DPI, eigenem Zielviewport
+und deaktivierten Systemfonts. Pillow schreibt RGBA8 ohne Metadaten, mit
+Kompressionsstufe 9 und ohne Encoderoptimierung. Die Obergrenze je Datei
+beträgt 256 KiB. Änderungen an diesem Verfahren benötigen eine neue Generatorversion.
+
+Die Reveal-Source v6 führt das technische Feld
+`catalog={generator,source_sha256,source_width,source_height,profiles}`.
+Die zwei geordneten Einträge binden jeweils `profile,asset,width,height`.
+Der Hash gehört zum Original in `current.asset`, der Assetref zu den
+tatsächlichen PNG-Bytes. Runtime v9 projiziert die Maße, den Quellhash und
+dieselben Profile mit spielrelativen Pfaden nach `catalog_reveal`.
 
 ## 3. Reine Bildrevision: Identität und historische Bindungen
 

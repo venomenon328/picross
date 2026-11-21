@@ -61,7 +61,7 @@ def state(root):
         raw = io.read(root, tx.RUNTIME, 8*1024*1024)
         value = io.json_bytes(raw, 8*1024*1024)
         version = value.get("format")
-        if version not in ("picross-runtime-registry-v7", "picross-runtime-registry-v8"):
+        if version not in ("picross-runtime-registry-v7", "picross-runtime-registry-v8", "picross-runtime-registry-v9"):
             version = "unbekannt"
     except Exception:
         version = "unbekannt"

@@ -42,6 +42,7 @@ def pre_metadata(root, *, runtime_version=5):
     for entry in runtime['entries']:
         if entry['background']['status'] != 'standard': raise ValueError('Cannot discard selected background')
         del entry['background']
+        del entry['catalog_reveal']
         # v5 predates the independent puzzle name introduced by v7.
         del entry['name']
     (root/current.RUNTIME).write_bytes(current.encoded(runtime))

@@ -244,6 +244,7 @@ SOURCE_GROUPS = {'tests/puzzle_production/background_catalog_fixtures.py': ('sol
  'tools/puzzle_production/content_registry.py': ('solver', 'images', 'adapter', 'catalog'),
  'tools/puzzle_production/content_update.py': ('solver', 'images', 'adapter', 'catalog'),
  'tools/puzzle_production/contract.py': ('solver', 'images', 'adapter', 'catalog'),
+ 'tools/puzzle_production/catalog_profiles.py': ('solver', 'images', 'adapter', 'catalog'),
  'tools/puzzle_production/current_content.py': ('solver', 'images', 'adapter', 'catalog'),
  'tools/puzzle_production/current_delivery.py': ('images', 'adapter', 'catalog'),
  'tools/puzzle_production/current_rating.py': ('solver', 'images', 'adapter', 'catalog'),

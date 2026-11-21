@@ -12,7 +12,7 @@ from .contract import exact_keys
 REGISTRY, RUNTIME, LOCK = content.REGISTRY, content.RUNTIME, registration.LOCK
 LIMIT = 24*1024*1024
 REVEAL_LIMIT = 128*1024*1024
-FORMAT = "picross-current-catalog-journal-v1"
+FORMAT = "picross-current-catalog-journal-v2"
 OPERATIONS = ("adoption", "added-adoption", "method-activation", "metadata", "sync")
 IMAGE_FORMATS = PE_FORMATS = FORMATS = dict.fromkeys(OPERATIONS, FORMAT)
 STAGE = "content/.registration-journal-catalog.tmp"
@@ -34,7 +34,7 @@ def file_limit(root,name,journal=None):
 def image_generation(snapshot):
     raw = snapshot["texts"][RUNTIME]
     if isinstance(raw,str): raw=raw.encode()
-    return io.json_bytes(raw,8*1024*1024)["format"] == content.RUNTIME_FORMAT
+    return io.json_bytes(raw,content.RUNTIME_LIMIT)["format"] == content.RUNTIME_FORMAT
 
 
 def active_reveal(entry,texts):
@@ -63,12 +63,15 @@ def report_names(run, operation="adoption"):
 def image_candidates(registry):
     return {name for entry in registry["entries"] for name in
             (*(Path("game/"+entry["reveal"]).with_suffix(s).as_posix() for s in (".png",".svg")),
+             *(content.catalog_profiles.path(entry["id"], label) for label, _, _ in content.catalog_profiles.PROFILES),
              background_source.asset_path(entry["id"]))}
 
 
 def retained_names(root,registry,**options):
     texts=options.get("texts") or {n:read(root,n) for n in text_names(registry)}
     names={active_reveal(e,texts) for e in registry["entries"]}
+    names.update(content.catalog_profiles.path(e["id"], label) for e in registry["entries"]
+                 for label, _, _ in content.catalog_profiles.PROFILES)
     names |= background_source.retained_names(root,registry,texts)
     return names-set(options.get("exclude",()))
 
@@ -91,6 +94,7 @@ def capture(root, *, allow_stale=False):
                            io.json_bytes(read(root,categories.PATH),categories.MAX_BYTES))
     texts={n:read(root,n) for n in text_names(value)}
     retained={n:file_hash(root,n) for n in retained_names(root,value,texts=texts)}
+    validate_retained(value, texts, retained)
     expected=projection(texts,value)
     require(allow_stale or texts[RUNTIME] == expected,"Stale runtime")
     snapshot={"registry":value,"texts":texts,"retained":retained,"namespaces":{"current":sorted(set(texts)|set(retained))}}
@@ -102,6 +106,14 @@ def capture_detail(root,identifier):
     s=registration.Snapshot(root,identifier)
     require(s.delivery is not None,"Unknown current ID")
     return {"registry":s.registry,"texts":s.raw,"retained":{},"namespaces":{"current":sorted(s.raw)}}
+
+
+def validate_retained(registry, texts, retained):
+    for entry in registry["entries"]:
+        raw = texts[reveal.path(entry["id"])]
+        record = content.validate_source(io.json_bytes(raw, reveal.LIMIT), entry)
+        for asset in [record["current"]["asset"], *(r["asset"] for r in record["catalog"]["profiles"])]:
+            require(retained.get(asset["file"]) == asset["sha256"], "Retained reveal binding differs: "+asset["file"])
 
 
 def recheck(root,snapshot):
@@ -116,15 +128,19 @@ def projection(texts,registry,version=None):
         value=texts[name]
         return value.encode() if isinstance(value,str) else value
     cats=io.json_bytes(raw(categories.PATH),categories.MAX_BYTES)
-    ratings,dates,reveals={},{},{}
+    ratings,dates,reveals,catalogs={},{},{},{}
     for entry in registry["entries"]:
         identifier=entry["id"]
         ratings[identifier]=rating.validate(io.json_bytes(raw(rating.path(identifier)),rating.LIMIT),
                                            definition_bytes=raw("game/"+entry["definition"]),production_mode=entry["mode"])
         dates[identifier]=added.validate(io.json_bytes(raw(added.path(identifier)),added.LIMIT),identifier)
-        reveals[identifier]=active_reveal(entry,texts).removeprefix("game/")
+        record = content.validate_source(io.json_bytes(raw(reveal.path(identifier)), reveal.LIMIT), entry)
+        require(record["binding"]["identity"] == content.identity(entry, raw("game/"+entry["definition"])),
+                "Stale catalog reveal definition")
+        reveals[identifier] = record["current"]["asset"]["file"].removeprefix("game/")
+        catalogs[identifier] = content.catalog_profiles.project(record["catalog"])
     return content.encoded(project(registry,cats,ratings=ratings,added=dates,reveals=reveals,
-                                   backgrounds=background_source.projection(registry,texts),version=8))
+                                   backgrounds=background_source.projection(registry,texts),catalogs=catalogs,version=9))
 
 
 def prepare(root,snapshot,changes,*,operation,additions=None,report_run=None,replacements=None,generation=None):
@@ -153,7 +169,9 @@ def validate_journal(root,journal,*,before_write=False):
     exact_keys(journal,{"format","operation","report_run","old","new","retained","additions","replacements"})
     require(journal["format"]==FORMAT and journal["operation"] in OPERATIONS and not journal["additions"] and
             not journal["replacements"],"Current metadata journal required")
-    require(set(journal["old"])==set(journal["new"]) and len(content.encoded(journal))<=LIMIT,"Invalid journal sides")
+    size = len(content.encoded(journal))
+    require(size <= LIMIT, f"Catalog journal {size} exceeds {LIMIT} bytes")
+    require(set(journal["old"]) == set(journal["new"]), "Invalid journal sides")
     sides={side:{n:raw.encode() if raw is not None else None for n,raw in journal[side].items()} for side in ("old","new")}
     indices={}
     for side,values in sides.items():
@@ -207,6 +225,7 @@ def validate_journal(root,journal,*,before_write=False):
                 new["previous_record_hash"]==(old["record_hash"] if old else None),"Invalid method activation chain")
     expected=retained_names(root,indices["old"],texts=sides["old"])
     require(set(journal["retained"])==expected,"Foreign retained inventory")
+    validate_retained(indices["old"], sides["old"], journal["retained"])
     for h in journal["retained"].values(): sha(h)
     return sides
 

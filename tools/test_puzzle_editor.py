@@ -15,7 +15,7 @@ def fixture(root):
     (root/".git").mkdir(parents=True)
     write_json(root/"content/categories.json", {"format": "picross-categories-v1", "categories": []})
     write_json(root/"content/registry.json", {"format": "picross-content-registry-v5", "entries": [], "metadata": [], "backgrounds": []})
-    write_json(root/"game/data/registry.json", {"format": "picross-runtime-registry-v8", "categories": [], "entries": []})
+    write_json(root/"game/data/registry.json", {"format": "picross-runtime-registry-v9", "categories": [], "entries": []})
     return root
 
 
@@ -196,7 +196,7 @@ class EditorHTTPTests(unittest.TestCase):
         job = self.finish()
         self.assertEqual(job["state"], "error", job)
         self.assertIn("Phase:", job["error"])
-        self.assertIn("picross-runtime-registry-v8", job["error"])
+        self.assertIn("picross-runtime-registry-v9", job["error"])
         self.assertIn("kein Journal/Staging", job["error"])
         self.assertNotIn(str(self.home), job["error"])
         self.assertFalse(self.service.status()["recovery_required"])

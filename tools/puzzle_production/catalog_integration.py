@@ -48,7 +48,10 @@ def integrate(export_dir, root, *, apply=False, fail_step=None, publication_seco
     value["entries"].append(entry); value["entries"].sort(key=lambda e: e["id"])
     value["metadata"].append(incoming.value["metadata"]); value["metadata"].sort(key=lambda e: e["id"])
     raw = incoming.definition_raw
-    reveal = content.source(entry, raw, {"image_revision": 1, "asset": content.ref("game/"+entry["reveal"], incoming.reveal["asset"])}, "reveal")
+    from .catalog_profiles import generate
+    original = content.ref("game/"+entry["reveal"], incoming.reveal["asset"])
+    catalog, profiles = generate(entry["id"], original, incoming.reveal["asset"])
+    reveal = content.source(entry, raw, {"image_revision": 1, "asset": original}, "reveal", catalog=catalog)
     background = content.source(entry, raw, {"image_revision": 1, "status": incoming.value["background"]["status"],
         "asset": content.ref("game/art/backgrounds/"+entry["id"]+".png", incoming.background["asset"]) if incoming.background else None}, "background")
     background_name = content.source_path(entry["id"], "background")
@@ -62,7 +65,7 @@ def integrate(export_dir, root, *, apply=False, fail_step=None, publication_seco
                 "rating": active, "added": date}
     runtime = deepcopy(snapshot.runtime)
     runtime["entries"].append(content.runtime_row(delivery)); runtime["entries"].sort(key=lambda e: e["id"])
-    changes = {content.REGISTRY: content.encoded(value), content.RUNTIME: content.encoded(runtime),
+    changes = {**profiles, content.REGISTRY: content.encoded(value), content.RUNTIME: content.encoded(runtime),
                "game/"+entry["definition"]: raw, "game/"+entry["reveal"]: incoming.reveal["asset"],
                content.notice_path(entry): incoming.reveal["notice"],
                rating.path(entry["id"]): rating.encoded(active),

@@ -253,7 +253,7 @@ class ProductHarnessTests(unittest.TestCase):
             (source / "content").mkdir()
             (source / "game/model/loader.gd").write_text("runtime code\n")
             shutil.copytree(root / "tests/puzzle_production/fixtures/catalog", source / "tests/puzzle_production/fixtures/catalog")
-            (source / "game/data/registry.json").write_text(json.dumps(dict(format="picross-runtime-registry-v8", categories=[], entries=[])))
+            (source / "game/data/registry.json").write_text(json.dumps(dict(format="picross-runtime-registry-v9", categories=[], entries=[])))
             (source / "content/registry.json").write_text(json.dumps(dict(format="picross-content-registry-v5", entries=[], metadata=[], backgrounds=[])))
             (source / "game/data/content/new.json").write_text("not a valid puzzle; must never be certified here")
             (source / "game/art/content/new.png").write_bytes(b"opaque bytes")

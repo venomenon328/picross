@@ -15,7 +15,7 @@ from .authoring_package import require
 from .contract import canonical_bytes, exact_keys
 
 PLAN_FORMAT = "picross-editor-metadata-plan-v1"
-IMAGE_PLAN_FORMAT = "picross-editor-metadata-plan-v2"
+IMAGE_PLAN_FORMAT = "picross-editor-metadata-plan-v3"
 VIEW_FORMAT = "picross-metadata-view-v1"
 PLAN_LIMIT = 32 * 1024 * 1024
 MAX_OPERATIONS = 10000

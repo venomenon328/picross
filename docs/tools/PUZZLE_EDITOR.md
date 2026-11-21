@@ -231,11 +231,11 @@ v4/v7-Migrations- oder Altjournalunterstützung.
 
 | Form/Feld | Exakter Inhalt |
 | --- | --- |
-| `picross-editor-metadata-plan-v2` | `format,operation,operations,changes,files,journal`; `operation=metadata`. |
+| `picross-editor-metadata-plan-v3` | `format,operation,operations,changes,files,journal`; `operation=metadata`. |
 | `operations` | Geprüfte Metadatenoperationen nach §13.2; bei `category_create` ist die erzeugte stabile `id` im Plan ergänzt. |
 | `changes` | Fachliche Vorschau als Liste mit `kind,id,before,after`; `kind=puzzle` oder `category`. |
 | `files` | Sortierte tatsächlich geänderte Pfade; keine zusätzliche Schreibautorität. |
-| `journal` | Aktuelles `picross-current-catalog-journal-v1` nach [SD-Catalog](../difficulty/SD_CATALOG.md#aktuelle-katalogjournale); dessen geschlossene Felder, Größe und Recovery gelten unverändert. |
+| `journal` | Aktuelles `picross-current-catalog-journal-v2` nach [SD-Catalog](../difficulty/SD_CATALOG.md#aktuelle-katalogjournale); dessen geschlossene Felder, Größe und Recovery gelten unverändert. |
 | Journaloperation | `operation=metadata`, `report_run=null`, `additions={}`, `replacements={}`. |
 | `old,new` | Gleiche geschlossene Menge benötigter aktueller Quellen; Pfad → UTF-8-Text oder null für gebundene Abwesenheit. |
 | `retained` | Pfad → SHA-256 der unveränderten aktuellen Bildbytes. Keine Produktionsarchive oder alten Paketnamespaces. |
@@ -540,7 +540,7 @@ Die logischen Formen sind geschlossene UTF-8-JSON-Objekte ohne Doppelschlüssel,
 kanonisch mit abschließendem LF. Hashes sind SHA-256, Ganzzahlen keine bools.
 Plan und entpacktes Journal sind auf 128 MiB begrenzt; einzelne Seiten auf
 64 MiB, importierte Bilder weiterhin auf 32 MiB. Physisch speichert allein das
-neue Journal die ASCII-Kennung `PICROSS-EDITOR-CHANGE-JOURNAL-V1` plus LF und
+neue Journal die ASCII-Kennung `PICROSS-EDITOR-CHANGE-JOURNAL-V2` plus LF und
 einen RFC-1950/zlib-Strom (Level 6) seines kanonischen JSON mit kanonischer Schlüsselsortierung.
 Der Reader begrenzt bereits die Dekompression, verlangt genau einen vollständigen
 Strom ohne Nachlauf und prüft die kanonische Rekodierung. Das vermeidet erneutes
@@ -548,7 +548,7 @@ Lesen der Base64-Vergrößerung der betroffenen Bildbytes; alte Journale werden 
 
 | Form | Exakte Felder |
 | --- | --- |
-| `picross-editor-change-plan-v1` | `format,action,id,entry,reads,changes,before,after,quality,plan_hash` |
+| `picross-editor-change-plan-v2` | `format,action,id,entry,reads,changes,before,after,quality,plan_hash` |
 | `action` | `metadata`, `images` oder `raster`; Kategorienpflege ist metadata mit id/entry null. |
 | `entry` | Der ausgewählte unveränderte Inhaltsregistryeintrag, bei Kategorienpflege null. Er begrenzt technische Zielpfade, keine erneute Produktionsabnahme. |
 | `reads` | Pfad → SHA-256 oder null für tatsächlich benötigte aktuelle Quellen/Abwesenheiten. Keine Namespace- oder Vollbestandsbindung. |
@@ -556,7 +556,7 @@ Lesen der Base64-Vergrößerung der betroffenen Bildbytes; alte Journale werden 
 | `before,after` | Lesbare fachliche Vorschau der betroffenen Werte; keine zusätzliche Schreibautorität. |
 | `quality` | null ohne Logikänderung; sonst der tatsächlich erzeugte Rating-/Proofbefund mit `method,checked,proof,baseline,proof_data,baseline_data`. `proof` und gegebenenfalls `baseline` sind Byte-Refs `file,bytes,sha256`; die zugehörigen `*_data` enthalten die tatsächlich geprüften JSON-Belege. Ohne Paired-Profil sind beide Baselinefelder null. |
 | `plan_hash` | Kanonischer Hash aller anderen Planfelder. |
-| `picross-editor-change-journal-v1` | `format,action,id,entry,reads,changes,quality`; dieselben bereits vorbereiteten Quellen, Schreibseiten und gegebenenfalls Prüfbelege. |
+| `picross-editor-change-journal-v2` | `format,action,id,entry,reads,changes,quality`; dieselben bereits vorbereiteten Quellen, Schreibseiten und gegebenenfalls Prüfbelege. |
 
 Ein Zielpfad muss aus den drei Indexpfaden oder der ausgewählten Entry-ID und
 ihren festen Definitions-/Bildstämmen herleitbar sein. Kategorienpflege
@@ -760,3 +760,7 @@ nur über seine private Startumgebung; Theme bleibt aus unveränderter Konfigura
 Technische Kandidatenprüfung, unabhängiges Review, persönliche Windows-/
 Bedienprobe und Betriebsfreigabe werden in #691 getrennt nachgewiesen.
 Dieser Vertrag allein autorisiert keine Erstpublikation oder Updateinstallation.
+
+## Katalogprofile für Abschlussbilder
+
+Ein echter Bildwechsel bereitet Original und beide Katalogprofile im Änderungsplan v2 vor. Rasterpflege übernimmt die technische Profilbindung. Normale Namens- und Kategoriepflege liest nur die gemeinsamen Indizes. Die separate Metadaten-API bindet zusätzlich die erhaltenen Bildhashes. Das logische Journalbudget beträgt 128 MiB, das Metadatenplanbudget 32 MiB mit maximal 24 MiB Katalogjournal.

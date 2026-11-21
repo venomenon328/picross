@@ -59,6 +59,10 @@ class CurrentConsumerTests(unittest.TestCase):
         self.assertEqual(list(added.load_sources(self.root,index)),['pz-current'])
         self.assertEqual(list(rating.load_sources(self.root,index)),['pz-current'])
         plan=metadata.plan(self.root,[{'op':'set_metadata','id':'pz-current','name':'Current name'}])
+        self.assertEqual(plan["format"], "picross-editor-metadata-plan-v3")
+        retained = plan["journal"]["retained"]
+        for label in ("ui100", "ui125"):
+            self.assertIn("game/art/catalog/pz-current-" + label + ".png", retained)
         self.assertEqual(metadata.apply(self.root,plan)['status'],'updated')
         self.assertEqual(metadata.view(self.root)['entries'][0]['name'],'Current name')
         registry.check_checkout(self.root)

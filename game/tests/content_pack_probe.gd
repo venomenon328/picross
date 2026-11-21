@@ -10,6 +10,27 @@ func digest(bytes: PackedByteArray) -> String:
 	context.update(bytes)
 	return context.finish().hex_encode()
 
+func catalog_reveals() -> void:
+	var wanted: Array[String] = []
+	for entry: Dictionary in Registry.entries():
+		if not entry.has("catalog_reveal"): continue
+		var original := ResourceLoader.load("res://" + str(entry.reveal), "Texture2D", ResourceLoader.CACHE_MODE_IGNORE) as Texture2D
+		check(original != null and not original.get_image().is_empty(), "PCK original " + str(entry.id))
+		for profile: Dictionary in entry.catalog_reveal.profiles:
+			var path: String = "res://" + str(profile.asset.file)
+			wanted.append(path.get_file() + ".import")
+			var texture := ResourceLoader.load(path, "Texture2D", ResourceLoader.CACHE_MODE_IGNORE) as Texture2D
+			check(texture != null and texture.get_image().get_size() == Vector2i(profile.width, profile.height),
+				"PCK catalog profile dimensions " + path)
+	var directory := DirAccess.open("res://art/catalog")
+	var actual: Array[String] = []
+	if directory != null:
+		check(directory.get_directories().is_empty(), "PCK catalog namespace")
+		for name: String in directory.get_files(): actual.append(name)
+	wanted.sort()
+	actual.sort()
+	check(actual == wanted, "PCK exact catalog profile inventory")
+
 func backgrounds() -> void:
 	# Inspect actual remaps and decoded mipmaps, not source-PNG hashes against
 	# unrelated compressed bytes. Expected source bindings arrive outside the PCK.
@@ -204,6 +225,7 @@ func run() -> void:
 	check(hash.finish().hex_encode() == "414e35e9875605ea0dfe549a6bdad6d1f1f3d5427c97af2060213adb6709484c", "PCK PANG original OFL bytes")
 	check(not ResourceLoader.exists("res://art/drawing/TidyHand.ttf") and not FileAccess.file_exists("res://art/drawing/tidy-hand/NOTICE.txt"), "PCK excludes inactive historical Tidy Hand")
 	check(Registry.load_error.is_empty(), "PCK registry/category format invalid")
+	catalog_reveals()
 	backgrounds()
 	var categories: Array[Dictionary] = Registry.categories()
 	check(not categories.is_empty(), "PCK categories projection missing")

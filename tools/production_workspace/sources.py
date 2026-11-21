@@ -39,6 +39,8 @@ def read_path(value):
         return value
     if re.fullmatch(r'content/difficulty/pz-[a-z0-9][a-z0-9-]{0,59}/rating\.json',value):
         return value
+    if re.fullmatch(r'game/art/catalog/pz-[a-z0-9][a-z0-9-]{0,59}-ui(?:100|125)\.png', value):
+        return value
     if re.fullmatch(r'game/data/content/[A-Za-z0-9_-]+\.json|game/art/content/[A-Za-z0-9_-]+\.(?:png|svg|txt)|game/art/backgrounds/pz-[a-z0-9][a-z0-9-]{0,59}\.(?:png|txt)',value):
         return value
     return production_path(value)

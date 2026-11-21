@@ -23,7 +23,7 @@ static func load_fixture(id: String) -> Dictionary:
 			return {}
 		parsed.reveal["name"] = entry.name
 	if Registry.current_reveal_enabled():
-		# Only v8 separates the live image from its historical production path.
+		# Current generations separate the live image from its historical production path.
 		# A format switch keeps that same technical stem; it never edits the
 		# definition file or the raster/save revision.
 		if not parsed.get("reveal") is Dictionary or not parsed.reveal.get("image") is String:
@@ -122,6 +122,11 @@ static func validate(data: Dictionary, study_assets: Dictionary = {}) -> String:
 		return "Falsche feste Abschlussressource."
 	if not ResourceLoader.exists(path, "Texture2D"):
 		return "Abschlussbild fehlt."
+	if not study_asset and registration.has("catalog_reveal"):
+		var catalog: Dictionary = registration.catalog_reveal
+		if catalog.source_width < 2 * data.width or catalog.source_height < 2 * data.height:
+			return "Ungültige Abschlussgröße."
+		return ""
 	var texture: Texture2D = load(path) as Texture2D
 	if texture == null or texture.get_width() < 1 or texture.get_height() < 1:
 		return "Defektes Abschlussbild."

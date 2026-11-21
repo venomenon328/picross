@@ -96,3 +96,7 @@ Der vollständige [CI-A-Verlauf vor v2](https://github.com/venomenon328/picross/
 enthält frühere v4/v5-Schemata, automatische Auswahl, Firefox-/33-Fall-Matrizen
 und damalige Liefergates. Diese Beschreibungen werden nicht als heutige Regeln
 fortgeführt. Aktueller Testlebenszyklus: [CI_CONTRACT](../dev-rules/CI_CONTRACT.md).
+
+## Katalogprofile für Abschlussbilder
+
+KAT-IMG-B prüft die Farbsamples und Geometrie synthetischer PNG-/SVG-Eingänge in der Bildgruppe. Adapter- und Kataloggruppen prüfen die zusätzlichen Registrierungsziele, Revisionen und wiederaufnehmbaren Schreibseiten.

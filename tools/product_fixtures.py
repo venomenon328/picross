@@ -22,7 +22,7 @@ def install_runtime_fixtures(root: Path, project: Path, *, append: bool = False)
     current = None
     if append:
         current = json.loads((project / "data/registry.json").read_text(encoding="utf-8"))
-        if current['format'] in ('picross-runtime-registry-v6', 'picross-runtime-registry-v7', 'picross-runtime-registry-v8'):
+        if current['format'] in ('picross-runtime-registry-v6', 'picross-runtime-registry-v7', 'picross-runtime-registry-v8', 'picross-runtime-registry-v9'):
             raise ValueError("Legacy geometry IDs cannot be appended to a v6/v7/v8 production catalog")
     colors = ["#343f42", "#edca78", "#bd604a", "#6c9aab"]
     for entry in catalog["entries"]:
@@ -126,7 +126,7 @@ def copy_regression_game(root: Path, project: Path) -> None:
     def ignored(directory, names):
         result = ordinary(directory, names)
         if Path(directory) == root / "game/art":
-            result.add("backgrounds")
+            result.update(("backgrounds", "catalog"))
         return result
     shutil.copytree(root / "game", project, ignore=ignored)
     install_runtime_fixtures(root, project)
@@ -151,7 +151,7 @@ def restore_player_catalog(root: Path, project: Path, *, background_inventory: d
     had_backgrounds = (project / "art/backgrounds").exists()
     background_inventory = restore_sources(root, project, background_inventory)
     changed = changed or had_backgrounds or bool(background_inventory["assets"])
-    for name in ("data/content", "art/content"):
+    for name in ("data/content", "art/content", "art/catalog"):
         if (project / name).exists():
             shutil.rmtree(project / name)
             changed = True

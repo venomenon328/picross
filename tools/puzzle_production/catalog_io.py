@@ -267,7 +267,8 @@ def json_bytes(raw, limit):
         return result
 
     def number(token, convert):
-        require(len(token) <= 16, "Catalog JSON numeric token exceeds 16 characters")
+        limit = 24 if convert is float else 16
+        require(len(token) <= limit, "Catalog JSON numeric token exceeds " + str(limit) + " characters")
         return convert(token)
 
     def constant(token):

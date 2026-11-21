@@ -1,16 +1,18 @@
 """Current catalog records. No production packages or historical receipts."""
 from copy import deepcopy
 from pathlib import Path
+from . import catalog_profiles
 from . import catalog_io as io, categories, catalog_rating as rating, catalog_added as added
 from .authoring_package import ID, STEM, require, relative, sha
 from .contract import canonical_bytes, digest, exact_keys, integer
 
 FORMAT = "picross-content-registry-v5"
-REVEAL = "picross-catalog-reveal-v5"
+REVEAL = "picross-catalog-reveal-v6"
 BACKGROUND = "picross-catalog-background-v7"
 REGISTRY = "content/registry.json"
 RUNTIME = "game/data/registry.json"
-RUNTIME_FORMAT = "picross-runtime-registry-v8"
+RUNTIME_FORMAT = "picross-runtime-registry-v9"
+RUNTIME_LIMIT = 16*1024*1024
 LIMIT = 64*1024*1024
 ENTRY_FIELDS = {"id", "key", "save_slot", "definition", "reveal", "visible", "mode", "category_id"}
 
@@ -100,10 +102,12 @@ def identity(entry, raw):
             "runtime_revision": definition["revision"]}
 
 
-def source(entry, raw, current, kind, *, record_revision=1):
+def source(entry, raw, current, kind, *, record_revision=1, catalog=None):
     value = {"format": REVEAL if kind == "reveal" else BACKGROUND, "id": entry["id"],
              "record_revision": record_revision, "binding": {"identity": identity(entry, raw)},
              "current": deepcopy(current)}
+    if kind == "reveal":
+        value["catalog"] = deepcopy(catalog)
     value["record_hash"] = digest(value)
     return validate_source(value, entry)
 
@@ -122,7 +126,8 @@ def validate_binding(binding, identifier, entry=None):
 
 
 def validate_source(value, entry=None):
-    exact_keys(value, {"format", "id", "record_revision", "binding", "current", "record_hash"})
+    fields = {"format", "id", "record_revision", "binding", "current", "record_hash"}
+    exact_keys(value, fields | ({"catalog"} if isinstance(value, dict) and value.get("format") == REVEAL else set()))
     require(value["format"] in (REVEAL, BACKGROUND), "Current image source required")
     rating.identity(value["id"])
     require(entry is None or value["id"] == entry["id"], "Wrong source ID")
@@ -141,6 +146,7 @@ def validate_source(value, entry=None):
         reference(current["asset"], limit=32*1024*1024)
         require(current["asset"]["file"].startswith("game/art/content/") and
                 current["asset"]["file"].endswith((".png", ".svg")), "Invalid reveal path")
+        catalog_profiles.validate(value["catalog"], value["id"], current["asset"])
         if entry is not None:
             require(Path(current["asset"]["file"]).with_suffix("") == Path("game/"+entry["reveal"]).with_suffix(""),
                     "Foreign reveal resource")
@@ -152,7 +158,9 @@ def load_source(root, entry, kind, *, texts=None):
     name = source_path(entry["id"], kind)
     raw = texts[name] if texts is not None and name in texts else io.read(root, name, 1024*1024)
     if isinstance(raw, str): raw = raw.encode()
-    return validate_source(io.json_bytes(raw, 1024*1024), entry)
+    value = validate_source(io.json_bytes(raw, 1024*1024), entry)
+    require(value["format"] == (REVEAL if kind == "reveal" else BACKGROUND), "Wrong image source kind")
+    return value
 
 
 def notice_path(entry):
@@ -177,11 +185,19 @@ def selected(root, value, identifier, *, read=None):
         if kind == "background":
             require(next((r["source"] for r in value["backgrounds"] if r["id"] == identifier), None) == ref(name, source_raw),
                     "Background index mismatch")
+        require(image["format"] == (REVEAL if kind == "reveal" else BACKGROUND), "Wrong image source kind")
         asset = image["current"]["asset"]
         if asset is not None:
             asset_raw = read(asset["file"], 32*1024*1024)
             require(ref(asset["file"], asset_raw) == asset, "Changed active image")
             result[kind+"_bytes"] = asset_raw
+        if kind == "reveal":
+            require(image["catalog"]["source_width"] >= 2*definition["width"] and
+                    image["catalog"]["source_height"] >= 2*definition["height"], "Reveal is too small for definition")
+            for profile in image["catalog"]["profiles"]:
+                asset = profile["asset"]
+                payload = read(asset["file"], catalog_profiles.LIMIT)
+                catalog_profiles.validate_png(profile, payload)
         result[kind] = image
     result["notice"] = read(notice_path(entry), 65536)
     if result["background"]["current"]["status"] == "selected":
@@ -200,5 +216,6 @@ def runtime_row(delivery):
         background["asset"]["file"] = background["asset"]["file"].removeprefix("game/")
     return {**{k: entry[k] for k in ("id", "key", "save_slot", "definition", "visible", "category_id")},
             "reveal": delivery["reveal"]["current"]["asset"]["file"].removeprefix("game/"),
+            "catalog_reveal": catalog_profiles.project(delivery["reveal"]["catalog"]),
             "name": delivery["metadata"]["name"], "category_id": delivery["metadata"]["category_id"],
             "background": background, "difficulty": rating.project(delivery["rating"]), "added_at": delivery["added"]["added_at"]}

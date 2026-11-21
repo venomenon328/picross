@@ -175,10 +175,33 @@ class EditorChangeTests(unittest.TestCase):
         from tools.puzzle_production.editor_image_input import validate_reveal
         plan = edit.plan(self.root, self.request(reveal={'upload': 'image'}), uploads={
             'image': {'raw': raw, 'suffix': 'svg', 'checked': validate_reveal(raw, '.svg')}})
+        self.assertTrue(all("game/art/catalog/" + self.entry["id"] + "-" + label + ".png" in plan["changes"]
+                            for label in ("ui100", "ui125")))
         del plan['changes']['content/reveals/'+self.entry['id']+'.json']
         plan['plan_hash'] = digest({k: v for k, v in plan.items() if k != 'plan_hash'})
         with self.assertRaisesRegex(ValueError, 'lacks current image source|without current source'): edit.apply(self.root, plan)
         self.assertEqual(before, self.snapshot())
+
+    def test_reveal_suffix_switch_preserves_foreign_files_and_round_trips(self):
+        from tools.puzzle_production.editor_image_input import validate_reveal
+        png = self.root / "game" / self.entry["reveal"]
+        original = png.read_bytes()
+        svg = png.with_suffix(".svg")
+        vector = b'<svg xmlns="http://www.w3.org/2000/svg" width="128.25" height="64"><rect width="8" height="8"/></svg>'
+        def plan(raw, suffix):
+            upload = {"raw": raw, "suffix": suffix, "checked": validate_reveal(raw, "." + suffix)}
+            return edit.plan(self.root, self.request(reveal={"upload":"image"}), uploads={"image":upload})
+        svg.write_bytes(b"foreign")
+        with self.assertRaisesRegex(ValueError, "occupied"):
+            plan(vector, "svg")
+        self.assertEqual(svg.read_bytes(), b"foreign")
+        svg.unlink()
+        for raw, suffix, target, removed in ((vector, "svg", svg, png), (original, "png", png, svg)):
+            edit.apply(self.root, plan(raw, suffix))
+            self.assertEqual(target.read_bytes(), raw)
+            self.assertFalse(removed.exists())
+            registry.check_checkout(self.root)
+            self.assertEqual(edit.apply(self.root, plan(raw, suffix))["status"], "noop")
 
     def test_hg31_new_prepared_profile_requires_v2_and_preserves_unrelated_bytes(self):
         from io import BytesIO

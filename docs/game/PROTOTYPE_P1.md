@@ -450,3 +450,7 @@ Der [historische Dokumentstand](https://github.com/venomenon328/picross/blob/6fe
 erhält frühere Lieferchronologie und ersetzte Regeln. Er ist keine zusätzliche
 Normquelle oder dauerhafte Prüfpflicht. Aktuelle Prüfungen folgen dem
 [Paketvertrag](../ci/CI_WORKFLOW_V2.md) und dem jeweils betroffenen Modul.
+
+## Katalogprofile für Abschlussbilder
+
+Runtime v9 prüft beim Start die deklarierten Maße, Profilpfade und Ressourcenexistenz ohne Texturdekodierung. Eine gelöste Katalogkarte lädt nach der Sessionfreigabe ein Profil. Abschluss und erneutes Öffnen eines gelösten Blatts laden das Original. Fehlende oder inkonsistente Bindungen ergeben einen Katalogfehler. Saveformat und frühere Runtime-Lesepfade bleiben erhalten.

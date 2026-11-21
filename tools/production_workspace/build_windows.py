@@ -103,6 +103,8 @@ def build(destination, *, version=None, app=PW):
     for name in ('release.json', 'update-trust.json'):
         resources[name] = sha(package / name)
     extra_args = []
+    if app in (PW, PE):
+        extra_args += ["--collect-all", "resvg_py"]
     if app == PE:
         from .payload import PE_EXCLUDED, PRODUCTION
         source_data = work / 'puzzle_production'; source_data.mkdir()
@@ -185,7 +187,7 @@ def build(destination, *, version=None, app=PW):
     shutil.copyfile(Path(sys.base_prefix) / 'LICENSE.txt', licenses / 'Python.txt')
     for notice in (PACKAGE / 'licenses').glob('*.txt'):
         shutil.copyfile(notice, licenses / notice.name)
-    for name in ('PyInstaller', 'cryptography', 'cffi', 'pycparser') + (() if app == PG else ('Pillow',)):
+    for name in ('PyInstaller', 'cryptography', 'cffi', 'pycparser') + (() if app == PG else ('Pillow', 'resvg_py')):
         dist = metadata.distribution(name)
         copied = False
         for file in dist.files:
