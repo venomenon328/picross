@@ -3,8 +3,8 @@
   "issue": "https://github.com/venomenon328/picross/issues/700",
   "package": "PZ-DURIAN-RASTER",
   "modules": [],
-  "purpose": "Buildfreie Quellen- und Planprüfung für den fixierten Durian-Arbeitsstand aus Authoring Schritt 3.",
-  "omitted": "Der Draft enthält ausschließlich Authoring-Metadaten und Paketplan. Deduktion, unabhängiger Proof, Endmatrix, SD2-Bewertung und native Sichtung erfolgten am konkreten Raster in der Produktion.",
+  "purpose": "Buildfreie Quellen- und Planprüfung für das qualifizierte Durian-Rasterangebot nach Authoring Schritt 3 und Qualitätsvertrag 1.0 (#753).",
+  "omitted": "Der Draft enthält ausschließlich Authoring-Metadaten und Paketplan. Der PW-B-Reader prüfte den aktuellen Rasterstand samt Proof, Endmatrix und SD2-Bewertung. Die fälligen Sichturteile stehen im Datensatz.",
   "test_changes": [],
   "core_change": null,
   "evidence": {
