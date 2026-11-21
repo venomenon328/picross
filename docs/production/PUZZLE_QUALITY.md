@@ -1,6 +1,6 @@
 # Redaktioneller Qualitätsvertrag für neue Rätsel
 
-**Vertrag 1.0 · Dokumentrevision 17 · 17.11.2026 · HG-SEITENKOMPOSITION / [#671](https://github.com/venomenon328/picross/issues/671)**
+**Vertrag 1.0 · Dokumentrevision 18 · 21.11.2026 · Q-H02-ZUSTÄNDIGKEIT / [#753](https://github.com/venomenon328/picross/issues/753)**
 
 ## 1. Geltung und Zuständigkeit
 
@@ -58,7 +58,8 @@ bei Bedarf auf neutralem Grund/Schachbrett. Die jeweiligen Kriterien ergänzen
 die benötigten Vergleiche. Keine routinemäßige Buch-/Katalogmontage, Fadeprobe,
 Kandidaten-Testintegration, Godot-Start oder zusätzliche persönliche Buchabnahme;
 dies gilt auch für spätere Phasen. Bestehende technische Tests tragen ihre
-Render-/Integrationsgarantien. Q-H01/Q-H02 behalten den eigenen Zell-/Hinweisgegenstand.
+Render-/Integrationsgarantien. Q-H01/Q-H02 behalten ihren rätselspezifischen Zell-/Hinweisgegenstand
+nach §3.4; spielweite Schrift-, X- und Slotgeometrie bleibt Spielverantwortung.
 
 ## 3. Redaktionelle Kriterien nach Darstellung und Prüfzeitpunkt
 
@@ -97,8 +98,21 @@ redaktionelle Abweichung autorisiert keine materielle Umgestaltung.
 | ID / Kriterium | Herkunft | Methode und Zeitpunkt |
 | --- | --- | --- |
 | Q-H01 · Farb- und Zelllesbarkeit auf Papier | [Zeichenstil ZS-D02/03/05](../game/UI_DRAWING_STYLE.md); Design §§2/4.4; #488 | Vor Endabnahme die tatsächliche Rasterpalette in repräsentativer Zell-/Hinweisgröße einschließlich kleiner Darstellung auf dem aktuellen Papier unter vorhandener Kontur und Schraffur beurteilen. Vordergrundfarben, Leergrund, Nachbarzellen und Fünferlinien müssen erkennbar bleiben. Große isolierte Farbfelder reichen nicht. Farbsinnsimulation, soweit verfügbar, nur ergänzend mit Methode/Grenzen angeben. Auch eine positive Diagnose nach §8 ersetzt dieses Sichturteil nicht. |
-| Q-H02 · Lesbare Hinweisziffern und Farbzuordnung in allen Zuständen | [Hinweistypografie](../game/CLUE_TYPOGRAPHY.md), [Hinweisstatus](../game/CLUE_STATUS.md), [ZS-D01](../game/UI_DRAWING_STYLE.md) | Vor Endabnahme wirkliche ein-/mehrstellige Hinweise beider Achsen in normalem, abgeschwächtem und zusätzlich ausgekreuztem Zustand prüfen; aktuelle Schrift, C1-Kontur und Papier verwenden. Zahl und Farbzugehörigkeit müssen auch klein erkennbar bleiben. Fehlende Darstellungsmöglichkeit als `nicht geprüft` melden, keine Sichtprüfung aus Proof/Dateihash oder positivem Paarwert (§8) ableiten. |
+| Q-H02 · Rätselspezifische Hinweislesbarkeit und Farbzuordnung in allen Zuständen | [Hinweistypografie](../game/CLUE_TYPOGRAPHY.md), [Hinweisstatus](../game/CLUE_STATUS.md), [ZS-D01](../game/UI_DRAWING_STYLE.md) | Vor Endabnahme tatsächlich vorkommende ein-/mehrstellige Hinweise beider Achsen in normalem, abgeschwächtem und zusätzlich ausgekreuztem Zustand auf aktuellem Papier ansehen, auch klein und unter bestehender C1-Kontur. Nur Beeinträchtigungen durch die konkrete Rasterpalette, ihren Kontrast, die Farbzuordnung oder die tatsächliche Hinweisfolge als Q-H02-Befund werten. Fehlende nötige Rätselansicht als `nicht geprüft` melden; Proof, Dateihash und positiver Farbpaartest (§8) ersetzen keine Sichtprüfung. |
 | Q-H03 · Spiel-/Hinweisstruktur und Arbeitsumfang | Produkt §§3.2/5; Produktion §7.1; Authoring §§4–5 | Nach finalem Proof vor Endabnahme tatsächliche Hinweisfolgen, Farbabhängigkeiten, Kleinteiligkeit, Engstellen und Umfang anhand des gebundenen Verlaufs beschreiben. Keine pauschale Abwertung vieler kleiner Zahlen/Farben, kein hoher Schwierigkeitsgrad allein aus Größe/Laufzeit. Die gebundene Bewertung ist separat H-06; Probespielen bleibt optional. |
+
+**Abgrenzung Q-H02:** Schriftgrad, Token-/Slotabstände und Geometrie oder
+Zeichnung des X gehören zum allgemeinen Spieler unter
+[Hinweistypografie](../game/CLUE_TYPOGRAPHY.md) und
+[Hinweisstatus](../game/CLUE_STATUS.md). Eine gewollte Überkreuzung der eigenen
+Zahl durch das X ist für sich kein Rätselmangel. Reicht ein X in andere Hinweise
+hinein oder verdeckt die Spielzeichnung eine Zahl tatsächlich unlesbar, ist das
+ein Fehler der Spieleroberfläche, auch wenn er erst bei bestimmten Zellgrößen,
+Zoomstufen oder kurzen Ziffern auftritt. Keine Rasteränderung und keine
+redaktionelle Q-H02-Einzelfallannahme als Ersatz für die Spielkorrektur verlangen.
+Eine rätselspezifische Warnung muss dagegen betroffene Achse, Zahlen bzw.
+Hinweisfolge, Farb-ID/Kontrast, Zustand, beobachtete Wirkung und Methode benennen.
+Die pauschale Aussage „X überlagert kurze Ziffern“ genügt hierfür nicht.
 
 Diese Sichtungen gehören zu den bestehenden Bild-/Motiv-/Endabnahmen. Sie
 verlangen keine neue allgemeine Freigabeschleife, keinen Pflicht-Spielstart und
