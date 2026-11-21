@@ -1,29 +1,11 @@
 {
   "format": "development-ci-plan/v1",
-  "issue": "https://github.com/venomenon328/picross/issues/746",
-  "package": "PW-SD2-A",
-  "modules": [
-    "tools"
-  ],
-  "purpose": "Prüft die commitgebundene Liefermenge und frühe Freezevalidierung für PW 0.4 und 0.3. Der Werkzeug- und Workflowdiff löst den regulären Windows-x64-Spielerbau aus. Der separate nicht veröffentlichende PW-Dispatch belegt MSI-Ressourcen und echten Frozen-Detailabruf am exakten Quellhead.",
-  "omitted": "Native Zusatzmodule, production.solver, production.images, production.adapter, production.catalog, Preflight, Delivery und Chromium entfallen. Der Umfang ändert weder Spielverhalten noch Analyse, Bewertungsalgorithmen, Bildableitung oder Datenformen. Die unveränderten Freezeprüfer und der synthetische Frozen-Detailabruf decken die Readergrenze ab.",
-  "test_changes": [
-    {
-      "path": "tools/test_production_installer.py",
-      "disposition": "change-scoped",
-      "reason": "Gezielte Regressionen für vollständige Methodendateien, Fingerprint, Arbeitsbytes und Analysis-Drift."
-    },
-    {
-      "path": "tools/test_production_launcher.py",
-      "disposition": "change-scoped",
-      "reason": "Gezielte echte Freeze-Ablehnung vor Launcher-Bereitschaft bei fehlenden und manipulierten Originalen."
-    },
-    {
-      "path": "tools/production_workspace/smoke_windows.py",
-      "disposition": "change-scoped",
-      "reason": "Nicht veröffentlichender PW-Dispatch belegt beide Rasterprojektionen und isolierte Startfehler für denselben MSI-inspektierten Payload. Synthetische Daten und Fehlerkopien enden im Lauf."
-    }
-  ],
+  "issue": "https://github.com/venomenon328/picross/issues/700",
+  "package": "PZ-ONIGIRI-STEP-3",
+  "modules": [],
+  "purpose": "Quellen- und Planintegrität für den unverändert aus PW-B übernommenen Onigiri-Sichtungsstand nach dem in #700 eingeführten Produktionsvertrag.",
+  "omitted": "Der Diff enthält den aktuellen Authoring-Record, den Indexverweis und den Paketplan. Die fachlichen Prüfungen am einzelnen Raster wurden in der Produktion ausgeführt. Player-Build, Zusatzmodule und technische Aufbewahrung entfallen.",
+  "test_changes": [],
   "core_change": null,
   "evidence": {
     "mode": "none",
