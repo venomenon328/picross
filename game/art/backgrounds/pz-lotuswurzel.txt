@@ -1,0 +1,4 @@
+author: OpenAI ImageGen (KI-generierte Kontextzeichnung)
+changes: Vollständige proportionale technische Ableitung des unveränderten Originals von 2172 × 724 auf 2304 × 768 RGBA nach picross-background-png2304x768-v1.
+source: Native Bildgenerierung in Codex für diesen Produktionsauftrag. Ausgewähltes unverändertes Original: SHA-256 408b870e56ef2ce37f1a889d82f6c1e020e7a1d12d6cb39f7e160abff3de73a9.
+usage_basis: Für die Auswahl der Kontextzeichnung für Lotuswurzel im Auftrag des Nutzers erstellt.

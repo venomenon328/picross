@@ -1,0 +1,4 @@
+author: OpenAI ImageGen (KI-generierte Bearbeitung)
+changes: Die einzelne Scheibe ist mittig mit schmalen, ausgewogenen Bildrändern gefasst. Der obere rechte Schalenbogen verläuft durchgehend. Unveränderte PNG-Ausgabe der Bildbearbeitung.
+source: Native Bildbearbeitung in Codex auf Basis der zuvor erzeugten Einzelscheibe (SHA-256 7c6f344591716bbee291df263a6eb2d8a2b20a4dbfa83390fea81f21d4b8b7ab).
+usage_basis: Für diesen Produktionsauftrag bearbeitete Projektgrafik aus dem dafür erzeugten Abschlussbild.
