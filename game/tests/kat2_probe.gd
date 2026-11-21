@@ -770,12 +770,43 @@ func sort_pointer(index: int) -> void:
 	await frames()
 	check(hit and not popup.visible and app.album.preference.criterion == app.album.Preference.CRITERIA[index], "KU-B criterion selected through actual pointer hit")
 
+func prepared_page_handoff() -> void:
+	# Bypass the fixture's synchronous request_page settlement for this one
+	# case. The real-time Windows probe separately proves when the hit opens.
+	var book = app.book
+	var before: int = app.album.generation
+	book.target_page = 1
+	book.direction = 1
+	book._begin("page")
+	while book.state == book.State.PREPARING: await process_frame
+	var card: Control = app.choices[0]
+	check(app.album.generation == before+1 and book._exposed_step(0.0) == 0,"covered source arrow rejects input")
+	book.free_page_step = book._exposed_step(0.8)
+	check(book.free_page_step == 1,"stationary target has a valid successor")
+	var pointer := InputEventMouseMotion.new()
+	pointer.position = app.album.next_button.get_global_rect().get_center()
+	surface.push_input(pointer,true)
+	book._update_page_buttons()
+	check(app.album.next_button.page_pointer_mode == BaseButton.DRAW_HOVER,"existing pager ink follows stationary pointer on activation")
+	click(app.album.next_button)
+	click(app.album.previous_button)
+	check(book.queued_page == 2 and app.album.next_button.disabled and app.album.previous_button.disabled,"one fixed target saturates both directions")
+	book._settle(true)
+	check(app.album.generation == before+1 and app.choices[0] == card,"direct handoff preserves target controls")
+	book.interrupt("ui-scale")
+	check(book.queued_page == -1 and book.pressed_page_step == 0 and app.album.page_index == 1,"post-handoff invalidation keeps the reached page")
+	await frames()
+	app.album.turn_page(-1)
+	await frames()
+	check(app.album.page_index == 0 and app.album.previous_button.disabled,"return to first page and respect boundary")
+
 func pages() -> void:
 	# Equal areas recover the canonical ordering needed by the pre-existing
 	# page/reset assertions; sorting() separately covers editorial/default order.
 	app.album.choose_sort("size")
 	check(app.sessions.size() == 54 and app.album.categories.size() == 20, "54 synthetic sessions and twenty categories")
 	check(app.album.summary.text == "54 Treffer · 27 von 54 gelöst" and app.choices.size() == 24, "valid saved completions counted across all pages")
+	await prepared_page_handoff()
 	await shot("first-page")
 	var before: Dictionary = save_bytes()
 	var released: Array[WeakRef] = []

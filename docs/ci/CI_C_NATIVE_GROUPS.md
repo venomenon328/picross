@@ -648,6 +648,14 @@ und Umgebungsfreigabe; keine automatische Wiederholung aus einem historischen
 B-B-/HIL-Auftrag. Offene persönliche Abnahmen und Befunde im aktuellen Issue/PR
 prüfen, nicht aus alten Lieferstatusabsätzen übernehmen.
 
+## Katalogseiten · KAT-UX-A / #735
+
+Im bestehenden `catalog-pages`-Checkpoint belegt eine vorbereitete Doppelseite
+Rand- und Freigabegeometrie, vorhandene Hoverkontur, Sättigung genau eines
+Folgeziels, dessen Invalidierung und die Identität der übernommenen Controls.
+Die reale Reihenfolge von Down, normaler Direktübergabe und Up wurde separat
+für das Paket am unbeschleunigten Windows-Buchroot geprüft.
+
 ## Historische Quellen
 
 Der [vollständige Vorgänger](https://github.com/venomenon328/picross/blob/f3626f28899a48fa4d783716925f7425a3eb1784/docs/CI_C_NATIVE_GROUPS.md)

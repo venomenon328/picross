@@ -1,25 +1,20 @@
 {
   "format": "development-ci-plan/v1",
-  "issue": "https://github.com/venomenon328/picross/issues/733",
-  "package": "GAME-APP-E",
+  "issue": "https://github.com/venomenon328/picross/issues/735",
+  "package": "KAT-UX-A",
   "modules": [
-    "tools"
+    "native.catalog"
   ],
-  "purpose": "Prüft die getrennten PG-Aktionen, den Updatekoordinator, Recovery und den authentisierten Launcher-Wiederanlauf einschließlich bestehender PW-/PE-Regressionen.",
-  "omitted": "Native Module, Preflight, Produktionsmodule, Delivery und Chromium sind nicht gewählt. Die Spiel-, Save- und Weblogik gehören nicht zum geänderten Umfang. Native Launcheransichten und der MSI-Übergang werden einmalig am Produkt-Head geprüft.",
+  "purpose": "Prüft den Katalog einschließlich Zielkartenübernahme, Pfeilgrenzen und genau einer Vormerkung. Pflichtkern und regulärer Windows-x64-Spielerbau laufen mit.",
+  "omitted": "Andere native Gruppen, Production, Delivery, Preflight, Browserdiagnose und vollständige Buch-Rundreisen entfallen. Die gezielte Windowsprobe umfasst reale Blätterereignisse, Unterbrechungen, Hover und beide Studien. Lokale Originale gehen über den befristeten Reviewtransfer an R01 und Tobias (7 Tage), der Player bleibt 14 Tage.",
   "test_changes": [
     {
-      "path": "tools/test_game_installer.py",
+      "path": "game/tests/kat2_probe.gd",
       "disposition": "change-scoped",
-      "reason": "Ersetzt den Spielklick als Suchauslöser. Prüft Angebot ohne Stage, ausdrückliche Installation, Abbruch, READY und Recovery."
-    },
-    {
-      "path": "tools/game_app/update_diagnostic.py",
-      "disposition": "change-scoped",
-      "reason": "Hält die ausdrückliche native PG-Helferdiagnose mit dem aktuellen Wiederanlauf ausführbar. Einführungssichten und Altclientprobe für #733 sind einmalig."
+      "reason": "Erweitert catalog-pages um eine gebundene Vormerkung, ihre Invalidierung, Randpfeile und die Identität der Zielkarten bei Direktübergabe."
     }
   ],
-  "core_change": "Der Werkzeugdiff verlangt den regulären Windows-x64-Spielerbau. Pflichtkern und Modulauswahl bleiben unverändert.",
+  "core_change": null,
   "evidence": {
     "mode": "none",
     "purpose": null,

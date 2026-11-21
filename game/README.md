@@ -28,6 +28,10 @@ Arbeitsbudgets. N03 revidiert Leder-/Randanschlüsse sowie Hover und leere
 Tooltips bei erhaltenen sinnvollen Hilfen. N04 ergänzt ein eigenes Tischbild,
 saubere innere Enden und sichere Fußbereiche auch bei 16:10. Bis zu zwölf Karten
 stehen zuerst links, weitere rechts; jede Hälfte scrollt unabhängig.
+Beim Blättern kannst du den nächsten Wechsel vormerken, sobald der Zielpfeil
+vollständig frei liegt. Drücke und löse den Pfeil einmal. Beide Pfeile zeigen
+die Sperre, bis das Buch den vorgemerkten Wechsel beginnt. Escape verwirft die
+Vormerkung und bringt dich während der Bewegung zur Ausgangsseite zurück.
 Der linke Pfeil im rechten Arbeitskopf führt in 1,8 Sekunden zum vorherigen
 Katalogkontext mit beiden Scrollständen zurück. Daneben öffnen Zahnrad und Fragezeichen
 Einstellungen links beziehungsweise Hilfe rechts in naher Ansicht. Zwischen

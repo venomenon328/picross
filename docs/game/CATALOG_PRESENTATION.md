@@ -336,6 +336,19 @@ Auswahlvorschau. Bilder stammen ausschließlich aus dem freigegebenen
 Lokale Polygonkantenglättung gilt auch für Holzspitze, Modusstifte und den
 Begonnen-Stift. Sie verändert keine Zell-/Hinweisrenderer oder EA-Zeitfolge.
 
+Beim regulären Blättern wandert der vorbereitete Zielbestand aus dem Capture
+direkt in den Katalog. Seite, Filter, Reihenfolge, Kartengeneration und
+Geometrie binden die Übernahme. Dadurch behalten höchstens 24 Karten ihre
+lokalen Revealreferenzen. Der bestehende Kartenhover wird auch unter einem
+ruhenden Zeiger wiederhergestellt.
+
+Die Dimensionsstudie für [#735](https://github.com/venomenon328/picross/issues/735)
+ergab seitlich 112 × 112 bzw. 140 × 140 Pixel. Gestapelt begrenzen die
+Wunschkartenbreite und beide Innenränder den Bildraum im vermessenen Bestand
+auf 264 × 112 bzw. 329 × 140 Pixel (UI100/125). Die Textur passt proportional
+in diesen Raum. Die Profile für die Folgeintegration stehen im
+[Bildvertrag](../production/REVEAL_TRANSPARENCY.md).
+
 ## AT · Transparente verdiente Bilder
 
 Die Katalogkarte verwendet dasselbe freigegebene farbige Reveal wie die

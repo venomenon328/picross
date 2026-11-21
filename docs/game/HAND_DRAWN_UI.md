@@ -306,6 +306,13 @@ StyleBox-Pfad verwendet nur die stabile Identitätsfunktion aus `scribble.gd`,
 keine für große Papierflächen ausgelegten Kantenbögen. Buchmaterialien, Schriftrollen und übrige Icons behalten ihre jeweils
 zuständigen Fachverträge. Herkunft und Exportbindung folgen [Z2](Z2_SELECTION.md).
 
+## Kataloghoverstudie · #735
+
+Die isolierte native Studie vergleicht eine verstärkte vollständige Buchkontur
+(A) mit inneren Graphit-Eckklammern (B) auf warmem Papier. Tobias wählt nach
+Ansicht der Originale die Gestaltung für KAT-HOVER-C. KAT-UX-A nutzt im Spiel
+weiter die bestehenden Hoverfarben und das hinterlegte Fragezeichen.
+
 ## Herkunft und Nachweise
 
 Fachentscheidungen und tatsächliche Review-/Abnahmeergebnisse: [#284](https://github.com/venomenon328/picross/issues/284), [#294](https://github.com/venomenon328/picross/issues/294), [#531 / PR #532](https://github.com/venomenon328/picross/pull/532), [#539](https://github.com/venomenon328/picross/issues/539) und [#549](https://github.com/venomenon328/picross/issues/549).

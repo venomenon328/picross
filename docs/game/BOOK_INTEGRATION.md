@@ -210,11 +210,26 @@ Gegenproben gehören zum betroffenen Nachweis.
 
 Quelle, Ziel, IDs, Sessionbindung und Generation werden vor dem ersten Await
 fixiert. Vorbereitung, Bewegungszeit und Frameabstände sind getrennte Größen.
-Gesten, Popups und Tooltips werden vor Beginn geschlossen. Weitere Eingaben
-werden verworfen, ohne Queue oder späteres Nachholen. Gehaltene Tasten müssen
+Gesten, Popups und Tooltips werden vor Beginn geschlossen. Nur beim regulären
+Katalogblättern gilt die unten beschriebene Ausnahme für Seitenpfeile. Sonstige
+Eingaben werden während des Übergangs verworfen. Gehaltene Tasten müssen
 losgelassen werden, danach ist ein frisches Down nötig. Radereignisse sind
 keine gehaltenen Tasten. Fokuswiederkehr gleicht außerhalb erfolgte Releases
 mit der tatsächlichen Tastenmaske ab.
+
+Beim Katalogblättern wird der feststehende Zielpfeil bedienbar, sobald die
+projizierte Blattkante seine gesamte Trefferfläche freigibt. Die andere Hälfte
+zeigt bis zur Direktübergabe die Quelle bzw. die bewegte Rückseite. Ein frisches
+Down zeigt Druck, ein Up im selben gültigen Pfeil bindet genau eine Folgeseite.
+Beide Zielpfeile sperren bei belegtem Platz. Die Folgebewegung beginnt erst
+nach Stabilisierung und Loslassen aller gehaltenen Maustasten. Ein vor dem
+Bewegungsende begonnener Druck bleibt bis zum Up im Besitz des Buchroots.
+
+Der normale Übergang übernimmt die im Capture vorbereiteten Zielkarten samt
+beiden Scrollcontainern. Aktive Pfeile und Karten erhalten ihren Hover aus der
+aktuellen Pointerposition. Eine Unterbrechung verwirft Press und Vormerkung
+auch nach der Direktübergabe. Die bereits erreichte Seite bleibt dann stehen.
+Geänderter Bestand und Verlassen entwerten die Bindung.
 
 | Unterbrechung | Stabile Wirkung |
 | --- | --- |
