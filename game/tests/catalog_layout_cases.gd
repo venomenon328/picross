@@ -58,7 +58,19 @@ static func catalog_profiles(probe) -> void:
 		probe.check(view.artwork.resource_path == (small_path if width <= 26 else large_path), "smallest sufficient profile")
 	view.payload = {}
 	probe.check(view.artwork == null and view.filtered_artwork == null, "hidden profile references released")
+	view.payload = {"image":small_path}
+	probe.check(view.artwork != null and view.artwork.resource_path == small_path, "legacy reveal loads its original")
 	view.free()
+	var registry = preload("res://model/content_registry.gd")
+	var row := {"id":"pz-compat","key":"pz-compat","save_slot":"pz-compat","definition":"data/compat.json",
+		"reveal":"art/book/reset.svg","visible":true,"name":"Kompatibilität","category_id":"test",
+		"difficulty":null,"added_at":null,"background":{"status":"standard","asset":null,"image_revision":1}}
+	var data := {"format":"picross-runtime-registry-v8","categories":[{"id":"test","name":"Test","order":1}],"entries":[row]}
+	probe.check(registry.validate(data).is_empty(), "v8 accepts its original-only row")
+	data.format = registry.CATALOG_FORMAT
+	probe.check(not registry.validate(data).is_empty(), "v9 rejects the same row without profiles")
+	row.catalog_reveal = {}
+	probe.check(not registry.validate(data).is_empty(), "v9 rejects an incomplete profile binding")
 
 static func run(probe) -> void:
 	catalog_profiles(probe)
