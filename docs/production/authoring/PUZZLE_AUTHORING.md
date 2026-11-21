@@ -1,6 +1,6 @@
 # Picross: Produktionsregeln
 
-**Version 0.8.0 · Dokumentrevision 10 · 17.11.2026 · PROD-SLIM**
+**Version 0.8.0 · Dokumentrevision 11 · 21.11.2026 · PROD-SLIM**
 
 ## 1. Einstieg und Befugnisse
 
@@ -89,7 +89,8 @@ Revealwahl → Motiv-/Parameterfreigabe → qualifizierte Raster → Rasterwahl 
 Kontexte/Wahl oder none → Endabnahme → Finalizer → Export → frischer Plan →
 autorisiertes Register → Git/Draft-PR → bestätigtes main → Schritt 5 §9.
 PW2-B verbindet Hintergrundwahl/none, Endabnahme und Integration samt Commit/PR,
-unabhängigem Review und bedingtem Squash-Merge nach aktuellen Vor-Merge-Gates.
+Selbstprüfung des PR-Diffs und bedingtem Squash-Merge nach aktuellen Vor-Merge-Gates.
+Eine unabhängige PR-Zweitprüfung gehört bei normaler Rätselintegration nicht zum Standardprüfbedarf; siehe Schritt 5 §8.
 Nach bestätigter autorisierter Integration führt der Akteur den gebundenen
 Abschluss samt Branch, Arbeitsrelease und Tag direkt nach Schritt 5 §9 aus.
 Ausdrücklicher Draftumfang bleibt. Erst Absenden erklärt Rechte, Gitdaten belegen Erfolg.
