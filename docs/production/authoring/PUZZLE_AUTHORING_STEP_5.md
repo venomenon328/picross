@@ -1,6 +1,6 @@
 # Schritt 5: Abschluss und Integration
 
-**Version 0.8.0 · Dokumentrevision 11 · 21.11.2026 · PROD-SLIM**
+**Version 0.8.0 · Dokumentrevision 12 · 21.11.2026 · PROD-SLIM**
 
 Pflicht: [Kern und Phasenroute](PUZZLE_AUTHORING.md#11-pflichtquellen-nach-phase),
 danach diese Phase. Vorhandene passende Bild-/Rasterbelege verwenden; ihre
@@ -11,7 +11,7 @@ Abschlussausgabe folgen Kern §§6–7.
 
 Vor Benutzung [RI](../PUZZLE_INTEGRATION.md), den aktuellen Eingang in [ZA-1](../ZA1_ADAPTER.md) und die passende CLI-Anleitung lesen. Schritt 5 setzt vollständige aktuelle Raster-/Hintergrundbereitschaft und tatsächliche Endfreigabe voraus. Bestehende gültige Entscheidungen verwenden, fehlende Entscheidungen niemals technisch erzeugen. Der Finalizer führt vorhandene tatsächliche Entscheidungen im einen aktuellen Record nach; Arbeitsmaterial ist keine Katalogautorität.
 
-Den aktuellen `picross-integration-input-v1` aus endgültiger Definition, Hinweisen/Palette, explizitem Mono-/Color-Modus, gewähltem Reveal, Hintergrund selected/none/standard, benötigten Notices/Rechten, Metadaten, geprüfter Difficulty, gültigem vollständigem Proof und wirklicher Inhalts-/Integrationsentscheidung zusammenstellen. Vorhandenen Proof anhand des finalen Rasters unabhängig prüfen; kein zusätzlicher Suchsolverlauf zur Rekonstruktion alter Produktion. Keine Original-ZIP-, Producer-, Toolversions- oder historische Regelwerkszulassung.
+Den aktuellen `picross-integration-input-v1` aus endgültiger Definition, Hinweisen/Palette, explizitem Mono-/Color-Modus, gewähltem Reveal, Hintergrund selected/none/standard, benötigten Notices/Rechten, Metadaten, geprüfter Difficulty, gültigem vollständigem Proof und wirklicher Inhalts-/Integrationsentscheidung zusammenstellen. Den vollständigen Linien- oder Paarlinien-Proof am finalen Raster unabhängig prüfen und die Endmatrix vergleichen. Kein zusätzlicher Suchsolverlauf zur Rekonstruktion alter Produktion. Keine Original-ZIP-, Producer-, Toolversions- oder historische Regelwerkszulassung.
 
 ```text
 python -m tools.puzzle_production.authoring_builder prepare-integration --repository <arbeitscheckout> --record <aktueller-record> --output-dir <neue-übergabe>
@@ -29,7 +29,30 @@ Für die Integration einen sauberen Branch vom aktuellen Main verwenden und nur 
 python -m tools.production_workspace.projector --repository <checkout> --complete-record <recordpfad> --integration-commit <volle-SHA> --input <übergabe>
 ```
 
-Den aktuellen Arbeitsrecord danach mit tools.work_publish publish auf dem Arbeitsref sichern, finale Produktcommits mit tools.publish_git veröffentlichen und Draft-PR im beauftragten Umfang erstellen. Reine Produktion erhält CI-Kern ohne Windowsbau und ohne neue rätselspezifische Tests. Vor Merge aktuellen Head/Basis und vollständigen PR-Diff selbst prüfen sowie erfolgreiche Pflichtchecks, Konfliktfreiheit, erforderliche Abnahmen und tatsächliche Mergebefugnis verifizieren. Für normale Rätsel-Erstintegrationen ist kein unabhängiges PR-Zweitreview vorgeschrieben; nur eine ausdrücklich auftrags- oder paketbezogen geforderte unabhängige Prüfung bleibt Vor-Merge-Gate. Der unabhängig geprüfte vollständige Rätsel-Proof bleibt unverändert Pflicht. Squash verwenden. Main erst am zurückgelesenen Mergecommit melden; lokaler Erfolg genügt nicht. Werkzeug-/CI-Pakete erben keine Produktions-Mergefreigabe.
+Den aktuellen Arbeitsrecord danach mit `tools.work_publish publish` auf dem
+Arbeitsref sichern, finale Produktcommits mit `tools.publish_git` veröffentlichen
+und Draft-PR im beauftragten Umfang erstellen. Reine Produktion erhält den CI-Kern
+ohne Windowsbau und ohne neue rätselspezifische Tests.
+
+Den vollständigen PR-Diff einschließlich Lieferdaten selbst prüfen und das
+Selbstreview an Head und Basis binden. Für die normale Rätsel-Erstintegration
+kein unabhängiges GitHub-PR-Zweitreview und kein Copilot-Review anfordern und
+keine PR-Inhalte an Copilot weitergeben. Keine
+Reviewer-Konten oder Freigaben zur Weitergabe des PR-Inhalts verlangen. Eine
+fehlgeschlagene oder verweigerte Copilot-Anfrage ist kein Mergeblocker. Nur eine
+vom Auftraggeber konkret zusätzlich beauftragte Zweitprüfung gilt als persönliches
+Vor-Merge-Gate. Daraus folgt keine Befugnis zur Weitergabe von PR-Inhalten.
+
+Unmittelbar vor dem Merge aktuellen Head und Basis, vollständiges Selbstreview,
+erfolgreiche Pflichtchecks (`docs`, `ci-required` und tatsächlich verlangte weitere
+Checks), Konfliktfreiheit, gebundene Endabnahme und passende Mergebefugnis
+bestätigen. Bei erfüllten Bedingungen direkt per Squash-Merge nach main integrieren.
+Ein von GitHub gemeldeter Konflikt (`dirty`) blockiert den Merge. Meldet GitHub eine
+Mergesperre wegen eines erforderlichen Approvals oder Branchschutzes, die konkrete
+API-/UI-Meldung und die zuständige Schutzregel angeben, soweit sie einsehbar ist.
+Die Schutzregeln einhalten und unverändert lassen. Im ausdrücklich beauftragten
+Draftumfang beim Draft-PR bleiben. Main erst am zurückgelesenen Mergecommit melden.
+Werkzeug- und CI-Pakete brauchen eine eigene Mergebefugnis.
 
 ## 9. Produktionsabschluss und Bereinigung
 

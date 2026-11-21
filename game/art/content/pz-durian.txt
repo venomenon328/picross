@@ -1,0 +1,4 @@
+author: KI-generiert mit OpenAI ImageGen im Auftrag des Nutzers
+changes: Unveränderte Originalbytes der Bildgenerierung
+source: Native OpenAI-Bildgenerierung aus dem textlichen Durian-Briefing, ohne externe Bildvorlage
+usage_basis: Im Auftrag des Nutzers erstelltes Bild zur Veröffentlichung im Picross-Arbeitsrelease und gemäß seiner Endabnahme und seinem Integrationsauftrag zur Verwendung im Picross-Spiel.

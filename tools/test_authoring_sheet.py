@@ -34,7 +34,7 @@ for(const [state,n,kind] of [['reveal_review',2,'reveal'],['motif_review',3,null
  for(const action of ['resume','rework'])assert.ok(P.prompt(v,{action,feedback:'Linie korrigieren'},opts).includes(record.file));
 }
 v.facts.state='background_review';assert.match(P.prompt(v,{selection:'none'},opts),/ausdrücklich für keinen Hintergrund/);
-v.facts.state='content_ready';assert.match(P.prompt(v,{}, {...opts,merge:true}),/Squash-Merge nur bei erfüllten aktuellen Vor-Merge-Gates/);
+v.facts.state='content_ready';assert.match(P.prompt(v,{}, {...opts,merge:true}),/Bei erfüllten Bedingungen direkt per Squash-Merge nach main integrieren/);
 for(const url of [null,'http://localhost:1234/job','https://github.com/venomenon328/picross/tree/main']){
  v.source_url=url;assert.throws(()=>P.prompt(v,{},opts),/Remote-Sicherung/);
 }
@@ -214,14 +214,26 @@ assert.deepEqual(P.options({workroot:'E:/Own',merge:false,cleanup:true}),{workro
 assert.equal(P.orderStep(v),5);assert.equal(P.step(v),4,'copy does not advance displayed Git phase');
 for(const intent of [selected,{selection:'none'}]){
  const before=JSON.stringify(v), text=P.prompt(v,intent,{});
+ const draft=P.prompt(v,intent,{merge:false});
+ for(const order of [text,draft]){
+  assert.match(order,/kein unabhängiges PR-Zweitreview und kein GitHub-Copilot-Review anfordern/);
+  assert.match(order,/Keine Reviewer-Konten oder Freigaben zur Weitergabe des PR-Inhalts verlangen/);
+  assert.match(order,/keine PR-Inhalte an Copilot weitergeben/);
+  assert.match(order,/Copilot-Anfrage ist kein Mergeblocker/);
+  assert.doesNotMatch(order,/Zweitreview nur bei|auf (?:ein |das )?(?:unabhängiges )?PR-Review warten|Reviewfreigabe als Voraussetzung/i);
+  assert.match(order,/vollständigen Linien- oder Paarlinien-Proof unabhängig am finalen Raster prüfen und die Endmatrix vergleichen/);
+  assert.match(order,/vollständigen PR-Diff einschließlich Lieferdaten selbst prüfen/);
+ }
  assert.match(text,/Schritt 5/);assert.match(text,/Ich erteile die Endabnahme/);assert.match(text,/Integration/);
- assert.match(text,/PR-Diff einschließlich Lieferdaten selbst prüfen/);assert.match(text,/unabhängiges PR-Zweitreview nur bei ausdrücklicher Beauftragung/);
- assert.doesNotMatch(text,/unabhängiges Review/);assert.match(text,/Squash-Merge.*Vor-Merge-Gates/);assert.match(text,/Authoring Schritt 5 §9/);
+ assert.match(text,/aktuellen Head, Basis, erfolgreiche Pflichtchecks, Konfliktfreiheit, Endabnahme und Mergebefugnis bestätigen/);
+ assert.match(text,/direkt per Squash-Merge nach main integrieren/);
+ assert.match(text,/tatsächlichen GitHub-Mergesperre.*API-\/UI-Meldung.*Schutzregel/);
+ assert.match(text,/Authoring Schritt 5 §9/);
  assert.match(text,/work_publish retire pz-test --expected <nach Completion veröffentlichter Arbeitscommit>/);
  assert.match(text,/Produktionsbranches, Arbeitsreleases und Tags zurücklesen/);
  assert.doesNotMatch(text,/Zur Endabnahme vorbereiten|Keine zusätzliche Abschlussbereinigung|SHA-256|workspace.json/);
  assert.equal(text.split(record.file).length,2);assert.equal(JSON.stringify(v),before);
- const draft=P.prompt(v,intent,{merge:false});assert.match(draft,/Draft-PR.*kein Merge/);assert.doesNotMatch(draft,/Squash-Merge|work_publish retire/);
+ assert.match(draft,/Draft-PR.*kein Merge/);assert.doesNotMatch(draft,/Squash-Merge|work_publish retire/);
 }
 for(const action of ['resume','rework']){
  const text=P.prompt(v,{...selected,action,feedback:'Striche korrigieren'},{merge:true});

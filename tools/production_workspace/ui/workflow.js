@@ -154,7 +154,7 @@ const PW = (()=>{
    else if(value.facts.state==='editorially_approved')lines.push('Schritt 5: Die bereits endabgenommene unveränderte Lieferung integrieren.');
    else lines.push('Schritt 5: Ich erteile die Endabnahme der gebundenen unveränderten Raster-, Reveal- und Hintergrundfassung (gegebenenfalls none) und beauftrage deren Integration.');
   }
-  if(n===5&&action!=='background_change')lines.push('Die ausgewählten finalen Nutzdaten mit explizitem Modus, gültigem Logiknachweis, aktueller Bewertung, Rechten und dieser tatsächlichen Entscheidung als aktuellen RI-ONE-Eingang vorbereiten. Planung, Übernahme und Wiederholung verwenden denselben Kern. Den Integrationsbranch vom aktuellen main aufbauen und ausschließlich finale gewählte Produktdaten übernehmen. Completion prüft diese tatsächliche Lieferung. Den abgeschlossenen Record auf dem eigenen Produktionsbranch veröffentlichen.');
+  if(n===5&&action!=='background_change')lines.push('Die ausgewählten finalen Nutzdaten mit explizitem Modus, gültigem Logiknachweis, aktueller Bewertung, Rechten und dieser tatsächlichen Entscheidung als aktuellen RI-ONE-Eingang vorbereiten. Den vollständigen Linien- oder Paarlinien-Proof unabhängig am finalen Raster prüfen und die Endmatrix vergleichen. Planung, Übernahme und Wiederholung verwenden denselben Kern. Den Integrationsbranch vom aktuellen main aufbauen und ausschließlich finale gewählte Produktdaten übernehmen. Completion prüft diese tatsächliche Lieferung. Den abgeschlossenen Record auf dem eigenen Produktionsbranch veröffentlichen.');
   const published=value?.facts.published;
   if(n===1&&intent.notes?.trim())lines.push(`Neue/zusätzliche Motivhinweise:\n${intent.notes.trim()}`);
   if(n<=2||(n===3&&action==='rework')){
@@ -167,8 +167,13 @@ const PW = (()=>{
   if((n===2||(n===3&&action==='rework'))&&intent.parameters?.trim())lines.push(`Neue/zusätzliche Wünsche zur Motivvorlage: ${intent.parameters.trim()}`);
   if(n===4&&intent.context?.trim())lines.push(`Kontextwunsch: ${intent.context.trim()}`);
   if(opts.workroot.trim())lines.push(`Lokale Codex-Arbeitswurzel: ${opts.workroot.trim()}.`);
-  if(closing(value,intent)&&opts.merge){
-   lines.push('Commit, Push und PR; PR-Diff einschließlich Lieferdaten selbst prüfen. Squash-Merge nur bei erfüllten aktuellen Vor-Merge-Gates; unabhängiges PR-Zweitreview nur bei ausdrücklicher Beauftragung.');
+  const isClosing=closing(value,intent);
+  if(isClosing){
+   lines.push('Bei dieser normalen Rätsel-Erstintegration kein unabhängiges PR-Zweitreview und kein GitHub-Copilot-Review anfordern. Keine Reviewer-Konten oder Freigaben zur Weitergabe des PR-Inhalts verlangen und keine PR-Inhalte an Copilot weitergeben. Eine fehlgeschlagene oder abgelehnte Copilot-Anfrage ist kein Mergeblocker.');
+   lines.push('Nach Commit, Push und PR-Erstellung den vollständigen PR-Diff einschließlich Lieferdaten selbst prüfen.');
+  }
+  if(isClosing&&opts.merge){
+   lines.push('Vor dem Merge aktuellen Head, Basis, erfolgreiche Pflichtchecks, Konfliktfreiheit, Endabnahme und Mergebefugnis bestätigen. Bei erfüllten Bedingungen direkt per Squash-Merge nach main integrieren. Bei einer tatsächlichen GitHub-Mergesperre wegen Approval oder Branchschutz die konkrete API-/UI-Meldung und die betroffene Schutzregel nennen, soweit sie einsehbar ist. Die Schutzregeln einhalten.');
    lines.push(`Nach bestätigter Mainintegration gemäß Authoring Schritt 5 §9 den eigenen Produktionsstand direkt abschließen: python -m tools.work_publish retire ${value.puzzle_id} --expected <nach Completion veröffentlichter Arbeitscommit>. Fehlen des eigenen Produktionsbranches, Arbeitsreleases und Tags zurücklesen. Offenen Bereinigungsrest und Wiederholungsbefehl mit demselben Arbeitscommit getrennt vom Mainabschluss melden.`);
   }
   else lines.push('Commit, Push und Draft-PR im beauftragten Umfang; kein Merge.');
