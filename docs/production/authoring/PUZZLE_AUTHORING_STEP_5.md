@@ -1,6 +1,6 @@
 # Schritt 5: Abschluss und Integration
 
-**Version 0.8.0 · Dokumentrevision 10 · 17.11.2026 · PROD-SLIM**
+**Version 0.8.0 · Dokumentrevision 11 · 21.11.2026 · PROD-SLIM**
 
 Pflicht: [Kern und Phasenroute](PUZZLE_AUTHORING.md#11-pflichtquellen-nach-phase),
 danach diese Phase. Vorhandene passende Bild-/Rasterbelege verwenden; ihre
@@ -29,7 +29,7 @@ Für die Integration einen sauberen Branch vom aktuellen Main verwenden und nur 
 python -m tools.production_workspace.projector --repository <checkout> --complete-record <recordpfad> --integration-commit <volle-SHA> --input <übergabe>
 ```
 
-Den aktuellen Arbeitsrecord danach mit tools.work_publish publish auf dem Arbeitsref sichern, finale Produktcommits mit tools.publish_git veröffentlichen und Draft-PR im beauftragten Umfang erstellen. Reine Produktion erhält CI-Kern ohne Windowsbau und ohne neue rätselspezifische Tests. Vor Merge aktuellen Head/Basis, unabhängiges Review, Pflichtchecks, Konfliktfreiheit, erforderliche Abnahmen und tatsächliche Befugnis prüfen. Squash verwenden. Main erst am zurückgelesenen Mergecommit melden; lokaler Erfolg genügt nicht. Werkzeug-/CI-Pakete erben keine Produktions-Mergefreigabe.
+Den aktuellen Arbeitsrecord danach mit tools.work_publish publish auf dem Arbeitsref sichern, finale Produktcommits mit tools.publish_git veröffentlichen und Draft-PR im beauftragten Umfang erstellen. Reine Produktion erhält CI-Kern ohne Windowsbau und ohne neue rätselspezifische Tests. Vor Merge aktuellen Head/Basis und vollständigen PR-Diff selbst prüfen sowie erfolgreiche Pflichtchecks, Konfliktfreiheit, erforderliche Abnahmen und tatsächliche Mergebefugnis verifizieren. Für normale Rätsel-Erstintegrationen ist kein unabhängiges PR-Zweitreview vorgeschrieben; nur eine ausdrücklich auftrags- oder paketbezogen geforderte unabhängige Prüfung bleibt Vor-Merge-Gate. Der unabhängig geprüfte vollständige Rätsel-Proof bleibt unverändert Pflicht. Squash verwenden. Main erst am zurückgelesenen Mergecommit melden; lokaler Erfolg genügt nicht. Werkzeug-/CI-Pakete erben keine Produktions-Mergefreigabe.
 
 ## 9. Produktionsabschluss und Bereinigung
 
