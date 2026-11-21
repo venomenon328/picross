@@ -4,6 +4,7 @@ import ctypes
 from ctypes import wintypes as w
 import hashlib
 import threading
+import queue
 
 from tools.app_products import PG
 from tools.production_workspace.app_updates import Updates
@@ -78,9 +79,9 @@ def settings(state):
         except (ValueError, OSError):
             enabled = None
         root, status, buttons = window('Picross – Update-Einstellungen')
-        status.set({None: 'Automatische Spiel-Updates sind noch nicht aktiviert.',
-                    False: 'Automatische Spiel-Updates sind ausgeschaltet.',
-                    True: 'Automatische Spiel-Updates sind aktiviert.'}[enabled])
+        status.set({None: 'Automatische Update-Suche ist noch nicht aktiviert.',
+                    False: 'Automatische Update-Suche ist ausgeschaltet.',
+                    True: 'Automatische Update-Suche ist aktiviert.'}[enabled])
 
         def choose(value):
             try:
@@ -106,7 +107,7 @@ def settings(state):
 
 
 class LauncherWindow:
-    def __init__(self, version, play, choose, skip, close):
+    def __init__(self, version, play, choose, install, close):
         import tkinter as tk
         from tkinter import font, ttk
 
@@ -142,7 +143,7 @@ class LauncherWindow:
         panel.rowconfigure(3, minsize=self.amount.winfo_reqheight())
         self.bar.grid_remove()
 
-        settings_panel = ttk.LabelFrame(panel, text='Automatische Updates', padding=padding // 2)
+        settings_panel = ttk.LabelFrame(panel, text='Automatische Update-Suche', padding=padding // 2)
         settings_panel.grid(row=4, column=0, columnspan=2, sticky='ew', pady=(padding, 0))
         settings_panel.columnconfigure(0, weight=1)
         self.preference = ttk.Label(settings_panel)
@@ -152,25 +153,24 @@ class LauncherWindow:
 
         actions = ttk.Frame(panel)
         actions.grid(row=5, column=0, columnspan=2, sticky='e', pady=(padding, 0))
-        self.skip = ttk.Button(actions, text='Ohne Update spielen', command=skip)
-        self.skip.grid(row=0, column=0, padx=(0, padding // 2))
+        self.install = ttk.Button(actions, text='Update installieren', command=install)
+        self.install.grid(row=0, column=0, padx=(0, padding // 2))
         self.primary = ttk.Button(actions, command=play)
         self.primary.grid(row=0, column=1)
         self.primary.focus_set()
-        root.bind('<Return>', lambda _: self.primary.invoke())
         self.mode = None
 
-    def controls(self, enabled, available, *, idle, checking):
+    def controls(self, enabled, available, *, interactive, offered):
         label = {True: 'Ein', False: 'Aus', None: 'Noch keine Entscheidung'}[enabled]
         self.preference.configure(text=label if available else 'Nicht verfügbar')
-        self.setting.configure(text='Updates ausschalten' if enabled is True else 'Updates aktivieren',
-                               state='normal' if available and (idle or checking) else 'disabled')
+        self.setting.configure(text='Suche ausschalten' if enabled is True else 'Suche aktivieren',
+                               state='normal' if available and interactive else 'disabled')
         self.primary.configure(text='Ohne Updates spielen' if available and enabled is None else 'Spielen',
-                               state='normal' if idle else 'disabled')
-        if checking:
-            self.skip.grid()
+                               state='normal' if interactive else 'disabled')
+        if offered and interactive:
+            self.install.grid()
         else:
-            self.skip.grid_remove()
+            self.install.grid_remove()
 
     def show(self, status, progress=None, *, busy=False):
         self.status.configure(text=status)
@@ -196,30 +196,38 @@ class LauncherWindow:
 
 class StartupGate:
     def __init__(self, state, owner, updates, version):
+        self.state = state
         self.owner = owner
-        self.updates = updates
-        self.available = updates is not None and updates.preferences is not None
-        self.decision = StateLock(state, app=PG, decision=True) if self.available else None
-        self.enabled = updates.enabled if self.available else False
-        self.channel_status = updates.status if updates is not None and updates.started else ''
-        self.requested = False
         self.result = None
         self.handoff = None
-        self.stop_status = ''
-        self.view = LauncherWindow(version, self.play, self.toggle,
-                                   lambda: self.stop('play'), lambda: self.stop('close'))
+        self.restarting = False
+        self.installing = False
+        self.timer = None
+        self.drain = None
+        self.cancel_status = None
+        self.configure_updates(updates)
+        self.view = LauncherWindow(version, self.play, self.toggle, self.install, lambda: self.stop('close'))
         self.root = self.view.root
 
+    def configure_updates(self, updates):
+        self.updates = updates
+        self.available = updates is not None and updates.preferences is not None
+        self.decision = None
+        if self.available:
+            try:
+                self.decision = StateLock(self.state, app=PG, decision=True)
+            except (ValueError, OSError):
+                self.available = False
+        self.enabled = updates.enabled if self.available else False
+
     def initial_status(self):
-        if self.channel_status:
-            return self.channel_status
+        if self.updates and (self.updates.started or self.updates.recovery):
+            return self.updates.status
         if not self.available:
             return 'Updatezustand nicht verfügbar. Du kannst die installierte Fassung spielen.'
         if self.enabled is None:
-            return 'Updates sind zunächst aus. Du kannst sie hier aktivieren oder direkt offline spielen.'
-        if self.enabled:
-            return 'Beim Spielen wird zuerst nach signierten Updates gesucht.'
-        return 'Bereit zum Spielen. Automatische Updates sind ausgeschaltet.'
+            return 'Du kannst die Update-Suche aktivieren oder direkt offline spielen.'
+        return 'Bereit zum Spielen.'
 
     def save(self, enabled):
         try:
@@ -238,136 +246,160 @@ class StartupGate:
         self.enabled = False
         return False
 
-    def controls(self, *, idle=False, checking=False):
-        self.view.controls(self.enabled, self.available, idle=idle, checking=checking)
+    def controls(self):
+        self.view.controls(self.enabled, self.available, interactive=self.interactive,
+                           offered=bool(self.updates and self.updates.offer and self.enabled is True))
+
+    @property
+    def interactive(self):
+        return self.result is None and self.handoff is None and not self.restarting
+
+    def search(self):
+        if not self.interactive or not self.available or self.enabled is not True:
+            return
+        if self.updates.start():
+            self.view.show('Signierten Updatekanal prüfen …', busy=True)
+            self.timer = self.root.after(75, self.poll)
 
     def toggle(self):
-        if not self.available or self.result is not None or self.handoff is not None:
+        if not self.available or not self.interactive:
             return
-        if self.requested:
-            if self.enabled is True:
-                saved = self.save(False)
-                message = ('Updates ausgeschaltet. Die installierte Fassung startet …' if saved else
-                           'Ausschalten konnte nicht gespeichert werden. Diese Prüfung wird abgebrochen.')
-                self.stop('play', message)
-            return
-        saved = self.save(self.enabled is not True)
-        self.controls(idle=True)
+        enable = self.enabled is not True
+        saved = self.save(enable)
+        if not enable and self.updates.started:
+            self.updates.cancel()
+            self.cancel_status = ('Automatische Update-Suche ausgeschaltet.' if saved else
+                                  'Ausschalten nicht gespeichert. Dieser Updateversuch wurde verworfen.')
+        self.controls()
         if saved:
-            self.view.show(self.initial_status())
+            if enable and self.updates.started:
+                self.cancel_status = 'Update-Suche aktiviert. Erneute Prüfung beim nächsten Öffnen.'
+            self.view.show(self.cancel_status or ('Automatische Update-Suche aktiviert.' if enable else
+                                                  'Automatische Update-Suche ausgeschaltet.'))
+            if enable:
+                self.search()
+
+    def install(self):
+        if self.interactive and self.enabled is True and self.updates.install_offer():
+            self.installing = True
+            self.controls()
+            self.view.show('Update herunterladen …', busy=True)
+            self.timer = self.root.after(75, self.poll)
 
     def play(self):
-        if self.requested or self.result is not None:
+        if not self.interactive:
             return
-        self.requested = True
-        self.controls()
         if self.available and self.enabled is None:
             if not self.save(False):
-                self.finish('Die Updateentscheidung konnte nicht gespeichert werden. '
-                            'Die installierte Fassung startet offline …')
+                self.result = 'play'
+                self.controls()
+                self.view.show('Updateentscheidung nicht gespeichert. Die installierte Fassung startet offline …')
+                self.root.after(1500, self.destroy)
                 return
-        if self.enabled is True:
-            try:
-                if not self.decision.acquire():
-                    self.finish('Update-Einstellungen sind bereits geöffnet. Die installierte Fassung startet offline …')
-                    return
-                self.updates.enabled = self.updates.preferences.read()
-                if self.updates.start():
-                    self.controls(checking=True)
-                    self.view.show('Signierten Updatekanal prüfen …', busy=True)
-                    self.root.after(75, self.poll)
-                    return
-            except (ValueError, OSError):
-                pass
-            finally:
-                self.decision.close()
-            self.finish(self.channel_status or 'Updateprüfung nicht verfügbar. Die installierte Fassung startet …')
-            return
-        self.finish(self.channel_status)
+        self.stop('play')
 
-    def finish(self, message):
-        self.result = 'play'
+    def destroy(self):
+        if self.timer is not None:
+            self.root.after_cancel(self.timer)
+            self.timer = None
+        self.view.bar.stop()
+        self.root.destroy()
+
+    def stop(self, action):
+        if not self.interactive:
+            return
+        self.result = action
+        if self.owner is not None:
+            self.owner.stop_requested.set()
+        if self.updates is not None:
+            self.updates.cancel()
         self.controls()
-        if message:
-            self.view.show(message)
-            self.root.after(2000, self.root.destroy)
+        if self.installing:
+            self.view.show('Updateversuch wird beendet …', busy=True)
+            # Wait for the discarded download and any still-uncommitted READY
+            # helper to release their files before dispatching the player.
+            self.drain = threading.Thread(target=self.updates.close, name='PG-update-cancel')
+            self.drain.start()
+            if self.timer is None:
+                self.timer = self.root.after(75, self.poll)
         else:
-            self.root.destroy()
-
-    def stop(self, action, message=''):
-        if self.handoff is not None:
-            return
-        if action == 'close':
-            self.result = 'close'
-            if self.owner is not None:
-                self.owner.stop_requested.set()
-            if self.updates is not None:
-                self.updates.cancel()
-            self.root.destroy()
-        elif self.requested and self.result is None and self.updates.cancel():
-            self.result = 'play'
-            self.stop_status = message
-            self.controls()
-            self.view.show('Updateprüfung wird beendet …')
+            self.destroy()
 
     def take(self):
-        if self.result is not None:
+        if not self.interactive or not self.installing:
             return False
         try:
             if not self.decision.acquire():
+                self.updates.cancel()
+                self.view.show('Update-Einstellungen geöffnet. Installation verworfen.')
                 return False
-            try:
-                enabled = self.updates.preferences.read()
-            except (ValueError, OSError):
-                enabled = None
-            if enabled is not True:
-                self.stop('play')
+            if self.updates.preferences.read() is not True:
+                self.enabled = False
+                self.updates.cancel()
+                self.view.show('Update-Suche ausgeschaltet. Installation verworfen.')
                 return False
             self.handoff = self.updates.take()
             if self.handoff:
                 atomic_json(self.decision.directory / 'update-accepted.json', {'nonce': self.handoff.nonce})
                 return True
+            self.updates.cancel()
+            self.view.show('Zustimmung zur Installation konnte nicht bestätigt werden.')
         except (ValueError, OSError):
             if self.handoff:
                 self.handoff.abort()
                 self.handoff = None
-            self.result = 'play'
-            self.stop_status = 'Spiel-Update konnte nicht übernommen werden. Die installierte Fassung startet …'
+            self.updates.cancel()
+            self.view.show('Spiel-Update konnte nicht übernommen werden.')
         finally:
             if self.handoff is None:
                 self.decision.close()
         return False
 
     def poll(self):
+        self.timer = None
+        if self.drain is not None:
+            if self.drain.is_alive():
+                self.timer = self.root.after(75, self.poll)
+            else:
+                self.destroy()
+            return
         if self.updates.thread.is_alive():
             if self.result is None:
                 progress = self.updates.progress
-                if self.updates.cancelled.is_set():
-                    self.view.show(self.updates.status)
+                if self.enabled is False and self.updates.cancelled.is_set():
+                    self.view.show('Updateversuch wird beendet …', busy=True)
                 elif progress and progress[0] == 'download':
                     self.view.show('Update herunterladen …', progress[1:])
                 elif progress:
                     self.view.show('Heruntergeladenes Update prüfen …', busy=True)
                 else:
-                    self.view.show(self.updates.status, busy=True)
-        elif self.result == 'play':
-            self.finish(self.stop_status)
+                    self.view.show(self.updates.status, busy=not self.updates.cancelled.is_set())
+            self.timer = self.root.after(75, self.poll)
             return
-        elif self.updates.pending:
+        if self.result is not None:
+            self.destroy()
+            return
+        if self.updates.pending:
             if self.take():
                 self.controls()
-                self.root.destroy()
+                self.destroy()
                 return
         else:
-            status = ('Updateversuch verworfen. Die installierte Fassung startet …'
-                      if self.updates.handoff else self.updates.status)
-            self.finish(status)
-            return
-        self.root.after(75, self.poll)
+            self.view.show(self.cancel_status or self.updates.status)
+        self.installing = False
+        self.controls()
 
-    def run(self):
-        self.controls(idle=True)
-        self.view.show(self.initial_status())
+    def run(self, on_visible=None):
+        self.restarting = on_visible is not None
+        self.controls()
+        self.view.show('Installation wird bestätigt …' if self.restarting else self.initial_status())
+
+        def mapped(event):
+            if event.widget is self.root:
+                self.root.unbind('<Map>', binding)
+                self.root.after_idle(on_visible or self.search)
+
+        binding = self.root.bind('<Map>', mapped)
         try:
             self.root.mainloop()
             if self.handoff is not None:
@@ -378,10 +410,12 @@ class StartupGate:
                 self.decision.close()
 
 
-def startup(state, directory, play, *, version):
+def startup(state, directory, play, *, version, confirm_launcher=None):
     # An unpacked image can still use the fixed player without touching the
     # user's update state. Updates also checks the actual MSI/product binding.
     if directory != state.parent / 'Programs' / PG.install_directory:
+        if confirm_launcher is not None:
+            raise ValueError('Installierter Launcher erforderlich.')
         play()
         return
     lock = None
@@ -390,22 +424,56 @@ def startup(state, directory, play, *, version):
     try:
         try:
             lock = StateLock(state, app=PG)
-            if not lock.acquire() or accepted_handoff(lock.directory):
+            if not lock.acquire() or (confirm_launcher is None and accepted_handoff(lock.directory)):
                 return
             cancelled = Cancellation(state)
         except (ValueError, OSError):
+            if confirm_launcher is not None:
+                raise
             if StartupGate(state, None, None, version).run() == 'play':
                 play()
             return
         owner = GateRuntime(lock)
-        updates = Updates(owner, app=PG, cancelled=cancelled)
-        try:
-            gate = StartupGate(state, owner, updates, version)
-        except (ValueError, OSError):
-            gate = StartupGate(state, None, None, version)
-        action = gate.run()
-        updates.close()
-        updates = None
+        if confirm_launcher is None:
+            updates = Updates(owner, app=PG, cancelled=cancelled)
+        gate = StartupGate(state, owner, updates, version)
+
+        def authenticate():
+            # Tk returns the native outer frame of this mapped root, including on Windows.
+            window = int(gate.root.wm_frame(), 0)
+            outcome = queue.Queue()
+
+            def wait_for_helper():
+                try:
+                    outcome.put(confirm_launcher(window))
+                except (ValueError, OSError, KeyError, TypeError):
+                    outcome.put(None)
+
+            thread = threading.Thread(target=wait_for_helper, name='PG-launcher-restart')
+            thread.start()
+
+            def completed():
+                nonlocal updates
+                if thread.is_alive():
+                    gate.root.after(75, completed)
+                    return
+                nonce = None if outcome.empty() else outcome.get_nowait()
+                if nonce:
+                    updates = Updates(owner, app=PG, cancelled=cancelled, expected_nonce=nonce)
+                if (not updates or not updates.recovery or updates.recovery.nonce != nonce or
+                        updates.recovery.status != 'installed'):
+                    gate.view.show('Wiederanlauf unbestätigt. Bitte schließen und die Installation prüfen.')
+                    gate.root.protocol('WM_DELETE_WINDOW', gate.root.destroy)
+                    return
+                gate.configure_updates(updates)
+                gate.restarting = False
+                gate.controls()
+                gate.view.show(updates.status)
+                gate.search()
+
+            completed()
+
+        action = gate.run(authenticate if confirm_launcher is not None else None)
         if action == 'play':
             play()
     finally:

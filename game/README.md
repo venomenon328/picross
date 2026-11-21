@@ -203,14 +203,13 @@ Linux-Runner nicht geprüft. Der separate CI-Playerexport bleibt unverändert.
 
 Öffne den `Picross-Spiel-X.Y.Z-windows-x64.msi`-Kandidaten und installiere für
 dein Windows-Benutzerkonto. **Picross** im Startmenü oder die optionale
-Desktopverknüpfung öffnet den Picross-Launcher. Dort kannst du automatische
-Updates aktivieren und später jederzeit vor dem Spielstart wieder ausschalten.
-Beim ersten Start speichert **Ohne Updates spielen** die Ablehnung und öffnet
-das Spiel offline. Nach der Entscheidung startet **Spielen** das Spiel und
-prüft bei aktivierten Updates zuvor den Updatekanal. Während der Prüfung
-oder des Downloads öffnet **Ohne Update spielen** die installierte Fassung.
-Ein bestätigtes Update zeigt den Installationsfortschritt und öffnet das Spiel
-anschließend automatisch. Beende das Spiel vor einem manuellen Upgrade oder
+Desktopverknüpfung öffnet den Picross-Launcher. Ist die automatische Update-Suche
+eingeschaltet, prüft der Launcher beim Öffnen den Updatekanal. Du kannst die Suche
+auch hier aktivieren. **Update installieren** lädt die angezeigte neue Version und
+öffnet nach erfolgreicher Installation wieder den Launcher. **Spielen** startet
+jederzeit vor der Installationsübergabe die vorhandene Fassung, auch während
+der Suche oder eines Downloads. Beim ersten Start kannst du mit **Ohne Updates
+spielen** die Suche ausschalten und direkt offline spielen. Beende das Spiel vor einem manuellen Upgrade oder
 dem Deinstallieren. Vorhandene Spielstände und Einstellungen findest du im
 gleichen Godot-Profil.
 

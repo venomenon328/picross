@@ -38,11 +38,14 @@ class SyntheticChannel:
         require(len(raw) <= limit, 'Synthetic response limit')
         return raw
 
-    def transfer(self, url, output, limit, cancel, deadline, *, expected=None):
+    def transfer(self, url, output, limit, cancel, deadline, *, expected=None, received=None):
         raw = self.read(url, limit, cancel, deadline)
         require(len(raw) == expected, 'Synthetic length mismatch')
         for offset in range(0, len(raw), 65536):
-            client.checkpoint(cancel, deadline); output.write(raw[offset:offset+65536])
+            client.checkpoint(cancel, deadline)
+            size = output.write(raw[offset:offset+65536])
+            if received:
+                received(size)
 
 
 def run(build, output, *, app=PW):

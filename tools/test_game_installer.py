@@ -3,6 +3,7 @@ from pathlib import Path
 from types import SimpleNamespace
 import subprocess
 import tempfile
+import threading
 import unittest
 from unittest.mock import Mock, patch
 
@@ -134,35 +135,78 @@ class GameInstallerTests(unittest.TestCase):
             self.assertFalse(stage.exists())
             self.assertIsNone(recover(launcher, app=PG))
 
-    def test_consent_changes_stay_local_until_one_play_request(self):
-        with tempfile.TemporaryDirectory(prefix='pg-consent-') as folder:
-            state = Path(folder) / 'state'
-            owner = SimpleNamespace(lock=SimpleNamespace(state=state, directory=state / '.updates'),
-                                    stop_requested=Mock())
-            owner.stop_requested.is_set.return_value = False
-            identity = SimpleNamespace(executable=Path(folder) / 'app/launcher.exe')
-            with patch('tools.production_workspace.app_updates.windows.installation', return_value=identity), \
-                    patch('tools.production_workspace.app_updates.production_trust', return_value={'accepted': True}), \
-                    patch('tools.game_app.gate.StateLock'), patch('tools.game_app.gate.LauncherWindow'):
-                updates = Updates(owner, app=PG)
-                gate = StartupGate(state, owner, updates, PG.anchor)
-                with patch.object(updates, '_run') as worker:
+    def test_only_confirmed_recovery_allows_a_fresh_pg_search(self):
+        from tools.production_workspace.update_storage import Recovery
+
+        for status in ('installed', 'unconfirmed', 'failed', 'cancelled', 'reboot'):
+            with self.subTest(status=status), tempfile.TemporaryDirectory() as folder:
+                state = Path(folder) / 'state'
+                owner = SimpleNamespace(lock=SimpleNamespace(state=state, directory=state / '.updates'),
+                                        stop_requested=threading.Event())
+                Preferences(owner.lock.directory).write(True)
+                identity = SimpleNamespace(executable=Path(folder) / 'app/game.exe')
+                with patch('tools.production_workspace.app_updates.windows.installation', return_value=identity), \
+                        patch('tools.production_workspace.app_updates.recover_result',
+                              return_value=Recovery(status, 'gleicher Meldungstext', 'ab' * 24)), \
+                        patch.object(Updates, 'launch_worker') as start:
+                    updates = Updates(owner, app=PG)
+                    self.assertEqual(updates.start(), status == 'installed')
+                    self.assertFalse(updates.start())
+                    self.assertEqual(start.call_count, int(status == 'installed'))
+
+    def test_enabled_search_offers_without_staging_and_play_cancels(self):
+        for action in ('play', 'close', 'opt_out', 'download'):
+            with self.subTest(action=action), tempfile.TemporaryDirectory() as folder:
+                state = Path(folder) / 'state'
+                owner = SimpleNamespace(lock=SimpleNamespace(state=state, directory=state / '.updates'),
+                                        stop_requested=threading.Event())
+                identity = SimpleNamespace(executable=Path(folder) / 'app/game.exe', version=PG.anchor)
+                metadata = SimpleNamespace(version='0.1.2')
+                entered, release_worker = threading.Event(), threading.Event()
+
+                def download(candidate, assets, stage, cancel, **kwargs):
+                    self.assertIs(candidate, metadata)
+                    entered.set()
+                    release_worker.wait(2)
+                    return Mock()
+
+                with patch('tools.production_workspace.app_updates.windows.installation', return_value=identity), \
+                        patch('tools.production_workspace.app_updates.client.discover', return_value=(metadata, {})) as discover, \
+                        patch('tools.production_workspace.app_updates.client.download', side_effect=download) as fetch, \
+                        patch('tools.production_workspace.app_updates.windows.prepare') as helper, \
+                        patch('tools.game_app.gate.StateLock'), patch('tools.game_app.gate.LauncherWindow'):
+                    updates = Updates(owner, app=PG)
+                    gate = StartupGate(state, owner, updates, PG.anchor)
+                    gate.search()
+                    discover.assert_not_called()
                     gate.toggle()
-                    self.assertTrue(updates.preferences.read())
-                    gate.toggle()
-                    self.assertFalse(updates.preferences.read())
-                    gate.toggle()
-                    self.assertTrue(updates.preferences.read())
-                    worker.assert_not_called()
-                    gate.play()
-                    gate.play()
                     updates.thread.join(2)
-                    worker.assert_called_once()
-                    gate.toggle()
-                    self.assertFalse(updates.preferences.read())
-                    self.assertTrue(updates.cancelled.is_set())
-                    gate.stop('close')
-                    self.assertEqual(gate.result, 'close')
+                    gate.search()
+                    discover.assert_called_once()
+                    self.assertIsNotNone(updates.offer)
+                    self.assertFalse((owner.lock.directory / 'update-staging').exists())
+                    fetch.assert_not_called()
+                    if action == 'download':
+                        gate.install()
+                        gate.install()
+                        self.assertTrue(entered.wait(2))
+                    if action in ('play', 'download'):
+                        gate.play()
+                        gate.play()
+                        self.assertEqual(gate.result, 'play')
+                    elif action == 'close':
+                        gate.stop('close')
+                        self.assertEqual(gate.result, 'close')
+                    else:
+                        gate.toggle()
+                        self.assertIsNone(gate.result)
+                    release_worker.set()
+                    if gate.drain:
+                        gate.drain.join(2)
+                    updates.close()
+                    self.assertEqual(fetch.call_count, int(action == 'download'))
+                    self.assertIs(updates.preferences.read(), action != 'opt_out')
+                    helper.assert_not_called()
 
     def test_first_play_is_offline_even_if_storing_decline_fails(self):
         for fail in (False, True):
@@ -199,7 +243,7 @@ class GameInstallerTests(unittest.TestCase):
                 patch('tools.game_app.gate.atomic_json') as save:
             lock.return_value.directory = Path('pg-install')
             gate = StartupGate(Path('pg-state'), SimpleNamespace(stop_requested=Mock()), update, PG.anchor)
-            gate.requested = True
+            gate.installing = True
             self.assertTrue(gate.take())
             save.assert_called_once_with(Path('pg-install/update-accepted.json'), {'nonce': '0' * 48})
             gate.stop('play')
@@ -213,14 +257,15 @@ class GameInstallerTests(unittest.TestCase):
             stop = Mock()
             with patch('tools.game_app.gate.StateLock'), patch('tools.game_app.gate.LauncherWindow'):
                 gate = StartupGate(Path('pg-state'), SimpleNamespace(stop_requested=stop), update, PG.anchor)
-                gate.requested = True
+                gate.installing = True
+                update.thread.is_alive.return_value = False
                 if action == 'close':
                     gate.stop('close')
                     stop.set.assert_called_once()
                     self.assertEqual(gate.result, 'close')
                 else:
                     self.assertFalse(gate.take())
-                    self.assertEqual(gate.result, 'play')
+                    self.assertIsNone(gate.result)
                 update.cancel.assert_called_once()
                 update.take.assert_not_called()
 
