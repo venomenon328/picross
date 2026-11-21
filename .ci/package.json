@@ -1,94 +1,11 @@
 {
   "format": "development-ci-plan/v1",
-  "issue": "https://github.com/venomenon328/picross/issues/735",
-  "package": "REPO-CLEANUP-735",
-  "modules": [
-    "tools"
-  ],
-  "purpose": "Prüft die weiterhin verwendeten Ressourcen-, Werkzeug- und Diagnoseverträge nach dem Entfernen historischer Buchentwürfe, VS2-Einführungsbelege und einmaliger Prüfhilfen. Der vollständige Diff erfordert den regulären Windows-x64-Spielerbau.",
-  "omitted": "Native Zusatzmodule, Produktionsgruppen, Preflight, Delivery und Chromium entfallen. Spielcode, aktive Eingänge und aktuelle Testfälle sind bytegleich. Der Quellenabgleich prüft die verbleibenden Verbraucher sowie die registrierten Originale, Katalogprofile und Hintergründe. Die Katalogabnahme der Teilpakete wird nicht wiederholt.",
-  "test_changes": [
-    {
-      "path": "game/tests/at_pack.gd",
-      "disposition": "remove",
-      "reason": "Einstieg ausschließlich für die entfernte AT-N02-Windowsprobe."
-    },
-    {
-      "path": "game/tests/hz_c_sample.gd",
-      "disposition": "remove",
-      "reason": "Unreferenzierte HZ-C-Schriftstudie aus der abgeschlossenen Einführung."
-    },
-    {
-      "path": "game/tests/hz_pack.gd",
-      "disposition": "remove",
-      "reason": "PCK-Einstieg ausschließlich für die entfernte HZ-C-Windowsprobe."
-    },
-    {
-      "path": "game/tests/p14_profile.gd",
-      "disposition": "remove",
-      "reason": "Separate historische P1.4-Profilprobe ohne Aufruf im aktuellen Harness."
-    },
-    {
-      "path": "game/tests/zr_windows_probe.gd",
-      "disposition": "remove",
-      "reason": "Messskript ausschließlich für die entfernte ZR-Windowsprobe."
-    },
-    {
-      "path": "game/tests/zs2_numerals.gd",
-      "disposition": "remove",
-      "reason": "Verwaister ZS2-Ziffernvergleich ohne Verbraucher im aktuellen Harness."
-    },
-    {
-      "path": "tools/at_windows_probe.py",
-      "disposition": "remove",
-      "reason": "Einmaliger AT-N02-Windowsnachweis für die Einführung der Bildrevisionen."
-    },
-    {
-      "path": "tools/gp48_owner.ps1",
-      "disposition": "remove",
-      "reason": "Einmalige Eigentümerprobe mit altem GP-48-Spielerpaket und Berichtsformat."
-    },
-    {
-      "path": "tools/hn192_windows_probe.py",
-      "disposition": "remove",
-      "reason": "Einmaliger Windows-Liefernachweis für HN. Der aktive native HN-Checkpoint bleibt erhalten."
-    },
-    {
-      "path": "tools/hz_windows_probe.py",
-      "disposition": "remove",
-      "reason": "Einmaliger HZ-C-Windowsnachweis mit separatem PCK-Einstieg."
-    },
-    {
-      "path": "tools/ke_windows_probe.py",
-      "disposition": "remove",
-      "reason": "Einmaliger Windows-Liefernachweis für KE und KU, außerhalb der aktiven Kataloggruppe."
-    },
-    {
-      "path": "tools/ku_b_windows_probe.py",
-      "disposition": "remove",
-      "reason": "Einmaliger KU-B-Aufruf der entfernten KE-Windowsprobe."
-    },
-    {
-      "path": "tools/ku_windows_probe.py",
-      "disposition": "remove",
-      "reason": "Einmaliger KU-A-Aufruf der entfernten KE-Windowsprobe."
-    },
-    {
-      "path": "tools/p14_owner_probe.ps1",
-      "disposition": "remove",
-      "reason": "Einmalige P1.4-Eigentümerprobe mit historischem Testprofil."
-    },
-    {
-      "path": "tools/zr_windows_probe.py",
-      "disposition": "remove",
-      "reason": "Einmaliger ZR-Windows-EXE-Nachweis mit eigenem Messskript."
-    },
-    {
-      "path": "tools/zv50_owner.ps1",
-      "disposition": "remove",
-      "reason": "Einmalige Eigentümerprobe für das alte ZV-50-Paket und Berichtsformat."
-    }
-  ],
+  "issue": "https://github.com/venomenon328/picross/issues/700",
+  "package": "PZ-ONIGIRI-STEP-2",
+  "modules": [],
+  "purpose": "Prüft die Quellen- und Planintegrität der redaktionellen Onigiri-Motivsichtung nach dem in #700 eingeführten Produktionsvertrag.",
+  "omitted": "Der Diff enthält nur Authoring-Metadaten und den Paketplan. Player-Build, Zusatzmodule und technische Aufbewahrung entfallen.",
+  "test_changes": [],
   "core_change": null,
   "evidence": {
     "mode": "none",
