@@ -1,10 +1,10 @@
 {
   "format": "development-ci-plan/v1",
-  "issue": "https://github.com/venomenon328/picross/issues/660",
-  "package": "PROD-LOTUSWURZEL",
+  "issue": "https://github.com/venomenon328/picross/issues/700",
+  "package": "MACARON-REVEAL-REVIEW",
   "modules": [],
-  "purpose": "Erstintegration der endabgenommenen Lotuswurzel pz-lotuswurzel über RI-ONE mit Monoraster, Reveal samt Katalogprofilen, gewählter 3:1-Kontextzeichnung und Inhaltsmetadaten.",
-  "omitted": "Reine Rätselproduktion. Proof, Bewertung und tatsächliche Lieferung werden im Produktionsweg geprüft. Der CI-Quellenkern läuft ohne Player-Build und Zusatzmodule.",
+  "purpose": "Prüft Quellen und Paketplan des Entwurfs für die Macaron-Bildauswahl mit drei über PW-B veröffentlichten Originalen.",
+  "omitted": "Reine Authoringdaten. Bildsichtung und Originalabruf erfolgen am PW-B-Arbeitsstand. Player-Build und Zusatzmodule entfallen.",
   "test_changes": [],
   "core_change": null,
   "evidence": {
