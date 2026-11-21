@@ -172,3 +172,7 @@ Zulassungsbedingung für aktuelle Ergebnisse.
 Für aktuelle Jobs genügt der aktuelle Quellencommit. Kein neuer Regelwerksnapshot
 und kein Zugriff auf frühere Erzeugerbytes. Alte Snapshotformen bleiben nur als
 explizit historische Daten erkennbar; sie sind kein normaler Writerweg.
+
+## Katalogprofile für Abschlussbilder
+
+Integrationseingang v1 und Authoringrecord v2 führen das gewählte Original. Die automatische Ableitung gehört zur Erstintegration. Completion vergleicht die aktuelle Revealquelle und beide tatsächlichen Profilbytes gegen den Integrationscommit.

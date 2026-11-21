@@ -664,3 +664,7 @@ Uploadregeln und damalige Liefergates. Diese werden nicht als heutige Normen
 wiederholt. Die oben erhaltenen risikobasierten Stichproben dokumentieren die
 bewusst entfallene Erkennung; sie sind keine Behauptung vollständiger Abdeckung.
 Aktuelle Änderungen und ihre Abnahmen stehen im zuständigen Issue/PR.
+
+## Katalogprofile für Abschlussbilder
+
+Der externe PCK-Reader prüft im Windows- und Webpaket für jede Runtime-v9-ID das ladbare Original sowie die beiden importierten Profiltexturen und ihre tatsächlichen Maße. Der Vergleich des Profilverzeichnisses umfasst auch verborgene Einträge.

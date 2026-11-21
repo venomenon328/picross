@@ -567,3 +567,7 @@ Lieferstände an; er erzeugt daraus keine Schreib- oder Mergefreigabe.
 
 Aufrufgebundene Finalisierung und Quellprüfung: [PW-B](PW_B_CONTRACT.md#pw-perf-c--aufrufgebundene-prüfung-und-hintergrund-v2).
 Bildableitung und Profilformen: [Hintergrund §4](../production/PUZZLE_BACKGROUNDS.md#4-hp-w2-eigenständige-datei--und-ableitungsschnittstelle).
+
+## Katalogprofile für Abschlussbilder
+
+Die registrierte Lieferung bindet Original, Revealquelle und beide Katalogprofile. Die private Windowslaufzeit liefert den SVG-Renderer mit. Der prüfende Programmstart mit `--catalog-svg-self-test` rasterisiert ein kleines teiltransparentes SVG ohne Benutzercheckout.

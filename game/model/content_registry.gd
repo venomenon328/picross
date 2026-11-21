@@ -1,6 +1,7 @@
 extends RefCounted
 ## Bundled, generated data only. No save input or runtime directory discovery.
 const PATH: String = "res://data/registry.json"
+const CATALOG_FORMAT := "picross-runtime-registry-v9"
 const CAPABILITY_PATH: String = "res://data/background-capability.json"
 const Difficulty = preload("res://model/catalog_difficulty.gd")
 static var cached: Dictionary = {}
@@ -24,7 +25,7 @@ static func valid_category_id(value: Variant) -> bool:
 	return true
 
 static func validate(raw: Variant) -> String:
-	if not raw is Dictionary or raw.size() != 3 or not raw.get("format") in ["picross-runtime-registry-v2", "picross-runtime-registry-v3", "picross-runtime-registry-v4", "picross-runtime-registry-v5", "picross-runtime-registry-v6", "picross-runtime-registry-v7", "picross-runtime-registry-v8"] or not raw.get("entries") is Array or not raw.get("categories") is Array:
+	if not raw is Dictionary or raw.size() != 3 or not raw.get("format") in ["picross-runtime-registry-v2", "picross-runtime-registry-v3", "picross-runtime-registry-v4", "picross-runtime-registry-v5", "picross-runtime-registry-v6", "picross-runtime-registry-v7", "picross-runtime-registry-v8", CATALOG_FORMAT] or not raw.get("entries") is Array or not raw.get("categories") is Array:
 		return "Unsupported runtime registry format"
 	if raw.categories.size() > 256 or raw.entries.size() > 10000:
 		return "Registry count limit exceeded"
@@ -49,14 +50,15 @@ static func validate(raw: Variant) -> String:
 		previous_order = int(order)
 	var seen: Dictionary = {}
 	var current: bool = raw.format != "picross-runtime-registry-v2"
-	var image_preferences: bool = raw.format == "picross-runtime-registry-v8"
+	var catalog_images: bool = raw.format == CATALOG_FORMAT
+	var image_preferences: bool = catalog_images or raw.format == "picross-runtime-registry-v8"
 	var named: bool = image_preferences or raw.format == "picross-runtime-registry-v7"
 	var backgrounds: bool = named or raw.format == "picross-runtime-registry-v6"
 	var dated: bool = backgrounds or raw.format in ["picross-runtime-registry-v4", "picross-runtime-registry-v5"]
 	# V8 retains the v7 fields and v5 difficulty; only v8 adds standard.
 	var version: int = 5 if backgrounds or raw.format == "picross-runtime-registry-v5" else 4
 	for item: Variant in raw.entries:
-		if not item is Dictionary or item.size() != (11 if named else 10 if backgrounds else 9 if dated else 8 if current else 7) or not item.get("visible") is bool or not item.has("category_id"):
+		if not item is Dictionary or item.size() != (12 if catalog_images else 11 if named else 10 if backgrounds else 9 if dated else 8 if current else 7) or not item.get("visible") is bool or not item.has("category_id"):
 			return "Invalid registry entry fields"
 		if named and not valid_name(item.get("name")):
 			return "Invalid current puzzle name"
@@ -84,6 +86,8 @@ static func validate(raw: Variant) -> String:
 			return "Invalid registry resource type"
 		if image_preferences and not (str(item.reveal).ends_with(".png") or str(item.reveal).ends_with(".svg")):
 			return "Invalid current reveal type"
+		if catalog_images and not valid_catalog_reveal(item):
+			return "Invalid catalog reveal profile or resource"
 		if not valid_category_id(item.category_id) or not category_ids.has(item.category_id):
 			return "Missing or unknown category for " + str(item.id)
 	return ""
@@ -130,6 +134,45 @@ static func bounded_integer(value: Variant, minimum: int, maximum: int) -> bool:
 	# JSON numbers are floats in Godot. Booleans, fractions and non-finite values
 	# must not be accepted as integer revisions or byte counts.
 	return (value is int or value is float) and is_finite(float(value)) and float(value) == floor(float(value)) and value >= minimum and value <= maximum
+
+static func valid_sha256(value: Variant) -> bool:
+	if not value is String or value.length() != 64: return false
+	for digit: String in value:
+		if not digit in "0123456789abcdef": return false
+	return true
+
+static func valid_catalog_reveal(item: Dictionary) -> bool:
+	var catalog: Variant = item.get("catalog_reveal")
+	if not catalog is Dictionary or catalog.size() != 4 or not valid_sha256(catalog.get("source_sha256")):
+		return false
+	var vector: bool = str(item.reveal).ends_with(".svg")
+	if str(item.reveal).get_base_dir() != "art/content": return false
+	for key: String in ["source_width", "source_height"]:
+		var axis: Variant = catalog.get(key)
+		if not (axis is float or axis is int) or not is_finite(axis) or axis <= 0 or axis > 8192:
+			return false
+		if not vector and not bounded_integer(axis, 1, 8192): return false
+	var w: float = catalog.source_width
+	var h: float = catalog.source_height
+	if w * h > 8000000 or not catalog.get("profiles") is Array or catalog.profiles.size() != 2: return false
+	if not ResourceLoader.exists("res://" + str(item.reveal), "Texture2D"): return false
+	for index: int in range(2):
+		var label := "ui100" if index == 0 else "ui125"
+		var pw := 264 if index == 0 else 329
+		var ph := 112 if index == 0 else 140
+		var row: Variant = catalog.profiles[index]
+		if not row is Dictionary or row.size() != 4 or row.get("profile") != "catalog-" + label + "-v1": return false
+		var expected_width: int = mini(pw, maxi(1, ceili(ph * w / h)))
+		var expected_height: int = mini(ph, maxi(1, ceili(pw * h / w)))
+		if not vector:
+			expected_width = mini(int(w), expected_width)
+			expected_height = mini(int(h), expected_height)
+		if not bounded_integer(row.get("width"), expected_width, expected_width) or not bounded_integer(row.get("height"), expected_height, expected_height): return false
+		var asset: Variant = row.get("asset")
+		if not asset is Dictionary or asset.size() != 3 or not valid_sha256(asset.get("sha256")) or not bounded_integer(asset.get("bytes"), 1, 262144): return false
+		var path: String = "art/catalog/" + str(item.id) + "-" + label + ".png"
+		if asset.get("file") != path or not ResourceLoader.exists("res://" + path, "Texture2D"): return false
+	return true
 
 static func valid_background(item: Dictionary, allow_standard: bool = false) -> bool:
 	var identifier: Variant = item.get("id")
@@ -179,7 +222,7 @@ static func _load() -> Dictionary:
 	if not cached.is_empty():
 		return cached
 	var file: FileAccess = FileAccess.open(PATH, FileAccess.READ)
-	if file == null or file.get_length() > 8388608:
+	if file == null or file.get_length() > 16777216:
 		load_error = "Missing or oversized runtime registry"
 		return {}
 	var text: String = file.get_as_text()
@@ -187,10 +230,13 @@ static func _load() -> Dictionary:
 	if not unique_keys(text):
 		load_error = "Duplicate runtime registry JSON key"
 		return {}
+	if file.get_length() > 8388608 and (not raw is Dictionary or raw.get("format") != CATALOG_FORMAT):
+		load_error = "Oversized legacy registry"
+		return {}
 	load_error = validate(raw)
 	if not load_error.is_empty():
 		return {}
-	if raw.format in ["picross-runtime-registry-v7", "picross-runtime-registry-v8"]:
+	if raw.format in ["picross-runtime-registry-v7", "picross-runtime-registry-v8", CATALOG_FORMAT]:
 		var capability: Variant = null
 		var present: bool = FileAccess.file_exists(CAPABILITY_PATH) or DirAccess.dir_exists_absolute(CAPABILITY_PATH)
 		if present:
@@ -211,7 +257,7 @@ static func _load() -> Dictionary:
 	return cached
 
 static func current_reveal_enabled() -> bool:
-	return _load().get("format") == "picross-runtime-registry-v8"
+	return _load().get("format") in ["picross-runtime-registry-v8", CATALOG_FORMAT]
 
 static func unique_keys(text: String) -> bool:
 	var objects: Array[Dictionary] = []

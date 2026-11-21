@@ -729,3 +729,7 @@ Input nach [ZA-1](../production/ZA1_ADAPTER.md) und den aktuellen [RI-Vertrag](.
 Bild-, Raster-, Metadaten- und Hintergrundänderungen bleiben eigene Operationen
 nach [PE](PUZZLE_EDITOR.md#13-pe-edit2-gezielte-pflege-statt-vollbestandsprüfung).
 Historische Formbeispiele erteilen keine aktuelle Schreibbefugnis.
+
+## Katalogprofile für Abschlussbilder
+
+Die Toolbindung enthält resvg_py und die eingebettete resvg-Version. Der erreichte Zustand bindet die aktuelle Revealquelle und beide PNGs. Resume prüft die vollständige Lieferung erneut. Ältere versiegelte Jobs benötigen ihren zugehörigen Werkzeugstand.

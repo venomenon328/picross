@@ -28,7 +28,9 @@ class CurrentIntegrationTests(unittest.TestCase):
                 root=checkout(self.work/(mode+"-"+status))
                 source=make(self.work/("input-"+mode+"-"+status),mode=mode,background=status)
                 before=fingerprints(root)
-                self.assertEqual(core.integrate(source,root)["status"],"planned")
+                plan = core.integrate(source,root)
+                self.assertEqual(plan["status"], "planned")
+                self.assertEqual(len(plan["changes"]), 13 if status == "selected" else 11)
                 self.assertEqual(fingerprints(root),before)
                 self.assertEqual(core.integrate(source,root,apply=True)["status"],"registered")
                 before=fingerprints(root)
@@ -200,6 +202,19 @@ class CurrentIntegrationTests(unittest.TestCase):
             before=fingerprints(self.root)
             with self.assertRaises(InvalidInput): core.integrate(source,self.root,apply=True)
             self.assertEqual(fingerprints(self.root),before)
+
+    def test_profile_and_runtime_interruptions_are_recoverable(self):
+        source = make(self.work/"profile-input")
+        before = {n: v[0] for n, v in fingerprints(self.root).items()}
+        for path in ("game/art/catalog/pz-current-ui100.png", "content/reveals/pz-current.json", content.RUNTIME):
+            def interrupt(phase, name=None):
+                if phase == "after-write" and name == path:
+                    raise RuntimeError("synthetic interruption")
+            with patch.object(transaction, "checkpoint", side_effect=interrupt), self.assertRaises(RuntimeError):
+                core.integrate(source, self.root, apply=True)
+            self.assertEqual(transaction.recover(self.root)["status"], "rolled-back")
+            self.assertEqual(transaction.recover(self.root)["status"], "no-op")
+            self.assertEqual(before, {n: v[0] for n, v in fingerprints(self.root).items()})
 
     def test_runtime_last_and_controlled_abort_rolls_back_with_own_budget(self):
         from tools.puzzle_production.contract import Aborted

@@ -80,3 +80,7 @@ keine Fremdarbeits-, Main-, Byte- oder Recoveryguards auf.
 Der Pointer entfällt nur, wenn er exakt auf eine ausgewählte abgeschlossene Revision zeigt; neue/offene Arbeit und fremde Bytes bleiben. Unbekannte Dateien innerhalb ausgewählter Arbeit blockieren vor Löschung. Teilentfernung ist ehrlich zu melden und anhand desselben Mainankers wiederholbar; vollständige Wiederholung ist schreibfreier No-op. Keine neue historische Dauerakte.
 
 Eigenständige aktuelle Bild-/Rasteränderungen verwenden den gezielten Editor. Deren ausgewählte abgeschlossene Arbeitsdateien können nach tatsächlichem Mainnachweis über denselben ausgewählten Abschlussweg bereinigt werden; bestehende aktuelle Rechte und Bilder bleiben. Alte `retire-reveal-production`-/`retire-background-production`-Receiptpfade sind abgelöst.
+
+## Katalogprofile für Abschlussbilder
+
+Die Erstintegration bereitet zwei Profile aus dem gewählten Original vor. Registrierungsjournal v2 bindet elf Ziele, mit gewähltem Hintergrund dreizehn. Ein belegter identischer Eintrag endet vor der Ableitung als No-op. Recovery verwendet die bereits gebundenen Schreibseiten und prüft fremde Bytes vor jeder Änderung.

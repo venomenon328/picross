@@ -162,6 +162,49 @@ class PaletteQualityTests(unittest.TestCase):
 
 
 class ImageTests(unittest.TestCase):
+    def test_catalog_profiles_preserve_small_alpha_and_fit_natural_axes(self):
+        from PIL import PngImagePlugin
+        from tools.puzzle_production import catalog_profiles as profiles, current_content as content
+        for size, expected in [((16, 8), [(16, 8), (16, 8)]),
+                               ((1024, 64), [(264, 17), (329, 21)]),
+                               ((64, 1024), [(7, 112), (9, 140)])]:
+            source = Image.new("RGBA", size, (15, 210, 31, 0))
+            source.putpixel((2, 2), (130, 31, 60, 125))
+            source.putpixel((3, 2), (255, 255, 255, 255))
+            buf = io.BytesIO()
+            source.save(buf, format="PNG")
+            raw = buf.getvalue()
+            ref = content.ref("game/art/content/probe.png", raw)
+            catalog, files = profiles.generate("pz-probe", ref, raw)
+            self.assertEqual((catalog, files), profiles.generate("pz-probe", ref, raw))
+            self.assertEqual(catalog["source_sha256"], hashlib.sha256(raw).hexdigest())
+            self.assertEqual(len(files), 2)
+            for row, target in zip(catalog["profiles"], expected, strict=True):
+                png = files[row["asset"]["file"]]
+                with Image.open(io.BytesIO(png)) as output:
+                    self.assertEqual((output.mode, output.size, output.info), ("RGBA", target, {}))
+                    if size == target:
+                        self.assertEqual(output.tobytes(), source.tobytes())
+        for mode in ("L", "LA", "P", "RGB"):
+            buf = io.BytesIO()
+            source = Image.new(mode, (8, 8))
+            source.save(buf, format="PNG")
+            self.assertEqual(profiles.decode_png(buf.getvalue()).tobytes(), source.convert("RGBA").tobytes())
+        pnginfo = PngImagePlugin.PngInfo()
+        pnginfo.add(b"gAMA", (100000).to_bytes(4, "big"))
+        icc = ImageCms.ImageCmsProfile(ImageCms.createProfile("sRGB")).tobytes()
+        buf = io.BytesIO()
+        Image.new("RGBA", (8, 8), (64, 128, 255, 47)).save(buf, format="PNG", icc_profile=icc, pnginfo=pnginfo)
+        raw = buf.getvalue()
+        _, files = profiles.generate("pz-probe", content.ref("game/art/content/probe.png", raw), raw)
+        for png in files.values():
+            self.assertEqual(Image.open(io.BytesIO(png)).getpixel((0, 0)), (136, 186, 255, 47))
+        xml = b'<svg xmlns="http://www.w3.org/2000/svg" width="18.5" height="7.25" viewBox="2 2 8 4"><rect x="2" y="2" width="8" height="4" fill="white"/></svg>'
+        catalog, files = profiles.generate("pz-probe", content.ref("game/art/content/probe.svg", xml), xml)
+        self.assertEqual((catalog["source_width"], catalog["source_height"]), (18.5, 7.25))
+        self.assertEqual([(r["width"], r["height"]) for r in catalog["profiles"]], [(264, 104), (329, 129)])
+        for png in files.values(): self.assertIsNotNone(Image.open(io.BytesIO(png)).getbbox())
+
     def setUp(self):
         self.temp = tempfile.TemporaryDirectory()
         self.addCleanup(self.temp.cleanup)

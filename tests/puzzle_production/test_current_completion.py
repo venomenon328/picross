@@ -62,6 +62,10 @@ class CurrentCompletionTests(unittest.TestCase):
     def test_completion_no_archives_multiphase_retirement_and_noop(self):
         main=self.close()
         live=current_delivery.snapshot(lambda n,l,missing=False:catalog_io.read(self.root,n,l,missing=missing),'pz-current')
+        self.assertIn("content/reveals/pz-current.json", live["files"])
+        for profile in live["runtime"]["catalog_reveal"]["profiles"]:
+            name = "game/" + profile["asset"]["file"]
+            self.assertEqual(live["files"][name], {**profile["asset"], "file": name})
         self.phase('r02','raster_review') # A smaller number is still new open work.
         protected=(self.root/'content/authoring/pz-current/r02/record.json').read_bytes()
         kwargs={'completed_revisions':[('pz-current','r01')],'completed_work':[('pz-current','shared')]}
@@ -143,9 +147,9 @@ class CurrentCompletionTests(unittest.TestCase):
         value = reader.listing()
         self.assertEqual(value['jobs'], [])
         self.assertEqual(value['completion']['completed_ids'], ['pz-current'])
-        edited = current_delivery.snapshot(lambda n, l, missing=False: source.read(later, n, l, missing),
-                                           'pz-current')
-        self.assertFalse(current_delivery.same(edited, baseline))
+        self.assertIn("game/art/content/pz-current.png", baseline["files"])
+        with self.assertRaisesRegex(ValueError, "asset binding differs"):
+            current_delivery.snapshot(lambda n, l, missing=False: source.read(later, n, l, missing), 'pz-current')
 
 
 if __name__=='__main__':unittest.main()

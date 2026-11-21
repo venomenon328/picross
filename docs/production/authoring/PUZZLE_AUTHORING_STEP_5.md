@@ -67,3 +67,7 @@ IDs, Save-Slots, Revisionen, Namen, Kategorien, Bewertungen und Added-Daten.
 Aktuelle Bildquellen binden die aktuelle Identität und Bildbytes.
 
 Spätere echte Änderungen bleiben eigene Aufträge. Fehlende frühere Arbeitsdateien sind kein Defekt. Raster-/Reveal-/Hintergrundänderungen verwenden den [gezielten Editorvertrag](../../tools/PUZZLE_EDITOR.md#13-pe-edit2-gezielte-pflege-statt-vollbestandsprüfung), keinen neuen alten Export. Gültige aktuelle Bilder und Korrekturbefugnisse bleiben erhalten. Ihre eindeutig zugeordneten Arbeitsdaten nach tatsächlich bestätigtem Mainstand gezielt abschließen; aktuelle Rechte/Notices erhalten. Lokale Checkoutbereinigung richtet sich gesondert nach WORKSPACE und Benutzerauftrag.
+
+## Katalogprofile für Abschlussbilder
+
+Bei der Erstintegration erzeugt der Fachkern automatisch beide Katalogprofile. Für den Abschluss werden die aktuelle Revealquelle und die gelieferten Profilbytes mitgeprüft.

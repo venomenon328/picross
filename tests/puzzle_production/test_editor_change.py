@@ -175,6 +175,8 @@ class EditorChangeTests(unittest.TestCase):
         from tools.puzzle_production.editor_image_input import validate_reveal
         plan = edit.plan(self.root, self.request(reveal={'upload': 'image'}), uploads={
             'image': {'raw': raw, 'suffix': 'svg', 'checked': validate_reveal(raw, '.svg')}})
+        self.assertTrue(all("game/art/catalog/" + self.entry["id"] + "-" + label + ".png" in plan["changes"]
+                            for label in ("ui100", "ui125")))
         del plan['changes']['content/reveals/'+self.entry['id']+'.json']
         plan['plan_hash'] = digest({k: v for k, v in plan.items() if k != 'plan_hash'})
         with self.assertRaisesRegex(ValueError, 'lacks current image source|without current source'): edit.apply(self.root, plan)

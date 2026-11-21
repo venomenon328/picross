@@ -11,7 +11,7 @@ LEGACY_FORMAT = "picross-added-plan-v1"
 AT_FORMAT = "picross-added-plan-v2"
 SD2_FORMAT = "picross-added-plan-v3"
 FORMAT = "picross-added-plan-v4"
-IMAGE_FORMAT = "picross-added-plan-v5"
+IMAGE_FORMAT = "picross-added-plan-v6"
 METHOD_FORMATS = (IMAGE_FORMAT, FORMAT, SD2_FORMAT)
 
 
@@ -30,7 +30,7 @@ def validate_plan(plan):
     require(plan["format"] in (IMAGE_FORMAT, FORMAT, SD2_FORMAT, AT_FORMAT, LEGACY_FORMAT) and len(canonical_bytes(plan)) + 1 <= added.REPORT_LIMIT, "Invalid added plan format/size")
     added.report_path(plan["run_id"])
     added.commit(plan["base_commit"])
-    require(isinstance(plan["sources"], dict) and len(plan["sources"]) <= (80004 if plan["format"] in METHOD_FORMATS else 80003 if plan["format"] == AT_FORMAT else 100003), "Invalid added source map")
+    require(isinstance(plan["sources"], dict) and len(plan["sources"]) <= (110005 if plan["format"] == IMAGE_FORMAT else 80004 if plan["format"] in METHOD_FORMATS else 80003 if plan["format"] == AT_FORMAT else 100003), "Invalid added source map")
     for n, h in plan["sources"].items():
         relative(n)
         if h is not None: sha(h)
@@ -64,9 +64,9 @@ def validate_plan(plan):
             runtime = rating.bytes_json(integration["runtime"].encode(), added.REPORT_LIMIT)
             versions = ("picross-runtime-registry-v2", "picross-runtime-registry-v3", "picross-runtime-registry-v4") + (("picross-runtime-registry-v5",) if plan["format"] in METHOD_FORMATS else ())
             if plan["format"] in (IMAGE_FORMAT, FORMAT): versions += ("picross-runtime-registry-v6", cr.METADATA_RUNTIME_FORMAT)
-            if plan["format"] == IMAGE_FORMAT: versions += ("picross-runtime-registry-v8",)
+            if plan["format"] == IMAGE_FORMAT: versions += ("picross-runtime-registry-v8","picross-runtime-registry-v9")
             require(runtime.get("format") in versions and
-                    (runtime.get("format") in (cr.METADATA_RUNTIME_FORMAT, "picross-runtime-registry-v8")) == (production["format"] == cr.METADATA_FORMAT) and
+                    (runtime.get("format") in (cr.METADATA_RUNTIME_FORMAT, "picross-runtime-registry-v8","picross-runtime-registry-v9")) == (production["format"] == cr.METADATA_FORMAT) and
                     runtime.get("categories") == categories.ordered(catalog), "Invalid historical runtime categories/version")
             runtime_ids = {r["id"]: r for r in runtime["entries"]}
             require(len(runtime_ids) == len(runtime["entries"]), "Duplicate snapshot runtime ID")
@@ -246,9 +246,10 @@ def plan(root, run, base, *, repository=None, direct=()):
         catalog = rating.bytes_json(cats,131072)
         production = cr.validate(registry,catalog)
         metadata = cr.current_metadata(production,catalog)
-        runtime = rating.bytes_json(runtime_raw, 8 * 1024 * 1024)
-        require(runtime.get("format") in ("picross-runtime-registry-v2", "picross-runtime-registry-v3", "picross-runtime-registry-v4", "picross-runtime-registry-v5", "picross-runtime-registry-v6", cr.METADATA_RUNTIME_FORMAT, "picross-runtime-registry-v8") and
-                (runtime.get("format") in (cr.METADATA_RUNTIME_FORMAT, "picross-runtime-registry-v8")) == (production["format"] == cr.METADATA_FORMAT),
+        runtime = rating.bytes_json(runtime_raw, cr.current.RUNTIME_LIMIT)
+        require(runtime.get("format") == cr.IMAGE_RUNTIME_FORMAT or len(runtime_raw) <= 8*1024*1024, "Oversized historical runtime")
+        require(runtime.get("format") in ("picross-runtime-registry-v2", "picross-runtime-registry-v3", "picross-runtime-registry-v4", "picross-runtime-registry-v5", "picross-runtime-registry-v6", cr.METADATA_RUNTIME_FORMAT, "picross-runtime-registry-v8","picross-runtime-registry-v9") and
+                (runtime.get("format") in (cr.METADATA_RUNTIME_FORMAT, "picross-runtime-registry-v8","picross-runtime-registry-v9")) == (production["format"] == cr.METADATA_FORMAT),
                 "Unsupported historical runtime")
         runtime_ids = {e["id"]: e for e in runtime["entries"]}
         require(len(runtime_ids) == len(runtime["entries"]), "Duplicate historical runtime ID")

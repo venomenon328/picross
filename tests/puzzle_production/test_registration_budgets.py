@@ -30,6 +30,18 @@ def files(root):
 
 
 class BudgetTests(unittest.TestCase):
+    def test_complete_catalog_registration_budget_before_lock(self):
+        from tests.puzzle_production.current_fixtures import checkout, make
+        from tools.puzzle_production import catalog_integration, current_registration
+        with tempfile.TemporaryDirectory() as directory:
+            home = Path(directory)
+            root = checkout(home / "repo")
+            source = make(home / "input")
+            before = files(root)
+            with patch.object(current_registration, "LIMIT", 2048), self.assertRaisesRegex(ValueError, "journal"):
+                catalog_integration.integrate(source, root, apply=True)
+            self.assertEqual(before, files(root))
+
     def test_invalid_values_and_plan_update_reject_before_io(self):
         for value in (True, False, 0, -1, float('nan'), float('inf'), '1800', 10 ** 1000):
             with self.subTest(value=str(value)[:20]), patch.object(tx, 'capture', side_effect=AssertionError('I/O')):

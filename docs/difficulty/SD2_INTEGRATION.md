@@ -242,7 +242,7 @@ Alle Aktivierungspläne v1/v2/v3 haben exakt
 - `result_hash`: kanonischer Hash aller übrigen Felder.
 
 Limit **16 MiB/80004 Quellen**. Der Strukturreader akzeptiert v1–v3, der
-aktuelle Planer/Adopter ausschließlich `picross-difficulty-activation-plan-v3`.
+aktuelle Planer/Adopter ausschließlich `picross-difficulty-activation-plan-v4`.
 `catalog_method plan` benötigt Checkout, erwartete Methode, Zielmethode, exakten
 Zielhash und neuen externen Ausgabepfad. Gleiche Ziel-/Ausgangsmethode erzeugt
 keinen Aktivierungsplan.

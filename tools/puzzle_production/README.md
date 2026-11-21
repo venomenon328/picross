@@ -1812,3 +1812,7 @@ Fertigimport erkennt 2304×768 bzw. 2304×576 aus validierten PNG-Bytes und
 übernimmt unverändert. V1-Capability erlaubt ausschließlich das alte Profil.
 [Geschlossener Vertrag](../../docs/production/PUZZLE_BACKGROUNDS.md#hg31--zwei-geschlossene-bildprofile).
 Keine Kandidatenintegration vor geprüftem Mainmerge oder neue WIP-Migration.
+
+## Katalogprofile für Abschlussbilder
+
+Nach der Originalwahl erzeugt die Integrationsplanung beide Profile nach [Revealtechnik](../../docs/production/REVEAL_TRANSPARENCY.md). Die private Umgebung benötigt Pillow 12.3.0 und resvg_py 0.5.0. Ein identischer registrierter Eingang bewahrt Bildbytes und Dateizeiten. Änderungen am gewählten Original gehören in den Bestandseditor.

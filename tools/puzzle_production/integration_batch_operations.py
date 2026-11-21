@@ -101,10 +101,12 @@ def tool_binding(repo):
                        "Loaded integration module belongs to another checkout: " + relative)
         bound.append(bg.ref(relative, raw))
     bound.extend(_ref(repo, name) for name in sorted(_NORMS | _METHODS))
+    import resvg_py
     versions = images.versions()
     value = {"files": sorted(bound, key=lambda item: item["file"]),
              "python": platform.python_version(), "pillow": versions["pillow"],
              "codecs": {key: versions[key] for key in ("zlib", "littlecms", "jpeg", "jpeg_turbo")}}
+    value["codecs"].update(resvg_py=resvg_py.__version__, resvg=resvg_py.__resvg_version__)
     contract.tool_binding(value)
     return value
 

@@ -10,7 +10,7 @@ from .authoring_package import require
 from .contract import exact_keys, InvalidInput, Aborted
 from . import catalog_rating as rating, catalog_added as added, catalog_method
 
-FORMAT = "picross-current-registration-journal-v1"
+FORMAT = "picross-current-registration-journal-v2"
 LOCK = "content/.registration-pending.json"
 STAGE = "content/.registration-journal-current.tmp"
 LIMIT = 128*1024*1024
@@ -35,7 +35,7 @@ def unpack(value):
     if value is None: return None
     require(isinstance(value, str) and len(value) <= 4*((content.LIMIT+2)//3), "Oversized journal side")
     raw = base64.b64decode(value, validate=True)
-    require(pack(raw) == value, "Noncanonical journal side")
+    require(len(raw) <= content.LIMIT and pack(raw) == value, "Noncanonical journal side")
     return raw
 
 
@@ -52,14 +52,14 @@ class Snapshot:
         require(not pending(self.root), "Pending publication requires recovery")
         self.catalog = categories.validate(self.json(categories.PATH, categories.MAX_BYTES))
         self.registry = content.validate(self.json(content.REGISTRY), self.catalog)
-        self.runtime = self.json(content.RUNTIME)
+        self.runtime = self.json(content.RUNTIME, content.RUNTIME_LIMIT)
         exact_keys(self.runtime, {"format", "categories", "entries"})
         require(self.runtime["format"] == content.RUNTIME_FORMAT and
                 self.runtime["categories"] == categories.ordered(self.catalog), "Current runtime required")
         require(len(self.runtime["entries"]) == len(self.registry["entries"]), "Runtime size differs")
         for entry, row, meta in zip(self.registry["entries"], self.runtime["entries"], self.registry["metadata"]):
             exact_keys(row, {"id", "key", "save_slot", "definition", "reveal", "visible", "category_id",
-                             "name", "difficulty", "added_at", "background"})
+                             "name", "difficulty", "added_at", "background", "catalog_reveal"})
             require(all(row[k] == entry[k] for k in ("id", "key", "save_slot", "definition", "visible")) and
                     row["name"] == meta["name"] and row["category_id"] == meta["category_id"], "Runtime identity differs")
             content.relative(row["reveal"])
@@ -96,7 +96,8 @@ def prepare(snapshot, changes):
              "dependencies": {n: io.checksum(raw) for n, raw in snapshot.raw.items() if n not in sides},
              "files": sides}
     validate(value)
-    require(len(content.encoded(value)) <= LIMIT, "Current journal exceeds 128 MiB")
+    size = len(content.encoded(value))
+    require(size <= LIMIT, f"Registration journal {size} exceeds {LIMIT} bytes")
     snapshot.recheck()
     return value
 
@@ -105,7 +106,7 @@ def validate(value):
     exact_keys(value, {"format", "id", "dependencies", "files"})
     require(value["format"] == FORMAT, "Only current registration recovery is supported")
     identifier = rating.identity(value["id"])
-    require(isinstance(value["files"], dict) and 2 <= len(value["files"]) <= 12 and
+    require(isinstance(value["files"], dict) and 2 <= len(value["files"]) <= 13 and
             isinstance(value["dependencies"], dict) and len(value["dependencies"]) <= 8, "Invalid journal inventory")
     sides = {}
     for name, pair in value["files"].items():
@@ -127,6 +128,7 @@ def validate(value):
     allowed = {content.REGISTRY, content.RUNTIME, "game/"+entry["definition"], "game/"+entry["reveal"],
                content.notice_path(entry), rating.path(identifier), added.path(identifier),
                content.source_path(identifier, "reveal"), content.source_path(identifier, "background")}
+    allowed.update(content.catalog_profiles.path(identifier, label) for label, _, _ in content.catalog_profiles.PROFILES)
     image = io.json_bytes(sides[content.source_path(identifier, "background")][1], 1024*1024)
     content.validate_source(image, entry)
     if image["current"]["status"] == "selected":
@@ -137,7 +139,7 @@ def validate(value):
     require(set(value["dependencies"]) == set(SHARED)-set(sides), "Foreign recovery dependency")
     for name, checksum in value["dependencies"].items():
         if checksum is not None: content.sha(checksum)
-    old_runtime, runtime = (io.json_bytes(raw, 8*1024*1024) for raw in sides[content.RUNTIME])
+    old_runtime, runtime = (io.json_bytes(raw, content.RUNTIME_LIMIT) for raw in sides[content.RUNTIME])
     require(runtime["format"] == old_runtime["format"] == content.RUNTIME_FORMAT and
             runtime["categories"] == old_runtime["categories"] and
             [e for e in runtime["entries"] if e["id"] != identifier] == old_runtime["entries"] and
@@ -192,6 +194,7 @@ def _publish(snapshot, journal, *, publication_seconds=None, recovery_seconds=No
     root = snapshot.root
     sides = validate(journal)
     raw = content.encoded(journal)
+    require(len(raw) <= LIMIT, f"Registration journal {len(raw)} exceeds {LIMIT} bytes")
     with diagnostics.operation("Publication", publication_seconds or 1800,
                                "override" if publication_seconds is not None else "registration-default",
                                recovery_seconds=recovery_seconds):

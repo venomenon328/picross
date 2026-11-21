@@ -512,3 +512,7 @@ Historische Studien, alte Abnahmen und Quellenbindungen:
 [Bestandsinventar](../docs/history/README.md). Die ursprüngliche Anleitung ist
 [am Stand vor Cleanup](https://github.com/venomenon328/picross/blob/0f89f08729539bbb4a02a590cbd18e58fbbda305/prototypes/p1/README.md) erreichbar.
 Historische Prüferdokumente mit Motivspoiler: [F01](https://github.com/venomenon328/picross/blob/37f500d5e6599a6c8ff85c8ca8edb4d190474c5f/game/F01_PROOF.md), [F02/F03](https://github.com/venomenon328/picross/blob/37f500d5e6599a6c8ff85c8ca8edb4d190474c5f/game/F02_PROOF.md).
+
+## Katalogprofile für Abschlussbilder
+
+Der Katalog zeigt bei gelösten Rätseln eine proportionale Vorschau. Beim Öffnen des gelösten Blatts zeigt die Abschlussansicht das gewählte Original. Neue und begonnene Blätter behalten das Fragezeichen bzw. die eigene Füllminiatur.

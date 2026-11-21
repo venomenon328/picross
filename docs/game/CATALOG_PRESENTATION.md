@@ -450,3 +450,7 @@ Der [historische Dokumentstand](https://github.com/venomenon328/picross/blob/6fe
 erhält frühere Lieferchronologie und ersetzte Regeln. Er ist keine zusätzliche
 Normquelle oder dauerhafte Prüfpflicht. Aktuelle Prüfungen folgen dem
 [Paketvertrag](../ci/CI_WORKFLOW_V2.md) und dem jeweils betroffenen Modul.
+
+## Katalogprofile für Abschlussbilder
+
+Runtime v9 misst den eingepassten Bildraum aus der natürlichen Quellgröße. Nach der Sessionfreigabe lädt die Karte das kleinste Profil, dessen tatsächliche Pixel beide aufgerundeten Renderachsen abdecken. Bei größerem Bedarf verwendet sie das größte Profil. Beim Profilwechsel gibt sie die vorherige Textur und die letzte lokale Restskalierung frei. PNG-Alpha, Zentrierung und die Übernahme vorbereiteter Zielkarten gelten auch bei UI125.

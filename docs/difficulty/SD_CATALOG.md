@@ -101,7 +101,7 @@ historische Lesbarkeit erlaubt keine Übernahme eines alten Plans.
 
 ## Aktuelle Katalogjournale
 
-`picross-current-catalog-journal-v1` hat exakt
+`picross-current-catalog-journal-v2` hat exakt
 `format,operation,report_run,old,new,retained,additions,replacements`.
 `additions` und `replacements` sind leer. Grenze **24 MiB**; der Writer schreibt
 nur aktuelle Katalogtexte und projiziert die Runtime. Zulässige Operationen:
@@ -139,3 +139,7 @@ Der [historische Vertragsstand](https://github.com/venomenon328/picross/blob/6fe
 und ältere Gitstände erhalten frühere Lieferungen; sie begründen keine neuen
 Readerpflichten. Aktuelle Nachweise beziehen sich auf den konkreten Auftrag,
 Diff und [CI-Vertrag](../ci/CI_WORKFLOW_V2.md).
+
+## Katalogprofile für Abschlussbilder
+
+Die aktuelle Quellenmenge enthält beide Katalogprofile je ID. Ihre Strukturgrenze beträgt 110.005 Quellen. Difficultybericht v7 und Aktivierungsplan v4 haben jeweils 16 MiB, Added-Plan v6 hat 8 MiB und Katalogjournal v2 hat 24 MiB Budget. Vor Publikation zählen die vollständigen kanonischen Seiten einschließlich Berichten. Eine technische Profiländerung erfordert keine Neubewertung.

@@ -69,12 +69,10 @@ werden. Bereits bestehende aktuelle
 Metadaten-, Rating- und Datumquellen werden wiederverwendet, ohne eine zweite
 bearbeitbare Datenhaltung aufzubauen.
 
-Die Runtimeprojektion `picross-runtime-registry-v8` bleibt in Form und
-Bedeutung unverändert. Bei der Bestandsüberführung bleiben ihre bestehenden
-Bytes erhalten; die Projektion des neuen Readers muss dieselben Werte liefern.
-Aktive Definitionen/Bilder/Notices, Save-Slots, IDs und Runtime-Rätselrevisionen
-werden nicht wegen der Werkzeugumstellung geändert. Auch manuelle aktuelle
-Namen/Kategorien, Bewertungen, Datumwerte und Bildpräferenzen bleiben erhalten.
+Runtime v9 übernimmt die bestehenden Werte und projiziert zusätzlich die geprüften
+Katalogprofile. Die einmalige Überführung bindet die gesamte Registrykohorte.
+Nur die technische Reveal-Recordrevision steigt. Alle bestehenden
+Definitionen, Originalbilder, Notices, Bewertungen und Added-Dateien bleiben bytegleich.
 
 Die Bezeichnung einer fachlichen Difficulty-Methode bleibt zur Bedeutung
 einer Bewertung erhalten. Sie verlangt keinen alten Gitcommit oder bytegleichen
@@ -84,23 +82,24 @@ fachliche Bewertung; bestehende Rätsel werden nicht ungefragt neu bewertet.
 ### 2.1 Geschlossene aktuelle Runtimeprojektion
 
 `game/data/registry.json` ist die kanonische UTF-8/LF-Projektion für den Spieler.
-Aktuelle Pythonwriter erzeugen ausschließlich `picross-runtime-registry-v8`.
+Aktuelle Pythonwriter erzeugen ausschließlich `picross-runtime-registry-v9`.
 Alle Objekte haben exakt die genannten Felder; der Spieler erhält keine
 Produktionsfreitexte, Freigaben oder zusätzlichen Herkunftsfelder.
 
 | Objekt/Feld | Geschlossene Form und Bedeutung |
 | --- | --- |
-| Wurzel | `format,categories,entries`; `format=picross-runtime-registry-v8`. |
+| Wurzel | `format,categories,entries`; `format=picross-runtime-registry-v9`. |
 | `categories` | Kategorienobjekte `id,name,order` nach [Kategorienvertrag](../game/CATEGORIES.md), aufsteigend nach `order`. |
-| Runtimeeintrag | `id,key,save_slot,definition,reveal,visible,category_id,difficulty,added_at,background,name`. |
+| Runtimeeintrag | `id,key,save_slot,definition,reveal,visible,category_id,difficulty,added_at,background,name,catalog_reveal`. |
 | Identität und Pfade | Aktuelle ID, Key, Save-Slot, Definition und wirksames Reveal; Ressourcenpfade relativ zu `game/`, ohne vorangestelltes `game/`. PNG/SVG-Reveal bleibt zulässig. |
+| `catalog_reveal` | Quellhash, natürliche Maße und zwei gebundene Profile nach [Revealtechnik](REVEAL_TRANSPARENCY.md). |
 | `visible` | Boolean; auch unsichtbare Einträge benötigen eine gültige Kategorie. |
 | `name,category_id` | Aktuelle Metadaten; Name 1…128 Zeichen und nicht ausschließlich Whitespace. Keine Ableitung aus historischer Produktion. |
 | `difficulty` | Minimale fachliche Projektion nach [SD-Catalog](../difficulty/SD_CATALOG.md) und [SD2-Integration](../difficulty/SD2_INTEGRATION.md), einschließlich dort definierter Null-/Altwerte. |
 | `added_at` | Gültiger UTC-Zeitpunkt oder null nach [Katalogsortierung](../game/CATALOG_SORTING.md). |
 | `background` | Exakt `status,image_revision,asset`. Aktuelle Pythonquellen verwenden `selected`, `none` oder `standard` und eine positive Revision 1…1.000.000. |
 | Hintergrundasset | Nur bei `selected` ein Ref `file,bytes,sha256`, mit `file=art/backgrounds/<id>.png`; bei `none` und `standard` null. Bildgrenzen und Capability gehören ausschließlich zum [Hintergrundvertrag](PUZZLE_BACKGROUNDS.md#hg31--zwei-geschlossene-bildprofile). |
-| Grenzen | Höchstens 256 Kategorien, 10.000 Einträge und 8 MiB Dateibytes; doppelte Schlüssel, Identitäten und ungültige Referenzen sind Fehler. |
+| Grenzen | Höchstens 256 Kategorien, 10.000 Einträge und 16 MiB Dateibytes; doppelte Schlüssel, Identitäten und ungültige Referenzen sind Fehler. |
 
 `mode` bleibt ausdrücklich in Inhaltsindex und Integrationsinput und ist kein
 zusätzliches Runtimefeld. Der Loader unterscheidet einen ungültigen Katalog von
@@ -108,7 +107,7 @@ einem gültigen leeren Katalog; unbekannte Zuordnungen entfernen keine Rätsel s
 
 ### 2.2 Spieler-Lesekompatibilität
 
-Der Godot-Loader liest weiterhin die exakten Runtimegenerationen v2 bis v8.
+Der Godot-Loader liest weiterhin die exakten Runtimegenerationen v2 bis v8 auf ihrem ursprünglichen Bildpfad mit 8 MiB Dateigrenze.
 Auch v8 darf einen historischen Hintergrund `legacy` mit
 `image_revision=null,asset=null` lesen. Das ist eine bestehende Lesekompatibilität;
 aktuelle Pythonquellen erzeugen keine neue `legacy`-Entscheidung. `standard`

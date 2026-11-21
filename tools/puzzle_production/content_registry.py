@@ -1,4 +1,4 @@
-"""Current content registry and unchanged runtime-v8 projection."""
+"""Current content registry and unchanged runtime-v9 projection."""
 from copy import deepcopy
 from pathlib import Path
 import os
@@ -46,20 +46,20 @@ def current_metadata(registry, catalog, root=None, *, definitions=None):
     return {row["id"]: deepcopy(row) for row in registry["metadata"]}
 
 
-def projection(registry, catalog, root=None, *, ratings=None, added=None, backgrounds=None, reveals=None, version=None):
+def projection(registry, catalog, root=None, *, ratings=None, added=None, backgrounds=None, reveals=None, catalogs=None, version=None):
     validate(registry, catalog)
-    require(version is None or version == 8, "Runtime v8 required")
-    if root is not None and all(v is None for v in (ratings, added, backgrounds, reveals)):
+    require(version is None or version == 9, "Runtime v9 required")
+    if root is not None and all(v is None for v in (ratings, added, backgrounds, reveals, catalogs)):
         rows = [current.runtime_row(current.selected(root, registry, e["id"])) for e in registry["entries"]]
     else:
-        require(all(v is not None for v in (ratings, added, backgrounds, reveals)), "Projection requires complete current data")
+        require(all(v is not None for v in (ratings, added, backgrounds, reveals, catalogs)), "Projection requires complete current data")
         meta = {row["id"]: row for row in registry["metadata"]}
         rows = [{**{k: e[k] for k in ("id", "key", "save_slot", "definition", "visible")},
-                 "reveal": reveals[e["id"]], "name": meta[e["id"]]["name"], "category_id": meta[e["id"]]["category_id"],
+                 "catalog_reveal": catalogs[e["id"]], "reveal": reveals[e["id"]], "name": meta[e["id"]]["name"], "category_id": meta[e["id"]]["category_id"],
                  "difficulty": catalog_rating.project(ratings[e["id"]]), "added_at": added[e["id"]]["added_at"],
                  "background": backgrounds[e["id"]]} for e in registry["entries"]]
     result = {"format": IMAGE_RUNTIME_FORMAT, "categories": categories.ordered(catalog), "entries": rows}
-    require(len(current.encoded(result)) <= 8*1024*1024, "Runtime exceeds byte limit")
+    require(len(current.encoded(result)) <= current.RUNTIME_LIMIT, "Runtime exceeds byte limit")
     return result
 
 
@@ -72,13 +72,13 @@ def check_checkout(root, replay=False, *, check_projection=True, pending_journal
     registry = validate(catalog_io.json_bytes(catalog_io.read(root, REGISTRY, 8*1024*1024), 8*1024*1024), catalog)
     result = projection(registry, catalog, root)
     if check_projection:
-        require(catalog_io.read(root, RUNTIME, 8*1024*1024) == current.encoded(result), "Stale current runtime")
+        require(catalog_io.read(root, RUNTIME, current.RUNTIME_LIMIT) == current.encoded(result), "Stale current runtime")
     return {"status": "valid", "entries": len(registry["entries"]), "categories": len(catalog["categories"])}
 
 
 def check_detail(root, snapshot, identifier):
     delivery = current.selected(root, snapshot["registry"], identifier)
-    runtime = catalog_io.json_bytes(snapshot["texts"][RUNTIME], 8*1024*1024)
+    runtime = catalog_io.json_bytes(snapshot["texts"][RUNTIME], current.RUNTIME_LIMIT)
     require(next(e for e in runtime["entries"] if e["id"] == identifier) == current.runtime_row(delivery), "Stale selected runtime")
     return delivery
 
