@@ -1,11 +1,17 @@
 {
   "format": "development-ci-plan/v1",
-  "issue": "https://github.com/venomenon328/picross/issues/660",
-  "package": "PROD-PAK-CHOI",
-  "modules": [],
-  "purpose": "Erstintegration von Pak Choi (pz-pak-choi) über RI-ONE mit endabgenommenem Farbraster, Reveal samt Katalogprofilen und gewählter HG31-Kontextzeichnung.",
-  "omitted": "Reine Rätselproduktion. Logiknachweis und Inhaltsprüfung laufen im Produktionsweg. Package CI prüft den Quellenkern ohne Zusatzmodule und Player-Build. Der Diff enthält 13 Produktpfade und diesen Paketplan.",
-  "test_changes": [],
+  "issue": "https://github.com/venomenon328/picross/issues/772",
+  "package": "PW-Abschluss ohne Reviewer-Anfragen bei Rätsel-Erstintegration",
+  "modules": ["tools"],
+  "purpose": "Prüft den tatsächlich kopierten PW-Schlussauftrag für gewählten Hintergrund und none, bedingten Merge und Draft-only sowie die Bytebindung des regenerierten Windows-Starters. Tooländerungen erfordern den regulären Windows-Player-Build.",
+  "omitted": "Keine zusätzlichen Fach-, Browser-, nativen oder Liefermodule. Geändert werden die Produktionsnorm und der Auftragstext, ohne Eingriff in Spiel-, Solver-, Registrierungs-, CI- oder GitHub-Schutzlogik.",
+  "test_changes": [
+    {
+      "path": "tools/test_authoring_sheet.py",
+      "disposition": "change-scoped",
+      "reason": "Die bestehende Prompt-Regression prüft den Ausschluss von Zweitreview, Copilot und Reviewer-Konto sowie Erhalt der tatsächlichen Prüfschritte und Mergebedingungen. Sie bleibt im tools-Modul."
+    }
+  ],
   "core_change": null,
   "evidence": {
     "mode": "none",

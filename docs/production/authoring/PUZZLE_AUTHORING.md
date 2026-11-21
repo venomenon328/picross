@@ -1,6 +1,6 @@
 # Picross: Produktionsregeln
 
-**Version 0.8.0 · Dokumentrevision 11 · 21.11.2026 · PROD-SLIM**
+**Version 0.8.0 · Dokumentrevision 12 · 21.11.2026 · PROD-SLIM**
 
 ## 1. Einstieg und Befugnisse
 
@@ -67,6 +67,13 @@ direktes Schreiben auf main, keine fremden Änderungen, ungeklärten Fremdassets
 Secrets oder privaten Daten übernehmen. Beauftragte Arbeitswurzel und
 [WORKSPACE](../../dev-rules/WORKSPACE.md) vor lokaler Ablage/Bereinigung lesen.
 
+Bei normaler Rätsel-Erstintegration bezeichnet Review die fachliche unabhängige
+Proofprüfung und die eigene Kontrolle des vollständigen PR-Diffs. Kein unabhängiges
+GitHub-PR-Zweitreview und kein Copilot-Review anfordern. Keine Reviewer-Konten oder
+Zustimmung zur Weitergabe des PR-Inhalts verlangen. Die Regeln für zusätzliche
+persönliche Prüfaufträge und tatsächliche GitHub-Mergesperren stehen in
+[Schritt 5 §8](PUZZLE_AUTHORING_STEP_5.md#8-abgenommenes-ergebnis-ins-spiel-integrieren).
+
 Probespiel ist optional; echte Bild-/Motiv-/Parameter-/Raster-/Hintergrundentscheidung
 und Endabnahme am Gegenstand bleiben Pflicht. Empfehlung/Datei/Klick/Kopieren/
 Aktualisierung/Schweigen geben nichts frei, Korrekturwünsche keine künftigen Bytes.
@@ -89,8 +96,10 @@ Revealwahl → Motiv-/Parameterfreigabe → qualifizierte Raster → Rasterwahl 
 Kontexte/Wahl oder none → Endabnahme → Finalizer → Export → frischer Plan →
 autorisiertes Register → Git/Draft-PR → bestätigtes main → Schritt 5 §9.
 PW2-B verbindet Hintergrundwahl/none, Endabnahme und Integration samt Commit/PR,
-Selbstprüfung des PR-Diffs und bedingtem Squash-Merge nach aktuellen Vor-Merge-Gates.
-Eine unabhängige PR-Zweitprüfung gehört bei normaler Rätselintegration nicht zum Standardprüfbedarf; siehe Schritt 5 §8.
+unabhängiger Proofprüfung und vollständigem Diff-Selbstreview. Bei grünen
+Pflichtchecks, Konfliktfreiheit, gebundener Endabnahme und passender Mergebefugnis
+direkt per Squash-Merge integrieren. Die normale Abschlusskette läuft ohne
+Zweitreviewer, Copilot-Anfrage oder Weitergabe des PR-Inhalts an Copilot.
 Nach bestätigter autorisierter Integration führt der Akteur den gebundenen
 Abschluss samt Branch, Arbeitsrelease und Tag direkt nach Schritt 5 §9 aus.
 Ausdrücklicher Draftumfang bleibt. Erst Absenden erklärt Rechte, Gitdaten belegen Erfolg.
