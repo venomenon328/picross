@@ -101,7 +101,9 @@ Bau und Inspektion verwenden die [gebundene Windows-Bauumgebung](../../tools/pro
 Die Startdiagnose prüft den regulären Export, den nativen Launcher und
 die Guard-Entscheidungen mit isoliertem Profil. Der Diagnosedispatch prüft
 außerdem den konkreten Kandidaten mit flüchtiger synthetischer Signatur,
-den PG-Helfer und die private Startfreigabe mit einem echten Playerfenster.
+den PG-Helfer und die Bestätigung des sichtbaren neuen Launcherfensters.
+Die Einführungsprobe für #733 prüft zusätzlich den alten Spielpfad mit dem
+Helfer aus dem veröffentlichten 0.1.3-MSI und einem echten Playerfenster.
 Der ausgeschlossene Diagnosetreiber liefert dafür den isolierten Kontext
 nach einem simulierten MSI-Erfolg. MSI-Inspektion, automatisierte Startbeobachtung,
 persönliche Sicht-/Bedienprobe und echte Installation sind eigene Belege.
