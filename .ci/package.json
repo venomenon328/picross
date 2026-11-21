@@ -1,10 +1,10 @@
 {
   "format": "development-ci-plan/v1",
   "issue": "https://github.com/venomenon328/picross/issues/700",
-  "package": "Shiitake Schritt 5 · Erstintegration",
+  "package": "Lotuswurzel · Motivvorlage und Parameter zur Freigabe",
   "modules": [],
-  "purpose": "Registriert pz-shiitake mit dem freigegebenen Raster raster-b, reveal-c und der HG31-Ableitung von background-c im Spielkatalog.",
-  "omitted": "Reine Rätseldaten einschließlich Metadaten, Definition, Bildern und Runtimeprojektion. Der verpflichtende Quellen- und Plankern läuft ohne Player-Build oder Zusatzmodule. RI-ONE prüft Logiknachweis, Bewertung und Lieferbytes während der Produktion. Keine Änderung an Tests oder CI-Kern.",
+  "purpose": "Legt die aus der gewählten Einzelscheibe abgeleitete Motivvorlage mit zwei monochromen Rastermaßen im aktuellen PW-B-Datensatz zur Freigabe vor.",
+  "omitted": "Reine Authoring-Metadaten. Der Quellen- und Plankern läuft ohne Zusatzmodule oder Playerbau. Bildsichtung, Flächenproben und Rücklesen der Originalbytes erfolgen in der Produktion.",
   "test_changes": [],
   "core_change": null,
   "evidence": {
