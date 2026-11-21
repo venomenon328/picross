@@ -1,10 +1,10 @@
 {
   "format": "development-ci-plan/v1",
   "issue": "https://github.com/venomenon328/picross/issues/660",
-  "package": "PROD-ONIGIRI",
+  "package": "PROD-LOTUSWURZEL",
   "modules": [],
-  "purpose": "Erstintegration des endabgenommenen Onigiri pz-onigiri über RI-ONE. Der Katalog erhält das gewählte Monoraster, das Reveal mit beiden Katalogprofilen, die 3:1-Kontextzeichnung und die gebundenen Metadaten.",
-  "omitted": "Reine Rätselproduktion. Proof, Bewertung und Lieferprüfung laufen über den Produktionsweg. Der Dokumentations- und CI-Quellenkern deckt die gelieferten Daten ohne Player-Build und Zusatzmodule ab.",
+  "purpose": "Erstintegration der endabgenommenen Lotuswurzel pz-lotuswurzel über RI-ONE mit Monoraster, Reveal samt Katalogprofilen, gewählter 3:1-Kontextzeichnung und Inhaltsmetadaten.",
+  "omitted": "Reine Rätselproduktion. Proof, Bewertung und tatsächliche Lieferung werden im Produktionsweg geprüft. Der CI-Quellenkern läuft ohne Player-Build und Zusatzmodule.",
   "test_changes": [],
   "core_change": null,
   "evidence": {
