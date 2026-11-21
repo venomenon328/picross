@@ -592,14 +592,29 @@ class AppReleaseTests(unittest.TestCase):
             payload.git(root, 'add', '.')
             payload.git(root, '-c', 'user.name=synthetic', '-c', 'user.email=synthetic@example.invalid', 'commit', '-qm', 'synthetic')
         payload.git(root, 'init', '-q')
+        source = Path(__file__).resolve().parents[1]
+        methods = payload.pw_method_files(lambda name: (source / name).read_bytes())
+        for name in sorted(methods):
+            write(name, (source / name).read_bytes())
         write('tools/puzzle_production/reader.py', b'reader=1\n'); commit()
         first = payload.fingerprint(root)
-        write('tools/puzzle_production/za1_fixtures.py', b'test-only fixture\n'); commit()
+        self.assertTrue(methods <= {row['file'] for row in first['files']})
+        for name in ('tools/puzzle_production/za1_fixtures.py', 'tools/production_workspace/smoke_windows.py'):
+            write(name, b'test-only fixture\n')
+        commit()
         self.assertEqual(first, payload.fingerprint(root), 'Test-only code must not trigger an app update')
         for name in ('content/a.json', 'game/main.gd', 'docs/NOT-PACKAGED.md', 'tools/ci_modular.py',
                      'tools/ci_growth.py', 'tools/work_ref_check.py', 'tools/publish_git.py', 'tools/work_publish.py'):
             write(name, b'irrelevant'); commit()
             self.assertEqual(first, payload.fingerprint(root))
+        for name in ('tools/puzzle_production/sd2_validation_0_4.json', 'tools/puzzle_production/sd2_rating_freeze.py'):
+            with self.subTest(name=name):
+                write(name, (source / name).read_bytes() + b'\n')
+                self.assertEqual(first, payload.fingerprint(root), 'Working bytes must not define the fingerprint')
+                commit()
+                updated = payload.fingerprint(root)
+                self.assertNotEqual(first['sha256'], updated['sha256'])
+                first = updated
         write('tools/work_refs.py', b'CLEAN_MAIN = "anchor"\n'); commit()
         with_anchor = payload.fingerprint(root)
         self.assertNotEqual(first['sha256'], with_anchor['sha256'])
@@ -615,6 +630,28 @@ class AppReleaseTests(unittest.TestCase):
         payload.git(root, '-c', 'user.name=synthetic', '-c', 'user.email=synthetic@example.invalid', 'commit', '-qm', 'link')
         with self.assertRaisesRegex(ValueError, 'Unsafe'):
             payload.fingerprint(root)
+
+    def test_pw_method_payload_matches_input_bytes_and_reader_paths(self):
+        source = Path(__file__).resolve().parents[1]
+        names = payload.pw_method_files(lambda name: (source / name).read_bytes())
+        self.assertEqual(sum(name.endswith('.py') for name in names), 27)
+        self.assertEqual(sum(name.endswith('.json') for name in names), 8)
+        files, hashes, rows = {}, {}, []
+        for name in sorted(names):
+            raw = (source / name).read_bytes()
+            file = self.root / '_internal' / name
+            file.parent.mkdir(parents=True, exist_ok=True)
+            file.write_bytes(raw)
+            files[name] = file
+            hashes[name] = channel.digest(raw)
+            rows.append({'file': name, 'bytes': len(raw), 'sha256': hashes[name]})
+        self.assertEqual(payload.verify_pw_method_resources({'files': rows}, hashes, files), hashes)
+        calibration = payload.PRODUCTION + 'difficulty_calibration_0_3.json'
+        with self.assertRaisesRegex(ValueError, 'Incomplete'):
+            payload.verify_pw_method_resources({'files': rows}, hashes, {name: file for name, file in files.items() if name != calibration})
+        files[calibration].write_bytes(files[calibration].read_bytes() + b'\n')
+        with self.assertRaisesRegex(ValueError, 'differs from committed input'):
+            payload.verify_pw_method_resources({'files': rows}, hashes, files)
 
     def test_pe_frozen_excludes_pw_motifs_but_retains_strict_source_binding(self):
         # PROD-SLIM added a PW-only phase-label import to current_authoring.
@@ -646,6 +683,10 @@ class AppReleaseTests(unittest.TestCase):
         toc.write_text(repr([('entry', str(entry), 'PYSOURCE')]))
         result = payload.audit_analysis(self.root, toc, {'sha256': 'x', 'files': [row]}, [])
         self.assertEqual(result['repository_inputs'], [row['file']])
+        entry.write_bytes(b'different working bytes')
+        with self.assertRaisesRegex(ValueError, 'differs from committed input'):
+            payload.audit_analysis(self.root, toc, {'sha256': 'x', 'files': [row]}, [])
+        entry.write_bytes(b'entry')
         unknown = self.root / 'outside.py'; unknown.write_bytes(b'not fingerprinted')
         toc.write_text(repr([('entry', str(entry), 'PYSOURCE'), ('new', str(unknown), 'PYMODULE')]))
         with self.assertRaisesRegex(ValueError, 'absent'):

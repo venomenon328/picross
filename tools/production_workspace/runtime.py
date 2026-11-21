@@ -12,6 +12,8 @@ import sys
 from .instance import PROTOCOL, control, data
 
 ROOT = Path(__file__).parent
+METHOD_ROOT = ROOT.parent / 'puzzle_production'
+METHOD_RESOURCE_PREFIX = 'tools/puzzle_production/'
 
 
 def build_id():
@@ -27,6 +29,13 @@ def build_id():
 
 
 def preflight(gui=False):
+    try:
+        from tools.puzzle_production import catalog_method
+        for method in catalog_method.METHODS:
+            catalog_method.method_hash(method)
+    except Exception as exc:
+        raise ValueError('Programmpaket unvollständig oder beschädigt. Interne Dateien der Bewertungsmethoden '
+                         'konnten nicht geprüft werden. Den gesamten App-Ordner neu entpacken.') from exc
     try:
         for module in ('presentation', 'repository', 'server', 'current_view', 'motifs'):
             importlib.import_module('tools.production_workspace.' + module)
@@ -48,7 +57,14 @@ def preflight(gui=False):
         manifest = ROOT / 'build.json'
         if manifest.exists():
             for name, expected in json.loads(manifest.read_text(encoding='utf-8'))['resources'].items():
-                if hashlib.sha256((ROOT / name).read_bytes()).hexdigest() != expected:
+                relative = name.removeprefix(METHOD_RESOURCE_PREFIX)
+                if relative == name:
+                    resource = ROOT / name
+                else:
+                    if Path(relative).name != relative or not relative:
+                        raise RuntimeError('Ungültiger Methodenressourcenpfad')
+                    resource = METHOD_ROOT / relative
+                if hashlib.sha256(resource.read_bytes()).hexdigest() != expected:
                     raise RuntimeError('Ressourcenbindung')
         if gui:
             import tkinter

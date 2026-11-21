@@ -71,9 +71,18 @@ erhält `contents:write`; Prüf-/PR-Code erhält kein Release-Schreibrecht.
 committeten Gitdateien samt Pfad, Gitmodus, Bytezahl und SHA-256 auf einen kanonischen
 Fingerprint ab. Sämtliche eingesammelten Produktions-Pythonmodule, App-Reader,
 UI, MSI-/Build-/Prüfcode, Pins, Guard, Lizenztexte, Icon und START sind Eingaben.
-Explizite Ausnahmen sind nicht eingebaute Markdown-/Schema-/Kalibrierungsdateien,
-CMD-Fallbackbau und manuelle Smokes. Neue Pythonmodule werden einbezogen;
-unbekannte Ressourcen und nichtreguläre Modi stoppen die Vorprüfung. Änderungen
+Zum PW-Payload gehören auch die unveränderten Pythonoriginale und JSON-Dateien,
+die die unterstützten eingefrorenen Bewertungsmethoden tatsächlich lesen. Dazu
+zählen deren gebundene Methoden-, Referenz-, Kalibrierungs-, Vergleichs- und
+Validierungsdateien. Sie werden aus demselben Buildcommit inventarisiert und
+physisch ausgeliefert. PYZ-Bytecode ersetzt ihre Originalbytes nicht.
+Maßgeblich sind die unveränderten Methodenmanifeste und die
+[Readergrenze in SD2-INTEGRATION](../difficulty/SD2_INTEGRATION.md#c-v01-01--methoden-und-tatsächliche-readergrenze).
+Ausgenommen bleiben tatsächlich nicht verwendete Dokument-/Schemadateien und
+Anforderungen der Entwicklerumgebung, CMD-Fallbackbau, manuelle Smokes und
+ausdrücklich ausgeschlossene Test-/Diagnosemodule. Neue Pythonmodule werden
+einbezogen. Unbekannte mögliche Paketinputs und nichtreguläre Modi stoppen die
+Vorprüfung. Änderungen
 außerhalb dieser Eingaben (insbesondere Inhalt, Spiel und allgemeiner CI-Kern)
 ändern den Fingerprint nicht. Der echte Bau gleicht die repositorybezogenen
 Dateien aus `Analysis-00.toc` gegen `inputs.json` ab; ein nicht inventarisierter

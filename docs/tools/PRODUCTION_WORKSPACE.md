@@ -329,8 +329,15 @@ Fremdbelegung kein stiller Portwechsel: Wiederholen oder ausdrücklich neuen Por
 mit Hinweis auf getrennte Browseroptionen/Entwürfe wählen. Frühere Zufallsport-
 Browserdaten bleiben unverändert; Migration wird nicht behauptet. Eine historische
 CMD ohne Protokoll zuerst regulär beenden. Produktionsbranches und Datencheckout
-liefern niemals ausführbaren Code. Fehlende Reader, UI/Tcl/Tk und echte
-Pillowdekodierung werden vor Bereitschaft geprüft.
+liefern niemals ausführbaren Code. Vor Bereitschaft prüft PW die benötigten
+Reader, UI/Tcl/Tk, echte Pillowdekodierung sowie die vollständigen unveränderten
+Ressourcen beider unterstützten Bewertungsmethoden. Fehlende oder beschädigte
+interne Methodenressourcen werden als Programmpaketfehler auf Deutsch gemeldet.
+Die Ressourcen- und Pfadbindung folgt
+[WINDOWS_BUILD](../../tools/production_workspace/WINDOWS_BUILD.md). Der
+Datencheckout liefert dafür weder ausführbaren Code noch Methodenoriginale.
+Diese Startprüfung validiert Methodenidentitäten. Sie analysiert oder bewertet
+kein Rätsel neu.
 
 Fensterschließen und „Assistent beenden“ sperren neue Arbeit, warten auf eigene
 Requests und Worker und geben Port/Lock erst nach deren Ende frei. Eine begonnene

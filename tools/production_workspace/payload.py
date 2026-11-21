@@ -25,12 +25,8 @@ IGNORED = {
     'update_diagnostic.py',  # Isolated synthetic signing adapter; never frozen.
     'helper_diagnostic.py', 'packaging/HelperDiagnostic.cs',  # Explicit, non-installing T02 adapter.
 }
-PRODUCTION_DATA = {
-    'difficulty_calibration_0_3.json', 'difficulty_method_0_3.json',
-    'difficulty_references_0_3.json', 'sd2_calibration_0_4.json',
-    'sd2_comparison_0_4.json', 'sd2_method_0_4.json',
-    'sd2_references_0_4.json', 'sd2_validation_0_4.json', 'requirements-image.txt',
-}
+METHOD_04 = PRODUCTION + 'sd2_method_0_4.json'
+METHOD_03 = PRODUCTION + 'difficulty_method_0_3.json'
 # Synthetic ZA-1 support is deliberately excluded from the Windows executable.
 PRODUCTION_TEST_ONLY = {'za1_fixtures.py'}
 
@@ -84,7 +80,22 @@ def pe_selected(path):
     return False
 
 
-def selected(path, *, app=PW):
+def pw_method_files(read):
+    """Derive the reader's physical originals from the two method manifests."""
+    modern = json.loads(read(METHOD_04))
+    legacy = json.loads(read(METHOD_03))
+    # 0.3 names its references and calibration implicitly. 0.4 binds both
+    # in artifacts, alongside its own method inputs.
+    python = modern['implementation'].keys() | legacy['implementation'].keys()
+    data = modern['artifacts'].keys() | {Path(METHOD_04).name, Path(METHOD_03).name,
+                                       'difficulty_references_0_3.json', 'difficulty_calibration_0_3.json'}
+    for names, extension in ((python, 'py'), (data, 'json')):
+        if any(not re.fullmatch(r'[a-z0-9_]+\.' + extension, name) for name in names):
+            raise ValueError('Unsafe PW method input name')
+    return {PRODUCTION + name for name in python | data}
+
+
+def selected(path, *, app=PW, method_files=None):
     if app == PG:
         # Producer-only code stays outside the existing PW/PE PyInstaller graphs.
         return import_module('tools.game_app.inputs').selected(path)
@@ -98,10 +109,17 @@ def selected(path, *, app=PW):
     for scope in (WORKSPACE, PRODUCTION):
         if path.startswith(scope):
             local = path[len(scope):]
-            if local.endswith('.md') or (scope == WORKSPACE and local in IGNORED) or (scope == PRODUCTION and local in PRODUCTION_DATA | PRODUCTION_TEST_ONLY):
+            if (local.endswith('.md') or (scope == WORKSPACE and local in IGNORED) or
+                    (scope == PRODUCTION and local in PRODUCTION_TEST_ONLY | {'requirements-image.txt'})):
                 return False
             if local.endswith('.py'):
                 return True
+            if scope == PRODUCTION and local.endswith('.json'):
+                if method_files is None:
+                    root = Path(__file__).resolve().parents[2]
+                    method_files = pw_method_files(lambda name: (root / name).read_bytes())
+                if path in method_files:
+                    return True
             if scope == WORKSPACE and (local.startswith('ui/') or local.startswith('licenses/') or
                                       local in {PW.icon_resource, 'packaging/Guard.cs', 'packaging/UpdateHelper.cs', 'release.json',
                                                 'requirements-windows.txt', 'requirements-update.txt',
@@ -114,13 +132,15 @@ def selected(path, *, app=PW):
 def fingerprint(root, *, app=PW):
     rows = []
     seen = set()
-    tree = git(root, 'ls-tree', '-rz', '--full-tree', 'HEAD').split(b'\0')
+    commit = git(root, 'rev-parse', 'HEAD').decode('ascii').strip()
+    methods = pw_method_files(lambda name: git(root, 'show', f'{commit}:{name}')) if app == PW else set()
+    tree = git(root, 'ls-tree', '-rz', '--full-tree', commit).split(b'\0')
     for entry in tree:
         if not entry:
             continue
         metadata, name = entry.split(b'\t', 1)
         path = name.decode('utf-8')
-        if not selected(path, app=app):
+        if not selected(path, app=app, method_files=methods):
             continue
         mode, kind, blob = metadata.decode().split()
         parts = PurePosixPath(path).parts
@@ -133,10 +153,34 @@ def fingerprint(root, *, app=PW):
         seen.add(path.casefold())
         raw = git(root, 'cat-file', 'blob', blob)
         rows.append({'file': path, 'mode': mode, 'bytes': len(raw), 'sha256': hashlib.sha256(raw).hexdigest()})
+    missing_methods = methods - {row['file'] for row in rows}
+    if missing_methods:
+        raise ValueError('Missing committed PW method inputs: ' + repr(sorted(missing_methods)))
     rows.sort(key=lambda row: row['file'])
     if not rows:
         raise ValueError('Empty package input inventory')
     return {'format': 'picross-app-inputs-v1', 'sha256': hashlib.sha256(canonical(rows)).hexdigest(), 'files': rows}
+
+
+def bound_input(path, row):
+    if not path.is_file() or path.is_symlink():
+        raise ValueError('Missing or linked committed input: ' + row['file'])
+    raw = path.read_bytes()
+    if len(raw) != row['bytes'] or hashlib.sha256(raw).hexdigest() != row['sha256']:
+        raise ValueError('Source differs from committed input: ' + row['file'])
+    return row['sha256']
+
+
+def verify_pw_method_resources(inputs, resources, files):
+    """Bind the physical PW reader paths and bytes to the input inventory."""
+    methods = pw_method_files(lambda name: files[name].read_bytes())
+    if methods != {name for name in resources if name.startswith(PRODUCTION)} or methods != set(files):
+        raise ValueError('Incomplete or extra PW method resources')
+    expected = {row['file']: row for row in inputs['files']}
+    for name in sorted(methods):
+        if name not in expected or bound_input(files[name], expected[name]) != resources[name]:
+            raise ValueError('Unbound PW method resource: ' + name)
+    return {name: resources[name] for name in sorted(methods)}
 
 
 def audit_analysis(root, toc, inventory, generated, *, app=PW):

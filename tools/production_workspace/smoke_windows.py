@@ -1,5 +1,6 @@
 """One-time P3-T02 smoke of an unpacked delivery, not a CI/browser test family."""
 import argparse
+from contextlib import contextmanager
 import hashlib
 import http.client
 import json
@@ -8,6 +9,7 @@ from pathlib import Path
 import shutil
 import socket
 import subprocess
+import tempfile
 import time
 import zipfile
 
@@ -187,9 +189,224 @@ def smoke(archive, destination):
                 child.kill(); child.wait(timeout=10)  # Only exact synthetic children created above.
 
 
+def raster_fixture(repo, root):
+    from tests.puzzle_production.current_fixtures import checkout, make, put
+    from tests.puzzle_production.test_current_authoring import decide, judgment
+    from tools.puzzle_production import current_authoring as current
+    from tools.test_production_workspace import commit
+
+    checkout(repo)
+    git(repo, 'init', '-q', '-b', 'main')
+    base = commit(repo)
+    entries = []
+    for version in ('0.4', '0.3'):
+        identifier = 'pz-frozen-' + version.replace('.', '')
+        method = 'picross-difficulty-' + version
+        fixture = make(root / identifier, identifier=identifier, method=method)
+        incoming = json.loads((fixture / 'manifest.json').read_bytes())
+        prefix = f'content/authoring/{identifier}/data/'
+        assets = [
+            {'id': role + '-a', 'role': role, 'label': role,
+             'file': put(repo, prefix + role + '.png', (fixture / 'reveal.png').read_bytes()),
+             'rights': incoming['reveal']['rights'], 'review': judgment(current.CRITERIA[role])}
+            for role in ('reveal', 'motif')
+        ]
+        definition = json.loads((fixture / 'definition.json').read_bytes())
+        raster = {'id': 'raster-a', 'label': 'Synthetisches Raster',
+                  **{key: put(repo, prefix + key + '.json', (fixture / incoming[key]['file']).read_bytes())
+                     for key in ('definition', 'proof', 'difficulty')},
+                  'preview': put(repo, prefix + 'preview.png', current.raster_preview(definition)),
+                  'review': judgment(current.CRITERIA['raster']), 'exceptions': []}
+        parameters = {'width': 3, 'height': 3, 'mode': 'mono', 'foreground_colors': 1,
+                      'size_constraint': 'exact', 'foreground_color_constraint': 'exact'}
+        limits = {'raster_candidates': 6, 'repair_rounds': 2, 'image_corrections': 2}
+        record = {'format': current.FORMAT, 'puzzle_id': identifier, 'revision': 'current',
+                  'source_commit': base, 'operation': 'production', 'target': None, 'title': identifier,
+                  'category_id': 'test', 'state': 'raster_ready', 'brief': 'Synthetischer Methoden-Smoke',
+                  'parameters': {'proposed': [parameters], 'approved': [parameters]}, 'assets': assets,
+                  'rasters': [raster], 'selected': {'reveal': 'reveal-a', 'motif': 'motif-a',
+                  'raster': None, 'background': None}, 'decisions': [], 'blockers': [], 'test_only': True,
+                  'budgets': {'limits': limits, 'used': dict.fromkeys(limits, 0)}, 'integration': None}
+        for scope in ('reveal', 'motif'):
+            decide(record, scope)
+        current.validate(record)
+        name = current.path(identifier)
+        put(repo, name, current.encoded(record))
+        entries.append({'puzzle_id': identifier, 'revision': 'current', 'record': name})
+    put(repo, current.INDEX, current.encoded({'format': 'picross-authoring-index-v1', 'entries': entries}))
+    commit_id = commit(repo)
+    paths = git(repo, 'ls-tree', '-r', '--name-only', commit_id).decode().splitlines()
+    if not paths or any(not name.startswith(('content/', 'game/data/')) or Path(name).suffix not in {'.json', '.png'}
+                        for name in paths):
+        raise RuntimeError('Synthetischer Datencheckout enthält ausführbare Quellen oder fremde Ressourcen.')
+    return commit_id, paths, entries
+
+
+def start_frozen(app, state, work, *extra):
+    # In particular, source Python, a developer venv and the checkout CWD
+    # cannot supply importable code or original method files to this process.
+    env = {name: value for name, value in os.environ.items() if not name.upper().startswith('PYTHON')}
+    git_path = Path(shutil.which('git')).parent
+    env['PATH'] = os.pathsep.join((str(git_path), str(Path(os.environ['SystemRoot']) / 'System32')))
+    env['TEMP'] = env['TMP'] = str(work)
+    return subprocess.Popen([str(app / 'Picross-Start.exe'), '--headless', '--no-browser', '--state', str(state), *extra],
+                            cwd=work, env=env, creationflags=subprocess.CREATE_NO_WINDOW,
+                            stdout=subprocess.DEVNULL, stderr=subprocess.PIPE)
+
+
+@contextmanager
+def frozen_reader(app, state, work, commit):
+    lock = StateLock(state)
+    with start_frozen(app, state, work) as child:
+        metadata = None
+        try:
+            def ready():
+                if child.poll() is not None:
+                    raise RuntimeError('Frozen-Start fehlgeschlagen: ' + child.stderr.read().decode('utf-8', errors='replace'))
+                if lock.metadata.exists():
+                    identity = lock.read()
+                    if control(identity, 'identify')['state'] == 'ready':
+                        return identity
+                return None
+            metadata = wait_for(ready)
+            if metadata['build'] != commit:
+                raise RuntimeError('Frozen-Instanz meldet einen fremden Buildcommit.')
+            session = control(metadata, 'open')['browser_url'].split('#', 1)[1]
+
+            def request(path):
+                connection = http.client.HTTPConnection('127.0.0.1', metadata['port'], timeout=30)
+                try:
+                    connection.request('GET', path, headers={'X-Workspace-Session': session})
+                    response = connection.getresponse()
+                    return response.status, json.loads(response.read())
+                finally:
+                    connection.close()
+
+            def finished():
+                status, listing = request('/api/jobs')
+                if status != 200:
+                    raise RuntimeError('Frozen-Jobliste nicht lesbar.')
+                return listing if listing['update']['state'] in ('done', 'error') else None
+
+            listing = wait_for(finished, timeout=120)
+            yield listing, request
+        finally:
+            if metadata and child.poll() is None:
+                try:
+                    control(metadata, 'stop')
+                    if child.wait(timeout=30) != 0:
+                        raise RuntimeError('Frozen-Instanz konnte nicht regulär beenden.')
+                finally:
+                    if child.poll() is None:
+                        child.kill()
+                        child.wait(timeout=10)
+            elif child.poll() is None:
+                child.kill()
+                child.wait(timeout=10)
+
+
+def verify_method_candidate(app, build, inspection):
+    audit = json.loads((inspection / 'method-resources.json').read_bytes())
+    delivery = json.loads((build / 'delivery.json').read_bytes())
+    result = json.loads((inspection / 'result.json').read_bytes())
+    keys = ('commit', 'payload_fingerprint', 'msi_sha256')
+    if not result['compared_to_build'] or any(audit[key] != result[key] or audit[key] != delivery[key] for key in keys):
+        raise RuntimeError('Frozen-Smoke ohne zugeordnete MSI-Inspektion.')
+    inventory_path = app / 'inventory.json'
+    inventory_raw = inventory_path.read_bytes()
+    inventory = json.loads(inventory_raw)
+    if hashlib.sha256(inventory_raw).hexdigest() != audit['inventory_sha256'] or inventory['commit'] != audit['commit']:
+        raise RuntimeError('Frozen-Dateiinventar weicht vom inspizierten MSI ab.')
+    files = {name.relative_to(app).as_posix() for name in app.rglob('*') if name.is_file()}
+    if files != {row['file'] for row in inventory['files']} | {'inventory.json'}:
+        raise RuntimeError('Frozen-Dateimenge weicht vom inspizierten MSI ab.')
+    for row in inventory['files']:
+        raw = (app / row['file']).read_bytes()
+        if len(raw) != row['bytes'] or hashlib.sha256(raw).hexdigest() != row['sha256']:
+            raise RuntimeError('Frozen-Datei weicht vom inspizierten MSI ab: ' + row['file'])
+    return audit
+
+
+def method_smoke(build, inspection, destination):
+    if os.name != 'nt':
+        raise RuntimeError('PW-SD2-A benötigt Windows.')
+    destination.mkdir()
+    app = build / 'dist/Picross-Start'
+    audit = verify_method_candidate(app, build, inspection)
+    commit = audit['commit']
+    with tempfile.TemporaryDirectory(prefix='method-smoke-', dir=destination) as temporary:
+        work = Path(temporary)
+        repo, state = work / 'Daten ä', work / 'Zustand ü'
+        data_commit, data_paths, entries = raster_fixture(repo, work)
+        configure(repo, state, refs=['main'])
+        cwd = work / 'Fremder Startordner ö'; cwd.mkdir()
+        (cwd / 'tools.py').write_text('raise RuntimeError("FOREIGN MODULE MUST NOT RUN")\n', encoding='utf-8')
+        projections = {}
+        with frozen_reader(app, state, cwd, commit) as (listing, request):
+            if listing['update']['state'] != 'done' or listing['errors'] or len(listing['jobs']) != len(entries):
+                raise RuntimeError('Frozen-Jobliste enthält nicht genau die synthetischen Rasterangebote.')
+            for job in listing['jobs']:
+                status, detail = request('/api/jobs/' + job['id'])
+                if status != 200:
+                    raise RuntimeError('Frozen-Detailreader: ' + repr(detail))
+                facts = detail['facts']
+                method = {'pz-frozen-04': 'picross-difficulty-0.4', 'pz-frozen-03': 'picross-difficulty-0.3'}[job['puzzle_id']]
+                expected = {'width': 3, 'height': 3, 'mode': 'mono', 'used_colors': 1,
+                            'difficulty': {'method': method, 'level': 'L1', 'assessment_type': 'instrumented',
+                                           'confidence': 'medium', 'plausible_range': ['L1', 'L1'], 'r4_required': False}}
+                if (job['commit'] != data_commit or not facts['test_only'] or facts['state'] != 'raster_ready'
+                        or facts['metadata'] != expected or [(offer['kind'], offer['id']) for offer in detail['offers']]
+                        != [('raster', 'raster-a')]):
+                    raise RuntimeError('Unerwartete Frozen-Rasterprojektion: ' + repr(facts['metadata']))
+                projections[job['puzzle_id']] = facts['metadata']
+
+        negatives = []
+        for name in ('difficulty_method_0_3.json', 'sd2_rating_freeze.py'):
+            relative = 'tools/puzzle_production/' + name
+            for mutation in ('missing', 'changed'):
+                with tempfile.TemporaryDirectory(prefix='broken-', dir=work) as broken:
+                    root = Path(broken)
+                    copy = Path(shutil.copytree(app, root / 'app'))
+                    broken_state = root / 'state'
+                    member = copy / '_internal' / relative
+                    if mutation == 'missing':
+                        member.unlink()
+                    else:
+                        member.write_bytes(b'changed')
+                    with start_frozen(copy, broken_state, cwd, '--repository', str(repo)) as child:
+                        try:
+                            _, raw = child.communicate(timeout=45)
+                        finally:
+                            if child.poll() is None:
+                                child.kill()
+                                child.wait(timeout=10)
+                        error = raw.decode('utf-8').strip()
+                        if child.returncode != 2 or broken_state.exists() or not error.startswith(
+                                'Programmpaket unvollständig oder beschädigt. Interne Dateien der Bewertungsmethoden'):
+                            raise RuntimeError(f'Frozen-Preflight akzeptierte {mutation} {name}: {child.returncode} {error!r}')
+                        negatives.append({'file': relative, 'mutation': mutation, 'exit': child.returncode, 'error': error,
+                                          'state_created': False})
+        if git(repo, 'status', '--porcelain') or git(repo, 'rev-parse', 'HEAD').decode().strip() != data_commit:
+            raise RuntimeError('Der synthetische Datencheckout wurde verändert.')
+    result = {**audit, 'format': 'picross-pw-method-smoke-v1', 'exe_sha256': hashlib.sha256(
+              (app / 'Picross-Start.exe').read_bytes()).hexdigest(), 'data_commit': data_commit,
+              'data_tree_files': data_paths, 'projections': projections, 'preflight_rejections': negatives}
+    output = json.dumps(result, ensure_ascii=False, indent=2) + '\n'
+    (destination / 'frozen-methods.json').write_text(output, encoding='utf-8')
+    print(output)
+
+
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--archive', type=Path, required=True)
+    mode = parser.add_mutually_exclusive_group(required=True)
+    mode.add_argument('--archive', type=Path)
+    mode.add_argument('--method-build', type=Path)
+    parser.add_argument('--inspection', type=Path)
     parser.add_argument('--output', type=Path, required=True)
     args = parser.parse_args()
-    smoke(args.archive.resolve(), args.output.resolve())
+    if args.method_build:
+        if not args.inspection:
+            parser.error('--method-build benötigt --inspection')
+        method_smoke(args.method_build.resolve(), args.inspection.resolve(), args.output.resolve())
+    else:
+        smoke(args.archive.resolve(), args.output.resolve())

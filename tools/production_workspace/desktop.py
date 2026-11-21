@@ -35,6 +35,29 @@ def error_dialog(message, root=None):
             ctypes.windll.user32.MessageBoxW(None, message, 'Picross · Start nicht möglich', 0x10)
 
 
+def headless_error(message):
+    data = (message + '\n').encode('utf-8')
+    if getattr(sys, 'frozen', False) and hasattr(sys.stderr, 'buffer'):
+        sys.stderr.buffer.write(data)
+        sys.stderr.buffer.flush()
+    elif sys.stderr is not None:
+        print(message, file=sys.stderr)
+    elif os.name == 'nt':
+        # A windowed Frozen EXE has no Python stderr. Use the supervisor's
+        # inherited redirection if it supplied one.
+        import ctypes
+        from ctypes import wintypes
+        kernel = ctypes.WinDLL('kernel32')
+        kernel.GetStdHandle.argtypes = [wintypes.DWORD]
+        kernel.GetStdHandle.restype = wintypes.HANDLE
+        handle = kernel.GetStdHandle(-12)  # STD_ERROR_HANDLE
+        if handle not in (None, ctypes.c_void_p(-1).value):
+            kernel.WriteFile.argtypes = [wintypes.HANDLE, ctypes.c_char_p, wintypes.DWORD,
+                                         ctypes.POINTER(wintypes.DWORD), wintypes.LPVOID]
+            written = wintypes.DWORD()
+            kernel.WriteFile(handle, data, len(data), ctypes.byref(written), None)
+
+
 def setup(root, args, state):
     from tkinter import ttk, filedialog, messagebox
     import tkinter as tk
@@ -343,9 +366,9 @@ def main(argv=None, *, console=False):
         return run_headless(args, lock, build) if args.headless else run_gui(args, lock, build)
     except (ValueError, OSError, RuntimeError, ImportError) as exc:
         message = str(exc) if isinstance(exc, ValueError) else 'Start nicht möglich. Gesamtes App-Paket neu entpacken, Einrichtung und Zugriffsrechte prüfen.'
-        if (console or args.headless) and sys.stderr is not None:
-            print(message, file=sys.stderr)
-        elif not args.headless:
+        if console or args.headless:
+            headless_error(message)
+        else:
             error_dialog(message)
         return 2
     finally:

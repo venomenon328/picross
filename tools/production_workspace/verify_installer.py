@@ -1,5 +1,6 @@
 """Manual Actions MSI byte inspection; never installs or changes machine policy."""
 import argparse
+import hashlib
 import json
 from pathlib import Path, PurePosixPath
 import re
@@ -11,7 +12,7 @@ import zipfile
 
 from .build_windows import ROOT, sha
 from .release import release
-from .payload import fingerprint
+from .payload import PRODUCTION, canonical, fingerprint, verify_pw_method_resources
 from .update_verifier import production_trust
 from tools.msi_database import msi_properties
 from tools.app_products import PG, PW, PE
@@ -61,10 +62,15 @@ def verify(build, output, expected_commit, wix_archive=None, compare_build=False
     require(msi.stat().st_size == report['msi_bytes'] and sha(msi) == report['msi_sha256'], 'MSI byte mismatch')
     require((build / (msi.name + '.sha256')).read_text(encoding='utf-8') ==
             report['msi_sha256'] + '  ' + msi.name + '\n', 'Checksum file mismatch')
+    if app == PW:
+        inputs = json.loads((build / 'inputs.json').read_bytes())
+        require(hashlib.sha256(canonical(inputs['files'])).hexdigest() == inputs['sha256'] == report['payload_fingerprint'],
+                'PW input inventory fingerprint mismatch')
     if compare_build:
-        inputs = fingerprint(ROOT, app=app)
-        require(report['payload_fingerprint'] == inputs['sha256'], 'Source fingerprint mismatch')
-        require(json.loads((build / 'inputs.json').read_bytes()) == inputs, 'Input inventory mismatch')
+        committed_inputs = fingerprint(ROOT, app=app)
+        require(report['payload_fingerprint'] == committed_inputs['sha256'], 'Source fingerprint mismatch')
+        require(json.loads((build / 'inputs.json').read_bytes()) == committed_inputs, 'Input inventory mismatch')
+        inputs = committed_inputs
         audit = json.loads((build / 'input-audit.json').read_bytes())
         if app == PG:
             from tools.game_app.inspect import verify_audit
@@ -148,6 +154,14 @@ def verify(build, output, expected_commit, wix_archive=None, compare_build=False
                 require(original.is_relative_to(image.resolve()) and sha(original) == row['sha256'],
                         'MSI payload differs from original build: ' + row['file'])
         components = json.loads(payload['components.json'].read_text(encoding='utf-8'))
+        if app == PW:
+            prefix = '_internal/'
+            files = {name.removeprefix(prefix): file for name, file in payload.items() if name.startswith(prefix + PRODUCTION)}
+            inventory_sha256 = sha(inventory_file)
+            method_resources = verify_pw_method_resources(inputs, components['resources'], files)
+            if compare_build:
+                require(method_resources == audit.get('method_resources') and set(method_resources) <= set(audit['repository_inputs']),
+                        'MSI methods differ from frozen input audit')
         if app == PG:
             from tools.game_app.inspect import verify_payload
             verify_payload(build, root, payload, components, report, compare_build)
@@ -207,6 +221,11 @@ def verify(build, output, expected_commit, wix_archive=None, compare_build=False
               'inventory_files': len(rows), 'license_files': len(licenses), 'compared_to_build': compare_build,
               'limits': ('Actual MSI database and all unpacked bytes verified. No MSI installation; GAME-APP-R01 is separate.' if app == PG else
                          'Actual MSI database and all unpacked bytes verified. No installation; T02 requires a non-elevated Windows client.')}
+    if app == PW:
+        methods = {'commit': expected_commit, 'payload_fingerprint': report['payload_fingerprint'],
+                   'msi_sha256': report['msi_sha256'], 'inventory_sha256': inventory_sha256,
+                   'files': method_resources}
+        (output / 'method-resources.json').write_text(json.dumps(methods, indent=2) + '\n', encoding='utf-8')
     (output / 'result.json').write_text(json.dumps(result, indent=2) + '\n', encoding='utf-8')
     print(json.dumps(result))
     return result

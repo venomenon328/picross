@@ -68,7 +68,17 @@ synthetische `za1_fixtures` und der gesamte `tests`-Namensraum bleiben aus der
 PyInstaller-Analysis ausgeschlossen und zählen nicht zum Appfingerprint.
 Der echte Analysis-/PYZ-Abgleich weist unerwartete Testmodule weiterhin ab,
 statt diese ins Fingerprintinventar aufzunehmen;
-der Datencheckout hat keine Codeautorität. `components.json` bindet Commit,
+der Datencheckout hat keine Codeautorität. PW bündelt sämtliche durch die
+unterstützten Methodenmanifeste gebundenen Python- und JSON-Originaldateien
+physisch unter `_internal/tools/puzzle_production/`. Der Bau prüft jede Datei
+gegen denselben committeten Inputbestand und bindet sie im ausgelieferten
+Datei- und Ressourceninventar. Methodenressourcen verwenden repo-relative Keys
+mit Wurzel `_internal/`. Die übrigen PW-Ressourcen verwenden weiter Keys relativ
+zu `_internal/tools/production_workspace/`. Importierbarkeit oder Bytecode
+allein bestätigen diese Vollständigkeit nicht. Die eingefrorenen Quellen und
+Methodenidentitäten bleiben unverändert. Synthetische Fixtureproduzenten und
+Diagnoseadapter gehören nicht in den App-Payload.
+`components.json` bindet Commit,
 Fingerprint, Architektur, Komponenten und Ressourcenhashes, `inventory.json`
 die übrigen Appdateien. Kein Versprechen bitidentischer EXEs ohne Messung.
 
@@ -165,6 +175,16 @@ ausdrücklicher Portwechsel, eigener synthetischer Absturz, fehlendes Git und
 defekte UI. Nachlauf prüft echte Prozess-/Portbeendigung und unveränderte Datenrefs.
 Nur eigene synthetische Prozesse, keine P2-Löschung. Kein Browsernachweis.
 Eigene Smoke-/Builddaten anschließend gemäß Arbeitsablagevertrag bereinigen.
+
+Der bedarfsbezogene Methodennachweis startet die Frozen-EXE desselben
+hashgebundenen Kandidaten wie die MSI-Inspektion. Über den tatsächlichen
+Detailreader öffnet er einen synthetischen aktuellen `raster_ready`-Record
+mit 0.4-Bewertung und einen begrenzten 0.3-Fall. Isolierte Kopien mit fehlenden
+oder manipulierten Methodenressourcen müssen vor Bereitschaft mit
+Programmpaketfehler scheitern. Dieser Readernachweis ergänzt die MSI-Dateiliste
+und den `reveal_review`-Smoke. Ein Entwickler-Pythonlauf belegt den Frozen-Reader
+nicht. Ausführung und befristete Zustellung bestimmt das jeweilige Issue/Paket.
+Ein persönlicher Installations- oder Bediennachweis ist dafür nicht vorgesehen.
 
 P3-T03 bleibt separat: zulässiger interaktiver Windowsdesktop, tatsächlicher
 Doppelklick, native Einrichtung/Fehler/Stop und tatsächlich geöffneter
