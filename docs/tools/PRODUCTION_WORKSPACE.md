@@ -497,7 +497,13 @@ explizites gespeichertes `false` bleibt erhalten. Die Option und die Wirkung des
 konkreten Schlussauftrags sind sichtbar; Kopieren ist noch kein Absenden.
 Korrektur und Wiederaufnahme erzeugen weder eine neue Endabnahme noch eine neue
 Mergefreigabe. Vorhandene passende Endabnahmen werden nicht erneut erklärt.
-Ein unabhängiges PR-Zweitreview wird bei normaler Rätselintegration nicht automatisch angefordert (Authoring Schritt 5 §8).
+Der kopierte Schlussauftrag schließt bei normaler Rätsel-Erstintegration in
+beiden Mergeoptionen Zweitreview- und Copilot-Anfragen, die Anforderung eines
+Reviewerkontos und die Weitergabe von PR-Inhalten an Copilot ausdrücklich aus.
+Unabhängiger Rätsel-Proof und vollständiges PR-Diff-Selbstreview stehen im Auftrag.
+Den bedingten Squash-Merge nach bestätigten Pflichtchecks, Konfliktfreiheit,
+gebundener Endabnahme und Mergebefugnis regelt
+[Authoring Schritt 5 §8](../production/authoring/PUZZLE_AUTHORING_STEP_5.md#8-abgenommenes-ergebnis-ins-spiel-integrieren).
 Unveränderte Quellenwerte und allgemeine Regeln werden nicht im Prompt wiederholt;
 Auftrag, feste Recordquelle, neue Absichten und persönliche Arbeitswurzel bleiben.
 
