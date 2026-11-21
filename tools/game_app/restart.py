@@ -1,4 +1,5 @@
 """PG's private, one-use launcher authentication and game observation."""
+from contextlib import contextmanager
 import ctypes
 from ctypes import wintypes as w
 import hashlib
@@ -42,7 +43,8 @@ def line(pipe):
     raise ValueError('Wiederanlauf nicht rechtzeitig bestätigt.')
 
 
-def verify_helper(pipe, pid, expected):
+@contextmanager
+def verified_helper(pipe, pid, expected):
     import msvcrt
 
     kernel = ctypes.WinDLL('kernel32', use_last_error=True)
@@ -53,15 +55,17 @@ def verify_helper(pipe, pid, expected):
     owner = w.ULONG()
     require(kernel.GetNamedPipeServerProcessId(msvcrt.get_osfhandle(pipe.fileno()), ctypes.byref(owner))
             and owner.value == pid, 'Fremder PG-Wiederanlaufhelfer.')
-    process = kernel.OpenProcess(0x1000, False, pid)
+    process = kernel.OpenProcess(0x101000, False, pid)
     require(process, 'Updatehelfer nicht prüfbar.')
     try:
         require(process_image(pid, process) == expected, 'Fremdes Updateprogramm.')
+        yield process
     finally:
         kernel.CloseHandle(process)
 
 
-def restart(directory, build, state):
+@contextmanager
+def authenticated_pipe(state):
     name, key, pid, nonce = (os.environ.pop(field, '') for field in ENV)
     require(all(hex_string(value, 48) for value in (name, key, nonce)) and
             pid.isascii() and pid.isdecimal() and 0 < int(pid) <= 0xFFFFFFFF,
@@ -71,8 +75,7 @@ def restart(directory, build, state):
     require(read_small(updates / 'update-accepted.json') == {'nonce': nonce}
             and accepted_handoff(updates), 'PG-Übergabe nicht aktiv.')
     helper = updates / 'update-staging' / nonce / 'UpdateHelper.exe'
-    with open(r'\\.\pipe\PicrossPGReady-' + name, 'r+b', buffering=0) as pipe:
-        verify_helper(pipe, int(pid), helper)
+    with open(r'\\.\pipe\PicrossPGReady-' + name, 'r+b', buffering=0) as pipe, verified_helper(pipe, int(pid), helper) as process:
         challenge = line(pipe).decode('ascii')
         require(hex_string(challenge, 48), 'Ungültige PG-Challenge.')
         binding = {
@@ -84,6 +87,21 @@ def restart(directory, build, state):
             'version': identity.version,
             'fingerprint': identity.payload_fingerprint,
         }
+        yield pipe, key, binding, process, nonce
+
+
+def confirm_launcher(state, window):
+    kernel = ctypes.WinDLL('kernel32', use_last_error=True)
+    kernel.WaitForSingleObject.argtypes = [w.HANDLE, w.DWORD]
+    with authenticated_pipe(state) as (pipe, key, binding, process, nonce):
+        observed = {**binding, 'window': window}
+        pipe.write(data({**observed, 'proof': mac(key, 'pg-launcher-ready:', observed)}) + b'\n')
+        require(kernel.WaitForSingleObject(process, 30000) == 0, 'Updatehelferabschluss unbestätigt.')
+        return nonce
+
+
+def restart(directory, build, state):
+    with authenticated_pipe(state) as (pipe, key, binding, _, _nonce):
         pipe.write(data({**binding, 'proof': mac(key, 'pg-ready:', binding)}) + b'\n')
         go = strict_json(line(pipe))
         shape(go, 'proof', 'Ungültige PG-Startfreigabe')

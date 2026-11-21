@@ -1,4 +1,5 @@
 """Private launcher update decisions and owned, flat staging (no checkout I/O)."""
+from dataclasses import dataclass
 from pathlib import Path
 from tools.app_products import PG, PW
 import os
@@ -113,7 +114,19 @@ def accepted_handoff(directory):
         return True
 
 
+@dataclass(frozen=True)
+class Recovery:
+    status: str
+    message: str
+    nonce: str
+
+
 def recover(launcher, *, app=PW):
+    result = recover_result(launcher, app=app)
+    return result.message if result else None
+
+
+def recover_result(launcher, *, app=PW, expected_nonce=None):
     """Read a result, remove only listed completed handoff files, never resume MSI."""
     launcher = no_links(launcher)
     pending = launcher / 'update-pending.json'
@@ -125,6 +138,7 @@ def recover(launcher, *, app=PW):
     require(value['format'] == 'picross-update-pending-v1' and
             value['stage'] == value['nonce'] and len(value['stage']) == 48 and
             all(c in '0123456789abcdef' for c in value['stage']), 'Invalid pending stage')
+    require(expected_nonce is None or value['nonce'] == expected_nonce, 'Unexpected restart handoff')
     stage = no_links(launcher / 'update-staging' / value['stage'])
     msi = release(version=value['version'], app=app)['filename']
     expected = {msi, msi + '.sha256', 'START.txt', 'delivery.json', 'inputs.json',
@@ -134,7 +148,7 @@ def recover(launcher, *, app=PW):
                 not n.endswith(('.', ' ')) for n in value['files']), 'Invalid pending inventory')
     require(set(value['files']) == expected and len(value['files']) == len(expected), 'Unowned pending inventory')
     if not result.exists():
-        return 'Updateausgang unbestätigt. Anwendung regulär starten; vor erneutem Versuch Installation prüfen.'
+        return Recovery('unconfirmed', 'Updateausgang unbestätigt. Anwendung regulär starten; vor erneutem Versuch Installation prüfen.', value['nonce'])
     report = read_small(result)
     shape(report, 'format nonce status version', 'Invalid update result')
     require(report['format'] == 'picross-update-result-v1' and report['nonce'] == value['nonce'] and report['version'] == value['version'] and
@@ -160,6 +174,4 @@ def recover(launcher, *, app=PW):
                 'reboot': 'Windows meldet erforderlichen Neustart. Update noch nicht als erfolgreich bestätigt.',
                 'unconfirmed': 'Update oder Wiederanlauf unbestätigt. Installation prüfen und manuell starten.',
                 'cancelled': 'Update abgebrochen; kein automatischer Wiederholungsversuch.'}
-    if app == PG:
-        messages['installed'] = 'Installation und Spielstart bestätigt.'
-    return messages[report['status']]
+    return Recovery(report['status'], messages[report['status']], value['nonce'])

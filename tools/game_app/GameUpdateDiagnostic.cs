@@ -64,20 +64,22 @@ public static class GameUpdateDiagnostic {
                 if(!QueryFullProcessImageName(launcher.Handle,0,path,ref length))
                     throw new Exception("Diagnostic launcher image error: "+Marshal.GetLastWin32Error());
                 helper.GetField("Exe",BindingFlags.NonPublic|BindingFlags.Static).SetValue(null,path.ToString());
+                bool legacy=scenario=="legacy";
                 bool confirmed=false;
                 try {
-                    Method(helper,"GameReady").Invoke(null,new object[]{pipe,launcher,request,key,connected});
+                    Method(helper,legacy?"GameReady":"LauncherReady").Invoke(null,new object[]{pipe,launcher,request,key,connected});
                     confirmed=true;
                 } catch(TargetInvocationException error) {
-                    var reason=error.InnerException;
-                    if(scenario=="forged" && reason is InvalidDataException) { }
-                    else if(scenario=="lost" && reason is AggregateException &&
-                            ((AggregateException)reason).GetBaseException() is EndOfStreamException) { }
-                    else throw;
+                    if(!(error.InnerException is InvalidDataException)) throw;
                 }
-                if(confirmed!=(scenario=="confirmed") || !launcher.WaitForExit(35000) || launcher.ExitCode!=0)
-                    throw new Exception("Wrong PG restart outcome: "+scenario);
-                Console.WriteLine(confirmed?"Confirmed authenticated child window":"Rejected "+scenario+" confirmation");
+                bool expected=legacy || scenario=="confirmed" || scenario=="missing";
+                if(confirmed!=expected) throw new Exception("Wrong PG readiness: "+scenario);
+                if(legacy) {
+                    if(!launcher.WaitForExit(35000) || launcher.ExitCode!=0) throw new Exception("Legacy child failed");
+                } else if(scenario!="missing") {
+                    Method(helper,"Report").Invoke(null,new object[]{state,handoff,confirmed?"installed":"unconfirmed",args[8]});
+                }
+                Console.WriteLine(scenario+" launcher_pid="+launcher.Id+" authenticated_readiness="+confirmed);
             }
         }
     }

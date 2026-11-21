@@ -1,4 +1,4 @@
-"""Fixed PG entry modes: normal play, settings, or helper-authenticated restart."""
+"""Fixed PG entry modes for the launcher, settings and authenticated restarts."""
 import ctypes
 import os
 from pathlib import Path
@@ -7,7 +7,7 @@ import sys
 from tools.app_products import PG
 from tools.game_app.gate import settings, startup
 from tools.game_app.player import play
-from tools.game_app.restart import ENV, restart
+from tools.game_app.restart import ENV, confirm_launcher, restart
 from tools.production_workspace.install_interlock import InstallInterlock
 from tools.production_workspace.update_storage import no_links, read_small
 from tools.production_workspace.update_windows import installation, local_appdata
@@ -15,7 +15,7 @@ from tools.production_workspace.update_windows import installation, local_appdat
 
 def main():
     mode = sys.argv[1:]
-    if mode not in ([], ['--update-settings'], ['--update-restart']):
+    if mode not in ([], ['--update-settings'], ['--update-restart'], ['--launcher-restart']):
         raise ValueError('Unbekannter Picross-Aufruf.')
     directory = no_links(Path(sys.executable)).parent
     state = no_links(local_appdata() / PG.state_directory)
@@ -31,6 +31,9 @@ def main():
         marker.acquire()
         if mode == ['--update-restart']:
             restart(directory, build, state)
+        elif mode == ['--launcher-restart']:
+            startup(state, directory, lambda: play(directory, build), version=build['version'],
+                    confirm_launcher=lambda window: confirm_launcher(state, window))
         else:
             # Any stale private launch data must stay out of the game process.
             for field in ENV:

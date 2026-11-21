@@ -48,39 +48,34 @@ regulärem Upgrade ist **Picross** der einzige Startmenüeintrag. Das Upgrade
 entfernt die frühere Einstellungen-Verknüpfung über die MSI-Komponenten
 der alten Version. Die optionale Desktopverknüpfung öffnet denselben Launcher.
 
-Öffnen und Ändern der Einstellung bleiben lokal. Automatische Updates
-benötigen eine gültige gespeicherte Zustimmung in
-`%LOCALAPPDATA%/PicrossGame/.updates/app-updates.json`. Dort liegen auch Stage,
-Pending und Ergebnis. **Updates aktivieren** speichert die Zustimmung.
-Solange keine gültige Entscheidung vorliegt, speichert **Ohne Updates spielen**
-die Ablehnung und startet das Spiel offline. Nach der Entscheidung heißt die
-Hauptaktion **Spielen**. Ein Speicherfehler wird angezeigt und lässt den
-Spielstart ohne Updateprüfung zu.
+[GAME-APP-E / #733](https://github.com/venomenon328/picross/issues/733) trennt
+Update-Suche, Installation und Spielstart. Die Einstellung **Automatische
+Update-Suche** liegt in `%LOCALAPPDATA%/PicrossGame/.updates/app-updates.json`.
+Nach sichtbarer Fensteröffnung und gültigem Opt-in sucht der Launcher einmal
+nebenläufig im festen anonymen PG-Kanal. Auch das erste Aktivieren kann diese
+Suche auslösen. Ohne gültige Entscheidung speichert **Ohne Updates spielen**
+die Ablehnung. Speicherfehler lassen den Offline-Spielweg offen.
 
-Erst **Spielen** mit Opt-in löst einmal nebenläufig die Prüfung des festen
-anonymen PG-Kanals aus. Der Launcher zeigt Metadatensuche, Download und
-Kandidatenprüfung getrennt. Der Download zählt empfangene Nutzassetbytes gegen
-die signiert gebundenen Gesamtbytes. Nach dem Download werden der Kandidat
-und die Helferübergabe geprüft. **Ohne Update spielen** behält die Zustimmung
-und verwirft den laufenden Versuch. **Updates ausschalten** speichert Aus
-und verwirft ihn ebenfalls. In beiden Fällen startet die vorhandene Fassung
-einmal. Schließen vor der Helferübernahme verwirft den Startwunsch. Kanal-,
-Netz- und Prüffehler zeigen einen Status mit anschließendem Spielstart. Eine
-passende signierte Gleichversion wird frisch lokal geprüft und benötigt keine
-Nutzdateien.
+Eine authentisierte höhere Version erscheint mit Versionsnummer und **Update
+installieren**. Erst dieser Klick lädt die fünf gebundenen Nutzassets, zeigt
+ihren Bytefortschritt und verifiziert alle Dateien vor der Helferübergabe.
+Gleichversion und Fehler erhalten ihren eigenen Status im offenen Launcher.
+**Spielen** verwirft einen offenen Versuch und startet einmal die installierte
+Fassung. Ausschalten oder Schließen bricht vor der atomaren READY-Übernahme ab.
+Nach Übernahme sperrt der Launcher weitere Aktionen. Der PG-Helfer prüft
+Identität und Zustimmung, wartet nach GO auf das echte Prozessende und
+verwendet die passive MSI-Anzeige.
 
-Nur eine vollständig verifizierte höhere Version gelangt in die
-noncegebundene READY/GO-Übergabe. Der fest kompilierte PG-Helfer prüft den
-Elternprozess, die Zustimmung, Kandidaten und MSI-Identität. Ab der Übernahme
-sind Einstellungen, Abbruch und Schließen gesperrt. Der Helfer wartet auf das
-tatsächliche Ende des Launchers und startet die native passive MSI-Anzeige.
-Laufender Player und Dateibelegung sperren den Austausch. Nach bestätigtem
-MSI-Erfolg prüft der Helfer die neue installierte Identität. Die private PG-Pipe
-authentisiert erst den wartenden Launcher und übergibt den bestehenden
-Spielstartwunsch einmal direkt an den Player. Eine zweite authentisierte
-Antwort bindet den laufenden Player und dessen sichtbares Fenster. Bei
-unbestätigtem Ergebnis bleibt der manuelle Start. Pending löst keine
-Wiederholung aus.
+Nach MSI-Erfolg startet der Helfer genau einen neuen Launcher. Die private
+PG-Pipe authentisiert den gestarteten Prozess und dessen sichtbares
+Launcherfenster mit frischer Challenge, eigener HMAC-Domäne, Benutzer-,
+EXE-, Versions-, Source-, Fingerprint- und Präferenzbindung. Der Launcher
+wartet außerhalb des GUI-Threads begrenzt auf das Ende des gebundenen Helfers.
+Erst dessen passendes bestätigtes Ergebnis und sichere Bereinigung erlauben
+eine neue einmalige Suche. Das gilt auch beim ersten normalen Öffnen nach
+einem erfolgreichen Update. Fehler, ausstehender Neustart und unbestätigte
+Übergaben autorisieren keine Wiederholung. Der frühere private Spielpfad
+`--update-restart` erfüllt ausschließlich den Spielwunsch ausgelieferter Helfer.
 
 ## Diagnose und Veröffentlichung
 

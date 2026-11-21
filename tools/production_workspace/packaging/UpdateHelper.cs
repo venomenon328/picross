@@ -289,7 +289,7 @@ public static class UpdateHelper {
         Need(difference==0);
         return reply;
     }
-    static void GameReady(NamedPipeServerStream pipe, Process launched, Dictionary<string,object> d, string key, IAsyncResult connected) {
+    static void LauncherReady(NamedPipeServerStream pipe, Process launched, Dictionary<string,object> d, string key, IAsyncResult connected) {
         Need(connected.AsyncWaitHandle.WaitOne(30000)); pipe.EndWaitForConnection(connected);
         uint pid;
         Need(GetNamedPipeClientProcessId(pipe.SafePipeHandle.DangerousGetHandle(),out pid) && pid==launched.Id);
@@ -305,25 +305,12 @@ public static class UpdateHelper {
         using(var writer=new StreamWriter(pipe,new UTF8Encoding(false),1024,true))
         using(var reader=new StreamReader(pipe,new UTF8Encoding(false,true),false,1024,true)) {
             writer.NewLine="\n"; writer.WriteLine(challenge); writer.Flush();
-            var ready=Reply(reader,20000,key,"pg-ready:",Fields);
+            var ready=Reply(reader,20000,key,"pg-launcher-ready:",Fields+" window");
             Need(expected.All(pair=>Object.Equals(pair.Value,ready[pair.Key])));
             State(d);
             UserImage(launched.Handle,Exe);
-            writer.WriteLine(Json.Serialize(new Dictionary<string,object>{{"proof",Mac(key,"pg-play:",expected)}}));
-            writer.Flush();
-
-            var started=Reply(reader,45000,key,"pg-started:",Fields+" player window");
-            Need(expected.All(pair=>Object.Equals(pair.Value,started[pair.Key])));
-            uint player=checked((uint)Number(started,"player"));
-            var window=new IntPtr(Number(started,"window"));
-            IntPtr process=OpenProcess(0x101000,false,player);
-            Need(process!=IntPtr.Zero);
-            try {
-                UserImage(process,Path.Combine(Install,"picross-p1.exe"));
-                ProcessParent(GetProcessId(process),(uint)launched.Id);
-                Need(!launched.HasExited && GetWindowThreadProcessId(window,out pid)!=0 &&
-                     pid==GetProcessId(process) && IsWindowVisible(window));
-            } finally { CloseHandle(process); }
+            var window=new IntPtr(Number(ready,"window"));
+            Need(GetWindowThreadProcessId(window,out pid)!=0 && pid==launched.Id && IsWindowVisible(window));
         }
     }
 
@@ -335,14 +322,14 @@ public static class UpdateHelper {
         security.AddAccessRule(new PipeAccessRule(new SecurityIdentifier("S-1-5-18"),PipeAccessRights.FullControl,AccessControlType.Allow));
         using(var pipe=new NamedPipeServerStream("PicrossPGReady-"+nonce,PipeDirection.InOut,1,PipeTransmissionMode.Byte,
                                                  PipeOptions.Asynchronous,4096,4096,security)) {
-            var info=new ProcessStartInfo(Exe,"--update-restart") { UseShellExecute=false, WorkingDirectory=Install };
+            var info=new ProcessStartInfo(Exe,"--launcher-restart") { UseShellExecute=false, WorkingDirectory=Install };
             info.EnvironmentVariables["PYINSTALLER_RESET_ENVIRONMENT"]="1";
             info.EnvironmentVariables["PICROSS_PG_RESTART_PIPE"]=nonce;
             info.EnvironmentVariables["PICROSS_PG_RESTART_KEY"]=key;
             info.EnvironmentVariables["PICROSS_PG_RESTART_PID"]=Process.GetCurrentProcess().Id.ToString(System.Globalization.CultureInfo.InvariantCulture);
             info.EnvironmentVariables["PICROSS_PG_RESTART_STAGE"]=Text(d,"nonce");
             var connected=pipe.BeginWaitForConnection(null,null);
-            using(var launched=Process.Start(info)) GameReady(pipe,launched,d,key,connected);
+            using(var launched=Process.Start(info)) LauncherReady(pipe,launched,d,key,connected);
         }
     }
 #endif

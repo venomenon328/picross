@@ -4,12 +4,12 @@ import threading
 import subprocess
 
 from . import update_client as client, update_windows as windows
-from .update_storage import Preferences, Stage, recover
+from .update_storage import Preferences, Stage, recover, recover_result
 from .update_verifier import production_trust
 
 
 class Updates:
-    def __init__(self, runtime, *, app=PW, cancelled=None):
+    def __init__(self, runtime, *, app=PW, cancelled=None, expected_nonce=None):
         self.runtime = runtime
         self.app = app
         self.app_args = {} if app == PW else {"app": app}
@@ -18,6 +18,8 @@ class Updates:
         # helper-spawn/publication transition. Never hold this over network I/O.
         self.transition = threading.Lock()
         self.thread = None
+        self.offer = None
+        self.recovery = None
         self.handoff = None
         self.stage = None
         self.started = False
@@ -39,10 +41,12 @@ class Updates:
                 if app != PG:
                     raise
                 self.status = 'Gespeicherte Updateentscheidung ungültig. Bitte erneut entscheiden.'
-            previous = recover(runtime.lock.directory, **self.app_args)
+            previous = self.recovery = recover_result(runtime.lock.directory, expected_nonce=expected_nonce, **self.app_args)
             if previous:
-                self.status = previous + ' Nächster automatischer Versuch erst nach erneutem Start.'
-                self.started = True
+                self.status = previous.message
+                self.started = app != PG or previous.status != 'installed'
+                if self.started:
+                    self.status += ' Nächster automatischer Versuch erst nach erneutem Start.'
             if not production_trust(**self.app_args)['accepted']:
                 self.status = 'Updatekanal inaktiv: Vertrauensschlüssel fehlt. Erste vertrauenswürdige Version manuell installieren.'
                 self.started = True
@@ -81,9 +85,20 @@ class Updates:
                 self.enabled is not True or self.identity is None):
             return False
         self.started = True
-        self.thread = threading.Thread(target=self._run, name=self.app.key.upper()+'-app-update')
-        self.thread.start()
+        self.launch_worker()
         return True
+
+    def install_offer(self):
+        if (self.app != PG or self.offer is None or self.thread.is_alive() or
+                self.cancelled.is_set() or self.runtime.stop_requested.is_set()):
+            return False
+        offer, self.offer = self.offer, None
+        self.launch_worker(offer)
+        return True
+
+    def launch_worker(self, offer=None):
+        self.thread = threading.Thread(target=self._run, args=(offer,), name=self.app.key.upper()+'-app-update')
+        self.thread.start()
 
     @property
     def pending(self):
@@ -97,23 +112,35 @@ class Updates:
         # Publish a single immutable snapshot for the GUI thread.
         self.progress = (phase, received, total)
 
-    def _run(self):
+    def _run(self, offer=None):
         try:
-            self.status = 'Signierten App-Updatekanal prüfen …'
-            metadata, assets = client.discover(self.identity.version, self.cancelled, installation=self.identity, **self.app_args)
-            if self.cancelled.is_set():
-                raise client.Cancelled()
-            if metadata.version == self.identity.version:
-                # Discovery checked signed publication identity, not MSI/EXE byte
-                # equality. Re-read the actual installed/MSI context before status.
+            if offer is None:
+                if self.app == PG and self.preferences.read() is not True:
+                    raise client.Cancelled()
+                self.status = 'Signierten App-Updatekanal prüfen …'
+                metadata, assets = client.discover(self.identity.version, self.cancelled,
+                                                  installation=self.identity, **self.app_args)
+                if self.cancelled.is_set():
+                    raise client.Cancelled()
+                if self.app == PG or metadata.version == self.identity.version:
+                    if windows.installation(**self.app_args) != self.identity:
+                        raise client.InstallationMismatch('Installed application changed during check')
+                    with self.transition:
+                        if (self.cancelled.is_set() or self.preferences.read() is not True or
+                                self.runtime.stop_requested.is_set()):
+                            raise client.Cancelled()
+                        if metadata.version == self.identity.version:
+                            self.status = 'Keine neuere Appversion veröffentlicht.'
+                        else:
+                            self.offer = (metadata, assets)
+                            self.status = f'Version {metadata.version} ist verfügbar.'
+                    return
+            else:
+                metadata, assets = offer
+                if self.preferences.read() is not True or self.cancelled.is_set():
+                    raise client.Cancelled()
                 if windows.installation(**self.app_args) != self.identity:
-                    raise client.InstallationMismatch('Installed application changed during check')
-                with self.transition:
-                    if (self.cancelled.is_set() or self.preferences.read() is not True or
-                            self.runtime.stop_requested.is_set()):
-                        raise client.Cancelled()
-                    self.status = 'Keine neuere Appversion veröffentlicht.'
-                return
+                    raise client.InstallationMismatch('Installed application changed before download')
             self.stage = Stage(self.runtime.lock.directory)
             self.status = 'Geprüfte neuere Appversion herunterladen …'
             progress = {'progress': self.report_progress} if self.app == PG else {}
@@ -183,6 +210,7 @@ class Updates:
             if self.taken:
                 return False  # The GUI now owns the drain/GO or explicit abort.
             self.cancelled.set()
+            self.offer = None
             self.started = True  # Skip/opt-out cannot restart this attempt.
             if self.handoff:
                 self.handoff.abort()
