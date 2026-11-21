@@ -1,0 +1,4 @@
+author: OpenAI ImageGen, eingesetzt durch Codex
+changes: Unbearbeitetes PNG-Original. Für das Spiel technische HG31-Ableitung auf 2304 × 768 RGBA nach picross-background-png2304x768-v1. Die vollständige 3:1-Komposition bleibt erhalten.
+source: Eigenständige native Bildgenerierung aus dem Bánh-Mì-Kontextbriefing. Gewähltes Original HG-A am Arbeitscommit d374bd0f609e690175f0adbe6b4c8540e854c17f, SHA-256 280ed7149944393e2e60449090bfd4fb863e9cd51ac7a86d65031c0f6475aa52.
+usage_basis: Für den beauftragten Picross-Produktionsstand erzeugt und zur Veröffentlichung beauftragt.
