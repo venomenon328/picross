@@ -1,10 +1,10 @@
 {
   "format": "development-ci-plan/v1",
   "issue": "https://github.com/venomenon328/picross/issues/700",
-  "package": "PROD-FALAFEL-REVEAL",
+  "package": "PROD-FALAFEL-MOTIF",
   "modules": [],
-  "purpose": "Draft zur Auswahl der drei veröffentlichten Falafel-Abschlussbilder. Der PR bindet den aktuellen PW-B-Record und seinen Indexeintrag.",
-  "omitted": "Reine Authoringablage zur Bildwahl. Bildsichtung und Originalabruf erfolgen über den Produktionsweg. Der PR benötigt den Quellen- und Plankern ohne Player-Build oder Zusatzmodule.",
+  "purpose": "Draft zur Freigabe von Falafel-Motivvorlage und Parameterkorridor aus dem aktuellen PW-B-Record.",
+  "omitted": "Reine Authoringablage. Originalabruf und Bildsichtung folgen dem Produktionsweg. Der PR benötigt den Quellen- und Plankern ohne Player-Build oder Zusatzmodule.",
   "test_changes": [],
   "core_change": null,
   "evidence": {
