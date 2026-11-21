@@ -1,10 +1,10 @@
 {
   "format": "development-ci-plan/v1",
   "issue": "https://github.com/venomenon328/picross/issues/700",
-  "package": "PZ-WALNUSS-S3-SICHTUNG",
+  "package": "PZ-WALNUSS-S4-KONTEXTWAHL",
   "modules": [],
-  "purpose": "Prüft Quellen und Paketplan für den aktualisierten Walnuss-Draft in Schritt 3. Der geprüfte Produktionsstand mit den aktuellen Sichtungsentwürfen liegt im PW-B-Arbeitsref.",
-  "omitted": "Die Sichtungsaktualisierung ändert ausschließlich den Paketplan. Die Produktionsprüfung läuft am gebundenen PW-B-Datensatz. Player-Build und Zusatzmodule entfallen.",
+  "purpose": "Prüft Quellen und Paketplan für den Walnuss-Draft mit gewähltem Raster und Kontextangeboten in Schritt 4. Der aktuelle Produktionsstand liegt im PW-B-Arbeitsref.",
+  "omitted": "Der Draft aktualisiert ausschließlich den Paketplan. Raster, Quellen und Bildangebote werden im aktuellen PW-B-Datensatz geprüft. Player-Build und Zusatzmodule entfallen.",
   "test_changes": [],
   "core_change": null,
   "evidence": {
