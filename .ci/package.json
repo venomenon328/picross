@@ -1,11 +1,19 @@
 {
   "format": "development-ci-plan/v1",
-  "issue": "https://github.com/venomenon328/picross/issues/700",
-  "package": "Shiitake Schritt 5 · Erstintegration",
-  "modules": [],
-  "purpose": "Registriert pz-shiitake mit dem freigegebenen Raster raster-b, reveal-c und der HG31-Ableitung von background-c im Spielkatalog.",
-  "omitted": "Reine Rätseldaten einschließlich Metadaten, Definition, Bildern und Runtimeprojektion. Der verpflichtende Quellen- und Plankern läuft ohne Player-Build oder Zusatzmodule. RI-ONE prüft Logiknachweis, Bewertung und Lieferbytes während der Produktion. Keine Änderung an Tests oder CI-Kern.",
-  "test_changes": [],
+  "issue": "https://github.com/venomenon328/picross/issues/761",
+  "package": "PROD-REVIEW-A · Unabhängiges PR-Zweitreview nicht pauschal verlangen",
+  "modules": [
+    "tools"
+  ],
+  "purpose": "Stellt die Eigentümerentscheidung zu normaler Rätsel-Erstintegration in den Produktionsnormen, PW-Prompt und Completion-Status konsistent her. Unabhängiger fachlicher Linienproof und tatsächliche Vor-Merge-Gates bleiben verpflichtend.",
+  "omitted": "Kein Player-Build und keine nativen/Fach-/Browsermodule: nur redaktionelle Produktionsnormen sowie Formulierungen im PW-Prompt, Completion-Status und bestehende Prompt-Regression; keine Spiel-, Registrierungs- oder CI-Engineänderung. `tools` deckt die bestehenden Prompt-/Projektorregressionen ab.",
+  "test_changes": [
+    {
+      "path": "tools/test_authoring_sheet.py",
+      "disposition": "change-scoped",
+      "reason": "Bestehende Prompt-Regression aktualisiert: Standardintegration ohne vorgeschriebenes unabhängiges PR-Zweitreview, bedingter Squash-Merge bleibt erhalten. Weiterhin im tools-Modul bei passenden Änderungen."
+    }
+  ],
   "core_change": null,
   "evidence": {
     "mode": "none",
