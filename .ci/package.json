@@ -1,10 +1,10 @@
 {
   "format": "development-ci-plan/v1",
-  "issue": "https://github.com/venomenon328/picross/issues/660",
-  "package": "PROD-LOTUSWURZEL",
+  "issue": "https://github.com/venomenon328/picross/issues/700",
+  "package": "TAIYAKI-RASTER-REVIEW",
   "modules": [],
-  "purpose": "Erstintegration der endabgenommenen Lotuswurzel pz-lotuswurzel über RI-ONE mit Monoraster, Reveal samt Katalogprofilen, gewählter 3:1-Kontextzeichnung und Inhaltsmetadaten.",
-  "omitted": "Reine Rätselproduktion. Proof, Bewertung und tatsächliche Lieferung werden im Produktionsweg geprüft. Der CI-Quellenkern läuft ohne Player-Build und Zusatzmodule.",
+  "purpose": "Prüft den Paketplan und den bytegleichen PW-B-Record für Taiyaki Schritt 3 zur Rasterwahl.",
+  "omitted": "Reine Rätselproduktion. Unabhängiger Proof, gebundene Bewertung und Sichtprüfungen erfolgen am konkreten Raster im Authoring. Die CI prüft Quellen und Plan ohne Player-Build oder Zusatzmodule.",
   "test_changes": [],
   "core_change": null,
   "evidence": {
