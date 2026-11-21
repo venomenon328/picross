@@ -29,9 +29,39 @@
       "path": "game/tests/content_pack_probe.gd",
       "disposition": "change-scoped",
       "reason": "Vollständige Profilnamen und tatsächliche Texturgrößen in beiden Exporten."
+    },
+    {
+      "path": "game/tests/catalog_layout_cases.gd",
+      "disposition": "change-scoped",
+      "reason": "Profilwahl, natürliche Geometrie und Freigabe der Texturen im vorhandenen Katalogcheckpoint."
+    },
+    {
+      "path": "tests/puzzle_production/test_current_consumers.py",
+      "disposition": "change-scoped",
+      "reason": "Gebundene Profile im Katalogjournal."
+    },
+    {
+      "path": "tests/puzzle_production/test_current_completion.py",
+      "disposition": "change-scoped",
+      "reason": "Registrierte Lieferung enthält Revealquelle und Profilbytes."
+    },
+    {
+      "path": "tests/puzzle_production/test_registration_budgets.py",
+      "disposition": "change-scoped",
+      "reason": "Gesamtjournal wird vor der ersten Mutation begrenzt."
+    },
+    {
+      "path": "tests/puzzle_production/test_editor_change.py",
+      "disposition": "change-scoped",
+      "reason": "Aktive Profilziele bei echter Bildwahl."
+    },
+    {
+      "path": "tools/test_puzzle_editor.py",
+      "disposition": "change-scoped",
+      "reason": "Aktuelle Runtimegeneration in den bestehenden Editortests."
     }
   ],
-  "core_change": null,
+  "core_change": "Beide festen PNG-Profilpfade zählen als reine Produktionsinhalte; Generator, Importmetadaten und andere Pfade bleiben buildpflichtig.",
   "evidence": {
     "mode": "none",
     "purpose": null,
