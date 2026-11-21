@@ -1,0 +1,4 @@
+author: OpenAI ImageGen (KI-generierte Illustration, erstellt mit Codex)
+changes: Unverändertes PNG der Bildgenerierung.
+source: Native Bildgenerierung in diesem Auftrag aus dem Textbriefing.
+usage_basis: Für Picross im Auftrag neu erzeugt. Die Veröffentlichung zur Auswahl ist ausdrücklich beauftragt. Der Auftraggeber hat das unveränderte Reveal gewählt und seine Integration mit dem gebundenen Raster und Hintergrund beauftragt.

@@ -1,0 +1,4 @@
+author: OpenAI ImageGen (KI-generierte Zeichnung, erstellt mit Codex)
+changes: Beet, Anzuchtgruppe und Blütentrieb neu komponiert. Natives PNG unverändert. Für die Spielressource wurde die vollständige Leinwand proportional von 2172 × 724 auf 2304 × 768 Pixel nach HG31 skaliert.
+source: Neu gezeichnete Nutzgartenszene nach der bisherigen Kontextzeichnung zu Pak Choi.
+usage_basis: Im beauftragten Schritt 4 für Picross erzeugt. Veröffentlichung zur Auswahl beauftragt. Der Auftraggeber hat das unveränderte Original gewählt und dessen Integration mit dem gebundenen HG31-Profil beauftragt.
