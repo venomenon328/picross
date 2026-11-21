@@ -59,6 +59,26 @@
       "path": "tools/test_puzzle_editor.py",
       "disposition": "change-scoped",
       "reason": "Aktuelle Runtimegeneration in den bestehenden Editortests."
+    },
+    {
+      "path": "tools/test_background_import.py",
+      "disposition": "change-scoped",
+      "reason": "Aktuelle v9-Projektion und historische v5-Fixierung im bestehenden Prüffall."
+    },
+    {
+      "path": "tools/test_p1_product.py",
+      "disposition": "change-scoped",
+      "reason": "Aktuelle v9-Projektion und historische v5-Fixierung im bestehenden Prüffall."
+    },
+    {
+      "path": "tools/test_categories.py",
+      "disposition": "change-scoped",
+      "reason": "Aktuelle v9-Projektion und historische v5-Fixierung im bestehenden Prüffall."
+    },
+    {
+      "path": "tests/puzzle_production/catalog_fixtures.py",
+      "disposition": "change-scoped",
+      "reason": "Aktuelle v9-Projektion und historische v5-Fixierung im bestehenden Prüffall."
     }
   ],
   "core_change": "Beide festen PNG-Profilpfade zählen als reine Produktionsinhalte; Generator, Importmetadaten und andere Pfade bleiben buildpflichtig.",

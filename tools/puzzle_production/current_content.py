@@ -185,17 +185,19 @@ def selected(root, value, identifier, *, read=None):
         if kind == "background":
             require(next((r["source"] for r in value["backgrounds"] if r["id"] == identifier), None) == ref(name, source_raw),
                     "Background index mismatch")
+        require(image["format"] == (REVEAL if kind == "reveal" else BACKGROUND), "Wrong image source kind")
         asset = image["current"]["asset"]
         if asset is not None:
             asset_raw = read(asset["file"], 32*1024*1024)
             require(ref(asset["file"], asset_raw) == asset, "Changed active image")
             result[kind+"_bytes"] = asset_raw
-        require(image["format"] == (REVEAL if kind == "reveal" else BACKGROUND), "Wrong image source kind")
         if kind == "reveal":
+            require(image["catalog"]["source_width"] >= 2*definition["width"] and
+                    image["catalog"]["source_height"] >= 2*definition["height"], "Reveal is too small for definition")
             for profile in image["catalog"]["profiles"]:
                 asset = profile["asset"]
                 payload = read(asset["file"], catalog_profiles.LIMIT)
-                require(ref(asset["file"], payload) == asset, "Changed catalog profile: " + asset["file"])
+                catalog_profiles.validate_png(profile, payload)
         result[kind] = image
     result["notice"] = read(notice_path(entry), 65536)
     if result["background"]["current"]["status"] == "selected":

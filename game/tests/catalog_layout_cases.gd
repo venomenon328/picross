@@ -46,16 +46,16 @@ static func catalog_profiles(probe) -> void:
 	# coverage independently verifies actual catalog PNG files and dimensions.
 	view.fit_available = true
 	view.catalog_profile = {"source_width":1024, "source_height":64, "profiles":[
-		{"width":264,"height":17,"asset":{"file":small_path.trim_prefix("res://")}},
-		{"width":329,"height":21,"asset":{"file":large_path.trim_prefix("res://")}}]}
+		{"width":26,"height":26,"asset":{"file":small_path.trim_prefix("res://")}},
+		{"width":load(large_path).get_width(),"height":load(large_path).get_height(),"asset":{"file":large_path.trim_prefix("res://")}}]}
 	view.payload = {"image":"res://missing-original.png"}
 	probe.check(view.artwork == null, "catalog profile loading waits for render geometry")
-	for width: int in [264, 265, 500, 112]:
+	for width: int in [26, 27, 500, 16]:
 		view.size = Vector2(width, 140)
 		var rect: Rect2 = view.artwork_rect()
 		probe.check(is_equal_approx(rect.size.x / rect.size.y, 16.0), "original aspect survives rounding")
 		view.display_texture(rect)
-		probe.check(view.artwork.resource_path == (small_path if width <= 264 else large_path), "smallest sufficient profile")
+		probe.check(view.artwork.resource_path == (small_path if width <= 26 else large_path), "smallest sufficient profile")
 	view.payload = {}
 	probe.check(view.artwork == null and view.filtered_artwork == null, "hidden profile references released")
 	view.free()

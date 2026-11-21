@@ -187,7 +187,7 @@ class BackgroundImportTests(unittest.TestCase):
         (source_root / "game/data").mkdir(parents=True)
         (source_root / "content").mkdir()
         (source_root / "content/registry.json").write_text(json.dumps(dict(format="picross-content-registry-v5", entries=[],metadata=[],backgrounds=[])))
-        (source_root / "game/data/registry.json").write_text(json.dumps(dict(format="picross-runtime-registry-v8", categories=[], entries=[])))
+        (source_root / "game/data/registry.json").write_text(json.dumps(dict(format="picross-runtime-registry-v9", categories=[], entries=[])))
         self.assertEqual(background.source_inventory(source_root)["assets"], [])
         stray = source_root / "game/art/backgrounds/pz-unbound.png.import"
         stray.parent.mkdir(parents=True)
@@ -195,18 +195,20 @@ class BackgroundImportTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "inventory differs|Unknown/noncanonical background source"):
             background.source_inventory(source_root)
 
-    def test_current_inventory_requires_v8_and_valid_capability(self):
+    def test_current_inventory_requires_v9_and_valid_capability(self):
         source_root = self.root / "metadata"
         (source_root / "game/data").mkdir(parents=True)
         (source_root / "content").mkdir()
         (source_root / "content/registry.json").write_text(json.dumps(dict(
             format="picross-content-registry-v5", entries=[], metadata=[], backgrounds=[])))
         runtime_path = source_root / "game/data/registry.json"
-        runtime = dict(format="picross-runtime-registry-v8", categories=[], entries=[])
+        runtime = dict(format="picross-runtime-registry-v9", categories=[], entries=[])
         runtime_path.write_text(json.dumps(runtime))
         self.assertEqual(background.source_inventory(source_root)["assets"], [])
         runtime_path.write_text(json.dumps({**runtime, "format": "picross-runtime-registry-v8"}))
-        self.assertEqual(background.source_inventory(source_root)["assets"], [])
+        with self.assertRaisesRegex(ValueError, "Current background"):
+            background.source_inventory(source_root)
+        runtime_path.write_text(json.dumps(runtime))
         capability = dict(format="picross-runtime-background-capability-v1",
                           runtime_format="picross-runtime-registry-v6",
                           profile_id="picross-background-png2304-v1", enabled=False)
@@ -242,7 +244,7 @@ class BackgroundImportTests(unittest.TestCase):
         index = dict(format="picross-content-registry-v5", entries=[entry], metadata=[],
                      backgrounds=[dict(id=identifier, source=bg.ref(bg.path(identifier),raw))])
         (root/"content/registry.json").write_bytes(edit.encoded(index))
-        runtime = dict(format="picross-runtime-registry-v8", categories=[], entries=[dict(
+        runtime = dict(format="picross-runtime-registry-v9", categories=[], entries=[dict(
             id=identifier, background={**current, "asset":self.inventory["assets"][0]["asset"]})])
         (self.source/"data/registry.json").write_bytes(edit.encoded(runtime))
         (self.source/"data/background-capability.json").write_bytes(edit.encoded(dict(

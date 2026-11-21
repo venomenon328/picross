@@ -34,7 +34,9 @@ func display_texture(rect: Rect2) -> Texture2D:
 			filtered_artwork = null
 			filtered_size = Vector2i.ZERO
 			profile_path = path
-			if artwork == null: push_error("Defektes Katalogbild: " + path)
+			if artwork == null or artwork.get_width() != profile.width or artwork.get_height() != profile.height:
+				artwork = null
+				push_error("Defektes Katalogbild: " + path)
 	if artwork == null: return null
 	if target.x >= artwork.get_width() and target.y >= artwork.get_height():
 		filtered_artwork = null

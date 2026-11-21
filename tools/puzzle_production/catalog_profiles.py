@@ -4,6 +4,8 @@ from fractions import Fraction
 from io import BytesIO
 from math import ceil, isfinite
 from pathlib import Path
+import struct
+import zlib
 import xml.etree.ElementTree as ET
 
 from .authoring_package import require
@@ -56,6 +58,53 @@ def project(catalog):
     for row in result["profiles"]:
         row["asset"]["file"] = row["asset"]["file"].removeprefix("game/")
     return result
+
+
+def validate_projection(row):
+    from .current_content import relative, sha
+    catalog = deepcopy(row["catalog_reveal"])
+    exact_keys(catalog, {"source_sha256", "source_width", "source_height", "profiles"})
+    sha(catalog["source_sha256"])
+    relative(row["reveal"])
+    require(isinstance(catalog["profiles"], list) and len(catalog["profiles"]) == 2, "Missing catalog profiles")
+    for profile in catalog["profiles"]:
+        exact_keys(profile, {"profile", "asset", "width", "height"})
+        exact_keys(profile["asset"], {"file", "bytes", "sha256"})
+        relative(profile["asset"]["file"])
+        profile["asset"]["file"] = "game/" + profile["asset"]["file"]
+    catalog["generator"] = GENERATOR
+    validate(catalog, row["id"], {"file": row["reveal"], "sha256": catalog["source_sha256"]})
+
+
+def validate_png(profile, raw):
+    """Check the closed metadata-free RGBA8 bitstream without regenerating it."""
+    from .current_content import ref
+    asset = profile["asset"]
+    require(isinstance(raw, bytes) and len(raw) <= LIMIT and ref(asset["file"], raw) == asset,
+            "Changed catalog profile: " + asset["file"])
+    width, height = profile["width"], profile["height"]
+    header = struct.pack(">IIBBBBB", width, height, 8, 6, 0, 0, 0)
+    require(raw.startswith(b"\x89PNG\r\n\x1a\n"), "Invalid catalog PNG signature")
+    offset, chunks, compressed = 8, [], bytearray()
+    while offset < len(raw):
+        require(offset + 12 <= len(raw), "Truncated catalog PNG")
+        size, tag = struct.unpack_from(">I4s", raw, offset)
+        end = offset + 8 + size
+        require(end + 4 <= len(raw) and zlib.crc32(raw[offset+4:end]) == int.from_bytes(raw[end:end+4], "big"),
+                "Invalid catalog PNG chunk")
+        data = raw[offset+8:end]
+        if tag == b"IHDR": require(data == header and not chunks, "Wrong catalog PNG dimensions or format")
+        elif tag == b"IDAT": compressed.extend(data)
+        else: require(tag == b"IEND" and not data and end+4 == len(raw), "Unexpected catalog PNG chunk")
+        chunks.append(tag)
+        offset = end + 4
+    require(len(chunks) >= 3 and chunks[0] == b"IHDR" and chunks[-1] == b"IEND" and
+            all(tag == b"IDAT" for tag in chunks[1:-1]), "Incomplete catalog PNG")
+    stride = 1 + 4*width
+    decoder = zlib.decompressobj()
+    pixels = decoder.decompress(compressed, stride*height + 1)
+    require(len(pixels) == stride*height and decoder.eof and not decoder.unused_data and
+            all(f <= 4 for f in pixels[::stride]), "Invalid catalog PNG scanlines")
 
 
 def decode_png(raw):

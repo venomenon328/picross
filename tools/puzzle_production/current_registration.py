@@ -62,7 +62,7 @@ class Snapshot:
                              "name", "difficulty", "added_at", "background", "catalog_reveal"})
             require(all(row[k] == entry[k] for k in ("id", "key", "save_slot", "definition", "visible")) and
                     row["name"] == meta["name"] and row["category_id"] == meta["category_id"], "Runtime identity differs")
-            content.relative(row["reveal"])
+            content.catalog_profiles.validate_projection(row)
         self.read(catalog_method.PATH, catalog_method.LIMIT, missing=True)
         self.read(SHARED[-1], 4096)
         self.existing = next((e for e in self.registry["entries"] if e["id"].casefold() == identifier.casefold()), None)

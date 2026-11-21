@@ -122,6 +122,8 @@ class Inputs:
                     and row["name"] == meta["name"] and row["category_id"] == meta["category_id"],
                     "Current runtime metadata differs")
             relative("game/"+row["reveal"])
+            if runtime["format"] == registry.IMAGE_RUNTIME_FORMAT:
+                current_content.catalog_profiles.validate_projection(row)
         require(not pending(self.root), "Publication started while reading indices")
         return value, cats, runtime
 
@@ -318,7 +320,9 @@ def plan(root, request, *, uploads=None, work=None, expected=None, expected_defi
                             require(ref(asset["file"], inputs.read(asset["file"])) == asset, "Previous catalog bytes differ")
                             put(asset["file"], profiles[asset["file"]])
                         target_row["catalog_reveal"] = current_content.catalog_profiles.project(catalog)
-                        if name != old_name: put(old_name, None)
+                        if name != old_name:
+                            require(inputs.read(name, 32*1024*1024, missing=True) is None, "New original path is occupied")
+                            put(old_name, None)
                         put(name, raw)
                         old_revision = (previous.get("current", {}).get("image_revision", 0) if previous else 0)
                         current = {"image_revision": old_revision+1, "asset": ref(name, raw)}
@@ -558,13 +562,19 @@ def validate_targets(value, sides, actual):
                 if image == previous_image:
                     require(current["catalog"] == old["catalog"], "Raster rebind changes catalog profiles")
                 else:
-                    require(image["asset"]["file"] in sides, "Reveal switch lacks prepared original")
+                    new_path = image["asset"]["file"]
+                    old_path = previous_image["asset"]["file"]
+                    require(new_path in sides, "Reveal switch lacks prepared original")
+                    if new_path != old_path:
+                        require(sides[new_path][0] is None and old_path in sides and sides[old_path][1] is None,
+                                "Reveal suffix switch requires a free destination and deletion of the previous original")
                 for old_profile, new_profile in zip(old["catalog"]["profiles"], current["catalog"]["profiles"]):
                     asset = new_profile["asset"]
                     path = asset["file"]
                     if path in sides or image != previous_image:
                         require(path in actual and ref(path, actual[path]) == old_profile["asset"] and
                                 ref(path, target[path]) == asset, "Catalog profile bytes differ")
+                        current_content.catalog_profiles.validate_png(new_profile, target[path])
             else:
                 projected = deepcopy(image)
                 if projected["asset"]: projected["asset"]["file"] = projected["asset"]["file"].removeprefix("game/")

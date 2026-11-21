@@ -15,7 +15,7 @@ def projection(registry,catalog):
     ids=[e["id"] for e in registry["entries"]]
     with patch("tools.puzzle_production.catalog_rating.project", return_value=None):
         return project(registry,catalog,ratings=dict.fromkeys(ids),added={i:{"added_at":None} for i in ids},
-                   reveals={e["id"]:e["reveal"] for e in registry["entries"]},
+                   catalogs=dict.fromkeys(ids, {}), reveals={e["id"]:e["reveal"] for e in registry["entries"]},
                    backgrounds={i:{"status":"standard","image_revision":1,"asset":None} for i in ids})
 from tools.puzzle_production.contract import InvalidInput, load_json, write_json
 from ci_scope import classify
