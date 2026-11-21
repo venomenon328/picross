@@ -1465,9 +1465,9 @@ python3 -m venv .venv/rp3
 ```
 
 Unter Windows entsprechend `.venv/rp3/Scripts/python.exe`; keine globale
-Installation. Jedes Ausgabeziel muss **neu/nicht vorhanden** sein. Die mitgelieferte
-[reale Quelle samt Produktionsbundle](../../examples/rp3/README.md) enthält bereits
-einen offline öffnenden Vergleich: `examples/rp3/production/index.html`.
+Installation. Jedes Ausgabeziel muss **neu/nicht vorhanden** sein. Die
+[Beispielquelle](../../examples/rp3/README.md) liegt im Repository. Der
+[Offlinevergleich des damaligen Produktionsbundles](https://github.com/venomenon328/picross/blob/37f500d5e6599a6c8ff85c8ca8edb4d190474c5f/examples/rp3/production/index.html).
 PNG/JSON/Briefing können ohne Dienst an ChatGPT/Codex übergeben werden.
 
 ### Entwurf, Normalisierung und Rasterverfahren

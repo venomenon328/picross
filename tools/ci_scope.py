@@ -177,10 +177,8 @@ def classify(paths: list[str], force: str = "auto", browser_scope: str = "none",
                 "game/tests/zs2_capture.gd",
             }):
                 add(("integration",), path)
-        elif path.startswith("docs/design/book_inventory/"):
-            add(("product", "visual", "perf_b", "web"), path)
-        elif path.startswith("tools/book_inventory/"):
-            # Reusable helper tests still run in docs; archived deliveries do not.
+        elif path.startswith(("docs/design/book_inventory/", "tools/book_inventory/")):
+            # Keep classifying deletions of historical book tooling in older comparisons.
             add(("product", "visual", "perf_b", "web"), path)
         elif path in {"tools/check_docs.py", "tools/test_check_docs.py"}:
             continue
