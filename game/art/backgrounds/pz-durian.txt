@@ -1,0 +1,4 @@
+author: KI-generiert mit OpenAI ImageGen im Auftrag des Nutzers
+changes: Vollständige proportionale HG31-Skalierung (picross-background-png2304x768-v1) von 2172 × 724 auf 2304 × 768 RGBA, ohne Beschnitt, Retusche oder Motivverschiebung.
+source: Native OpenAI-Bildgenerierung aus dem textlichen Durian-Kontextbriefing, ohne externe Bildvorlage. Gewähltes Original bg-steg, SHA-256 7e3b207afbaa6266410d717a042fa8106975f8e821a268d2ad871a0ef95325e7.
+usage_basis: Im Auftrag des Nutzers erstelltes Bild zur Veröffentlichung im Picross-Arbeitsrelease und gemäß seiner Endabnahme und seinem Integrationsauftrag zur Verwendung im Picross-Spiel.
