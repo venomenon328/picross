@@ -36,7 +36,11 @@ def error_dialog(message, root=None):
 
 
 def headless_error(message):
-    if sys.stderr is not None:
+    data = (message + '\n').encode('utf-8')
+    if getattr(sys, 'frozen', False) and hasattr(sys.stderr, 'buffer'):
+        sys.stderr.buffer.write(data)
+        sys.stderr.buffer.flush()
+    elif sys.stderr is not None:
         print(message, file=sys.stderr)
     elif os.name == 'nt':
         # A windowed Frozen EXE has no Python stderr. Use the supervisor's
@@ -50,7 +54,6 @@ def headless_error(message):
         if handle not in (None, ctypes.c_void_p(-1).value):
             kernel.WriteFile.argtypes = [wintypes.HANDLE, ctypes.c_char_p, wintypes.DWORD,
                                          ctypes.POINTER(wintypes.DWORD), wintypes.LPVOID]
-            data = (message + '\n').encode('utf-8')
             written = wintypes.DWORD()
             kernel.WriteFile(handle, data, len(data), ctypes.byref(written), None)
 

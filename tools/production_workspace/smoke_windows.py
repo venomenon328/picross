@@ -239,7 +239,7 @@ def raster_fixture(repo, root):
     if not paths or any(not name.startswith(('content/', 'game/data/')) or Path(name).suffix not in {'.json', '.png'}
                         for name in paths):
         raise RuntimeError('Synthetischer Datencheckout enthält ausführbare Quellen oder fremde Ressourcen.')
-    return commit_id, entries
+    return commit_id, paths, entries
 
 
 def start_frozen(app, state, work, *extra):
@@ -337,7 +337,7 @@ def method_smoke(build, inspection, destination):
     with tempfile.TemporaryDirectory(prefix='method-smoke-', dir=destination) as temporary:
         work = Path(temporary)
         repo, state = work / 'Daten ä', work / 'Zustand ü'
-        data_commit, entries = raster_fixture(repo, work)
+        data_commit, data_paths, entries = raster_fixture(repo, work)
         configure(repo, state, refs=['main'])
         cwd = work / 'Fremder Startordner ö'; cwd.mkdir()
         (cwd / 'tools.py').write_text('raise RuntimeError("FOREIGN MODULE MUST NOT RUN")\n', encoding='utf-8')
@@ -390,7 +390,7 @@ def method_smoke(build, inspection, destination):
             raise RuntimeError('Der synthetische Datencheckout wurde verändert.')
     result = {**audit, 'format': 'picross-pw-method-smoke-v1', 'exe_sha256': hashlib.sha256(
               (app / 'Picross-Start.exe').read_bytes()).hexdigest(), 'data_commit': data_commit,
-              'projections': projections, 'preflight_rejections': negatives}
+              'data_tree_files': data_paths, 'projections': projections, 'preflight_rejections': negatives}
     output = json.dumps(result, ensure_ascii=False, indent=2) + '\n'
     (destination / 'frozen-methods.json').write_text(output, encoding='utf-8')
     print(output)
