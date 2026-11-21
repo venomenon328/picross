@@ -1,0 +1,4 @@
+author: OpenAI ImageGen
+changes: Proportionale Ganzbildableitung von 2172 × 724 auf 2304 × 768 nach picross-background-png2304x768-v1, einschließlich sRGB- und Alpha-Normalisierung. Auswahloriginal unverändert.
+source: Nativ mit ImageGen für pz-onigiri erzeugte Kontextzeichnung ohne externe Bildvorlage. Auswahloriginal background-a (SHA-256 72c8039495e4eedebca1f6d8fbb6ebdcfa530f1e42d54526cae4cc7ad8c57bdb).
+usage_basis: Für diesen Rätselauftrag neu erzeugt und als Auswahloriginal zur Veröffentlichung beauftragt.

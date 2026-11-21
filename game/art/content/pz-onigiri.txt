@@ -1,0 +1,4 @@
+author: OpenAI ImageGen
+changes: Unveränderte generierte PNG-Bytes.
+source: Native ImageGen-Erzeugung aus dem Onigiri-Auftrag ohne externe Bildvorlage.
+usage_basis: Für diesen Auftrag neu generiert und zur Veröffentlichung als Auswahloriginal beauftragt.
