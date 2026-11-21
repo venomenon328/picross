@@ -1,10 +1,10 @@
 {
   "format": "development-ci-plan/v1",
-  "issue": "https://github.com/venomenon328/picross/issues/660",
-  "package": "PROD-WALNUSS",
+  "issue": "https://github.com/venomenon328/picross/issues/700",
+  "package": "PZ-BANH-MI-KONTEXT",
   "modules": [],
-  "purpose": "Erstintegration der endabgenommenen Walnuss pz-walnuss über RI-ONE. Der Katalog erhält das gewählte Monoraster, Reveal samt Katalogprofilen, den 3:1-Kontext und die gebundenen aktuellen Inhaltsmetadaten.",
-  "omitted": "Reine Rätselproduktion. Keine Änderungen an Spieler, Resolvern, Werkzeugen, gemeinsamen Laufzeitressourcen oder Tests. Proof und Inhaltsprüfung erfolgen im Produktionsweg. Der Docs- und CI-Quellenkern genügt ohne Player-Build und Zusatzmodule.",
+  "purpose": "Buildfreie Sichtung der drei Kontextangebote zu Bánh Mì nach Authoring Schritt 4.",
+  "omitted": "Der Draft enthält ausschließlich PW-B-Metadaten, ihren Indexverweis und den Paketplan. Rasterproof und Bildsichtung sind im Produktionsweg erfolgt. Der Quellen- und Plankern genügt ohne Playerbau und Zusatzmodule.",
   "test_changes": [],
   "core_change": null,
   "evidence": {
