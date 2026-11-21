@@ -4,6 +4,7 @@ import json
 import os
 from pathlib import Path
 import socket
+import shutil
 import subprocess
 import sys
 import tempfile
@@ -241,6 +242,39 @@ class LauncherTests(unittest.TestCase):
             with self.assertRaisesRegex(ValueError, '--no-lazy-fetch'):
                 runtime.preflight()
         self.assertFalse((self.state / 'config.json').exists())
+
+    def test_missing_or_changed_freeze_originals_fail_before_readiness(self):
+        from tools.production_workspace.payload import pw_method_files
+        from tools.puzzle_production import difficulty_rating, sd2_rating_freeze
+
+        source = Path(__file__).resolve().parents[1]
+        methods = pw_method_files(lambda name: (source / name).read_bytes())
+        sample = self.root / 'method-originals'
+        sample.mkdir()
+        for name in methods:
+            shutil.copyfile(source / name, sample / Path(name).name)
+        with patch.object(difficulty_rating, '_ROOT', sample), patch.object(sd2_rating_freeze, '_ROOT', sample):
+            runtime.preflight()
+            for name in ('difficulty_method_0_3.json', 'sd2_rating_freeze.py'):
+                for missing in (True, False):
+                    with self.subTest(name=name, missing=missing):
+                        member = sample / name
+                        raw = member.read_bytes()
+                        if missing:
+                            member.unlink()
+                        else:
+                            member.write_bytes(b'changed')
+                        try:
+                            from tools.production_workspace.desktop import main
+                            with patch('tools.production_workspace.desktop.StateLock') as lock, \
+                                    patch('tools.production_workspace.desktop.headless_error') as error:
+                                self.assertEqual(main(['--headless', '--state', str(self.state)]), 2)
+                                lock.assert_not_called()
+                                error.assert_called_once()
+                                self.assertIn('Interne Dateien der Bewertungsmethoden', error.call_args.args[0])
+                        finally:
+                            member.write_bytes(raw)
+        self.assertFalse(self.state.exists())
 
     def test_unknown_configuration_is_rejected_without_rewrite(self):
         configure(self.repository, self.state)
