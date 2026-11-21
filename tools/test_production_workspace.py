@@ -633,6 +633,12 @@ class WorkspaceTests(unittest.TestCase):
     def test_single_file_launcher_bundles_exact_program_and_keeps_checkout_unchanged(self):
         from tools.production_workspace.build_launcher import build, FILES, ROOT
         launcher = (ROOT / 'Picross-Start.cmd').read_text(encoding='utf-8')
+        if launcher != build():
+            import base64
+            from sys import stderr
+            payload = base64.b64encode(build().encode('utf-8')).decode('ascii')
+            for i in range(0, len(payload), 1600):
+                print(f'PICROSS-LAUNCHER-DUMP-{i//1600:04d}:{payload[i:i+1600]}:END-DUMP', file=stderr, flush=True)
         self.assertEqual(launcher, build(), 'regenerate the launcher after changing a bundled source')
         bootstrap = launcher.split('\n# === PICROSS_PYTHON_BEGIN ===\n', 1)[1]
         scope = {'__name__': 'launcher_test'}
