@@ -18,7 +18,7 @@ PW2-B stellt Bilder, fällige Entscheidungen und relevante Parameter vor die
 technischen Originaldetails. Bei der Hintergrundwahl zeigt die Schlussübersicht
 gewähltes Raster, Reveal und Hintergrund/none. „Endabnahme & Integration: Auftrag
 kopieren“ erzeugt einen gemeinsamen Schlussauftrag; erst sein Absenden erklärt
-die Freigabe. Bedingter Squash-Merge nach unabhängigem Review und aktuellen Gates
+die Freigabe. Bedingter Squash-Merge nach PR-Diff-Selbstprüfung und aktuellen Gates
 ist ohne gespeicherte Einstellung der Standard; ein ausdrückliches Nein bleibt
 als Draft-Auftrag erhalten. Korrektur/Wiederaufnahme erklären keine neue Endabnahme
 oder Mergefreigabe. Der geprüfte aktuelle Record bleibt unten
