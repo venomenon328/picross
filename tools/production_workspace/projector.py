@@ -242,7 +242,7 @@ def complete(root, record_path, commit, *, current_input):
             binding = {"operation": "register", "commit": commit,
                        "result": current_delivery.snapshot(lambda name,limit,missing=False:source.read(commit,name,limit,missing),before["puzzle_id"])}
             after.update(state='registered', integration=binding, blockers=[],
-                         next_step='5 · Lokal registriert; unabhängiges Review und Git-/Mainabschluss prüfen')
+                         next_step='5 · Lokal registriert; PR-Selbstreview, Pflichtchecks und Git-/Mainabschluss prüfen')
         ap.require(after['integration']['commit'] == commit, 'Completion belongs to another registration')
         p.registration(source, after)
         directory = record_path.rsplit('/', 1)[0]
