@@ -12,6 +12,11 @@
       "path": "tools/test_authoring_sheet.py",
       "disposition": "change-scoped",
       "reason": "Bestehende Prompt-Regression aktualisiert: Standardintegration ohne vorgeschriebenes unabhängiges PR-Zweitreview, bedingter Squash-Merge bleibt erhalten. Weiterhin im tools-Modul bei passenden Änderungen."
+    },
+    {
+      "path": "tools/test_production_workspace.py",
+      "disposition": "temporary",
+      "reason": "Einmaliger Lauf der bestehenden Paket-Konsistenzprüfung mit Ausgabe der deterministischen Starterbytes zur Rekonstruktion; Debugausgabe wird vor Endlieferung wieder entfernt."
     }
   ],
   "core_change": null,
