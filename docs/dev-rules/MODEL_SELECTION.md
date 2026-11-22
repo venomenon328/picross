@@ -26,6 +26,10 @@ Immer eine konkrete, umgebungsbezogene Aussage für noch anstehende Umsetzung tr
 
 Code schreiben können allein genügt nicht. Umgekehrt machen wenige berührte Dateien die Eigenumsetzung nicht automatisch sicher. Kleine isolierte Fixes und zusammengehörige Nacharbeiten bevorzugt selbst erledigen, wenn der gesamte Implementierungsweg belastbar verfügbar ist und kein relevanter Qualitätsvorteil einer Delegation zu erwarten ist. `Selbst umsetzbar: Ja` beschreibt die Fähigkeit, nicht zwangsläufig den qualitativ besten Ausführungsweg.
 
+In ChatGPT den Connector und den lokalen Git-/gh-Weg getrennt beurteilen.
+Welche Publikation für den konkreten Branchzustand geprüft ausführbar ist,
+bestimmt [WORKFLOW §5](WORKFLOW.md#5-umsetzen).
+
 **Manuelle Abnahme separat behandeln:** Eine außerhalb des Implementierungsumfangs vereinbarte Nutzerprüfung macht eine sonst vollständige Eigenumsetzung nicht automatisch „Teilweise“. Sie muss separat als offenes Merge- oder Releasegate genannt werden. Gehört sie ausdrücklich zum beauftragten Endzustand, ist die verbleibende Einschränkung entsprechend einzurechnen. Codex kann dieselbe Abnahme ebenfalls nicht automatisch ersetzen.
 
 Die Befugnis zur tatsächlichen Eigenumsetzung folgt aus dem Auftrag, nicht aus dieser Einschätzung.

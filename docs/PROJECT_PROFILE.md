@@ -72,6 +72,7 @@ Für normale Inhalte gilt stattdessen die Authoringroute.
 | Schritt-4-Integrationscode, Registrierungsbudgets, Prüfkontext, Publikationsguards/Recovery | [PUZZLE_INTEGRATION](production/PUZZLE_INTEGRATION.md), [ZA1_ADAPTER](production/ZA1_ADAPTER.md), aktuelles Paket; Soll und ausführbaren Stand unterscheiden |
 | Schwierigkeit, Analyse, Kalibrierung, Bewertung oder deren Integration | [SD2](difficulty/PUZZLE_DIFFICULTY_V2.md), [SD](difficulty/PUZZLE_DIFFICULTY.md), je nach Änderung [SD2-Analyse](difficulty/SD2_ANALYZER.md), [SD2-Kalibrierung](difficulty/SD2_CALIBRATION.md), [SD2-Integration](difficulty/SD2_INTEGRATION.md), kompatible [SD-Analyse](difficulty/SD_ANALYZER.md), [0.3-Freeze](difficulty/SD_CALIBRATION.md), [Daten-/Recoveryvertrag](difficulty/SD_CATALOG.md), [Paarlinien](production/PAIRED_LINES.md), Kategorien/ZA-1/Katalogdarstellung |
 | CI, Prüfprogramme, Artefakte oder neue Tests | [CI_WORKFLOW_V2](ci/CI_WORKFLOW_V2.md), tatsächlich betroffene [Native](ci/CI_C_NATIVE_GROUPS.md)-/[Fach](ci/CI_A_SELECTION.md)-/[Browser](ci/CI_B_BROWSER_GROUPS.md)-Verträge |
+| Git-Publikation aus Entwicklungsaufträgen | [Git-Publikationsvertrag](tools/GIT_PUBLICATION.md), bei Änderungen am ChatGPT-Einstieg die [Projektvorlage](project/CHATGPT_PROJECT_INSTRUCTIONS.md) |
 | Webbuild, Browserpersistenz oder Hosting | [WEB_HOSTING](operations/WEB_HOSTING.md) und betroffene Fachverträge |
 | Bestandsbereinigung oder historische CI-Nacharbeit | [Historische Quellen](history/README.md) und nur die tatsächlich betroffenen Originale |
 
@@ -81,6 +82,7 @@ Für normale Inhalte gilt stattdessen die Authoringroute.
 | Regelbereich | Einzige zuständige Quelle |
 | --- | --- |
 | Phasen, Befugnisse, Review, Merge | [WORKFLOW](dev-rules/WORKFLOW.md) |
+| Geprüfte Git-Transporte und Connector-Ablauf | [Git-Publikationsvertrag](tools/GIT_PUBLICATION.md) |
 | Test-/Artefaktlebenszyklus | [CI_CONTRACT](dev-rules/CI_CONTRACT.md) |
 | Ausführbare CI und Modulauswahl | [CI_WORKFLOW_V2](ci/CI_WORKFLOW_V2.md) |
 | Lokale Arbeitswurzel und Bereinigung | [WORKSPACE](dev-rules/WORKSPACE.md) |

@@ -7,10 +7,11 @@ Zuständigkeit: Herkunft, Versionierung und Pflege des lokalen Regelpakets.
 ## Aktueller Stand
 
 Das Repository verwendet den ausdrücklich beauftragten lokalen Fork
-`0.2.0-rc.6`: Grundlage [#517](https://github.com/venomenon328/picross/issues/517),
+`0.2.0-rc.7`: Grundlage [#517](https://github.com/venomenon328/picross/issues/517),
 Quellenbindung der Sheet-Prompts in [#521](https://github.com/venomenon328/picross/issues/521),
 schrittbezogene Übergaben und zugängliche Reviewbelege in [#525](https://github.com/venomenon328/picross/issues/525),
-eigene Änderungswünsche und quellengebundene Folgeaufträge nach dem Review in [#529](https://github.com/venomenon328/picross/issues/529).
+eigene Änderungswünsche und quellengebundene Folgeaufträge nach dem Review in [#529](https://github.com/venomenon328/picross/issues/529),
+Connector- und Publikationsrouting in [#824](https://github.com/venomenon328/picross/issues/824).
 [WORKFLOW](../dev-rules/WORKFLOW.md), CI_CONTRACT, WORKSPACE, HANDOFF und Modellregeln
 bilden das portable Paket unter `docs/dev-rules/`. Projektwerte und Fachrouting
 stehen im [Projektprofil](../PROJECT_PROFILE.md), die technische CI-Adaption in

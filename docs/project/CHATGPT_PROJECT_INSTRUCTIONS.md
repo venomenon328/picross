@@ -12,11 +12,13 @@ Vor Merge einer neuen Fassung deren Arbeitsbranch im konkreten Auftrag benennen.
 ```text
 Dieses Entwicklungsprojekt arbeitet mit dem GitHub-Repository venomenon328/picross.
 
-Vor auftragsbezogener Arbeit die aktuelle AGENTS.md im beauftragten Arbeitsbranch, sonst in main, tatsächlich abrufen und ihren Pflichtquellen folgen. Maßgeblich sind docs/dev-rules/, docs/PROJECT_PROFILE.md und der aktuelle Issue-/PR-Stand. Alte Chats und Erinnerungen ersetzen keine Quellenprüfung; bei einer neuen Idee kein bereits vorhandenes Issue voraussetzen.
+Den verbundenen GitHub-Connector bevorzugt für Repositoryquellen, Issues, PRs und CI verwenden. Vor auftragsbezogener Arbeit die aktuelle AGENTS.md im beauftragten Arbeitsbranch, sonst in main, tatsächlich abrufen und ihren Pflichtquellen folgen. Maßgeblich sind docs/dev-rules/, docs/PROJECT_PROFILE.md und der aktuelle Issue-/PR-Stand. Alte Chats und Erinnerungen ersetzen keine Quellenprüfung; bei einer neuen Idee kein bereits vorhandenes Issue voraussetzen.
 
 Produkt- und Technikentscheidungen anhand der aktuellen Fachquellen klären. Vorschlag, bestätigte Anforderung, Implementierung, tatsächlichen Test und Abnahme unterscheiden. Setup- oder Quellenprüfung ist kein Nachweis funktionierenden Spielverhaltens.
 
 Befugnisse folgen dem konkreten Auftrag und docs/dev-rules/WORKFLOW.md. Implementierung erlaubt Änderungen, passende Prüfungen, Commit, Push und Draft-PR im Scope. Beratung, Vorbereitung oder Review allein erlauben keine Produktkorrektur oder Merge. Bereits erteilte kombinierte/bedingte Freigaben ohne erneute Routinebestätigung nutzen, sobald ihr aktueller Review und alle Vor-Merge-Gates erfüllt sind. Reviews an tatsächlichen Änderungen und Belegen auf einen konkreten Commit binden.
+
+Für Commits das geprüfte Veröffentlichungsrouting in docs/dev-rules/WORKFLOW.md §5 verwenden. Ein Ausfall von Git-Netz oder gh-Anmeldung ist ein Befund zum lokalen Weg. Connector-Zugriff und die für den Branch benötigte Publikationsfähigkeit getrennt prüfen.
 
 Entscheidungen im zuständigen Issue/Paket beziehungsweise PR festhalten. Jedes PR-Paket entscheidet seinen Prüfbedarf nach docs/ci/CI_WORKFLOW_V2.md: kleiner Kern, Windows-Spieler außer bei reinen Dokumentenänderungen und reiner Rätselproduktion, begründete Zusatzmodule, temporäre Nachweise und bewusste Dauerregressionen. Zehn Minuten sind weich; keine maximale CI-Laufzeit oder Artefaktgröße. Technische Uploads nur zweckgebunden und befristet. Chromium nur auf ausdrücklichen manuellen Auftrag.
 
