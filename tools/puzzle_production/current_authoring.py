@@ -20,10 +20,8 @@ FIELDS = set('format puzzle_id revision source_commit operation target title cat
 PHASES = ('brief_ready', 'reveal_review', 'motif_review', 'motif_approved', 'raster_review',
           'raster_ready', 'background_review', 'content_ready', 'editorially_approved', 'registered')
 SCOPES = ('reveal', 'motif', 'raster', 'background', 'final', 'integration', 'budget')
-CRITERIA = {'reveal': {'Q-B01','Q-B02','Q-B03'}, 'motif': {'Q-M01','Q-M02','Q-M03'},
-            'background': {'Q-HG01','Q-HG02','Q-HG03','Q-HG04','H-07'},
-            'raster': {'Q-R01','Q-R02','Q-R03','Q-R04','Q-H01','Q-H02','Q-H03'}}
-OPTION = re.compile(r'[A-Za-z0-9][A-Za-z0-9_-]{0,63}\Z')
+CRITERIA = findings.CRITERIA
+OPTION = findings.OPTION
 
 
 def encoded(value):
@@ -112,27 +110,6 @@ def references(job):
     return refs
 
 
-def validate_parameters(parameters):
-    exact_keys(parameters, {'proposed','approved'})
-    for role, values in parameters.items():
-        ap.require(isinstance(values,list) and len(values)<=8, 'Invalid parameters')
-        for value in values:
-            ap.require(isinstance(value,dict), 'Invalid parameter object')
-            if value.get('format') == raster_parameters.FORMAT:
-                raster_parameters.validate(value)
-            else:
-                keys = {'width','height','foreground_colors','size_constraint','foreground_color_constraint'}
-                exact_keys(value, keys | ({'mode'} if role == 'approved' or 'mode' in value else set()))
-                for axis in ('width','height'): integer(value[axis],1,50,axis)
-                ap.require(value['size_constraint'] in ('exact','approximate') and
-                           value['foreground_color_constraint'] in ('exact','approximate'), 'Invalid raster parameters')
-                mode = value.get('mode')
-                if (mode is None and role == 'proposed' and value['foreground_color_constraint'] == 'exact'
-                        and value['foreground_colors'] == 1):
-                    mode = 'mono'
-                raster_parameters.require_color_count(mode, value['foreground_colors'])
-
-
 def validate(job):
     structured = job.get('format') in findings.FORMATS
     published = job.get('format') in PUBLISHED_FORMATS
@@ -161,7 +138,7 @@ def validate(job):
         exact_keys(counters, {'raster_candidates','repair_rounds','image_corrections'})
         for count in counters.values(): integer(count,0,1000000,'current budget counter')
     ap.require(all(job['budgets']['used'][k]<=v for k,v in job['budgets']['limits'].items()), 'Current operation budget exceeded')
-    validate_parameters(job['parameters'])
+    findings.validate_parameters(job['parameters'])
     for key, maximum in (('assets',100),('rasters',20),('decisions',8),('blockers',64)):
         ap.require(isinstance(job[key],list) and len(job[key])<=maximum, 'Too many '+key)
     for blocker in job['blockers']:
@@ -243,19 +220,16 @@ def validate(job):
 
 
 def review(value, criteria, *, ready, decisions=()):
-    ap.require(isinstance(value,dict) and set(value)<=criteria, 'Unknown visual criterion')
-    if ready: ap.require(set(value)==criteria, 'Missing current visual judgments')
+    findings.check_summaries(value, criteria)
+    if not ready:
+        return
+    ap.require(set(value)==criteria, 'Missing current visual judgments')
+    recorded = decisions.values() if isinstance(decisions, dict) else decisions
     for criterion, finding in value.items():
-        exact_keys(finding, {'result','accepted','reason','method','actor','timestamp_utc'})
-        ap.require(finding['result'] in ('erfüllt','Warnung','nicht erfüllt','nicht geprüft') and type(finding['accepted']) is bool, 'Invalid visual result')
-        for key in ('reason','method','actor'): text(finding[key],key)
-        if finding['timestamp_utc'] is not None: ap.timestamp(finding['timestamp_utc'])
-        if ready:
-            recorded=list(decisions.values()) if isinstance(decisions,dict) else list(decisions)
-            accepted=any(criterion in d['statement'] for d in recorded if d.get('scope') in ('background','final','motif','raster'))
-            ap.require(finding['result']!='nicht geprüft', 'Visual criterion not checked: '+criterion)
-            ap.require(finding['result']=='erfüllt' or criterion not in ('H-07','Q-HG01') and finding['accepted'] and accepted,
-                       'Actual editorial acceptance required: '+criterion)
+        accepted=any(criterion in d['statement'] for d in recorded if d.get('scope') in ('background','final','motif','raster'))
+        ap.require(finding['result']!='nicht geprüft', 'Visual criterion not checked: '+criterion)
+        ap.require(finding['result']=='erfüllt' or criterion not in ('H-07','Q-HG01') and finding['accepted'] and accepted,
+                   'Actual editorial acceptance required: '+criterion)
 
 
 class Checked:
@@ -280,7 +254,8 @@ class Checked:
             info = image_info(raw,asset['file']['file'],j)
             ready=(asset['id'] in (selected['reveal'],selected['motif']) and phase>=5 and j['operation']=='production' or
                    asset['role']=='background' and phase>=7 and asset['id']==selected['background'])
-            if structured and asset['role'] != 'input':
+            active_reveal = j['operation'] == 'background' and asset['id'] == selected['reveal']
+            if structured and asset['role'] != 'input' and not active_reveal:
                 missing = [] if asset['rights'] else ['Nutzungsrechte fehlen']
                 if asset['role'] == 'background':
                     from .background_contract import PROFILES
@@ -461,6 +436,51 @@ class Checked:
                 ap.require(self.read(name,max(len(raw),1))==raw, 'Current input changed: '+name)
 
 
+def check_transition(previous, job):
+    findings.transition(previous, job)
+    if job['format'] in findings.FORMATS and job['blockers']:
+        prior = previous or {'state': PHASES[0], 'selected': {}}
+        choosing = any(value is not None and value != prior['selected'].get(role)
+                       for role, value in job['selected'].items())
+        ap.require(not choosing and PHASES.index(job['state']) <= PHASES.index(prior['state']),
+                   'Resolve job-wide blockers before choosing or advancing')
+
+
+def upgrade(job, *, observations=(), backgrounds=None, job_blockers=None):
+    """Start a v3 draft from verified current coverage and existing creative choices."""
+    validate(job)
+    result = deepcopy(job)
+    result['format'] = findings.PUBLISHED if 'work_release' in job else findings.LOCAL
+    ap.require(job['format'] not in findings.FORMATS, 'Expected a supported earlier current record')
+    result['findings'] = deepcopy(list(observations))
+    result['instructions'] = {}
+    ap.require(not job['blockers'] or job_blockers is not None, 'Classify remaining job-wide blockers explicitly')
+    result['blockers'] = deepcopy(list(job_blockers or []))
+    for item in findings.subjects(result).values():
+        if item.get('role') == 'background':
+            ap.require(backgrounds and item['id'] in backgrounds, 'Identify the actual background profile and prepared bytes')
+            supplied = exact_keys(backgrounds[item['id']], {'profile', 'prepared'})
+            if job['selected']['background'] == item['id']:
+                prepared = supplied['prepared']
+                ap.require(prepared and prepared['file']['sha256'] == item['file']['sha256'],
+                           'Earlier approval covers only its actual background bytes')
+            item.update(deepcopy(supplied))
+        for summary in item['review'].values():
+            summary['accepted'] = False
+    # New visual declarations require an actual new final decision. Keep earlier
+    # choices only for their original bytes and parameter scope.
+    if observations and any(d['scope'] in ('final','integration') for d in job['decisions']):
+        ap.require(job['state'] != 'registered', 'Integrated content has a separate revision path')
+        result['decisions'] = [d for d in result['decisions'] if d['scope'] not in ('final','integration')]
+        result['state'] = 'content_ready'
+    for raster in result['rasters']:
+        for exception in raster['exceptions']:
+            exception['definition_sha256'] = raster['definition']['sha256']
+    for d in result['decisions']:
+        d['binding'] = binding(result, d['scope'])
+    return validate(result)
+
+
 def checkpoint(name):
     io.tick()
 
@@ -555,7 +575,7 @@ def build(request, source_root, root):
         checked=Checked(job,read)
         # Local resume mirrors the exact remote record before editing. For a
         # retry, the journal above supplies the original predecessor.
-        findings.transition(old, job)
+        check_transition(old, job)
         checked.check_new_previews(old)
         for source,raw in observed.items(): ap.require(io.read(source_root,source,max(len(raw),1))==raw, 'Payload source changed')
         for ref in journal['remove']:

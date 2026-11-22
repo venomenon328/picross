@@ -163,7 +163,7 @@ Für eine Korrektur zuerst am tatsächlichen unmittelbaren Ausgangsrecord neu be
 `carry(previous, job, source_id, successor_id, continuing=…)` verwenden. In `continuing`
 die weiterhin relevanten früheren Texte für den Nachfolger angeben, auch wenn ein Befund verschwunden ist.
 Bei weiteren Blockern den tatsächlichen Reviewstand mit den bereits wirksamen Erklärungen sichern.
-Zum gezielten Wechsel eines aktuellen Altstands dient `upgrade(job, observations=…, backgrounds=…, job_blockers=…)`.
+Zum gezielten Wechsel eines aktuellen Altstands dient `current_authoring.upgrade(job, observations=…, backgrounds=…, job_blockers=…)`.
 Negative Sammelurteile benötigen konkrete neu gebundene Einzelbefunde, Hintergrundoriginale ihr tatsächliches Profil.
 Frühere Annahmen nur mit belegter Einzelzuordnung erklären. Auftragsweite Altblocker ausdrücklich prüfen.
 Nach Resume, Builder und Finalizer mit dem regulären Publisher und erwarteten Arbeitscommit sichern.

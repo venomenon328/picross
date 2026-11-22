@@ -24,6 +24,7 @@ for(const key of ['workroot','merge']){
 }
 function refreshChoices(){
  if(!detail?.facts.candidates)return;
+ document.querySelectorAll('[data-rework-shortcut]').forEach(button=>{button.hidden=intent.action==='rework';});
  document.querySelectorAll('[data-readiness]').forEach(status=>{
   const card=detail.facts.candidates[status.dataset.readiness];
   const open=card.findings.filter(row=>!row.eligible||!(intent.findings?.[row.binding]?.accepted??(row.decision?.action==='accept'))).length;
@@ -401,7 +402,7 @@ function assetCard(value,id,asset,selectable=true){
   const select=node('button','Diese Variante wählen');select.dataset.choice=offer.id;if(value.facts.candidates)select.dataset.candidate=asset.id;select.setAttribute('aria-pressed',String(intent.selection===offer.id));select.disabled=true;select.onclick=()=>choose(offer.id,offer.kind,select);caption.append(select);choices.push(select);
  }
  if(card&&selectable&&offered){
-  const correction=node('button','Korrigieren');
+  const correction=node('button','Korrigieren');correction.dataset.reworkShortcut='true';
   correction.onclick=()=>{
    const mode=$('nextActionMode');mode.value='rework';mode.onchange();
    choose(asset.id,asset.role==='raster_draft'?'raster':asset.role,correction);

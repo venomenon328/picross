@@ -130,7 +130,7 @@ class CurrentAuthoringTests(unittest.TestCase):
 
     def test_mixed_candidates_and_combined_decision_through_completion(self):
         self.raster_ready()
-        self.job = current.findings.upgrade(self.job)
+        self.job = current.upgrade(self.job)
         a = self.job['rasters'][0]
         b, c = deepcopy(a), deepcopy(a)
         b['id'], c['id'], c['proof'] = 'raster-b', 'raster-c', None
@@ -180,9 +180,52 @@ class CurrentAuthoringTests(unittest.TestCase):
         git(self.root, 'checkout', '-qb', 'work', work)
         current.complete(self.root,current.path('pz-current'),product,current_input=exported)
 
+    def test_selected_background_profile_and_all_phase_treatments_reach_export(self):
+        from io import BytesIO
+        from PIL import Image
+        self.raster_ready()
+        self.job = current.upgrade(self.job)
+        for target,key,rule in [('reveal-b','Q-B02','illustration'),('motif-a','Q-M02','area-use')]:
+            self.accept(self.finding(target, 'detail', key, rule), target+' beibehalten')
+        self.job['selected']['raster'] = 'raster-a'
+        decide(self.job, 'raster')
+        self.job['state'] = 'background_review'
+        image = Image.new('RGBA',(30,10))
+        image.putpixel((2,5),(20,30,40,255))
+        original = BytesIO()
+        image.save(original,format='PNG')
+        asset = self.asset('sky','background')
+        asset.update(file=self.file('sky-original.png',original.getvalue()),
+                     profile='picross-background-png2304x768-v1',prepared=None)
+        self.job['assets'].append(asset)
+        self.accept(self.finding('sky','stroke','Q-HG04','stroke-quality'),'Strich bewahren')
+        self.publish()
+        self.job['selected']['background'] = 'sky'
+        decide(self.job,'background')
+        self.job['state'] = 'content_ready'
+        with self.assertRaisesRegex(InvalidInput,'Prepared'):
+            self.publish()
+        prepared = self.work/'prepared.png'
+        current.prepare_background(self.sources/'sky-original.png',prepared,profile_id=asset['profile'])
+        bound = current.findings.subjects(self.job)['sky']
+        bound['prepared'] = {'original_sha256':asset['file']['sha256'],'profile':asset['profile'],
+                             'file':self.file('sky-output.png',prepared.read_bytes())}
+        self.job['instructions']['sky'] = ['Kontur weiterhin hell halten']
+        decide(self.job,'final')
+        decide(self.job,'integration')
+        self.job['state'] = 'editorially_approved'
+        self.publish()
+        out=self.work/'final'
+        current.prepare(self.root,current.path('pz-current'),out)
+        review=json.loads((out/'review.json').read_bytes())
+        self.assertEqual({r['target'] for r in review['findings']},{'reveal-b','motif-a','sky'})
+        self.assertEqual(review['instructions']['sky'],['Kontur weiterhin hell halten'])
+        self.assertEqual(review['components']['background']['sha256'],asset['file']['sha256'])
+        self.assertEqual((out/'background.png').read_bytes(),prepared.read_bytes())
+
     def test_immediate_correction_source_revocation_and_hard_subrules(self):
         f = current.findings
-        self.job = f.upgrade(self.job)
+        self.job = current.upgrade(self.job)
         self.job['assets'] = [self.asset('one','reveal'),self.asset('sibling','reveal')]
         row = self.finding('one','edge','Q-B03','edge-quality')
         self.accept(row)

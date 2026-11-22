@@ -1,9 +1,11 @@
 """Concrete observations and human decisions on the current content only."""
 from copy import deepcopy
+from datetime import datetime
 import re
 
 from .authoring_package import require, sha, string, timestamp
-from .contract import digest, exact_keys
+from . import raster_parameters
+from .contract import digest, exact_keys, integer
 
 LOCAL = 'picross-authoring-draft-v3'
 PUBLISHED = 'picross-authoring-current-v3'
@@ -24,6 +26,44 @@ EDITORIAL = {
 SEMANTICS = ('criterion', 'rule', 'properties', 'context', 'effect', 'extent', 'result')
 OBSERVATION = {'id', *SEMANTICS, 'description', 'method', 'actor', 'timestamp_utc'}
 NEGATIVE = ('Warnung', 'nicht erfüllt')
+
+
+CRITERIA = {'reveal': {'Q-B01','Q-B02','Q-B03'}, 'motif': {'Q-M01','Q-M02','Q-M03'},
+            'background': {'Q-HG01','Q-HG02','Q-HG03','Q-HG04','H-07'},
+            'raster': {'Q-R01','Q-R02','Q-R03','Q-R04','Q-H01','Q-H02','Q-H03'}}
+OPTION = re.compile(r'[A-Za-z0-9][A-Za-z0-9_-]{0,63}\Z')
+
+
+def validate_parameters(parameters):
+    exact_keys(parameters, {'proposed','approved'})
+    for role, values in parameters.items():
+        require(isinstance(values,list) and len(values)<=8, 'Invalid parameters')
+        for value in values:
+            require(isinstance(value,dict), 'Invalid parameter object')
+            if value.get('format') == raster_parameters.FORMAT:
+                raster_parameters.validate(value)
+            else:
+                keys = {'width','height','foreground_colors','size_constraint','foreground_color_constraint'}
+                exact_keys(value, keys | ({'mode'} if role == 'approved' or 'mode' in value else set()))
+                for axis in ('width','height'): integer(value[axis],1,50,axis)
+                require(value['size_constraint'] in ('exact','approximate') and
+                           value['foreground_color_constraint'] in ('exact','approximate'), 'Invalid raster parameters')
+                mode = value.get('mode')
+                if (mode is None and role == 'proposed' and value['foreground_color_constraint'] == 'exact'
+                        and value['foreground_colors'] == 1):
+                    mode = 'mono'
+                raster_parameters.require_color_count(mode, value['foreground_colors'])
+
+
+def check_summaries(value, criteria):
+    require(isinstance(value,dict) and set(value)<=criteria, 'Unknown visual criterion')
+    for criterion, finding in value.items():
+        exact_keys(finding, {'result','accepted','reason','method','actor','timestamp_utc'})
+        require(finding['result'] in ('erfüllt','Warnung','nicht erfüllt','nicht geprüft') and type(finding['accepted']) is bool, 'Invalid visual result')
+        for key in ('reason','method','actor'):
+            string(finding[key], key)
+            require('\0' not in finding[key], 'NUL in ' + key)
+        if finding['timestamp_utc'] is not None: timestamp(finding['timestamp_utc'])
 
 
 def subjects(job):
@@ -64,7 +104,7 @@ def check_row(row, target, content, criteria):
     require(row['target'] == target and row['content'] == content, 'Stale finding content')
     require(isinstance(row['id'], str) and re.fullmatch(r'[A-Za-z0-9][A-Za-z0-9_-]{0,63}', row['id']),
             'Invalid finding identifier')
-    require(row['criterion'] in criteria and row['result'] in (*NEGATIVE, 'nicht geprüft'),
+    require(isinstance(row['criterion'], str) and row['criterion'] in criteria and row['result'] in (*NEGATIVE, 'nicht geprüft'),
             'Invalid concrete finding')
     require(isinstance(row['rule'], str), 'Invalid finding subrule')
     for key in ('rule', 'properties', 'context', 'effect', 'extent', 'description', 'method', 'actor'):
@@ -152,9 +192,14 @@ def transition(previous, job):
     if job['format'] not in FORMATS:
         return
     old = previous['findings'] if previous and previous['format'] in FORMATS else []
+    revoked = {binding(r): r['decision'] for r in old if r['decision'] and r['decision']['action'] == 'revoke'}
     sources = {}
     for row in job['findings']:
         d = row['decision']
+        prior = revoked.get(binding(row))
+        if prior and effective(row):
+            require(d['source'] is None and datetime.fromisoformat(d['timestamp_utc']) > datetime.fromisoformat(prior['timestamp_utc']),
+                    'Reactivation after revocation needs a new actual declaration')
         if d and d['source']:
             require(sources.setdefault(row['target'], d['source']['target']) == d['source']['target'],
                     'A successor has one immediate correction base')
@@ -163,41 +208,10 @@ def transition(previous, job):
         require(previous and old, 'Missing immediate correction source')
         candidate = deepcopy(row)
         candidate['decision'] = None
-        probe = {**job, 'findings': [candidate if r is row else r for r in job['findings']]}
+        probe = {**job, 'findings': [candidate if r is row else deepcopy(r) for r in job['findings']]}
         carry(previous, probe, d['source']['target'], row['target'])
         require(candidate == row, 'Acceptance not covered by immediate correction source')
 
-
-def upgrade(job, *, observations=(), backgrounds=None, job_blockers=None):
-    """Start a v3 draft from verified current coverage and existing creative choices."""
-    from . import current_authoring as current
-    current.validate(job)
-    result = deepcopy(job)
-    result['format'] = PUBLISHED if 'work_release' in job else LOCAL
-    require(job['format'] not in FORMATS, 'Expected a supported earlier current record')
-    result['findings'] = deepcopy(list(observations))
-    result['instructions'] = {}
-    require(not job['blockers'] or job_blockers is not None, 'Classify remaining job-wide blockers explicitly')
-    result['blockers'] = deepcopy(list(job_blockers or []))
-    for item in subjects(result).values():
-        if item.get('role') == 'background':
-            require(backgrounds and item['id'] in backgrounds, 'Identify the actual background profile and prepared bytes')
-            supplied = exact_keys(backgrounds[item['id']], {'profile', 'prepared'})
-            item.update(deepcopy(supplied))
-        for criterion, summary in item['review'].items():
-            summary['accepted'] = False
-    # New visual declarations require an actual new final decision. Keep earlier
-    # choices only for their original bytes and parameter scope.
-    if observations and any(d['scope'] in ('final','integration') for d in job['decisions']):
-        require(job['state'] != 'registered', 'Integrated content has a separate revision path')
-        result['decisions'] = [d for d in result['decisions'] if d['scope'] not in ('final','integration')]
-        result['state'] = 'content_ready'
-    for raster in result['rasters']:
-        for exception in raster['exceptions']:
-            exception['definition_sha256'] = raster['definition']['sha256']
-    for d in result['decisions']:
-        d['binding'] = current.binding(result, d['scope'])
-    return current.validate(result)
 
 def declare(row, *, expected, action, treatment, actor, timestamp_utc, statement):
     """Apply a submitted declaration to the exact observation in the actor's draft."""
@@ -230,13 +244,12 @@ def selected_review(job):
 
 
 def check_selected(review_data, manifest):
-    from . import current_authoring as current
     exact_keys(review_data, {'brief', 'instructions', 'components', 'parameters', 'findings', 'actor', 'timestamp_utc', 'statement'})
     string(review_data['brief'], 'Current production instructions', 16384)
     components = exact_keys(review_data['components'], {'reveal', 'motif', 'raster', 'background'})
     job = {'puzzle_id': manifest['entry']['id'], 'operation': 'production', 'target': None, 'assets': [],
            'rasters': [], 'instructions': review_data['instructions'], 'selected': {}, 'parameters': {'approved': review_data['parameters']}, 'findings': review_data['findings']}
-    current.validate_parameters({'proposed': [], 'approved': review_data['parameters']})
+    validate_parameters({'proposed': [], 'approved': review_data['parameters']})
     require(review_data['parameters'], 'Selected parameter alternative required')
     expected = {'reveal': manifest['reveal']['asset'], 'raster': manifest['definition']}
     background = manifest['background']
@@ -248,7 +261,7 @@ def check_selected(review_data, manifest):
             job['selected'][role] = value
             continue
         exact_keys(value, {'id', 'sha256', 'review'} | ({'profile', 'prepared_sha256'} if role == 'background' else set()))
-        current.identifier(value['id'])
+        require(isinstance(value['id'], str) and OPTION.fullmatch(value['id']) and value['id'] not in ('none','standard'), 'Invalid selected candidate')
         require(value['id'] not in job['selected'].values(), 'Duplicate selected candidate')
         sha(value['sha256'])
         require(role not in expected or expected[role]['sha256'] == value.get('prepared_sha256', value['sha256']), 'Different selected content in review')
@@ -265,8 +278,8 @@ def check_selected(review_data, manifest):
                 item['profile'] = value['profile']
                 item['prepared'] = {'file': {'sha256': value['prepared_sha256']}}
             job['assets'].append(item)
-        current.review(item['review'], current.CRITERIA[role], ready=False)
-        require(set(item['review']) == current.CRITERIA[role] and
+        check_summaries(item['review'], CRITERIA[role])
+        require(set(item['review']) == CRITERIA[role] and
                 all(v['result'] != 'nicht geprüft' for v in item['review'].values()), 'Incomplete selected assessment')
-    validate(job, current.CRITERIA)
+    validate(job, CRITERIA)
     require(all(effective(r) for r in job['findings']), 'Open selected finding')

@@ -153,6 +153,7 @@ const PW = (()=>{
   if(cards){
    lines.push(...findingOrders(value,intent));
    if(action==='continue'){
+    if(value.facts.blockers?.length)throw Error('Auftragsweite Voraussetzung offen: '+value.facts.blockers[0]);
     const required=new Set(selected?[selected.id]:[]);
     if(closing(value,intent)){
      for(const id of Object.values(value.facts.originals?.record?.selected||{}))if(cards[id])required.add(id);
@@ -174,7 +175,10 @@ const PW = (()=>{
     lines.push(`Korrekturgrundlage: ${base}. Geltende Behandlungen berücksichtigen. Korrigierte Bytes zur Wahl vorlegen.`);
     for(const text of cards[base].instructions||[])lines.push('Geltende Behandlung: '+text);
     for(const row of cards[base].findings){
-     if(row.decision?.action==='accept'&&!intent.findings?.[row.binding])
+     const edit=intent.findings?.[row.binding];
+     if(edit&&!edit.accepted&&edit.treatment.trim()&&row.decision?.action!=='accept')
+      lines.push(JSON.stringify({Befund:row.id,Korrekturhinweis:edit.treatment}));
+     if(row.decision?.action==='accept'&&(!edit||edit.accepted&&edit.treatment===row.decision.treatment))
       lines.push(JSON.stringify({Befund:row.id,Behandlung:row.decision.treatment}));
     }
    }else if(selected)lines.push(`Betroffenes Angebot: ${selected.kind}/${selected.id}.`);

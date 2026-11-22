@@ -140,7 +140,7 @@ class ClosingViewTests(unittest.TestCase):
         fixture.setUp()
         self.addCleanup(fixture.doCleanups)
         fixture.raster_ready()
-        job = current.findings.upgrade(fixture.job)
+        job = current.upgrade(fixture.job)
         job['state'] = 'motif_review'
         job['selected']['motif'] = None
         job['parameters']['approved'] = []
