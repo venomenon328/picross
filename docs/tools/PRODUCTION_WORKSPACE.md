@@ -26,7 +26,8 @@ alte Jobs. Vorhandene WIP-Dateien werden durch diesen Auftrag nicht gelöscht.
 Bereits integrierte Inhalte, Spielstände, IDs, Rechte und kompakte historische
 Belege sind keine WIP-Kompatibilitätslast und bleiben unverändert.
 
-Die aktuellen Datenformen stehen im [PW-B-Vertrag](PW_B_CONTRACT.md).
+Die aktuellen Datenformen und der Bestandsschutz für bereits gebundene
+Mono-Vorschauen stehen im [PW-B-Vertrag](PW_B_CONTRACT.md#rastervorschau-und-bindung).
 Der getrennte [Bestandseditor](PUZZLE_EDITOR.md) bearbeitet vorhandene Spielinhalte;
 der Assistent erstellt keine konkurrierenden Inhaltswriter.
 
@@ -57,8 +58,9 @@ Schemafelder als Hauptoberfläche.
   werden, sind aber keine Pflichtfelder der Abschlussbilderzeugung.
   Das eigene optionale Feld für Motivhinweise gelangt unverändert in den ersten
   Auftrag. Die optionalen Rastervorgaben unterscheiden Breite/Höhe in Zellen,
-  Genauigkeit der ausgefüllten Achsen, Modus und bei Farbrätseln die Anzahl der Vordergrundfarben
-  mit eigener Genauigkeit. Wünsche werden im Motivbriefing des Produktionsauftrags
+  Genauigkeit der ausgefüllten Achsen, Modus und die Vordergrundfarbzahl mit
+  eigener Genauigkeit. Die Farbzahl lässt sich auch bei offenem Modus vorgeben.
+  Wünsche werden im Motivbriefing des Produktionsauftrags
   festgehalten. Bei der Abschlussbildauswahl für den Motivauftrag lassen sie sich
   konkretisieren. Breite und Höhe sind unabhängig: keine, nur eine oder beide
   Achsen sind frühe Wünsche. Offene Achsen passend zum Motiv bestimmen, niemals

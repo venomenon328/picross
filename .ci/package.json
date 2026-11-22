@@ -30,6 +30,16 @@
       "path": "tools/test_work_publish.py",
       "disposition": "change-scoped",
       "reason": "Prüft Aufnahmegrenze neuer Vorschauen und bytegleiche Wiederverwendung eines bereits im synthetischen Arbeitsrelease gebundenen Mono-Originals."
+    },
+    {
+      "path": "tests/puzzle_production/test_current_integration.py",
+      "disposition": "change-scoped",
+      "reason": "Die bestehende positive Erstintegrationsprüfung verwendet für Color zwei tatsächlich belegte Farben und behält ihre Hintergrund-/No-op-Abdeckung."
+    },
+    {
+      "path": "tests/puzzle_production/test_authoring_workflow.py",
+      "disposition": "change-scoped",
+      "reason": "Der bestehende historische Snapshotreader wird mit passgenauen synthetischen Git-Normdateien statt mit unabhängig fortgeschriebenen aktuellen Authoringrevisionen geprüft."
     }
   ],
   "core_change": null,
