@@ -23,6 +23,7 @@ from tools.production_workspace.verify_installer import require
 
 FORMAT = 'picross-pg-launcher-smoke-v1'
 ROOT = Path(__file__).resolve().parents[2]
+VERSION_GLYPHS = str.maketrans('oilzsb', '011258')
 
 
 class EarlyExit(RuntimeError):
@@ -123,7 +124,7 @@ def read_window(handle, snapshot):
         stdout=subprocess.PIPE, stderr=subprocess.STDOUT, cwd=snapshot.parent,
         encoding='utf-8', errors='replace', timeout=12,
     )
-    require(outcome.returncode == 0, 'Launcher OCR failed: ' + outcome.stdout.strip())
+    require(outcome.returncode == 0, f'Launcher OCR failed: {outcome.stdout.strip()[:512]!a}')
     return outcome.stdout.strip()
 
 
@@ -132,10 +133,13 @@ def launcher_controls(text, version):
     # simplifications while requiring the actual German control labels.
     folded = unicodedata.normalize('NFKD', text.casefold())
     folded = ''.join(char for char in folded if not unicodedata.combining(char))
-    # OCR can render zero as O and insert spaces around version separators.
-    versions = re.findall(r'\bversion\s+([0-9o]+(?:\s*\.\s*[0-9o]+){2})\b', folded)
+    # Restrict digit substitutions to a complete Version value.
+    versions = re.findall(
+        r'\bversion\s+([0-9oilzsb]+(?:\s*\.\s*[0-9oilzsb]+){2})(?![\w.+-]|\s+\.)',
+        text.lower(),
+    )
     words = ' ' + ' '.join(re.findall(r'\w+', folded)) + ' '
-    return any(re.sub(r'\s+', '', value.replace('o', '0')) == version for value in versions) and all(
+    return any(re.sub(r'\s+', '', value).translate(VERSION_GLYPHS) == version for value in versions) and all(
         ' ' + label + ' ' in words for label in
         ('automatische update suche', 'nicht verfugbar', 'suche aktivieren', 'spielen')
     )
@@ -144,25 +148,35 @@ def launcher_controls(text, version):
 def observe(pid, exit_code, count, version, snapshot, log):
     until = time.monotonic() + 45
     observations = set()
-    while time.monotonic() < until:
-        code = exit_code()
-        if code is not None:
-            raise EarlyExit(f'Process exited before launcher window (exit {code})')
-        if count() != 1:
-            raise RuntimeError('Launcher spawned a process before game choice')
-        for handle, title, kind in windows(pid):
-            observed = (title, kind)
-            if observed not in observations:
-                log(f'Visible process window: title={title!r}, class={kind!r}')
-                observations.add(observed)
-            if title != 'Picross' or kind != 'TkTopLevel' or not responsive(handle):
-                continue
-            text = read_window(handle, snapshot)
-            if launcher_controls(text, version):
-                return handle, text
-            log(f'Launcher controls not recognized: {text!r}')
-        time.sleep(0.25)
-    raise TimeoutError('Timed out waiting for the normal responsive PG launcher controls')
+    ocr_reads = 0
+    try:
+        while time.monotonic() < until:
+            code = exit_code()
+            if code is not None:
+                raise EarlyExit(f'Process exited before launcher window (exit {code})')
+            if count() != 1:
+                raise RuntimeError('Launcher spawned a process before game choice')
+            for handle, title, kind in windows(pid):
+                observed = (title, kind)
+                if observed not in observations and len(observations) < 8:
+                    log(f'Visible PID window: title={title[:128]!a}, class={kind[:128]!a}')
+                    observations.add(observed)
+                if title != 'Picross' or kind != 'TkTopLevel' or not responsive(handle):
+                    continue
+                text = read_window(handle, snapshot)
+                ocr_reads += 1
+                if ocr_reads <= 8:
+                    log(f'PID window OCR: {text[:512]!a}')
+                if launcher_controls(text, version):
+                    return handle, text
+            time.sleep(0.25)
+        raise TimeoutError('Timed out waiting for the normal responsive PG launcher controls')
+    except Exception:
+        if not observations:
+            log(f'No visible titled window observed for PID={pid}.')
+        else:
+            log(f'PID={pid} produced {ocr_reads} OCR reads from responsive launcher windows.')
+        raise
 
 
 def inventory(image, commit):
@@ -192,26 +206,32 @@ def verify_result(result, delivery, inspection, commit):
 
 def smoke(build, inspection_path, output, commit, *, negative_control=False):
     require(os.name == 'nt' and not output.is_relative_to(ROOT), 'Windows output outside checkout required')
-    delivery = json.loads((build / 'delivery.json').read_bytes())
-    inspection = json.loads(inspection_path.read_bytes())
-    require(inspection['compared_to_build'] is True and
-            inspection['commit'] == delivery['commit'] == commit and
-            binding(build / delivery['msi_file']) ==
-            {'bytes': inspection['msi_bytes'], 'sha256': inspection['msi_sha256']},
-            'A matching --compare-build MSI inspection is required')
-    source = build / 'dist' / PG.executable
-    source_files = inventory(source, commit)
-    launcher_name = PG.executable + '.exe'
-    require(source_files[launcher_name]['sha256'] == delivery['exe_sha256'] and
-            len(source_files) == inspection['inventory_files'] + 1, 'Unbound launcher executable or inventory')
     output.mkdir(parents=True, exist_ok=False)
-    version = delivery['version']
+    # Keep the last PID-window capture available if the smoke fails.
+    snapshot = output / 'window.png'
 
     with (output / 'process.log').open('x', encoding='utf-8') as stream:
         start = time.monotonic()
 
         def log(message):
-            print(f'{time.monotonic() - start:.3f}s {message}', file=stream, flush=True)
+            line = f'{time.monotonic() - start:.3f}s {message}'
+            print(line, file=stream, flush=True)
+            print(line, flush=True)
+
+        log(f'Checking MSI-inspected PG launcher for source {commit}.')
+        delivery = json.loads((build / 'delivery.json').read_bytes())
+        inspection = json.loads(inspection_path.read_bytes())
+        require(inspection['compared_to_build'] is True and
+                inspection['commit'] == delivery['commit'] == commit and
+                binding(build / delivery['msi_file']) ==
+                {'bytes': inspection['msi_bytes'], 'sha256': inspection['msi_sha256']},
+                'A matching --compare-build MSI inspection is required')
+        source = build / 'dist' / PG.executable
+        source_files = inventory(source, commit)
+        launcher_name = PG.executable + '.exe'
+        require(source_files[launcher_name]['sha256'] == delivery['exe_sha256'] and
+                len(source_files) == inspection['inventory_files'] + 1, 'Unbound launcher executable or inventory')
+        version = delivery['version']
 
         with ExitStack() as cleanup:
             work = Path(cleanup.enter_context(TemporaryDirectory(prefix='isolated-', dir=output)))
@@ -237,11 +257,10 @@ def smoke(build, inspection_path, output, commit, *, negative_control=False):
             system = Path(os.environ['SystemRoot'])
             env.update(APPDATA=str(work / 'appdata'), TEMP=str(work), TMP=str(work),
                        PATH=os.pathsep.join((str(system / 'System32'), str(system))))
-            snapshot = work / 'window.png'
             with isolated_process([str(image / launcher_name)], work, env) as (pid, exit_code, count):
                 log(f'Started installed-path frozen launcher without arguments. PID={pid}.')
                 handle, window_text = observe(pid, exit_code, count, version, snapshot, log)
-                log(f'Responsive normal launcher controls: {window_text!r}')
+                log('Responsive normal launcher controls recognized.')
                 close(handle)
                 code = exit_code(15000)
                 processes = count()
@@ -273,6 +292,7 @@ def smoke(build, inspection_path, output, commit, *, negative_control=False):
         }
         verify_result(result, delivery, inspection, commit)
         (output / 'result.json').write_bytes(canonical(result))
+        snapshot.unlink(missing_ok=True)
         print(json.dumps(result, ensure_ascii=True))
 
 
