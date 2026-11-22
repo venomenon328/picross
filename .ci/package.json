@@ -1,47 +1,11 @@
 {
   "format": "development-ci-plan/v1",
-  "issue": "https://github.com/venomenon328/picross/issues/786",
-  "package": "MONOV-P1",
-  "modules": [
-    "tools",
-    "production.images",
-    "production.adapter",
-    "production.catalog"
-  ],
-  "purpose": "tools: PW-Reader, UI und Publisher. production.images: synthetische Rasterbildableitung. production.adapter: aktuelle Parameter, Builder, Vorschau- und Integrationsgrenzen. production.catalog: Modusprüfung vor Registry-Schreiboperationen und Bestandsleser.",
-  "omitted": "Keine Solver-/Proof-/Bewertungsalgorithmik oder neue algorithmische Quellabhängigkeit. Native-, Preflight-, Delivery- und Chromium-Module bleiben ausgelassen. Der reguläre Windows-x64-Playerbau läuft im Kern. Die PW-Desktopprobe ist einmalig und verwendet synthetische Kandidaten.",
-  "test_changes": [
-    {
-      "path": "tests/puzzle_production/test_current_authoring.py",
-      "disposition": "change-scoped",
-      "reason": "Vergleicht neue und gebundene ältere Mono-Pixel, Color-Pixel, echte Vorschau-/Auswahlbindungen und den Color-1-Ablehnungspfad an Producer, Parameter und Reader."
-    },
-    {
-      "path": "tests/puzzle_production/test_current_consumers.py",
-      "disposition": "change-scoped",
-      "reason": "Prüft Color-1 einschließlich einer zusätzlichen unbenutzten ID vor Registry-Schreibseite und prüft den gebundenen Altmodus im Bestandsleser."
-    },
-    {
-      "path": "tools/test_authoring_sheet.py",
-      "disposition": "change-scoped",
-      "reason": "Prüft die frühe exakte Einfarbvorgabe und den Textauftrag für neue Mono-Angebote im vorhandenen Prompt-Test."
-    },
-    {
-      "path": "tools/test_work_publish.py",
-      "disposition": "change-scoped",
-      "reason": "Prüft Aufnahmegrenze neuer Vorschauen und bytegleiche Wiederverwendung eines bereits im synthetischen Arbeitsrelease gebundenen Mono-Originals."
-    },
-    {
-      "path": "tests/puzzle_production/test_current_integration.py",
-      "disposition": "change-scoped",
-      "reason": "Die bestehende positive Erstintegrationsprüfung verwendet für Color zwei tatsächlich belegte Farben und behält ihre Hintergrund-/No-op-Abdeckung."
-    },
-    {
-      "path": "tests/puzzle_production/test_authoring_workflow.py",
-      "disposition": "change-scoped",
-      "reason": "Der bestehende historische Snapshotreader wird mit passgenauen synthetischen Git-Normdateien statt mit unabhängig fortgeschriebenen aktuellen Authoringrevisionen geprüft."
-    }
-  ],
+  "issue": "https://github.com/venomenon328/picross/issues/700",
+  "package": "IGEL-MOTIF-REVIEW",
+  "modules": [],
+  "purpose": "Quellenprüfung für pz-igel in Schritt 2. Der Draft zeigt den veröffentlichten PW-B-Record der Motivvorlage und des vorgeschlagenen Parameterkorridors.",
+  "omitted": "Reine Authoringdaten. PNG-Originale und Sichturteile sind am PW-B-Arbeitsstand geprüft. Ein Player-Build oder Zusatzmodule sind hierfür entbehrlich.",
+  "test_changes": [],
   "core_change": null,
   "evidence": {
     "mode": "none",
