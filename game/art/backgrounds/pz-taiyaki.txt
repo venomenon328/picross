@@ -1,0 +1,4 @@
+author: OpenAI ImageGen (KI-generiert im Auftrag)
+changes: Proportionale Skalierung der vollständigen 3:1-Leinwand von 2172 × 724 auf 2304 × 768 nach HG31, ohne Beschnitt, Retusche oder Umkomposition.
+source: Native Bildgenerierung aus dem Kontextbriefing für pz-taiyaki ohne externe Bildvorlage. Gewähltes Original taiyaki-background-c, SHA-256 0b92695a7522e5c7a5edd9ff40d1d66c6235ad278cb1f31527d1e8c654dbc929.
+usage_basis: Auftragsbezogene Neuerstellung und Veröffentlichung als Auswahloriginal im Projekt.
