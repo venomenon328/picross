@@ -46,7 +46,10 @@ der ursprünglichen [APP-A-Kriterien K01–K10](https://github.com/venomenon328/
 Reguläre technische Prüfungen verwenden synthetische Identitäten und Negativfälle.
 Diagnose-Dispatches bauen fixierte echte Windowskandidaten ohne Veröffentlichung;
 private Testschlüssel existieren nur im Prozess. Vor Veröffentlichung werden die
-gebundenen Originalassets zurückgeladen und erneut geprüft. Unabhängige Reviews,
+gebundenen Originalassets zurückgeladen und erneut geprüft. Der PG-Installer
+verlangt schon vor Kandidatenabschluss und Upload einen erfolgreichen
+[normalen Start seines inspizierten Frozen-Images](../operations/WINDOWS_GAME_APP.md#diagnose-und-veröffentlichung).
+Unabhängige Reviews,
 Betriebsfreigaben und persönliche Windows-11-Abnahmen bleiben an konkrete
 Produkt-Heads und Artefakte gebunden; ihr tatsächlicher Status steht im Issue/PR.
 
@@ -333,8 +336,9 @@ zeigt die Oberfläche den geordneten Stop; ein begonnener P2-Vorgang läuft aus.
 HTTPS-Releases des festen Repositorys. Der installierte PW kann die
 Releasekatalogabfrage mit seiner
 [Windows-Benutzervariable](PRODUCTION_WORKSPACE.md#optionaler-rest-zugang-unter-windows)
-authentifizieren. PE, PG und sämtliche Downloadanfragen bleiben anonym. Der
-Client verwendet weder Umgebungsproxys noch Git-Credentials oder
+authentifizieren. Nur dieser PW-Katalogpfad lädt den Produktions-REST-Client
+und der PW-Fehlerpfad dessen Fehlertyp. PE, PG und sämtliche Downloadanfragen
+verwenden den anonymen Opener. Der Client verwendet weder Umgebungsproxys noch Git-Credentials oder
 Produktionsremotes. Höchstens vier Seiten à 100
 Releases und 4 MiB, zehn Sekunden je Socketoperation, 60 Sekunden Metadatenbudget;
 unvollständiger Katalog ist ein Fehler. Höchste veröffentlichte 0.1.x-Version

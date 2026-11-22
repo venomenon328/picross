@@ -207,7 +207,18 @@ gebundene x64-Python-/PyInstaller-/Tk-/Kryptografiekette für seinen eigenen
 Einstieg. Analysis und PYZ binden die verwendeten gemeinsamen Clientmodule.
 Der Helfer entsteht mit `/define:PG`. Öffentliche Produkt- und Trustressourcen,
 native Erweiterungen und die zugehörigen Lizenzen liegen im Spiel-MSI.
-Die reguläre Godot-Exportprüfung läuft zusätzlich.
+Die reguläre Godot-Exportprüfung läuft zusätzlich. PG schließt
+`tools.puzzle_production` weiterhin aus. Der anonyme gemeinsame Updatepfad
+ist an dieser Frozen-Grenze vollständig verfügbar.
+
+Der separate [PG-Startnachweis](../../docs/operations/WINDOWS_GAME_APP.md#diagnose-und-veröffentlichung)
+verwendet eine Kopie des mit `--compare-build` inspizierten Images und die
+tatsächlichen, zuvor freien Windows-Programm- und Zustandspfade. Der Runner
+benötigt einen Windows-Desktop mit OCR in Deutsch oder Englisch. Der Smoke
+prüft das reagierende Tk-Fenster mit seinen sichtbaren Launcherbedienelementen,
+reguläres Prozessende und Inventar. Vor `seal` muss das Ergebnis zum Commit,
+MSI und Launcher passen. Der Diagnosedispatch liefert zusätzlich die
+Negativkontrolle und eine höchstens siebentägige Reviewablage der Originale.
 
 ## Lizenzen und Signatur
 

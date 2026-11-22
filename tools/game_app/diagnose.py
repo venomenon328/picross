@@ -16,9 +16,13 @@ from tools.app_products import PG
 from tools.production_workspace.payload import canonical
 
 
-def window(pid):
+def windows(pid):
     user = ctypes.windll.user32
-    windows = []
+    found = []
+    user.GetWindowThreadProcessId.argtypes = [wintypes.HWND, ctypes.POINTER(wintypes.DWORD)]
+    user.IsWindowVisible.argtypes = [wintypes.HWND]
+    user.GetWindowTextW.argtypes = [wintypes.HWND, wintypes.LPWSTR, ctypes.c_int]
+    user.GetClassNameW.argtypes = [wintypes.HWND, wintypes.LPWSTR, ctypes.c_int]
     enum_proc = ctypes.WINFUNCTYPE(wintypes.BOOL, wintypes.HWND, wintypes.LPARAM)
 
     @enum_proc
@@ -29,11 +33,18 @@ def window(pid):
             title = ctypes.create_unicode_buffer(512)
             user.GetWindowTextW(handle, title, len(title))
             if title.value:
-                windows.append((handle, title.value))
+                kind = ctypes.create_unicode_buffer(256)
+                user.GetClassNameW(handle, kind, len(kind))
+                found.append((handle, title.value, kind.value))
         return True
 
     user.EnumWindows(collect, 0)
-    return windows[0] if windows else None
+    return found
+
+
+def window(pid):
+    found = windows(pid)
+    return found[0][:2] if found else None
 
 
 def close(handle):

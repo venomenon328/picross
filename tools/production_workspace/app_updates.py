@@ -1,6 +1,5 @@
 """One opt-in startup operation, owned by the native GUI and its stop lifecycle."""
 from tools.app_products import PG, PW
-from tools.puzzle_production import github_rest
 import threading
 import subprocess
 
@@ -167,11 +166,13 @@ class Updates:
                            'Vorhandene App bleibt verfügbar; Installation prüfen.')
         except Exception as exc:
             self.cancel()
-            if self.app == PW and isinstance(exc, github_rest.Failure):
-                self.status = 'App-Updateprüfung fehlgeschlagen. ' + str(exc) + ' Vorhandene App bleibt verfügbar.'
-            else:
-                self.status = ('App-Update nicht möglich: Kanal, Signatur, Version, Download oder Übergabe nicht bestätigt. '
-                               'Vorhandene App bleibt verfügbar; beim nächsten Start erneut prüfen oder manuell installieren.')
+            self.status = ('App-Update nicht möglich: Kanal, Signatur, Version, Download oder Übergabe nicht bestätigt. '
+                           'Vorhandene App bleibt verfügbar; beim nächsten Start erneut prüfen oder manuell installieren.')
+            if self.app == PW:
+                from tools.puzzle_production import github_rest
+
+                if isinstance(exc, github_rest.Failure):
+                    self.status = 'App-Updateprüfung fehlgeschlagen. ' + str(exc) + ' Vorhandene App bleibt verfügbar.'
         finally:
             self.progress = None
             # A started helper owns its lifetime. Pending staging is recovered only

@@ -9,7 +9,7 @@ from unittest.mock import Mock, patch
 
 from tools.app_products import PE, PG, PW
 from tools.game_app.gate import StartupGate
-from tools.game_app.inputs import selected
+from tools.game_app.inputs import runtime, selected
 from tools.game_app.inspect import verify_database
 from tools.production_workspace import payload
 from tools.production_workspace.app_updates import Updates
@@ -105,9 +105,18 @@ class GameInstallerTests(unittest.TestCase):
         for relative in ('game_app/gate.py', 'game_app/restart.py', 'production_workspace/update_client.py',
                          'production_workspace/packaging/UpdateHelper.cs', 'production_workspace/requirements-windows.txt'):
             self.assertTrue(selected('tools/' + relative), relative)
-        self.assertFalse(selected('tools/game_app/diagnose.py'))
+        for relative in ('diagnose.py', 'launcher_smoke.py', 'launcher_ocr.ps1'):
+            self.assertTrue(selected('tools/game_app/' + relative), relative)
+        self.assertFalse(selected('tools/game_app/update_diagnostic.py'))
+        self.assertFalse(selected('tools/puzzle_production/github_rest.py'))
         self.assertFalse(selected('tools/production_workspace/helper_diagnostic.py'))
         self.assertFalse(selected('tools/puzzle_editor/desktop.py'))
+
+    def test_catalog_hyphenation_is_a_bound_runtime_input(self):
+        for path in ('game/data/hyphenation/de-1996.deflate', 'game/data/hyphenation/LICENSE.txt'):
+            with self.subTest(path=path):
+                self.assertTrue(runtime(path))
+                self.assertTrue(selected(path))
 
     def test_pending_is_unconfirmed_and_requires_end_before_cleanup(self):
         with tempfile.TemporaryDirectory(prefix='pg-pending-') as folder:

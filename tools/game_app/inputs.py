@@ -23,10 +23,11 @@ BACKGROUND = {
     '__init__', 'analysis_contract', 'analysis_io', 'authoring_package', 'background_contract', 'catalog_added',
     'catalog_background', 'catalog_io', 'catalog_method', 'catalog_rating',
     'categories', 'content_registry', 'contract', 'current_content', 'difficulty_identity',
-    'difficulty_rating', 'github_rest', 'operation_diagnostics',
+    'difficulty_rating', 'operation_diagnostics',
 }
 GAME_APP = {
     '__init__.py', 'assets/game.ico', 'build.py', 'inputs.py', 'inspect.py',
+    'diagnose.py', 'launcher_smoke.py', 'launcher_ocr.ps1',
     'desktop_entry.py', 'gate.py', 'player.py', 'restart.py',
     'release.json', 'release_channel.py', 'update-trust.json', 'START.txt',
 }
@@ -46,7 +47,7 @@ RESOURCE_TYPES = {
 
 def runtime(path):
     if path in {'game/project.godot', 'game/export_presets.cfg', 'game/main.tscn',
-                'game/web/background_loader.js'}:
+                'game/web/background_loader.js', 'game/data/hyphenation/de-1996.deflate'}:
         return True
     return (path.startswith(('game/art/', 'game/book/', 'game/data/', 'game/model/', 'game/ui/'))
             and path not in OMITTED and not path.startswith('game/art/drawing/tidy-hand/')
