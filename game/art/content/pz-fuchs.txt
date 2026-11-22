@@ -1,0 +1,4 @@
+author: KI-generiert mit der integrierten OpenAI-Bildgenerierung
+changes: Unveränderte PNG-Ausgabe der Bildgenerierung.
+source: Für pz-fuchs aus dem textlichen Motivbriefing neu generiertes Einzeloriginal.
+usage_basis: Vom Auftraggeber beauftragte Veröffentlichung zur Bildauswahl. OpenAI-Nutzungsbedingungen für generierte Ausgaben.
