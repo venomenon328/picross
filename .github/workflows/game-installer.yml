@@ -6,6 +6,10 @@ on:
     types: [completed]
     branches: [main]
   workflow_dispatch:
+    inputs:
+      diagnostic_version:
+        description: Optional PG version for the diagnostic candidate
+        type: string
 
 # Dispatch is ALWAYS diagnostic. Publication requires the separately
 # authorized PG_RELEASE_ENABLED AND PG_UPDATE_SIGNING_ENABLED variables.
@@ -30,7 +34,7 @@ jobs:
     runs-on: ubuntu-24.04
     outputs:
       changed: ${{ steps.plan.outputs.changed }}
-      version: ${{ steps.plan.outputs.version }}
+      version: ${{ steps.diagnostic_version.outputs.version || steps.plan.outputs.version }}
       source: ${{ steps.source.outputs.commit }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
@@ -57,6 +61,31 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: python -m tools.game_app.release_channel plan --plan "$RUNNER_TEMP/plan.json"
+      - name: Bind the requested diagnostic version
+        id: diagnostic_version
+        if: github.event_name == 'workflow_dispatch' && inputs.diagnostic_version != ''
+        env:
+          PG_DIAGNOSTIC_VERSION: ${{ inputs.diagnostic_version }}
+        run: |
+          python - "$RUNNER_TEMP/plan.json" <<'PY'
+          import json
+          import os
+          from pathlib import Path
+          import sys
+
+          from tools.app_products import PG
+          from tools.production_workspace.payload import canonical
+          from tools.production_workspace.release import release
+
+          path = Path(sys.argv[1])
+          plan = json.loads(path.read_bytes())
+          if plan["diagnostic"] is not True:
+              raise ValueError("Expected a diagnostic PG plan")
+          plan["version"] = release(app=PG, version=os.environ["PG_DIAGNOSTIC_VERSION"])["version"]
+          path.write_bytes(canonical(plan))
+          with open(os.environ["GITHUB_OUTPUT"], "a", encoding="utf-8") as output:
+              print("version=" + plan["version"], file=output)
+          PY
       - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
         with:
           name: pg-plan
@@ -103,6 +132,7 @@ jobs:
           & $python -m tools.game_app.inspect --build "$env:RUNNER_TEMP\pg-product" --output "$env:RUNNER_TEMP\pg-inspection" --expected-commit $env:PG_SOURCE --version $env:PG_VERSION --compare-build
           if ($LASTEXITCODE -ne 0) { throw 'MSI inspection failed' }
       - name: Require the normal frozen PG launcher start
+        id: launcher-smoke
         shell: pwsh
         env:
           PG_SOURCE: ${{ needs.plan.outputs.source }}
@@ -119,6 +149,17 @@ jobs:
           & $python -m tools.game_app.launcher_smoke @smokeArgs --verify-result
           if ($LASTEXITCODE -ne 0) { throw 'Missing or unbound launcher start result' }
           if ((git status --porcelain)) { throw 'Launcher smoke changed source checkout' }
+      - name: Retain failed PG launcher start originals
+        if: failure() && steps.launcher-smoke.outcome == 'failure'
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: pg-launcher-smoke-failure-${{ github.run_attempt }}-${{ needs.plan.outputs.source }}
+          path: |
+            ${{ runner.temp }}/pg-launcher-smoke/process.log
+            ${{ runner.temp }}/pg-launcher-smoke/window.png
+            ${{ runner.temp }}/pg-inspection/result.json
+          retention-days: 7
+          if-no-files-found: error
       - name: Seal the inspected and start-tested candidate
         shell: pwsh
         run: |

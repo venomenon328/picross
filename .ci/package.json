@@ -1,32 +1,22 @@
 {
   "format": "development-ci-plan/v1",
   "issue": "https://github.com/venomenon328/picross/issues/817",
-  "package": "PG-START-FIX",
+  "package": "PG-LAUNCHER-B04",
   "modules": [
     "tools"
   ],
-  "purpose": "Gemeinsamen Updater an der PG-Frozen-Importgrenze korrigieren und normale Starts des tatsächlich inspizierten Windows-Launchers vor jedem PG-Kandidatenabschluss prüfen.",
-  "omitted": "Keine preflight-, native.*, production.*-, delivery- oder Chromium-Module. Der PG-Installerdispatch liefert den separaten Windowsstart und die einmalige Negativkontrolle. Der reguläre Playerbau bleibt im Kern.",
+  "purpose": "OCR-Versionsabgleich und Fehlerdiagnose des verpflichtenden Frozen-PG-Startgates prüfen. Das tools-Modul deckt die Python-Regressionen und die Bindung der Installerinputs ab.",
+  "omitted": "Keine preflight-, native.*, production.*-, delivery- oder Chromium-Module. Der reguläre Windows-Playerbau bleibt im Kern. Der einmalige PG-Installerdispatch prüft das tatsächliche MSI 0.1.25, den normalen Start und die bestehende Negativkontrolle.",
   "test_changes": [
-    {
-      "path": "tools/test_app_updates.py",
-      "disposition": "change-scoped",
-      "reason": "Frischer PG-Import ohne Produktionsnamespace, anonyme Transporte und PW-REST-Pfad im tools-Modul."
-    },
     {
       "path": "tools/test_pg_launcher_smoke.py",
       "disposition": "change-scoped",
-      "reason": "Kleine Verhaltensregressionen fuer falsche Fenster, Prozessfehler und fehlende oder fremde Startresultate."
+      "reason": "Kleine Dauerregression für OCR-Glyphen, exakten Versionsabgleich, fehlende Beschriftungen und die Diagnose beim Fenster-Timeout im tools-Modul."
     },
     {
       "path": ".github/workflows/game-installer.yml",
       "disposition": "change-scoped",
-      "reason": "Frozenstart vor jedem PG-Kandidatenabschluss. Die einmalige Negativkontrolle laeuft nur beim Diagnosedispatch."
-    },
-    {
-      "path": "tools/test_game_installer.py",
-      "disposition": "change-scoped",
-      "reason": "Der obligatorische PG-Startcheck bindet seine Fensterhelfer und OCR; PW-REST und die getrennte Update-Diagnose sind keine PG-Bauinputs. Der integrierte Katalog benötigt Wörterbuch und Lizenz auch im isolierten PG-Export."
+      "reason": "Der Pflichtstart behält sein Ergebnisgate. Fehleroriginale bleiben sieben Tage verfügbar. Der separate Diagnosedispatch erhält einen optionalen Versionswert für den vorgesehenen PG-Kandidaten."
     }
   ],
   "core_change": null,
