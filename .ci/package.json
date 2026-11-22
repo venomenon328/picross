@@ -1,10 +1,10 @@
 {
   "format": "development-ci-plan/v1",
-  "issue": "https://github.com/venomenon328/picross/issues/821",
-  "package": "SYNC-SPEC",
+  "issue": "https://github.com/venomenon328/picross/issues/700",
+  "package": "PZ-OKTOPUS-REVEAL",
   "modules": [],
-  "purpose": "Freigegebene optionale Konto-/Spielstandsynchronisierung dokumentieren und SYNC-A mit Protokoll, Grenzen, Akzeptanz und Prüfplan vorbereiten; keine Produktimplementierung.",
-  "omitted": "Reiner Dokument-/Paketplandiff: keine optionalen Module und kein Playerbau. Das erst mit SYNC-A einzuführende sync.server ist hier noch nicht ausführbar; keine Server-, Spiel- oder Liveprüfung behauptet.",
+  "purpose": "Buildfreie Sichtung der drei Oktopus-Abschlussbilder nach Authoring 0.8.0, Schritt 1.",
+  "omitted": "Der Draft verweist auf den PW-B-Arbeitsstand mit dem Record und den drei Originalen. Der CI-Kern prüft den Quellenstand und Paketplan ohne Player-Build und Zusatzmodule.",
   "test_changes": [],
   "core_change": null,
   "evidence": {
