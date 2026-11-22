@@ -27,17 +27,21 @@ static func geometry(r: SceneTree) -> void:
 	var u: float = app.ui_scale
 	var viewport := Rect2(Vector2.ZERO,app.size)
 	r.check(album.quit_button.text.is_empty() and album.quit_button.image != null and album.quit_button.size == Vector2.ONE*44*u and album.quit_button.tooltip_text == "Beenden" and album.quit_button.accessibility_name == "Beenden","NAV-A: owner-requested hand-drawn quit X has exact tooltip/name and target")
+	r.check(album.settings_button.tooltip_text == "Einstellungen öffnen" and album.settings_button.accessibility_name == "Einstellungen öffnen","NAV-A: exact catalog settings tooltip/name")
+	r.check(album.help_button.tooltip_text == "Hilfe öffnen" and album.help_button.accessibility_name == "Hilfe öffnen","NAV-A: exact catalog help tooltip/name")
 	var prior: Rect2
-	for button: Control in [album.quit_button,album.settings_button,album.help_button]:
+	for button: ButtonInk in [album.settings_button,album.help_button,album.quit_button]:
+		r.check(button.top_navigation and not button.selected,"NAV-STATE-A: catalog header has no active menu")
 		var box: Rect2 = button.get_global_rect()
-		r.check(viewport.encloses(box) and box.size.x >= 44*u and box.size.y >= 44*u,"NAV-A: fixed catalog header hit target")
+		r.check(viewport.encloses(box) and box.size == Vector2.ONE*44*u,"NAV-A: fixed catalog header hit target")
 		r.check(is_equal_approx(box.position.y,album.summary.global_position.y) and not box.intersects(album.summary.get_global_rect()) and not box.intersects(album.notice_area.get_global_rect()) and not box.intersects(app.recent_panel.get_global_rect()),"NAV-A: header beside count on same top edge, clear of retry and full recent panel")
-		if prior.has_area(): r.check(prior.end.x < box.position.x,"NAV-A: quit, gear, help in order")
+		if prior.has_area(): r.check(prior.end.x < box.position.x,"NAV-STATE-A: gear, help, quit in order")
 		prior = box
 	r.check(album.summary.size.x+1 >= album.summary.get_theme_font("font").get_multiline_string_size(album.summary.text,HORIZONTAL_ALIGNMENT_LEFT,album.summary.size.x,album.summary.get_theme_font_size("font_size")).x and album.summary.size.y+1 >= album.summary.get_minimum_size().y,"NAV-A: full count wraps only within measured side space")
 	var left: Rect2 = app.book.projected_paper(false,-1)
 	var right: Rect2 = app.book.projected_paper(false,1)
-	for button: Control in [album.previous_button,album.next_button]:
+	for button: ButtonInk in [album.previous_button,album.next_button]:
+		r.check(not button.top_navigation,"NAV-STATE-A: catalog footer keeps regular button style")
 		var box: Rect2 = button.get_global_rect()
 		r.check(button.text.is_empty() and button.image != null and box.size == Vector2.ONE*44*u,"NAV-A: pagination is arrow-only with exact hit size")
 		r.check(viewport.encloses(box) and box.position.y >= album.scroll.get_global_rect().end.y,"NAV-A: pagination outside card clips")
@@ -54,13 +58,14 @@ static func information(r: SceneTree) -> void:
 	var help: Control = app.information.get_node("help-access")
 	var active: Control = settings if section == "settings" else help
 	var other: Control = help if section == "settings" else settings
-	r.check(settings.selected == (section == "settings") and help.selected == (section == "help"),"NAV-A: active information location marked by underline")
+	r.check(active.selected and not other.selected and not back.selected,"NAV-STATE-A: only the current information view is selected for the double contour")
 	r.check(active.tooltip_text == ("Einstellungen" if section == "settings" else "Hilfe")+" (aktuelle Ansicht)" and active.accessibility_name == active.tooltip_text,"NAV-A: active location named")
 	r.check(other.tooltip_text == ("Hilfe öffnen" if section == "settings" else "Einstellungen öffnen") and other.accessibility_name == other.tooltip_text,"NAV-A: opposite destination named")
 	var expected: String = "Zurück zum Katalog" if app.information_origin == "album" else "Zurück zum Rätsel"
 	r.check(back.tooltip_text == expected and back.accessibility_name == expected,"NAV-A: return names actual visit origin")
 	var prior: Rect2
-	for button: Control in [back,settings,help]:
+	for button: ButtonInk in [back,settings,help]:
+		r.check(button.top_navigation,"NAV-STATE-A: information header uses the navigation role")
 		var box: Rect2 = button.get_global_rect()
 		r.check(button.is_visible_in_tree() and button.text.is_empty() and box.size == Vector2.ONE*44*app.ui_scale,"NAV-A: full icon group on either information page")
 		if prior.has_area(): r.check(box.position.x > prior.end.x and box.position.y == prior.position.y,"NAV-A: back, gear, help in one fixed row")
@@ -119,6 +124,7 @@ static func catalog(r: SceneTree) -> void:
 	r.click(app.actions["nav-work"])
 	await r.frames()
 	r.check(album.visible and album.page_index == 1 and album.positions() == positions and album.selected_id == selected and album.filters == filters and [album.preference.criterion,album.preference.direction] == order,"NAV-A: catalog-help-settings-back restores entire filtered spread context")
+	geometry(r)
 	album.choose_category("voegel")
 	await r.frames()
 	r.check(album.page_label.text == "Seite 1 von 1" and album.previous_button.disabled and album.next_button.disabled and album.previous_button.is_visible_in_tree() and album.next_button.is_visible_in_tree(),"NAV-A: single filtered spread keeps both inactive arrows and count")
@@ -149,6 +155,10 @@ static func work(r: SceneTree) -> void:
 	await information(r)
 	r.click(app.actions["nav-work"])
 	await r.frames()
+	for id: String in ["nav-information","menu","help"]:
+		var button: ButtonInk = app.actions[id]
+		r.check(button.top_navigation and not button.selected,"NAV-STATE-A: work header has no active menu")
+	r.check(not app.actions["fill"].top_navigation,"NAV-STATE-A: selected tool keeps regular button style")
 	r.check(app.work.visible and str(app.session.definition.id) == id and app.session.player.cells == cells and app.session.player.history == history and app.session.player.cursor == cursor and r.save_bytes() == saved,"NAV-A: work-help-settings-back restores same durable work")
 	r.click(app.album_button)
 	await r.frames()

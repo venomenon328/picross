@@ -48,7 +48,6 @@ func _ready() -> void:
 	quit_button.image = preload("res://art/book/quit.svg")
 	quit_button.tooltip_text = "Beenden"
 	quit_button.accessibility_name = "Beenden"
-	quit_button.reparent(navigation)
 	settings_button.reparent(navigation)
 	settings_button.text = ""
 	settings_button.action_id = "catalog-settings"
@@ -63,6 +62,9 @@ func _ready() -> void:
 	help_button.tooltip_text = "Hilfe öffnen"
 	help_button.accessibility_name = help_button.tooltip_text
 	navigation.add_child(help_button)
+	quit_button.reparent(navigation)
+	for button: BookButton in [settings_button,help_button,quit_button]:
+		button.top_navigation = true
 	summary.reparent(right_page)
 	notice_area = ScrollContainer.new()
 	notice_area.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED

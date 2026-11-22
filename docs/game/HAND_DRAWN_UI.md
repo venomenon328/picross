@@ -127,8 +127,12 @@ den aktuellen Zeichenpfad; die getrennte Fokusinnenkontur bleibt weiter innen.
 
 Die gemeinsame Buttonfamilie verwendet im regulären Buch transparente Füllung.
 Hover und Druck verstärken die vorhandene vollständige Kontur in zwei Stärken;
-kein isolierter oberer Hoverstrich. Auswahlunterstrich, Fokusinnenkontur und
-Deaktiviertmarkierung bleiben. Eigener Text wird genau einmal gezeichnet;
+kein isolierter oberer Hoverstrich. In der äußeren oberen Buchnavigation
+verstärkt auch nativer Fokus die Außenkontur. Druck hat Vorrang. Die stabile
+Innenkontur markiert dort die offene Informationsansicht in allen Zeiger- und
+Fokuszuständen. Für die Kopfgruppe entfallen die Auswahlunterstriche. Andere
+Buttonrollen behalten ihre bisherigen Auswahl-, Fokus- und Deaktiviertzeichen.
+Eigener Text wird genau einmal gezeichnet;
 Farbproben behalten ihre Originalpixel. Popup-, Dialog- und Fehlerflächen bleiben
 opak. Die gemeinsame vorhandene Buttonfamilie wird fortgeführt. Katalogkarten nutzen
 einen eigenen `content_surface`-/StyleBox-Pfad und überspringen
@@ -258,8 +262,9 @@ Gemäß Eigentümerpräzisierung in #549 ersetzt ein handgezeichnetes X den
 Beenden-Textbutton im Katalog. Das neue `quit`-SVG verwendet zwei leicht gebogene,
 sparsam nachgezogene Stiftzüge derselben Familie und dieselbe quadratische
 44/55-px-Fassung. Aktive Quelle, Generatorinventar, SVG und Manifest umfassen es.
-Die aktuelle Informationsansicht ist zusätzlich unterstrichen; Hover und Fokus
-behalten ihre Konturzeichen. Positionen und Rückwege stehen im
+Im Katalog stehen Zahnrad, Hilfe und Beenden-X von links nach rechts.
+In Hilfe und Einstellungen kennzeichnet die Innenkontur die offene Ansicht.
+Außenkontur und Innenkontur folgen HZ-D03. Positionen und Rückwege stehen im
 [Buchvertrag](BOOK_INTEGRATION.md), Titelvorrang in [BTI-D04](VIEW_TITLE_ART.md).
 
 Der folgende Vertrag umfasst die reinen Symbolbuttons des regulären Spiels. Jeder besitzt auch im deaktivierten Zustand

@@ -1,22 +1,17 @@
 {
   "format": "development-ci-plan/v1",
-  "issue": "https://github.com/venomenon328/picross/issues/817",
-  "package": "PG-LAUNCHER-B04",
+  "issue": "https://github.com/venomenon328/picross/issues/822",
+  "package": "NAV-STATE-A",
   "modules": [
-    "tools"
+    "native.catalog"
   ],
-  "purpose": "OCR-Versionsabgleich und Fehlerdiagnose des verpflichtenden Frozen-PG-Startgates prüfen. Das tools-Modul deckt die Python-Regressionen und die Bindung der Installerinputs ab.",
-  "omitted": "Keine preflight-, native.*, production.*-, delivery- oder Chromium-Module. Der reguläre Windows-Playerbau bleibt im Kern. Der einmalige PG-Installerdispatch prüft das tatsächliche MSI 0.1.25, den normalen Start und die bestehende Negativkontrolle.",
+  "purpose": "Die vorhandenen Pages- und Informationsprozesse prüfen die echten Navigationscontrols, Katalogfolge, Rollenzuordnung, Hitboxen, Symbolnamen, No-op und Besuchskontext. Der Kern baut den regulären Windows-x64-Spieler.",
+  "omitted": "Keine weiteren native.*, tools, production.*, preflight, delivery, Chromium oder vollständige Buch-Lifecycle-Diagnose. Spielstand, Export und Browser bleiben außerhalb des Diffs. Die einmalige native Windows-Sichtprobe deckt Konturen und Bedienung im regulären Buch ab.",
   "test_changes": [
     {
-      "path": "tools/test_pg_launcher_smoke.py",
+      "path": "game/tests/navigation_cases.gd",
       "disposition": "change-scoped",
-      "reason": "Kleine Dauerregression für OCR-Glyphen, exakten Versionsabgleich, fehlende Beschriftungen und die Diagnose beim Fenster-Timeout im tools-Modul."
-    },
-    {
-      "path": ".github/workflows/game-installer.yml",
-      "disposition": "change-scoped",
-      "reason": "Der Pflichtstart behält sein Ergebnisgate. Fehleroriginale bleiben sieben Tage verfügbar. Der separate Diagnosedispatch erhält einen optionalen Versionswert für den vorgesehenen PG-Kandidaten."
+      "reason": "Die vorhandenen Navigationsorakel auf die neue Katalogfolge und die aktive Ansicht in der oberen Navigationsrolle umstellen."
     }
   ],
   "core_change": null,
