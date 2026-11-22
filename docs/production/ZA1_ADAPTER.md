@@ -39,15 +39,15 @@ Definition und Modus müssen zusammenpassen: Mono hat genau eine benutzte Vorder
 
 ## PW-FIND · Entscheidungen bis zur Integration
 
-Freigegebener Sollstand [PW-FIND-A / #797](https://github.com/venomenon328/picross/issues/797);
-Implementierung und Abnahme offen. Die oben geschlossene Eingangsform bleibt bis
-zur Lieferung maßgeblich. Die Erweiterung wird ausdrücklich versioniert und mit
-allen aktuellen Verbrauchern eingeführt, nicht als freie Zusatzfelder in v1.
+Der v3-Finalizer liefert `picross-integration-input-v2`. Der ältere v1-Eingang
+behält seinen geschlossenen Reviewvertrag. Bei v2 enthält `quality.review`
+die vier gewählten Bestandteile (`components`), Parameter, Briefing,
+fortgeltende Vorgaben (`instructions`), konkrete `findings` und die tatsächliche
+Schlusserklärung. Die technische Ausnahme bindet zusätzlich `definition_sha256`.
+Die Prüfung gleicht die ausgewählten Produktbytes mit dem Manifest ab.
 
 Finalizer, Export und Integration erhalten alle noch relevanten Befundannahmen
-und Behandlungsvorgaben aus sämtlichen Produktionsphasen. Die gegenwärtige
-Dreierliste in `quality.review` darf diesen erweiterten Entscheidungsumfang nicht
-abschneiden. Urteil, tatsächliche Annahme und Behandlung bleiben getrennt und an
+und Behandlungsvorgaben aus sämtlichen Produktionsphasen. Im v2-Eingang wird der vollständige gewählte Befundumfang geprüft. Urteil, tatsächliche Annahme und Behandlung bleiben getrennt und an
 die gewählten Inhalte gebunden. Die fachliche Wirksamkeit definiert
 [Qualität §6.1](PUZZLE_QUALITY.md#61-pw-find--befundentscheidungen-in-allen-phasen).
 Ein gedeckt angenommener Befund darf nicht erneut blockieren; übrige technische

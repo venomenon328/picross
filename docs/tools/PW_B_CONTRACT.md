@@ -204,18 +204,33 @@ explizit historische Daten erkennbar; sie sind kein normaler Writerweg.
 
 ## PW-FIND · freigegebene Erweiterung der Entscheidungsdaten
 
-**Sollstand [PW-FIND-A / #797](https://github.com/venomenon328/picross/issues/797),
-22.11.2026; Implementierung und Abnahme offen.** Die oben geschlossene v2-Form
-beschreibt weiterhin den ausführbaren Stand. Neue Formen werden im Paket
-ausdrücklich versioniert und mit allen aktuellen Verbrauchern konsistent
-eingeführt; bestehende v2-Bytes erhalten keine stillen Zusatzfelder oder neue
-Bedeutung. Unterstützte aktuelle v2-Stände bleiben lesbar. Eine gezielte
-Fortschreibung übernimmt nur tatsächlich belegte gültige Entscheidungen, keine
-vermeintliche Annahme aus einem Briefing. Historische Paket-/ZIPformen werden
-nicht migriert; laufende reale Produktionen sind kein Implementierungsfixture.
+Neue Aufträge verwenden lokal `picross-authoring-draft-v3` und veröffentlicht
+`picross-authoring-current-v3`. Der Builderrequest und die gemessenen Dateirefs
+bleiben dieselben. Der lesende Dienst leitet die Ansicht
+`picross-production-presentation-v3` aus diesem Record ab. Für vorhandene
+v2-Bytes gilt weiterhin die oben beschriebene Feldmenge.
 
-Die neue Form muss im einzigen aktuellen Record folgende Informationen eindeutig
-voneinander trennen und geschlossen validieren:
+Zusätzliche Pflichtfelder sind `findings` (Liste) und `instructions` (aktuelle
+Kandidaten-ID → weiterhin geltende Behandlungstexte). Ein Befund enthält
+`target,content,id,criterion,rule,properties,context,effect,extent,result,description,method,actor,timestamp_utc,decision`.
+`target` bezeichnet eine Kandidaten-ID oder `@selection` für die gewählte
+Schlusskombination. `content` ist die aktuelle semantische Identität. Ein
+Kriteriensammelurteil bildet das schlechteste Einzelurteil ab. Sein
+`accepted` bleibt in v3 false. `decision` ist null oder enthält
+`binding,action,treatment,actor,timestamp_utc,statement,source`. Die Bindung
+umfasst alle Beobachtungsfelder. Die Aktionen heißen `accept` und `revoke`.
+Eine Übernahme benennt in `source` den unmittelbaren Ursprung mit `target,binding`.
+
+`blockers` enthält ausschließlich auftragsweite Objekte mit `scope`
+(source, transport oder job) und `message`. Kandidatenbefunde stehen in
+`findings`. Hintergrundassets binden zusätzlich `profile` sowie `prepared`
+(null bis zur Ableitung, danach `original_sha256,profile,file` mit Ergebnisref).
+Technische Rasterausnahmen binden zusätzlich `definition_sha256`.
+Vor der Wahl genügt ein qualifizierter Rasterkandidat für `raster_ready`.
+
+Der [Entscheidungshelfer](../../tools/puzzle_production/finding_decisions.py)
+definiert Identitäten, zugelassene Teilregeln und die geprüfte Fortschreibung.
+Die Tabelle ordnet die Angaben der fachlichen Entscheidung zu.
 
 | Information | Bindung und Bedeutung |
 | --- | --- |

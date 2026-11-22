@@ -1,0 +1,272 @@
+"""Concrete observations and human decisions on the current content only."""
+from copy import deepcopy
+import re
+
+from .authoring_package import require, sha, string, timestamp
+from .contract import digest, exact_keys
+
+LOCAL = 'picross-authoring-draft-v3'
+PUBLISHED = 'picross-authoring-current-v3'
+FORMATS = (LOCAL, PUBLISHED)
+COMBINATION = '@selection'
+DEFAULT = 'Unverändert beibehalten'
+
+# Only these editorial subrules have a discretionary path. Technical frame
+# and colour-pair failures still go through the independent exception checks.
+EDITORIAL = {
+    'Q-B01': ('secondary-detail',), 'Q-B02': ('illustration',), 'Q-B03': ('edge-quality',),
+    'Q-M01': ('secondary-detail',), 'Q-M02': ('area-use',), 'Q-M03': ('colour-role',),
+    'Q-R01': ('secondary-detail',), 'Q-R02': ('shape-detail',), 'Q-R03': ('area-use',),
+    'Q-R04': ('visual-distinction',), 'Q-H01': ('cell-contrast',),
+    'Q-H02': ('hint-contrast', 'hint-colour-assignment'), 'Q-H03': ('clue-structure',),
+    'Q-HG02': ('pencil-style',), 'Q-HG03': ('visual-balance',), 'Q-HG04': ('stroke-quality',),
+}
+SEMANTICS = ('criterion', 'rule', 'properties', 'context', 'effect', 'extent', 'result')
+OBSERVATION = {'id', *SEMANTICS, 'description', 'method', 'actor', 'timestamp_utc'}
+NEGATIVE = ('Warnung', 'nicht erfüllt')
+
+
+def subjects(job):
+    return {item['id']: item for item in [*job['assets'], *job['rasters']]}
+
+
+def identity(job, target):
+    items = subjects(job)
+    if target == COMBINATION:
+        selected = job['selected']
+        require(all(selected[k] is not None for k in ('reveal', 'background')) and
+                (job['operation'] == 'background' or all(selected.values())), 'Incomplete final combination')
+        return digest({'job': job['puzzle_id'], 'selection': {
+            k: identity(job, v) if v in items else v for k, v in selected.items()},
+            'target': None if not job['target'] else job['target']['definition']['sha256'],
+            'prepared': (items.get(selected['background'], {}).get('prepared') or {}).get('file', {}).get('sha256'),
+            'parameters': job['parameters']['approved']})
+    require(target in items, 'Finding candidate missing')
+    item = items[target]
+    return digest({'job': job['puzzle_id'], 'id': target, 'role': item.get('role', 'raster'),
+                   'sha256': (item.get('file') or item['definition'])['sha256'], 'profile': item.get('profile')})
+
+
+def binding(row):
+    return digest({k: v for k, v in row.items() if k != 'decision'})
+
+
+def eligible(row):
+    return row['result'] in NEGATIVE and row['rule'] in EDITORIAL.get(row['criterion'], ())
+
+
+def effective(row):
+    return row['decision'] is not None and row['decision']['action'] == 'accept'
+
+
+def check_row(row, target, content, criteria):
+    exact_keys(row, OBSERVATION | {'target', 'content', 'decision'})
+    require(row['target'] == target and row['content'] == content, 'Stale finding content')
+    require(isinstance(row['id'], str) and re.fullmatch(r'[A-Za-z0-9][A-Za-z0-9_-]{0,63}', row['id']),
+            'Invalid finding identifier')
+    require(row['criterion'] in criteria and row['result'] in (*NEGATIVE, 'nicht geprüft'),
+            'Invalid concrete finding')
+    require(isinstance(row['rule'], str), 'Invalid finding subrule')
+    for key in ('rule', 'properties', 'context', 'effect', 'extent', 'description', 'method', 'actor'):
+        string(row[key], key, 4096)
+    timestamp(row['timestamp_utc'])
+    d = row['decision']
+    if d is None:
+        return
+    exact_keys(d, {'binding', 'action', 'treatment', 'actor', 'timestamp_utc', 'statement', 'source'})
+    require(eligible(row) and d['binding'] == binding(row) and d['action'] in ('accept', 'revoke'),
+            'Unavailable or stale finding decision')
+    for key in ('actor', 'statement', 'treatment'):
+        string(d[key], key, 4096)
+    timestamp(d['timestamp_utc'])
+    if d['source'] is not None:
+        exact_keys(d['source'], {'target', 'binding'})
+        string(d['source']['target'], 'correction base', 64)
+        sha(d['source']['binding'])
+        require(d['action'] == 'accept', 'Only an effective acceptance can carry forward')
+
+
+def validate(job, criteria):
+    rows = job['findings']
+    require(isinstance(rows, list) and len(rows) <= 512, 'Invalid findings list')
+    items = subjects(job)
+    instructions = job['instructions']
+    require(isinstance(instructions, dict) and set(instructions) <= set(items), 'Invalid treatment targets')
+    for values in instructions.values():
+        require(isinstance(values, list) and len(values) <= 128, 'Invalid ongoing treatments')
+        for value in values:
+            string(value, 'Ongoing production treatment')
+    seen = set()
+    for row in rows:
+        require(isinstance(row, dict) and isinstance(row.get('target'), str), 'Invalid finding target')
+        target = row['target']
+        content = identity(job, target)
+        allowed = set.union(*criteria.values()) if target == COMBINATION else criteria.get(items[target].get('role', 'raster'), set())
+        check_row(row, target, content, allowed)
+        key = (target, row['id'])
+        require(key not in seen, 'Duplicate concrete finding')
+        seen.add(key)
+    for item in items.values():
+        # Criterion summaries record coverage. They cannot grant acceptance or
+        # conceal an unassessed/negative component.
+        relevant = [r for r in rows if r['target'] == item['id']]
+        for criterion, summary in item['review'].items():
+            require(not summary['accepted'], 'Use a bound finding decision')
+            results = [r['result'] for r in relevant if r['criterion'] == criterion]
+            worst = next((s for s in ('nicht geprüft', 'nicht erfüllt', 'Warnung') if s in results), 'erfüllt')
+            require(summary['result'] == worst or not results and summary['result'] == 'nicht geprüft',
+                    'Criterion summary differs from concrete findings')
+        require(all(r['criterion'] in item['review'] for r in relevant), 'Finding lacks criterion assessment')
+
+
+def carry(previous, job, source, target, *, continuing=()):
+    """Run on a freshly assessed successor of the specified immediate base."""
+    require(previous['puzzle_id'] == job['puzzle_id'] and previous['format'] in FORMATS, 'Invalid correction base')
+    require(identity(previous, source) != identity(job, target) and target != COMBINATION and
+            source != COMBINATION and subjects(previous)[source].get('role') == subjects(job)[target].get('role'),
+            'Correction needs a new candidate of the same kind')
+    require(not any(item == target and identity(previous, item) == identity(job, target)
+                    for item in subjects(previous)), 'Cannot transfer to an existing sibling')
+    # The actor identifies which instructions still apply even if the observed
+    # defect has disappeared. Never recreate a finding just to retain its text.
+    available = set(previous['instructions'].get(source, [])) | {
+        r['decision']['treatment'] for r in previous['findings'] if r['target'] == source and effective(r)}
+    require(all(t in available for t in continuing), 'Unknown continuing treatment')
+    if continuing:
+        job['instructions'][target] = list(dict.fromkeys(continuing))
+    for row in job['findings']:
+        if row['target'] != target or row['decision'] is not None:
+            continue
+        matches = [r for r in previous['findings'] if r['target'] == source and
+                   all(r[k] == row[k] for k in SEMANTICS)]
+        peers = [r for r in job['findings'] if r['target'] == target and all(r[k] == row[k] for k in SEMANTICS)]
+        if len(peers) == len(matches) == 1 and effective(matches[0]):
+            parent = matches[0]
+            row['decision'] = {**deepcopy(parent['decision']), 'binding': binding(row),
+                               'source': {'target': source, 'binding': binding(parent)}}
+
+
+def transition(previous, job):
+    if previous and previous['format'] in FORMATS:
+        require(job['format'] in FORMATS, 'Cannot discard structured decision format')
+    if job['format'] not in FORMATS:
+        return
+    old = previous['findings'] if previous and previous['format'] in FORMATS else []
+    sources = {}
+    for row in job['findings']:
+        d = row['decision']
+        if d and d['source']:
+            require(sources.setdefault(row['target'], d['source']['target']) == d['source']['target'],
+                    'A successor has one immediate correction base')
+        if not d or not d['source'] or row in old:
+            continue
+        require(previous and old, 'Missing immediate correction source')
+        candidate = deepcopy(row)
+        candidate['decision'] = None
+        probe = {**job, 'findings': [candidate if r is row else r for r in job['findings']]}
+        carry(previous, probe, d['source']['target'], row['target'])
+        require(candidate == row, 'Acceptance not covered by immediate correction source')
+
+
+def upgrade(job, *, observations=(), backgrounds=None, job_blockers=None):
+    """Start a v3 draft from verified current coverage and existing creative choices."""
+    from . import current_authoring as current
+    current.validate(job)
+    result = deepcopy(job)
+    result['format'] = PUBLISHED if 'work_release' in job else LOCAL
+    require(job['format'] not in FORMATS, 'Expected a supported earlier current record')
+    result['findings'] = deepcopy(list(observations))
+    result['instructions'] = {}
+    require(not job['blockers'] or job_blockers is not None, 'Classify remaining job-wide blockers explicitly')
+    result['blockers'] = deepcopy(list(job_blockers or []))
+    for item in subjects(result).values():
+        if item.get('role') == 'background':
+            require(backgrounds and item['id'] in backgrounds, 'Identify the actual background profile and prepared bytes')
+            supplied = exact_keys(backgrounds[item['id']], {'profile', 'prepared'})
+            item.update(deepcopy(supplied))
+        for criterion, summary in item['review'].items():
+            summary['accepted'] = False
+    # New visual declarations require an actual new final decision. Keep earlier
+    # choices only for their original bytes and parameter scope.
+    if observations and any(d['scope'] in ('final','integration') for d in job['decisions']):
+        require(job['state'] != 'registered', 'Integrated content has a separate revision path')
+        result['decisions'] = [d for d in result['decisions'] if d['scope'] not in ('final','integration')]
+        result['state'] = 'content_ready'
+    for raster in result['rasters']:
+        for exception in raster['exceptions']:
+            exception['definition_sha256'] = raster['definition']['sha256']
+    for d in result['decisions']:
+        d['binding'] = current.binding(result, d['scope'])
+    return current.validate(result)
+
+def declare(row, *, expected, action, treatment, actor, timestamp_utc, statement):
+    """Apply a submitted declaration to the exact observation in the actor's draft."""
+    require(binding(row) == expected and eligible(row), 'Finding changed or cannot be accepted')
+    require(action in ('accept', 'revoke'), 'Unknown finding action')
+    for value in (actor, statement, treatment):
+        string(value, 'Submitted declaration')
+    timestamp(timestamp_utc)
+    row['decision'] = {'binding': expected, 'action': action, 'treatment': treatment,
+                       'actor': actor, 'timestamp_utc': timestamp_utc, 'statement': statement, 'source': None}
+
+
+def selected_review(job):
+    """Keep the selected assessments and their declarations in the temporary RI input."""
+    items = subjects(job)
+    components = {}
+    for role, key in job['selected'].items():
+        if role == 'background' and key in ('standard', 'none'):
+            components[role] = key
+            continue
+        item = items[key]
+        components[role] = {'id': key, 'sha256': (item.get('file') or item['definition'])['sha256'],
+                            'review': item['review']}
+        if role == 'background':
+            components[role]['profile'] = item['profile']
+            components[role]['prepared_sha256'] = item['prepared']['file']['sha256']
+    return {'instructions': {k:v for k,v in job['instructions'].items() if k in job['selected'].values()},
+            'brief': job['brief'], 'components': components, 'parameters': job['parameters']['approved'],
+            'findings': [r for r in job['findings'] if r['target'] in (*job['selected'].values(), COMBINATION)]}
+
+
+def check_selected(review_data, manifest):
+    from . import current_authoring as current
+    exact_keys(review_data, {'brief', 'instructions', 'components', 'parameters', 'findings', 'actor', 'timestamp_utc', 'statement'})
+    string(review_data['brief'], 'Current production instructions', 16384)
+    components = exact_keys(review_data['components'], {'reveal', 'motif', 'raster', 'background'})
+    job = {'puzzle_id': manifest['entry']['id'], 'operation': 'production', 'target': None, 'assets': [],
+           'rasters': [], 'instructions': review_data['instructions'], 'selected': {}, 'parameters': {'approved': review_data['parameters']}, 'findings': review_data['findings']}
+    current.validate_parameters({'proposed': [], 'approved': review_data['parameters']})
+    require(review_data['parameters'], 'Selected parameter alternative required')
+    expected = {'reveal': manifest['reveal']['asset'], 'raster': manifest['definition']}
+    background = manifest['background']
+    if background['status'] == 'selected':
+        expected['background'] = background['image']['asset']
+    for role, value in components.items():
+        if role == 'background' and background['status'] != 'selected':
+            require(value == background['status'], 'Different background preference in review')
+            job['selected'][role] = value
+            continue
+        exact_keys(value, {'id', 'sha256', 'review'} | ({'profile', 'prepared_sha256'} if role == 'background' else set()))
+        current.identifier(value['id'])
+        require(value['id'] not in job['selected'].values(), 'Duplicate selected candidate')
+        sha(value['sha256'])
+        require(role not in expected or expected[role]['sha256'] == value.get('prepared_sha256', value['sha256']), 'Different selected content in review')
+        job['selected'][role] = value['id']
+        item = {'id': value['id'], 'review': value['review']}
+        if role == 'raster':
+            item['definition'] = {'sha256': value['sha256']}
+            job['rasters'].append(item)
+        else:
+            item.update(role=role, file={'sha256': value['sha256']})
+            if role == 'background':
+                from .background_contract import PROFILES
+                require(value['profile'] in PROFILES, 'Unknown selected profile')
+                item['profile'] = value['profile']
+                item['prepared'] = {'file': {'sha256': value['prepared_sha256']}}
+            job['assets'].append(item)
+        current.review(item['review'], current.CRITERIA[role], ready=False)
+        require(set(item['review']) == current.CRITERIA[role] and
+                all(v['result'] != 'nicht geprüft' for v in item['review'].values()), 'Incomplete selected assessment')
+    validate(job, current.CRITERIA)
+    require(all(effective(r) for r in job['findings']), 'Open selected finding')

@@ -220,10 +220,8 @@ ist keine technische Ausnahme.
 ### 6.1 PW-FIND · Befundentscheidungen in allen Phasen
 
 **Freigegebener Sollstand vom 22.11.2026, [PW-FIND-A / #797](https://github.com/venomenon328/picross/issues/797).**
-Die technische Umsetzung und Abnahme stehen noch aus. Bis zur Lieferung gelten
-die oben beschriebenen ausführbaren Formen; diese Spezifikation erlaubt keine
-freien Zusatzfelder oder das Umgehen bestehender Prüfungen. Der Zielstandard der
-Bildnormen und die harten Voraussetzungen werden nicht geändert.
+Die geschlossene v3-Form in PW-B bindet diese Einzelentscheidungen. Der Akteur
+prüft die jeweils fälligen Bildnormen und harten Voraussetzungen am aktuellen Inhalt.
 
 Ein konkreter Befund bindet Kandidat oder gewählte Schlusskombination, relevante
 Inhaltsbytes, Kriterien-ID, betroffene Teilregel/Eigenschaft, Kontext und

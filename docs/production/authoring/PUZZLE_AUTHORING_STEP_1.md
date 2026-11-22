@@ -53,7 +53,7 @@ Keine Abstraktion vor dieser Entscheidung; neue Briefings erfinden keine ID/Gitq
 
 ### PW-FIND · Annahme und Revealwahl
 
-Freigegebener, noch nicht implementierter Sollweg nach
+Für aktuelle Befundentscheidungen gilt der Weg nach
 [Kern §6.3](PUZZLE_AUTHORING.md#63-pw-find--phasenübergreifende-befundentscheidungen):
 Zulässige konkrete Bildbefunde dürfen zusammen mit der Wahl genau dieses
 Revealoriginals zur Abstraktion angenommen werden. Offene andere Kandidaten

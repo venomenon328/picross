@@ -61,7 +61,7 @@ Hintergrundkandidatenzahl nicht.
 
 ### PW-FIND · Annahme und Kontextwahl
 
-Freigegebener, noch nicht implementierter Sollweg nach
+Für aktuelle Befundentscheidungen gilt der Weg nach
 [Kern §6.3](PUZZLE_AUTHORING.md#63-pw-find--phasenübergreifende-befundentscheidungen):
 Zulässige konkrete Hintergrundabweichungen können mit Original-/Profilwahl und
 beauftragter Schlussvorbereitung angenommen werden. Die unabdingbaren Teilregeln

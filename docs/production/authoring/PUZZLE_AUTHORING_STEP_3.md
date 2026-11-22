@@ -266,7 +266,7 @@ haben. Keine automatische Auswahl nach Reihenfolge oder Dateinamen.
 
 ### 4.6 PW-FIND · Annahme und Rasterwahl
 
-Freigegebener, noch nicht implementierter Sollweg nach
+Für aktuelle Befundentscheidungen gilt der Weg nach
 [Kern §6.3](PUZZLE_AUTHORING.md#63-pw-find--phasenübergreifende-befundentscheidungen):
 Ein Raster wird anhand seiner eigenen aktuellen Befunde, zulässigen Annahmen
 und Nachweise auswählbar. Offene Vergleichskandidaten sperren diese Wahl nicht.

@@ -30,7 +30,7 @@ Vor technischer Benutzung zusätzlich Referenz lesen:
 
 | Operation | Pflichtquelle |
 | --- | --- |
-| Befundannahme, Behandlung, Widerruf und Fortführung auf Nachfolger | [Qualität §6 einschließlich §6.1](../PUZZLE_QUALITY.md#6-gezielte-redaktionelle-einzelfallentscheidung); für den freigegebenen PW-FIND-Sollweg zusätzlich unten §6.3 |
+| Befundannahme, Behandlung, Widerruf und Fortführung auf Nachfolger | [Qualität §6 einschließlich §6.1](../PUZZLE_QUALITY.md#6-gezielte-redaktionelle-einzelfallentscheidung); für die Umsetzung im aktuellen Job zusätzlich unten §6.3 |
 | Paketbau/Veröffentlichung | [PW-B](../../tools/PW_B_CONTRACT.md), Tool-README PW-B/PB-A, unten §6 |
 | Rasterimport/Endproof | Tool-README RP-3, Datenvertrag/Ressourcen; [Produktion](../PUZZLE_PRODUCTION.md) §§4–5 |
 | Paarprofil | [PAIRED_LINES](../PAIRED_LINES.md) vollständig; Tool-README Paarlinienprofil; kein Routinepaarlauf bei gelöster Linienlogik |
@@ -183,13 +183,12 @@ bestehenden Editor-/Revisionsweg.
 
 ### 6.3 PW-FIND · phasenübergreifende Befundentscheidungen
 
-**Freigegebene Spezifikation [PW-FIND-A / #797](https://github.com/venomenon328/picross/issues/797),
-22.11.2026; technische Umsetzung noch offen.** Die derzeit ausführbaren
-Recordformen bleiben bis zur Lieferung maßgeblich. Die neue Annahmesemantik
+Neue Produktionen verwenden den v3-Record mit konkreten Befunden.
+Bestehende aktuelle v2-Stände lassen sich gezielt fortschreiben. Die Annahmesemantik
 steht in [Qualität §6.1](../PUZZLE_QUALITY.md#61-pw-find--befundentscheidungen-in-allen-phasen),
 ihre technische Bindung in [PW-B](../../tools/PW_B_CONTRACT.md#pw-find--freigegebene-erweiterung-der-entscheidungsdaten).
 
-Der Sollweg gilt für Abschlussbild, Motivvorlage, Raster, Kontextzeichnung und
+Dieser Weg gilt für Abschlussbild, Motivvorlage, Raster, Kontextzeichnung und
 Schlussübersicht. Ein Auftrag kann konkrete zulässige Befundannahmen samt
 Behandlung, aktuelle Kandidatenwahl und fällige Folgeaktion verbinden. Keine
 zusätzliche menschliche Runde allein zur Veröffentlichung der Annahmen.

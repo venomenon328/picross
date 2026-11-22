@@ -16,6 +16,7 @@ from .editor_raster import check_end
 from .raster_parameters import require_color_count, used_foreground
 
 FORMAT = "picross-integration-input-v1"
+FINDING_FORMAT = "picross-integration-input-v2"
 FIELDS = {"format", "entry", "metadata", "definition", "reveal", "background",
           "difficulty", "proof", "quality", "approval", "test_only"}
 CHECKS = ("reveal", "motif", "raster", "palette", "hint_legibility", "background", "final_content", "integration")
@@ -37,7 +38,7 @@ class Input:
         self.raw = {}
         self.value = self.json("manifest.json", 1024*1024)
         value = exact_keys(self.value, FIELDS)
-        require(value["format"] == FORMAT, "Current integration input required")
+        require(value["format"] in (FORMAT, FINDING_FORMAT), "Current integration input required")
         content.entries([value["entry"]])
         self.entry = value["entry"]
         require(type(value["test_only"]) is bool, "Invalid fixture declaration")
@@ -110,7 +111,19 @@ class Input:
 
     def quality(self, value):
         exact_keys(value, {"review", "exceptions"})
-        review=io.json_bytes(self.bound(value["review"],65536),65536)
+        structured = self.value['format'] == FINDING_FORMAT
+        limit = 1024*1024 if structured else 65536
+        review = io.json_bytes(self.bound(value['review'], limit), limit)
+        if structured:
+            from .finding_decisions import check_selected
+            check_selected(review, self.value)
+            decision(review)
+        else:
+            self.legacy_review(review)
+        self.exceptions(value["exceptions"])
+
+    @staticmethod
+    def legacy_review(review):
         exact_keys(review,{"actor","timestamp_utc","statement","criteria"})
         decision(review)
         from .palette_gate import CRITERIA
@@ -121,6 +134,8 @@ class Input:
                     isinstance(finding["reason"],str) and finding["reason"].strip(),"Invalid visual criterion: "+criterion)
             require(finding["result"]=="fulfilled" or finding["accepted"],
                     "Visual criterion needs actual acceptance: "+criterion)
+
+    def exceptions(self, exceptions):
         matrix = self.definition["solution"]
         frame_ok = (any(row[0] for row in matrix) or any(row[-1] for row in matrix)) and (any(matrix[0]) or any(matrix[-1]))
         findings = [] if frame_ok else ["frame"]
@@ -130,11 +145,14 @@ class Input:
             score = sum((x-y)**2 for x, y in zip(qa, qb))
             if palette_quality.pair_status(score) == "negative":
                 findings.append("palette:"+str(a["id"])+":"+str(b["id"]))
-        exceptions = value["exceptions"]
         require(isinstance(exceptions, list) and len(exceptions) <= 29, "Invalid quality exceptions")
         actual = []
         for exception in exceptions:
-            exact_keys(exception, {"criterion", "actor", "timestamp_utc", "statement", "evidence"})
+            structured = self.value['format'] == FINDING_FORMAT
+            exact_keys(exception, {"criterion", "actor", "timestamp_utc", "statement", "evidence"} |
+                       ({'definition_sha256'} if structured else set()))
+            if structured:
+                require(exception['definition_sha256'] == self.value['definition']['sha256'], 'Stale technical exception')
             decision(exception)
             require(self.bound(exception["evidence"], 65536).decode("utf-8").strip(), "Missing explicit exception evidence")
             actual.append(exception["criterion"])

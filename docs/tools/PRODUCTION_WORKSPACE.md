@@ -521,9 +521,9 @@ die integrierte ID aus.
 
 ## PW-FIND · Befunde am Kandidaten
 
-**Freigegebener Sollstand [PW-FIND-A / #797](https://github.com/venomenon328/picross/issues/797),
-22.11.2026; noch kein bestätigtes Produktverhalten.** Umsetzung und Nachweise
-gehören zum dort vorbereiteten Paket. Fachliche Annahmesemantik besitzt
+Bei v3-Produktionen zeigt die Werkstatt die Wählbarkeit direkt am Bild.
+„Korrigieren“ an einer Karte übernimmt diese Variante und fokussiert das Änderungsfeld.
+Die fachliche Annahmesemantik besitzt
 [Qualität §6.1](../production/PUZZLE_QUALITY.md#61-pw-find--befundentscheidungen-in-allen-phasen),
 Daten-/Prüfbindung [PW-B](PW_B_CONTRACT.md#pw-find--freigegebene-erweiterung-der-entscheidungsdaten).
 

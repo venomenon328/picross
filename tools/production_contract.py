@@ -306,6 +306,7 @@ SOURCE_GROUPS = {'tests/puzzle_production/background_catalog_fixtures.py': ('sol
  'tools/puzzle_production/verifier.py': ('solver', 'images', 'adapter', 'catalog'),
  'tools/puzzle_production/za1_fixtures.py': ('images', 'adapter'),
  'tools/puzzle_production/current_authoring.py': ('images', 'adapter', 'catalog'),
+ 'tools/puzzle_production/finding_decisions.py': ('images', 'adapter', 'catalog'),
  'tools/puzzle_production/current_tools.py': ('adapter',),
  'tests/puzzle_production/test_current_authoring.py': ('adapter',)}
 

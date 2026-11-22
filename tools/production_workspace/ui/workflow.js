@@ -109,9 +109,31 @@ const PW = (()=>{
   if(grid.mode!=='mono'&&grid.colors)parts.push(colorRequest(grid.colors,grid.colorAccuracy,grid.mode));
   return parts.join(' ');
  }
+ function choiceReady(value,target,intent){
+  const card=value?.facts.candidates?.[target];
+  if(!card)return !value?.facts.candidates;
+  return !card.missing.length&&card.findings.every(row=>
+   row.eligible&&(intent.findings?.[row.binding]?.accepted??(row.decision?.action==='accept')));
+ }
+ function findingOrders(value,intent){
+  const lines=[];
+  for(const [target,card] of Object.entries(value?.facts.candidates||{})){
+   for(const row of card.findings){
+    const edit=intent.findings?.[row.binding];
+    const stored=row.decision;
+    if(!edit||!row.eligible)continue;
+    if(edit.accepted&&!edit.treatment.trim())throw Error('Bitte den Umgang mit dem Befund bestätigen.');
+    if(edit.accepted===(stored?.action==='accept')&&(!edit.accepted||edit.treatment===stored?.treatment))continue;
+    lines.push(JSON.stringify({Kandidat:target,Befund:row.id,Kriterium:row.criterion,Bindung:row.binding,
+     Entscheidung:edit.accepted?'Annahme':'Widerruf',Behandlung:edit.treatment}));
+   }
+  }
+  return lines;
+ }
  function prompt(value,intent={},personal={}){
   const action=intent.action||'continue',order=orderStep(value),opts=options(personal);
-  const n=action==='continue'?order:step(value);
+  const pickingRaster=value?.facts.candidates&&value.facts.state==='raster_review'&&value.offers.some(o=>o.kind==='raster');
+  const n=action==='continue'?(pickingRaster?4:order):step(value);
   if(!n)throw Error('Dieser Stand benötigt einen eigenen ausdrücklich beauftragten Folgeauftrag.');
   if(value&&value.facts.authoring_version!=='0.8.0')throw Error('Dieser historische Stand gehört nicht zum neuen 0.8-Produktionsweg.');
   const remote=value?.source_url?.match(/^https:\/\/github\.com\/([A-Za-z0-9_.-]+\/[A-Za-z0-9_.-]+)\/tree\/([a-f0-9]{40})$/);
@@ -127,6 +149,18 @@ const PW = (()=>{
    if(intent.inputImage)lines.push(`Beigefügte Referenzdatei: ${intent.inputImage}.`);
   }
   const selected=value?.offers.find(o=>o.id===intent.selection&&o.kind===intent.kind);
+  const cards=value?.facts.candidates;
+  if(cards){
+   lines.push(...findingOrders(value,intent));
+   if(action==='continue'){
+    const required=new Set(selected?[selected.id]:[]);
+    if(closing(value,intent)){
+     for(const id of Object.values(value.facts.originals?.record?.selected||{}))if(cards[id])required.add(id);
+     if(cards['@selection'])required.add('@selection');
+    }
+    for(const id of required)if(!choiceReady(value,id,intent))throw Error('Offene Voraussetzungen für '+id+'.');
+   }
+  }
   if(action==='background_change'){
    if(value?.facts.state!=='registered')throw Error('Eine spätere Hintergrundrevision braucht einen tatsächlich registrierten Stand.');
    if(!intent.feedback?.trim())throw Error('Bitte die gewünschte Hintergrundänderung beschreiben.');
@@ -134,7 +168,16 @@ const PW = (()=>{
   }else if(action==='rework'){
    if(!intent.feedback?.trim())throw Error('Bitte die gewünschte Korrektur beschreiben.');
    lines.push(`Korrektur in Schritt ${step(value)}: ${intent.feedback.trim()}. Korrigierten Stand zur fälligen Entscheidung vorlegen.`);
-   if(selected)lines.push(`Betroffenes Angebot: ${selected.kind}/${selected.id}.`);
+   if(cards){
+    const base=intent.selection;
+    if(!cards[base])throw Error('Bitte die Korrekturgrundlage wählen.');
+    lines.push(`Korrekturgrundlage: ${base}. Geltende Behandlungen berücksichtigen. Korrigierte Bytes zur Wahl vorlegen.`);
+    for(const text of cards[base].instructions||[])lines.push('Geltende Behandlung: '+text);
+    for(const row of cards[base].findings){
+     if(row.decision?.action==='accept'&&!intent.findings?.[row.binding])
+      lines.push(JSON.stringify({Befund:row.id,Behandlung:row.decision.treatment}));
+    }
+   }else if(selected)lines.push(`Betroffenes Angebot: ${selected.kind}/${selected.id}.`);
   }else if(action==='resume'){
    lines.push(`Schritt ${n} am gebundenen Datensatz wieder aufnehmen.`);
   }else if(!value||value.facts.state==='brief_ready'){
@@ -143,16 +186,22 @@ const PW = (()=>{
    if(!selected||selected.kind!=='reveal')throw Error('Bitte ein Abschlussbild wählen.');
    lines.push(`Schritt 2: Ich wähle und gebe Abschlussbild ${selected.id} unverändert frei. Motivvorlage und Parameterkorridor als motif_review vorlegen.`);
   }else if(value.facts.state==='motif_review'){
-   lines.push('Schritt 3: Ich gebe die unveränderte Motivvorlage samt vorgeschlagenem Parameterkorridor im Datensatz frei. Qualifizierte Rasterangebote als raster_ready vorlegen.');
-  }else if(['motif_approved','raster_review'].includes(value.facts.state)){
+   if(cards){
+    const options=value.facts.published.proposed;
+    if(selected?.kind!=='motif')throw Error('Bitte die Motivvorlage wählen.');
+    if(!Number.isInteger(intent.parameter)||!options[intent.parameter])throw Error('Bitte eine vollständige Parameteralternative wählen.');
+    lines.push(`Schritt 3: Ich gebe Motivvorlage ${selected.id} und die Parameteralternative ${intent.parameter+1} unverändert frei: ${JSON.stringify(options[intent.parameter])}. Qualifizierte Rasterangebote vorlegen.`);
+   }else lines.push('Schritt 3: Ich gebe die unveränderte Motivvorlage samt vorgeschlagenem Parameterkorridor im Datensatz frei. Qualifizierte Rasterangebote als raster_ready vorlegen.');
+  }else if(!pickingRaster&&['motif_approved','raster_review'].includes(value.facts.state)){
    lines.push('Schritt 3: Die bereits freigegebene Rasterproduktion bis zu qualifizierten Rasterangeboten fortsetzen.');
-  }else if(value.facts.state==='raster_ready'){
+  }else if(pickingRaster||value.facts.state==='raster_ready'){
    if(!selected||selected.kind!=='raster')throw Error('Bitte ein qualifiziertes Rasterangebot wählen.');
    lines.push(`Schritt 4: Ich wähle das qualifizierte Rasterangebot ${selected.id}. Kontextzeichnungen als background_review zur Auswahl vorlegen.`);
   }else{
    const final=finalAssets(value,intent);
    if(value.facts.state==='background_review'){
     lines.push(final.choice==='none'?'Schritt 5: Ich entscheide mich ausdrücklich für keinen Hintergrund.':final.choice==='standard'?'Schritt 5: Ich wähle ausdrücklich den Standardhintergrund.':`Schritt 5: Ich wähle die unveränderte Kontextzeichnung aus Angebot ${final.choice}.`);
+    if(cards&&final.background)lines.push('Gewähltes Profil: '+value.facts.originals.record.assets.find(a=>a.id===final.background.id).profile+'.');
     lines.push('Ich erteile die Endabnahme dieser Hintergrundentscheidung mit dem gewählten Raster und Reveal und beauftrage deren Integration.');
    }else if(value.facts.state==='registered')lines.push('Schritt 5: Git-/PR-Abschluss der bereits registrierten unveränderten Lieferung fortsetzen.');
    else if(value.facts.state==='editorially_approved')lines.push('Schritt 5: Die bereits endabgenommene unveränderte Lieferung integrieren.');
@@ -175,6 +224,6 @@ const PW = (()=>{
   else lines.push('Commit, Push und Draft-PR im beauftragten Umfang; kein Merge.');
   return lines.join('\n\n');
  }
- return {steps,step,orderStep,prompt,publishedGrid,options,closing,finalAssets};
+ return {steps,step,orderStep,prompt,choiceReady,publishedGrid,options,closing,finalAssets};
 })();
 if(typeof module!=='undefined')module.exports=PW;

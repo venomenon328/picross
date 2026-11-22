@@ -60,7 +60,7 @@ Bildprofile, aktuelle Bildqualität und technische Import-/Runtimegarantien blei
 
 ### PW-FIND · aktuelle Befundannahmen
 
-Freigegebene, noch nicht implementierte Erweiterung
+Aktuelle Erweiterung
 [PW-FIND-A / #797](https://github.com/venomenon328/picross/issues/797): Annahmen
 und Behandlung werden am konkreten aktuellen Kandidaten nach
 [Qualität §6.1](PUZZLE_QUALITY.md#61-pw-find--befundentscheidungen-in-allen-phasen)

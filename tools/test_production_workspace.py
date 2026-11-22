@@ -133,6 +133,28 @@ def current_fixture(repo, source, revision='r01', proposed=None, approved=None, 
 
 
 class ClosingViewTests(unittest.TestCase):
+    def test_motif_offer_is_scoped_to_the_new_projection(self):
+        from tools.puzzle_production import current_authoring as current
+        from tests.puzzle_production.test_current_authoring import CurrentAuthoringTests
+        fixture = CurrentAuthoringTests()
+        fixture.setUp()
+        self.addCleanup(fixture.doCleanups)
+        fixture.raster_ready()
+        job = current.findings.upgrade(fixture.job)
+        job['state'] = 'motif_review'
+        job['selected']['motif'] = None
+        job['parameters']['approved'] = []
+        job['rasters'] = []
+        job['decisions'] = [d for d in job['decisions'] if d['scope'] == 'reveal']
+        fixture.job = job
+        fixture.publish()
+        view = current.projection(job, current.encoded(job))
+        self.assertEqual(p.validate(view)['offers'][0]['kind'], 'motif')
+        facts = p.inspect(LocalSource(fixture.root), None, view)
+        self.assertEqual(facts['candidates']['motif-a']['missing'], [])
+        with self.assertRaises(ValueError):
+            p.validate({**view,'format':p.CURRENT_FORMAT})
+
     def test_remote_current_pointer_can_return_from_phase_four_to_phase_one(self):
         from tools.production_workspace.motifs import group
         common = {'puzzle_id': 'pz-correction', 'title': 'Synthetic correction', 'source': 'remote',

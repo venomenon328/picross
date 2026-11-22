@@ -56,7 +56,7 @@ Werkzeug- und CI-Pakete brauchen eine eigene Mergebefugnis.
 
 ### PW-FIND · Behandlung in der Schlussentscheidung
 
-Freigegebener, noch nicht implementierter Sollweg nach
+Für aktuelle Befundentscheidungen gilt der Weg nach
 [Kern §6.3](PUZZLE_AUTHORING.md#63-pw-find--phasenübergreifende-befundentscheidungen):
 Die Schlussübersicht zeigt alle noch relevanten Annahmen und Behandlungsvorgaben
 an der gewählten Kombination beziehungsweise ihren Bestandteilen. Gedeckte
