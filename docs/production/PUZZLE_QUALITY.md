@@ -1,6 +1,6 @@
 # Redaktioneller Qualitätsvertrag für neue Rätsel
 
-**Vertrag 1.0 · Dokumentrevision 18 · 21.11.2026 · Q-H02-ZUSTÄNDIGKEIT / [#753](https://github.com/venomenon328/picross/issues/753)**
+**Vertrag 1.0 · Dokumentrevision 19 · 23.11.2026 · KORRIDOR-NORM-A / [#816](https://github.com/venomenon328/picross/issues/816)**
 
 ## 1. Geltung und Zuständigkeit
 
@@ -127,7 +127,7 @@ Schemas, Zahlen und Befehle bleiben ausschließlich in den verlinkten Normen.
 
 | ID / Voraussetzung | Herkunft | Methode und fälliger Zeitpunkt |
 | --- | --- | --- |
-| H-01 · Maße, Werte, verwendete Farbzahl und Farb-/Randregeln | [Authoring §4.2](authoring/PUZZLE_AUTHORING_STEP_3.md), [ZA-1](ZA1_ADAPTER.md), [CLI](../../tools/puzzle_production/README.md) | Bei jedem Import/finalen Kandidaten automatisch an exakter Matrix/Design/Hinweisen prüfen; vor `content_ready` vollständig belegen. Eine Randverletzung nur über die bereits unterstützte konkrete ZA-1-v2-Autorisierung behandeln, tatsächlichen Negativbefund sichtbar erhalten. |
+| H-01 · Maße, Werte, verwendete Farbzahl und Farb-/Randregeln | [Authoring §4.2](authoring/PUZZLE_AUTHORING_STEP_3.md), [ZA-1](ZA1_ADAPTER.md), [CLI](../../tools/puzzle_production/README.md) | Bei jedem Import/finalen Kandidaten automatisch an exakter Matrix/Design/Hinweisen prüfen; vor `content_ready` vollständig belegen. Bei einem sonst brauchbaren Kandidaten die Randverletzung nach §5 mit betroffenen Kanten als negativen H-01-Befund sichtbar machen. Nur eine ausdrücklich erteilte technische `frame`-Ausnahme nach [PW-B](../tools/PW_B_CONTRACT.md#pw-find--freigegebene-erweiterung-der-entscheidungsdaten) und ZA-1 am konkreten aktuellen Kandidaten deckt den Randbefund. Befund und Ausnahmebeleg getrennt führen. Eine Korridorabweichung erfordert eine gültige Parameteränderung nach [Schritt 3 §4.4](authoring/PUZZLE_AUTHORING_STEP_3.md#44-reparaturen-und-änderungen). |
 | H-02 · Vollständige Deduktion und unabhängiger Proof | [Produktion §5](PUZZLE_PRODUCTION.md), [Authoring §§4.2/4.2.1](authoring/PUZZLE_AUTHORING_STEP_3.md) | Nach letzter Logikänderung vom unbekannten Start unter benanntem zugelassenem Profil lösen, geschriebenen vollständigen Proof unabhängig frisch prüfen und Endmatrix vergleichen; vor `content_ready`. `stalled`, Abbruch, Such-`unique` und bloßer Exitcode genügen nicht. |
 | H-03 · Aktuelle Inhaltsbindung und Nutzungsgrundlage | [Produktion](PUZZLE_PRODUCTION.md), [PW-B](../tools/PW_B_CONTRACT.md), [ZA-1](ZA1_ADAPTER.md) | Aktuelle Bilder, Matrix/Hinweise, Motiv-/Parameterkonformität und tatsächlich nötige Rechte/Notices prüfen. Keine Normalisierungs-, Generator-, Codec-, Toolhash-, Import- oder Reparaturhistorie und kein Herstellungsreplay als Zulassung. Ungeklärte Rechte bleiben Blocker. |
 | H-04 · Tatsächliche Bild-/Motivfreigaben und erlaubte Änderungen | [Bildwahl §2.4](authoring/PUZZLE_AUTHORING_STEP_1.md) / [Motiv §2.4](authoring/PUZZLE_AUTHORING_STEP_2.md) / [Änderung §4.4](authoring/PUZZLE_AUTHORING_STEP_3.md) / [Sicherung §6](authoring/PUZZLE_AUTHORING.md), [AT](REVEAL_TRANSPARENCY.md), [ZA-1](ZA1_ADAPTER.md) | Vor Abstraktion die konkrete Bildfreigabe, vor Rasterproduktion die Motivfreigabe samt Parameterkorridor prüfen. Materielle Änderungen erneut freigeben; vor `content_ready` alle gültigen Bindungen abgleichen. Ein ausdrücklich unterstützter historischer Autorisierungsweg gilt nur unter seinen eigenen Bedingungen. |
@@ -140,20 +140,22 @@ nur Hintergrundbereitschaft und nachfolgende echte Endabnahme bleiben getrennt.
 Die ältere `content_ready`-Formulierung ist keine Erlaubnis, Rasterangebote
 ungeprüft vorzuziehen. Weniger Angebote senken keines dieser Gates.
 
-## 5. Sichtung ohne vollständig qualifizierten Kandidaten
+## 5. Diagnostische Sichtung
 
 Nach der vorgesehenen bedarfsweisen Varianten-/Profil-/Reparatursuche innerhalb
 der [Authoringbudgets §§4.1–4.4](authoring/PUZZLE_AUTHORING_STEP_3.md) MUSS die KI bei
 null vollständig qualifizierten Kandidaten die **zwei bis drei möglichst
 unterschiedlichen besten vorliegenden brauchbaren Entwürfe** zur menschlichen
-Ansicht zeigen, sofern vorhanden. Bei nur einem diesen zeigen. Weitere aktuell angebotene
-Entwürfe bleiben im aktuellen Record erreichbar; gleiche Matrizen mit
-anderem Namen/Profil zählen nicht als Unterschied. Keine künstliche Quote,
+Ansicht zeigen, sofern vorhanden. Bei nur einem diesen zeigen. Weitere aktuelle Entwürfe bleiben im
+Record erreichbar, soweit der technische Weg sie dort gültig abbildet. Gleiche
+Matrizen mit anderem Namen oder Profil zählen nicht als Unterschied. Keine künstliche Quote,
 Budgetausweitung oder zusätzliche Erzeugung allein für diese Sichtungszahl.
-Ein geeigneter vollständig qualifizierter Kandidat genügt dagegen nach Authoring
-§4.5; bereits sinnvolle qualifizierte Alternativen dürfen angeboten werden.
-Sind keine brauchbaren tatsächlichen Entwürfe vorhanden, diesen Umstand und den
-nächsten konkreten Korrekturschritt melden, keine Bilder/Dateien erfinden.
+Ein geeigneter vollständig qualifizierter Kandidat A bleibt nach Authoring
+§4.5 direkt wählbar. Ein bereits vorhandener, sonst überzeugender Kandidat B
+mit lediglich offenem Randbefund oder Unterschreitung des ungefähren Korridors
+nach motivtreuem leerem Außenbeschnitt erscheint zusätzlich als diagnostischer
+Entwurf. Bs Befund sperrt A nicht. Sind keine brauchbaren tatsächlichen Entwürfe
+vorhanden, diesen Umstand und den konkreten Korrekturschritt melden.
 
 Jede Sichtungsansicht MUSS unmittelbar enthalten:
 
@@ -163,7 +165,12 @@ Jede Sichtungsansicht MUSS unmittelbar enthalten:
 - geprüfte, fehlgeschlagene und ungeprüfte technische Voraussetzungen jeweils
   getrennt, mit ihren tatsächlichen Belegen beziehungsweise konkreten Lücken;
 - jedes maßgebliche Qualitätsdefizit mit Kriterien-ID, betroffener Form/Farbe/
-  Hinweisansicht, möglicher Korrektur und Auswirkungen auf Freigaben/Neunachweise.
+  Hinweisansicht, möglicher Korrektur und Auswirkungen auf Freigaben/Neunachweise;
+- bei negativem Randbefund die betroffenen Kanten, gegebenenfalls eine
+  korrekt gebundene `frame`-Ausnahme als eigenen Beleg; bei einem Beschnitt
+  unter den ungefähren Korridor die tatsächlichen Ansichten und Maße vor und
+  nach dem Beschnitt, die verletzte Grenze, den konkreten Freigabevorschlag und
+  die anschließenden Prüfungen.
 
 Auch technisch nicht zertifizierte Entwürfe dürfen so zur **Diagnose** betrachtet
 werden. Sichtbarkeit ist keine Zertifizierung, Empfehlung keine Auswahl und
@@ -171,14 +178,17 @@ Auswahl keine Integrationsfreigabe. Fehlende Proofs oder unklare Rechte bleiben
 Blocker. Eine gestalterisch attraktive, technisch ungeprüfte Variante darf nicht
 als bereits übernehmbar erscheinen.
 
-Die Sichtung erfolgt mit echten Links im bestehenden Abschlussbericht und der
-vorhandenen Produktionsansicht, ohne parallele Datenhaltung. Qualifizierte
-Rasterangebote bleiben vollständig gebundenen Kandidaten nach Authoring §4.5/§7
-vorbehalten. Bei null solchen Angeboten ist die Angebotsliste leer; keinen
-Sichtungsentwurf als `raster_ready` oder `content_ready` ausgeben. Den Stand je
-nach Lage als `raster_review` beziehungsweise `blocked` mit Ursache führen.
-Eine nach §6 zulässig angenommene redaktionelle Abweichung kann erst nach
-vollständiger technischer Prüfung im bestehenden gültigen Auswahlweg erscheinen.
+Die Sichtung erfolgt mit echten Links im bestehenden Sichtungsbericht und,
+soweit technisch unterstützt, in der vorhandenen Produktionsansicht.
+Der Bericht nennt eine fehlende Abbildung im aktuellen technischen Weg.
+Qualifizierte Rasterangebote bleiben vollständig gebundenen Kandidaten nach
+Authoring §4.5 vorbehalten. Bei null solchen Angeboten ist die Liste
+qualifizierter Angebote leer und der Stand bleibt je nach Lage
+`raster_review` beziehungsweise `blocked` mit Ursache. Ein qualifizierter
+Kandidat kann `raster_ready` begründen, während ein mitgezeigter
+Vergleichsentwurf weiter unqualifiziert bleibt. Eine nach §6 zulässig
+angenommene redaktionelle Abweichung kann erst nach vollständiger technischer
+Prüfung im gültigen Auswahlweg erscheinen.
 
 ## 6. Gezielte redaktionelle Einzelfallentscheidung
 
@@ -197,8 +207,13 @@ wird im aktuellen Record am konkreten gebundenen Ergebnis nachvollziehbar festge
 Die Einzelfallentscheidung verändert das Urteil `Warnung`/`nicht erfüllt` nicht
 in `erfüllt` und ist **kein als bestanden gemeldeter Test**. Die redaktionelle
 Annahme wird separat vermerkt. Sie ersetzt weder Bild-/Motiv-/Endfreigaben noch
-heilt sie Verstöße gegen feste Auftrags-/Motivgrenzen. Bei materieller Änderung
-gelten die Rücksprünge und Neuprüfungen aus Authoring §4.4.
+heilt sie Verstöße gegen feste Auftrags-/Motivgrenzen. Ein Randbefund unter
+H-01 kann ausschließlich über die korrekt gebundene technische
+`frame`-Ausnahme nach Schritt 3 §4.2 gedeckt werden. Eine Maßabweichung
+braucht eine ausdrückliche neue Parameterfreigabe mit gültiger Bindung und
+frischen abhängigen Prüfungen nach Schritt 3 §4.4. Bei einem fehlenden oder
+negativen Deduktionsproof bleibt das Raster auch mit angenommener
+Bildabweichung unqualifiziert.
 
 Vor einem freigabefähigen Angebot müssen sämtliche dann fälligen harten Gates
 aktuell erfüllt oder durch ihren bereits ausdrücklich zugelassenen, technisch
@@ -247,9 +262,11 @@ Eine frühere individuelle Behandlung hat bei zulässiger Übernahme Vorrang.
 
 Annahmefähigkeit richtet sich nach der konkreten Teilregel. Eine Zuordnung nur
 nach Q-/H-Präfix oder ein frei gesetzter Bypass ist unzulässig. Bestehende frame-/
-palette-Ausnahmen behalten ihre aktuellen technischen Bindungen. Ungeprüfte oder
-fehlende Voraussetzungen, falsche Inhaltsbindungen und ungeklärte Rechte bleiben
-offen. Beim Hintergrund bleiben zusätzlich zu Q-HG01/H-07 echte Transparenz
+palette-Ausnahmen behalten ihre aktuellen technischen Bindungen und ihren
+separaten Beleg. Die redaktionelle Befund-Checkbox ersetzt weder den
+`frame`-Ausnahmeweg noch die ausdrückliche Genehmigung geänderter Maßgrenzen.
+Ungeprüfte oder fehlende Voraussetzungen, falsche Inhaltsbindungen und
+ungeklärte Rechte bleiben offen. Beim Hintergrund bleiben zusätzlich zu Q-HG01/H-07 echte Transparenz
 freier Räume und ausgeschlossene technische Kompositionsmanipulationen nach
 [Hintergrund §3.4](PUZZLE_BACKGROUNDS.md#34-effektiver-zustand-und-referenzgraph)
 unabdingbar; Q-HG03/Q-HG04 erlauben nur die dort zugelassenen Teilabweichungen.

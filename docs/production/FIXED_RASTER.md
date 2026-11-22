@@ -38,6 +38,18 @@ dieselbe Form verwenden, erteilen aber keine Befugnis. Alte einfache Formen
 behalten ihren Vertrag. Die Ansicht zeigt den vollständigen Korridor, ohne
 offene oder ungefähre Vorgaben als exakte Formulareingaben auszugeben.
 
+Liegt ein motivtreuer Zuschnitt aus ausschließlich erlaubten, ursprünglich
+leeren und ungeschützten Außenlinien unter dem freigegebenen Minimum einer
+ungefähren Achse, die tatsächlichen Maße und Ansichten vor und nach dem
+Beschnitt mit der verletzten Grenze nach
+[Schritt 3 §4.5](authoring/PUZZLE_AUTHORING_STEP_3.md#45-geprüfte-raster-zur-menschlichen-auswahl)
+als `Sichtungsentwurf – nicht integrationsbereit` zeigen. Konkret angeben,
+welche Unter- oder Obergrenze geändert werden soll und welche Werte gelten
+bleiben. Den Vorschlag ausdrücklich freigeben lassen und den aktualisierten
+Korridor identisch an Parameter und Motivfreigabe binden, bevor eine gültige
+feste Ableitung darauf gestützt wird. Eine Befundannahme ändert diese Bindung
+nicht. Die regulären Grenzen und der Motivschutz gelten für jeden Vorschlag.
+
 ## Geschlossener Plan
 
 `picross-fixed-raster-plan-v1` hat exakt `format,puzzle_id,revision,reference,
@@ -75,6 +87,13 @@ abgewiesen. Materielle Änderungen außerhalb der Freigabe benötigen Entscheidu
 ## Ergebnis und aktuelle Übergabe
 
 Feste Änderungen und Schutzmaske werden vor der konkreten Operation geprüft.
+Die Endprüfung verlangt für tatsächliche Endmaße und verwendete Farbzahl
+die Einhaltung des gebundenen genehmigten `picross-raster-parameters-v1`-Korridors.
+Ein diagnostischer Zuschnitt außerhalb dieses Korridors besteht die Endprüfung
+nicht. Jede Zell- oder Maßänderung, auch reiner leerer Außenbeschnitt,
+erfordert eine neue Rasterrevision, neu erzeugte Hinweise, einen vollständigen
+frischen Deduktionsproof mit unabhängiger Prüfung und Endmatrixvergleich sowie
+eine neu gebundene Difficulty aus der frischen Bewertung des Endrasters.
 Der bestehende Ableitungshelfer darf seine gebundenen Pläne/Quellen während der
 laufenden Operation temporär benötigen. Sie sind keine dauerhafte Voraussetzung
 für das aktuelle Ergebnis. Keine erfolglosen Raster/Proofs, Reparaturpläne oder
