@@ -1315,7 +1315,8 @@ func recovery_pointer_cases() -> void:
 				check(Card.UiText.label_width(card.repair_label, line, pixels) <= card.repair_label.size.x,
 					"KL-TRENN " + state + ": same measured Pangolin role and usable width")
 			check(is_equal_approx(card.repair.custom_minimum_size.y, expected_height)
-				and card.repair.size.y >= roundf(44 * app.ui_scale),
+				and card.repair.size.y >= expected_height
+				and Rect2(Vector2.ZERO, card.repair.size).encloses(card.repair_label.get_rect()),
 				"KL-TRENN " + state + ": measured height retains the full minimum target")
 			card.repair.grab_focus()
 			check(card.repair.has_focus(), "KL-TRENN " + state + ": native repair action retains focus")

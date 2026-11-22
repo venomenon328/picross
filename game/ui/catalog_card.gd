@@ -24,7 +24,6 @@ var recovery: ScrollContainer
 var recovery_content: VBoxContainer
 var repair: Button
 var repair_label: Label
-var repair_layout := Vector2(-1, -1)
 var image_area: Rect2
 var label_area: Rect2
 var unknown: Ink
@@ -188,9 +187,6 @@ func _layout_repair() -> void:
 	if repair_label == null: return
 	var u: float = ui_scale
 	var text_width: float = maxf(1,repair.size.x-8*u)
-	var layout := Vector2(text_width, u)
-	if repair_layout == layout: return
-	repair_layout = layout
 	var pixels: int = roundi(small_text_size*u)
 	UiText.small_label(repair_label,pixels,u)
 	var lines: PackedStringArray = LineBreak.new(repair_label, text_width).lines(str(repair.get_meta("caption")))
