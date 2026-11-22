@@ -1,10 +1,10 @@
 {
   "format": "development-ci-plan/v1",
-  "issue": "https://github.com/venomenon328/picross/issues/660",
-  "package": "PROD-LOTUSWURZEL",
+  "issue": "https://github.com/venomenon328/picross/issues/700",
+  "package": "PZ-ZIMTSCHNECKE-KONTEXT",
   "modules": [],
-  "purpose": "Erstintegration der endabgenommenen Lotuswurzel pz-lotuswurzel über RI-ONE mit Monoraster, Reveal samt Katalogprofilen, gewählter 3:1-Kontextzeichnung und Inhaltsmetadaten.",
-  "omitted": "Reine Rätselproduktion. Proof, Bewertung und tatsächliche Lieferung werden im Produktionsweg geprüft. Der CI-Quellenkern läuft ohne Player-Build und Zusatzmodule.",
+  "purpose": "Buildfreie Sichtung der drei Kontextzeichnungen für pz-zimtschnecke in Schritt 4 von Authoring 0.8.0.",
+  "omitted": "Die isolierten Originale und die Bildurteile liegen im aktuellen PW-B-Datensatz. Der Quell- und Plankern genügt für diesen Draft ohne Player-Build und Zusatzmodule.",
   "test_changes": [],
   "core_change": null,
   "evidence": {
