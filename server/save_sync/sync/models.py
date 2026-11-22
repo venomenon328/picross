@@ -1,8 +1,9 @@
 """Closed wire shapes and definition-independent Schema 1 validation."""
-from typing import Annotated, Generic, Literal, TypeVar
-import unicodedata
 
-from pydantic import BaseModel, ConfigDict, Field, AfterValidator, model_validator
+import unicodedata
+from typing import Annotated, Generic, Literal, TypeVar
+
+from pydantic import AfterValidator, BaseModel, ConfigDict, Field, model_validator
 
 MAX_INT = 2**53 - 1
 Natural = Annotated[int, Field(ge=0, le=MAX_INT)]
@@ -99,9 +100,13 @@ class Save(Shape):
         x, y = self.view.center
         if not (0 <= x <= self.width and 0 <= y <= self.height and self.view.zoom in ZOOMS):
             raise ValueError("view")
-        for lines, count, length in ((self.view.row_clue_reads, self.height, self.width),
-                                     (self.view.column_clue_reads, self.width, self.height)):
-            if len(lines) != count or any(isinstance(line, Middle) and not line.start < line.end < length for line in lines):
+        for lines, count, length in (
+            (self.view.row_clue_reads, self.height, self.width),
+            (self.view.column_clue_reads, self.width, self.height),
+        ):
+            if len(lines) != count or any(
+                isinstance(line, Middle) and not line.start < line.end < length for line in lines
+            ):
                 raise ValueError("clue position")
         return self
 
@@ -182,8 +187,18 @@ class Mutation(Shape):
     outcome: Literal["applied", "conflict", "discarded", "rejected"]
     server_revision: Natural
     candidate_id: Uuid | None
-    code: Literal["ok", "conflict_saved", "revision_conflict", "candidate_missing", "history_missing",
-                  "conflict_limit", "storage_limit", "sequence_reused", "sequence_stale", "sequence_gap"]
+    code: Literal[
+        "ok",
+        "conflict_saved",
+        "revision_conflict",
+        "candidate_missing",
+        "history_missing",
+        "conflict_limit",
+        "storage_limit",
+        "sequence_reused",
+        "sequence_stale",
+        "sequence_gap",
+    ]
     sequence_consumed: bool
 
 
@@ -234,9 +249,18 @@ class Page(Shape, Generic[T]):
 
 
 class Error(Shape):
-    code: Literal["malformed_json", "authentication_failed", "not_found", "registration_unavailable",
-                  "payload_too_large", "unsupported_media_type", "invalid_request", "rate_limited",
-                  "unavailable", "server_generation_changed"]
+    code: Literal[
+        "malformed_json",
+        "authentication_failed",
+        "not_found",
+        "registration_unavailable",
+        "payload_too_large",
+        "unsupported_media_type",
+        "invalid_request",
+        "rate_limited",
+        "unavailable",
+        "server_generation_changed",
+    ]
 
 
 class Health(Shape):

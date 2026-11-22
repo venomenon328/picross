@@ -1,7 +1,7 @@
-from datetime import timezone
-from hashlib import sha256
 import os
 import secrets
+from datetime import UTC
+from hashlib import sha256
 
 import psycopg
 from psycopg.rows import dict_row
@@ -24,7 +24,7 @@ def instance(db):
 
 
 def stamp(value):
-    return value.astimezone(timezone.utc).isoformat().replace("+00:00", "Z")
+    return value.astimezone(UTC).isoformat().replace("+00:00", "Z")
 
 
 def digest(value):

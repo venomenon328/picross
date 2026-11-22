@@ -1,9 +1,10 @@
 """HTTP boundary. FastAPI models describe the same bodies used for runtime validation."""
+
 import json
 import math
 import os
 import re
-from decimal import Decimal, InvalidOperation
+from decimal import Decimal, DecimalException
 from typing import Annotated
 
 import psycopg
@@ -16,13 +17,16 @@ from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from starlette.concurrency import run_in_threadpool
 from starlette.exceptions import HTTPException
 
-from . import auth, models as m, store
+from . import auth, store
+from . import models as m
 from .db import Failure, connect, instance
 
 GEN = "X-Picross-Generation"
 PUBLIC = {"register", "login", "recover"}
 LISTS = {"puzzles", "history", "conflicts"}
-app = FastAPI(title="Picross Save Sync", version="1.0", docs_url=None, redoc_url=None, openapi_url="/openapi.json")
+app = FastAPI(
+    title="Picross Save Sync", version="1.0", docs_url=None, redoc_url=None, openapi_url="/openapi.json"
+)
 app.router.redirect_slashes = False
 
 
@@ -39,7 +43,7 @@ def pairs(items):
 
 def number(text):
     value = Decimal(text)
-    if value == value.to_integral_value() and abs(value) <= m.MAX_INT:
+    if value == value.to_integral_value() and value.copy_abs() <= m.MAX_INT:
         return int(value)
     result = float(value)
     if not math.isfinite(result):
@@ -49,12 +53,14 @@ def number(text):
 
 def parse(raw):
     try:
-        obj = json.loads(raw.decode("utf-8"), object_pairs_hook=pairs, parse_constant=invalid, parse_float=number)
+        obj = json.loads(
+            raw.decode("utf-8"), object_pairs_hook=pairs, parse_constant=invalid, parse_float=number
+        )
         # Python accepts unpaired escaped surrogates; they are not Unicode scalar values.
         if b"\\u" in raw:
             json.dumps(obj, ensure_ascii=False).encode("utf-8")
         return obj
-    except (ValueError, RecursionError, InvalidOperation, OverflowError):
+    except (ValueError, RecursionError, DecimalException, OverflowError):
         raise Failure(400, "malformed_json") from None
 
 
@@ -71,7 +77,9 @@ class WireRoute(APIRoute):
                 raise Failure(422, "invalid_request")
             if self.name not in PUBLIC:
                 header = request.headers.get(GEN, "")
-                if not re.fullmatch(r"[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}", header):
+                if not re.fullmatch(
+                    r"[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}", header
+                ):
                     raise Failure(422, "invalid_request")
                 if header != str(request.state.instance["generation"]):
                     raise Failure(409, "server_generation_changed")
@@ -86,8 +94,11 @@ class WireRoute(APIRoute):
                     raise Failure(413, "payload_too_large")
                 raw.extend(chunk)
             if needs_body:
-                if (request.headers.get("content-type", "").partition(";")[0].strip().lower() != "application/json"
-                        or request.headers.get("content-encoding", "identity").lower() != "identity"):
+                if (
+                    request.headers.get("content-type", "").partition(";")[0].strip().lower()
+                    != "application/json"
+                    or request.headers.get("content-encoding", "identity").lower() != "identity"
+                ):
                     raise Failure(415, "unsupported_media_type")
                 request.state.raw = bytes(raw)
                 # Supply the bounded bytes and strict parse to FastAPI's body/model reader.
@@ -96,12 +107,25 @@ class WireRoute(APIRoute):
             elif raw:
                 raise Failure(422, "invalid_request")
             return await endpoint(request)
+
         return checked
 
 
 def current_instance():
     with connect() as db:
         return instance(db)
+
+
+origins = [v for v in os.environ.get("SYNC_ORIGINS", "").split(",") if v]
+if "*" in origins:
+    raise ValueError("Configure exact Web origins")
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_methods=["GET", "POST"],
+    allow_headers=["Authorization", "Content-Type", GEN],
+    expose_headers=[GEN, "Retry-After"],
+)
 
 
 @app.middleware("http")
@@ -118,13 +142,6 @@ async def metadata(request, call_next):
     if generation:
         response.headers[GEN] = generation
     return response
-
-
-origins = [v for v in os.environ.get("SYNC_ORIGINS", "").split(",") if v]
-if "*" in origins:
-    raise ValueError("Configure exact Web origins")
-app.add_middleware(CORSMiddleware, allow_origins=origins, allow_methods=["GET", "POST"],
-                   allow_headers=["Authorization", "Content-Type", GEN], expose_headers=[GEN, "Retry-After"])
 
 
 @app.exception_handler(Failure)
@@ -156,8 +173,10 @@ def ready():
     return {"status": "ok"}
 
 
-def require_headers(generation: Annotated[m.Uuid, Header(alias=GEN)],
-                    bearer: Annotated[HTTPAuthorizationCredentials | None, Security(HTTPBearer(auto_error=False))]):
+def require_headers(
+    generation: Annotated[m.Uuid, Header(alias=GEN)],
+    bearer: Annotated[HTTPAuthorizationCredentials | None, Security(HTTPBearer(auto_error=False))],
+):
     # WireRoute validates generation. The session lookup runs inside the operation's transaction.
     if not bearer:
         raise auth.denied()
@@ -165,7 +184,9 @@ def require_headers(generation: Annotated[m.Uuid, Header(alias=GEN)],
 
 errors = {s: {"model": m.Error} for s in (400, 401, 404, 409, 413, 415, 422, 429, 503)}
 public = APIRouter(prefix="/v1/auth", route_class=WireRoute, responses=errors)
-private = APIRouter(prefix="/v1", route_class=WireRoute, responses=errors, dependencies=[Depends(require_headers)])
+private = APIRouter(
+    prefix="/v1", route_class=WireRoute, responses=errors, dependencies=[Depends(require_headers)]
+)
 
 
 def authenticate(request, body, operation):
@@ -212,8 +233,10 @@ def account(request: Request):
         return auth.info(auth.session(db, request))
 
 
-def pagination(limit: Annotated[int, Query(ge=1, le=100)] = 100,
-               cursor: Annotated[str | None, Query(min_length=1, max_length=1024)] = None):
+def pagination(
+    limit: Annotated[int, Query(ge=1, le=100)] = 100,
+    cursor: Annotated[str | None, Query(min_length=1, max_length=1024)] = None,
+):
     if cursor is not None and not re.fullmatch(r"[A-Za-z0-9_-]{1,1024}", cursor):
         raise Failure(422, "invalid_request")
 
@@ -230,7 +253,9 @@ def current(request: Request, puzzle: m.PuzzleId):
         return store.version(db, (auth.session(db, request)["account_id"], puzzle))
 
 
-@private.get("/puzzles/{puzzle}/history", response_model=m.Page[m.Summary], dependencies=[Depends(pagination)])
+@private.get(
+    "/puzzles/{puzzle}/history", response_model=m.Page[m.Summary], dependencies=[Depends(pagination)]
+)
 def history(request: Request, puzzle: m.PuzzleId):
     with connect() as db:
         return store.page(db, auth.session(db, request), request, puzzle, "history")
@@ -242,7 +267,11 @@ def previous(request: Request, puzzle: m.PuzzleId, revision: Annotated[int, Path
         return store.version(db, (auth.session(db, request)["account_id"], puzzle), revision)
 
 
-@private.get("/puzzles/{puzzle}/conflicts", response_model=m.Page[m.CandidateSummary], dependencies=[Depends(pagination)])
+@private.get(
+    "/puzzles/{puzzle}/conflicts",
+    response_model=m.Page[m.CandidateSummary],
+    dependencies=[Depends(pagination)],
+)
 def conflicts(request: Request, puzzle: m.PuzzleId):
     with connect() as db:
         return store.page(db, auth.session(db, request), request, puzzle, "conflicts")
@@ -254,7 +283,9 @@ def conflict(request: Request, puzzle: m.PuzzleId, candidate_id: m.Uuid):
         return store.candidate(db, (auth.session(db, request)["account_id"], puzzle), candidate_id)
 
 
-@private.post("/puzzles/{puzzle}/mutations", response_model=m.Mutation, responses={409: {"model": m.Mutation | m.Error}})
+@private.post(
+    "/puzzles/{puzzle}/mutations", response_model=m.Mutation, responses={409: {"model": m.Mutation | m.Error}}
+)
 def mutation(request: Request, puzzle: m.PuzzleId, body: m.MutationRequest):
     with connect() as db:
         return store.mutate(db, auth.session(db, request), puzzle, body, request)

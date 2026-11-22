@@ -1,4 +1,5 @@
 """Local operator entry points. Secrets are printed only after commit."""
+
 import argparse
 from pathlib import Path
 
@@ -25,8 +26,9 @@ def main():
             if args.action == "invite":
                 db.execute("DELETE FROM invitations WHERE expires_at <= now()")
                 db.execute("INSERT INTO invitations VALUES (%s, now() + interval '7 days')", (digest(code),))
-            elif not db.execute("UPDATE accounts SET recovery=%s WHERE username=%s AND locked",
-                                (digest(code), args.username)).rowcount:
+            elif not db.execute(
+                "UPDATE accounts SET recovery=%s WHERE username=%s AND locked", (digest(code), args.username)
+            ).rowcount:
                 raise SystemExit("Expected one locked account")
     if code:
         print(code)
