@@ -3,7 +3,7 @@
   "issue": "https://github.com/venomenon328/picross/issues/700",
   "package": "IGEL-RASTER-REVIEW",
   "modules": [],
-  "purpose": "Quellenprüfung des veröffentlichten PW-B-Rasterangebots für Igel in Schritt 3.",
+  "purpose": "Quellenprüfung beider aktuellen PW-B-Rasterangebote für Igel nach Korrektur in Schritt 3.",
   "omitted": "Reine Authoringdaten. Raster, Endmatrix, Proof, Difficulty und Sichturteile sind im Produktionsweg geprüft. Package CI prüft den Quellen- und Plankern ohne Zusatzmodule oder Player-Build.",
   "test_changes": [],
   "core_change": null,
