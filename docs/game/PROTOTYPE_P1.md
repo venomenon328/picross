@@ -304,6 +304,14 @@ Auswahl samt zusätzlichen Darstellungsdaten.
 
 ## 6. Speicherung und Wiederaufnahme
 
+Die optionale Konten-/Synchronisationsschicht ist in [SYNC](SAVE_SYNC.md) als
+Soll freigegeben und noch nicht implementiert. Dieser Abschnitt bleibt der
+maßgebliche lokale Save-/Recoveryvertrag; der bisherige kontolose Speicherroot,
+Schema 1 und vollständige Validierung ändern sich dadurch nicht. Spätere
+Kontoprofile erhalten eigene lokale Saves, Fortsetzen-Merker und Syncmetadaten.
+Serverrevision/Resetmarker liegen außerhalb des Schema-1-Snapshots. Ein
+Serverempfang ersetzt keine vollständige Validierung vor Anwendung im Spiel.
+
 WEB-1 ergänzt für den Browser die bestätigte IDBFS-Synchronisation, Einzeltab-
 Schreibsperre und eigene Beenden-Aktion gemäß [Webvertrag](../operations/WEB_HOSTING.md).
 Schema/Validierung/Recovery bleiben gleich. Browsergesteuertes Schließen kann

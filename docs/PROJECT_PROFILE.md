@@ -27,6 +27,7 @@ Abschnitte werden zur Pflichtlektüre.
 | Produktanforderungen und reguläre Größen | [PRODUCT_DEFINITION](project/PRODUCT_DEFINITION.md); technische Entwicklungsbindung ist keine abschließende Veröffentlichungspolitik |
 | Runtime-Inhalt | Ausschließlich aktuelle registrierte Daten; Inhaltsautorität und Runtimeprojektion nach [RI-ONE](production/PUZZLE_INTEGRATION_SINGLE_PATH.md) |
 | App-/Saveidentität | `picross · P1`, Save-Schema 1, `user://p1/saves/`; vollständige Validierung vor Normalisierung nach [P1](game/PROTOTYPE_P1.md) |
+| Optionale Konten und Spielstandsync | Freigegebenes Soll nach [SYNC](game/SAVE_SYNC.md); zuerst eigenständiger Server, danach Clients/Betrieb. Kontolose Speicherung bleibt getrennt; Lieferstatus in [#821](https://github.com/venomenon328/picross/issues/821) |
 | Arbeitsproduktion | Ein aktueller Job unter `content/authoring/` plus benötigte Nutzdaten; Abschluss nach [Authoring Schritt 5 §9](production/authoring/PUZZLE_AUTHORING_STEP_5.md#9-produktionsabschluss-und-bereinigung) |
 | Neue kreative Produktion | Phasenbezogene Bildregeln und aktuelle Version/Dokumentrevision in [Authoring](production/authoring/PUZZLE_AUTHORING.md), technische aktuelle Form in [PW-B](tools/PW_B_CONTRACT.md) |
 | Bild-/Rasterintegration und Pflege | [RI-ONE](production/PUZZLE_INTEGRATION_SINGLE_PATH.md), [ZA-1](production/ZA1_ADAPTER.md), [Bestandseditor](tools/PUZZLE_EDITOR.md) |
@@ -52,6 +53,7 @@ Für normale Inhalte gilt stattdessen die Authoringroute.
 | Produkt, Regeln, Inhalte, Progression, UX/UI, Eingabe, Plattform oder Architektur | [Produktdefinition](project/PRODUCT_DEFINITION.md) |
 | Thematik, Album, Motiventhüllung, UX/UI oder Eingabe/Wertung | [Gestaltungskonzept](project/DESIGN_CONCEPT.md) |
 | Spieltechnik, P1-Verträge, Save/Recovery | [P1](game/PROTOTYPE_P1.md), einschlägige Entscheidungen in [#5](https://github.com/venomenon328/picross/issues/5), [Preflight](ci/TOOLCHAIN.md), [Spielanleitung](../game/README.md) |
+| Optionale Spielerkonten, Snapshotdienst, Synchronisierung oder Kontoprofile | [SYNC-Fachvertrag](game/SAVE_SYNC.md), [P1](game/PROTOTYPE_P1.md), [Webvertrag](operations/WEB_HOSTING.md), zuständiges Paket in [#821](https://github.com/venomenon328/picross/issues/821); bei Client-Revisionsreset zusätzlich [PE §9.3](tools/PUZZLE_EDITOR.md#93-sicherer-automatischer-save-neustart) |
 | Buchpräsentation, Seiten-/Informationswechsel, Spielerhilfe | [Buchintegration](game/BOOK_INTEGRATION.md), bei gezielter historischer Nacharbeit deren verlinkte Lieferbelege |
 | Native Windows-Fenstergrößen, Anzeigemodi und Display-Präferenzen | [ANZ](game/DISPLAY_SETTINGS.md), dazu [P1](game/PROTOTYPE_P1.md) und bei Abgrenzung [Webvertrag](operations/WEB_HOSTING.md) |
 | Zellgesten, Cursorzähler und Raster-/Fenstergrenzen | [CELL_DRAG](game/CELL_DRAG.md), [Hinweisfont](game/CLUE_TYPOGRAPHY.md) |

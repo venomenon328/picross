@@ -208,6 +208,16 @@ Das persönliche Logbuch erfasst mindestens Lösungszeit, Fehlerzahl, Ergebnis b
 
 Das vollständige Solo-Spiel funktioniert offline, einschließlich Fortschritt und persönlicher Statistik. Offline gespielte Durchgänge werden lokal protokolliert und können später optional für Ranglisten übertragen werden. Eine dauerhafte Onlineverbindung ist keine Voraussetzung für reguläre Rätsel oder ihre Freischaltungen.
 
+Optionale Spielerkonten und gemeinsame Spielstände zwischen Web und mehreren
+Windowsgeräten sind als [SYNC-Spezifikation](../game/SAVE_SYNC.md) freigegeben.
+Ohne Konto bleibt die bisherige lokale Speicherung getrennt. Ein Kontoprofil
+arbeitet ebenfalls offline und synchronisiert vollständige Spielstände später;
+Gastübernahme, Konfliktentscheidung und Wiederherstellung sind ausdrücklich.
+Der eigene Konto-/Speicherdienst wird vor der Clientanbindung und dem separat
+beauftragten Livebetrieb geliefert. Diese Entscheidung behauptet keine bereits
+implementierte Synchronisierung und führt keine neue Wertung, Rangliste oder
+dauerhafte „jemals gelöst“-Statistik ein. Lieferstatus: [#821](https://github.com/venomenon328/picross/issues/821).
+
 Ein plausibles Prüf- und Übertragungsmodell ist zu spezifizieren. Es wird kein manipulationssicherer Wettkampf und keine nachweisbare Verhinderung externer Lösungshilfen versprochen. Online-Ranglisten ergänzen das Spiel, bestimmen aber nicht seinen Hauptzweck.
 
 ## 8. Entwicklungs- und Veröffentlichungsrahmen
