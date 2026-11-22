@@ -5,12 +5,13 @@ from urllib.parse import urlsplit
 from urllib.request import HTTPRedirectHandler, ProxyHandler, Request, build_opener
 
 from . import current_content as content
+from . import github_rest
 from .authoring_package import require, ID
 from .contract import exact_keys
 
 FORMAT = 'picross-authoring-current-v2'
-REPOSITORY = 'venomenon328/picross'
-API = 'https://api.github.com/repos/' + REPOSITORY
+REPOSITORY = github_rest.REPOSITORY
+API = github_rest.API
 FIELDS = {'repository', 'job', 'release_id', 'asset_id'}
 
 
@@ -42,17 +43,25 @@ class AssetRedirect(HTTPRedirectHandler):
 def get(path, limit, *, binary=False):
     # A byte request is derived from a validated release row and a hash-based
     # name. Browser downloads do not consume one API request per offered file.
-    base = 'https://github.com/' + REPOSITORY if binary else API
-    request = Request(base + path, headers={'Accept': 'application/octet-stream' if binary else 'application/vnd.github+json',
-                                          'Accept-Encoding': 'identity', 'User-Agent': 'picross-work-assets'})
+    headers = {'Accept': 'application/octet-stream' if binary else 'application/vnd.github+json',
+               'Accept-Encoding': 'identity', 'User-Agent': 'picross-work-assets'}
     deadline = time.monotonic() + 60
-    with build_opener(ProxyHandler({}), AssetRedirect()).open(request, timeout=10) as response:
-        result = bytearray()
-        while len(result) <= limit and time.monotonic() < deadline:
-            part = response.read(min(65536, limit + 1 - len(result)))
-            if not part:
-                return bytes(result)
-            result.extend(part)
+    if binary:
+        request = Request('https://github.com/' + REPOSITORY + path, headers=headers)
+        with github_rest.transport_errors():
+            with build_opener(ProxyHandler({}), AssetRedirect()).open(request, timeout=10) as response:
+                return _read_response(response, limit, deadline)
+    with github_rest.open_api(API + path, headers, timeout=10) as response:
+        return _read_response(response, limit, deadline)
+
+
+def _read_response(response, limit, deadline):
+    result = bytearray()
+    while len(result) <= limit and time.monotonic() < deadline:
+        part = response.read(min(65536, limit + 1 - len(result)))
+        if not part:
+            return bytes(result)
+        result.extend(part)
     raise ValueError('Production asset exceeds its byte/time budget')
 
 

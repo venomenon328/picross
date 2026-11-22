@@ -13,6 +13,7 @@ import os
 import socket
 
 from tools.puzzle_production import authoring_package as ap, catalog_io as io
+from tools.puzzle_production import github_rest
 from . import presentation as p
 from .sources import LRU
 from .repository import ProductionRemoval
@@ -409,6 +410,10 @@ class Handler(BaseHTTPRequestHandler):
             return self.reply(200, p.data(value), 'application/json; charset=utf-8')
         except (BrokenPipeError, ConnectionResetError, ConnectionAbortedError):
             pass  # A closed transport is not a source failure; finally releases the slots.
+        except github_rest.Failure as exc:
+            # 503 is reserved for the browser's local worker-slot retry loop.
+            status = {'rate_limit': 429, 'source': 404}.get(exc.kind, 502)
+            return self.reply(status, p.data({'error': str(exc), 'code': exc.kind}), 'application/json; charset=utf-8')
         except (ValueError, OSError, RuntimeError, KeyError, TypeError) as exc:
             # All errors are data; never include source URLs or a Python traceback.
             message = str(exc) if isinstance(exc, ValueError) else 'Quelle konnte nicht vollständig gelesen werden. Veröffentlichung prüfen und neu laden.'

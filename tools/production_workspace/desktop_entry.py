@@ -7,6 +7,8 @@ if sys.argv[1:] == ["--catalog-svg-self-test"]:
 
 if __name__ == '__main__':
     try:
+        from tools.puzzle_production.github_rest import load_workspace_token
+        load_workspace_token()
         from tools.production_workspace.desktop import main
         code = main()
     except Exception:

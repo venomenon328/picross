@@ -1,5 +1,6 @@
 """One opt-in startup operation, owned by the native GUI and its stop lifecycle."""
 from tools.app_products import PG, PW
+from tools.puzzle_production import github_rest
 import threading
 import subprocess
 
@@ -164,6 +165,9 @@ class Updates:
             self.cancel()
             self.status = ('App-Update nicht bestätigt: Installationsidentität passt nicht zum signierten Release. '
                            'Vorhandene App bleibt verfügbar; Installation prüfen.')
+        except github_rest.Failure as exc:
+            self.cancel()
+            self.status = 'App-Updateprüfung fehlgeschlagen. ' + str(exc) + ' Vorhandene App bleibt verfügbar.'
         except Exception:
             self.cancel()
             self.status = ('App-Update nicht möglich: Kanal, Signatur, Version, Download oder Übergabe nicht bestätigt. '
