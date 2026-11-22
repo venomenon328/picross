@@ -1,10 +1,10 @@
 {
   "format": "development-ci-plan/v1",
-  "issue": "https://github.com/venomenon328/picross/issues/660",
-  "package": "PROD-ZIMTSCHNECKE",
+  "issue": "https://github.com/venomenon328/picross/issues/700",
+  "package": "PZ-HALO-HALO-RASTERSICHTUNG",
   "modules": [],
-  "purpose": "Erstintegration der endabgenommenen Zimtschnecke pz-zimtschnecke über RI-ONE mit Monoraster raster-b, Reveal reveal-c und HG31-Hintergrund background-b.",
-  "omitted": "Reine Rätselproduktion. Proof, Endmatrix und ausgewählte Nutzdaten werden im Produktionsweg geprüft. Package CI prüft den Quellen- und Plankern ohne Zusatzmodule und ohne Player-Build.",
+  "purpose": "Buildfreie Sichtung der Halo-Halo-Konturkorrektur in Schritt 3 nach Authoring 0.8.0.",
+  "omitted": "Der Draft verweist auf den aktuellen PW-B-Record. Randprüfung, Linienproof, Endmatrix, Schwierigkeit und Sichtprüfung gehören in den Produktionsweg. Die CI prüft Quellen und Paketplan ohne Zusatzmodule und ohne Player-Build.",
   "test_changes": [],
   "core_change": null,
   "evidence": {
