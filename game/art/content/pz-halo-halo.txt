@@ -1,0 +1,4 @@
+author: Mit OpenAI ImageGen für diesen Produktionsauftrag erzeugt
+changes: Unverändertes generiertes RGBA-PNG.
+source: Native Bildgenerierung aus dem Halo-Halo-Textbriefing ohne externe Bildvorlage.
+usage_basis: Auftrag zur Erzeugung und Veröffentlichung der drei Auswahlbilder in venomenon328/picross.
