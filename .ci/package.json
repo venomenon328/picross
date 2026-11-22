@@ -1,10 +1,10 @@
 {
   "format": "development-ci-plan/v1",
   "issue": "https://github.com/venomenon328/picross/issues/700",
-  "package": "PZ-NASI-LEMAK-INTEGRATION",
+  "package": "PZ-FALAFEL-STEP-4",
   "modules": [],
-  "purpose": "Nasi Lemak mit raster-g, reveal-a und der gewählten Kontextzeichnung background-a im Profil 2304 × 768 in den Spielkatalog aufnehmen.",
-  "omitted": "Reine Rätselproduktion. Proof und Endmatrix, Bildableitung und Lieferdaten werden durch die Produktionswerkzeuge geprüft. Der Paketdiff erfordert den Quellen- und Plankern.",
+  "purpose": "Die Rasterwahl raster-c binden und drei geprüfte Falafel-Kontextzeichnungen im Authoringstand background_review zur Auswahl vorlegen.",
+  "omitted": "Reine Authoringablage. Aktuelle Rasterbindung sowie Sichtung, Transparenz und Randabschluss der isolierten Originale sind Produktionsprüfungen. Die CI übernimmt den Quellen- und Plankern ohne Player-Build.",
   "test_changes": [],
   "core_change": null,
   "evidence": {
