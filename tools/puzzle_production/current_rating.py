@@ -2,6 +2,7 @@
 from copy import deepcopy
 from .contract import exact_keys, digest, integer
 from .authoring_package import require
+from .raster_parameters import require_color_count, used_foreground
 from . import catalog_rating as common, catalog_method
 
 FORMAT = "picross-current-difficulty-v1"
@@ -9,7 +10,7 @@ FIELDS = {"format","method","production_mode","current_source","logic_binding",
           "rating","compact_analysis","rating_revision","record_hash"}
 
 
-def validate(value, *, definition_bytes=None, production_mode=None, **unused):
+def validate(value, *, definition_bytes=None, production_mode=None, active=False):
     exact_keys(value,FIELDS)
     require(value["format"]==FORMAT and value["method"] in catalog_method.METHODS,"Unknown current assessment")
     common.mode(value["production_mode"])
@@ -22,15 +23,23 @@ def validate(value, *, definition_bytes=None, production_mode=None, **unused):
         method.compact(value["compact_analysis"])
         require(value["compact_analysis"]["analysis_hash"]==value["logic_binding"]["analysis_hash"],"Assessment logic differs")
         method.rating(value["rating"],value["compact_analysis"],value["current_source"]["id"])
+        color_count = value["compact_analysis"]["structure"]["colors"]
     else:
         common._compact(value["compact_analysis"])
         common._rating(value["rating"],value["compact_analysis"],value["current_source"]["id"])
+        color_count = value["compact_analysis"]["metrics"]["workload"]["colors"]
+    if not active:
+        require_color_count(value["production_mode"], color_count)
     require(value["rating"]["result"]["status"]=="rated","Complete current assessment required")
     if definition_bytes is not None:
         data,puzzle,source,logic=common.definition(definition_bytes,method=value["method"])
         require(value["current_source"]==source and value["logic_binding"]==logic and
                 value["rating"]["source"]["engine_logic_hash"]==puzzle.logic_hash,"Stale assessment definition")
-        require(value["production_mode"]!="mono" or len(puzzle.colors)==1,"Mono assessment has multiple colors")
+        if not active:
+            require_color_count(value["production_mode"], len(used_foreground(data["solution"])))
+        else:
+            require(value["production_mode"] != "mono" or len(puzzle.colors) == 1,
+                    "Mono assessment has multiple colors")
         if value["method"]==catalog_method.NEW:
             from .sd2_profiles import structure
             require(value["compact_analysis"]["structure"]==structure(puzzle),"Assessment geometry differs")

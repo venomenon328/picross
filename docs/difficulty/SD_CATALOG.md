@@ -42,7 +42,10 @@ in SD2-Integration definiert. Unbekannte Felder sind unzulässig. Die Hülle
 verlangt einen gültigen vollständigen Befund mit `status=rated`.
 
 `current_rating.validate` prüft Form, Werte, Hashes, Methodenkonsistenz,
-Definition/Modus, Geometrie, Hinweise und erforderliche R4-Profile.
+Definition/Modus, Geometrie, Hinweise und erforderliche R4-Profile. Neue
+Checked-Daten erfüllen die [Modusgrenze](../production/ZA1_ADAPTER.md#eingang-und-grenzen)
+anhand der belegten Zielmatrix. Registrierte Altstände werden mit ihrer
+gebundenen Bewertung gelesen.
 `current_rating.from_checked` übernimmt bereits tatsächlich geprüfte Werte
 in diese Hülle; es berechnet keine neue Stufe und erfindet keine Herkunft.
 Ein Analyzer-Checked-Bericht bleibt Arbeitsmaterial. Der aktuelle Integrator

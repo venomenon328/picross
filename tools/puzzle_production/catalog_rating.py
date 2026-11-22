@@ -305,7 +305,7 @@ def _rating(rating, compact, identifier):
 def validate(value, *, active=True, definition_bytes=None, production_mode=None):
     if value.get("format") == "picross-current-difficulty-v1":
         from .current_rating import validate as current
-        return current(value,definition_bytes=definition_bytes,production_mode=production_mode)
+        return current(value,definition_bytes=definition_bytes,production_mode=production_mode,active=active)
     from . import sd2_catalog_rating as sd2
     if isinstance(value, dict) and value.get("format") in (sd2.FORMAT, sd2.CHECKED):
         return sd2.validate(value, active=active, definition_bytes=definition_bytes, production_mode=production_mode)
@@ -321,6 +321,9 @@ def validate(value, *, active=True, definition_bytes=None, production_mode=None)
     source(value["current_source"]); binding(value["logic_binding"])
     _compact(value["compact_analysis"])
     _rating(value["rating"], value["compact_analysis"], value["current_source"]["id"])
+    if not active and "production_mode" in value:
+        from .raster_parameters import require_color_count, used_foreground
+        require_color_count(value["production_mode"], value["compact_analysis"]["metrics"]["workload"]["colors"])
     if active:
         integer(value["rating_revision"], 1, 1000000, "rating revision")
         a = exact_keys(value["adoption"], {"kind", "previous_record_hash", "analysis_report_hash", "verification_hash", "tool", "report"})
@@ -338,7 +341,11 @@ def validate(value, *, active=True, definition_bytes=None, production_mode=None)
     check_hash(value, "record_hash" if active else "checked_hash")
     if definition_bytes is not None:
         data, puzzle, current, logic = definition(definition_bytes)
-        require(value.get("production_mode") != "mono" or len(puzzle.colors) == 1, "Mono mode requires one foreground color")
+        if not active and "production_mode" in value:
+            require_color_count(value["production_mode"], len(used_foreground(data["solution"])))
+        else:
+            require(value.get("production_mode") != "mono" or len(puzzle.colors) == 1,
+                    "Mono mode requires one foreground color")
         require(value["current_source"] == current and value["logic_binding"] == logic and
                 value["rating"]["source"]["engine_logic_hash"] == puzzle.logic_hash, "Stale difficulty source/logic/matrix binding")
         w = value["compact_analysis"]["metrics"]["workload"]

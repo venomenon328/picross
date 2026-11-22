@@ -60,7 +60,7 @@ function gridFields(parent,expanded){
  const summary=node('summary','Rastervorgaben');summary.append(node('small','Maße, Modus und Farbzahl'));
  panel.append(summary,node('p','Optional für das spätere Lösungsraster. Offene Werte werden bei der Motivvorlage empfohlen.','hint'));
  const grid={...PW.publishedGrid(detail),...intent.grid};
- panel.open=expanded||Boolean(grid.width||grid.height||grid.mode);
+ panel.open=expanded||Boolean(grid.width||grid.height||grid.mode||grid.colors);
  function control(group,label,key,choices,placeholder,unit){
   const wrap=node('label',label),input=node(choices?'select':'input');
   if(choices){for(const [id,caption] of choices){const option=node('option',caption);option.value=id;input.append(option);}}
@@ -69,10 +69,10 @@ function gridFields(parent,expanded){
   input[choices?'onchange':'oninput']=()=>{
    grid[key]=input.value;
    if(key==='mode'){
-    palette.hidden=grid.mode!=='color';
+    palette.hidden=grid.mode==='mono';
     if(palette.hidden){delete grid.colors;delete grid.colorAccuracy;colors.value='';precision.value='approx';}
    }
-   remember('grid',{...intent.grid,[key]:input.value,...(key==='mode'&&grid.mode!=='color'?{colors:'',colorAccuracy:''}:{})});
+   remember('grid',{...intent.grid,[key]:input.value,...(key==='mode'&&grid.mode==='mono'?{colors:'',colorAccuracy:''}:{})});
   };
   if(unit){const measure=node('span',undefined,'numberUnit');measure.append(input,node('span',unit));wrap.append(measure);}
   else wrap.append(input);
@@ -95,12 +95,12 @@ function gridFields(parent,expanded){
  const modes=node('fieldset'),row=node('div',undefined,'gridRow');modes.append(node('legend','Rasterfarben'),row);
  const mode=control(row,'Farbmodus','mode',[['','Offen'],['mono','Monochrom'],['color','Farbig']]);
  const palette=node('div',undefined,'paletteFields');
- const colors=control(palette,'Vordergrundfarben','colors',null,'2–8');colors.className='shortNumber';
+ const colors=control(palette,'Vordergrundfarben','colors',null,'1–8');colors.className='shortNumber';
  const precision=control(palette,'Farbzahlvorgabe','colorAccuracy',accuracy);
- palette.hidden=grid.mode!=='color';row.append(palette);panel.append(sizes,modes);
+ palette.hidden=grid.mode==='mono';row.append(palette);panel.append(sizes,modes);
  if(detail?.facts.published){
   panel.append(node('p','Vorgefüllte Werte sind Quellkontext. Änderungen werden als neue Wünsche formuliert. Leeren allein hebt keine Vorgabe auf.','hint'));
-  removal(modes,'mode','Rastermodus',[['mode',mode]],removed=>{palette.hidden=removed||grid.mode!=='color';});
+  removal(modes,'mode','Rastermodus',[['mode',mode]],removed=>{palette.hidden=removed||grid.mode==='mono';});
   removal(palette,'colors','Farbzahl',[['colors',colors]]);
  }
  parent.append(panel);return panel;
@@ -328,7 +328,7 @@ function assetCard(value,id,asset,selectable=true){
    if(typeof img.decode==='function')await img.decode();
    if(current!==generation)return;
    canvas.replaceChildren(img);readyImages.add(asset.id);button.disabled=false;choices.forEach(b=>b.disabled=false);
-   button.onclick=()=>{$('largeTitle').textContent=asset.caption;$('largeImage').src=url;$('largeImage').alt=asset.caption;$('zoom').value='fit';zoom();$('large').showModal();};
+   button.onclick=()=>{$('largeTitle').textContent=asset.caption;$('largeImage').dataset.role=asset.role;$('largeImage').src=url;$('largeImage').alt=asset.caption;$('zoom').value='fit';zoom();$('large').showModal();};
    updatePrompt();
   }catch(exc){
    if(current===generation&&exc.name!=='AbortError'){

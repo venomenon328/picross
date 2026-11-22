@@ -1,6 +1,6 @@
 # Schritt 3: Rasterangebote
 
-**Version 0.8.0 · Dokumentrevision 10 · 17.11.2026 · PROD-SLIM**
+**Version 0.8.0 · Dokumentrevision 11 · 22.11.2026 · MONOV-P1**
 
 Pflicht: [Kern und Phasenroute](PUZZLE_AUTHORING.md#11-pflichtquellen-nach-phase),
 danach diese Phase und die dort zugeordnete Bildnorm. Zusätzlich:
@@ -53,8 +53,10 @@ Jeder angebotene freigabefähige Kandidat erfüllt vollständig:
 
 - Gültige Maße, Werte, Palette und Formate; regulär höchstens 50 je Achse.
   Tatsächliche Vordergrundzahl als len({v für v in allen Zellen, wenn v != EMPTY})
-  zählen; endgültige Palette, genaue Vorgabe und freigegebener Korridor passen.
-  Wunsch, Istzahl und Farbrollen nennen, nicht bloß Paletteinträge zählen.
+  zählen. Mono hat genau eine, Color zwei bis acht. Der explizite Modus,
+  die endgültige Palette und der freigegebene Korridor müssen dazu passen.
+  Ungenutzte Paletteinträge zählen nicht. Widersprüche offen melden und vor
+  erneuter Produktion klären.
 - Hinweise deterministisch aus exakt dieser Matrix. Gleichfarbige Folgeblöcke
   haben mindestens eine Leerzelle Abstand; verschiedenfarbige dürfen sich berühren.
 - Vollständige deduktive Lösung vom unbekannten Start, ohne vorgefüllte Zellen,
@@ -252,6 +254,12 @@ Schwierigkeit und echte Rasteransicht. Ein gemeinsamer aktueller Record bindet
 alle tatsächlich angebotenen Raster samt aktuellen Definitionen, Proofs,
 Bewertungen und Sichturteilen. Kein Einzelpaket/ZIP pro Angebot. Auswahl bindet
 die konkreten Inhaltsbytes nach [PW-B](../../tools/PW_B_CONTRACT.md).
+Für monochrome Angebote im aktuellen PW-B-Record ein Label mit Maßen, dem
+Modus „Monochrom“ und sichtbaren Motivmerkmalen formulieren, beispielsweise
+„19 × 13 · Monochrom · Aussparung und drei Bögen“. Konkrete Rasterfarbnamen und
+RGB-Angaben bleiben aus dem Label. Die Vorschau nach [PW-B](../../tools/PW_B_CONTRACT.md#rastervorschau-und-bindung)
+zeigt belegte Zellen schwarz und Leerzellen transparent. Ein gebundenes älteres
+Label bei beauftragter Korrektur redaktionell im aktuellen Record fortschreiben.
 Schritt 4 beginnt erst mit der tatsächlichen qualifizierten Rasterwahl.
 Ungewählte Angebote danach entfernen, sobald sie keine aktuelle Nutzung mehr
 haben. Keine automatische Auswahl nach Reihenfolge oder Dateinamen.

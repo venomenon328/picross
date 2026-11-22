@@ -135,6 +135,34 @@ class WorkPublicationTests(unittest.TestCase):
         self.assertFalse(self.assets)
         self.assertIsNone(guard.remote_head(self.root,'refs/tags/work-prod-pz-current'))
 
+    def test_publication_preserves_only_an_already_bound_legacy_mono_preview(self):
+        f = self.fixture
+        f.raster_ready()
+        definition = json.loads((f.input/'definition.json').read_bytes())
+        legacy = current.raster_preview(definition, mode='color')
+        f.job['rasters'][0]['preview'] = f.file('legacy.png', legacy)
+        with patch.object(current.Checked, 'check_new_previews'):
+            f.publish()
+        with self.assertRaisesRegex(ValueError, 'New mono raster preview'):
+            pub.push_job(self.root, 'pz-current', None)
+        self.assertIsNone(self.release)
+        with patch.object(current.Checked, 'check_new_previews'):
+            first = pub.push_job(self.root, 'pz-current', None)
+        _, _, original = self.record(first)
+        previous = original['rasters'][0]['preview']
+        f.job['rasters'][0]['label'] = '3 × 3 · Monochrom · Aussparungen'
+        f.publish()
+        second = pub.push_job(self.root, 'pz-current', first)
+        source, raw, record = self.record(second)
+        self.assertEqual(record['rasters'][0]['preview'], previous)
+        self.assertEqual(work_assets.read(previous, 1024), legacy)
+        projection = current.projection(record, raw)
+        facts = presentation.inspect(source, second, projection)
+        raster = next(a for a in projection['assets'] if a['id'] == 'raster-a')
+        self.assertEqual(presentation.asset_bytes(source, second, raster['location'],
+                                                  mode=facts['raster_modes']['raster-a']),
+                         current.raster_preview(definition, mode='mono'))
+
     def test_selection_prunes_only_the_superseded_physical_identity(self):
         from io import BytesIO
         from PIL import Image

@@ -77,13 +77,15 @@ class CurrentAuthoringTests(unittest.TestCase):
         self.job['selected']['reveal']='reveal-b';decide(self.job,'reveal')
         self.job['assets'].append(self.asset('motif-a','motif'));self.job['state']='motif_review';self.publish()
         self.assertFalse((self.root/'content/authoring/pz-current/data/reveal-a.png').exists())
-        parameters={'width':3,'height':3,'mode':self.incoming['entry']['mode'],'foreground_colors':len(json.loads((self.input/'definition.json').read_bytes())['palette']),
+        definition = json.loads((self.input/'definition.json').read_bytes())
+        mode = self.incoming['entry']['mode']
+        parameters={'width':definition['width'],'height':definition['height'],'mode':mode,'foreground_colors':len(definition['palette']),
                     'size_constraint':'exact','foreground_color_constraint':'exact'}
         self.job['parameters']={'proposed':[parameters],'approved':[parameters]}
         self.job['selected']['motif']='motif-a';decide(self.job,'motif');self.job['state']='raster_review';self.publish()
         raster={'id':'raster-a','label':'Qualified synthetic raster',
                 **{k:self.file(k+'.json',(self.input/self.incoming[k]['file']).read_bytes()) for k in ('definition','proof','difficulty')},
-                'preview':self.file('raster.png',current.raster_preview(json.loads((self.input/'definition.json').read_bytes()))),
+                'preview':self.file('raster.png',current.raster_preview(definition, mode=mode)),
                 'review':judgment(current.CRITERIA['raster']),'exceptions':[]}
         self.job.update(state='raster_ready',rasters=[raster]);self.publish()
 
@@ -190,6 +192,13 @@ class CurrentAuthoringTests(unittest.TestCase):
         self.input=make(self.work/'color-input',mode='color',colors=2)
         self.incoming=json.loads((self.input/'manifest.json').read_bytes())
         self.approved('standard')
+        from PIL import Image
+        preview = self.root/self.job['rasters'][0]['preview']['file']
+        with Image.open(preview) as decoded:
+            self.assertEqual(decoded.size, (36, 36))
+            self.assertEqual(decoded.getpixel((0, 0)), (32, 32, 32, 255))
+            self.assertEqual(decoded.getpixel((12, 0)), (221, 102, 0, 255))
+            self.assertEqual(decoded.getpixel((12, 12)), (0, 0, 0, 0))
         self.job['rasters'][0]['review']['Q-H01'].update(result='nicht erfüllt',accepted=True,reason='Explicit synthetic editorial exception')
         decide(self.job,'final');decide(self.job,'integration')
         for d in self.job['decisions']:
@@ -203,12 +212,17 @@ class CurrentAuthoringTests(unittest.TestCase):
 
     def test_current_helpers_publish_only_result_files(self):
         from tools.puzzle_production import current_tools
+        from PIL import Image
         definition=json.loads((self.input/'definition.json').read_bytes())
+        definition['palette'][0]['color'] = '000000'
         out=self.work/'current-raster'
         result=current_tools.raster(definition,out,mode='mono')
         self.assertTrue(result['certified'])
         self.assertEqual({p.name for p in out.iterdir()},{'definition.json','proof.json','difficulty.json','preview.png'})
         self.assertEqual(result['files']['proof'],content.ref('proof.json',(out/'proof.json').read_bytes()))
+        with Image.open(out/'preview.png') as preview:
+            self.assertEqual(preview.getpixel((0, 0)), (0, 0, 0, 0))
+            self.assertEqual(preview.getpixel((12, 0)), (0, 0, 0, 255))
 
     def test_background_only_uses_active_references_and_shared_editor(self):
         from io import BytesIO
@@ -230,7 +244,8 @@ class CurrentAuthoringTests(unittest.TestCase):
         source=LocalSource(self.root);raw=(self.root/current.path('pz-current')).read_bytes();view=current.projection(self.job,raw)
         facts=presentation.inspect(source,None,presentation.validate(view))
         self.assertEqual(facts['composition']['raster'],'active-raster')
-        preview=presentation.asset_bytes(source,None,next(a['location'] for a in view['assets'] if a['id']=='active-raster'))
+        preview=presentation.asset_bytes(source,None,next(a['location'] for a in view['assets'] if a['id']=='active-raster'),
+                                         mode=facts['raster_modes']['active-raster'])
         self.assertTrue(preview.startswith(b'\x89PNG'))
         self.job['selected']['background']='context-a';decide(self.job,'background');decide(self.job,'final');decide(self.job,'integration')
         self.job['state']='editorially_approved';self.publish()
@@ -295,6 +310,13 @@ class CurrentAuthoringTests(unittest.TestCase):
         out=self.work/'image-result';result=current_tools.image(source,design_path,out,puzzle_id='pz-current',name='Synthetic')
         self.assertEqual(len(result['candidates']),1)
         self.assertEqual({p.name for p in (out/design['variants'][0]['id']).iterdir()},{'definition.json','proof.json','difficulty.json','preview.png'})
+        design['mode'] = 'color'
+        design['palette'].append({'id': 'unused', 'rgb': '#ff5500'})
+        design_path.write_bytes(current.encoded(design))
+        invalid = self.work/'rejected'/'image-result'
+        with self.assertRaisesRegex(InvalidInput, 'Color foreground color count'):
+            current_tools.image(source, design_path, invalid, puzzle_id='pz-current', name='Synthetic')
+        self.assertFalse(invalid.parent.exists())
         bg_source=self.work/'bg-source.png';pixels=Image.new('RGBA',(12,4),(41,62,61,128));pixels.putpixel((0,0),(0,0,0,0));pixels.save(bg_source,format='PNG')
         bg=self.work/'prepared.png';current.prepare_background(bg_source,bg)
         with Image.open(bg) as prepared:self.assertEqual(prepared.size,(2304,768))
@@ -406,12 +428,43 @@ class CurrentAuthoringTests(unittest.TestCase):
             'derivation':{'cell_edits':False,'empty_edge_crop':[],'protected_features':[]}}
         self.job['parameters']={'approved':[corridor],'proposed':[corridor]};decide(self.job,'motif');self.publish()
 
-    def test_parameter_alternatives_preserve_one_color_color_assessment(self):
-        self.input=make(self.work/'one-color',mode='color',colors=1);self.incoming=json.loads((self.input/'manifest.json').read_bytes())
-        self.raster_ready();chosen=deepcopy(self.job['parameters']['approved'][0]);other={**chosen,'width':4,'height':4,'mode':'mono'}
-        self.job['parameters']={'approved':[other,chosen],'proposed':[other,chosen]};decide(self.job,'motif');self.publish()
-        checked=current.Checked(self.job,lambda n,limit:io.read(self.root,n,limit),technical=False)
-        self.assertEqual(checked.rasters['raster-a']['mode'],'color')
+    def test_color_one_rejected_in_parameters_draft_producer_and_checked(self):
+        from tools.puzzle_production import current_rating, current_tools
+        from tools.puzzle_production.contract import digest
+        self.raster_ready()
+        original = self.job['parameters']['approved'][0]
+        early = {k: v for k, v in original.items() if k != 'mode'}
+        self.job['parameters']['proposed'] = [early]
+        self.publish()
+        self.job['parameters']['proposed'] = [{**early, 'mode': 'color'}]
+        with self.assertRaisesRegex(InvalidInput, 'Color foreground color count'):
+            current.validate(self.job)
+        self.job['parameters']['proposed'] = [early]
+        self.job['parameters']['approved'] = [{**early, 'mode': 'color', 'foreground_colors': 2,
+                                               'foreground_color_constraint': 'approximate'}]
+        decide(self.job, 'motif')
+        self.job['state'] = 'raster_review'
+        self.job['rasters'][0]['difficulty'] = None
+        read = lambda n, limit: io.read(self.root, n, limit)
+        with self.assertRaisesRegex(InvalidInput, 'Color foreground color count'):
+            current.Checked(self.job, read, technical=False)
+        definition = json.loads((self.input/'definition.json').read_bytes())
+        for extra in ([], [{'id': 2, 'color': 'ff5500', 'symbol': 'B'}]):
+            data = {**definition, 'palette': definition['palette'] + extra}
+            out = self.work/'invalid'/'result'
+            with self.assertRaisesRegex(InvalidInput, 'Color foreground color count'):
+                current_tools.raster(data, out, mode='color')
+            self.assertFalse(out.parent.exists())
+            ref = self.file('color-one.json', current.encoded(data))
+            self.job['rasters'][0]['definition'] = ref
+            with self.assertRaisesRegex(InvalidInput, 'Color foreground color count'):
+                current.Checked(self.job, lambda n, limit: self.payload['color-one.json'] if n == ref['file']
+                                else read(n, limit), technical=False)
+        assessment = json.loads((self.input/'difficulty.json').read_bytes())
+        assessment['production_mode'] = 'color'
+        assessment['record_hash'] = digest({k: v for k, v in assessment.items() if k != 'record_hash'})
+        with self.assertRaisesRegex(InvalidInput, 'Color foreground color count'):
+            current_rating.validate(assessment, definition_bytes=(self.input/'definition.json').read_bytes())
 
     def test_raster_offer_rejects_swapped_preview_and_displays_definition(self):
         from io import BytesIO
@@ -428,7 +481,68 @@ class CurrentAuthoringTests(unittest.TestCase):
         asset=next(a for a in view['assets'] if a['id']=='raster-a')
         self.assertEqual(asset['location']['storage'],'definition')
         definition=json.loads((self.root/self.job['rasters'][0]['definition']['file']).read_bytes())
-        self.assertEqual(presentation.asset_bytes(LocalSource(self.root),None,asset['location']),current.raster_preview(definition))
+        facts = presentation.inspect(LocalSource(self.root), None, view)
+        self.assertEqual(presentation.asset_bytes(LocalSource(self.root), None, asset['location'],
+                                                  mode=facts['raster_modes']['raster-a']),
+                         current.raster_preview(definition, mode='mono'))
+
+    def test_neutral_preview_and_label_correction_preserve_legacy_bindings(self):
+        from io import BytesIO
+        from PIL import Image
+        from tools.puzzle_production import current_tools
+        from tools.production_workspace.repository import Repository, configure
+        from tools.production_workspace.server import Service
+
+        self.input = make(self.work/'brown-mono', mono_size=(19, 13), primary_rgb='632f18')
+        self.incoming = json.loads((self.input/'manifest.json').read_bytes())
+        self.raster_ready()
+        definition_raw = (self.input/'definition.json').read_bytes()
+        definition = json.loads(definition_raw)
+        legacy = current.raster_preview(definition, mode='color')
+        raster = self.job['rasters'][0]
+        raster['label'] = '19 × 13 · Braun mit freier Zeile'
+        raster['preview'] = self.file('old-raster.png', legacy)
+        with self.assertRaisesRegex(InvalidInput, 'New mono raster preview'):
+            self.publish()
+        # Seed the exact record and payload a predecessor already published.
+        with patch.object(current.Checked, 'check_new_previews'):
+            self.publish()
+        commit(self.root, 'legacy mono offer')
+        configure(self.root, self.work/'pw', refs=['main'])
+        service = Service(Repository(self.work/'pw'))
+        jid = service.listing()['jobs'][0]['id']
+        self.assertEqual(service.detail(jid)['offers'][0]['label'], raster['label'])
+        displayed, mime = service.picture(jid, 'raster-a')
+        self.assertEqual(mime, 'image/png')
+        with Image.open(BytesIO(displayed)) as image, Image.open(BytesIO(legacy)) as original:
+            self.assertEqual(image.size, (228, 156))
+            self.assertEqual(image.getpixel((12, 0)), (0, 0, 0, 0))
+            self.assertEqual(image.getpixel((12, 12)), (0, 0, 0, 255))
+            self.assertEqual(original.getpixel((12, 12)), (99, 47, 24, 255))
+            self.assertEqual(set(image.get_flattened_data()), {(0, 0, 0, 0), (0, 0, 0, 255)})
+        self.assertEqual((self.root/raster['preview']['file']).read_bytes(), legacy)
+
+        decisions = deepcopy(self.job['decisions'])
+        before = deepcopy(self.job['rasters'][0])
+        self.job['rasters'][0]['label'] = '19 × 13 · Monochrom · Freie Zeile'
+        self.publish()  # Editorial correction alone retains the legacy original.
+        self.assertEqual(self.job['rasters'][0]['preview'], before['preview'])
+        new = self.work/'neutral'
+        current_tools.raster(definition, new, mode='mono')
+        self.assertEqual((new/'definition.json').read_bytes(), definition_raw)
+        self.assertEqual((new/'preview.png').read_bytes(), displayed)
+        self.job['rasters'][0]['preview'] = self.file('neutral.png', displayed)
+        self.publish()
+        raw = (self.root/current.path('pz-current')).read_bytes()
+        view = current.projection(self.job, raw)
+        corrected = '19 × 13 · Monochrom · Freie Zeile'
+        self.assertEqual(view['offers'][0]['label'], corrected)
+        self.assertEqual(next(a['caption'] for a in view['assets'] if a['id'] == 'raster-a'), corrected)
+        self.assertIsNone(self.job['selected']['raster'])
+        self.assertEqual(self.job['decisions'], decisions)
+        for key in ('definition', 'proof', 'difficulty'):
+            self.assertEqual(self.job['rasters'][0][key], before[key])
+            self.assertEqual(content.ref(before[key]['file'], (self.root/before[key]['file']).read_bytes()), before[key])
 
     def test_background_context_is_hard_but_fine_detail_acceptance_is_allowed(self):
         self.background_offers();self.job['selected']['background']='context-0';self.job['state']='content_ready';decide(self.job,'background')

@@ -540,7 +540,7 @@ class Record:
         return self.asset_name(asset) is not None
 
 
-def asset_bytes(source, snapshot, loc):
+def asset_bytes(source, snapshot, loc, *, mode=None):
     commit = loc['commit'] if loc['commit'] is not None else snapshot
     if 'asset' in loc:
         from tools.puzzle_production import work_assets
@@ -551,7 +551,7 @@ def asset_bytes(source, snapshot, loc):
         if 'asset' not in loc:
             raw = bind(source.read(commit, loc['file'], 2 * JSON_LIMIT), loc)
         from tools.puzzle_production.current_authoring import raster_preview
-        return raster_preview(io.json_bytes(raw, 2 * JSON_LIMIT))
+        return raster_preview(io.json_bytes(raw, 2 * JSON_LIMIT), mode=mode)
     if loc['storage'] == 'repository':
         return bind(source.read(commit, loc['file'], 32 * JSON_LIMIT), loc)
     raw = source.read(commit, loc['container']['file'], ap.MAX_ZIP)
