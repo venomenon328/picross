@@ -1,10 +1,10 @@
 {
   "format": "development-ci-plan/v1",
   "issue": "https://github.com/venomenon328/picross/issues/700",
-  "package": "PZ-FUCHS-INTEGRATION",
+  "package": "PZ-FALAFEL-STEP-4",
   "modules": [],
-  "purpose": "Fuchs mit raster-a (18 × 22), reveal-c und background-a unter Säugetiere registrieren.",
-  "omitted": "Reine Rätselproduktion. Unabhängiger Proof, Endmatrix, Bildprofil und Lieferdaten sind im Produktionsweg geprüft. CI prüft Quellen und Paketplan ohne Player-Build.",
+  "purpose": "Die Rasterwahl raster-c binden und drei geprüfte Falafel-Kontextzeichnungen im Authoringstand background_review zur Auswahl vorlegen.",
+  "omitted": "Reine Authoringablage. Aktuelle Rasterbindung sowie Sichtung, Transparenz und Randabschluss der isolierten Originale sind Produktionsprüfungen. Die CI übernimmt den Quellen- und Plankern ohne Player-Build.",
   "test_changes": [],
   "core_change": null,
   "evidence": {
