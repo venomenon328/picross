@@ -1,0 +1,4 @@
+author: OpenAI ImageGen, im Produktionsauftrag durch Codex erstellt.
+changes: Zeichnerisch überarbeitete ImageGen-Fassung. Das vorgelegte PNG enthält die unveränderten Ausgabebytes.
+source: Eigene für diesen Auftrag generierte Kontextzeichnung, ohne externe Bildvorlage.
+usage_basis: Im Auftrag für Picross erzeugt und als Kontextangebot zur Veröffentlichung beauftragt.

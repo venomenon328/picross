@@ -1,0 +1,4 @@
+author: Generierte Originalillustration (OpenAI ImageGen), erstellt durch Codex im Auftrag.
+changes: Unveränderte PNG-Originalbytes aus der Bildgenerierung.
+source: Native Bildgenerierung in dieser Codex-Sitzung, ohne externe Bildvorlage.
+usage_basis: Für Picross in diesem Auftrag erzeugt. Die Veröffentlichung als Auswahlangebot ist beauftragt.

@@ -1,15 +1,11 @@
 {
   "format": "development-ci-plan/v1",
   "issue": "https://github.com/venomenon328/picross/issues/700",
-  "package": "PZ-MACARON-INTEGRATION",
+  "package": "PZ-IGEL-INTEGRATION",
   "modules": [],
-  "purpose": "Macaron mit dem gewählten 15 × 10-Farbraster, dem Himbeer-Vanille-Reveal und dem Dagashi-Laden mit Bonbonregal in den Spielkatalog aufnehmen.",
-  "omitted": "Reine Rätselproduktion. Endmatrix, unabhängiger Linienproof, Hinweisbefund, Bildableitung und gebundene Registrierung werden im Produktionsweg geprüft. Für den PR genügen Quellen- und Plankern.",
+  "purpose": "Igel mit dem gewählten 15 × 13-Monochromraster, Reveal und Obstwiesen-Hintergrund in den Spielkatalog der Säugetiere aufnehmen.",
+  "omitted": "Reine Rätselproduktion. Der unabhängige Linienproof, die Endmatrix, die gebundene Freigabe, die Bildableitung und die Registrierung werden im Produktionsweg geprüft. Der PR benötigt den Quellen- und Plankern.",
   "test_changes": [],
   "core_change": null,
-  "evidence": {
-    "mode": "none",
-    "purpose": null,
-    "expires": null
-  }
+  "evidence": {"mode": "none", "purpose": null, "expires": null}
 }
