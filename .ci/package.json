@@ -26,7 +26,7 @@
     {
       "path": "tools/test_game_installer.py",
       "disposition": "change-scoped",
-      "reason": "Der obligatorische PG-Startcheck bindet seine Fensterhelfer und OCR; PW-REST und die getrennte Update-Diagnose sind keine PG-Bauinputs."
+      "reason": "Der obligatorische PG-Startcheck bindet seine Fensterhelfer und OCR; PW-REST und die getrennte Update-Diagnose sind keine PG-Bauinputs. Der integrierte Katalog benötigt Wörterbuch und Lizenz auch im isolierten PG-Export."
     }
   ],
   "core_change": null,

@@ -47,7 +47,7 @@ RESOURCE_TYPES = {
 
 def runtime(path):
     if path in {'game/project.godot', 'game/export_presets.cfg', 'game/main.tscn',
-                'game/web/background_loader.js'}:
+                'game/web/background_loader.js', 'game/data/hyphenation/de-1996.deflate'}:
         return True
     return (path.startswith(('game/art/', 'game/book/', 'game/data/', 'game/model/', 'game/ui/'))
             and path not in OMITTED and not path.startswith('game/art/drawing/tidy-hand/')
