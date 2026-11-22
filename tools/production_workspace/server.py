@@ -13,6 +13,7 @@ import os
 import socket
 
 from tools.puzzle_production import authoring_package as ap, catalog_io as io
+from tools.puzzle_production import github_rest
 from . import presentation as p
 from .sources import LRU
 from .repository import ProductionRemoval
@@ -214,7 +215,8 @@ class Service:
     def detail(self, jid):
         job = self.job(jid)
         facts = p.inspect(job['_source'], job['commit'], job['_projection'])
-        self.views.put(('validated', job['commit'], io.checksum(p.data(job['_projection']))), b'1')
+        self.views.put(('validated', job['commit'], io.checksum(p.data(job['_projection']))),
+                       p.data(facts.get('raster_modes', {})))
         return {**job['_projection'], 'facts': facts, 'source': job['source'], 'commit': job['commit'],
                 'source_url': job.get('source_url'), 'branch': job['ref'],
                 'removal_unavailable': self.removal.availability(job),
@@ -227,15 +229,17 @@ class Service:
         ap.require(any(a['id'] == aid for a in projection['assets']), 'Unbekannte Bildkennung.')
         # detail validation must complete before ANY image resource is released.
         key = ('validated', job['commit'], io.checksum(p.data(projection)))
-        if self.views.get(key) is None:
-            self.detail(jid)
-            self.views.put(key, b'1')
+        modes = self.views.get(key)
+        if modes is None:
+            mode = self.detail(jid)['facts'].get('raster_modes', {}).get(aid)
+        else:
+            mode = p.parse(modes).get(aid)
         loc = next(a['location'] for a in projection['assets'] if a['id'] == aid)
-        cache_key = ('pw-reader-1', job['commit'], p.data(loc))
+        cache_key = ('pw-reader-1', job['commit'], p.data(loc), mode)
         raw = self.views.get(cache_key)
         self.metrics['image_requests'] += 1
         if raw is None:
-            raw = p.asset_bytes(job['_source'], job['commit'], loc)
+            raw = p.asset_bytes(job['_source'], job['commit'], loc, mode=mode)
             from tools.puzzle_production import current_authoring
             if job['_record'].get('format') in current_authoring.FORMATS:
                 current_authoring.image_info(raw,loc['file'],job['_record'])
@@ -409,6 +413,10 @@ class Handler(BaseHTTPRequestHandler):
             return self.reply(200, p.data(value), 'application/json; charset=utf-8')
         except (BrokenPipeError, ConnectionResetError, ConnectionAbortedError):
             pass  # A closed transport is not a source failure; finally releases the slots.
+        except github_rest.Failure as exc:
+            # 503 is reserved for the browser's local worker-slot retry loop.
+            status = {'rate_limit': 429, 'source': 404}.get(exc.kind, 502)
+            return self.reply(status, p.data({'error': str(exc), 'code': exc.kind}), 'application/json; charset=utf-8')
         except (ValueError, OSError, RuntimeError, KeyError, TypeError) as exc:
             # All errors are data; never include source URLs or a Python traceback.
             message = str(exc) if isinstance(exc, ValueError) else 'Quelle konnte nicht vollständig gelesen werden. Veröffentlichung prüfen und neu laden.'

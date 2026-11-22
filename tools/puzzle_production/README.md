@@ -1290,7 +1290,9 @@ python -m tools.puzzle_production.catalog_analysis analyze --input <work/provisi
 keine Freigabe. `analyze` ruft die eingefrorenen SD-A/SD-B-APIs auf und prüft das
 fertige Bundle vollständig. Den Produktionsmodus ausdrücklich aus dem geprüften
 Design übernehmen: Schema 2 allein unterscheidet Mono und Einfarb-Color nicht.
-Der Wrapper bindet den Modus an die analysierten Definitionsbytes in
+Der Wrapper prüft für neue Bewertungen den expliziten Modus anhand der
+tatsächlich benutzten Vordergrundfarben nach [ZA-1](../../docs/production/ZA1_ADAPTER.md#eingang-und-grenzen)
+und bindet ihn an die analysierten Definitionsbytes in
 `catalog-context.json`; das eingefrorene SD-B-Bundleformat bleibt unverändert.
 Schon vorhandene Bundles werden ausdrücklich importiert:
 

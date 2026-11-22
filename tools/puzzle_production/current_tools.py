@@ -8,6 +8,7 @@ import sys
 import tempfile
 from . import catalog_io as io, current_authoring as current, current_content as content
 from .authoring_package import require
+from .raster_parameters import require_color_count, used_foreground
 from .contract import Budget, Aborted
 from .background_contract import BackgroundError
 
@@ -19,7 +20,9 @@ def raster(definition, output, *, mode, profile='line', method='picross-difficul
     from .editor_raster import check_end
     raw=current.encoded(definition)
     definition,puzzle,_,_=catalog_rating.definition(raw)
-    require(mode in ('mono','color') and (mode!='mono' or len(puzzle.colors)==1), 'Invalid explicit raster mode')
+    used = used_foreground(definition['solution'])
+    require_color_count(mode, len(used))
+    require(used == {p['id'] for p in definition['palette']}, 'Palette must contain exactly used colors')
     require(profile in ('line','paired'), 'Invalid current proof profile')
     output=io.external(output);require(not output.exists(),'Current result output already exists')
     output.parent.mkdir(parents=True,exist_ok=True)
@@ -49,7 +52,7 @@ def raster(definition, output, *, mode, profile='line', method='picross-difficul
             rating=catalog_analysis.analyze_single(stage/'definition.json',work/'analysis',production_mode=mode,method=method,**arguments)
             (stage/'difficulty.json').write_bytes(current.encoded(current_rating.from_checked(rating)))
             rating_ref=content.ref('difficulty.json',(stage/'difficulty.json').read_bytes())
-        (stage/'preview.png').write_bytes(current.raster_preview(definition))
+        (stage/'preview.png').write_bytes(current.raster_preview(definition, mode=mode))
         refs={k:content.ref(name,(stage/name).read_bytes()) for k,name in
               (('definition','definition.json'),('proof','proof.json'),('preview','preview.png'))}
         refs['difficulty']=rating_ref
@@ -68,18 +71,22 @@ def image(source, design_path, output, *, puzzle_id, name, revision=1, profile='
     design=images.validate_design(io.json_bytes(design_raw,2*current.LIMIT));images.versions()
     require(design['width']<=50 and design['height']<=50,'Regular raster size exceeded')
     normal,_,_=images.normalize_bytes(raw,max_bytes=images.MAX_BYTES,max_axis=images.MAX_AXIS,max_pixels=images.MAX_PIXELS)
-    require(not output.exists(),'Current image output already exists');output.parent.mkdir(parents=True,exist_ok=True)
+    require(not output.exists(),'Current image output already exists')
+    candidates = []
+    for variant in design['variants']:
+        matrix = images.rasterize(normal, design, variant)
+        used = used_foreground(matrix, 'empty')
+        require_color_count(design['mode'], len(used))
+        candidates.append((variant['id'], matrix, used))
+    output.parent.mkdir(parents=True,exist_ok=True)
     with tempfile.TemporaryDirectory(prefix='.current-image-',dir=output.parent) as temporary:
         stage=Path(temporary)/'results';stage.mkdir();results=[]
-        for variant in design['variants']:
-            matrix=images.rasterize(normal,design,variant)
-            used={c for row in matrix for c in row if c!='empty'}
-            if not used: continue
+        for identifier, matrix, used in candidates:
             actual=deepcopy(design);actual['palette']=[p for p in actual['palette'] if p['id'] in used]
             logic=images.logic_from_matrix(matrix,actual)
             definition,_=authoring_inspection.definition({'puzzle_id':puzzle_id},actual,matrix,logic,name,revision,puzzle_id+'.png')
-            result=raster(definition,stage/variant['id'],mode=design['mode'],profile=profile,method=method)
-            results.append({'id':variant['id'],**result})
+            result=raster(definition,stage/identifier,mode=design['mode'],profile=profile,method=method)
+            results.append({'id':identifier,**result})
         require(io.read(source.parent,source.name,32*current.LIMIT)==raw and
                 io.read(design_path.parent,design_path.name,2*current.LIMIT)==design_raw,'Current image input changed')
         from .catalog_publication import rename

@@ -23,7 +23,7 @@ BACKGROUND = {
     '__init__', 'analysis_contract', 'analysis_io', 'authoring_package', 'background_contract', 'catalog_added',
     'catalog_background', 'catalog_io', 'catalog_method', 'catalog_rating',
     'categories', 'content_registry', 'contract', 'current_content', 'difficulty_identity',
-    'difficulty_rating', 'operation_diagnostics',
+    'difficulty_rating', 'github_rest', 'operation_diagnostics',
 }
 GAME_APP = {
     '__init__.py', 'assets/game.ico', 'build.py', 'inputs.py', 'inspect.py',

@@ -26,7 +26,8 @@ alte Jobs. Vorhandene WIP-Dateien werden durch diesen Auftrag nicht gelöscht.
 Bereits integrierte Inhalte, Spielstände, IDs, Rechte und kompakte historische
 Belege sind keine WIP-Kompatibilitätslast und bleiben unverändert.
 
-Die aktuellen Datenformen stehen im [PW-B-Vertrag](PW_B_CONTRACT.md).
+Die aktuellen Datenformen und der Bestandsschutz für bereits gebundene
+Mono-Vorschauen stehen im [PW-B-Vertrag](PW_B_CONTRACT.md#rastervorschau-und-bindung).
 Der getrennte [Bestandseditor](PUZZLE_EDITOR.md) bearbeitet vorhandene Spielinhalte;
 der Assistent erstellt keine konkurrierenden Inhaltswriter.
 
@@ -57,8 +58,9 @@ Schemafelder als Hauptoberfläche.
   werden, sind aber keine Pflichtfelder der Abschlussbilderzeugung.
   Das eigene optionale Feld für Motivhinweise gelangt unverändert in den ersten
   Auftrag. Die optionalen Rastervorgaben unterscheiden Breite/Höhe in Zellen,
-  Genauigkeit der ausgefüllten Achsen, Modus und bei Farbrätseln die Anzahl der Vordergrundfarben
-  mit eigener Genauigkeit. Wünsche werden im Motivbriefing des Produktionsauftrags
+  Genauigkeit der ausgefüllten Achsen, Modus und die Vordergrundfarbzahl mit
+  eigener Genauigkeit. Die Farbzahl lässt sich auch bei offenem Modus vorgeben.
+  Wünsche werden im Motivbriefing des Produktionsauftrags
   festgehalten. Bei der Abschlussbildauswahl für den Motivauftrag lassen sie sich
   konkretisieren. Breite und Höhe sind unabhängig: keine, nur eine oder beide
   Achsen sind frühe Wünsche. Offene Achsen passend zum Motiv bestimmen, niemals
@@ -268,13 +270,15 @@ Mainstands aus und authentifiziert seine PR-Prüfungen mit diesem Token.
 Unter der gemeinsamen Katalogsperre prüft er erneut Main, Arbeitsref, offene
 und geschlossene PRs, Record, Indexdelta, Release-ID, Tag und zugehörige
 Asset-IDs. Nach dem gezielten Releaseabbau quittiert er am Auftragsref.
-PW benötigt lokal ausschließlich Git und liest öffentliche API-Daten weiterhin
-anonym. Die Worker-Authentifizierung wird mit dem Workflow auf main wirksam
+PW verwendet für Git die vorhandene Git-/SSH-Anmeldung und für öffentliche
+Repository- und PR-Abfragen den unten beschriebenen optionalen REST-Zugang.
+Die Worker-Authentifizierung wird mit dem Workflow auf main wirksam
 und erfordert für PW-Installationen mit v2-Entfernung kein neues MSI.
 
-PW wartet bis zu vier Minuten, wiederholt seine Vorprüfung und liest die
-öffentliche Release-ID und den Tagnamen zurück. Nach bestätigtem Fehlen entfernt
-der Client Arbeitsref, vorhandenen gebundenen Tag und Quittung gemeinsam per
+PW wartet bis zu vier Minuten, wiederholt seine Vorprüfung und prüft anonym
+die öffentliche Release-ID und den Tagnamen auf Abwesenheit. So kann ein vom
+Tokenzugriff abhängiges HTTP 404 keine Entfernung bestätigen. Nach bestätigtem
+Fehlen entfernt der Client Arbeitsref, vorhandenen gebundenen Tag und Quittung gemeinsam per
 atomarem Lease-Push und prüft das Ergebnis. Bei Ablehnung, abgelaufenem Auftrag
 oder unbekanntem Ausgang die Quellen aktualisieren und denselben Job neu
 vorprüfen und bestätigen. Bis zum letzten Push bleibt der Arbeitsref erhalten.
@@ -302,6 +306,29 @@ P2-T01–T03-Nachweise; ausschließlich synthetische Testrefs dürfen dafür ent
 Die nicht gelieferten P2-Browser-/PNG-/A01-Gates wurden durch die
 [Eigentümerentscheidung](https://github.com/venomenon328/picross/pull/590#issuecomment-6809311950)
 aufgehoben. P3-Paketierung und deren neue Nachweise bleiben separat.
+
+### Optionaler REST-Zugang unter Windows
+
+Die Windows-EXE übernimmt beim Start das vorhandene `GH_TOKEN`, ersatzweise
+`GITHUB_TOKEN`. Sind beide Werte in ihrer Prozessumgebung leer, liest sie diese
+Benutzervariablen aus dem aktuellen Windows-Benutzerprofil. Das gilt auch beim
+Wiederanlauf durch den getrennten Updatehelfer. Ohne Token bleiben öffentliche
+Abfragen anonym. Ein geänderter Wert gilt nach vollständigem Beenden und
+erneutem Start.
+
+Der Wert bleibt flüchtig im Prozess. Der Assistent entfernt beide Variablen
+vor dem Start von Browser, Git oder Updatehelfer aus seiner Prozessumgebung.
+Gesendet wird der Token als Bearer-Header ausschließlich bei den festen
+HTTPS-REST-GETs an `api.github.com` für Originalmetadaten, Repository-/PR-Daten
+und den [Updatekatalog](PRODUCTION_UPDATES.md). API-Redirects werden abgewiesen.
+Browser- und Assetdownloads laufen ohne Token. Browser, Prompts, Logs und
+gespeicherter Arbeitszustand enthalten den Wert nicht.
+
+Rate-Limits, Anmelde-/Zugriffsfehler und technische Abrufstörungen werden als
+solche angezeigt. Ein authentifiziertes 404 kann auch fehlenden Zugriff
+bedeuten. Nachgewiesene fehlende Quellen oder abweichende Originalbindungen
+bleiben Quellenfehler. Bei einem nicht bestätigten PR- oder Releasebefund bleibt
+die Entfernung gesperrt.
 
 ### 4.5 P3 · Instanz, Origin und geordneter Stop
 
@@ -381,6 +408,10 @@ bei reiner Hintergrundpflege wird aus der aktiven Definition nur für den Abruf
 gerendert; keine neue Produktionsdatei oder Bildkopie.
 
 ## 6. Geschlossener Sichtvertrag
+
+Aktuelle Rasterkachel und Großansicht verwenden dieselbe PNG-Ableitung aus
+Definition und geprüftem Modus nach [PW-B](PW_B_CONTRACT.md#rastervorschau-und-bindung).
+Die Angebotsüberschrift in beiden Ansichten stammt aus dem gebundenen Label.
 
 Der Reader vergleicht die ganze abgeleitete Ansicht mit dem kanonischen aktuellen
 Record und den tatsächlichen aktiven Datei-/Inhaltsbindungen. Fremde Angebote,

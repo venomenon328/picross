@@ -8,7 +8,7 @@ from tools.puzzle_production import catalog_integration as core,catalog_method a
 from tools.puzzle_production import catalog_rating as rating,catalog_added as added,current_content as content
 from tools.puzzle_production import content_registry as registry,catalog_transaction as tx,catalog_metadata as metadata
 from tools.puzzle_production import editor_cli,catalog_background_change as images
-from tools.puzzle_production.contract import digest
+from tools.puzzle_production.contract import InvalidInput, digest
 
 
 class CurrentConsumerTests(unittest.TestCase):
@@ -25,16 +25,37 @@ class CurrentConsumerTests(unittest.TestCase):
         self.assertEqual(before,fingerprints(self.root))
         return plan
 
-    def test_activation_new_one_color_and_multicolor_keep_existing_rating_and_dates(self):
+    def test_activation_and_new_color_keep_existing_rating_and_dates(self):
         original=(self.root/rating.path('pz-current')).read_bytes()
         date=(self.root/added.path('pz-current')).read_bytes()
         self.activate()
-        for count in (1,2):
-            source=make(self.work/str(count),identifier='pz-color-'+str(count),mode='color',colors=count,method=method.NEW)
-            self.assertEqual(core.integrate(source,self.root,apply=True)['status'],'registered')
+        source=make(self.work/'color',identifier='pz-color-two',mode='color',colors=2,method=method.NEW)
+        self.assertEqual(core.integrate(source,self.root,apply=True)['status'],'registered')
         self.assertEqual((self.root/rating.path('pz-current')).read_bytes(),original)
         self.assertEqual((self.root/added.path('pz-current')).read_bytes(),date)
         registry.check_checkout(self.root)
+
+    def test_first_registration_rejects_color_one_before_writing(self):
+        source = make(self.work/'mono', identifier='pz-invalid-color', method=method.NEW)
+        manifest = json.loads((source/'manifest.json').read_bytes())
+        manifest['entry']['mode'] = 'color'
+        definition = json.loads((source/'definition.json').read_bytes())
+        before = fingerprints(self.root)
+        for extra in ([], [{'id': 2, 'color': 'ff5500', 'symbol': 'B'}]):
+            manifest['definition'] = json_file(source, 'definition.json',
+                                              {**definition, 'palette': definition['palette'] + extra})
+            json_file(source, 'manifest.json', manifest)
+            for apply in (False, True):
+                with self.assertRaisesRegex(InvalidInput, 'Color foreground color count'):
+                    core.integrate(source, self.root, apply=apply)
+                self.assertEqual(fingerprints(self.root), before)
+        # A mode already bound to registered history remains readable.
+        rating_file = self.root/rating.path('pz-current')
+        historical = json.loads(rating_file.read_bytes())
+        historical['production_mode'] = 'color'
+        historical['record_hash'] = digest({k: v for k, v in historical.items() if k != 'record_hash'})
+        original = (self.source/'definition.json').read_bytes()
+        self.assertEqual(rating.validate(historical, definition_bytes=original)['production_mode'], 'color')
 
     def test_current_preview_adopt_repeat_and_source_change_guard(self):
         self.activate();output=self.work/'preview'

@@ -27,7 +27,7 @@ Ein Verzeichnis enthält `manifest.json` und die darin referenzierten aktuellen 
 
 Ein Ref enthält exakt `file,bytes,sha256`: sicherer relativer Dateipfad, positive tatsächliche Länge und SHA-256. Keine Links/Aliase, Pfadtraversierung, Gerätepfade oder versteckte Quellenauflösung. Die Definition ist höchstens 2 MiB, das Manifest 1 MiB, Proof 64 MiB, ein Bild 32 MiB und ein Textbeleg 64 KiB. UTF-8 und geschlossene JSON-Formen gelten. Export kopiert ausschließlich referenzierte Dateien und prüft den geschriebenen Eingang vollständig.
 
-Definition und Modus müssen zusammenpassen: Mono hat genau eine benutzte Farbe, Color bleibt auch mit einer Farbe Color. Die Palette enthält genau die benutzten Farben; Hinweise und Lösungsmatrix sind konsistent. Finale Revealadresse und Name stimmen mit Entry/Metadaten überein. Ein unabhängiger Verifier bestätigt vollständige Deduktion und exakt das finale Raster. Vorhandene gültige Nachweise benutzen; keine erneute Suchproduktion allein zur Herkunftszulassung.
+Definition und Modus müssen zusammenpassen: Mono hat genau eine benutzte Vordergrundfarbe, Color zwei bis acht. Gezählt werden die unterschiedlichen belegten Zellwerte. Ein ungenutzter Paletteintrag zählt nicht. Widersprüche stoppen Export, Planung und Erstregistrierung vor Schreiboperationen. Die Palette enthält genau die benutzten Farben; Hinweise und Lösungsmatrix sind konsistent. Finale Revealadresse und Name stimmen mit Entry/Metadaten überein. Ein unabhängiger Verifier bestätigt vollständige Deduktion und exakt das finale Raster. Vorhandene gültige Nachweise benutzen; keine erneute Suchproduktion allein zur Herkunftszulassung.
 
 ## Rechte, Bildqualität und tatsächliche Entscheidung
 

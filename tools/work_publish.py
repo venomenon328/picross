@@ -140,6 +140,7 @@ def publish_locked(root, job, expected, main, checked):
                 'Current work scope or budget changed')
         if any(draft['budgets']['limits'][k] > v for k,v in previous['budgets']['limits'].items()):
             require(any(d['scope'] == 'budget' for d in draft['decisions']), 'Budget increase lacks approval')
+    checked.check_new_previews(previous)
     rows, elapsed = catalog()
     release = release_for(rows, tag)
     old = {r['sha256']:r for r in current.references(previous) if 'asset' in r} if previous else {}

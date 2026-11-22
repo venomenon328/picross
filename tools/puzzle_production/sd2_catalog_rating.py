@@ -150,6 +150,9 @@ def validate(value, *, active=True, definition_bytes=None, production_mode=None)
     compact(value["compact_analysis"])
     require(value["compact_analysis"]["analysis_hash"] == value["logic_binding"]["analysis_hash"], "Wrong SD2 normalized logic binding")
     rating(value["rating"], value["compact_analysis"], value["current_source"]["id"])
+    if not active:
+        from .raster_parameters import require_color_count, used_foreground
+        require_color_count(value["production_mode"], value["compact_analysis"]["structure"]["colors"])
     a = value
     if active:
         integer(value["rating_revision"], 1, 1000000, "rating revision")
@@ -165,10 +168,14 @@ def validate(value, *, active=True, definition_bytes=None, production_mode=None)
     common.tool(a["tool"], version=2)
     common.check_hash(value, "record_hash" if active else "checked_hash")
     if definition_bytes is not None:
-        _, puzzle, source, binding = common.definition(definition_bytes, method=METHOD_ID)
+        data, puzzle, source, binding = common.definition(definition_bytes, method=METHOD_ID)
         require(source == value["current_source"] and binding == value["logic_binding"] and
                 value["rating"]["source"]["engine_logic_hash"] == puzzle.logic_hash, "Stale SD2 source/logic/matrix binding")
-        require(value["production_mode"] != "mono" or len(puzzle.colors) == 1, "Mono mode requires one foreground color")
+        if not active:
+            require_color_count(value["production_mode"], len(used_foreground(data["solution"])))
+        else:
+            require(value["production_mode"] != "mono" or len(puzzle.colors) == 1,
+                    "Mono mode requires one foreground color")
         from .sd2_profiles import structure as expected_structure
         require(value["compact_analysis"]["structure"] == expected_structure(puzzle), "Wrong SD2 definition workload")
         if value["compact_analysis"]["r4"]:

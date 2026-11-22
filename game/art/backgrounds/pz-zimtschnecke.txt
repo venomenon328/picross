@@ -1,0 +1,4 @@
+author: OpenAI ImageGen (KI-Generierung im Codex-Auftrag)
+changes: Eigenständig neu komponierte Fassung nach Format- und Transparenzsichtung; erzeugte PNG-Bytes unverändert. Gewähltes Original background-b (SHA-256 fbb60148e6308cd979908724d50408aab530806b102cfd97f97160b25ffd57ec). Technische proportionale HG31-Ableitung von 2172 × 724 auf 2304 × 768, mit unveränderter Zeichnung und Komposition.
+source: Native transparente Bildgenerierung aus dem Kontextbriefing ohne Fremdvorlage.
+usage_basis: Im Rätselauftrag erzeugte Kontextzeichnung zur Veröffentlichung als Auswahloriginal.

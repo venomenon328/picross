@@ -135,6 +135,34 @@ class WorkPublicationTests(unittest.TestCase):
         self.assertFalse(self.assets)
         self.assertIsNone(guard.remote_head(self.root,'refs/tags/work-prod-pz-current'))
 
+    def test_publication_preserves_only_an_already_bound_legacy_mono_preview(self):
+        f = self.fixture
+        f.raster_ready()
+        definition = json.loads((f.input/'definition.json').read_bytes())
+        legacy = current.raster_preview(definition, mode='color')
+        f.job['rasters'][0]['preview'] = f.file('legacy.png', legacy)
+        with patch.object(current.Checked, 'check_new_previews'):
+            f.publish()
+        with self.assertRaisesRegex(ValueError, 'New mono raster preview'):
+            pub.push_job(self.root, 'pz-current', None)
+        self.assertIsNone(self.release)
+        with patch.object(current.Checked, 'check_new_previews'):
+            first = pub.push_job(self.root, 'pz-current', None)
+        _, _, original = self.record(first)
+        previous = original['rasters'][0]['preview']
+        f.job['rasters'][0]['label'] = '3 × 3 · Monochrom · Aussparungen'
+        f.publish()
+        second = pub.push_job(self.root, 'pz-current', first)
+        source, raw, record = self.record(second)
+        self.assertEqual(record['rasters'][0]['preview'], previous)
+        self.assertEqual(work_assets.read(previous, 1024), legacy)
+        projection = current.projection(record, raw)
+        facts = presentation.inspect(source, second, projection)
+        raster = next(a for a in projection['assets'] if a['id'] == 'raster-a')
+        self.assertEqual(presentation.asset_bytes(source, second, raster['location'],
+                                                  mode=facts['raster_modes']['raster-a']),
+                         current.raster_preview(definition, mode='mono'))
+
     def test_selection_prunes_only_the_superseded_physical_identity(self):
         from io import BytesIO
         from PIL import Image
@@ -299,7 +327,8 @@ class WorkPublicationTests(unittest.TestCase):
                 if in_worker:
                     worker_pages.append(req.full_url)
                     if len(worker_pages) == fail_at:
-                        raise HTTPError(req.full_url, 403, 'rate limit exceeded', {}, None)
+                        raise HTTPError(req.full_url, 403, 'rate limit exceeded',
+                                        {'X-RateLimit-Remaining': '0'}, None)
                 value = worker_prs if in_worker else []
             elif endpoint == '':
                 value = {**actor, 'private': False}
@@ -330,7 +359,7 @@ class WorkPublicationTests(unittest.TestCase):
         self.assertTrue(shutil.which('git'))
         self.assertIsNone(shutil.which('gh'))
         self.enterContext(patch.object(pw, 'github_identity', side_effect=lambda url: url == self.remote))
-        self.enterContext(patch.object(pw, 'build_opener', return_value=SimpleNamespace(open=open_api)))
+        self.enterContext(patch.object(pw.github_rest, 'build_opener', return_value=SimpleNamespace(open=open_api)))
 
         def worker():
             nonlocal in_worker
@@ -359,7 +388,7 @@ class WorkPublicationTests(unittest.TestCase):
         if not lose_delete_reply:
             for fail_at in (1, 2):
                 with self.subTest(failed_pr_check=fail_at):
-                    reject_worker('GitHub-Status nicht prüfbar')
+                    reject_worker('GitHub-Anfragelimit erreicht')
                     self.assertEqual(len(worker_pages), fail_at)
             fail_at = None
             for state, head, error in (

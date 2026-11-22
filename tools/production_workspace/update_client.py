@@ -1,6 +1,7 @@
-"""Bounded anonymous public GitHub channel. No installer or browser API here."""
+"""Bounded reads from the public GitHub update channel."""
 from io import BytesIO
 from tools.app_products import PW
+from tools.puzzle_production import github_rest
 import hashlib
 import re
 import threading
@@ -61,17 +62,22 @@ class Redirects(urllib.request.HTTPRedirectHandler):
 
 
 class Transport:
-    def __init__(self):
-        # No environment proxies, .netrc, cookies, credentials or private token.
+    def __init__(self, *, use_workspace_token=False):
+        self.use_workspace_token = use_workspace_token
+        # Downloads use a credential-free transport with pinned redirects.
         self.opener = urllib.request.build_opener(urllib.request.ProxyHandler({}), Redirects())
 
     def transfer(self, url, output, limit, cancel, deadline, *, expected=None, received=None):
         require(url.startswith(API + '?') or url.startswith(DOWNLOAD), 'Foreign channel')
         allowed_url(url, initial=url)
         checkpoint(cancel, deadline)
-        request = urllib.request.Request(url, headers={'Accept': 'application/vnd.github+json' if url.startswith(API + '?') else 'application/octet-stream',
-            'User-Agent': 'Picross-ProductionWorkspace-Updater', 'Accept-Encoding': 'identity'})
-        with self.opener.open(request, timeout=min(10, max(0.1, deadline - time.monotonic()))) as response:
+        api = url.startswith(API + '?')
+        headers = {'Accept': 'application/vnd.github+json' if api else 'application/octet-stream',
+                   'User-Agent': 'Picross-ProductionWorkspace-Updater', 'Accept-Encoding': 'identity'}
+        timeout = min(10, max(0.1, deadline - time.monotonic()))
+        connection = (github_rest.open_api(url, headers, timeout=timeout, use_workspace_token=self.use_workspace_token)
+                      if api else self.opener.open(urllib.request.Request(url, headers=headers), timeout=timeout))
+        with connection as response:
             final = response.geturl()
             allowed_url(final, initial=url if final == url else None)
             require(response.status == 200 and response.headers.get('Content-Encoding', 'identity') == 'identity',
@@ -145,7 +151,7 @@ def release_assets(row):
 
 
 def discover(local_version, cancel, *, transport=None, installation=None, app=PW):
-    return _discover(local_version, cancel, transport or Transport(),
+    return _discover(local_version, cancel, transport or Transport(use_workspace_token=app == PW),
                      lambda raw, sig: verifier.verify_metadata(raw, sig, app=app),
                      installation=installation, app=app)
 

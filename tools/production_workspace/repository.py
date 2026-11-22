@@ -8,12 +8,11 @@ import re
 import subprocess
 import threading
 from time import monotonic, sleep
-from urllib.error import HTTPError
 from urllib.parse import urlsplit
 from urllib.parse import urlencode
-from urllib.request import Request, build_opener, HTTPRedirectHandler
 
 from tools.puzzle_production import authoring_package as ap, catalog_io as io
+from tools.puzzle_production import github_rest
 from tools.puzzle_production.authoring_builder import index_value
 from tools.puzzle_production.contract import exact_keys
 from .sources import git, GitSource, INDEX, JSON_LIMIT, LRU, check_commit
@@ -33,29 +32,22 @@ def github_identity(url):
         r'venomenon328/picross(?:\.git)?', url or ''))
 
 
-class NoRedirect(HTTPRedirectHandler):
-    def redirect_request(self, *_args, **_kwargs):
-        return None
-
-
 def github_get(path, *, missing=False, token=None):
-    """Read the fixed GitHub repository without redirects or credential discovery."""
+    """Read public repository facts. A token-scoped 404 cannot prove absence."""
     headers = {'Accept': 'application/vnd.github+json',
                'User-Agent': 'Picross-Production-Workspace',
                'X-GitHub-Api-Version': '2022-11-28'}
-    if token is not None:
-        headers['Authorization'] = 'Bearer ' + token
+    token = None if missing else token
     try:
-        request = Request('https://api.github.com/repos/venomenon328/picross' + path,
-                          headers=headers)
-        with build_opener(NoRedirect).open(request, timeout=10) as response:
+        with github_rest.open_api(github_rest.API + path, headers, timeout=10,
+                                  use_workspace_token=not missing, token=token) as response:
             return p.parse(response.read(8 * JSON_LIMIT + 1), 8 * JSON_LIMIT)
-    except HTTPError as exc:
-        if missing and exc.code == 404:
+    except github_rest.Failure as exc:
+        if missing and exc.status == 404:
             return None
-        raise ap.InvalidInput('GitHub-Status nicht prüfbar (HTTP-Fehler). Entfernung gesperrt.') from exc
-    except (ValueError, OSError) as exc:
-        raise ap.InvalidInput('GitHub-Status nicht prüfbar (Zugang, Rate-Limit oder Netzwerk). Entfernung gesperrt.') from exc
+        raise github_rest.Failure(exc.kind, str(exc) + ' Entfernung gesperrt.', exc.status) from None
+    except ValueError:
+        raise ValueError('GitHub-Antwort ist ungültig. Entfernung gesperrt.') from None
 
 
 REMOVAL_PREFIX = 'work-prod-control/remove/'

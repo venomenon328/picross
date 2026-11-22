@@ -1,0 +1,4 @@
+author: OpenAI ImageGen (KI-Generierung im Codex-Auftrag)
+changes: Unverändertes generiertes RGBA-PNG.
+source: Native Bildgenerierung aus dem textlichen Motivbriefing ohne Fremdvorlage.
+usage_basis: Für diesen Rätselauftrag erzeugte Illustration zur Veröffentlichung als Auswahloriginal.

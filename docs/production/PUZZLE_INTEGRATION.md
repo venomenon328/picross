@@ -16,7 +16,7 @@ Finale Definition, Hinweise, Palette, expliziter Modus, aktuelles Reveal, Hinter
 
 ## Inhaltsautorität und Zugriffsgrenze
 
-`content/registry.json` verwendet `picross-content-registry-v5`: exakt `format,entries,metadata,backgrounds`. Jeder Entry enthält exakt `id,key,save_slot,definition,reveal,visible,mode,category_id`. `mode` ist ausdrücklich `mono|color`; einfarbiges Color bleibt Color. `production` und Paket-/Receiptfelder entfallen. Die sortierten Metadaten und Hintergrundrefs führen alle IDs genau einmal.
+`content/registry.json` verwendet `picross-content-registry-v5`: exakt `format,entries,metadata,backgrounds`. Jeder Entry enthält exakt `id,key,save_slot,definition,reveal,visible,mode,category_id`. `mode` ist ausdrücklich `mono|color`; die Erstintegration prüft die Zahl der tatsächlich benutzten Vordergrundfarben nach ZA-1 vor jeder Schreiboperation. Bestehende registrierte Einträge behalten ihren gebundenen Modus. `production` und Paket-/Receiptfelder entfallen. Die sortierten Metadaten und Hintergrundrefs führen alle IDs genau einmal.
 
 Aktuelle Reveal-/Hintergrundsources verwenden v6/v7 und enthalten `format,id,record_revision,binding,current,record_hash`. `binding` enthält ausschließlich `identity`: `key,save_slot,definition` als Ref und `runtime_revision`. `current` enthält `image_revision,asset`, beim Hintergrund zusätzlich `status=selected|none|standard`. Ein Ref hat `file,bytes,sha256`. Die Revealquelle bindet zusätzlich `catalog` nach [Revealtechnik](REVEAL_TRANSPARENCY.md). Der `record_hash` ist der kanonische Hash aller übrigen Felder. PNG/SVG-Reveal und ausgewähltes Hintergrund-PNG bleiben durch aktuelle Bytes gebunden. Notices erhalten die benötigten Rechte.
 

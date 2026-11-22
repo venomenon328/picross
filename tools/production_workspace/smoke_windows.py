@@ -215,7 +215,7 @@ def raster_fixture(repo, root):
         raster = {'id': 'raster-a', 'label': 'Synthetisches Raster',
                   **{key: put(repo, prefix + key + '.json', (fixture / incoming[key]['file']).read_bytes())
                      for key in ('definition', 'proof', 'difficulty')},
-                  'preview': put(repo, prefix + 'preview.png', current.raster_preview(definition)),
+                  'preview': put(repo, prefix + 'preview.png', current.raster_preview(definition, mode='mono')),
                   'review': judgment(current.CRITERIA['raster']), 'exceptions': []}
         parameters = {'width': 3, 'height': 3, 'mode': 'mono', 'foreground_colors': 1,
                       'size_constraint': 'exact', 'foreground_color_constraint': 'exact'}

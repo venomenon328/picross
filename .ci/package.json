@@ -3,8 +3,8 @@
   "issue": "https://github.com/venomenon328/picross/issues/700",
   "package": "PZ-HALO-HALO-RASTERSICHTUNG",
   "modules": [],
-  "purpose": "Buildfreie Sichtung der beiden verifizierten Halo-Halo-Rasterentwürfe in Schritt 3 nach Authoring 0.8.0.",
-  "omitted": "Der Draft verweist auf den aktuellen PW-B-Record. Linienproofs, Schwierigkeitsbewertungen und Raster- und Hinweissichtung gehören in den Produktionsweg. Die CI prüft den Quellenstand und Paketplan ohne Player-Build und Zusatzmodule.",
+  "purpose": "Buildfreie Sichtung der Halo-Halo-Konturkorrektur in Schritt 3 nach Authoring 0.8.0.",
+  "omitted": "Der Draft verweist auf den aktuellen PW-B-Record. Randprüfung, Linienproof, Endmatrix, Schwierigkeit und Sichtprüfung gehören in den Produktionsweg. Die CI prüft Quellen und Paketplan ohne Zusatzmodule und ohne Player-Build.",
   "test_changes": [],
   "core_change": null,
   "evidence": {

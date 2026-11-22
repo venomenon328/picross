@@ -38,12 +38,16 @@ def approve(root,value):
     return value
 
 
-def make(root,*,identifier="pz-current",mode="mono",background="standard",method="picross-difficulty-0.3",colors=1):
+def make(root,*,identifier="pz-current",mode="mono",background="standard",method="picross-difficulty-0.3",colors=1,
+         mono_size=(3, 3), primary_rgb="202020"):
+    width, height = mono_size if colors == 1 else (3, 3)
     root.mkdir(parents=True,exist_ok=True)
-    matrix=[[0,1,0],[1,1,1],[1,1,1]] if colors==1 else [[1,2,1],[2,1,2],[1,2,1]]
+    matrix=[[0,1,0],[1,1,1],[1,1,1]] if colors==1 else [[1,2,1],[2,0,2],[1,2,1]]
+    if mono_size != (3, 3) and colors == 1:
+        matrix = [[0] * width] + [[1] * width for _ in range(height - 1)]
     from tools.puzzle_production.editor_raster import clues
-    data={"schema":2,"id":identifier,"revision":1,"width":3,"height":3,
-          "palette":[{"id":1,"color":"202020","symbol":"A"}]+([{ "id":2,"color":"DD6600","symbol":"B"}] if colors==2 else []),"solution":matrix,
+    data={"schema":2,"id":identifier,"revision":1,"width":width,"height":height,
+          "palette":[{"id":1,"color":primary_rgb,"symbol":"A"}]+([{ "id":2,"color":"DD6600","symbol":"B"}] if colors==2 else []),"solution":matrix,
           "rows":[clues(r) for r in matrix],"columns":[clues(r) for r in zip(*matrix)],
           "reveal":{"definition_id":identifier,"image":"res://art/content/"+identifier+".png","name":"Synthetic","version":1}}
     definition=json_file(root,"definition.json",data)
@@ -51,7 +55,7 @@ def make(root,*,identifier="pz-current",mode="mono",background="standard",method
     # Analyzer is a fixture producer, never called by the integration consumer.
     checked=catalog_analysis.analyze_single(root/"definition.json",root/"analysis",production_mode=mode,method=method)
     difficulty=json_file(root,"difficulty.json",current_rating.from_checked(checked))
-    stream=BytesIO();Image.new("RGBA",(12,12),(30,30,30,255)).save(stream,format="PNG")
+    stream=BytesIO();Image.new("RGBA",(width*4,height*4),(30,30,30,255)).save(stream,format="PNG")
     asset=put(root,"reveal.png",stream.getvalue())
     notice=put(root,"notice.txt",b"Author: synthetic test. Usage basis: repository test pixels.\n")
     rights={"author":"synthetic test","usage_basis":"repository test pixels","source":"synthetic test","changes":"synthetic test"}
