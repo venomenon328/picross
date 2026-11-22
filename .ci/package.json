@@ -1,35 +1,12 @@
 {
   "format": "development-ci-plan/v1",
-  "issue": "https://github.com/venomenon328/picross/issues/821",
-  "package": "SYNC-A",
-  "modules": [
-    "sync.server"
-  ],
-  "purpose": "Isolierten FastAPI-/PostgreSQL-Dienst mit zwei technischen Clients einschließlich Konkurrenz, Wiederholung und Restore prüfen.",
-  "omitted": "Spielbedienung, Browser, öffentliche Proxy-/TLS-Bindung und Livebetrieb folgen in SYNC-B/C. Keine tools-Gesamtsuite, preflight-, native.*, production.*-, delivery- oder Chromium-Module.",
-  "test_changes": [
-    {
-      "path": "tools/test_ci_modular.py",
-      "disposition": "core",
-      "reason": "Auswahl, Pfadklasse und Ergebnisbindung."
-    },
-    {
-      "path": "server/save_sync/test_integration.py",
-      "disposition": "change-scoped",
-      "reason": "Echte HTTP-, PostgreSQL- und Restoreprüfungen für SYNC-A-01 bis 09."
-    },
-    {
-      "path": "tools/ci_modular.py",
-      "disposition": "core",
-      "reason": "Expliziter Matrixteil mit Ergebnisprüfung."
-    },
-    {
-      "path": ".github/workflows/ci-modular.yml",
-      "disposition": "change-scoped",
-      "reason": "Runner- und Containerversionen beim ausgewählten Servermodul ausweisen."
-    }
-  ],
-  "core_change": "Der neue ausdrücklich gewählte Matrixteil prüft neun Originalergebnisse und Laufbindung. Nur reine reguläre Serverdiffs mit Dokumenten/Plan sind zusätzlich buildfrei.",
+  "issue": "https://github.com/venomenon328/picross/issues/700",
+  "package": "PZ-GEYSIR-REVEAL",
+  "modules": [],
+  "purpose": "Sichtung der drei Abschlussbilder für Geysir nach Authoring 0.8.0, Schritt 1.",
+  "omitted": "Der Draft enthält den Paketplan. Die Originale und der Record sind im PW-B-Arbeitsstand veröffentlicht. Der Quellen- und Plankern deckt den PR ohne Zusatzmodule und ohne Player-Build ab.",
+  "test_changes": [],
+  "core_change": null,
   "evidence": {
     "mode": "none",
     "purpose": null,
