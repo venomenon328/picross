@@ -1,10 +1,10 @@
 {
   "format": "development-ci-plan/v1",
-  "issue": "https://github.com/venomenon328/picross/issues/821",
-  "package": "SYNC-SPEC",
+  "issue": "https://github.com/venomenon328/picross/issues/700",
+  "package": "PZ-GOTTESANBETERIN-REVEAL",
   "modules": [],
-  "purpose": "Freigegebene optionale Konto-/Spielstandsynchronisierung dokumentieren und SYNC-A mit Protokoll, Grenzen, Akzeptanz und Prüfplan vorbereiten; keine Produktimplementierung.",
-  "omitted": "Reiner Dokument-/Paketplandiff: keine optionalen Module und kein Playerbau. Das erst mit SYNC-A einzuführende sync.server ist hier noch nicht ausführbar; keine Server-, Spiel- oder Liveprüfung behauptet.",
+  "purpose": "Sichtung der Abschlussbilder für Gottesanbeterin nach Authoring 0.8.0, Schritt 1.",
+  "omitted": "Der Draft enthält nur den Paketplan. Originale und Record liegen im PW-B-Arbeitsstand. Die Quellen- und Planprüfung benötigt weder Zusatzmodule noch einen Player-Build.",
   "test_changes": [],
   "core_change": null,
   "evidence": {
