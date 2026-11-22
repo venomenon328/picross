@@ -1,0 +1,4 @@
+author: Mit OpenAI ImageGen durch Codex erstellt
+changes: Unverändertes generiertes PNG-Original
+source: Native Bildgenerierung aus dem Kontextbriefing ohne externe Bildvorlage
+usage_basis: Für diesen Rätselauftrag neu erzeugt
