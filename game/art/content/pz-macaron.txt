@@ -1,0 +1,4 @@
+author: OpenAI ImageGen (KI-generiert, durch Codex beauftragt)
+changes: Unveränderte generierte PNG-Datei.
+source: Native Bildgenerierung für Macaron, Authoring-Schritt 1
+usage_basis: Für den beauftragten Picross-Arbeitsstand im Auftrag neu erzeugt. Keine eingebundenen Fremdvorlagen.

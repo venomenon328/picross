@@ -1,0 +1,4 @@
+author: OpenAI ImageGen
+changes: Unveränderte generierte PNG-Originalbytes.
+source: Integrierte Bildgenerierung für den Kontext von pz-macaron, Schritt 4.
+usage_basis: Im Auftrag für das Picross-Rätsel neu erzeugt, ohne eingebundene Fremdvorlage.
