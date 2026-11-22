@@ -1,0 +1,4 @@
+author: Mit OpenAI ImageGen durch Codex für diesen Auftrag erzeugt
+changes: PNG-Originalbytes unverändert übernommen.
+source: Native Einzelgenerierung aus dem Nasi-Lemak-Textbriefing, reveal-a.
+usage_basis: Auftrag zur Erstellung und Veröffentlichung als Auswahlangebot für Picross.

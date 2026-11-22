@@ -3,8 +3,8 @@
   "issue": "https://github.com/venomenon328/picross/issues/700",
   "package": "PZ-FUCHS-INTEGRATION",
   "modules": [],
-  "purpose": "Fuchs mit dem gewählten 18 × 22-Monochromraster, Reveal und Waldrand-Hintergrund in den Spielkatalog der Säugetiere aufnehmen.",
-  "omitted": "Reine Rätselproduktion. Linienproof, Endmatrix, Bildprofil, Endabnahme und Registrierung werden im Produktionsweg geprüft. Der PR benötigt den Quellen- und Plankern ohne Player-Build.",
+  "purpose": "Fuchs mit raster-a (18 × 22), reveal-c und background-a unter Säugetiere registrieren.",
+  "omitted": "Reine Rätselproduktion. Unabhängiger Proof, Endmatrix, Bildprofil und Lieferdaten sind im Produktionsweg geprüft. CI prüft Quellen und Paketplan ohne Player-Build.",
   "test_changes": [],
   "core_change": null,
   "evidence": {
