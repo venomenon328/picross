@@ -203,6 +203,18 @@ Kernpflicht. Die einmaligen Vorher-/Nachher-Buchoriginale und Fehler-/Recovery-
 Bedienbelege bleiben gemäß [Paketentscheidung](https://github.com/venomenon328/picross/issues/547#issuecomment-6727488115)
 auf einem getrennten befristeten Reviewref; R01 und Eigentümer-M01 bleiben getrennt.
 
+## KL-TRENN-A / #556: Katalogtitel und Backupaktionsbeschriftungen
+
+Im vorhandenen `catalog-layout`-Checkpoint prüfen kleine synthetische
+Bakso-Fälle zulässige deutsche Trennstellen mit sichtbarem Bindestrich,
+Wortgrenzen, Umlaute, zwei Zeilen, die Dreipunkt-Auslassung und unveränderte
+Geometrie beim Rückweg. Titelprojektion und Accessibility verwenden getrennte
+Werte. Die bestehenden KK-Fälle prüfen zusätzlich an beiden Backupaktionen
+die vollständige Anzeige, identische Pangolin-Messung, Fokus und Mindesthöhe.
+Scrollen, Klick, Bestätigung, ID-Bindung und Fremdslotbytes bleiben Teil der
+vorhandenen Folgen. Die getrennte Windows-Sicht- und PCK-Lieferprobe endet mit
+diesem Paket. Keine weiteren Prozesse oder Dauerbilder.
+
 ## NAV-A / #549: feste Buchnavigation und Symbolhilfen
 
 Das ausgewählte `native.catalog` ergänzt im vorhandenen Pages-/Informationsprozess

@@ -189,8 +189,13 @@ haben innerhalb derselben Konfiguration identische Maße:
    ausgeschriebener Status mit dem bisherigen Symbol. Neu/Begonnen tragen
    die neutrale Bakso-Überschrift **Blatt NN**; nach gültigem Abschluss steht
    dort der Motivtitel und neben **Gelöst** zusätzlich **· Blatt NN**.
-   Titel behalten zwei Zeilen mit der bestehenden Auslassungsregel. Der
-   obere rechte Resetplatz bleibt auch bei verborgenem Reset reserviert.
+   Titel nutzen höchstens zwei feste Zeilen. Ganze Wörter haben Vorrang.
+   Passt ein Wort allein nicht, darf es an einer belegten deutschen Trennstelle
+   mit sichtbarem Bindestrich auf die nächste Zeile wechseln. Bei Überlänge
+   greifen die drei Bakso-Punkte. Der erlaubte Originaltitel bleibt vollständig
+   als zugänglicher Name erhalten. Die [lokale Wortliste](CATALOG_HYPHENATION.md)
+   liefert Trennstellen nur für exakt passende Wortformen.
+   Der obere rechte Resetplatz bleibt auch bei verborgenem Reset reserviert.
 3. Die Kategorie bleibt auch bei Kategorienfilter sichtbar, an einer festen
    oberen Grundlinie innerhalb ihrer zwei reservierten Zeilen.
 4. Unten läuft genau ein passiver Papierstreifen über die innere Kartenbreite,

@@ -387,7 +387,7 @@ func _diagnose(card: Card, id: String) -> void:
 		message += ("\n" if not message.is_empty() else "") + "Speicherfehler: " + str(errors[id])
 	card.set_diagnosis(message, reset_allowed(items[id],state,str(errors[id])))
 	var action: String = "Öffnen gesperrt" if state == "error" else "Ansehen" if items[id].completed else "Fortsetzen" if progress(items[id]) == "Begonnen" else "Spielen"
-	card.accessibility_name = "%s · %s · %s · %s · %s · %s · %s · %s" % [card.caption.text,card.leaf.text,card.detail.text,card.dimensions.text,card.mode_tip.tooltip_text,card.difficulty.text,card.note.text,action]
+	card.accessibility_name = "%s · %s · %s · %s · %s · %s · %s · %s" % [card.original_title,card.leaf.text,card.detail.text,card.dimensions.text,card.mode_tip.tooltip_text,card.difficulty.text,card.note.text,action]
 	card.reset.accessibility_name = "Rätsel zurücksetzen · " + card.leaf.text + " · " + card.note.text
 	if card.repair != null: card.repair.accessibility_name = str(card.repair.get_meta("caption")) + " · " + card.leaf.text + " · " + card.note.text
 
