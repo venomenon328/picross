@@ -1,0 +1,4 @@
+author: Mit OpenAI ImageGen durch Codex erstellt
+changes: Unveränderte generierte PNG-Originaldatei
+source: Native Bildgenerierung aus dem Falafel-Motivtext ohne externe Bildvorlage
+usage_basis: Für diesen Rätselauftrag neu erzeugt

@@ -1,10 +1,10 @@
 {
   "format": "development-ci-plan/v1",
   "issue": "https://github.com/venomenon328/picross/issues/700",
-  "package": "PZ-FUCHS-INTEGRATION",
+  "package": "PZ-FALAFEL-INTEGRATION",
   "modules": [],
-  "purpose": "Fuchs mit raster-a (18 × 22), reveal-c und background-a unter Säugetiere registrieren.",
-  "omitted": "Reine Rätselproduktion. Unabhängiger Proof, Endmatrix, Bildprofil und Lieferdaten sind im Produktionsweg geprüft. CI prüft Quellen und Paketplan ohne Player-Build.",
+  "purpose": "Falafel mit raster-c (21 × 20, drei Vordergrundfarben), reveal-c und background-a2 im Profil picross-background-png2304x768-v1 unter Gerichte & Herzhaftes registrieren.",
+  "omitted": "Reine Rätselproduktion. Unabhängiger Proof, Endmatrix, Bildprofil und Lieferdaten werden im Produktionsweg geprüft. CI prüft Quellen und Paketplan ohne Player-Build.",
   "test_changes": [],
   "core_change": null,
   "evidence": {
