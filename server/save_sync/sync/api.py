@@ -22,7 +22,7 @@ from . import models as m
 from .db import Failure, connect, instance
 
 GEN = "X-Picross-Generation"
-PUBLIC = {"register", "login", "recover"}
+PUBLIC = {"register", "login", "recover", "live", "ready"}
 LISTS = {"puzzles", "history", "conflicts"}
 app = FastAPI(
     title="Picross Save Sync", version="1.0", docs_url=None, redoc_url=None, openapi_url="/openapi.json"
@@ -159,12 +159,15 @@ async def unknown(request, exc):
     return JSONResponse({"code": "not_found"}, 404)
 
 
-@app.get("/health/live", response_model=m.Health)
+health = APIRouter(route_class=WireRoute)
+
+
+@health.get("/health/live", response_model=m.Health)
 def live():
     return {"status": "ok"}
 
 
-@app.get("/health/ready", response_model=m.Health, responses={503: {"model": m.Health}})
+@health.get("/health/ready", response_model=m.Health, responses={503: {"model": m.Health}})
 def ready():
     try:
         current_instance()
@@ -291,5 +294,26 @@ def mutation(request: Request, puzzle: m.PuzzleId, body: m.MutationRequest):
         return store.mutate(db, auth.session(db, request), puzzle, body, request)
 
 
+app.include_router(health)
 app.include_router(public)
 app.include_router(private)
+
+
+def document_headers():
+    # FastAPI derives message schemas from the route models. The middleware
+    # supplies these response headers for every operation, including failures.
+    for path, operations in app.openapi()["paths"].items():
+        for operation in operations.values():
+            for status, response in operation["responses"].items():
+                headers = response.setdefault("headers", {})
+                headers["Cache-Control"] = {"required": True, "schema": {"const": "no-store"}}
+                if path.startswith("/v1/"):
+                    headers[GEN] = {
+                        "required": status != "503",
+                        "schema": {"type": "string", "format": "uuid"},
+                    }
+                if status == "429":
+                    headers["Retry-After"] = {"required": True, "schema": {"type": "integer", "minimum": 1}}
+
+
+document_headers()

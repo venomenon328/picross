@@ -24,9 +24,12 @@ PSQL = [
 EMPTY = """
 DO $$ BEGIN
  IF EXISTS (SELECT 1 FROM pg_namespace WHERE nspname NOT IN ('public','information_schema')
-            AND nspname NOT LIKE 'pg_%') OR EXISTS
-    (SELECT 1 FROM pg_class WHERE relnamespace='public'::regnamespace) OR EXISTS
-    (SELECT 1 FROM pg_proc WHERE pronamespace='public'::regnamespace) THEN
+            AND left(nspname, 3) <> 'pg_') OR EXISTS
+    (SELECT 1 FROM pg_depend WHERE refclassid='pg_namespace'::regclass
+     AND refobjid='public'::regnamespace) OR EXISTS
+    (SELECT 1 FROM pg_largeobject_metadata) OR EXISTS
+    (SELECT 1 FROM pg_event_trigger) OR EXISTS
+    (SELECT 1 FROM pg_extension WHERE extname <> 'plpgsql') THEN
    RAISE EXCEPTION 'Restore requires an empty database';
  END IF;
 END $$;

@@ -210,6 +210,7 @@ def save(puzzle, revision=1):
 
 
 def service(p, a):
+    p.env["SYNC_ORIGINS"] = "https://picross.example"
     p.up("--build")
     assert p.compose("port", "api", "8000", capture=True).startswith("127.0.0.1:")
     ports = json.loads(p.compose("ps", "--format", "json", "db", capture=True))
@@ -219,8 +220,31 @@ def service(p, a):
     p.admin("migrate")
     for health in ("live", "ready"):
         assert a.http("GET", "/health/" + health).body == {"status": "ok"}
+    a.http("GET", "/health/live?extra=1", status=422)
+    cross_origin = {
+        "Origin": "https://picross.example",
+        "Access-Control-Request-Method": "POST",
+        "Access-Control-Request-Headers": "Authorization, Content-Type, X-Picross-Generation",
+    }
+    preflight = a.http("OPTIONS", "/v1/auth/login", headers=cross_origin)
+    assert preflight.headers["access-control-allow-origin"] == cross_origin["Origin"]
+    denied = a.http(
+        "OPTIONS", "/v1/auth/login", status=400, headers=dict(cross_origin, Origin="https://other.example")
+    )
+    assert "access-control-allow-origin" not in denied.headers
+    p.sql("UPDATE instance SET version=2")
+    try:
+        assert a.http("GET", "/health/ready", status=503).body == {"status": "unavailable"}
+        assert a.http("GET", "/health/live").body == {"status": "ok"}
+    finally:
+        p.sql("UPDATE instance SET version=1")
     api = a.http("GET", "/openapi.json").body
     assert len(api["paths"]) == 15 and api["components"]["schemas"]["Save"]["additionalProperties"] is False
+    headers = api["paths"]["/v1/account"]["get"]["responses"]["200"]["headers"]
+    assert (
+        headers["X-Picross-Generation"]["required"]
+        and headers["Cache-Control"]["schema"]["const"] == "no-store"
+    )
     print("PostgreSQL", p.sql("SHOW server_version"), flush=True)
 
 
@@ -501,6 +525,11 @@ def archive(a, b, restored, work):
     assert client.put("race", 24, 16, "reset", definition_revision=1).body["server_revision"] == 17
 
 
+def remove_image(image):
+    if subprocess.check_output(["docker", "image", "ls", "--quiet", image], text=True).strip():
+        subprocess.run(["docker", "image", "rm", image], check=True)
+
+
 def main():
     if not __debug__:
         raise RuntimeError("Checks require normal Python assertion mode")
@@ -522,7 +551,7 @@ def main():
         (archive, (a, b, restored, report.parent)),
     ]
     with ExitStack() as stack:
-        stack.callback(lambda: subprocess.run(["docker", "image", "rm", image], check=False))
+        stack.callback(remove_image, image)
         stack.callback(p.down)
         stack.callback(restored.down)
         for n, (test, args) in enumerate(scenarios, 1):
