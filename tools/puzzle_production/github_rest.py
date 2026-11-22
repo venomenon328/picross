@@ -77,10 +77,7 @@ def _http_failure(error, *, api, authenticated):
     if status == 429 or status == 403 and (
             headers.get('X-RateLimit-Remaining') == '0' or headers.get('Retry-After')
             or api and _secondary_limit(error)):
-        message = _rate_limit_message(headers)
-        if api and not authenticated:
-            message += ' Mit GH_TOKEN steht ein eigenes API-Kontingent zur Verfügung.'
-        return Failure('rate_limit', message, status)
+        return Failure('rate_limit', _rate_limit_message(headers), status)
     if api and status == 401:
         return Failure('auth', 'GitHub-Anmeldung fehlgeschlagen. GH_TOKEN bzw. GITHUB_TOKEN prüfen und den Assistenten neu starten.', status)
     if status == 403:

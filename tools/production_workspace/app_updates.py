@@ -165,13 +165,13 @@ class Updates:
             self.cancel()
             self.status = ('App-Update nicht bestätigt: Installationsidentität passt nicht zum signierten Release. '
                            'Vorhandene App bleibt verfügbar; Installation prüfen.')
-        except github_rest.Failure as exc:
+        except Exception as exc:
             self.cancel()
-            self.status = 'App-Updateprüfung fehlgeschlagen. ' + str(exc) + ' Vorhandene App bleibt verfügbar.'
-        except Exception:
-            self.cancel()
-            self.status = ('App-Update nicht möglich: Kanal, Signatur, Version, Download oder Übergabe nicht bestätigt. '
-                           'Vorhandene App bleibt verfügbar; beim nächsten Start erneut prüfen oder manuell installieren.')
+            if self.app == PW and isinstance(exc, github_rest.Failure):
+                self.status = 'App-Updateprüfung fehlgeschlagen. ' + str(exc) + ' Vorhandene App bleibt verfügbar.'
+            else:
+                self.status = ('App-Update nicht möglich: Kanal, Signatur, Version, Download oder Übergabe nicht bestätigt. '
+                               'Vorhandene App bleibt verfügbar; beim nächsten Start erneut prüfen oder manuell installieren.')
         finally:
             self.progress = None
             # A started helper owns its lifetime. Pending staging is recovered only
