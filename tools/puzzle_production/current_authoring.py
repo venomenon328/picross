@@ -14,6 +14,8 @@ from . import finding_decisions as findings, raster_parameters, work_assets
 PUBLISHED_FORMATS = (work_assets.FORMAT, findings.PUBLISHED)
 FORMATS = (FORMAT, work_assets.FORMAT, *findings.FORMATS)
 REQUEST = 'picross-authoring-current-request-v1'
+CROP_DIAGNOSIS = 'picross-raster-crop-diagnosis-v1'
+CROP_REFS = ('before', 'preview', 'protection')
 LIMIT = 1024 * 1024
 INDEX = 'content/authoring/index.json'
 FIELDS = set('format puzzle_id revision source_commit operation target title category_id state brief parameters assets rasters selected decisions budgets blockers test_only integration'.split())
@@ -67,6 +69,10 @@ def binding(job, scope):
         return chosen if chosen in (None,'none','standard') else identity(assets[chosen])
     reveal = image('reveal')
     motif = {'reveal':reveal,'motif':image('motif'),'parameters':job['parameters']['approved']}
+    protection = next((d['crop_protection'] for d in job['decisions']
+                       if d['scope'] == 'motif' and 'crop_protection' in d), None)
+    if protection is not None:
+        motif['crop_protection'] = protection
     def raster_content(r):
         return {'id':r['id'],'definition':{k:r['definition'][k] for k in ('sha256','bytes')},
                 'difficulty':None if r['difficulty'] is None else {k:r['difficulty'][k] for k in ('sha256','bytes')}}
@@ -100,13 +106,16 @@ def binding(job, scope):
     return digest(values[scope])
 
 
-def references(job):
+def references(job, *, include_diagnostics=True):
     refs = [a['file'] for a in job['assets']]
     refs.extend(a['prepared']['file'] for a in job['assets'] if a.get('prepared') is not None)
     if job['target'] is not None: refs.extend(job['target'][k] for k in ('definition','reveal'))
     for raster in job['rasters']:
         refs.extend(raster[k] for k in ('definition','proof','difficulty','preview') if raster[k] is not None)
-        refs.extend(e['evidence'] for e in raster['exceptions'])
+        refs.extend(e['evidence'] for e in raster['exceptions']
+                    if include_diagnostics or 'candidate_id' not in e)
+        if include_diagnostics and 'crop_diagnosis' in raster:
+            refs.extend(raster['crop_diagnosis'][key] for key in CROP_REFS)
     return refs
 
 
@@ -167,15 +176,28 @@ def validate(job):
         review(asset['review'], CRITERIA.get(asset['role'],set()), ready=False)
     raster_ids=set()
     for raster in job['rasters']:
-        exact_keys(raster, {'id','label','definition','proof','difficulty','preview','review','exceptions'})
+        optional = {'crop_diagnosis'} if structured and 'crop_diagnosis' in raster else set()
+        exact_keys(raster, {'id','label','definition','proof','difficulty','preview','review','exceptions'} | optional)
+        if optional:
+            crop = exact_keys(raster['crop_diagnosis'], {'format', 'parameters_sha256', 'rectangle', *CROP_REFS})
+            ap.require(crop['format'] == CROP_DIAGNOSIS and PHASES.index(job['state']) >= 4,
+                       'Invalid current crop diagnosis format or phase')
+            ap.sha(crop['parameters_sha256'])
         identifier(raster['id']); text(raster['label'],'raster label',512)
         ap.require(raster['id'] not in raster_ids and raster['id'] not in ids, 'Duplicate raster ID')
         raster_ids.add(raster['id'])
         review(raster['review'],CRITERIA['raster'],ready=False)
         ap.require(isinstance(raster['exceptions'],list) and len(raster['exceptions'])<=29, 'Invalid exceptions')
         for exception in raster['exceptions']:
-            exact_keys(exception, {'criterion','actor','timestamp_utc','statement','evidence'} | ({'definition_sha256'} if structured else set()))
-            if structured:
+            fields = {'definition_sha256'} if structured else set()
+            if structured and exception.get('criterion') == 'frame' and ('candidate_id' in exception or 'revision' in exception):
+                fields |= {'candidate_id', 'revision'}
+            exact_keys(exception, {'criterion','actor','timestamp_utc','statement','evidence'} | fields)
+            if 'candidate_id' in exception:
+                ap.sha(exception['definition_sha256'])
+                identifier(exception['candidate_id'])
+                integer(exception['revision'], 1, 1000000, 'frame exception revision')
+            elif structured:
                 ap.require(exception['definition_sha256'] == raster['definition']['sha256'], 'Stale technical exception')
             text(exception['criterion'],'criterion'); human(exception)
     exact_keys(job['selected'], {'reveal','motif','raster','background'})
@@ -191,8 +213,16 @@ def validate(job):
         findings.validate(job, CRITERIA)
     seen=set()
     for decision in job['decisions']:
-        exact_keys(decision, {'scope','binding','actor','timestamp_utc','statement'})
-        scope=decision['scope']; ap.require(scope in SCOPES and scope not in seen, 'Invalid/duplicate decision scope')
+        scope = decision.get('scope')
+        extra = {'crop_protection'} if structured and scope == 'motif' and 'crop_protection' in decision else set()
+        exact_keys(decision, {'scope','binding','actor','timestamp_utc','statement'} | extra)
+        if extra:
+            protection = decision['crop_protection']
+            ap.require(isinstance(protection, dict) and 0 < len(protection) <= 20,
+                       'Invalid motif crop protection bindings')
+            for before_sha, mask_sha in protection.items():
+                ap.sha(before_sha); ap.sha(mask_sha)
+        ap.require(scope in SCOPES and scope not in seen, 'Invalid/duplicate decision scope')
         seen.add(scope); human(decision)
         ap.require(decision['binding']==binding(job,scope), 'Stale decision: '+scope)
     for role,selected in job['selected'].items():
@@ -208,6 +238,11 @@ def validate(job):
         ap.require(own(job['puzzle_id'],ref['file']) or ref['file'].startswith(('game/art/content/','game/art/backgrounds/','game/data/content/')),
                    'Foreign production source')
         ap.require(all_refs.setdefault(ref['file'],ref)==ref, 'Conflicting file bindings')
+    for raster in job['rasters']:
+        if 'crop_diagnosis' in raster:
+            ap.require(all(own(job['puzzle_id'], raster['crop_diagnosis'][key]['file']) for key in CROP_REFS) and
+                       raster['crop_diagnosis']['preview']['file'].endswith('.png') and raster['preview']['file'].endswith('.png'),
+                       'Crop comparison must use current own originals')
     from .authoring_build_contract import names
     names(list(all_refs))
     ap.require(len(all_refs)<=2048 and sum(r['bytes'] for r in all_refs.values())<=512*LIMIT, 'Current data exceeds resources')
@@ -241,7 +276,8 @@ class Checked:
         structured = self.job['format'] in findings.FORMATS
         j=self.job; phase=PHASES.index(j['state']); selected=j['selected']
         decisions={d['scope']:d for d in j['decisions']}
-        for ref in references(j): self.bound(ref,64*LIMIT)
+        for ref in references(j, include_diagnostics=False):
+            self.bound(ref, 64*LIMIT)
         if phase>=2 and j['operation']=='production':
             ap.require(selected['reveal'] is not None and 'reveal' in decisions, 'Actual reveal approval required')
             ap.require(any(a['role']=='motif' for a in j['assets']), 'Current motif required')
@@ -342,6 +378,57 @@ class Checked:
         ap.require(len(raw)<=limit and content.ref(name,raw)==expected, 'Current source missing/stale: '+name)
         return raw
 
+    def crop_diagnosis(self, raster, definition, mode):
+        from . import catalog_rating
+
+        crop = raster['crop_diagnosis']
+        before, _, _, _ = catalog_rating.definition(self.bound(crop['before'], 2*LIMIT))
+        ap.require(before['id'] == definition['id'] and before['revision'] < definition['revision'] and
+                   before['width'] <= 50 and before['height'] <= 50 and before['palette'] == definition['palette'] and
+                   before['reveal'] == definition['reveal'], 'Crop needs the earlier original and a fresh compatible definition')
+        options = {digest(p): (i, p) for i, p in enumerate(self.job['parameters']['approved'])
+                   if p.get('format') == raster_parameters.FORMAT}
+        ap.require(crop['parameters_sha256'] in options, 'Crop diagnosis belongs to stale parameters')
+        index, option = options[crop['parameters_sha256']]
+        colors = len(definition['palette'])
+        ap.require(any((v['width'], v['height'], v['mode'], v['foreground_colors']) ==
+                       (before['width'], before['height'], mode, colors) for v in option['imports']),
+                   'Before raster differs from the approved import dimensions, mode or color count')
+        mask = io.json_bytes(self.bound(crop['protection'], LIMIT), LIMIT)
+        exact_keys(mask, {'before_sha256', 'motif_sha256', 'cells'})
+        motif = next(a for a in self.job['assets'] if a['id'] == self.job['selected']['motif'])
+        ap.require(mask['before_sha256'] == crop['before']['sha256'] and mask['motif_sha256'] == motif['file']['sha256'],
+                   'Crop protection belongs to another source or motif')
+        approval = next(d for d in self.job['decisions'] if d['scope'] == 'motif')
+        pinned = approval.get('crop_protection', {}).get(mask['before_sha256'])
+        if pinned is not None or option['derivation']['protected_features']:
+            ap.require(pinned == crop['protection']['sha256'], 'Crop mask lacks the current motif protection approval')
+        removed = raster_parameters.crop_rectangle(crop['rectangle'], before['width'], before['height'], mask['cells'],
+                    option['derivation']['empty_edge_crop'], before['solution'], empty=0)
+        left, top, right, bottom = crop['rectangle']
+        ap.require(any(removed.values()) and (right-left, bottom-top) == (definition['width'], definition['height']) and
+                   [row[left:right] for row in before['solution'][top:bottom]] == definition['solution'],
+                   'End raster differs from the declared empty-edge crop')
+        self.check_preview(crop['preview'], before, mode, allow_legacy=False)
+        alternative = deepcopy(option)
+        changes = {}
+        for axis in ('width', 'height'):
+            constraint = option['constraints'][axis]
+            actual = definition[axis]
+            if not raster_parameters.accepts(constraint, actual):
+                ap.require(constraint['kind'] == 'approximate' and constraint['minimum'] is not None and
+                           actual < constraint['minimum'], 'Crop violates a hard axis or is not below an approximate minimum')
+                changes[axis] = {'previous': constraint['minimum'], 'proposed': actual}
+                alternative['constraints'][axis]['minimum'] = actual
+        raster_parameters.validate(alternative)
+        raster_parameters.result(alternative, {'width': definition['width'], 'height': definition['height'], 'mode': mode},
+                                 definition['solution'], empty=0)
+        return {'format': CROP_DIAGNOSIS, 'before': {axis: before[axis] for axis in ('width', 'height')},
+                'after': {axis: definition[axis] for axis in ('width', 'height')}, 'removed': removed,
+                'removed_cells': before['width'] * before['height'] - definition['width'] * definition['height'],
+                'parameter': index, 'parameters_sha256': crop['parameters_sha256'],
+                'constraints': option['constraints'], 'changes': changes, 'alternative': alternative}
+
     def raster(self, raster, *, technical, ready):
         from . import catalog_rating, current_rating, verifier, palette_quality
         from .editor_raster import check_end
@@ -366,48 +453,84 @@ class Checked:
         ap.require(not ready or raster['proof'] is not None and raster['difficulty'] is not None, 'Qualified raster needs proof and difficulty')
         proof=io.json_bytes(self.bound(raster['proof'],64*LIMIT),64*LIMIT) if raster['proof'] is not None else None
         if technical and proof is not None:
-            result=verifier.verify(puzzle,proof,Budget(300,1000000))
+            result = verifier.verify(puzzle, proof, Budget(300, 1000000))
             ap.require(result['proof_verified'] and (result['certified'] or not ready), 'Complete independently checked current proof required')
-            if result['certified']: check_end(definition,proof)
-        checked=rating_value
+        if proof is not None and proof.get('status') == 'solved':
+            ap.require(proof.get('logic_hash') == puzzle.logic_hash, 'Stale logic proof')
+            check_end(definition, proof)
         if ready and not structured:
-            review(raster['review'],CRITERIA['raster'],ready=True,decisions=self.job['decisions'])
+            review(raster['review'], CRITERIA['raster'], ready=True, decisions=self.job['decisions'])
+        diagnostics = {}
         if ready or structured:
-            matrix=definition['solution']
-            frame=(any(row[0] for row in matrix) or any(row[-1] for row in matrix)) and (any(matrix[0]) or any(matrix[-1]))
-            exceptions_needed=[] if frame else ['frame']
-            for a,b in combinations(definition['palette'],2):
-                qa,qb=(palette_quality.quantized_oklab('#'+p['color']) for p in (a,b))
-                if palette_quality.pair_status(sum((x-y)**2 for x,y in zip(qa,qb)))=='negative':
-                    exceptions_needed.append('palette:'+str(a['id'])+':'+str(b['id']))
-            exceptions_match = sorted(e['criterion'] for e in raster['exceptions']) == sorted(exceptions_needed)
+            edges = raster_parameters.frame_edges(definition['solution'])
+            failed_axes = raster_parameters.frame_failures(edges)
+            palette_needed = []
+            for a, b in combinations(definition['palette'], 2):
+                qa, qb = (palette_quality.quantized_oklab('#'+p['color']) for p in (a,b))
+                if palette_quality.pair_status(sum((x-y)**2 for x,y in zip(qa,qb))) == 'negative':
+                    palette_needed.append('palette:'+str(a['id'])+':'+str(b['id']))
+            frame = [e for e in raster['exceptions'] if e['criterion'] == 'frame']
+            palette = [e['criterion'] for e in raster['exceptions'] if e['criterion'] != 'frame']
+            frame_ok = len(frame) == int(bool(failed_axes))
+            for exception in raster['exceptions']:
+                try:
+                    if 'candidate_id' in exception:
+                        ap.require((exception['candidate_id'], exception['revision'], exception['definition_sha256']) ==
+                                   (raster['id'], definition['revision'], raster['definition']['sha256']),
+                                   'Foreign or stale frame exception')
+                    ap.require(self.bound(exception['evidence'], 65536).decode('utf8').strip(), 'Empty exception evidence')
+                except (ValueError, OSError):
+                    if technical or ready or self.job['selected']['raster'] == raster['id'] or 'candidate_id' not in exception:
+                        raise
+                    frame_ok = False
+            palette_ok = sorted(palette) == sorted(palette_needed)
             if structured:
                 missing = [] if matches_parameters else ['Raster außerhalb der genehmigten Parameteralternative']
                 if not proof or proof.get('status') != 'solved':
                     missing.append('Vollständiger Logiknachweis fehlt')
-                if checked is None:
+                if rating_value is None:
                     missing.append('Schwierigkeitsbewertung fehlt')
-                if not exceptions_match:
-                    missing.append('Gebundene frame-/palette-Ausnahme fehlt')
+                if not frame_ok:
+                    missing.append('Passender technischer frame-Ausnahmebeleg fehlt oder ist ungültig')
+                if not palette_ok:
+                    missing.append('Gebundene palette-Ausnahme fehlt oder ist ungültig')
+                if failed_axes:
+                    diagnostics['frame'] = {'criterion': 'H-01', 'result': 'nicht erfüllt', 'edges': edges,
+                                            'axes': failed_axes, 'exception': frame[0] if frame_ok else None}
+                if 'crop_diagnosis' in raster:
+                    try:
+                        diagnostics['crop'] = self.crop_diagnosis(raster, definition, mode)
+                    except (ValueError, OSError) as exc:
+                        if technical or ready or self.job['selected']['raster'] == raster['id']:
+                            raise
+                        missing.append('Beschnittoriginal oder -bindung nicht prüfbar: ' + str(exc))
+                    else:
+                        if diagnostics['crop']['changes'] and matches_parameters:
+                            missing.append('Diagnostischer Beschnitt braucht eine neue gebundene Parameteralternative')
                 self.candidate(raster, missing, required=ready or self.job['selected']['raster'] == raster['id'])
             else:
-                ap.require(exceptions_match, 'Exact current frame/palette exceptions required')
-            for exception in raster['exceptions']:
-                ap.require(self.bound(exception['evidence'],65536).decode('utf8').strip(), 'Empty exception evidence')
-        self.rasters[raster['id']]={'definition':definition,'mode':mode,'difficulty':checked}
-        from tools.production_workspace.presentation import image
-        preview=self.bound(raster['preview'],32*LIMIT)
-        image(preview)
+                ap.require(frame_ok and palette_ok, 'Exact current frame/palette exceptions required')
+        self.rasters[raster['id']] = {'definition': definition, 'mode': mode, 'difficulty': rating_value,
+                                      'diagnostics': diagnostics}
+        if not self.check_preview(raster['preview'], definition, mode, allow_legacy=True):
+            self.legacy_previews.add(raster['id'])
+
+    def check_preview(self, ref, definition, mode, *, allow_legacy):
         from io import BytesIO
         from PIL import Image
+        from tools.production_workspace.presentation import image
+
+        preview = self.bound(ref, 32*LIMIT)
+        image(preview)
         with Image.open(BytesIO(preview)) as actual:
             ap.require(actual.format == 'PNG' and actual.size == (definition['width'] * 12, definition['height'] * 12),
                        'Raster preview differs from current definition')
             pixels = actual.convert('RGBA').tobytes()
-        if pixels != raster_image(definition, neutral=mode == 'mono').tobytes():
-            ap.require(mode == 'mono' and pixels == raster_image(definition, neutral=False).tobytes(),
-                       'Raster preview differs from current definition')
-            self.legacy_previews.add(raster['id'])
+        if pixels == raster_image(definition, neutral=mode == 'mono').tobytes():
+            return True
+        ap.require(allow_legacy and mode == 'mono' and pixels == raster_image(definition, neutral=False).tobytes(),
+                   'Raster preview differs from current definition')
+        return False
 
     def check_new_previews(self, previous):
         # Reusing an established binding is allowed even when publishing a later phase.
@@ -431,6 +554,24 @@ class Checked:
 
 def check_transition(previous, job):
     findings.transition(previous, job)
+    if job['format'] in findings.FORMATS:
+        old_rasters = {r['id']: r for r in previous['rasters']} if previous else {}
+        for raster in job['rasters']:
+            prior = old_rasters.get(raster['id'])
+            for exception in raster['exceptions']:
+                if exception['criterion'] == 'frame' and 'candidate_id' not in exception:
+                    def legacy_frame(e):
+                        return {**{k: v for k, v in e.items() if k != 'definition_sha256'},
+                                'evidence': work_assets.local_ref(e['evidence'])}
+                    ap.require(prior and prior['definition']['sha256'] == raster['definition']['sha256'] and
+                               any(legacy_frame(e) == legacy_frame(exception) for e in prior['exceptions']),
+                               'New frame exception requires explicit current candidate and revision')
+            if prior and prior['definition']['sha256'] == raster['definition']['sha256'] and 'crop_diagnosis' in prior:
+                old_crop = prior['crop_diagnosis']
+                new_crop = raster.get('crop_diagnosis')
+                ap.require(new_crop and new_crop['rectangle'] == old_crop['rectangle'] and
+                           all(work_assets.local_ref(new_crop[k]) == work_assets.local_ref(old_crop[k]) for k in CROP_REFS),
+                           'Existing crop proof cannot be replaced for the same end raster')
     if job['format'] in findings.FORMATS and job['blockers']:
         prior = previous or {'state': PHASES[0], 'selected': {}}
         choosing = any(value is not None and value != prior['selected'].get(role)
@@ -614,6 +755,20 @@ def build(request, source_root, root):
         return {'format':job['format'],'status':'built','record':name}
 
 
+def crop_asset_ids(job):
+    used = {a['id'] for a in [*job['assets'], *job['rasters']]}
+    ids = {}
+    index = 0
+    for raster in job['rasters']:
+        if 'crop_diagnosis' not in raster:
+            continue
+        while f'crop-before-{index}' in used:
+            index += 1
+        ids[raster['id']] = f'crop-before-{index}'
+        index += 1
+    return ids
+
+
 def projection(job, record_raw):
     """Transient view only: no workspace or pointer file, no second data authority."""
     validate(job)
@@ -632,9 +787,16 @@ def projection(job, record_raw):
         assets.append({'id':'active-raster','role':'raster','caption':'Aktives unverändertes Raster',
                        'location':{'commit':None,'storage':'definition','container':None,**job['target']['definition']}})
     qualified=PHASES.index(job['state'])>=5
+    before_ids = crop_asset_ids(job)
     for raster in job['rasters']:
+        crop = raster.get('crop_diagnosis')
+        asset = {'storage': 'definition', **raster['definition']}
+        if crop:
+            asset = {'storage': 'repository', **raster['preview']}
+            assets.append({'id': before_ids[raster['id']], 'role': 'raster_draft', 'caption': 'Vor Beschnitt',
+                           'location': {'commit': None, 'container': None, 'storage': 'repository', **crop['preview']}})
         assets.append({'id':raster['id'],'role':'raster' if qualified else 'raster_draft','caption':raster['label'],
-                       'location':{'commit':None,'storage':'definition','container':None,**raster['definition']}})
+                       'location':{'commit':None,'container':None,**asset}})
         if (qualified or structured and job['state']=='raster_review') and job['selected']['raster'] is None:
             offers.append({'id':raster['id'],'kind':'raster','label':raster['label'],'record':ref,'asset_ids':[raster['id']]})
     return {'format':p.FINDING_FORMAT if structured else p.CURRENT_FORMAT,'puzzle_id':job['puzzle_id'],'revision':'current','record':ref,
@@ -672,6 +834,24 @@ def detail(source, commit, value):
         finding_view['candidates'] = {k: {'missing': v['missing'], 'instructions': job['instructions'].get(k, []), 'findings': [
             {**r, 'eligible': findings.eligible(r), 'binding': findings.binding(r)} for r in v['findings']]}
             for k, v in cards.items()}
+        before_ids = crop_asset_ids(job)
+        finding_view['hidden_assets'] = []
+        for candidate in job['rasters']:
+            key = candidate['id']
+            end = checked.rasters[key]
+            diagnostics = end['diagnostics']
+            if key in before_ids:
+                if 'crop' in diagnostics:
+                    diagnostics['crop']['before_asset'] = before_ids[key]
+                else:
+                    finding_view['hidden_assets'].append(before_ids[key])
+            finding_view['candidates'][key].update({
+                'qualified': checked.qualified(key),
+                'diagnostics': diagnostics,
+                'definition_sha256': candidate['definition']['sha256'],
+                'revision': end['definition']['revision'],
+                'width': end['definition']['width'], 'height': end['definition']['height'],
+            })
     return {**finding_view, 'state':job['state'],'blockers':[b['message'] if isinstance(b, dict) else b for b in job['blockers']],'raster_modes':raster_modes,
             'published':{'brief':{'text':job['brief']},'role':'approved' if job['parameters']['approved'] else 'proposed' if job['parameters']['proposed'] else 'absent',
                          'approved':job['parameters']['approved'],'proposed':job['parameters']['proposed']},

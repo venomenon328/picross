@@ -1,12 +1,32 @@
 {
   "format": "development-ci-plan/v1",
   "issue": "https://github.com/venomenon328/picross/issues/816",
-  "package": "KORRIDOR-NORM-A",
-  "modules": [],
-  "purpose": "Normdiff und Paketplan im Kern docs/ci-required prüfen. Fünf textuelle Szenarien einmalig auf Normkonsistenz, Links und harte Gates abgleichen. Dokumente und Paketplan sind buildfrei.",
-  "omitted": "tools, production.*, native.*, preflight, delivery und Browser bleiben bei reinem Normtext aus. Die Szenarien sind keine Softwaretests. Reader-, Projektions- und UI-Verhalten benötigen einen gesonderten Werkzeugauftrag.",
-  "test_changes": [],
-  "core_change": "Keine Änderung an Kern, Dauerprüfungen oder temporären Softwareproben.",
+  "package": "KORRIDOR-TOOL-B",
+  "modules": [
+    "tools",
+    "production.adapter",
+    "production.images"
+  ],
+  "purpose": "PW-Reader, HTTP-Projektion, Node-Auftragslogik, Builder/RI-ONE und den Leerbeschnitt mit synthetischen Quellen prüfen. Kern und regulärer Windows-Spielerbau gemäß Diff. Einmalige echte PW-Loopback-Bedienprüfung B-A01 für B-R01, ohne dauerhaften Browserkorpus.",
+  "omitted": "Kein native.*, preflight, delivery oder separater Chromium-Matrixlauf. Spielinteraktion, Live-Windows-App-Rollout und echte Rätseldaten liegen außerhalb des Pakets.",
+  "test_changes": [
+    {
+      "path": "tests/puzzle_production/test_current_authoring.py",
+      "disposition": "change-scoped",
+      "reason": "Diagnoseoriginale und Kandidatenisolierung, ausdrückliche Neufreigabe, separate technische Frame-Entscheidung bis RI-ONE und harte Gegenproben."
+    },
+    {
+      "path": "tests/puzzle_production/test_fixed_raster.py",
+      "disposition": "change-scoped",
+      "reason": "Gemeinsamer Leerbeschnittprüfer, unverändert hartes Endmaßgate."
+    },
+    {
+      "path": "tools/test_production_workspace.py",
+      "disposition": "change-scoped",
+      "reason": "Kombinierter Kopierauftrag, Kandidatenauswahl und veraltete Bindungen am echten Promptgenerator."
+    }
+  ],
+  "core_change": null,
   "evidence": {
     "mode": "none",
     "purpose": null,

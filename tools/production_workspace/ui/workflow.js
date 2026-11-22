@@ -132,6 +132,37 @@ const PW = (()=>{
   }
   return lines;
  }
+ const axes={width:'Breite',height:'Höhe',foreground_colors:'Vordergrundfarben'};
+ function cropChanges(crop){
+  return Object.entries(crop.changes).map(([axis,c])=>`${axes[axis]}: Minimum ${c.previous} → ${c.proposed}`);
+ }
+ function diagnosisOrder(value,intent){
+  const decision=intent.diagnosis;
+  const card=value.facts.candidates?.[decision?.target];
+  const record=value.facts.originals?.record;
+  if(!card||record?.selected?.raster||!['raster_review','raster_ready'].includes(value.facts.state)||
+     card.definition_sha256!==decision.sha||card.revision!==decision.revision)
+   throw Error('Bitte einen aktuellen Rasterbefund für den Auftrag wählen.');
+  const identity=`Kandidat ${decision.target}, Endrevision ${card.revision}, Definitions-SHA-256 ${card.definition_sha256}`;
+  if(decision.kind==='crop'){
+   const crop=card.diagnostics?.crop;
+   if(!crop||decision.parameters!==crop.parameters_sha256||!cropChanges(crop).length)
+    throw Error('Der gebundene Beschnittvorschlag fehlt oder ist veraltet.');
+   const dimensions=d=>`${d.width} × ${d.height}`;
+   return [
+    `Schritt 3: Für ${identity} genehmige ich die konkrete Parameter-/Korridorneufreigabe der Alternative ${crop.parameter+1} (bisheriger SHA-256 ${crop.parameters_sha256}): ${cropChanges(crop).join(', ')}. Alle übrigen Werte dieser Alternative und die übrigen Alternativen bleiben gültig. Der belegte Zuschnitt führt von ${dimensions(crop.before)} auf ${dimensions(crop.after)} Zellen.`,
+    `Ich beabsichtige die Rasterwahl ${decision.target} und die anschließende Fortsetzung in Schritt 4. Binde zuerst diese neue Parameteralternative und die davon abhängige Motiventscheidung. Prüfe die frische Endrevision, Hinweise, unabhängige vollständige Deduktion mit Endmatrixvergleich, Difficulty und alle weiteren Pflichtgates am Endraster. Publiziere die gültige Rasterwahl und die Fortsetzung erst nach erfolgreichen Prüfungen. Bleibt ein Gate offen, lege den konkreten Befund in Schritt 3 vor.`
+   ];
+  }
+  if(decision.kind!=='frame'||!card.diagnostics?.frame||card.diagnostics.frame.exception)
+   throw Error('Die aktuelle technische Randentscheidung ist nicht verfügbar.');
+  const reason=intent.frameReason?.trim();
+  if(!reason)throw Error('Bitte die technische frame-Ausnahme begründen.');
+  return [
+   `Schritt 3: Für ${identity} erkläre ich ausdrücklich eine technische frame-Ausnahme für den festgestellten H-01-Randbefund. Begründung: ${reason}`,
+   'Binde meine tatsächliche Erklärung mit eigenem Beleg an genau diesen Kandidaten, diese Endrevision und den Definitionshash. Prüfe die Ausnahme technisch, zeige den weiterhin negativen Randbefund und den separaten Ausnahmebeleg. Lege den aktuellen Prüfstand mit allen übrigen Pflichtgates vor.'
+  ];
+ }
  function prompt(value,intent={},personal={}){
   const action=intent.action||'continue',order=orderStep(value),opts=options(personal);
   const pickingRaster=value?.facts.candidates&&value.facts.state==='raster_review'&&value.offers.some(o=>o.kind==='raster');
@@ -140,7 +171,7 @@ const PW = (()=>{
   if(value&&value.facts.authoring_version!=='0.8.0')throw Error('Dieser historische Stand gehört nicht zum neuen 0.8-Produktionsweg.');
   const remote=value?.source_url?.match(/^https:\/\/github\.com\/([A-Za-z0-9_.-]+\/[A-Za-z0-9_.-]+)\/tree\/([a-f0-9]{40})$/);
   if(value&&(!remote||value.commit!==remote[2]))throw Error('Remote-Sicherung nicht bestätigt. Arbeitsstand zuerst mit dem PW-B-Publisher sichern, dann Quellen aktualisieren.');
-  if(!['continue','rework','resume','background_change'].includes(action))throw Error('Bitte eine gültige Aktion wählen.');
+  if(!['continue','rework','resume','background_change','raster_diagnosis'].includes(action))throw Error('Bitte eine gültige Aktion wählen.');
   const lines=[`Repository: ${remote?.[1]||'venomenon328/picross'} · Ziel: main. Verbindlich: AGENTS.md im aktuellen main und die dort gerouteten Pflichtquellen für Authoring 0.8.0, Schritt ${n}.`];
   if(value){
    if(!/^pz-[a-z0-9]+(?:-[a-z0-9]+)*$/.test(value.puzzle_id)||!/^[A-Za-z0-9][A-Za-z0-9._-]{0,31}$/.test(value.revision)||value.record?.file!==`content/authoring/${value.puzzle_id}/${value.revision}/record.json`)throw Error('Der kanonische Produktionsrecord ist nicht eindeutig gebunden.');
@@ -153,7 +184,7 @@ const PW = (()=>{
   const selected=value?.offers.find(o=>o.id===intent.selection&&o.kind===intent.kind);
   const cards=value?.facts.candidates;
   if(cards){
-   lines.push(...findingOrders(value,intent));
+   if(action!=='raster_diagnosis')lines.push(...findingOrders(value,intent));
    if(action==='continue'){
     if(value.facts.blockers?.length)throw Error('Auftragsweite Voraussetzung offen: '+value.facts.blockers[0]);
     const required=new Set(selected?[selected.id]:[]);
@@ -164,7 +195,10 @@ const PW = (()=>{
     for(const id of required)if(!choiceReady(value,id,intent))throw Error('Offene Voraussetzungen für '+id+'.');
    }
   }
-  if(action==='background_change'){
+  if(action==='raster_diagnosis'){
+   if(!cards||value.facts.blockers?.length)throw Error('Auftragsweite Voraussetzung für den Rasterauftrag offen.');
+   lines.push(...diagnosisOrder(value,intent));
+  }else if(action==='background_change'){
    if(value?.facts.state!=='registered')throw Error('Eine spätere Hintergrundrevision braucht einen tatsächlich registrierten Stand.');
    if(!intent.feedback?.trim())throw Error('Bitte die gewünschte Hintergrundänderung beschreiben.');
    lines.push(`Spätere Hintergrundrevision nach Authoring Schritt 5 §9: ${intent.feedback.trim()}`);
@@ -230,6 +264,6 @@ const PW = (()=>{
   else lines.push('Commit, Push und Draft-PR im beauftragten Umfang; kein Merge.');
   return lines.join('\n\n');
  }
- return {steps,step,orderStep,prompt,choiceReady,publishedGrid,options,closing,finalAssets};
+ return {steps,step,orderStep,prompt,choiceReady,publishedGrid,options,closing,finalAssets,axes,cropChanges};
 })();
 if(typeof module!=='undefined')module.exports=PW;

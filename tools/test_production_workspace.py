@@ -518,6 +518,44 @@ class WorkspaceTests(unittest.TestCase):
         finally:
             server.shutdown(); server.server_close(); thread.join()
 
+    def test_diagnostic_prompt_keeps_selection_and_declared_exceptions_distinct(self):
+        module = Path(__file__).parent / 'production_workspace/ui/workflow.js'
+        script = r"""
+const assert = require('node:assert/strict');
+const PW = require(process.argv[1]);
+const sha = 'a'.repeat(64), params = 'b'.repeat(64), commit = 'c'.repeat(40);
+const crop = {parameter:0, parameters_sha256:params, before:{width:20,height:3}, after:{width:17,height:3},
+              changes:{width:{previous:18,proposed:17}}};
+const value = {commit, source_url:'https://github.com/fixture/test/tree/'+commit,
+ puzzle_id:'pz-fixture', revision:'current', record:{file:'content/authoring/pz-fixture/current/record.json'},
+ offers:[{id:'a',kind:'raster'}], facts:{state:'raster_review', authoring_version:'0.8.0', blockers:[],
+ candidates:{a:{missing:[],findings:[]},
+             b:{missing:['Außerhalb der genehmigten Grenzen'],findings:[],definition_sha256:sha,revision:2,
+                diagnostics:{crop,frame:{exception:null}}}}}};
+const diagnosis = {target:'b',kind:'crop',sha,revision:2,parameters:params};
+const intent = {action:'raster_diagnosis',diagnosis};
+const combined = PW.prompt(value,intent);
+assert.match(combined,/Minimum 18 → 17/);
+assert.match(combined,/20 × 3 auf 17 × 3 Zellen/);
+assert.match(combined,/beabsichtige die Rasterwahl b/);
+assert.match(combined,/erst nach erfolgreichen Prüfungen/);
+assert.doesNotMatch(combined,/Ich wähle das qualifizierte Rasterangebot b/);
+assert.equal(PW.choiceReady(value,'b',intent),false);
+assert.match(PW.prompt(value,{kind:'raster',selection:'a'}),/Ich wähle das qualifizierte Rasterangebot a/);
+assert.throws(()=>PW.prompt(value,{kind:'raster',selection:'b'}),/qualifiziertes Rasterangebot/);
+assert.throws(()=>PW.prompt(value,{...intent,diagnosis:{...diagnosis,sha:params}}),/aktuellen Rasterbefund/);
+assert.throws(()=>PW.prompt(value,{...intent,diagnosis:{...diagnosis,parameters:sha}}),/veraltet/);
+const frame = {...intent,diagnosis:{...diagnosis,kind:'frame'}};
+assert.throws(()=>PW.prompt(value,frame),/begründen/);
+assert.match(PW.prompt(value,{...frame,frameReason:'Waagerechter Abstand gewollt'}),
+             /technische frame-Ausnahme.*Waagerechter Abstand gewollt/);
+value.facts.candidates.b.diagnostics.frame.exception = {statement:'Explicitly allowed'};
+assert.throws(()=>PW.prompt(value,{...frame,frameReason:'Schon gedeckt'}),/nicht verfügbar/);
+"""
+        result = subprocess.run(['node', '-e', script, str(module.resolve())], capture_output=True,
+                                text=True, encoding='utf-8', timeout=20)
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+
     def test_new_branch_namespace_skips_old_refs_and_reuses_unchanged_scans(self):
         sha = self.publish()
         updates = ''.join(f'create refs/heads/content/old-{n} {sha}\n' for n in range(300))

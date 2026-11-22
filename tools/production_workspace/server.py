@@ -215,9 +215,20 @@ class Service:
     def detail(self, jid):
         job = self.job(jid)
         facts = p.inspect(job['_source'], job['commit'], job['_projection'])
-        self.views.put(('validated', job['commit'], io.checksum(p.data(job['_projection']))),
-                       p.data(facts.get('raster_modes', {})))
-        return {**job['_projection'], 'facts': facts, 'source': job['source'], 'commit': job['commit'],
+        projection = job['_projection']
+        hidden = facts.get('hidden_assets', [])
+        self.views.put(('validated', job['commit'], io.checksum(p.data(projection))),
+                       p.data({'modes': facts.get('raster_modes', {}), 'hidden': hidden}))
+        cards = facts.get('candidates', {})
+        assets = [
+            {**asset, 'role': 'raster' if cards[asset['id']]['qualified'] else 'raster_draft'}
+            if 'qualified' in cards.get(asset['id'], {}) else asset
+            for asset in projection['assets'] if asset['id'] not in hidden
+        ]
+        offers = [offer for offer in projection['offers']
+                  if offer['kind'] != 'raster' or not cards.get(offer['id'], {}).get('missing')]
+        return {**projection, 'assets': assets, 'offers': offers, 'facts': facts,
+                'source': job['source'], 'commit': job['commit'],
                 'source_url': job.get('source_url'), 'branch': job['ref'],
                 'removal_unavailable': self.removal.availability(job),
                 'publication': job['publication'], 'status': 'Originalbindungen und Bildbytes geprüft; keine neue Inhaltsfreigabe'}
@@ -229,11 +240,15 @@ class Service:
         ap.require(any(a['id'] == aid for a in projection['assets']), 'Unbekannte Bildkennung.')
         # detail validation must complete before ANY image resource is released.
         key = ('validated', job['commit'], io.checksum(p.data(projection)))
-        modes = self.views.get(key)
-        if modes is None:
-            mode = self.detail(jid)['facts'].get('raster_modes', {}).get(aid)
+        validated = self.views.get(key)
+        if validated is None:
+            facts = self.detail(jid)['facts']
+            modes, hidden = facts.get('raster_modes', {}), facts.get('hidden_assets', [])
         else:
-            mode = p.parse(modes).get(aid)
+            data = p.parse(validated)
+            modes, hidden = data['modes'], data['hidden']
+        ap.require(aid not in hidden, 'Beschnittoriginal ist nicht prüfbar.')
+        mode = modes.get(aid)
         loc = next(a['location'] for a in projection['assets'] if a['id'] == aid)
         cache_key = ('pw-reader-1', job['commit'], p.data(loc), mode)
         raw = self.views.get(cache_key)

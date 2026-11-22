@@ -19,6 +19,34 @@ def used_foreground(matrix, empty=0):
     return {cell for row in matrix for cell in row if cell != empty}
 
 
+def frame_edges(matrix):
+    return dict(left=any(row[0] for row in matrix), right=any(row[-1] for row in matrix),
+                top=any(matrix[0]), bottom=any(matrix[-1]))
+
+
+def frame_failures(edges):
+    return [axis for axis, sides in (('width', ('left', 'right')), ('height', ('top', 'bottom')))
+            if not any(edges[side] for side in sides)]
+
+
+def crop_rectangle(crop, width, height, mask, permitted, matrix, *, empty):
+    require(isinstance(mask, list) and len(mask) == height and
+            all(isinstance(row, list) and len(row) == width and all(type(v) is bool for v in row)
+                for row in mask), 'Full boolean protection mask required')
+    require(isinstance(crop, list) and len(crop) == 4, 'Cell crop must be one rectangle')
+    for value in crop:
+        integer(value, 0, 50, 'cell crop')
+    left, top, right, bottom = crop
+    require(0 <= left < right <= width and 0 <= top < bottom <= height, 'Invalid cell crop rectangle')
+    removed = dict(zip(SIDES, (left, top, width - right, height - bottom)))
+    require(all(not count or side in permitted for side, count in removed.items()), 'Unapproved empty-edge crop')
+    for y, row in enumerate(matrix):
+        for x, value in enumerate(row):
+            if not (left <= x < right and top <= y < bottom):
+                require(value == empty and not mask[y][x], 'Crop removes nonempty or protected reference cell')
+    return removed
+
+
 def constraint(value):
     c = exact_keys(value, {'kind', 'target', 'minimum', 'maximum'})
     require(c['kind'] in ('exact', 'approximate', 'open'), 'Unknown constraint kind')
@@ -85,9 +113,9 @@ def import_entry(design, matrix, variant):
             'actual_crop': design['crop']}
 
 
-def result(p, design, matrix):
+def result(p, design, matrix, *, empty='empty'):
     values = {'width': design['width'], 'height': design['height'],
-              'foreground_colors': len(used_foreground(matrix, 'empty'))}
+              'foreground_colors': len(used_foreground(matrix, empty))}
     for axis in ('width', 'height'):
         integer(values[axis], 1, 50, axis)
     require_color_count(design['mode'], values['foreground_colors'])

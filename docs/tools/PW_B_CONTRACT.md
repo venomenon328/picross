@@ -249,18 +249,42 @@ betroffenen kreativen Wahlen und technischen Nachweise. Eine fortgeführte Annah
 ist keine automatische Auswahl des Nachfolgers.
 
 Prüfer, Projektion und Promptgenerator unterstützen gemischte Kandidatenstände.
-Ein qualifizierter Kandidat ist unabhängig von offenen Vergleichskandidaten
-auswählbar. Für Rand- und Maßabweichungen gelten die Diagnose- und
-Entscheidungspfade aus [Schritt 3 §§4.4–4.6](../production/authoring/PUZZLE_AUTHORING_STEP_3.md#44-reparaturen-und-änderungen).
-Das diagnostische Vorlegen eines Zuschnitts unter den freigegebenen Korridor
-ändert die Parameterbindung des qualifizierten Angebots nicht. Die bereits
-gebundene technische `frame`-Ausnahme bleibt der Weg für eine ausdrücklich
-angenommene Randverletzung. Die Soll-Sichtung eines konkreten H-01-Randbefunds
-samt getrenntem Ausnahmebeleg und die Sichtung eines Korridorentwurfs mit
-Vorher-/Nachheransichten und Änderungsvorschlag sind durch die allgemeine
-Unterstützung gemischter Kandidatenstände in Reader, Projektion und Bedienung
-noch nicht vollständig abgedeckt. Bis dahin gilt die Sichtung im bestehenden
-Bericht nach Schritt 3.
+Die Detailprojektion prüft die Bereitschaft je Kandidat. Sie zeigt qualifizierte
+Raster als Rasterangebote und harte Sperren als Sichtungsentwürfe. Zum negativen
+H-01-Randbefund gehören die aus der Endmatrix gemessene Belegung aller Kanten,
+die betroffene Achse, Kandidat, Endrevision und Definitionshash. Neue technische
+`frame`-Ausnahmen enthalten zusätzlich `candidate_id,revision` am bisherigen
+`definition_sha256` und dem eigenen Erklärungsbeleg. Bestandseinträge im
+bisherigen Format bleiben in ihren ursprünglichen Bindungen lesbar. Der
+Reader und der [Integrationseingang](../production/ZA1_ADAPTER.md)
+prüfen die technische Ausnahme. Der negative Randbefund bleibt auch mit
+gültigem Ausnahmebeleg sichtbar.
+
+Ein v3-Raster kann optional `crop_diagnosis` mit dem Format
+`picross-raster-crop-diagnosis-v1` enthalten. Die geschlossene Bindung enthält
+`before,preview,protection,rectangle,parameters_sha256`. Die drei Refs messen
+die ursprüngliche Definition, ihre echte PNG-Vorschau und die Schutzdatei.
+Letztere enthält `before_sha256,motif_sha256,cells` mit einer vollständigen
+booleschen Zellmatrix. Bei genehmigten geschützten Merkmalen bindet die
+tatsächliche Motiventscheidung die Schutzdatei in `crop_protection` als
+Zuordnung vom Hash der Vorher-Definition zum Hash der Schutzdatei. Eine
+vorhandene Zuordnung muss passen. Das Rechteck enthält Zellkoordinaten
+`[links,oben,rechts,unten]` mit exklusivem rechten und unteren Ende. Der
+geprüfte Ausschnitt erhält alle Zellen, Farbbedeutungen und die Revealbindung
+innerhalb des Rechtecks. Die erlaubten Seiten und die freigegebene vollständige
+Parameteralternative gelten auch für die Diagnose.
+
+Die Detailprojektion zeigt die gebundenen Originale vor und nach dem Beschnitt,
+die tatsächlichen Maße, die entfernten Seiten und Zellzahlen und den konkreten
+Vorschlag zur Änderung der ungefähren Untergrenze. Andere Parameterwerte bleiben
+gültig. Fehlende oder abweichende Originale sperren diesen Entwurf. Nach
+ausdrücklicher Neufreigabe müssen der Cropbezug und die Motiventscheidung auf
+die genehmigte Alternative zeigen. Der finale Reader verlangt aktuelle
+Hinweise, vollständige unabhängige Deduktion mit Endmatrixvergleich,
+Difficulty und alle übrigen Pflichtprüfungen. Die Vorschlagsalternative
+ändert keine Auswahl oder Phase. Die Originale liegen im einen aktuellen
+Record und folgen dessen Verdichtung. Das optionale Feld wird bestehenden
+v2-/v3-Records nicht automatisch hinzugefügt.
 
 Der globale Phasenstatus beschreibt den tatsächlichen Fortschritt
 und ersetzt keine Prüfung des ausgewählten Kandidaten. Auch ein blockierter
