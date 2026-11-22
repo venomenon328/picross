@@ -10,7 +10,7 @@ from . import authoring_package as ap, catalog_io as io, current_content as cont
 from .contract import exact_keys, canonical_bytes, digest, Budget, integer
 
 FORMAT = 'picross-authoring-current-v1'
-from . import work_assets
+from . import raster_parameters, work_assets
 FORMATS = (FORMAT, work_assets.FORMAT)
 REQUEST = 'picross-authoring-current-request-v1'
 LIMIT = 1024 * 1024
@@ -130,19 +130,23 @@ def validate(job):
         for count in counters.values(): integer(count,0,1000000,'current budget counter')
     ap.require(all(job['budgets']['used'][k]<=v for k,v in job['budgets']['limits'].items()), 'Current operation budget exceeded')
     exact_keys(job['parameters'], {'proposed','approved'})
-    for values in job['parameters'].values():
+    for role, values in job['parameters'].items():
         ap.require(isinstance(values,list) and len(values)<=8, 'Invalid parameters')
         for value in values:
             ap.require(isinstance(value,dict), 'Invalid parameter object')
-            from . import raster_parameters
             if value.get('format') == raster_parameters.FORMAT:
                 raster_parameters.validate(value)
             else:
-                exact_keys(value, {'width','height','mode','foreground_colors','size_constraint','foreground_color_constraint'})
+                keys = {'width','height','foreground_colors','size_constraint','foreground_color_constraint'}
+                exact_keys(value, keys | ({'mode'} if role == 'approved' or 'mode' in value else set()))
                 for axis in ('width','height'): integer(value[axis],1,50,axis)
-                ap.require(value['mode'] in ('mono','color') and value['size_constraint'] in ('exact','approximate') and
-                           value['foreground_color_constraint'] in ('exact','approximate'), 'Invalid approved parameters')
-                integer(value['foreground_colors'],1,8,'foreground colors')
+                ap.require(value['size_constraint'] in ('exact','approximate') and
+                           value['foreground_color_constraint'] in ('exact','approximate'), 'Invalid raster parameters')
+                mode = value.get('mode')
+                if (mode is None and role == 'proposed' and value['foreground_color_constraint'] == 'exact'
+                        and value['foreground_colors'] == 1):
+                    mode = 'mono'
+                raster_parameters.require_color_count(mode, value['foreground_colors'])
     for key, maximum in (('assets',100),('rasters',20),('decisions',8),('blockers',64)):
         ap.require(isinstance(job[key],list) and len(job[key])<=maximum, 'Too many '+key)
     for message in job['blockers']: text(message,'blocker')
@@ -227,6 +231,7 @@ class Checked:
     """Fresh current files only. UI can omit proof execution but never byte checks."""
     def __init__(self, job, read, *, technical=True):
         self.job=validate(deepcopy(job)); self.read=read; self.raw={}; self.rasters={}; self.releases={}
+        self.legacy_previews = set()
         j=self.job; phase=PHASES.index(j['state']); selected=j['selected']
         decisions={d['scope']:d for d in j['decisions']}
         for ref in references(j): self.bound(ref,64*LIMIT)
@@ -296,14 +301,12 @@ class Checked:
         raw=self.bound(raster['definition'],2*LIMIT)
         definition,puzzle,_,_=catalog_rating.definition(raw)
         ap.require(definition['id']==self.job['puzzle_id'] and definition['width']<=50 and definition['height']<=50, 'Invalid current raster identity/size')
-        used={c for row in definition['solution'] for c in row if c}
-        ap.require(used=={p['id'] for p in definition['palette']} and used, 'Palette must contain exactly used colors')
+        used = raster_parameters.used_foreground(definition['solution'])
         params=self.job['parameters']['approved']
         values={'width':definition['width'],'height':definition['height'],'foreground_colors':len(used)}
         def accepts_option(p):
             if 'constraints' in p:
-                from .raster_parameters import accepts
-                return all(accepts(p['constraints'][k],v) for k,v in values.items())
+                return all(raster_parameters.accepts(p['constraints'][k],v) for k,v in values.items())
             return (all(p['size_constraint']!='exact' or p[axis]==values[axis] for axis in ('width','height')) and
                     (p['foreground_color_constraint']!='exact' or p['foreground_colors']==len(used)))
         matching=[p for p in params if accepts_option(p)]
@@ -312,7 +315,8 @@ class Checked:
                     definition_bytes=raw,active=False) if raster['difficulty'] is not None else None)
         mode=rating_value.get('production_mode') if rating_value is not None else next(iter(modes)) if len(modes)==1 else None
         ap.require(mode in ('mono','color') and mode in modes, 'Raster requires one complete approved parameter option and an unambiguous explicit mode')
-        ap.require(mode!='mono' or len(used)==1, 'Mono requires one used color')
+        raster_parameters.require_color_count(mode, len(used))
+        ap.require(used == {p['id'] for p in definition['palette']}, 'Palette must contain exactly used colors')
         ap.require(not ready or raster['proof'] is not None and raster['difficulty'] is not None, 'Qualified raster needs proof and difficulty')
         proof=io.json_bytes(self.bound(raster['proof'],64*LIMIT),64*LIMIT) if raster['proof'] is not None else None
         if technical and proof is not None:
@@ -338,9 +342,23 @@ class Checked:
         image(preview)
         from io import BytesIO
         from PIL import Image
-        with Image.open(BytesIO(preview)) as actual, Image.open(BytesIO(raster_preview(definition))) as expected:
-            ap.require(actual.size==expected.size and actual.convert('RGBA').tobytes()==expected.tobytes(),
+        with Image.open(BytesIO(preview)) as actual:
+            ap.require(actual.format == 'PNG' and actual.size == (definition['width'] * 12, definition['height'] * 12),
                        'Raster preview differs from current definition')
+            pixels = actual.convert('RGBA').tobytes()
+        if pixels != raster_image(definition, neutral=mode == 'mono').tobytes():
+            ap.require(mode == 'mono' and pixels == raster_image(definition, neutral=False).tobytes(),
+                       'Raster preview differs from current definition')
+            self.legacy_previews.add(raster['id'])
+
+    def check_new_previews(self, previous):
+        # Reusing an established binding is allowed even when publishing a later phase.
+        def identity(raster):
+            return (raster['id'], raster['definition']['sha256'], raster['preview']['sha256'])
+        old = {identity(raster) for raster in previous['rasters']} if previous else set()
+        for raster in self.job['rasters']:
+            if raster['id'] in self.legacy_previews:
+                ap.require(identity(raster) in old, 'New mono raster preview must use neutral black')
 
     def matches(self,result):
         rating=self.rasters[self.job['selected']['raster']]['difficulty'] if self.job['operation']=='production' else None
@@ -445,6 +463,9 @@ def build(request, source_root, root):
                      'remove':list(remove.values()),'writes':[wanted[n] for n in sorted(payload)]}
         def read(n,limit): return payload[n] if n in payload else io.read(root,n,limit)
         checked=Checked(job,read)
+        # Local resume mirrors the exact remote record before editing. For a
+        # retry, the journal above supplies the original predecessor.
+        checked.check_new_previews(old)
         for source,raw in observed.items(): ap.require(io.read(source_root,source,max(len(raw),1))==raw, 'Payload source changed')
         for ref in journal['remove']:
             raw=io.read(root,ref['file'],64*LIMIT,missing=True)
@@ -532,8 +553,11 @@ def detail(source, commit, value):
     if selected['raster'] is not None or job['operation']=='background':
         composition={'raster':'active-raster' if job['operation']=='background' else selected['raster'],'reveal':selected['reveal'],
                      'background':None if selected['background'] in (None,'none','standard') else selected['background']}
+    raster_modes = {identifier: raster['mode'] for identifier, raster in checked.rasters.items()}
+    if job['operation'] == 'background':
+        raster_modes['active-raster'] = job['target']['mode']
     checked.recheck()
-    return {'state':job['state'],'blockers':job['blockers'],
+    return {'state':job['state'],'blockers':job['blockers'],'raster_modes':raster_modes,
             'published':{'brief':{'text':job['brief']},'role':'approved' if job['parameters']['approved'] else 'proposed' if job['parameters']['proposed'] else 'absent',
                          'approved':job['parameters']['approved'],'proposed':job['parameters']['proposed']},
             'metadata':metadata,'composition':composition,'originals':{'record':job},'authoring_version':'0.8.0',
@@ -775,14 +799,22 @@ def image_info(raw, name, job):
     return image(raw)
 
 
-def raster_preview(definition):
-    from io import BytesIO
+def raster_image(definition, *, neutral):
     from PIL import Image
-    palette={p['id']:tuple(bytes.fromhex(p['color']))+(255,) for p in definition['palette']}
-    image=Image.new('RGBA',(definition['width'],definition['height']),(0,0,0,0))
-    image.putdata([palette.get(v,(0,0,0,0)) for row in definition['solution'] for v in row])
-    image=image.resize((image.width*12,image.height*12),Image.Resampling.NEAREST)
-    stream=BytesIO();image.save(stream,format='PNG');return stream.getvalue()
+    palette = {p['id']: (0, 0, 0, 255) if neutral else tuple(bytes.fromhex(p['color'])) + (255,)
+               for p in definition['palette']}
+    palette[0] = (0, 0, 0, 0)
+    image = Image.new('RGBA', (definition['width'], definition['height']))
+    image.putdata([palette[cell] for row in definition['solution'] for cell in row])
+    return image.resize((image.width * 12, image.height * 12), Image.Resampling.NEAREST)
+
+
+def raster_preview(definition, *, mode):
+    from io import BytesIO
+    ap.require(mode in ('mono', 'color'), 'Raster preview requires a bound production mode')
+    stream = BytesIO()
+    raster_image(definition, neutral=mode == 'mono').save(stream, format='PNG')
+    return stream.getvalue()
 
 
 def prepare_background_change(job, checked, output):

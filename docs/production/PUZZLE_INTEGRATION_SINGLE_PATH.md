@@ -64,8 +64,8 @@ Zertifikats- oder „Aktuellbeleg“-Datei ersetzt. Maße werden aus der Definit
 `mode` mit den bisherigen Werten `mono` oder `color` im Inhaltsindex erhalten;
 bei der einmaligen Überführung wird der bestehende wirksame Wert aus
 `production.mode` übernommen. Definitionen enthalten heute kein eindeutiges
-Modusfeld: Einfarbiges Color darf nicht allein wegen der Palettengröße zu Mono
-werden. Bereits bestehende aktuelle
+Modusfeld. Registrierte Altstände behalten ihren wirksamen Modus. Ein neuer
+Eingang erfüllt die Modusgrenze anhand der verwendeten Zellwerte nach [ZA-1](ZA1_ADAPTER.md#eingang-und-grenzen). Bereits bestehende aktuelle
 Metadaten-, Rating- und Datumquellen werden wiederverwendet, ohne eine zweite
 bearbeitbare Datenhaltung aufzubauen.
 

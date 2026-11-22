@@ -407,6 +407,10 @@ gerendert; keine neue Produktionsdatei oder Bildkopie.
 
 ## 6. Geschlossener Sichtvertrag
 
+Aktuelle Rasterkachel und Großansicht verwenden dieselbe PNG-Ableitung aus
+Definition und geprüftem Modus nach [PW-B](PW_B_CONTRACT.md#rastervorschau-und-bindung).
+Die Angebotsüberschrift in beiden Ansichten stammt aus dem gebundenen Label.
+
 Der Reader vergleicht die ganze abgeleitete Ansicht mit dem kanonischen aktuellen
 Record und den tatsächlichen aktiven Datei-/Inhaltsbindungen. Fremde Angebote,
 vertauschte Bilder und stale Auswahl scheitern. Technische Detailprüfung ist

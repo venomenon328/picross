@@ -71,6 +71,8 @@ assert.match(build({...grid,sizeAccuracy:'approx',colorAccuracy:'exact'}),/Breit
 assert.match(build({mode:'mono'}),/monochrom, genau eine Vordergrundfarbe/);
 assert.doesNotMatch(build({...grid,mode:'mono'}),/4 Vordergrundfarben/);
 assert.doesNotMatch(build({mode:'color'}),/Farbzahl:/);
+assert.match(build({colors:'1',colorAccuracy:'exact'}),/exakt eine Vordergrundfarbe.*Parameterfestlegung.*Monochrom/);
+assert.throws(()=>build({mode:'color',colors:'1',colorAccuracy:'exact'}),/2 bis 8/);
 assert.doesNotMatch(build({}),/Rastergröße:|Rastermodus:|Farbzahl:/);
 for(const bad of [{...grid,width:'0'},{...grid,height:'51'},
                   {...grid,height:'1.5'},{...grid,width:'x'},{...grid,colors:'9'},{...grid,colors:'1'}]){
@@ -86,6 +88,7 @@ assert.equal(P.orderStep(value),2);
 assert.match(P.prompt(value,intent,{}),/Schritt 2.*Breite: exakt 28 Zellen/s);
 value.facts.state='motif_review';
 assert.doesNotMatch(P.prompt(value,intent,{}),/Breite: exakt 28 Zellen/);
+assert.match(P.prompt(value,intent,{}),/Monochrom und sichtbaren Motivmerkmalen/);
 const correction=P.prompt(value,{...intent,action:'rework',feedback:'Raster anpassen'},{});
 assert.match(correction,/Breite: exakt 28 Zellen/);
 assert.doesNotMatch(correction,/Ich gebe.*frei/);

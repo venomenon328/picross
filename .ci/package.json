@@ -1,25 +1,35 @@
 {
   "format": "development-ci-plan/v1",
-  "issue": "https://github.com/venomenon328/picross/issues/784",
-  "package": "PW-REST-AUTH",
-  "modules": ["tools"],
-  "purpose": "Optionaler Windows-REST-Zugang für Original-, Repository-/PR- und Updatekatalogabfragen mit sicherer Tokenbegrenzung und getrennten Abruffehlern. Separater unveröffentlichender PW-MSI-Diagnosebau.",
-  "omitted": "Keine zusätzlichen Native-, Produktions-, Web- oder Browserdiagnosemodule. Der reguläre Windows-Playerbau läuft im Kern. Es ändern sich weder Spielregeln noch Rätseldaten oder Browserplattformlogik.",
+  "issue": "https://github.com/venomenon328/picross/issues/786",
+  "package": "MONOV-P1",
+  "modules": [
+    "tools",
+    "production.images",
+    "production.adapter",
+    "production.catalog"
+  ],
+  "purpose": "tools: PW-Reader, UI und Publisher. production.images: synthetische Rasterbildableitung. production.adapter: aktuelle Parameter, Builder, Vorschau- und Integrationsgrenzen. production.catalog: Modusprüfung vor Registry-Schreiboperationen und Bestandsleser.",
+  "omitted": "Keine Solver-/Proof-/Bewertungsalgorithmik oder neue algorithmische Quellabhängigkeit. Native-, Preflight-, Delivery- und Chromium-Module bleiben ausgelassen. Der reguläre Windows-x64-Playerbau läuft im Kern. Die PW-Desktopprobe ist einmalig und verwendet synthetische Kandidaten.",
   "test_changes": [
     {
-      "path": "tools/test_app_updates.py",
+      "path": "tests/puzzle_production/test_current_authoring.py",
       "disposition": "change-scoped",
-      "reason": "Bestehende Transportgrenzen kontrolliert am neuen REST-Einstieg prüfen, ohne echte Netzaufrufe."
+      "reason": "Vergleicht neue und gebundene ältere Mono-Pixel, Color-Pixel, echte Vorschau-/Auswahlbindungen und den Color-1-Ablehnungspfad an Producer, Parameter und Reader."
+    },
+    {
+      "path": "tests/puzzle_production/test_current_consumers.py",
+      "disposition": "change-scoped",
+      "reason": "Prüft Color-1 einschließlich einer zusätzlichen unbenutzten ID vor Registry-Schreibseite und prüft den gebundenen Altmodus im Bestandsleser."
+    },
+    {
+      "path": "tools/test_authoring_sheet.py",
+      "disposition": "change-scoped",
+      "reason": "Prüft die frühe exakte Einfarbvorgabe und den Textauftrag für neue Mono-Angebote im vorhandenen Prompt-Test."
     },
     {
       "path": "tools/test_work_publish.py",
       "disposition": "change-scoped",
-      "reason": "Bestehende P2-Recovery- und Sperrregressionen authentifizieren am gemeinsamen REST-Einstieg und prüfen das Rate-Limit."
-    },
-    {
-      "path": "tools/test_pw_github_rest.py",
-      "disposition": "change-scoped",
-      "reason": "Kleine Regressionen für Startumgebung, API- und Downloadgrenzen, anonymen Betrieb, Statusklassen und Browserfehler ohne echte Credentials."
+      "reason": "Prüft Aufnahmegrenze neuer Vorschauen und bytegleiche Wiederverwendung eines bereits im synthetischen Arbeitsrelease gebundenen Mono-Originals."
     }
   ],
   "core_change": null,
