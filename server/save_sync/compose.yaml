@@ -1,0 +1,44 @@
+name: picross-save-sync
+services:
+  db:
+    image: postgres:17-bookworm@sha256:837bed18782820fe967067cb5328b02b0d9992c1be9a37ee0c9c492cfc03af3b
+    environment:
+      POSTGRES_USER: picross
+      POSTGRES_DB: picross
+      POSTGRES_PASSWORD: ${SYNC_DB_PASSWORD:?Set SYNC_DB_PASSWORD}
+      POSTGRES_INITDB_ARGS: "--encoding=UTF8 --no-locale"
+    command: ["postgres", "-c", "log_min_error_statement=panic", "-c", "log_parameter_max_length_on_error=0"]
+    volumes:
+      - data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "picross", "-d", "picross"]
+      interval: 2s
+      timeout: 3s
+      retries: 30
+  api:
+    build: .
+    image: ${SYNC_IMAGE:-picross-save-sync-api:local}
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      PGHOST: db
+      PGDATABASE: picross
+      PGUSER: picross
+      PGPASSWORD: ${SYNC_DB_PASSWORD:?Set SYNC_DB_PASSWORD}
+      SYNC_ORIGINS: ${SYNC_ORIGINS:-}
+      SYNC_BYTES: ${SYNC_BYTES:-536870912}
+      SYNC_PUZZLES: ${SYNC_PUZZLES:-2000}
+      SYNC_DEVICES: ${SYNC_DEVICES:-100}
+      SYNC_AUTH_NAME: ${SYNC_AUTH_NAME:-10}
+      SYNC_AUTH_IP: ${SYNC_AUTH_IP:-100}
+    ports:
+      - "127.0.0.1:${SYNC_PORT:-8000}:8000"
+    command: ["sh", "-ec", "python -m sync.admin migrate && exec python -m uvicorn sync.api:app --host 0.0.0.0 --port 8000 --no-access-log --no-proxy-headers"]
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/health/ready', timeout=2)"]
+      interval: 2s
+      timeout: 4s
+      retries: 30
+volumes:
+  data:

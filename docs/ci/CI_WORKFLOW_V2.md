@@ -60,6 +60,7 @@ klassifizierbaren Diff wird die Ausnahme nicht angenommen.
 
 | Modul | Tatsächlicher Umfang |
 | --- | --- |
+| `sync.server` | Isolierter Konto-/Snapshotdienst, HTTP, PostgreSQL und Restore gemäß SYNC-A |
 | `tools` | Vorhandene Python-Werkzeugtests; nur bei passendem Paketbedarf |
 | `preflight` | Gebundene Toolchain-/Smoke-/Exportprüfung |
 | `native.core`, `native.history`, `native.catalog`, `native.completion`, `native.adapters`, `native.graphics`, `native.export` | Unabhängige Gruppen des aktuellen nativen Harness; aktuelle Gruppenverträge und Reader |
@@ -75,13 +76,9 @@ Chromium bleibt ein separat ausdrücklich manuell gestarteter Diagnosepfad. Allg
 
 Der manuelle Einstieg in Package CI erlaubt die ausdrücklich angegebenen Module, standardmäßig keine; er übernimmt keine gespeicherte Feature-Uploadanforderung. Die Auswahl allein beweist keine fachlich ausreichende Abdeckung: diese Entscheidung gehört in Spezifikation und Review.
 
-## SYNC-A: geplantes Servermodul
+## SYNC-A: Servermodul
 
-[SYNC-A in #821](https://github.com/venomenon328/picross/issues/821#sync-a) führt
-das optionale Modul `sync.server` für den [Konto-/Snapshotdienst](../game/SAVE_SYNC.md)
-ein. **Freigegebenes Soll, noch nicht ausführbar:** Im reinen Spezifikationsdiff
-wählt `SYNC-SPEC` keine Zusatzmodule. Erst die Implementierung registriert
-`sync.server` im Runner und wählt es in ihrem Paketplan.
+[SYNC-A in #821](https://github.com/venomenon328/picross/issues/821#sync-a) wählt das optionale Modul `sync.server` für den [Konto-/Snapshotdienst](../../server/save_sync/README.md).
 
 `sync.server` baut das wirkliche Serviceimage aus einem abgegrenzten Serverkontext,
 startet eine isolierte Compose-/PostgreSQL-Umgebung und prüft die HTTP-Grenze mit
@@ -99,14 +96,12 @@ Buildklassifikation bleiben im bestehenden Kern `test_ci_modular.py`. SYNC-A
 wählt deshalb kein zusätzliches vollständiges `tools`-Modul; andere Fachmodule
 werden nur bei tatsächlichem Änderungsbedarf neu begründet.
 
-Die Implementierung führt eine eng begrenzte Ausnahme **nur vom Windows-
-Playerbau** für künftige reine reguläre `server/**`-Dateiänderungen ein. Der
+Reine reguläre `server/**`-Dateiänderungen sind vom Windows-Playerbau ausgenommen. Der
 vollständige Diff einschließlich Umbenennung/Löschung muss ausschließlich diese
 Klasse und bereits buildfreie Dokument-/Paketplandateien enthalten. Gemeinsame
 Werkzeuge/CI-Dateien, Spielcode, unbekannte Pfade und nicht reguläre Dateimodi
 bleiben außerhalb. Der erste gemischte SYNC-A-PR mit CI-Kern-/Workflowänderungen
-behält deshalb den regulären Windowsbau. Bis zur ausführbaren Klassifikation
-gilt unverändert die oben beschriebene konservative Auswahl.
+behält deshalb den regulären Windowsbau.
 
 Einmalige Liefernachweise, ausgelassene Spiel-/Liveabdeckung und Gatezeitpunkte
 stehen im Paket. Standardmäßig `evidence.mode=none`, kompakte Actions-Ergebnisse

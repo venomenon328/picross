@@ -23,7 +23,7 @@ PLAN_PATH = '.ci/package.json'
 FORMAT = 'development-ci-plan/v1'
 NATIVE = ('core', 'history', 'catalog', 'completion', 'adapters', 'graphics', 'export')
 PRODUCTION = ('solver', 'images', 'adapter', 'catalog')
-MODULES = ('tools', 'preflight', 'delivery', *(f'native.{g}' for g in NATIVE),
+MODULES = ('tools', 'preflight', 'delivery', 'sync.server', *(f'native.{g}' for g in NATIVE),
            *(f'production.{g}' for g in PRODUCTION))
 CORE_PATHS = {Path(__file__).resolve().relative_to(ROOT).as_posix(), 'tools/test_ci_modular.py',
               '.github/workflows/ci-modular.yml', 'tools/build_main_player.py', 'tools/ci_paths.py'}
@@ -125,6 +125,11 @@ def player_requirement(paths, modules, *, event, nonregular=()):
         suffix = PurePosixPath(path).suffix.lower()
         return (suffix == '.md' and (path.startswith(('docs/', 'game/', 'tools/', '.github/')) or '/' not in path)
                 or path.startswith('docs/') and suffix in {'.html', '.css', '.txt', '.png', '.jpg', '.jpeg', '.svg', '.webp', '.pdf'})
+    server = any(p.startswith('server/') for p in paths)
+    if server and not nonregular and all(p == PLAN_PATH or document(p) or
+            re.fullmatch(r'server/(?:[A-Za-z0-9_.-]+/)*[A-Za-z0-9_.-]+', p)
+            and not {'.', '..'}.intersection(p.split('/')) for p in paths):
+        return {'required': False, 'reason': 'Only regular server files, documents and package plan'}
     if (paths and not nonregular and all(p == PLAN_PATH or content_path(p) or document(p) for p in paths)):
         return {'required': False, 'reason': 'Only documents and/or inert puzzle production; no player build'}
     return {'required': True, 'reason': 'Development changes or no safely classifiable diff'}
@@ -303,6 +308,13 @@ def execution_plan(plan, part=None):
             'player': {**plan['player'], 'required': part in ('player', 'native.export')}}
 
 
+def validate_sync_result(plan, result):
+    binding = {key: plan[key] for key in ('source_head', 'base_commit', 'tested_checkout', 'run_id', 'run_attempt')}
+    expected = {f'SYNC-A-{n:02}': 'passed' for n in range(1, 10)}
+    if result != {'binding': binding, 'results': expected}:
+        raise ValueError('Missing, failed or incorrectly bound sync.server evidence')
+
+
 def execute(plan, output, cache, *, part=None):
     original = plan
     plan = execution_plan(plan, part)
@@ -334,6 +346,10 @@ def execute(plan, output, cache, *, part=None):
                 if 'tools' in plan['modules']:
                     command([sys.executable, '-m', 'unittest', 'discover', '-s', 'tools', '-p', 'test_*.py', '-v'],
                             'tools', work, rows)
+                if 'sync.server' in plan['modules']:
+                    result = work / 'sync.json'
+                    command([sys.executable, 'server/save_sync/test_integration.py', str(result)], 'sync.server', work, rows)
+                    validate_sync_result(plan, strict_json(result.read_text(encoding='utf-8')))
                 if 'preflight' in plan['modules']:
                     command([sys.executable, 'tools/p1_preflight.py', '--cache-dir', str(cache),
                              '--output-dir', str(work / 'preflight')], 'preflight', work, rows)
