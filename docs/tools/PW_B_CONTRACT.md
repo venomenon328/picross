@@ -76,9 +76,10 @@ Regelbuch, Generator-/Codec-/Toolhasharchiv oder Inventar als neue Pflichtdatei.
 brief_ready/reveal_review brauchen gültiges Briefing und vorhandene Angebote;
 motif_review zusätzlich gewähltes freigegebenes Reveal und Motivangebot;
 motif_approved/raster_review zusätzlich echte Motiv-/Parameterfreigabe.
-raster_ready verlangt für jedes angebotene Raster Maße/Palette/Hinweise,
-vollständigen unabhängigen Proof mit Endmatrixvergleich, gebundene Difficulty,
-fällige Sichturteile und passende Parameter. Hintergrundarbeit ist vorher kein
+Die oben beschriebene v2-Form verlangt für `raster_ready` bei jedem angebotenen
+Raster Maße/Palette/Hinweise, vollständigen unabhängigen Proof mit
+Endmatrixvergleich, gebundene Difficulty, fällige Sichturteile und passende
+Parameter. Hintergrundarbeit ist vorher kein
 Blocker. background_review braucht eine wirkliche qualifizierte Rasterwahl.
 content_ready zusätzlich gültigen Hintergrund selected/none/standard, Rechte
 und Bildurteile einschließlich H-07. editorially_approved braucht echte Endabnahme
@@ -249,7 +250,19 @@ ist keine automatische Auswahl des Nachfolgers.
 
 Prüfer, Projektion und Promptgenerator unterstützen gemischte Kandidatenstände.
 Ein qualifizierter Kandidat ist unabhängig von offenen Vergleichskandidaten
-auswählbar. Der globale Phasenstatus beschreibt den tatsächlichen Fortschritt
+auswählbar. Für Rand- und Maßabweichungen gelten die Diagnose- und
+Entscheidungspfade aus [Schritt 3 §§4.4–4.6](../production/authoring/PUZZLE_AUTHORING_STEP_3.md#44-reparaturen-und-änderungen).
+Das diagnostische Vorlegen eines Zuschnitts unter den freigegebenen Korridor
+ändert die Parameterbindung des qualifizierten Angebots nicht. Die bereits
+gebundene technische `frame`-Ausnahme bleibt der Weg für eine ausdrücklich
+angenommene Randverletzung. Die Soll-Sichtung eines konkreten H-01-Randbefunds
+samt getrenntem Ausnahmebeleg und die Sichtung eines Korridorentwurfs mit
+Vorher-/Nachheransichten und Änderungsvorschlag sind durch die allgemeine
+Unterstützung gemischter Kandidatenstände in Reader, Projektion und Bedienung
+noch nicht vollständig abgedeckt. Bis dahin gilt die Sichtung im bestehenden
+Bericht nach Schritt 3.
+
+Der globale Phasenstatus beschreibt den tatsächlichen Fortschritt
 und ersetzt keine Prüfung des ausgewählten Kandidaten. Auch ein blockierter
 Entwurf kann als Korrekturgrundlage adressiert werden; das setzt selected nicht
 auf eine unqualifizierte kreative Wahl. Nach tatsächlicher Wahl gelten die
