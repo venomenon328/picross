@@ -29,7 +29,11 @@ ist kein Webspielernachweis. Die damaligen Einführungsnachweise stehen in [B-B-
 Zusätzliche statische Entwicklungsfassung aus [#162](https://github.com/venomenon328/picross/issues/162).
 Gebundene Godot-Standard-Toolchain, Single-Thread, WebGL 2 und WebAssembly; Desktop mit
 Maus in Chromium und Firefox. Windows, Regeln, Schema 1 und Savevalidierung
-bleiben erhalten. Kein Backend, PWA, Cloudsave oder automatisches Deployment.
+bleiben erhalten. Der gelieferte WEB-1-Weg ist statisch, ohne Backend, PWA oder
+Cloudsave und ohne automatisches Deployment. Der zusätzliche optionale
+[SYNC-Dienst](../game/SAVE_SYNC.md) ist als Soll freigegeben, noch nicht geliefert.
+Seine spätere Kontoanbindung ergänzt diesen Webweg; kontolose Browserpersistenz
+und statisches Deployment bleiben bestehen. Lieferstatus: [#821](https://github.com/venomenon328/picross/issues/821).
 P1 enthält kein Audio; der Webstart verwendet deshalb Godots Dummy-Audiotreiber
 und erzeugt keine unbenötigten Browser-Audiokontexte.
 Technische Ergebnisse und Artefaktbindung stehen im jeweils tatsächlich geprüften PR.
@@ -170,7 +174,11 @@ prüft Hashes sowie MIME-/Cacheheader. Die Serverkonfiguration bleibt Betreibera
 
 ## Browserspeicher und Abnahmen
 
-`user://p1/saves/` bleibt die einzige Saveplattform. Godots `/userfs`-IDBFS-Mount
+`user://p1/saves/` ist der bisherige kontolose Speicherroot. Die hier beschriebene
+gelieferte Fassung speichert ausschließlich lokal. Zusätzliche Kontoprofile und
+Serversynchronisierung folgen erst dem [SYNC-Vertrag](../game/SAVE_SYNC.md);
+sie ersetzen weder diesen Gaststand noch die bestätigte lokale Persistenz.
+Godots `/userfs`-IDBFS-Mount
 speichert tatsächlich in IndexedDB am Browserorigin; Version/Assetpfad ist kein
 Teil dieser Identität. Verschiedene Installationen auf demselben Origin teilen
 den Speicher; unterschiedliche Origins/Profile sowie Windows bleiben getrennt.

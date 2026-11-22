@@ -24,7 +24,7 @@ Pflichtquellen des aktuellen Aufgabenbereichs und die unmittelbar benötigte Nor
 | [PROJECT_PROFILE.md](PROJECT_PROFILE.md) | Stabile Projekteigenschaften und aufgabenbezogene Fachroute. |
 | [dev-rules/](dev-rules/WORKFLOW.md) | Lokaler generischer Entwicklungsworkflow, Befugnisse, Modellwahl, CI- und Übergabevertrag. |
 | [project/](project/PRODUCT_DEFINITION.md) | Produktanforderungen, gestalterische Richtung und Herkunft des Regelpakets. |
-| [game/](game/PROTOTYPE_P1.md) | Spielverhalten, Buch/UI, Kategorien, Eingabe, Anzeige und Darstellung. |
+| [game/](game/PROTOTYPE_P1.md) | Spielverhalten, Buch/UI, Kategorien, Eingabe, Anzeige und Darstellung; [SYNC](game/SAVE_SYNC.md) als freigegebenes Soll für optionale Konten und gemeinsame Spielstände. |
 | [production/authoring/](production/authoring/PUZZLE_AUTHORING.md) | Kern und fünf Phasen der Rätselproduktion: Ablauf, Auswahl und Übergaben. |
 | [production/images/](production/images/README.md) | Gestalterische Norm je Bildtyp; keine zweite Ablaufbeschreibung. |
 | [production/](production/PUZZLE_PRODUCTION.md) | Technische Produktion, Qualität, Bildprofile, Rasterableitung und Integration. |

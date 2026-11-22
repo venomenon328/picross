@@ -75,6 +75,45 @@ Chromium bleibt ein separat ausdrücklich manuell gestarteter Diagnosepfad. Allg
 
 Der manuelle Einstieg in Package CI erlaubt die ausdrücklich angegebenen Module, standardmäßig keine; er übernimmt keine gespeicherte Feature-Uploadanforderung. Die Auswahl allein beweist keine fachlich ausreichende Abdeckung: diese Entscheidung gehört in Spezifikation und Review.
 
+## SYNC-A: geplantes Servermodul
+
+[SYNC-A in #821](https://github.com/venomenon328/picross/issues/821#sync-a) führt
+das optionale Modul `sync.server` für den [Konto-/Snapshotdienst](../game/SAVE_SYNC.md)
+ein. **Freigegebenes Soll, noch nicht ausführbar:** Im reinen Spezifikationsdiff
+wählt `SYNC-SPEC` keine Zusatzmodule. Erst die Implementierung registriert
+`sync.server` im Runner und wählt es in ihrem Paketplan.
+
+`sync.server` baut das wirkliche Serviceimage aus einem abgegrenzten Serverkontext,
+startet eine isolierte Compose-/PostgreSQL-Umgebung und prüft die HTTP-Grenze mit
+synthetischen Konten: Authentifizierung/Mandantentrennung, Einladung/Recovery,
+Save-/Historyvalidierung, echte konkurrierende Schreiber, Antwortverlust und
+Sequenzwiederholung, Reset, Konfliktentscheidung, Kontingente, Neustart sowie
+echtes Backup/Restore in einer zweiten leeren Datenbank einschließlich sicherem
+Abgleich nach Restore. SQLite oder ausschließlich interne Funktionsaufrufe
+ersetzen diesen Durchstich nicht. Leere, übersprungene oder fehlende erwartete
+Prüfungen und fehlerhafte Ergebnisbindung sind kein erfolgreicher Matrixteil.
+
+Das Modul ist `change-scoped`; kein automatischer Einbau in `tools`, Browser-
+diagnose oder den Main-Kern. Kleine Gegenproben für Auswahl, Ergebnisgate und
+Buildklassifikation bleiben im bestehenden Kern `test_ci_modular.py`. SYNC-A
+wählt deshalb kein zusätzliches vollständiges `tools`-Modul; andere Fachmodule
+werden nur bei tatsächlichem Änderungsbedarf neu begründet.
+
+Die Implementierung führt eine eng begrenzte Ausnahme **nur vom Windows-
+Playerbau** für künftige reine reguläre `server/**`-Dateiänderungen ein. Der
+vollständige Diff einschließlich Umbenennung/Löschung muss ausschließlich diese
+Klasse und bereits buildfreie Dokument-/Paketplandateien enthalten. Gemeinsame
+Werkzeuge/CI-Dateien, Spielcode, unbekannte Pfade und nicht reguläre Dateimodi
+bleiben außerhalb. Der erste gemischte SYNC-A-PR mit CI-Kern-/Workflowänderungen
+behält deshalb den regulären Windowsbau. Bis zur ausführbaren Klassifikation
+gilt unverändert die oben beschriebene konservative Auswahl.
+
+Einmalige Liefernachweise, ausgelassene Spiel-/Liveabdeckung und Gatezeitpunkte
+stehen im Paket. Standardmäßig `evidence.mode=none`, kompakte Actions-Ergebnisse
+und laufinterne Entfernung eigener Testdaten/Compose-Ressourcen. Keine Dumps
+oder Testgeheimnisse als routinemäßige Downloads; gezielt erforderliche
+Revieworiginale folgen dem bestehenden Zustell-/Aufbewahrungsvertrag.
+
 ## Laufzeit und Artefakte
 
 Weiches Ziel: **600 Sekunden / zehn Minuten**. Der Runner warnt bei Überschreitung und arbeitet weiter. Die weiche Uhr beginnt vor dem ersten Checkout und umfasst Kernprüfung, Wartezeit zwischen Jobs, Setup und Verifikation bis zum Upload. Verifikation, Modulzeiten und Byteumfang werden getrennt gemessen; anfängliche Queuezeit und endgültige Gesamtlaufzeit einschließlich Upload kommen aus Actions. Es gibt keine maximale Gesamtlaufzeit oder Artefaktgröße als Projekt-Erfolgsgate. Bestehende Prozess-/Netzwerk-Hängerschutzgrenzen bleiben getrennt. Allgemeine Workflow-Timeouts des alten Browserpfads sind entfernt; Plattformgrenzen werden nicht umgangen.
