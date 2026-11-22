@@ -1,10 +1,10 @@
 {
   "format": "development-ci-plan/v1",
-  "issue": "https://github.com/venomenon328/picross/issues/660",
-  "package": "PROD-ZIMTSCHNECKE",
+  "issue": "https://github.com/venomenon328/picross/issues/700",
+  "package": "PINGUIN-RASTER-REVIEW",
   "modules": [],
-  "purpose": "Erstintegration der endabgenommenen Zimtschnecke pz-zimtschnecke über RI-ONE mit Monoraster raster-b, Reveal reveal-c und HG31-Hintergrund background-b.",
-  "omitted": "Reine Rätselproduktion. Proof, Endmatrix und ausgewählte Nutzdaten werden im Produktionsweg geprüft. Package CI prüft den Quellen- und Plankern ohne Zusatzmodule und ohne Player-Build.",
+  "purpose": "Quellen- und Paketplanprüfung für den veröffentlichten Rasterstand von pz-pinguin.",
+  "omitted": "Reine Authoring-Daten. Raster, Hinweise, Deduktionsproof, Endmatrix, Schwierigkeit und Sichturteile werden in der Produktion am aktuellen Angebot geprüft. Der CI-Kern braucht weder Player-Build noch Zusatzmodule.",
   "test_changes": [],
   "core_change": null,
   "evidence": {
