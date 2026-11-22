@@ -1,0 +1,4 @@
+author: Mit OpenAI ImageGen durch Codex für diesen Auftrag erzeugt.
+changes: Die PNG-Originalbytes wurden unverändert übernommen.
+source: Native Einzelgenerierung einer Food-Court-Kontextzeichnung für Nasi Lemak.
+usage_basis: Auftrag zur Erstellung und Veröffentlichung als Auswahlangebot für Picross.

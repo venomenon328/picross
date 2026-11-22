@@ -1,11 +1,15 @@
 {
   "format": "development-ci-plan/v1",
   "issue": "https://github.com/venomenon328/picross/issues/700",
-  "package": "PZ-IGEL-INTEGRATION",
+  "package": "PZ-NASI-LEMAK-INTEGRATION",
   "modules": [],
-  "purpose": "Igel mit dem gewählten 15 × 13-Monochromraster, Reveal und Obstwiesen-Hintergrund in den Spielkatalog der Säugetiere aufnehmen.",
-  "omitted": "Reine Rätselproduktion. Der unabhängige Linienproof, die Endmatrix, die gebundene Freigabe, die Bildableitung und die Registrierung werden im Produktionsweg geprüft. Der PR benötigt den Quellen- und Plankern.",
+  "purpose": "Nasi Lemak mit raster-g, reveal-a und der gewählten Kontextzeichnung background-a im Profil 2304 × 768 in den Spielkatalog aufnehmen.",
+  "omitted": "Reine Rätselproduktion. Proof und Endmatrix, Bildableitung und Lieferdaten werden durch die Produktionswerkzeuge geprüft. Der Paketdiff erfordert den Quellen- und Plankern.",
   "test_changes": [],
   "core_change": null,
-  "evidence": {"mode": "none", "purpose": null, "expires": null}
+  "evidence": {
+    "mode": "none",
+    "purpose": null,
+    "expires": null
+  }
 }
