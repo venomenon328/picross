@@ -1,10 +1,10 @@
 {
   "format": "development-ci-plan/v1",
-  "issue": "https://github.com/venomenon328/picross/issues/660",
-  "package": "PROD-ZIMTSCHNECKE",
+  "issue": "https://github.com/venomenon328/picross/issues/700",
+  "package": "PZ-NASI-LEMAK-REVEAL",
   "modules": [],
-  "purpose": "Erstintegration der endabgenommenen Zimtschnecke pz-zimtschnecke über RI-ONE mit Monoraster raster-b, Reveal reveal-c und HG31-Hintergrund background-b.",
-  "omitted": "Reine Rätselproduktion. Proof, Endmatrix und ausgewählte Nutzdaten werden im Produktionsweg geprüft. Package CI prüft den Quellen- und Plankern ohne Zusatzmodule und ohne Player-Build.",
+  "purpose": "Buildfreie Sichtung der drei Nasi-Lemak-Abschlussbilder nach Authoring 0.8.0, Schritt 1.",
+  "omitted": "Der Draft verweist auf den aktuellen PW-B-Record. Bildsichtung und Originalprüfung laufen über PW-B. Die CI prüft den Quellenstand und Paketplan ohne Player-Build und Zusatzmodule.",
   "test_changes": [],
   "core_change": null,
   "evidence": {
