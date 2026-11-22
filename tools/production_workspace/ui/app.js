@@ -22,7 +22,25 @@ for(const key of ['workroot','merge']){
   updatePrompt();
  };
 }
+function refreshChoices(){
+ if(!detail?.facts.candidates)return;
+ document.querySelectorAll('[data-rework-shortcut]').forEach(button=>{button.hidden=intent.action==='rework';});
+ document.querySelectorAll('[data-readiness]').forEach(status=>{
+  const card=detail.facts.candidates[status.dataset.readiness];
+  const open=card.findings.filter(row=>!row.eligible||!(intent.findings?.[row.binding]?.accepted??(row.decision?.action==='accept'))).length;
+  const ready=!card.missing.length&&!open;
+  status.dataset.ready=String(ready);
+  status.textContent=ready?'Auswahl möglich':card.missing.length?'Prüfung ausstehend':open===1?'1 offener Befund':open+' offene Befunde';
+ });
+ document.querySelectorAll('button[data-candidate]').forEach(button=>{
+  const target=button.dataset.candidate;
+  button.disabled=!readyImages.has(target)||(intent.action!=='rework'&&!PW.choiceReady(detail,target,intent));
+  button.textContent=intent.action==='rework'?'Als Korrekturgrundlage wählen':'Diese Variante wählen';
+  button.setAttribute('aria-pressed',String(intent.selection===target));
+ });
+}
 function updatePrompt(){
+ refreshChoices();
  const box=$('orderText'),button=$('copyOrder'),status=$('orderStatus');
  if(!box||!button)return;
  const final=PW.closing(detail,intent);
@@ -38,7 +56,7 @@ function updatePrompt(){
   }
   box.value=PW.prompt(detail,intent,options());
   button.disabled=false;
-  status.textContent=final?(options().merge?'Auftrag bis main – erst nach unabhängigem Review und allen Gates.':'Auftrag bis Draft-PR – kein Merge.'):'Den kopierten Auftrag im Chat senden.';
+  status.textContent=final?(options().merge?'Auftrag bis main und Produktionsabschluss – nach erfüllten Pflichtgates.':'Auftrag bis Draft-PR – kein Merge.'):'Den kopierten Auftrag im Chat senden.';
   status.className='hint';
  }catch(exc){
   box.value='';button.disabled=true;status.textContent=exc.message;status.className='validation';
@@ -159,29 +177,60 @@ function workflow(view,value){
   label.append(input);section.append(label,node('p','Die ausgewählte Datei beim Senden an den Chat anhängen.','hint'));
  }
  if(value){
-  const label=node('label','Nächste Aktion'),select=node('select');
+  const label=node('label','Nächste Aktion'),select=node('select');select.id='nextActionMode';
   for(const [id,text] of [['continue','Fortsetzen / Entscheidung senden'],['rework','Gezielt korrigieren'],['resume','Arbeit wieder aufnehmen'],...(value.facts.state==='registered'?[['background_change','Separater Hintergrundfolgeauftrag']]:[])]){
    const opt=node('option',text);opt.value=id;select.append(opt);
   }
   label.append(select);section.append(label);
-  const correction=node('div');correction.hidden=true;field(correction,'Was soll geändert werden?','feedback');section.append(correction);
+  const correction=node('div');correction.hidden=true;field(correction,'Was soll geändert werden?','feedback').id='correctionFeedback';section.append(correction);
+  if(value.facts.candidates){
+   const base=node('select'),baseLabel=node('label','Korrekturgrundlage');
+   const empty=node('option','Bitte wählen');empty.value='';base.append(empty);
+   for(const asset of value.assets.filter(a=>Object.hasOwn(value.facts.candidates,a.id))){
+    const option=node('option',asset.caption);option.value=asset.id;base.append(option);
+   }
+   base.id='correctionBase';base.onchange=()=>{intent.selection=base.value;intent.kind=value.assets.find(a=>a.id===base.value)?.role;updatePrompt();};
+   baseLabel.append(base);correction.append(baseLabel);
+  }
   if(order===3)gridFields(correction,false);
-  select.onchange=()=>{intent.action=select.value;correction.hidden=!['rework','background_change'].includes(select.value);updatePrompt();};
+  select.onchange=()=>{intent.action=select.value;if($('correctionBase'))$('correctionBase').value=intent.selection||'';correction.hidden=!['rework','background_change'].includes(select.value);updatePrompt();};
  }
  if(order===1||order===2){gridFields(section,order===2);if(order===2)field(section,'Neue/zusätzliche Wünsche zur Motivvorlage (optional)','parameters','Zum Beispiel Merkmale, die bei der Vereinfachung erhalten bleiben sollen');}
  if(order===4){const d=node('details');d.append(node('summary','Optionaler Kontextwunsch'));field(d,'Kontextwunsch','context');section.append(d);}
+ if(value?.facts.candidates&&value.facts.state==='motif_review'){
+  const label=node('label','Parameteralternative'),select=node('select');
+  const empty=node('option','Bitte wählen');empty.value='';select.append(empty);
+  value.facts.published.proposed.forEach((option,i)=>{
+   const variants=option.imports||[option];
+   const labels=variants.map(v=>`${v.width} × ${v.height}, ${v.mode==='mono'||v.foreground_colors===1?'monochrom':v.foreground_colors+' Farben'}`);
+   const item=node('option',`Alternative ${i+1} · ${[...new Set(labels)].join(' / ')}`);item.value=String(i);select.append(item);
+  });
+  const description=node('p',undefined,'hint');
+  select.onchange=()=>{
+   intent.parameter=select.value===''?null:Number(select.value);
+   const option=value.facts.published.proposed[intent.parameter];
+   const features=option?.derivation?.protected_features||[];
+   const limits=Object.entries(option?.constraints||{}).map(([key,c])=>
+    ({width:'Breite',height:'Höhe',foreground_colors:'Vordergrundfarben'}[key])+' '+(c.kind==='exact'?'exakt '+c.target:c.kind==='approximate'?'etwa '+c.target:'offen')+
+    (c.minimum!==null||c.maximum!==null?' ('+(c.minimum??'–')+' bis '+(c.maximum??'–')+')':''));
+   description.textContent=[...limits,...(features.length?['Geschützte Merkmale: '+features.join(', ')]:[])].join(' · ');
+   updatePrompt();
+  };label.append(description);
+  label.append(select);section.append(label);
+ }
  if(value?.offers.length||value?.facts.state==='background_review'){
   const selected=node('p','Die gewünschte Variante auf der Bildkarte wählen.','hint');selected.id='selectionStatus';section.append(selected);
  }
  if(value?.facts.state==='background_review'){
   const none=node('button','Bewusst keinen Hintergrund wählen');none.onclick=()=>choose('none','background',none);none.dataset.choice='none';none.setAttribute('aria-pressed','false');section.append(none);
+  if(value.facts.candidates){const standard=node('button','Standardhintergrund wählen');standard.dataset.choice='standard';standard.onclick=()=>choose('standard','background',standard);section.append(standard);}
  }
  if(n===5)section.append(node('p',value.facts.background_choice==='none'?'Bestätigt: bewusst kein Hintergrund.':value.facts.background_choice?'Bestätigte Hintergrundwahl: '+value.facts.background_choice:'Hintergrundentscheidung noch offen.','hint'));
  if(PW.closing(value)){
   const scope=node('div',undefined,'finalScope');scope.id='finalScope';
   const label=node('label'),merge=node('input');merge.type='checkbox';merge.id='finalMerge';merge.checked=options().merge;
   merge.onchange=()=>{$('merge').checked=merge.checked;$('merge').onchange();};
-  label.append(merge,node('span',' Nach unabhängigem Review und allen Gates nach main mergen'));
+  label.append(merge,node('span',' Nach erfüllten Pflichtgates nach main mergen und Produktion abschließen'));
   scope.append(label,node('p','Erst der gesendete Auftrag erklärt die Endabnahme und den gewählten Umfang. Klicken, Kopieren und Aktualisieren bestätigen nichts.','hint'));section.append(scope);
  }
  const actions=node('div',undefined,'orderActions'),copy=node('button','Auftrag kopieren','primary');copy.id='copyOrder';
@@ -197,10 +246,10 @@ function workflow(view,value){
 }
 function choose(id,kind,button){
  const label=id==='none'?'kein Hintergrund':detail?.offers.find(o=>o.id===id&&o.kind===kind)?.label||id;
- intent.selection=id;intent.kind=kind;
+ intent.selection=id;intent.kind=kind;if($('correctionBase'))$('correctionBase').value=id;
  document.querySelectorAll('[data-choice]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.choice===id)));
- button.dataset.choice=id;button.setAttribute('aria-pressed','true');
- if($('selectionStatus'))$('selectionStatus').textContent=`Vorgemerkt: ${label}. Erst der gesendete Auftrag erklärt deine Wahl.`;
+ if(button.dataset.choice){button.setAttribute('aria-pressed','true');}
+ if($('selectionStatus'))$('selectionStatus').textContent=intent.action==='rework'?`Korrekturgrundlage: ${label}.`:`Wahl vorgemerkt: ${label}.`;
  refreshFinalPreview();const alternatives=$('backgroundOptions');if(alternatives)alternatives.open=false;updatePrompt();
 }
 function newDraft(id){
@@ -307,15 +356,58 @@ function assetURL(id,asset,current,signal){
  }
  return assetLoads.get(asset.id);
 }
+function findingControls(parent,value,target){
+ const card=value.facts.candidates?.[target];if(!card)return;
+ for(const instruction of card.instructions||[])parent.append(node('p','Geltende Vorgabe: '+instruction));
+ for(const reason of card.missing)parent.append(node('p',reason,'validation'));
+ for(const row of card.findings){
+  const group=node('fieldset',undefined,'finding'),info=node('details'),state=node('p',undefined,'findingState');
+  const legend=node('legend');legend.append(node('span',row.criterion,'criterion'),node('span',row.description));group.append(legend);
+  const facts=node('dl');
+  for(const [label,text] of [['Eigenschaft',row.properties],['Kontext',row.context],['Wirkung',row.effect],['Umfang',row.extent],['Geprüft mit',row.method]])facts.append(node('dt',label),node('dd',text));
+  info.append(node('summary','Befund erklären'),facts);
+  group.append(info,state);parent.append(group);
+  if(!row.eligible){state.textContent=row.result+' · Voraussetzung offen';continue;}
+  const check=node('input'),label=node('label'),treatment=node('textarea'),textLabel=node('label','Umgang mit diesem Befund');
+  check.type='checkbox';treatment.maxLength=4096;treatment.rows=2;
+  const stored=row.decision,edit=intent.findings?.[row.binding];
+  check.checked=edit?.accepted??(stored?.action==='accept');
+  treatment.value=edit?.treatment??stored?.treatment??'';
+  const source=stored?.source?'Übernommen von '+stored.source.target:stored?.action==='accept'?'Annahme veröffentlicht':stored?.action==='revoke'?'Widerruf veröffentlicht':'Offen';
+  function show(){const changed=intent.findings?.[row.binding];state.textContent=row.result+' · '+source+(changed?(check.checked?' · Annahme vorgemerkt':stored?.action==='accept'?' · Widerruf vorgemerkt':' · offen'):'');}
+  function save(){
+   (intent.findings??={})[row.binding]={accepted:check.checked,treatment:treatment.value};
+   show();updatePrompt();
+  }
+  check.onchange=()=>{if(check.checked&&!treatment.value.trim())treatment.value=stored?.treatment||'Unverändert beibehalten';save();};
+  treatment.oninput=save;
+  treatment.onblur=()=>{if(check.checked&&!treatment.value.trim()){treatment.value=stored?.treatment||'Unverändert beibehalten';save();}};
+  label.append(check,node('span',' Abweichung annehmen'));textLabel.append(treatment);group.append(label,textLabel);show();
+ }
+}
 function assetCard(value,id,asset,selectable=true){
  const current=generation,signal=controller.signal;
  const figure=node('figure',undefined,'card'),canvas=node('div',undefined,'canvas'),status=node('p','Original wird geladen …');
  canvas.dataset.role=asset.role;canvas.append(status);
  const caption=node('figcaption');caption.append(node('h3',asset.caption));
+ const card=value.facts.candidates?.[asset.id];
+ const offered=value.offers.some(o=>o.asset_ids.includes(asset.id));
+ if(card&&offered&&selectable){
+  const status=node('p',undefined,'readiness');status.dataset.readiness=asset.id;caption.append(status);
+ }
+ if(selectable||PW.step(value)===5||asset.role!=='background')findingControls(caption,value,asset.id);
  const choices=[];
  if(selectable)for(const offer of value.offers.filter(o=>o.asset_ids.includes(asset.id)&&PW.step(value)<5)){
-  caption.append(node('p',offer.label));
-  const select=node('button','Diese Variante wählen');select.dataset.choice=offer.id;select.setAttribute('aria-pressed',String(intent.selection===offer.id));select.disabled=true;select.onclick=()=>choose(offer.id,offer.kind,select);caption.append(select);choices.push(select);
+  if(!card||offer.label!==asset.caption)caption.append(node('p',offer.label));
+  const select=node('button','Diese Variante wählen');select.dataset.choice=offer.id;if(value.facts.candidates)select.dataset.candidate=asset.id;select.setAttribute('aria-pressed',String(intent.selection===offer.id));select.disabled=true;select.onclick=()=>choose(offer.id,offer.kind,select);caption.append(select);choices.push(select);
+ }
+ if(card&&selectable&&offered){
+  const correction=node('button','Korrigieren');correction.dataset.reworkShortcut='true';
+  correction.onclick=()=>{
+   const mode=$('nextActionMode');mode.value='rework';mode.onchange();
+   choose(asset.id,asset.role==='raster_draft'?'raster':asset.role,correction);
+   $('correctionFeedback').focus();
+  };caption.append(correction);
  }
  const button=node('button','Großansicht öffnen');button.disabled=true;caption.append(button);
  figure.append(canvas,caption);
@@ -341,21 +433,23 @@ function finalOverview(view,value,id){
  const section=node('section',undefined,'finalOverview');section.append(node('h3','Deine Schlussauswahl','sectionTitle'));
  section.append(node('p','Gewähltes Raster und zugehöriges Abschlussbild. Die Hintergrundwahl wird erst mit dem gesendeten Schlussauftrag bestätigt.','hint'));
  const cards=node('div',undefined,'closingCards');
- for(const [role,label] of [['raster','Gewähltes Raster'],['reveal','Zugehöriges Abschlussbild']]){
+ const roles=[['raster','Gewähltes Raster'],['reveal','Zugehöriges Abschlussbild']];
+ if(value.facts.candidates&&value.facts.originals.record.selected.motif)roles.push(['motif','Gewählte Motivvorlage']);
+ for(const [role,label] of roles){
   const slot=node('div');slot.append(node('h4',label));
-  const assets=value.assets.filter(a=>a.id===value.facts.composition?.[role]&&a.role===role);
+  const assets=value.assets.filter(a=>a.id===(value.facts.composition?.[role]??value.facts.originals?.record?.selected?.[role])&&a.role===role);
   if(assets.length===1)slot.append(assetCard(value,id,assets[0],false));else slot.append(node('p','Originalbindung fehlt oder ist uneindeutig.','validation'));
   cards.append(slot);
  }
  const background=node('div',undefined,'summaryBackground');background.id='summaryBackground';cards.append(background);
- section.append(cards);view.append(section);refreshFinalPreview();
+ section.append(cards);findingControls(section,value,'@selection');view.append(section);refreshFinalPreview();
 }
 function refreshFinalPreview(){
  const slot=$('summaryBackground');if(!slot||!detail||!active)return;
  slot.replaceChildren(node('h4',detail.facts.state==='background_review'?'Vorgemerkter Hintergrund':'Bestätigter Hintergrund'));
  try{
   const result=PW.finalAssets(detail,intent);
-  if(result.choice==='none')slot.append(node('p','Bewusst kein Hintergrund','noneChoice'));
+  if(['none','standard'].includes(result.choice))slot.append(node('p',result.choice==='none'?'Bewusst kein Hintergrund':'Standardhintergrund','noneChoice'));
   else slot.append(assetCard(detail,active.id,result.background,false));
  }catch(exc){slot.append(node('p',exc.message,'validation'));}
 }
@@ -405,7 +499,7 @@ async function open(id,explicit=false){
   for(const roles of groups){
    const assets=value.assets.filter(a=>{
     if(!roles.includes(a.role))return false;
-    if(['reveal','motif'].includes(a.role)){const key=a.role+':'+a.location.sha256;if(shownComparisons.has(key))return false;shownComparisons.add(key);}
+    if(!value.facts.candidates&&['reveal','motif'].includes(a.role)){const key=a.role+':'+a.location.sha256;if(shownComparisons.has(key))return false;shownComparisons.add(key);}
     if(a.role==='raster'&&PW.step(value)===3&&value.offers.some(o=>o.kind==='raster')&&!value.offers.some(o=>o.kind==='raster'&&o.asset_ids.includes(a.id)))return false;
     return true;
    });

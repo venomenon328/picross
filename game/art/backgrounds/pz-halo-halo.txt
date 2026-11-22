@@ -1,0 +1,4 @@
+author: Mit OpenAI ImageGen für diesen Produktionsauftrag erzeugt.
+changes: Original unverändert. Für das Spiel nach dem gewählten HG31-Profil proportional mit vormultipliziertem Lanczos auf 2304 × 768 Pixel skaliert.
+source: Eigenständige native Bildgenerierung aus dem Kontextbriefing ohne externe Bildvorlage.
+usage_basis: Auftrag zur Erzeugung und Veröffentlichung in venomenon328/picross sowie ausdrückliche Wahl, Endabnahme und Integrationsfreigabe für diesen Hintergrund.

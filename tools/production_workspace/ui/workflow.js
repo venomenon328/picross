@@ -4,7 +4,9 @@ const PW = (()=>{
  const steps=['Abschlussbilder','Motivvorlage','Rasterangebote','Kontextzeichnungen','Integration'];
  const phase={brief_ready:1,reveal_review:1,motif_review:2,motif_approved:3,raster_review:3,raster_ready:3,background_review:4,content_ready:5,editorially_approved:5,registered:5};
  function step(value){return value?phase[value.facts.state]||null:1;}
- function orderStep(value){return ({reveal_review:2,motif_review:3,raster_ready:4,background_review:5})[value?.facts.state]||step(value);}
+ function orderStep(value){
+  if(value?.facts.candidates&&value.facts.state==='raster_review'&&value.offers.some(o=>o.kind==='raster'))return 4;
+  return ({reveal_review:2,motif_review:3,raster_ready:4,background_review:5})[value?.facts.state]||step(value);}
  function options(saved){
   const v=saved&&typeof saved==='object'&&!Array.isArray(saved)?saved:{};
   return {workroot:typeof v.workroot==='string'?v.workroot:'',merge:typeof v.merge==='boolean'?v.merge:true};
@@ -60,14 +62,14 @@ const PW = (()=>{
   const base=publishedGrid(value),next={...base,...intent.grid},removed=intent.removeGrid||{};
   const changes=[];
   for(const [axis,label] of [['width','Breite'],['height','Höhe']]){
-   if(removed[axis])changes.push(`${label}: bisherigen Wunsch ausdrücklich aufheben; ${label} passend zum Motiv bestimmen. Andere Vorgaben bleiben bestehen.`);
+   if(removed[axis])changes.push(`${label}: bisherigen Wunsch ausdrücklich aufheben.`);
    else if((next[axis]||'')!==(base[axis]||'')||(next[axis]&&next.sizeAccuracy!==base.sizeAccuracy)){
     if(!next[axis])throw Error(`${label} ausdrücklich aufheben oder einen Wert angeben.`);
     changes.push(axisRequest(axis,next[axis],next.sizeAccuracy));
    }
   }
   for(const [group,label,keys] of [['mode','Rastermodus',['mode']],['colors','Farbzahl',['colors','colorAccuracy']]]){
-   if(removed[group]){changes.push(`${label}: bisherigen Wunsch ausdrücklich aufheben; neu empfehlen und zur Entscheidung vorlegen.`);continue;}
+   if(removed[group]){changes.push(`${label}: bisherigen Wunsch ausdrücklich aufheben.`);continue;}
    if(!keys.some(k=>(next[k]||'')!==(base[k]||'')))continue;
    if(group==='mode'){
     if(!next.mode){if(base.mode)throw Error('Rastermodus ausdrücklich aufheben oder einen Modus wählen.');continue;}
@@ -95,12 +97,12 @@ const PW = (()=>{
  }
  function colorRequest(value,precision,mode){
   const count=integer(value,mode==='color'||precision!=='exact'?2:1,8,'die Farbzahl');
-  if(count===1)return 'Farbzahl: exakt eine Vordergrundfarbe. Bei der Parameterfestlegung daraus Monochrom ableiten.';
-  return `Farbzahl: ${accuracy(precision)} ${count} Vordergrundfarben (ohne Leerfelder).`;
+  if(count===1)return 'Farbzahl: exakt eine Vordergrundfarbe.';
+  return `Farbzahl: ${accuracy(precision)} ${count} Vordergrundfarben.`;
  }
  function modeRequest(mode){
   if(!['mono','color'].includes(mode))throw Error('Bitte einen gültigen Rastermodus wählen.');
-  return mode==='mono'?'Rastermodus: monochrom, genau eine Vordergrundfarbe.':'Rastermodus: farbig.';
+  return mode==='mono'?'Rastermodus: monochrom.':'Rastermodus: farbig.';
  }
  function gridRequest(grid={}){
   const parts=[];
@@ -109,82 +111,125 @@ const PW = (()=>{
   if(grid.mode!=='mono'&&grid.colors)parts.push(colorRequest(grid.colors,grid.colorAccuracy,grid.mode));
   return parts.join(' ');
  }
+ function choiceReady(value,target,intent){
+  const card=value?.facts.candidates?.[target];
+  if(!card)return !value?.facts.candidates;
+  return !card.missing.length&&card.findings.every(row=>
+   row.eligible&&(intent.findings?.[row.binding]?.accepted??(row.decision?.action==='accept')));
+ }
+ function findingOrders(value,intent){
+  const lines=[];
+  for(const [target,card] of Object.entries(value?.facts.candidates||{})){
+   for(const row of card.findings){
+    const edit=intent.findings?.[row.binding];
+    const stored=row.decision;
+    if(!edit||!row.eligible)continue;
+    if(edit.accepted&&!edit.treatment.trim())throw Error('Bitte den Umgang mit dem Befund bestätigen.');
+    if(edit.accepted===(stored?.action==='accept')&&(!edit.accepted||edit.treatment===stored?.treatment))continue;
+    lines.push(JSON.stringify({Kandidat:target,Befund:row.id,Kriterium:row.criterion,Bindung:row.binding,
+     Entscheidung:edit.accepted?'Annahme':'Widerruf',Behandlung:edit.treatment}));
+   }
+  }
+  return lines;
+ }
  function prompt(value,intent={},personal={}){
-  const n=orderStep(value),action=intent.action||'continue',opts=options(personal);
+  const action=intent.action||'continue',order=orderStep(value),opts=options(personal);
+  const pickingRaster=value?.facts.candidates&&value.facts.state==='raster_review'&&value.offers.some(o=>o.kind==='raster');
+  const n=action==='continue'?(pickingRaster?4:order):step(value);
   if(!n)throw Error('Dieser Stand benötigt einen eigenen ausdrücklich beauftragten Folgeauftrag.');
   if(value&&value.facts.authoring_version!=='0.8.0')throw Error('Dieser historische Stand gehört nicht zum neuen 0.8-Produktionsweg.');
   const remote=value?.source_url?.match(/^https:\/\/github\.com\/([A-Za-z0-9_.-]+\/[A-Za-z0-9_.-]+)\/tree\/([a-f0-9]{40})$/);
   if(value&&(!remote||value.commit!==remote[2]))throw Error('Remote-Sicherung nicht bestätigt. Arbeitsstand zuerst mit dem PW-B-Publisher sichern, dann Quellen aktualisieren.');
   if(!['continue','rework','resume','background_change'].includes(action))throw Error('Bitte eine gültige Aktion wählen.');
-  const lines=[`Repository: ${remote?.[1]||'venomenon328/picross'} · Ziel: main. Lies AGENTS.md, den gemeinsamen Authoring-Kern und die dort für Schritt ${n} gerouteten Phasen- und Bildregeln im aktuellen main (Authoring 0.8.0).`];
+  const lines=[`Repository: ${remote?.[1]||'venomenon328/picross'} · Ziel: main. Verbindlich: AGENTS.md im aktuellen main und die dort gerouteten Pflichtquellen für Authoring 0.8.0, Schritt ${n}.`];
   if(value){
    if(!/^pz-[a-z0-9]+(?:-[a-z0-9]+)*$/.test(value.puzzle_id)||!/^[A-Za-z0-9][A-Za-z0-9._-]{0,31}$/.test(value.revision)||value.record?.file!==`content/authoring/${value.puzzle_id}/${value.revision}/record.json`)throw Error('Der kanonische Produktionsrecord ist nicht eindeutig gebunden.');
    lines.push(`Produktionsdatensatz: https://github.com/${remote[1]}/blob/${remote[2]}/${value.record.file}`);
   }else{
    if(!intent.brief?.trim())throw Error('Bitte zuerst dein Motiv beschreiben.');
    lines.push(`Neues Motiv: ${intent.brief.trim()}`);
-   if(intent.inputImage)lines.push(`Eigene Eingangsdatei: ${intent.inputImage}. Ich füge die tatsächliche Datei diesem Auftrag bei; falls sie fehlt, vor Bildarbeit anfordern.`);
+   if(intent.inputImage)lines.push(`Beigefügte Referenzdatei: ${intent.inputImage}.`);
   }
-  lines.push('Arbeitsstand mit python -m tools.work_publish publish nach PW-B (erwarteter Arbeitscommit oder new) in genau einem aktuellen Metadatensatz veröffentlichen; Ansichten daraus ableiten. Aktuelle Angebote bis zur Wahl erhalten, danach nicht mehr benötigte Varianten entfernen.');
-  lines.push('Git-Produktcommits mit python -m tools.publish_git und erwarteter Remote-SHA veröffentlichen.');
   const selected=value?.offers.find(o=>o.id===intent.selection&&o.kind===intent.kind);
+  const cards=value?.facts.candidates;
+  if(cards){
+   lines.push(...findingOrders(value,intent));
+   if(action==='continue'){
+    if(value.facts.blockers?.length)throw Error('Auftragsweite Voraussetzung offen: '+value.facts.blockers[0]);
+    const required=new Set(selected?[selected.id]:[]);
+    if(closing(value,intent)){
+     for(const id of Object.values(value.facts.originals?.record?.selected||{}))if(cards[id])required.add(id);
+     if(cards['@selection'])required.add('@selection');
+    }
+    for(const id of required)if(!choiceReady(value,id,intent))throw Error('Offene Voraussetzungen für '+id+'.');
+   }
+  }
   if(action==='background_change'){
    if(value?.facts.state!=='registered')throw Error('Eine spätere Hintergrundrevision braucht einen tatsächlich registrierten Stand.');
    if(!intent.feedback?.trim())throw Error('Bitte die gewünschte Hintergrundänderung beschreiben.');
-   lines.push(`Separater späterer Hintergrundauftrag nach docs/production/PUZZLE_BACKGROUNDS.md §11 (HP-I1b2) und Authoring Schritt 5 §9: ${intent.feedback.trim()}`);
+   lines.push(`Spätere Hintergrundrevision nach Authoring Schritt 5 §9: ${intent.feedback.trim()}`);
   }else if(action==='rework'){
    if(!intent.feedback?.trim())throw Error('Bitte die gewünschte Korrektur beschreiben.');
    lines.push(`Korrektur in Schritt ${step(value)}: ${intent.feedback.trim()}. Korrigierten Stand zur fälligen Entscheidung vorlegen.`);
-   if(selected)lines.push(`Betroffenes Angebot: ${selected.kind}/${selected.id}.`);
+   if(cards){
+    const base=intent.selection;
+    if(!cards[base])throw Error('Bitte die Korrekturgrundlage wählen.');
+    lines.push(`Korrekturgrundlage: ${base}. Geltende Behandlungen berücksichtigen. Korrigierte Bytes zur Wahl vorlegen.`);
+    for(const text of cards[base].instructions||[])lines.push('Geltende Behandlung: '+text);
+    for(const row of cards[base].findings){
+     const edit=intent.findings?.[row.binding];
+     if(edit&&!edit.accepted&&edit.treatment.trim()&&row.decision?.action!=='accept')
+      lines.push(JSON.stringify({Befund:row.id,Korrekturhinweis:edit.treatment}));
+     if(row.decision?.action==='accept'&&(!edit||edit.accepted&&edit.treatment===row.decision.treatment))
+      lines.push(JSON.stringify({Befund:row.id,Behandlung:row.decision.treatment}));
+    }
+   }else if(selected)lines.push(`Betroffenes Angebot: ${selected.kind}/${selected.id}.`);
   }else if(action==='resume'){
-   lines.push(`Schritt ${step(value)} am gebundenen Datensatz wieder aufnehmen; gültige Entscheidungen und Recoverystand prüfen. Keine neue Endabnahme oder Mergefreigabe.`);
+   lines.push(`Schritt ${n} am gebundenen Datensatz wieder aufnehmen.`);
   }else if(!value||value.facts.state==='brief_ready'){
-   lines.push('Schritt 1: Drei unterschiedliche detaillierte farbige Abschlussbildoriginale zur Auswahl erstellen; als reveal_review veröffentlichen.');
+   lines.push('Schritt 1: Abschlussbilder als reveal_review zur Auswahl vorlegen.');
   }else if(value.facts.state==='reveal_review'){
    if(!selected||selected.kind!=='reveal')throw Error('Bitte ein Abschlussbild wählen.');
-   lines.push(`Schritt 2: Ich wähle und gebe das unveränderte Abschlussbild aus Angebot ${selected.id} frei. Motivvorlage und Parameterkorridor als motif_review zur Freigabe vorlegen.`);
+   lines.push(`Schritt 2: Ich wähle und gebe Abschlussbild ${selected.id} unverändert frei. Motivvorlage und Parameterkorridor als motif_review vorlegen.`);
   }else if(value.facts.state==='motif_review'){
-   lines.push('Schritt 3: Ich gebe die unveränderte Motivvorlage samt vorgeschlagenem Parameterkorridor im Datensatz frei. Qualifizierte Rasterangebote als raster_ready vorlegen.');
-  }else if(['motif_approved','raster_review'].includes(value.facts.state)){
+   if(cards){
+    const options=value.facts.published.proposed;
+    if(selected?.kind!=='motif')throw Error('Bitte die Motivvorlage wählen.');
+    if(!Number.isInteger(intent.parameter)||!options[intent.parameter])throw Error('Bitte eine vollständige Parameteralternative wählen.');
+    lines.push(`Schritt 3: Ich gebe Motivvorlage ${selected.id} und die Parameteralternative ${intent.parameter+1} unverändert frei: ${JSON.stringify(options[intent.parameter])}. Qualifizierte Rasterangebote vorlegen.`);
+   }else lines.push('Schritt 3: Ich gebe die unveränderte Motivvorlage samt vorgeschlagenem Parameterkorridor im Datensatz frei. Qualifizierte Rasterangebote als raster_ready vorlegen.');
+  }else if(!pickingRaster&&['motif_approved','raster_review'].includes(value.facts.state)){
    lines.push('Schritt 3: Die bereits freigegebene Rasterproduktion bis zu qualifizierten Rasterangeboten fortsetzen.');
-  }else if(value.facts.state==='raster_ready'){
+  }else if(pickingRaster||value.facts.state==='raster_ready'){
    if(!selected||selected.kind!=='raster')throw Error('Bitte ein qualifiziertes Rasterangebot wählen.');
-   lines.push(`Schritt 4: Ich wähle das qualifizierte Raster aus Angebot ${selected.id}. Drei Kontextzeichnungen als background_review zur Auswahl vorlegen; noch keine Endabnahme oder Integration.`);
+   lines.push(`Schritt 4: Ich wähle das qualifizierte Rasterangebot ${selected.id}. Kontextzeichnungen als background_review zur Auswahl vorlegen.`);
   }else{
    const final=finalAssets(value,intent);
    if(value.facts.state==='background_review'){
     lines.push(final.choice==='none'?'Schritt 5: Ich entscheide mich ausdrücklich für keinen Hintergrund.':final.choice==='standard'?'Schritt 5: Ich wähle ausdrücklich den Standardhintergrund.':`Schritt 5: Ich wähle die unveränderte Kontextzeichnung aus Angebot ${final.choice}.`);
-    lines.push('Ich erteile die Endabnahme für diese Hintergrundentscheidung zusammen mit dem gewählten Raster und dem zugehörigen Reveal im gebundenen Datensatz und beauftrage deren Integration.');
+    if(cards&&final.background)lines.push('Gewähltes Profil: '+value.facts.originals.record.assets.find(a=>a.id===final.background.id).profile+'.');
+    lines.push('Ich erteile die Endabnahme dieser Hintergrundentscheidung mit dem gewählten Raster und Reveal und beauftrage deren Integration.');
    }else if(value.facts.state==='registered')lines.push('Schritt 5: Git-/PR-Abschluss der bereits registrierten unveränderten Lieferung fortsetzen.');
    else if(value.facts.state==='editorially_approved')lines.push('Schritt 5: Die bereits endabgenommene unveränderte Lieferung integrieren.');
    else lines.push('Schritt 5: Ich erteile die Endabnahme der gebundenen unveränderten Raster-, Reveal- und Hintergrundfassung (gegebenenfalls none) und beauftrage deren Integration.');
   }
-  if(n===5&&action!=='background_change')lines.push('Die ausgewählten finalen Nutzdaten mit explizitem Modus, gültigem Logiknachweis, aktueller Bewertung, Rechten und dieser tatsächlichen Entscheidung als aktuellen RI-ONE-Eingang vorbereiten. Den vollständigen Linien- oder Paarlinien-Proof unabhängig am finalen Raster prüfen und die Endmatrix vergleichen. Planung, Übernahme und Wiederholung verwenden denselben Kern. Den Integrationsbranch vom aktuellen main aufbauen und ausschließlich finale gewählte Produktdaten übernehmen. Completion prüft diese tatsächliche Lieferung. Den abgeschlossenen Record auf dem eigenen Produktionsbranch veröffentlichen.');
-  if(n===3)lines.push('Neue monochrome Rasterangebote mit Maßen, Monochrom und sichtbaren Motivmerkmalen beschriften. Konkrete Rasterfarbnamen und RGB-Angaben gehören in die technische Palette, nicht ins Angebotslabel.');
   const published=value?.facts.published;
-  if(n===1&&intent.notes?.trim())lines.push(`Neue/zusätzliche Motivhinweise:\n${intent.notes.trim()}`);
-  if(n<=2||(n===3&&action==='rework')){
+  // Input controls belong to the displayed view; corrections route their actual phase.
+  if(order===1&&intent.notes?.trim())lines.push(`Neue/zusätzliche Motivhinweise:\n${intent.notes.trim()}`);
+  if(order<=2||(order===3&&action==='rework')){
    const grid=value?gridChanges(value,intent):gridRequest(intent.grid);
-   if(grid){
-    lines.push(`${published?'Neue Absicht gegenüber den veröffentlichten Vorgaben':'Vorgaben für das spätere Lösungsraster'}: ${grid}`);
-    if(n===3||published?.approved?.length)lines.push('Geänderten Parameterkorridor über den Korrekturweg zur erneuten Entscheidung vorlegen.');
-   }
+   if(grid)lines.push(`${published?'Neue Absicht gegenüber den veröffentlichten Vorgaben':'Vorgaben für das spätere Lösungsraster'}: ${grid}`);
   }
-  if((n===2||(n===3&&action==='rework'))&&intent.parameters?.trim())lines.push(`Neue/zusätzliche Wünsche zur Motivvorlage: ${intent.parameters.trim()}`);
-  if(n===4&&intent.context?.trim())lines.push(`Kontextwunsch: ${intent.context.trim()}`);
+  if((order===2||(order===3&&action==='rework'))&&intent.parameters?.trim())lines.push(`Neue/zusätzliche Wünsche zur Motivvorlage: ${intent.parameters.trim()}`);
+  if(order===4&&intent.context?.trim())lines.push(`Kontextwunsch: ${intent.context.trim()}`);
   if(opts.workroot.trim())lines.push(`Lokale Codex-Arbeitswurzel: ${opts.workroot.trim()}.`);
   const isClosing=closing(value,intent);
-  if(isClosing){
-   lines.push('Bei dieser normalen Rätsel-Erstintegration kein unabhängiges PR-Zweitreview und kein GitHub-Copilot-Review anfordern. Keine Reviewer-Konten oder Freigaben zur Weitergabe des PR-Inhalts verlangen und keine PR-Inhalte an Copilot weitergeben. Eine fehlgeschlagene oder abgelehnte Copilot-Anfrage ist kein Mergeblocker.');
-   lines.push('Nach Commit, Push und PR-Erstellung den vollständigen PR-Diff einschließlich Lieferdaten selbst prüfen.');
-  }
   if(isClosing&&opts.merge){
-   lines.push('Vor dem Merge aktuellen Head, Basis, erfolgreiche Pflichtchecks, Konfliktfreiheit, Endabnahme und Mergebefugnis bestätigen. Bei erfüllten Bedingungen direkt per Squash-Merge nach main integrieren. Bei einer tatsächlichen GitHub-Mergesperre wegen Approval oder Branchschutz die konkrete API-/UI-Meldung und die betroffene Schutzregel nennen, soweit sie einsehbar ist. Die Schutzregeln einhalten.');
-   lines.push(`Nach bestätigter Mainintegration gemäß Authoring Schritt 5 §9 den eigenen Produktionsstand direkt abschließen: python -m tools.work_publish retire ${value.puzzle_id} --expected <nach Completion veröffentlichter Arbeitscommit>. Fehlen des eigenen Produktionsbranches, Arbeitsreleases und Tags zurücklesen. Offenen Bereinigungsrest und Wiederholungsbefehl mit demselben Arbeitscommit getrennt vom Mainabschluss melden.`);
+   lines.push('Commit, Push und PR; bei erfüllten Pflichtgates nach Authoring Schritt 5 §8 per Squash-Merge nach main integrieren und den Produktionsabschluss nach §9 ausführen.');
   }
   else lines.push('Commit, Push und Draft-PR im beauftragten Umfang; kein Merge.');
   return lines.join('\n\n');
  }
- return {steps,step,orderStep,prompt,publishedGrid,options,closing,finalAssets};
+ return {steps,step,orderStep,prompt,choiceReady,publishedGrid,options,closing,finalAssets};
 })();
 if(typeof module!=='undefined')module.exports=PW;

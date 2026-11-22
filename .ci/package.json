@@ -1,10 +1,10 @@
 {
   "format": "development-ci-plan/v1",
   "issue": "https://github.com/venomenon328/picross/issues/700",
-  "package": "MACARON-BACKGROUND-REVIEW",
+  "package": "MACARON-LADENSZENEN",
   "modules": [],
-  "purpose": "Prüft Quellenbindung und Paketplan für den PW-B-Arbeitsstand background_review von pz-macaron mit gewähltem Raster und drei Kontextzeichnungen zur Wahl.",
-  "omitted": "Reine Authoringdaten. Der Produktionsweg prüft Originalmaße, Transparenz, Sichturteile und Rasterbindung. Zusatzmodule und Player-Build entfallen.",
+  "purpose": "Quellen und Paketplan für drei japanische Ladenansichten im Macaron-Auswahlschritt prüfen.",
+  "omitted": "Reine Rätselproduktion. Maße, Transparenz, Bildkanten und Einzelurteile wurden an den Originalen geprüft. Der Produktionsweg prüft die Rasterbindung. Der CI-Kern genügt.",
   "test_changes": [],
   "core_change": null,
   "evidence": {

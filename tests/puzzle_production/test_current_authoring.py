@@ -110,6 +110,150 @@ class CurrentAuthoringTests(unittest.TestCase):
         self.assertEqual(catalog_integration.integrate(out,self.root,apply=True)['status'],'registered')
         self.assertEqual(catalog_integration.integrate(out,self.root,apply=True)['status'],'no-op')
 
+    def finding(self, target, key, criterion='Q-H02', rule='hint-contrast'):
+        f = current.findings
+        row = {'target': target, 'content': f.identity(self.job, target), 'id': key,
+               'criterion': criterion, 'rule': rule, 'properties': 'blue #3c5970',
+               'context': 'small crossed-out row clue 12', 'effect': 'weak contrast',
+               'extent': 'last digit only', 'description': 'Synthetic pale digit',
+               'method': 'Synthetic fixture inspection', 'actor': 'Synthetic reviewer',
+               'timestamp_utc': '2026-11-22T09:00:00Z', 'result': 'Warnung', 'decision': None}
+        self.job['findings'].append(row)
+        if target != f.COMBINATION:
+            f.subjects(self.job)[target]['review'][criterion]['result'] = row['result']
+        return row
+
+    def accept(self, row, text='Blau beibehalten', action='accept'):
+        current.findings.declare(row, expected=current.findings.binding(row), action=action,
+                                 treatment=text, actor='Synthetic owner', timestamp_utc='2026-11-22T10:00:00Z',
+                                 statement='Synthetic submitted decision for ' + row['id'])
+
+    def test_mixed_candidates_and_combined_decision_through_completion(self):
+        self.raster_ready()
+        self.job = current.upgrade(self.job)
+        a = self.job['rasters'][0]
+        b, c = deepcopy(a), deepcopy(a)
+        b['id'], c['id'], c['proof'] = 'raster-b', 'raster-c', None
+        self.job['rasters'].extend([b, c])
+        self.finding('raster-b', 'contrast')
+        self.job['state'] = 'raster_review'
+        self.publish()
+        first = self.finding('raster-a', 'contrast')
+        second = self.finding('raster-a', 'assignment', rule='hint-colour-assignment')
+        self.accept(first)
+        self.publish()
+        self.job['selected']['raster'] = 'raster-a'
+        decide(self.job, 'raster')
+        self.job['state'] = 'background_review'
+        with self.assertRaisesRegex(InvalidInput, 'blocked'):
+            self.publish()
+        self.accept(next(r for r in self.job['findings'] if r['id'] == 'assignment'), current.findings.DEFAULT)
+        self.publish()
+        self.assertEqual([r['id'] for r in self.job['rasters']], ['raster-a'])
+        self.job['selected']['background'] = 'standard'
+        decide(self.job, 'background')
+        combined = self.finding(current.findings.COMBINATION, 'joint', 'Q-H01', 'cell-contrast')
+        self.accept(combined, 'Linienkontrast bei Standard belassen')
+        self.job['state'] = 'content_ready'
+        self.publish()
+        different = deepcopy(self.job)
+        different['selected']['background'] = 'none'
+        with self.assertRaisesRegex(InvalidInput, 'Stale finding'):
+            current.validate(different)
+        decide(self.job, 'final')
+        decide(self.job, 'integration')
+        self.job['state'] = 'editorially_approved'
+        self.publish()
+        work = commit(self.root, 'approved finding decisions')
+        out = self.work/'prepared'
+        current.prepare(self.root, current.path('pz-current'), out)
+        exported = self.work/'export'
+        integration_input.export(out, exported)
+        review = json.loads((exported/'review.json').read_bytes())
+        self.assertEqual([r['decision']['treatment'] for r in review['findings']],
+                         ['Blau beibehalten', current.findings.DEFAULT, 'Linienkontrast bei Standard belassen'])
+        self.assertEqual(review['components']['raster']['review']['Q-H02']['result'], 'Warnung')
+        git(self.root, 'checkout', '-qb', 'product', self.base)
+        self.assertEqual(catalog_integration.integrate(exported,self.root,apply=True)['status'], 'registered')
+        self.assertEqual(catalog_integration.integrate(exported,self.root,apply=True)['status'], 'no-op')
+        product = commit(self.root, 'selected synthetic result')
+        git(self.root, 'checkout', '-qb', 'work', work)
+        current.complete(self.root,current.path('pz-current'),product,current_input=exported)
+
+    def test_selected_background_profile_and_all_phase_treatments_reach_export(self):
+        from io import BytesIO
+        from PIL import Image
+        self.raster_ready()
+        self.job = current.upgrade(self.job)
+        for target,key,rule in [('reveal-b','Q-B02','illustration'),('motif-a','Q-M02','area-use')]:
+            self.accept(self.finding(target, 'detail', key, rule), target+' beibehalten')
+        self.job['selected']['raster'] = 'raster-a'
+        decide(self.job, 'raster')
+        self.job['state'] = 'background_review'
+        image = Image.new('RGBA',(30,10))
+        image.putpixel((2,5),(20,30,40,255))
+        original = BytesIO()
+        image.save(original,format='PNG')
+        asset = self.asset('sky','background')
+        asset.update(file=self.file('sky-original.png',original.getvalue()),
+                     profile='picross-background-png2304x768-v1',prepared=None)
+        self.job['assets'].append(asset)
+        self.accept(self.finding('sky','stroke','Q-HG04','stroke-quality'),'Strich bewahren')
+        self.publish()
+        self.job['selected']['background'] = 'sky'
+        decide(self.job,'background')
+        self.job['state'] = 'content_ready'
+        with self.assertRaisesRegex(InvalidInput,'Prepared'):
+            self.publish()
+        prepared = self.work/'prepared.png'
+        current.prepare_background(self.sources/'sky-original.png',prepared,profile_id=asset['profile'])
+        bound = current.findings.subjects(self.job)['sky']
+        bound['prepared'] = {'original_sha256':asset['file']['sha256'],'profile':asset['profile'],
+                             'file':self.file('sky-output.png',prepared.read_bytes())}
+        self.job['instructions']['sky'] = ['Kontur weiterhin hell halten']
+        decide(self.job,'final')
+        decide(self.job,'integration')
+        self.job['state'] = 'editorially_approved'
+        self.publish()
+        out=self.work/'final'
+        current.prepare(self.root,current.path('pz-current'),out)
+        review=json.loads((out/'review.json').read_bytes())
+        self.assertEqual({r['target'] for r in review['findings']},{'reveal-b','motif-a','sky'})
+        self.assertEqual(review['instructions']['sky'],['Kontur weiterhin hell halten'])
+        self.assertEqual(review['components']['background']['sha256'],asset['file']['sha256'])
+        self.assertEqual((out/'background.png').read_bytes(),prepared.read_bytes())
+
+    def test_immediate_correction_source_revocation_and_hard_subrules(self):
+        f = current.findings
+        self.job = current.upgrade(self.job)
+        self.job['assets'] = [self.asset('one','reveal'),self.asset('sibling','reveal')]
+        row = self.finding('one','edge','Q-B03','edge-quality')
+        self.accept(row)
+        self.publish()
+        source = deepcopy(self.job)
+        for target in ('next', 'different'):
+            self.job['assets'].append(self.asset(target,'reveal'))
+            new = self.finding(target,'edge','Q-B03','edge-quality')
+            if target == 'different':
+                new['extent'] = 'whole silhouette'
+            f.carry(source,self.job,'one',target)
+            self.assertEqual(f.effective(new), target == 'next')
+        self.publish()
+        inherited = next(r for r in self.job['findings'] if r['target']=='next')
+        self.assertEqual(inherited['decision']['source']['target'], 'one')
+        self.accept(inherited, action='revoke')
+        self.publish()
+        source = deepcopy(self.job)
+        self.job['assets'].append(self.asset('last','reveal'))
+        last = self.finding('last','edge','Q-B03','edge-quality')
+        f.carry(source,self.job,'next','last')
+        self.assertIsNone(last['decision'])
+        self.assertTrue(f.effective(source['findings'][0]))
+        for criterion,rule in [('Q-HG01','context'),('H-07','edge'),('Q-HG04','transparent-space'),
+                               ('Q-HG03','technical-composition'),('Q-M01','protected-identity')]:
+            with self.assertRaises(InvalidInput):
+                self.accept({**last, 'criterion': criterion, 'rule': rule})
+
     def test_choice_survives_administrative_move_but_changed_bytes_fail(self):
         self.approved();old=self.job['assets'][0]['file'];new=deepcopy(self.job)
         changed=self.file('moved.png',(self.root/old['file']).read_bytes())
@@ -294,7 +438,7 @@ class CurrentAuthoringTests(unittest.TestCase):
         self.assertTrue(service.picture(listing['jobs'][0]['id'],'raster-a')[0].startswith(b'\x89PNG'))
         view['source_url']='https://github.com/venomenon328/picross/tree/'+view['commit']
         module=str(Path(__file__).resolve().parents[2]/'tools/production_workspace/ui/workflow.js')
-        script="const assert=require('node:assert/strict'),P=require(process.argv[1]),v=JSON.parse(process.argv[2]);const p=P.prompt(v,{kind:'raster',selection:'raster-a'},{merge:false});assert.ok(p.includes(v.record.file));assert.match(p,/einem aktuellen Metadatensatz/);assert.doesNotMatch(p,/Arbeitsbelege mitführen/);assert.throws(()=>P.prompt(v,{kind:'raster',selection:'wrong'},{}),/wählen/);"
+        script="const assert=require('node:assert/strict'),P=require(process.argv[1]),v=JSON.parse(process.argv[2]);const p=P.prompt(v,{kind:'raster',selection:'raster-a'},{merge:false});assert.ok(p.includes(v.record.file));assert.match(p,/AGENTS.md.*Authoring 0.8.0, Schritt 4/);assert.doesNotMatch(p,/Arbeitsbelege mitführen/);assert.throws(()=>P.prompt(v,{kind:'raster',selection:'wrong'},{}),/wählen/);"
         result=subprocess.run(['node','-e',script,module,json.dumps(view)],capture_output=True,text=True,encoding='utf8')
         self.assertEqual(result.returncode,0,result.stderr)
         (self.root/self.job['rasters'][0]['preview']['file']).write_bytes(b'stale')

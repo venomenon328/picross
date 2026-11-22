@@ -210,7 +210,7 @@ class ProductionRemoval:
             warnings.append('Geschlossener, nicht gemergter PR vorhanden. Seine Produktion wird durch die Branchentfernung nicht integriert.')
         if main['revisions'] or main['registered'] or any(row['merged'] for row in prs):
             warnings.append('Mainintegration bzw. gemergter PR vorhanden: integrierte Inhalte bleiben auf main erhalten.')
-        external = job.get('_record', {}).get('format') == current_authoring.work_assets.FORMAT
+        external = job.get('_record', {}).get('format') in current_authoring.PUBLISHED_FORMATS
         if external:
             warnings.append('Die bestätigte Entfernung beendet auch den gebundenen Arbeitsrelease mit Originalen und Tag.')
         return {'external_assets': external, 'repository': repository, 'source': 'remote', 'branch': branch, 'ref': ref,

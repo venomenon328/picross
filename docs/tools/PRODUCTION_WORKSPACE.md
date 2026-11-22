@@ -477,6 +477,13 @@ Ein kurzer verbindlicher Verweis auf AGENTS und Authoring 0.8.0 genügt; er akti
 die phasenbezogene Quellenroute einschließlich der zugeordneten Bildtypnormen, nicht
 die Volllektüre aller Fachhandbücher. Nur neue Absicht, Freigabe, Änderung oder
 Aufhebung sowie persönliche Befugnisse ergänzen.
+Das gilt für alle Phasen, Korrekturen, Wiederaufnahme und spätere Bildaufträge.
+Korrektur und Wiederaufnahme verweisen auf die tatsächlich bearbeitete Phase;
+nur Fortsetzen beziehungsweise eine neue Auswahl darf den Folgeschritt beauftragen.
+Neue Eingaben der jeweiligen Auftragsart bleiben im gekürzten Prompt erhalten. Allgemeine
+Mono-/Farbregeln, Bildvorgaben, Publikationsbefehle, Prüf- und Abschlussverfahren
+gehören ausschließlich in die Pflichtquellen. Auch passende Regeln werden nicht
+als vorsorgliche Hinweise angehängt.
 Ein neuer Erstauftrag enthält dagegen Motiv, Hinweise, Referenz und frühe Wünsche.
 Der Empfänger löst die vollständigen Definitionen und Bilder aus diesen Quellen
 auf. Ein relativer Paketpfad allein beweist keinen Zugang. Cloudschritte dürfen
@@ -512,15 +519,71 @@ Mainintegration führt der Akteur den gebundenen Produktionsabschluss in
 Authoring Schritt 5 §9 direkt aus. Der nächste übernommene Listenstand blendet
 die integrierte ID aus.
 
+## PW-FIND · Befunde am Kandidaten
+
+Bei v3-Produktionen zeigt die Werkstatt die Wählbarkeit direkt am Bild.
+„Korrigieren“ an einer Karte übernimmt diese Variante und fokussiert das Änderungsfeld.
+Die fachliche Annahmesemantik besitzt
+[Qualität §6.1](../production/PUZZLE_QUALITY.md#61-pw-find--befundentscheidungen-in-allen-phasen),
+Daten-/Prüfbindung [PW-B](PW_B_CONTRACT.md#pw-find--freigegebene-erweiterung-der-entscheidungsdaten).
+
+In allen Phasen stehen konkrete Befunde direkt an der jeweiligen Reveal-,
+Motiv-, Raster- oder Hintergrundkarte. Die Schlussübersicht verwendet die
+gewählten Bestandteile; sie braucht keinen künstlichen fünften Kandidatentyp.
+Zusätzliche Befunde am Zusammenspiel stehen direkt an der konkret gebundenen
+Schlusskombination; ein betroffener Bestandteilwechsel verlangt ihre Neubewertung,
+ohne unveränderte Einzelannahmen aufzuheben.
+Ein Befund zeigt Kürzel, kurze Beschreibung und Zustand. Nähere Erklärung per
+Tooltip oder Aufklappen auch mit Tastatur erreichbar machen. Annahmefähige
+Befunde erhalten eine beschriftete Checkbox und „Umgang mit diesem Befund“.
+Bei einer nicht annehmbaren Voraussetzung ohne zugelassenen Ausnahmeweg
+stattdessen die konkrete fehlende Prüfung oder nötige Korrektur nennen.
+Unterstützte technische Ausnahmen dürfen diese Befundbedienung nutzen und müssen
+ihren vorgeschriebenen aktuellen Ausnahme- und Bindungsweg vollständig erfüllen.
+Auftragsweite Quellen-/Transportfehler bleiben
+getrennt sichtbar und werden nicht als redaktionell akzeptierbar angeboten.
+
+Gleiche Kriterien an mehreren Kandidaten und mehrere konkrete Befunde desselben
+Kriteriums behalten eigene Eingaben. Gültige Übernahmen zeigen Checkbox und
+bisherigen Text vorgefüllt mit kurzer Herkunftskennzeichnung. Bei erstmaliger
+Annahme ohne Text vor Absenden sichtbar „Unverändert beibehalten“ einsetzen;
+ein Placeholder allein ist kein übertragener Text. Individuelle übernommene
+Eingaben erhalten. Die wirksame Wählbarkeit wird bei Annahme oder Rücknahme
+unmittelbar neu angezeigt; andere Kandidaten bleiben unverändert.
+
+„Nächste Aktion“ bleibt erhalten:
+
+| Aktion | Bedeutung der Kandidatenwahl |
+| --- | --- |
+| Fortsetzen / Entscheidung senden | Den vorhandenen Kandidaten einschließlich der im selben Auftrag erklärten zulässigen Annahmen für die fällige Folge verwenden. Keine zusätzliche Annahme-/Auswahlrunde. |
+| Korrigieren | Den Kandidaten, auch mit offenen Blockern, als Grundlage der beschriebenen Änderung verwenden. Behandlungsvorgaben mitnehmen; keine kreative Wahl künftiger Bytes. |
+
+Checkbox, Texte und Auswahl bleiben bis zum tatsächlichen Absenden lokale
+Bedienabsichten. Das UI unterscheidet vorgemerkte und veröffentlichte Entscheidungen.
+Der Auftrag trägt neue Annahmen/Widerrufe mit Kandidaten-/Befundzuordnung,
+Behandlung, konkrete Wahl oder Korrekturgrundlage und nächste Aktion. Bereits
+veröffentlichte gültige Entscheidungen werden aus derselben festen Quelle gelesen;
+keine komplette Historie oder allgemeinen Regeln erneut in Prompts kopieren.
+
+Passives Suchen erhält die aktuelle gebundene Ansicht und Eingaben. Ausdrücklicher
+Job-/Quellenwechsel überträgt ungesendete Absichten nicht still auf neue Inhalte.
+Ein abgesendeter Widerruf folgt dem fachlichen Kandidatenscope. Die Oberfläche
+schreibt keine Produktionsdaten und behauptet nach Kopieren keinen neuen Stand.
+Nach Veröffentlichung müssen dieselben Annahmen und Behandlungstexte aus dem
+Record wieder sichtbar sein. Endabnahme, Integrations- und Mergebefugnis werden
+durch ein Häkchen nicht ergänzt. Die tatsächliche Bedienprobe für Karten,
+Erklärung/Fokus, Texte und Aktionseffekt steht im Paket; DOM-Nachbildung allein
+belegt keine Browserbedienung.
+
 ## PW2-B · Schlussübersicht und gebundener Auftrag
 
 Die normale Hintergrundentscheidung zeigt zuerst das tatsächlich gewählte Raster,
 dessen Reveal und die vorgemerkte Hintergrunddatei beziehungsweise `none`. Der
 primäre Schlussauftrag erklärt diese konkrete Wahl, Endabnahme und Integration
-zusammen. Er enthält Commit/PR, PR-Diff-Selbstprüfung, Squash-Merge erst nach
-aktuellen Vor-Merge-Gates und den direkt anschließenden Arbeitsabschluss mit `tools.work_publish retire`
-nach Authoring Schritt 5 §9. Der Auftrag bindet den nach Completion veröffentlichten
-Arbeitscommit und fordert den Ref-, Release- und Tag-Readback. `content_ready`, echte äußere Endfreigabe, Finalizer, Export/Plan/Register und
+zusammen. Er nennt den gewählten Umfang: Commit, Push und Draft-PR ohne Merge
+oder PR samt bedingtem Squash-Merge und anschließendem Produktionsabschluss.
+Für Bedingungen und Verfahren verweist er auf Authoring Schritt 5 §§8–9.
+`content_ready`, echte äußere Endfreigabe, Finalizer, Export/Plan/Register und
 bestätigtes main bleiben getrennte technische Tatsachen; kein UI-Writer entsteht.
 
 Ohne gültigen gespeicherten Mergewert ist der bedingte Merge eingeschaltet. Ein
@@ -528,13 +591,11 @@ explizites gespeichertes `false` bleibt erhalten. Die Option und die Wirkung des
 konkreten Schlussauftrags sind sichtbar; Kopieren ist noch kein Absenden.
 Korrektur und Wiederaufnahme erzeugen weder eine neue Endabnahme noch eine neue
 Mergefreigabe. Vorhandene passende Endabnahmen werden nicht erneut erklärt.
-Der kopierte Schlussauftrag schließt bei normaler Rätsel-Erstintegration in
-beiden Mergeoptionen Zweitreview- und Copilot-Anfragen, die Anforderung eines
-Reviewerkontos und die Weitergabe von PR-Inhalten an Copilot ausdrücklich aus.
-Unabhängiger Rätsel-Proof und vollständiges PR-Diff-Selbstreview stehen im Auftrag.
-Den bedingten Squash-Merge nach bestätigten Pflichtchecks, Konfliktfreiheit,
-gebundener Endabnahme und Mergebefugnis regelt
+Unabhängigen Rätsel-Proof, vollständiges PR-Diff-Selbstreview, das Verbot
+routinemäßiger Zweitreview-/Copilot-Anfragen und die tatsächlichen Mergegates regelt
 [Authoring Schritt 5 §8](../production/authoring/PUZZLE_AUTHORING_STEP_5.md#8-abgenommenes-ergebnis-ins-spiel-integrieren).
+Diese dauerhaften Regeln werden über die Pflichtquellen gelesen. Die Oberfläche
+beschreibt denselben gewählten Umfang, ohne ein zusätzliches Reviewgate einzuführen.
 Unveränderte Quellenwerte und allgemeine Regeln werden nicht im Prompt wiederholt;
 Auftrag, feste Recordquelle, neue Absichten und persönliche Arbeitswurzel bleiben.
 

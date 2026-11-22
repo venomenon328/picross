@@ -42,6 +42,17 @@ class CurrentIntegrationTests(unittest.TestCase):
                 self.assertNotIn("production",entry)
                 self.assertFalse((root/"content/packages").exists())
 
+    def test_versioned_review_cannot_use_legacy_criterion_booleans(self):
+        source = make(self.work/'old-review')
+        manifest = json.loads((source/'manifest.json').read_bytes())
+        manifest['format'] = integration_input.FINDING_FORMAT
+        approve(source,manifest)
+        json_file(source,'manifest.json',manifest)
+        before = fingerprints(self.root)
+        with self.assertRaises(InvalidInput):
+            core.integrate(source,self.root,apply=True)
+        self.assertEqual(fingerprints(self.root),before)
+
     def test_current_input_needs_no_producer_or_rulebook(self):
         source=make(self.work/"input")
         value=integration_input.Input(source)

@@ -188,6 +188,8 @@ Der Regressionstest vergleicht die eingebetteten Bytes mit den Quellen.
 
 ## Bedienung und Quellenstatus
 
+Bei v3-Ständen steht die Bereitschaft auf der Bildkarte. Die Erklärung eines Befunds lässt sich mit Enter öffnen. Annahme und Behandlung gelten erst mit dem gesendeten Auftrag. „Korrigieren“ an der Karte setzt die Arbeitsgrundlage und springt zum Änderungsfeld. Die Auswahl einer Motivvorlage umfasst auch die konkrete Parameteralternative.
+
 Das Hauptdropdown enthält genau eine offene Produktion pro Rätsel-ID mit Titel
 und aktueller Phase; titelgleiche IDs bleiben unterscheidbar. Im bewusst
 konfigurierten Remotebetrieb führen nur Remotequellen. Die gültige Spitze von

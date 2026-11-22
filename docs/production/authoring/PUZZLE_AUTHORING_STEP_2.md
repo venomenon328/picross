@@ -50,3 +50,14 @@ Dies verlangt nicht mehrere tatsächliche Abstraktionsbilder.
 
 Übergabe: motif_review mit Reveal-/Motivvergleich, Verlusten und Parameterkorridor;
 vor Rasterarbeit tatsächliche Motiv-/Parameterfreigabe abwarten.
+
+### PW-FIND · Annahme und Motivfreigabe
+
+Für aktuelle Befundentscheidungen gilt der Weg nach
+[Kern §6.3](PUZZLE_AUTHORING.md#63-pw-find--phasenübergreifende-befundentscheidungen):
+Konkrete zulässige Befunde der gewählten Abstraktion können im selben Auftrag
+wie Motiv- und Parameterfreigabe angenommen werden. Revealbezug, Motivbytes,
+geschützte Merkmale und eine vollständige zulässige Parameteralternative bleiben
+gebunden. Eine Annahme ändert keine festen Maße, Farbzahl oder Motivgrenzen.
+Korrigierte Motivbytes benötigen ihre tatsächliche Wahl trotz zulässig
+fortgeführter Befundannahmen.
