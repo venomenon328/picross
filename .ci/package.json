@@ -1,10 +1,10 @@
 {
   "format": "development-ci-plan/v1",
   "issue": "https://github.com/venomenon328/picross/issues/700",
-  "package": "PZ-ZIMTSCHNECKE-RASTER",
+  "package": "PZ-ZIMTSCHNECKE-KONTEXT",
   "modules": [],
-  "purpose": "Buildfreie Sichtung des qualifizierten Rasterangebots für pz-zimtschnecke nach Authoring 0.8.0, Schritt 3.",
-  "omitted": "Das Rasterangebot und seine Originale liegen im aktuellen PW-B-Datensatz. Deduktion, unabhängiger Proof, Bewertung und Sichturteile werden im Produktionsweg geprüft. Der CI-Quellenkern läuft ohne Player-Build und Zusatzmodule.",
+  "purpose": "Buildfreie Sichtung der drei Kontextzeichnungen für pz-zimtschnecke in Schritt 4 von Authoring 0.8.0.",
+  "omitted": "Die isolierten Originale und die Bildurteile liegen im aktuellen PW-B-Datensatz. Der Quell- und Plankern genügt für diesen Draft ohne Player-Build und Zusatzmodule.",
   "test_changes": [],
   "core_change": null,
   "evidence": {
