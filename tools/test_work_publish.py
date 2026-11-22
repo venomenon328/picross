@@ -299,7 +299,8 @@ class WorkPublicationTests(unittest.TestCase):
                 if in_worker:
                     worker_pages.append(req.full_url)
                     if len(worker_pages) == fail_at:
-                        raise HTTPError(req.full_url, 403, 'rate limit exceeded', {}, None)
+                        raise HTTPError(req.full_url, 403, 'rate limit exceeded',
+                                        {'X-RateLimit-Remaining': '0'}, None)
                 value = worker_prs if in_worker else []
             elif endpoint == '':
                 value = {**actor, 'private': False}
@@ -330,7 +331,7 @@ class WorkPublicationTests(unittest.TestCase):
         self.assertTrue(shutil.which('git'))
         self.assertIsNone(shutil.which('gh'))
         self.enterContext(patch.object(pw, 'github_identity', side_effect=lambda url: url == self.remote))
-        self.enterContext(patch.object(pw, 'build_opener', return_value=SimpleNamespace(open=open_api)))
+        self.enterContext(patch.object(pw.github_rest, 'build_opener', return_value=SimpleNamespace(open=open_api)))
 
         def worker():
             nonlocal in_worker
@@ -359,7 +360,7 @@ class WorkPublicationTests(unittest.TestCase):
         if not lose_delete_reply:
             for fail_at in (1, 2):
                 with self.subTest(failed_pr_check=fail_at):
-                    reject_worker('GitHub-Status nicht prüfbar')
+                    reject_worker('GitHub-Anfragelimit erreicht')
                     self.assertEqual(len(worker_pages), fail_at)
             fail_at = None
             for state, head, error in (

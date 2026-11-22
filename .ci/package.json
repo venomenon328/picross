@@ -7,6 +7,16 @@
   "omitted": "Keine zusätzlichen Native-, Produktions-, Web- oder Browserdiagnosemodule. Der reguläre Windows-Playerbau läuft im Kern. Es ändern sich weder Spielregeln noch Rätseldaten oder Browserplattformlogik.",
   "test_changes": [
     {
+      "path": "tools/test_app_updates.py",
+      "disposition": "change-scoped",
+      "reason": "Bestehende Transportgrenzen kontrolliert am neuen REST-Einstieg prüfen, ohne echte Netzaufrufe."
+    },
+    {
+      "path": "tools/test_work_publish.py",
+      "disposition": "change-scoped",
+      "reason": "Bestehende P2-Recovery- und Sperrregressionen authentifizieren am gemeinsamen REST-Einstieg und prüfen das Rate-Limit."
+    },
+    {
       "path": "tools/test_pw_github_rest.py",
       "disposition": "change-scoped",
       "reason": "Kleine Regressionen für Startumgebung, API- und Downloadgrenzen, anonymen Betrieb, Statusklassen und Browserfehler ohne echte Credentials."
