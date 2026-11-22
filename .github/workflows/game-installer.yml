@@ -102,6 +102,27 @@ jobs:
           if ($LASTEXITCODE -ne 0) { throw 'Installer build failed' }
           & $python -m tools.game_app.inspect --build "$env:RUNNER_TEMP\pg-product" --output "$env:RUNNER_TEMP\pg-inspection" --expected-commit $env:PG_SOURCE --version $env:PG_VERSION --compare-build
           if ($LASTEXITCODE -ne 0) { throw 'MSI inspection failed' }
+      - name: Require the normal frozen PG launcher start
+        shell: pwsh
+        env:
+          PG_SOURCE: ${{ needs.plan.outputs.source }}
+          PG_EVENT: ${{ github.event_name }}
+        run: |
+          $python = "$env:RUNNER_TEMP\pg-env\Scripts\python.exe"
+          $smokeArgs = @('--build', "$env:RUNNER_TEMP\pg-product",
+                         '--inspection', "$env:RUNNER_TEMP\pg-inspection\result.json",
+                         '--output', "$env:RUNNER_TEMP\pg-launcher-smoke", '--expected-commit', $env:PG_SOURCE)
+          $control = @()
+          if ($env:PG_EVENT -eq 'workflow_dispatch') { $control += '--negative-control' }
+          & $python -m tools.game_app.launcher_smoke @smokeArgs @control
+          if ($LASTEXITCODE -ne 0) { throw 'Normal frozen launcher failed' }
+          & $python -m tools.game_app.launcher_smoke @smokeArgs --verify-result
+          if ($LASTEXITCODE -ne 0) { throw 'Missing or unbound launcher start result' }
+          if ((git status --porcelain)) { throw 'Launcher smoke changed source checkout' }
+      - name: Seal the inspected and start-tested candidate
+        shell: pwsh
+        run: |
+          $python = "$env:RUNNER_TEMP\pg-env\Scripts\python.exe"
           & $python -m tools.game_app.release_channel seal --plan "$env:RUNNER_TEMP\pg-plan\plan.json" --build "$env:RUNNER_TEMP\pg-product" --inspection "$env:RUNNER_TEMP\pg-inspection\result.json"
           if ($LASTEXITCODE -ne 0) { throw 'Candidate binding failed' }
           Get-Content "$env:RUNNER_TEMP\pg-product\delivery.json"
@@ -137,9 +158,20 @@ jobs:
           path: |
             ${{ runner.temp }}/pg-review/*
             ${{ runner.temp }}/pg-update-review/*
+          retention-days: 7
+          if-no-files-found: error
+      - name: Bound normal PG launcher smoke originals
+        if: github.event_name == 'workflow_dispatch'
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: pg-launcher-smoke-${{ needs.plan.outputs.source }}
+          path: |
+            ${{ runner.temp }}/pg-launcher-smoke/result.json
+            ${{ runner.temp }}/pg-launcher-smoke/process.log
+            ${{ runner.temp }}/pg-launcher-smoke/negative-control.json
+            ${{ runner.temp }}/pg-inspection/result.json
             ${{ runner.temp }}/pg-product/input-audit.json
             ${{ runner.temp }}/pg-product/frozen-audit.json
-            ${{ runner.temp }}/pg-inspection/result.json
           retention-days: 7
           if-no-files-found: error
 

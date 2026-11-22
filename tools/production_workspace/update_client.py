@@ -1,7 +1,6 @@
 """Bounded reads from the public GitHub update channel."""
 from io import BytesIO
 from tools.app_products import PW
-from tools.puzzle_production import github_rest
 import hashlib
 import re
 import threading
@@ -40,7 +39,7 @@ def checkpoint(cancel, deadline):
 def allowed_url(url, *, initial):
     p = urllib.parse.urlsplit(url)
     require(p.scheme == 'https' and p.port in (None, 443) and not p.username and not p.password and
-            not p.fragment and not any(c in url for c in '\r\n\\'), 'Untrusted update URL')
+            not p.fragment and not re.search(r'[\s\x00-\x1f\x7f\\]', url), 'Untrusted update URL')
     if initial:
         require(url == initial, 'Update source changed')
         return
@@ -64,7 +63,7 @@ class Redirects(urllib.request.HTTPRedirectHandler):
 class Transport:
     def __init__(self, *, use_workspace_token=False):
         self.use_workspace_token = use_workspace_token
-        # Downloads use a credential-free transport with pinned redirects.
+        # PG/PE catalog reads and all downloads use the credential-free opener.
         self.opener = urllib.request.build_opener(urllib.request.ProxyHandler({}), Redirects())
 
     def transfer(self, url, output, limit, cancel, deadline, *, expected=None, received=None):
@@ -75,11 +74,15 @@ class Transport:
         headers = {'Accept': 'application/vnd.github+json' if api else 'application/octet-stream',
                    'User-Agent': 'Picross-ProductionWorkspace-Updater', 'Accept-Encoding': 'identity'}
         timeout = min(10, max(0.1, deadline - time.monotonic()))
-        connection = (github_rest.open_api(url, headers, timeout=timeout, use_workspace_token=self.use_workspace_token)
-                      if api else self.opener.open(urllib.request.Request(url, headers=headers), timeout=timeout))
+        if api and self.use_workspace_token:
+            from tools.puzzle_production import github_rest
+
+            connection = github_rest.open_api(url, headers, timeout=timeout)
+        else:
+            connection = self.opener.open(urllib.request.Request(url, headers=headers), timeout=timeout)
         with connection as response:
             final = response.geturl()
-            allowed_url(final, initial=url if final == url else None)
+            allowed_url(final, initial=url if api or final == url else None)
             require(response.status == 200 and response.headers.get('Content-Encoding', 'identity') == 'identity',
                     'Unexpected HTTP response')
             length = response.headers.get('Content-Length')

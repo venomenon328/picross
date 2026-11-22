@@ -94,11 +94,28 @@ dieselben Schritte am sauberen PR-Head aus:
 ```powershell
 python -m tools.game_app.build --output <build>
 python -m tools.game_app.inspect --build <build> --output <inspection> --expected-commit <sha> --compare-build
+python -m tools.game_app.launcher_smoke --build <build> --inspection <inspection>/result.json --output <smoke> --expected-commit <sha> --negative-control
 python -m tools.game_app.diagnose --build <build> --output <diagnose>
 ```
 
 Bau und Inspektion verwenden die [gebundene Windows-Bauumgebung](../../tools/production_workspace/WINDOWS_BUILD.md#gebundener-bau-und-version).
-Die Startdiagnose prüft den regulären Export, den nativen Launcher und
+[PG-START-FIX](https://github.com/venomenon328/picross/issues/817#issuecomment-7082659950)
+verlangt für jeden neu gebauten Kandidaten nach `--compare-build` und vor
+Kandidatenabschluss und Upload den normalen Start der unveränderten
+`Picross-Game.exe`. Die Probe verwendet die tatsächlichen Windows-Pfade für
+Programm und Zustand auf einem frischen Runner und beansprucht beide exklusiv.
+Der Start erfolgt ohne Argumente aus einem Arbeitsverzeichnis außerhalb des
+Checkouts. Ohne MSI-Registrierung zeigt der reagierende Tk-Launcher die
+Kandidatenversion, **Nicht verfügbar**, **Suche aktivieren** und **Spielen**.
+Die Probe erkennt diese sichtbaren Elemente aus dem Fenster des gestarteten
+Prozesses und schließt es mit `WM_CLOSE`. Erfolg verlangt Exit 0, ein
+unverändertes Dateiinventar und genau einen Prozess im Diagnosejob. Ein
+fehlendes oder ungebundenes Ergebnis stoppt den Kandidatenabschluss.
+Die Probe verwendet Windows-OCR und räumt ausschließlich ihre Laufdaten auf.
+Der Dispatch führt zusätzlich eine Negativkontrolle mit vorzeitigem Prozessende
+aus und stellt die gebundenen Originale bis zu sieben Tage für das Review bereit.
+
+Die zusätzliche Diagnose prüft den regulären Export, den nativen Launcher und
 die Guard-Entscheidungen mit isoliertem Profil. Der Diagnosedispatch prüft
 außerdem den konkreten Kandidaten mit flüchtiger synthetischer Signatur,
 den PG-Helfer und die Bestätigung des sichtbaren neuen Launcherfensters.

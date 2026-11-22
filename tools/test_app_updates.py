@@ -5,6 +5,8 @@ from types import SimpleNamespace
 from io import BytesIO
 import os
 from pathlib import Path
+import subprocess
+import sys
 import tempfile
 import threading
 import time
@@ -14,6 +16,8 @@ import urllib.error
 import urllib.request
 
 from tools import test_production_installer as fixtures
+from tools.app_products import PE, PG, PW
+from tools.puzzle_production import github_rest
 from tools.production_workspace import app_updates, update_client as client, update_verifier as verifier
 from tools.production_workspace import update_diagnostic, update_windows as windows
 from tools.production_workspace.update_storage import Preferences, Stage, recover, atomic_json, no_links
@@ -561,6 +565,54 @@ class InstallationTests(unittest.TestCase):
                 with self.assertRaises(ValueError): windows.installation()
 
 
+class FrozenImportTests(unittest.TestCase):
+    def test_pg_start_transport_and_error_without_production_namespace(self):
+        probe = """
+import importlib.abc
+from io import BytesIO
+import sys
+import threading
+import time
+from types import SimpleNamespace
+from unittest.mock import Mock, patch
+
+class FrozenBoundary(importlib.abc.MetaPathFinder):
+    def find_spec(self, fullname, path=None, target=None):
+        if fullname == 'tools.puzzle_production' or fullname.startswith('tools.puzzle_production.'):
+            raise AssertionError('Production namespace requested by PG: ' + fullname)
+
+sys.meta_path.insert(0, FrozenBoundary())
+from tools.app_products import PG
+from tools.game_app.desktop_entry import main
+from tools.production_workspace import app_updates, update_client
+
+url = update_client.API + '?page=1'
+response = BytesIO(b'[]')
+response.status = 200
+response.headers = {'Content-Length': '2'}
+response.geturl = lambda: url
+transport = update_client.Transport()
+transport.opener = Mock()
+transport.opener.open.return_value = response
+assert transport.read(url, 20, threading.Event(), time.monotonic() + 5) == b'[]'
+assert not transport.opener.open.call_args.args[0].has_header('Authorization')
+
+runtime = SimpleNamespace(stop_requested=threading.Event())
+with patch.object(app_updates.windows, 'installation', side_effect=ValueError('portable')):
+    updates = app_updates.Updates(runtime, app=PG)
+updates.preferences = Mock()
+updates.preferences.read.return_value = True
+updates.identity = SimpleNamespace(version='0.1.1')
+with patch.object(update_client, 'discover', side_effect=OSError('offline')):
+    updates._run()
+assert updates.cancelled.is_set()
+assert updates.status.startswith('App-Update nicht')
+"""
+        result = subprocess.run([sys.executable, '-c', probe], cwd=Path(__file__).resolve().parents[1],
+                                capture_output=True, text=True, timeout=20)
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+
+
 class TransportTests(unittest.TestCase):
     class Response(BytesIO):
         status = 200
@@ -574,7 +626,7 @@ class TransportTests(unittest.TestCase):
         opener = Mock()
         opener.open.return_value = response
         output = BytesIO()
-        with patch.object(client.github_rest, 'build_opener', return_value=opener):
+        with patch.object(transport, 'opener', opener):
             transport.transfer(client.API + '?per_page=100&page=1', output, limit, threading.Event(),
                                time.monotonic()+10, expected=expected)
         request = opener.open.call_args.args[0]
@@ -588,6 +640,32 @@ class TransportTests(unittest.TestCase):
                                       (b'a',{'Content-Length':'-1'},None)]:
             with self.subTest(headers=headers), self.assertRaises(ValueError):
                 self.transfer(self.Response(raw, headers), expected=expected)
+
+    def test_app_catalog_selection_and_download_credentials(self):
+        api = client.API + '?page=1'
+        download = client.DOWNLOAD + 'pg-v0.1.1/manifest.json'
+        cancel = threading.Event()
+        for app in (PW, PE, PG):
+            with self.subTest(app=app.key), patch.object(client, '_discover') as discover:
+                client.discover('0.1.1', cancel, app=app)
+                transport = discover.call_args.args[2]
+                anonymous = Mock()
+                rest = Mock()
+                anonymous.open.side_effect = lambda request, **_: self.Response(b'a', final=request.full_url)
+                rest.open.side_effect = anonymous.open.side_effect
+                with (patch.object(transport, 'opener', anonymous),
+                      patch.object(github_rest, 'build_opener', return_value=rest),
+                      patch.object(github_rest, '_workspace_token', 'fixture-only')):
+                    deadline = time.monotonic() + 5
+                    self.assertEqual(transport.read(api, 10, cancel, deadline), b'a')
+                    self.assertEqual(transport.read(download, 10, cancel, deadline), b'a')
+                self.assertIsNone(anonymous.open.call_args.args[0].get_header('Authorization'))
+                if app == PW:
+                    self.assertEqual(rest.open.call_args.args[0].get_header('Authorization'), 'Bearer fixture-only')
+                    self.assertEqual(anonymous.open.call_count, 1)
+                else:
+                    rest.open.assert_not_called()
+                    self.assertEqual(anonymous.open.call_count, 2)
 
     def test_redirects_are_exact_https_release_assets_only(self):
         handler = client.Redirects()
@@ -604,16 +682,25 @@ class TransportTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             handler.redirect_request(urllib.request.Request(client.API+'?page=1'),None,302,'',{},good)
 
+    def test_anonymous_catalog_rejects_redirect_and_unescaped_whitespace(self):
+        target = 'https://release-assets.githubusercontent.com/github-production-release-asset/123/abc'
+        with self.assertRaisesRegex(ValueError, 'Update source changed'):
+            self.transfer(self.Response(b'[]', final=target))
+        for separator in (' ', chr(9), chr(0), chr(127)):
+            with self.subTest(separator=separator), self.assertRaisesRegex(ValueError, 'Untrusted update URL'):
+                client.Transport().read(client.API + '?page=' + separator + '1', 10, threading.Event(),
+                                        time.monotonic() + 1)
+
     def test_offline_404_429_tls_timeout_are_errors_not_current(self):
         for error, kind in ((OSError('offline'), 'network'), (TimeoutError(), 'network'),
                             (urllib.error.URLError('TLS'), 'network'),
                             (urllib.error.HTTPError(client.API, 404, 'missing', {}, None), 'source'),
                             (urllib.error.HTTPError(client.API, 429, 'rate limit', {}, None), 'rate_limit')):
-            transport = client.Transport()
+            transport = client.Transport(use_workspace_token=True)
             opener = Mock()
             opener.open.side_effect = error
-            with self.subTest(error=type(error)), patch.object(client.github_rest, 'build_opener', return_value=opener):
-                with self.assertRaises(client.github_rest.Failure) as failure:
+            with self.subTest(error=type(error)), patch.object(github_rest, 'build_opener', return_value=opener):
+                with self.assertRaises(github_rest.Failure) as failure:
                     transport.read(client.API+'?page=1', 100, threading.Event(), time.monotonic()+1)
                 self.assertEqual(failure.exception.kind, kind)
 

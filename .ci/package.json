@@ -1,11 +1,16 @@
 {
   "format": "development-ci-plan/v1",
-  "issue": "https://github.com/venomenon328/picross/issues/700",
-  "package": "PROD-PINGUIN",
-  "modules": [],
-  "purpose": "Erstintegration von pz-pinguin nach Authoring 0.8.0 mit Monoraster, Reveal samt Katalogprofilen und gewählter 3:1-Kontextzeichnung.",
-  "omitted": "Reine Rätselproduktion. Paarlinienproof, Endmatrix, Bewertung und Lieferbytes werden im Produktionsweg geprüft. Der CI-Quellenkern läuft ohne Player-Build und Zusatzmodule.",
-  "test_changes": [],
+  "issue": "https://github.com/venomenon328/picross/issues/817",
+  "package": "PG-START-FIX",
+  "modules": [
+    "tools"
+  ],
+  "purpose": "Gemeinsamen Updater an der PG-Frozen-Importgrenze korrigieren und normale Starts des tatsächlich inspizierten Windows-Launchers vor jedem PG-Kandidatenabschluss prüfen.",
+  "omitted": "Keine preflight-, native.*, production.*-, delivery- oder Chromium-Module. Der PG-Installerdispatch liefert den separaten Windowsstart und die einmalige Negativkontrolle. Der reguläre Playerbau bleibt im Kern.",
+  "test_changes": [
+    "PG-Importgrenze im frischen Prozess sowie gemeinsame PW-/PE-/PG-Transportpfade und Fehlerzuordnung.",
+    "Ablehnung falscher oder vorzeitig beendeter Fenster und fehlender oder fremder Startresultate. Der PG-Installer prüft dauerhaft den normalen Frozenstart vor dem Kandidatenabschluss."
+  ],
   "core_change": null,
   "evidence": {
     "mode": "none",
