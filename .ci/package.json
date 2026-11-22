@@ -1,10 +1,10 @@
 {
   "format": "development-ci-plan/v1",
-  "issue": "https://github.com/venomenon328/picross/issues/660",
-  "package": "PROD-TAIYAKI",
+  "issue": "https://github.com/venomenon328/picross/issues/700",
+  "package": "PROD-NASI-LEMAK-MOTIF-REVIEW",
   "modules": [],
-  "purpose": "Erstintegration von pz-taiyaki mit taiyaki-raster-a, reveal-a und taiyaki-background-c (HG31) nach Endabnahme.",
-  "omitted": "Reine Rätselproduktion. Linienproof, Endmatrix und Lieferbytes werden im Produktionsweg geprüft. Package CI prüft den Quellen- und Plankern ohne Zusatzmodule und Player-Build.",
+  "purpose": "Draft-Review der in PW-B veröffentlichten Motivvorlage und des Parameterkorridors für pz-nasi-lemak.",
+  "omitted": "Reine Authoring-Metadaten. Der Quell- und Plankern läuft ohne Zusatzmodule und Player-Build. Bilddateien und Freigabebindung wurden im Authoring geprüft.",
   "test_changes": [],
   "core_change": null,
   "evidence": {
