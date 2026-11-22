@@ -1,17 +1,17 @@
 {
   "format": "development-ci-plan/v1",
-  "issue": "https://github.com/venomenon328/picross/issues/822",
-  "package": "NAV-STATE-A",
+  "issue": "https://github.com/venomenon328/picross/issues/824",
+  "package": "CHAT-PUBLISH-A",
   "modules": [
-    "native.catalog"
+    "tools"
   ],
-  "purpose": "Die vorhandenen Pages- und Informationsprozesse prüfen die echten Navigationscontrols, Katalogfolge, Rollenzuordnung, Hitboxen, Symbolnamen, No-op und Besuchskontext. Der Kern baut den regulären Windows-x64-Spieler.",
-  "omitted": "Keine weiteren native.*, tools, production.*, preflight, delivery, Chromium oder vollständige Buch-Lifecycle-Diagnose. Spielstand, Export und Browser bleiben außerhalb des Diffs. Die einmalige native Windows-Sichtprobe deckt Konturen und Bedienung im regulären Buch ab.",
+  "purpose": "Das tools-Modul prüft die neue Connector-Objektbindung und die vorhandenen lokalen Publisher. Der Kern prüft Plan, Quellen und den regulären Windows-x64-Playerbau.",
+  "omitted": "Keine zusätzlichen native.*, production.*, preflight-, delivery- oder Chromium-Module. Spiel-, Produktions- und Webverhalten sind außerhalb des Scopes. Ein einmaliger GitHub-Durchstich prüft den Connector mit einem eigenen Entwicklungsbranch.",
   "test_changes": [
     {
-      "path": "game/tests/navigation_cases.gd",
+      "path": "tools/test_publish_connector.py",
       "disposition": "change-scoped",
-      "reason": "Die vorhandenen Navigationsorakel auf die neue Katalogfolge und die aktive Ansicht in der oberen Navigationsrolle umstellen."
+      "reason": "Kleine Offline-Dauerregressionen für vollständige Git-Objekte, verbotene Inhalte, erwartete SHAs, Refkonflikte und unabhängigen Readback."
     }
   ],
   "core_change": null,

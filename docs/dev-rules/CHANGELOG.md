@@ -1,5 +1,11 @@
 # Änderungen am Regelpaket
 
+## 0.2.0-rc.7 — 2026-11-22
+
+Picross #824 bevorzugt in ChatGPT den verbundenen GitHub-Connector und bindet
+die Veröffentlichung an die unterstützten Wege des lokalen Git-Publikationsvertrags.
+Die Ausführungsentscheidung bewertet Connector und lokale CLI getrennt.
+
 ## 0.2.0-rc.6 — 2026-11-06
 
 Picross #529 bindet einen Umsetzungsauftrag nach Eigentümerfeedback an die

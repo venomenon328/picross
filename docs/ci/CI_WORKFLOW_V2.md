@@ -66,6 +66,11 @@ klassifizierbaren Diff wird die Ausnahme nicht angenommen.
 | `production.solver`, `production.images`, `production.adapter`, `production.catalog` | Bestehende synthetische Fachgruppen und zugeordnete Integrationen |
 | `delivery` | Regulärer Webbuild und isolierte lokale SSH-/HTTP-Referenz; kein Live-Deployment |
 
+Das Modul `tools` enthält die Offline-Regressionen zum
+[Git-Publikationsvertrag](../tools/GIT_PUBLICATION.md). Der Metadatencheck im
+Kern läuft nach Veröffentlichung. Die Objektprüfung vor dem ersten Upload
+gehört zum jeweiligen Publisher.
+
 Chromium bleibt ein separat ausdrücklich manuell gestarteter Diagnosepfad. Allgemeine Module, `tools` oder ein gemeinsamer Dateipfad starten keinen Browser. Der alte [Diagnoseworkflow](../../.github/workflows/ci-chromium.yml) besitzt keine automatischen PR-/Push-Trigger; sein Ergebnis heißt `Diagnostic result`, nicht `ci-required`. Alte Auswahl-/Lifecyclehelfer sind kein zweiter aktueller Normvertrag. Ein manueller Diagnosevollumfang erteilt keine dauerhafte Pflicht.
 
 Der manuelle Einstieg in Package CI erlaubt die ausdrücklich angegebenen Module, standardmäßig keine; er übernimmt keine gespeicherte Feature-Uploadanforderung. Die Auswahl allein beweist keine fachlich ausreichende Abdeckung: diese Entscheidung gehört in Spezifikation und Review.

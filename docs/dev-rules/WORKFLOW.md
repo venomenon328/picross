@@ -10,6 +10,13 @@
 
 Vor Arbeit die aktuelle `AGENTS.md`, diesen Workflow und das Projektprofil vollständig lesen; bei vorhandenem Issue dessen vollständigen aktuellen Body und spätere relevante Entscheidungen. Beauftragten Branch verwenden, sonst den aktuellen Zielbranch. Bei Review zusätzlich den tatsächlichen vollständigen Diff, relevanten Kontext und konkret benannten Reviewstand prüfen. Weitere Fachquellen nur nach tatsächlichem Änderungsbezug und Routing laden.
 
+In ChatGPT den verbundenen GitHub-Connector für Repositoryquellen, Issues, PRs
+und CI bevorzugen. Quellenzugriff, beauftragte Metadatenänderungen, lokale
+Prüfbarkeit und sichere Commitveröffentlichung einzeln feststellen. Fehlendes
+Git-Netz oder eine fehlende `gh`-Anmeldung betreffen den jeweiligen lokalen
+Weg. Bei einem Ausfall den verfügbaren Connector prüfen und nur tatsächlich
+blockierte Arbeit benennen.
+
 | Quelle | Zuständigkeit |
 | --- | --- |
 | Issue/Paket | Ziel, Nichtziele, Akzeptanz, Abhängigkeiten, Prüfplan |
@@ -59,7 +66,14 @@ ein Arbeitsbranch, einen neuen vom aktuellen Zielbranch (bei gestapelten Paketen
 von der vereinbarten Basis) anlegen. Bei einer Wiederaufnahme zuerst den laufenden
 Stand zuordnen. Eine fehlende Branchangabe autorisiert keine Umsetzung auf dem Zielbranch.
 
-Für Arbeits-, Integrations- und Reviewquellen vor der Veröffentlichung den gemeinsamen Einstieg `python -m tools.publish_git BRANCH --expected new` bzw. mit erwarteter Remote-SHA verwenden. Für einen einzelnen API-Commit auf bestehendem Branch denselben Einstieg mit `--api` verwenden. Unmittelbare Connector-Uploads oder Git-Data-API-Aufrufe umgehen die Objektprüfung und gehören nicht zu den unterstützten Wegen. Laufbelege und lokale Originale über den Zustellvertrag liefern.
+Für Arbeits-, Integrations- und Reviewquellen gelten die unterstützten Wege im
+Git-Publikationsvertrag, den das Projektprofil verlinkt. Alle prüfen die
+ausgehenden Objekte vor dem ersten Upload, binden den erwarteten Refzustand bei
+der Mutation und lesen den veröffentlichten Remote-Commit zurück. In ChatGPT
+den geprüften Connector-Weg für geeignete neue Entwicklungsbranches bevorzugen.
+Für weitere Branchzustände gilt der lokale Publisher mit erwartetem Refzustand.
+Direkte Dateischreibwerkzeuge und ungeprüfte Git-Data-Aufrufe sind unzulässig.
+Laufbelege und lokale Originale über den Zustellvertrag liefern.
 
 Vor Änderungen Arbeitsbaum und Fremdänderungen prüfen. Standardbranch `feat/<issue>-<kurzname>`, `fix/<issue>-<kurzname>` oder `chore/<issue>-<kurzname>`; vorhandene beauftragte Branches fortführen. Keine Leercommits für vorzeitige PRs. Relevante Scope-/Produktwidersprüche konkret lösen, ohne unabhängige Arbeit anzuhalten.
 

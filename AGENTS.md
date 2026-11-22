@@ -21,6 +21,10 @@ Entwicklungsarbeit und folgt vollständig dem nächsten Abschnitt.
 
 ## Entwicklungsarbeit: aktuelle Quellen
 
+In ChatGPT den verbundenen GitHub-Connector bevorzugt für aktuelle Quellen,
+Issues, PRs und CI verwenden. Zugriff und geprüfte Veröffentlichung nach
+[WORKFLOW §§2, 5](docs/dev-rules/WORKFLOW.md) ermitteln.
+
 Vor auftragsbezogener Entwicklungsarbeit vollständig lesen:
 
 1. [Gemeinsamer Workflow](docs/dev-rules/WORKFLOW.md).
