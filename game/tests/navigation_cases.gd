@@ -155,8 +155,8 @@ static func work(r: SceneTree) -> void:
 	await information(r)
 	r.click(app.actions["nav-work"])
 	await r.frames()
-	for id: String in ["nav-information","menu","help"]:
-		var button: ButtonInk = app.actions[id]
+	for action: String in ["nav-information","menu","help"]:
+		var button: ButtonInk = app.actions[action]
 		r.check(button.top_navigation and not button.selected,"NAV-STATE-A: work header has no active menu")
 	r.check(not app.actions["fill"].top_navigation,"NAV-STATE-A: selected tool keeps regular button style")
 	r.check(app.work.visible and str(app.session.definition.id) == id and app.session.player.cells == cells and app.session.player.history == history and app.session.player.cursor == cursor and r.save_bytes() == saved,"NAV-A: work-help-settings-back restores same durable work")
