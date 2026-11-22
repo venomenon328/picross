@@ -58,3 +58,16 @@ Hintergrundkandidatenzahl nicht.
 
 Übergabe: `background_review` zur Wahl/Korrektur oder ausdrücklichem `none`.
 `content_ready` erst bei vollständiger Hintergrundbereitschaft; kein Spieleinbau.
+
+### PW-FIND · Annahme und Kontextwahl
+
+Für aktuelle Befundentscheidungen gilt der Weg nach
+[Kern §6.3](PUZZLE_AUTHORING.md#63-pw-find--phasenübergreifende-befundentscheidungen):
+Zulässige konkrete Hintergrundabweichungen können mit Original-/Profilwahl und
+beauftragter Schlussvorbereitung angenommen werden. Die unabdingbaren Teilregeln
+aus [Qualität §6.1](../PUZZLE_QUALITY.md#61-pw-find--befundentscheidungen-in-allen-phasen)
+bleiben bestehen. `none` verlangt den ausdrücklichen Verzicht, `standard` die
+ausdrückliche Wahl des Standardhintergrunds.
+Übernommene Befundannahmen wählen keine geänderten kreativen Bytes und bestätigen
+keine geänderte technische Ableitung. Noch nicht fällige Hintergrundentscheidungen
+sperren keine frühere Produktionsphase.

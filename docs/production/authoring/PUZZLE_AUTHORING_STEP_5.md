@@ -54,6 +54,19 @@ Die Schutzregeln einhalten und unverändert lassen. Im ausdrücklich beauftragte
 Draftumfang beim Draft-PR bleiben. Main erst am zurückgelesenen Mergecommit melden.
 Werkzeug- und CI-Pakete brauchen eine eigene Mergebefugnis.
 
+### PW-FIND · Behandlung in der Schlussentscheidung
+
+Für aktuelle Befundentscheidungen gilt der Weg nach
+[Kern §6.3](PUZZLE_AUTHORING.md#63-pw-find--phasenübergreifende-befundentscheidungen):
+Die Schlussübersicht zeigt alle noch relevanten Annahmen und Behandlungsvorgaben
+an der gewählten Kombination beziehungsweise ihren Bestandteilen. Gedeckte
+Annahmen werden nicht erneut verlangt. Neue zulässige Befunde dürfen zusammen
+mit der tatsächlichen Endentscheidung angenommen werden. Endabnahme sowie
+Integrations-/Mergebefugnis bleiben eigenständig erforderlich.
+Am [Integrationseingang](../ZA1_ADAPTER.md#pw-find--entscheidungen-bis-zur-integration)
+dürfen frühere Behandlungsvorgaben nicht verlorengehen. Die normale
+Abschlussbereinigung erzeugt daraus kein neues Archiv.
+
 ## 9. Produktionsabschluss und Bereinigung
 
 Eigentümerentscheidung vom 14.10.2026: Ein final auf main integriertes Rätsel muss nicht erneut produzierbar sein. Produktionsunterlagen sind Arbeitsmaterial.

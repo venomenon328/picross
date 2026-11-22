@@ -140,6 +140,7 @@ def publish_locked(root, job, expected, main, checked):
                 'Current work scope or budget changed')
         if any(draft['budgets']['limits'][k] > v for k,v in previous['budgets']['limits'].items()):
             require(any(d['scope'] == 'budget' for d in draft['decisions']), 'Budget increase lacks approval')
+    current.check_transition(previous, draft)
     checked.check_new_previews(previous)
     rows, elapsed = catalog()
     release = release_for(rows, tag)
@@ -163,7 +164,7 @@ def publish_locked(root, job, expected, main, checked):
     transport.git(root, 'merge-base', '--is-ancestor', anchor, main)
     attachments = {a['name']: a for a in release['assets']}
     result = deepcopy(draft)
-    result['format'] = work_assets.FORMAT
+    result['format'] = current.findings.PUBLISHED if draft['format'] in current.findings.FORMATS else work_assets.FORMAT
     result['work_release'] = {'id':release['id'],'anchor':anchor}
     if previous and 'work_release' in previous:
         require(previous['work_release'] == result['work_release'], 'Work release generation changed')
@@ -255,7 +256,7 @@ def remove_bound_release(root, job, expected, main, *, confirmed, before_delete=
         transport.git(root,'fetch','--no-tags','--',transport.REMOTE,actual)
     source = GitSource(root)
     record = current.validate(io.json_bytes(source.read(expected,current.path(job),MIB),MIB))
-    require(record['format'] == work_assets.FORMAT and record['puzzle_id'] == job, 'Unexpected work record')
+    require(record['format'] in current.PUBLISHED_FORMATS and record['puzzle_id'] == job, 'Unexpected work record')
     binding = record['work_release']
     require(not any(row['id'] == binding['id'] and row['tag_name'] != tag for row in rows),
             'Bound release has a different tag')
@@ -315,10 +316,10 @@ def resume(root, job, expected):
     with writer(git_root(root) / 'authoring-builder.lock'):
         raw = GitSource(root).read(expected, name, MIB)
         record = current.validate(io.json_bytes(raw, MIB))
-        require(record['format'] == work_assets.FORMAT, 'Bound external record required')
+        require(record['format'] in current.PUBLISHED_FORMATS, 'Bound external record required')
         checked = current.Checked(record, lambda n, limit: io.read(root,n,limit))
         draft = deepcopy(record)
-        draft['format'] = current.FORMAT
+        draft['format'] = current.findings.LOCAL if record['format'] == current.findings.PUBLISHED else current.FORMAT
         del draft['work_release']
         for ref in current.references(draft):
             if ref.pop('asset', None):

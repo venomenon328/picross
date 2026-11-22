@@ -267,3 +267,19 @@ dialog::backdrop { background: #07120fc4; }
 
 .summaryBackground { grid-column: 1 / -1; }
 .closingCards h4 { margin: 8px 0; font-size: .9rem; }
+
+/* Keep decisions beside their original, including on a single-column workspace. */
+.finding { min-width: 0; margin: 1rem 0; padding: .7rem .85rem .85rem; border: 1px solid var(--line); border-radius: .55rem; }
+.finding legend { max-width: 100%; padding: 0 .3rem; font-weight: 650; overflow-wrap: anywhere; }
+.criterion { margin-inline-end: .55rem; color: var(--accent); font: 600 .78rem ui-monospace, monospace; }
+.finding details { margin: .25rem 0; }
+.finding dl { display: grid; grid-template-columns: max-content minmax(0,1fr); gap: .3rem .65rem; font-size: .87rem; }
+.finding dt,.findingState { color: var(--muted); }
+.finding dd { margin: 0; overflow-wrap: anywhere; }
+.findingState,.readiness { font-size: .87rem; }
+.readiness { margin: .4rem 0; font-weight: 650; color: var(--warn); }
+.readiness[data-ready=true] { color: var(--accent); }
+.finding label { display: block; margin-top: .6rem; }
+.finding textarea { width: 100%; min-height: 3rem; }
+.card button:focus-visible,.finding :focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+@media (max-width: 540px) { .finding dl { grid-template-columns: 1fr; } .finding dd { margin-bottom: .3rem; } }

@@ -7,6 +7,27 @@ ROOT = Path(__file__).resolve().parents[1]
 
 
 class AuthoringPromptTests(unittest.TestCase):
+    def test_concrete_decisions_are_independent_and_correction_accepts_a_blocked_base(self):
+        probe = r"""
+const assert=require('node:assert/strict'), P=require('./tools/production_workspace/ui/workflow.js');
+const sha='a'.repeat(40), puzzle_id='pz-test';
+const row={id:'one',criterion:'Q-H02',binding:'b'.repeat(64),eligible:true,decision:null};
+const other={...row,id:'two',binding:'c'.repeat(64)};
+const cards={A:{missing:[],findings:[row,other]},B:{missing:['Proof fehlt'],findings:[]}};
+const v={puzzle_id,revision:'current',commit:sha,source_url:'https://github.com/venomenon328/picross/tree/'+sha,
+ record:{file:'content/authoring/pz-test/current/record.json'},assets:[],offers:[{id:'A',kind:'raster'},{id:'B',kind:'raster'}],
+ facts:{state:'raster_review',authoring_version:'0.8.0',candidates:cards}};
+const intent={selection:'A',kind:'raster',findings:{[row.binding]:{accepted:true,treatment:'Blau behalten'}}};
+assert.throws(()=>P.prompt(v,intent),/Offene Voraussetzungen/);
+intent.findings[other.binding]={accepted:true,treatment:'Unverändert beibehalten'};
+const order=P.prompt(v,intent);
+for(const word of ['Blau behalten','Unverändert beibehalten',row.binding,other.binding,'Schritt 4','Rasterangebot A'])assert(order.includes(word));
+assert.throws(()=>P.prompt(v,{...intent,selection:'B'}),/Offene Voraussetzungen/);
+const correction=P.prompt(v,{action:'rework',selection:'B',kind:'raster',feedback:'Proof ergänzen'});
+assert.match(correction,/Korrekturgrundlage: B/);assert.doesNotMatch(correction,/Ich wähle/);
+"""
+        subprocess.run(['node','-e',probe],cwd=ROOT,check=True)
+
     def test_actual_generator_for_all_five_steps_correction_resume_and_source_guards(self):
         probe = r"""
 const assert=require('node:assert/strict');

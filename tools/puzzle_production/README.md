@@ -152,6 +152,22 @@ Aktive Schwierigkeit zusätzlich über catalog_analysis mit expliziter Methode 0
 
 ## PW-B: aktuelle Produktion ohne Entstehungsarchive
 
+Für neue Jobs die geschlossene [v3-Form](../../docs/tools/PW_B_CONTRACT.md#pw-find--freigegebene-erweiterung-der-entscheidungsdaten) verwenden.
+Im bestehenden Builderrequest den aktuellen Record mit `findings=[]` und `instructions={}` beginnen.
+Der Akteur bindet jede neue Beobachtung mit `finding_decisions.identity(job, target)` an ihren Inhalt.
+`declare(row, expected=…, action=…, treatment=…, actor=…, timestamp_utc=…, statement=…)` wendet die
+tatsächlich gesendete Erklärung an. Die im Auftrag sichtbare Standardbehandlung wird wörtlich gespeichert.
+Bei widersprüchlicher Behandlung vor der Fortsetzung die konkrete Erklärung klären.
+
+Für eine Korrektur zuerst am tatsächlichen unmittelbaren Ausgangsrecord neu beurteilen, dann
+`carry(previous, job, source_id, successor_id, continuing=…)` verwenden. In `continuing`
+die weiterhin relevanten früheren Texte für den Nachfolger angeben, auch wenn ein Befund verschwunden ist.
+Bei weiteren Blockern den tatsächlichen Reviewstand mit den bereits wirksamen Erklärungen sichern.
+Zum gezielten Wechsel eines aktuellen Altstands dient `current_authoring.upgrade(job, observations=…, backgrounds=…, job_blockers=…)`.
+Negative Sammelurteile benötigen konkrete neu gebundene Einzelbefunde, Hintergrundoriginale ihr tatsächliches Profil.
+Frühere Annahmen nur mit belegter Einzelzuordnung erklären. Auftragsweite Altblocker ausdrücklich prüfen.
+Nach Resume, Builder und Finalizer mit dem regulären Publisher und erwarteten Arbeitscommit sichern.
+
 Neue Jobs verwenden den [fünfstufigen Authoringweg](../../docs/production/authoring/PUZZLE_AUTHORING.md)
 und den geschlossenen aktuellen [PW-B-Vertrag](../../docs/tools/PW_B_CONTRACT.md).
 Ein Record plus benötigte Nutzdateien, ein gemeinsamer Verweisindex. Kein

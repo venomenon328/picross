@@ -58,7 +58,7 @@ def check_range(root, head, bases, *, anchor=None):
                 if mode != '100644' or sizes[oid] > (8 if path.endswith('/index.json') else 1) * 1024**2:
                     raise ValueError('Invalid production metadata ' + path)
                 value = json.loads(git(root, 'cat-file', 'blob', oid))
-                if path.endswith('/current/record.json') and value.get('format') != 'picross-authoring-current-v2':
+                if path.endswith('/current/record.json') and value.get('format') not in ('picross-authoring-current-v2', 'picross-authoring-current-v3'):
                     raise ValueError('Only externally bound current records can be published')
     return {'commits': len(commits), 'changed_paths': len(paths), 'blobs': len(sizes), 'bytes': sum(sizes.values())}
 

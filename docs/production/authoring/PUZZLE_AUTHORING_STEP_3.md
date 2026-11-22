@@ -264,6 +264,23 @@ Schritt 4 beginnt erst mit der tatsächlichen qualifizierten Rasterwahl.
 Ungewählte Angebote danach entfernen, sobald sie keine aktuelle Nutzung mehr
 haben. Keine automatische Auswahl nach Reihenfolge oder Dateinamen.
 
+### 4.6 PW-FIND · Annahme und Rasterwahl
+
+Für aktuelle Befundentscheidungen gilt der Weg nach
+[Kern §6.3](PUZZLE_AUTHORING.md#63-pw-find--phasenübergreifende-befundentscheidungen):
+Ein Raster wird anhand seiner eigenen aktuellen Befunde, zulässigen Annahmen
+und Nachweise auswählbar. Offene Vergleichskandidaten sperren diese Wahl nicht.
+Annahme und Behandlung, qualifizierte Wahl des vorhandenen Rasters und
+Fortsetzung zu Schritt 4 dürfen in derselben tatsächlichen Erklärung erfolgen.
+Eine zusätzliche menschliche Runde allein zur Änderung des globalen Status
+entfällt. Vollständiger Logiknachweis, Schwierigkeit und übrige harte Bedingungen
+bleiben fällig; Befundannahme ersetzt ihre Prüfung nicht.
+
+Ein blockierter Sichtungsentwurf bleibt als Korrekturgrundlage adressierbar.
+Ein angenommener Befund oder alter globaler Blockertext verlangt keine weitere
+Rasterproduktion. Materielle Änderungen erfordern die betroffenen neuen Prüfungen;
+Korrektur- und Suchbudgets bleiben unverändert.
+
 ## 5. Schwierigkeit L1–L5
 
 Logische Schwierigkeit, Rastergröße, Bearbeitungsumfang und Lösungszeit trennen;

@@ -17,6 +17,7 @@ from .sources import Archive, JSON_LIMIT, INDEX, check_commit, production_path, 
 FORMAT = 'picross-production-presentation-v1'
 REQUEST = 'picross-production-presentation-request-v1'
 CURRENT_FORMAT = 'picross-production-presentation-v2'
+FINDING_FORMAT = 'picross-production-presentation-v3'
 CURRENT_REQUEST = 'picross-production-presentation-request-v2'
 ROLES = ('reveal', 'motif', 'raster', 'raster_draft', 'background')
 OPTION = re.compile(r'[A-Za-z0-9][A-Za-z0-9_-]{0,63}\Z')
@@ -56,7 +57,7 @@ def reference(value, measured):
 def validate(value, measured=True):
     value = parse(data(value))
     exact_keys(value, {'format', 'puzzle_id', 'revision', 'record', 'title', 'assets', 'offers'})
-    ap.require(value['format'] in ((FORMAT, CURRENT_FORMAT) if measured else (REQUEST, CURRENT_REQUEST)), 'Unbekanntes Projektionsformat.')
+    ap.require(value['format'] in ((FORMAT, CURRENT_FORMAT, FINDING_FORMAT) if measured else (REQUEST, CURRENT_REQUEST)), 'Unbekanntes Projektionsformat.')
     ap.require(isinstance(value['puzzle_id'], str) and ap.ID.fullmatch(value['puzzle_id']), 'Ungültige Rätsel-ID.')
     ap.require(isinstance(value['revision'], str) and ap.REVISION.fullmatch(value['revision']), 'Ungültige Revision.')
     reference(value['record'], measured)
@@ -104,13 +105,13 @@ def validate(value, measured=True):
             else:
                 production_path(loc['container'])
     offered = set()
-    ap.require(isinstance(value['offers'], list) and len(value['offers']) <= 20, 'Zu viele Angebote.')
+    ap.require(isinstance(value['offers'], list) and len(value['offers']) <= (100 if value['format'] == FINDING_FORMAT else 20), 'Zu viele Angebote.')
     for offer in value['offers']:
         exact_keys(offer, {'id', 'kind', 'label', 'record', 'asset_ids'})
         ap.require(isinstance(offer['id'], str) and OPTION.fullmatch(offer['id']) and offer['id'] not in offered,
                    'Angebots-ID fehlt oder ist doppelt.')
         offered.add(offer['id'])
-        ap.require(offer['kind'] in ('reveal', 'raster', 'background'), 'Unbekannte Angebotsart.')
+        ap.require(offer['kind'] in (('reveal', 'raster', 'background', 'motif') if value['format'] == FINDING_FORMAT else ('reveal', 'raster', 'background')), 'Unbekannte Angebotsart.')
         text(offer['label'])
         reference(offer['record'], measured)
         ap.require(isinstance(offer['asset_ids'], list) and 0 < len(offer['asset_ids']) <= 100 and
