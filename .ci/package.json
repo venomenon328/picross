@@ -1,10 +1,10 @@
 {
   "format": "development-ci-plan/v1",
   "issue": "https://github.com/venomenon328/picross/issues/700",
-  "package": "PZ-HALO-HALO-INTEGRATION",
+  "package": "IGEL-KONTEXTAUSWAHL",
   "modules": [],
-  "purpose": "Halo-Halo mit dem gewählten 10 × 25-Farbraster, dem Schmalglas-Reveal und der Pandan-Ube-Zeichnung in den Spielkatalog aufnehmen.",
-  "omitted": "Reine Rätselproduktion. Endmatrix, unabhängiger Linienproof, Hinweisbefund, Bildableitung und gebundene Registrierung werden im Produktionsweg geprüft. Für den PR genügen Quellen- und Plankern.",
+  "purpose": "Den gewählten Rasterstand und die drei geprüften Kontextzeichnungen für Igel in Schritt 4 zur Wahl vorlegen.",
+  "omitted": "Reine Authoringdaten. Originalbytes, Bildurteile, Randabschluss, Rasterproof und Bewertung sind im Produktionsweg geprüft. Package CI prüft Quellen und Paketplan.",
   "test_changes": [],
   "core_change": null,
   "evidence": {
