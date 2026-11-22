@@ -3,6 +3,7 @@ extends "res://ui/book_button.gd"
 const Miniature = preload("res://ui/miniature.gd")
 const Reveal = preload("res://ui/reveal.gd")
 const MOTIF_FONT = preload("res://art/drawing/BaksoDaging-Regular.ttf")
+const LineBreak = preload("res://ui/catalog_line_break.gd")
 const Ink = preload("res://ui/catalog_ink.gd")
 const Tip = preload("res://ui/catalog_tip.gd")
 const Difficulty = preload("res://model/catalog_difficulty.gd")
@@ -11,6 +12,7 @@ class CardLabel extends Label:
 	# Label otherwise offers its clipped text as a replacement tooltip.
 	func _get_tooltip(_at_position: Vector2) -> String: return ""
 var caption: Label
+var original_title: String
 var detail: Label
 var leaf: Label
 var note: Label
@@ -55,7 +57,9 @@ func configure(title: String, meta: String, number: String, earned: bool = false
 	# No hidden native Button text: it otherwise contributes its font minimum.
 	text = ""
 	tooltip_text = ""
-	caption = label(title, 20)
+	original_title = title
+	caption = label(title, 20, false)
+	caption.accessibility_name = original_title
 	caption.add_theme_font_override("font", MOTIF_FONT)
 	caption.add_theme_stylebox_override("normal",StyleBoxEmpty.new())
 	caption.add_theme_constant_override("line_spacing",3)
@@ -170,7 +174,9 @@ func add_repair(button: Button, value: String) -> void:
 	# The native button owns input/focus; a passive wrapping caption prevents
 	# its one-line minimum from widening the fixed diagnostic/image column.
 	repair.set_meta("caption",value)
-	repair_label = label(value,small_text_size)
+	repair_label = label(value,small_text_size,false)
+	repair_label.accessibility_name = value
+	repair_label.text_overrun_behavior = TextServer.OVERRUN_NO_TRIMMING
 	repair_label.reparent(repair)
 	repair_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	repair_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
@@ -180,11 +186,12 @@ func add_repair(button: Button, value: String) -> void:
 func _layout_repair() -> void:
 	if repair_label == null: return
 	var u: float = ui_scale
+	var text_width: float = maxf(1,repair.size.x-8*u)
 	var pixels: int = roundi(small_text_size*u)
 	UiText.small_label(repair_label,pixels,u)
-	var text_width: float = maxf(1,repair.size.x-8*u)
-	var lines: int = UiText.wrapped(repair_label.text,pixels,text_width-4*u).split("\n").size()
-	var height: float = maxf(roundf(44*u),UiText.label_height(repair_label,pixels,lines)+8*u)
+	var lines: PackedStringArray = LineBreak.new(repair_label, text_width).lines(str(repair.get_meta("caption")))
+	repair_label.text = "\n".join(lines)
+	var height: float = maxf(roundf(44*u),UiText.label_height(repair_label,pixels,lines.size())+8*u)
 	repair.custom_minimum_size = Vector2(0,height)
 	repair_label.position = Vector2(4,4)*u
 	repair_label.size = Vector2(text_width,height-8*u)
@@ -244,7 +251,8 @@ func layout_content() -> void:
 	var hit: float = roundf(44*u)
 	# Reflow changes geometry, not typefaces. Replacing identical label styles
 	# at every resize invalidates their layout again; refresh only on UI change.
-	if styled_ui_scale != u:
+	var scale_changed: bool = styled_ui_scale != u
+	if scale_changed:
 		styled_ui_scale = u
 		for control: Label in [caption, detail, leaf, note, dimensions, difficulty]:
 			control.add_theme_font_size_override("font_size", roundi(float(control.get_meta("base_font"))*u))
@@ -259,7 +267,10 @@ func layout_content() -> void:
 	var text_x: float = inset + roundf(112*u) + gap if side_by_side else inset
 	var text_width: float = size.x-inset-text_x
 	caption.position = Vector2(text_x, inset)
-	caption.custom_maximum_size = Vector2(maxf(1, text_width-hit-gap), title_height)
+	var caption_width: float = maxf(1, text_width-hit-gap)
+	if scale_changed or caption.custom_maximum_size.x != caption_width:
+		caption.text = "\n".join(LineBreak.new(caption, caption_width).lines(original_title, 2))
+	caption.custom_maximum_size = Vector2(caption_width, title_height)
 	caption.size = caption.custom_maximum_size
 	if reset != null:
 		reset.ui_scale = u

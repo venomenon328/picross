@@ -589,7 +589,7 @@ func regular() -> void:
 	check(app.store.write_slot(target, target.view_state).is_empty(), "valid earned save written")
 	await new_app()
 	await choose("voegel")
-	check(app.album.notes[0].text == "Gelöst" and app.album.summary.text == "1 Treffer · 1 von 1 gelöst" and app.choices[0].caption.text == "TEST ONLY Muster 9", "validated solved card/name/count after restart")
+	check(app.album.notes[0].text == "Gelöst" and app.album.summary.text == "1 Treffer · 1 von 1 gelöst" and app.choices[0].original_title == "TEST ONLY Muster 9", "validated solved card/name/count after restart")
 	check(app.album.reveals[0].artwork != null, "earned image loaded only for visible card")
 	check(app.choices[0].accessibility_name.contains("Ansehen"), "KB solved action views existing completion")
 	await shot("solved")
@@ -1105,7 +1105,7 @@ func fixed_cards() -> void:
 		check(item.completed and app.store.write_slot(item,item.view_state).is_empty(),"KK synthetic completion validated and saved")
 		app.show_album()
 		await frames()
-		check(card_geometry() == initial and app.choices[0].caption.text == item.definition.reveal.name,"KK completion adds earned title without moving following rows")
+		check(card_geometry() == initial and app.choices[0].original_title == item.definition.reveal.name and app.choices[0].accessibility_name.begins_with(item.definition.reveal.name + " · "),"KK completion adds earned title without moving following rows")
 		check(app.choices[0].note.text == "Gelöst" and app.choices[0].status_icon.kind == "Gelöst","KU-A validated completion selects the check-mark drawing")
 		# The fixed card footer can extend below the compact book's clip area.
 		# Compare actual visible pixels, then restore the geometry under test.
@@ -1137,7 +1137,7 @@ func fixed_cards() -> void:
 		item.definition.reveal.name = "TEST ONLY Ein außerordentlich langer verdienter Motivname mit Umlauten und mehr als zwei möglichen Zeilen ohne Änderung der Kachelgeometrie"
 		app.show_album()
 		await frames()
-		check(card_geometry() == initial and app.choices[0].caption.get_line_count() > 2 and app.choices[0].caption.get_visible_line_count() == 2,"KK long name overflows exactly the reserved two lines")
+		check(card_geometry() == initial and app.choices[0].caption.text.ends_with("...") and app.choices[0].caption.get_visible_line_count() == 2,"KK long name overflows exactly the reserved two lines")
 		check(app.choices[0].accessibility_name.contains(item.definition.reveal.name),"KK full earned name remains accessible")
 		var category: Dictionary
 		for value: Dictionary in app.album.categories:
@@ -1301,6 +1301,25 @@ func recovery_pointer_cases() -> void:
 			# Fractional book projection plus integer scrolling can differ by
 			# <0.001px at the shared bottom; retain the complete physical target.
 			check(card.recovery.get_global_rect().grow(0.01).encloses(card.repair.get_global_rect()),"KK "+state+": scrolled repair pointer target fully inside clip")
+			var action_title: String = "Backup übernehmen" if state == "recovered" else "Backup erneuern"
+			var shown: String = card.repair_label.text
+			var pixels: int = Card.UiText.small_size(app.ui_scale)
+			var lines: PackedStringArray = shown.split("\n")
+			var expected_height: float = maxf(roundf(44 * app.ui_scale),
+				Card.UiText.label_height(card.repair_label, pixels, lines.size()) + 8 * app.ui_scale)
+			check(shown.replace("-\n", "").replace("\n", " ") == action_title
+				and card.repair_label.get_visible_line_count() == lines.size()
+				and card.repair.accessibility_name.begins_with(action_title + " · "),
+				"KL-TRENN " + state + ": every letter visible; native accessibility uses the original")
+			for line: String in lines:
+				check(Card.UiText.label_width(card.repair_label, line, pixels) <= card.repair_label.size.x,
+					"KL-TRENN " + state + ": same measured Pangolin role and usable width")
+			check(is_equal_approx(card.repair.custom_minimum_size.y, expected_height)
+				and card.repair.size.y >= expected_height
+				and Rect2(Vector2.ZERO, card.repair.size).encloses(card.repair_label.get_rect()),
+				"KL-TRENN " + state + ": measured height retains the full minimum target")
+			card.repair.grab_focus()
+			check(card.repair.has_focus(), "KL-TRENN " + state + ": native repair action retains focus")
 			click(card.repair)
 			await frames()
 			check(app.repair_dialog.visible,"KK "+state+": repair pointer opens confirmation")
