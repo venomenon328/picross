@@ -3,7 +3,7 @@
   "issue": "https://github.com/venomenon328/picross/issues/700",
   "package": "PROD-FALAFEL-MOTIF",
   "modules": [],
-  "purpose": "Draft zur Freigabe von Falafel-Motivvorlage und Parameterkorridor aus dem aktuellen PW-B-Record.",
+  "purpose": "Draft zur Freigabe der korrigierten Falafel-Motivvorlage und des Parameterkorridors aus dem aktuellen PW-B-Record.",
   "omitted": "Reine Authoringablage. Originalabruf und Bildsichtung folgen dem Produktionsweg. Der PR benötigt den Quellen- und Plankern ohne Player-Build oder Zusatzmodule.",
   "test_changes": [],
   "core_change": null,

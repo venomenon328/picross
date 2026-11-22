@@ -76,12 +76,13 @@ def candidate(design, matrix, logic, identifier, revision):
 
 def analyze_single(input_path, output, *, production_mode, budget=None, verify_budget=None, proof=None, baseline=None, method=METHOD_ID):
     from .analysis_io import analyze_file
+    from .raster_parameters import require_color_count, used_foreground
     input_path = safe_external(input_path)
     output = work_directory(output)
     production_mode = rating.mode(production_mode)
     catalog_method.method_hash(method)
-    _, puzzle, source, _ = rating.definition(rating.read_file(input_path, 2 * 1024 * 1024))
-    require(production_mode != "mono" or len(puzzle.colors) == 1, "Mono mode requires one foreground color")
+    data, _, source, _ = rating.definition(rating.read_file(input_path, 2 * 1024 * 1024))
+    require_color_count(production_mode, len(used_foreground(data["solution"])))
     import_limits = verify_budget.limits() if verify_budget is not None else {}
     if method == catalog_method.NEW:
         from . import sd2_catalog_rating as sd2

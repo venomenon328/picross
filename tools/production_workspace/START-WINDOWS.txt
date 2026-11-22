@@ -33,6 +33,13 @@ Während einer Windowsinstallation nach deren Ende erneut starten.
 „Neuere Ergebnisse suchen“ aktualisiert Gitdaten, keine installierte Anwendung.
 Gleiche Produktversion und Downgrade werden zurückgewiesen.
 
+Optionaler GitHub-REST-Zugang: In Windows „Umgebungsvariablen für dieses Konto
+bearbeiten“ öffnen und GH_TOKEN als Benutzervariable setzen. GITHUB_TOKEN ist
+ein Ersatz, falls GH_TOKEN leer ist. Den Assistenten vollständig beenden und
+neu über das Startmenü öffnen. Der Wert gilt nur für HTTPS-Leseabfragen an
+api.github.com. Ohne Token werden die öffentlichen Daten anonym abgefragt.
+Für Git gilt weiterhin die vorhandene Git-/SSH-Anmeldung.
+
 Deinstallation über Windows „Installierte Apps“ entfernt Programmdateien und Links.
 Konfiguration/Remote/Refs, Cache, Port, Browserprofil, Datencheckout/Produktionsrefs
 und alte portable Ordner bleiben erhalten. Wiederinstallation nutzt diesen Zustand.

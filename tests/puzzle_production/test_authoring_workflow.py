@@ -50,9 +50,12 @@ class WorkflowFixture:
 
     def split_rulebook(self):
         from tools.puzzle_production import authoring_rulebook as rules
-        # A real isolated Git provenance, with only canonical norm files.
+        # Test the historical snapshot generation against its own Git sources.
+        # Current Authoring documents may use separate document revisions.
         for name in rules.PATHS:
-            put(self.helper.output, name, (Path(__file__).resolve().parents[2] / name).read_bytes())
+            header = (f'**Version 0.8.0 · Dokumentrevision {rules.DOCUMENT_REVISION} · TEST ONLY**\n'
+                      if name in rules.AUTHORING_PATHS else '')
+            put(self.helper.output, name, (header + f'Synthetic source {name}\n').encode('utf8'))
         commit = self.commit()
         rule, payload = rules.capture(self.helper.output, commit)
         for name, raw in payload.items():

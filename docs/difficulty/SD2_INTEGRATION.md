@@ -63,7 +63,7 @@ Ausführbare Reader:
 | --- | --- |
 | `current_source` | `id,runtime_revision,definition_sha256`; Revision 1…1000000, SHA-256 der aktuellen Definitionsbytes. |
 | `logic_binding` | `analysis_hash,matrix_hash`; SHA-256 des normalisierten methodenspezifischen Analyseinputs beziehungsweise der Lösungsmatrix. |
-| `production_mode` | `mono` oder `color`; ausdrücklich gebunden, keine Ableitung aus der Palettengröße. Mono verlangt eine Vordergrundfarbe; einfarbiges Color bleibt Color. |
+| `production_mode` | `mono` oder `color`; ausdrücklich gebunden, keine Ableitung aus der Palettengröße. Neue Checked-Ergebnisse erfüllen die [Modusgrenze nach ZA-1](../production/ZA1_ADAPTER.md#eingang-und-grenzen) anhand der verwendeten Vordergrundfarben. Bereits aktive registrierte Hüllen behalten ihren expliziten Modus. |
 | Ursprüngliches `rating.source` | `sha256,bytes,kind,engine_logic_hash,definition_id,runtime_revision,production_mode`; Runtime-Eingang mit `kind=runtime`, `production_mode=unknown`, Bytes 1…2 MiB und Revision 1…1000000. |
 
 Für 0.3 bindet `analysis_hash` den SD-A-Input, für 0.4

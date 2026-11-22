@@ -50,6 +50,7 @@ const PW = (()=>{
    }
   }
   if(['mono','color'].includes(p.mode))grid.mode=p.mode;
+  else if(p.mode==null&&p.foreground_colors===1&&p.foreground_color_constraint==='exact')grid.mode='mono';
   if(p.mode==='color'&&Number.isInteger(p.foreground_colors)&&p.foreground_colors>=2&&p.foreground_colors<=8&&precision[p.foreground_color_constraint]){
    Object.assign(grid,{colors:String(p.foreground_colors),colorAccuracy:precision[p.foreground_color_constraint]});
   }
@@ -72,9 +73,9 @@ const PW = (()=>{
     if(!next.mode){if(base.mode)throw Error('Rastermodus ausdrücklich aufheben oder einen Modus wählen.');continue;}
     changes.push(modeRequest(next.mode));
    }else{
-    if(next.mode!=='color'||removed.mode)continue;
+    if(next.mode==='mono'||removed.mode)continue;
     if(!next.colors){if(base.colors)throw Error('Farbzahl ausdrücklich aufheben oder eine Farbzahl angeben.');continue;}
-    changes.push(colorRequest(next.colors,next.colorAccuracy));
+    changes.push(colorRequest(next.colors,next.colorAccuracy,next.mode));
    }
   }
   return changes.join(' ');
@@ -92,7 +93,11 @@ const PW = (()=>{
   const label=axis==='width'?'Breite':'Höhe';
   return `${label}: ${accuracy(precision)} ${integer(value,1,50,'die '+label)} Zellen.`;
  }
- function colorRequest(value,precision){return `Farbzahl: ${accuracy(precision)} ${integer(value,2,8,'die Farbzahl')} Vordergrundfarben (ohne Leerfelder).`;}
+ function colorRequest(value,precision,mode){
+  const count=integer(value,mode==='color'||precision!=='exact'?2:1,8,'die Farbzahl');
+  if(count===1)return 'Farbzahl: exakt eine Vordergrundfarbe. Bei der Parameterfestlegung daraus Monochrom ableiten.';
+  return `Farbzahl: ${accuracy(precision)} ${count} Vordergrundfarben (ohne Leerfelder).`;
+ }
  function modeRequest(mode){
   if(!['mono','color'].includes(mode))throw Error('Bitte einen gültigen Rastermodus wählen.');
   return mode==='mono'?'Rastermodus: monochrom, genau eine Vordergrundfarbe.':'Rastermodus: farbig.';
@@ -101,7 +106,7 @@ const PW = (()=>{
   const parts=[];
   for(const axis of ['width','height'])if(grid[axis])parts.push(axisRequest(axis,grid[axis],grid.sizeAccuracy));
   if(grid.mode)parts.push(modeRequest(grid.mode));
-  if(grid.mode==='color'&&grid.colors)parts.push(colorRequest(grid.colors,grid.colorAccuracy));
+  if(grid.mode!=='mono'&&grid.colors)parts.push(colorRequest(grid.colors,grid.colorAccuracy,grid.mode));
   return parts.join(' ');
  }
  function prompt(value,intent={},personal={}){
@@ -155,6 +160,7 @@ const PW = (()=>{
    else lines.push('Schritt 5: Ich erteile die Endabnahme der gebundenen unveränderten Raster-, Reveal- und Hintergrundfassung (gegebenenfalls none) und beauftrage deren Integration.');
   }
   if(n===5&&action!=='background_change')lines.push('Die ausgewählten finalen Nutzdaten mit explizitem Modus, gültigem Logiknachweis, aktueller Bewertung, Rechten und dieser tatsächlichen Entscheidung als aktuellen RI-ONE-Eingang vorbereiten. Den vollständigen Linien- oder Paarlinien-Proof unabhängig am finalen Raster prüfen und die Endmatrix vergleichen. Planung, Übernahme und Wiederholung verwenden denselben Kern. Den Integrationsbranch vom aktuellen main aufbauen und ausschließlich finale gewählte Produktdaten übernehmen. Completion prüft diese tatsächliche Lieferung. Den abgeschlossenen Record auf dem eigenen Produktionsbranch veröffentlichen.');
+  if(n===3)lines.push('Neue monochrome Rasterangebote mit Maßen, Monochrom und sichtbaren Motivmerkmalen beschriften. Konkrete Rasterfarbnamen und RGB-Angaben gehören in die technische Palette, nicht ins Angebotslabel.');
   const published=value?.facts.published;
   if(n===1&&intent.notes?.trim())lines.push(`Neue/zusätzliche Motivhinweise:\n${intent.notes.trim()}`);
   if(n<=2||(n===3&&action==='rework')){

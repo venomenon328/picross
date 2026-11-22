@@ -7,6 +7,18 @@ IMPORT_KEYS = {'width', 'height', 'mode', 'foreground_colors', 'method', 'fit', 
 SIDES = ('left', 'top', 'right', 'bottom')
 
 
+def require_color_count(mode, count):
+    require(mode in ('mono', 'color'), 'Explicit production mode must be mono or color')
+    if mode == 'mono':
+        integer(count, 1, 1, 'Mono foreground color count')
+    else:
+        integer(count, 2, 8, 'Color foreground color count')
+
+
+def used_foreground(matrix, empty=0):
+    return {cell for row in matrix for cell in row if cell != empty}
+
+
 def constraint(value):
     c = exact_keys(value, {'kind', 'target', 'minimum', 'maximum'})
     require(c['kind'] in ('exact', 'approximate', 'open'), 'Unknown constraint kind')
@@ -40,12 +52,11 @@ def validate(value):
     for entry in imports:
         exact_keys(entry, IMPORT_KEYS)
         require(digest(entry) not in seen, 'Duplicate import')
-        seen.add(digest(entry)); modes.add(entry['mode'])
-        require(entry['mode'] in ('mono', 'color'), 'Invalid import mode')
+        seen.add(digest(entry))
         for axis in ('width', 'height'):
             integer(entry[axis], 1, 50, axis)
-        integer(entry['foreground_colors'], 1 if entry['mode'] == 'mono' else 2,
-                1 if entry['mode'] == 'mono' else 8, 'foreground colors')
+        require_color_count(entry['mode'], entry['foreground_colors'])
+        modes.add(entry['mode'])
         for key, c in p['constraints'].items():
             require(accepts(c, entry[key]), 'Import outside constraint: ' + key)
         require(entry['method'] in ('area', 'contour') and entry['fit'] in ('exact', 'contain'), 'Invalid import method/fit')
@@ -69,18 +80,17 @@ def validate(value):
 
 def import_entry(design, matrix, variant):
     return {**{k: design[k] for k in ('width', 'height', 'mode', 'fit')},
-            'foreground_colors': len({v for row in matrix for v in row} - {'empty'}),
+            'foreground_colors': len(used_foreground(matrix, 'empty')),
             'method': next(v['method'] for v in design['variants'] if v['id'] == variant),
             'actual_crop': design['crop']}
 
 
 def result(p, design, matrix):
     values = {'width': design['width'], 'height': design['height'],
-              'foreground_colors': len({v for row in matrix for v in row} - {'empty'})}
+              'foreground_colors': len(used_foreground(matrix, 'empty'))}
     for axis in ('width', 'height'):
         integer(values[axis], 1, 50, axis)
-    integer(values['foreground_colors'], 1 if design['mode'] == 'mono' else 2,
-            1 if design['mode'] == 'mono' else 8, 'actual foreground colors')
+    require_color_count(design['mode'], values['foreground_colors'])
     for key, c in p['constraints'].items():
         require(accepts(c, values[key]), 'Final raster outside constraint: ' + key)
 

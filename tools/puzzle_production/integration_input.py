@@ -13,6 +13,7 @@ from . import catalog_method, catalog_added, palette_quality, verifier
 from .authoring_package import require
 from .contract import exact_keys, digest, Budget
 from .editor_raster import check_end
+from .raster_parameters import require_color_count, used_foreground
 
 FORMAT = "picross-integration-input-v1"
 FIELDS = {"format", "entry", "metadata", "definition", "reveal", "background",
@@ -46,10 +47,10 @@ class Input:
         self.definition_raw = self.bound(value["definition"], 2*1024*1024)
         self.definition, puzzle, _, _ = rating.definition(self.definition_raw)
         require(self.definition["id"] == self.entry["id"], "Definition identity differs")
-        require(self.entry["mode"] != "mono" or len(puzzle.colors) == 1, "Mono requires one color")
         require(self.definition["reveal"]["image"] == "res://"+self.entry["reveal"] and
                 self.definition["reveal"]["name"] == meta["name"], "Final definition reveal/name differs")
-        used = {cell for row in self.definition["solution"] for cell in row if cell}
+        used = used_foreground(self.definition["solution"])
+        require_color_count(self.entry["mode"], len(used))
         require(used == {p["id"] for p in self.definition["palette"]}, "Palette must contain exactly the used colors")
         proof = io.json_bytes(self.bound(value["proof"], 64*1024*1024), 64*1024*1024)
         verified = verifier.verify(puzzle, proof, Budget(300, 1000000))

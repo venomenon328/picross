@@ -22,12 +22,12 @@ Metadatenautorität. Veröffentlichungsformat `picross-authoring-current-v2`, ex
 - `work_release` bindet die numerische Release-ID (`id`) und den vollen bereinigten Tagzielcommit (`anchor`), auch bei leerem Angebot.
 - `revision=current`; Git bindet den jeweiligen veröffentlichten Stand. Keine Paketkette.
 - ID: `pz-[a-z0-9][a-z0-9-]{0,59}`; source_commit: volle 40-stellige kleine Git-SHA zur aktuellen Quellenzuordnung. Kein Snapshot oder historischer Erzeugerzugriff.
-- operation: production/background. target ist bei production null, bei reiner Hintergrundpflege exakt definition/reveal als aktive Refs und mode=mono|color. Unveränderte aktive Raster brauchen dafür keinen neuen Proof oder Difficulty. Das aktuelle Rasterpreview wird nur transient aus der Definition gerendert. Spätere Hintergrundpflege für registrierte IDs verwendet den gemeinsamen Editorweg.
+- operation: production/background. target ist bei production null, bei reiner Hintergrundpflege exakt definition/reveal als aktive Refs und mode=mono|color. Unveränderte aktive Raster brauchen dafür keinen neuen Proof oder Difficulty. Die Rasteransicht verwendet die gebundene Definition und den Modus des aktiven Ziels. Spätere Hintergrundpflege für registrierte IDs verwendet den gemeinsamen Editorweg.
 - budgets: exakt limits/used, jeweils raster_candidates/repair_rounds/image_corrections als ganze Zähler 0–1.000.000. Used bleibt monoton; Erhöhung eines Limits braucht eine echte budget-Entscheidung. Nur aktueller Budgetverbrauch, keine Versuchsliste oder interne Historie.
 - title: 1–128 Zeichen, brief: 1–16384, übrige Texte: 1–4096, ohne NUL; category_id nach Kategorienvertrag, bei ungeklärter Zuordnung null.
-- parameters: exakt `proposed,approved`, jeweils Liste mit höchstens acht gültigen vorhandenen Rasterparameterobjekten. Approved braucht eine tatsächliche Motiv-/Parameterentscheidung. Mehrere Objekte sind vollständige Alternativen: Ein Raster muss mindestens eine ganze passende Option erfüllen. Sein expliziter Checked-Modus muss zu einer solchen Option gehören; ohne Checked ist ein eindeutiger Modus nötig. Einzelne Felder verschiedener Optionen dürfen nicht vermischt werden.
+- parameters: exakt `proposed,approved`, jeweils Liste mit höchstens acht gültigen vorhandenen Rasterparameterobjekten. Frühe Vorschläge mit exakt einer Vordergrundfarbe dürfen den Modus offenlassen. Bei der Parameterfestlegung ergibt das mono. Explizites color plus 1 ist ein Widerspruch. Approved braucht den expliziten Modus und eine tatsächliche Motiv-/Parameterentscheidung. Mehrere Objekte sind vollständige Alternativen: Ein Raster muss mindestens eine ganze passende Option erfüllen. Sein expliziter Checked-Modus muss zu einer solchen Option gehören; ohne Checked ist ein eindeutiger Modus nötig. Einzelne Felder verschiedener Optionen dürfen nicht vermischt werden.
 - assets: höchstens 100 Objekte `id,role,label,file,rights,review`. Eindeutige ID nach `[A-Za-z0-9][A-Za-z0-9_-]{0,63}`; role: reveal/motif/background/input. label 1–512 Zeichen. file ist Ref. rights: null bei offener Klärung, sonst exakt `author,usage_basis,source,changes`, mit tatsächlichen Angaben. review: Kriterien-ID → Urteil.
-- rasters: höchstens 20 Objekte `id,label,definition,proof,difficulty,preview,review,exceptions`. Definition/preview sind Refs; proof/difficulty bleiben bei ungeprüften Sichtungsentwürfen ausdrücklich null, qualifizierte Angebote brauchen alle vier Refs auf aktuelle Nutzdaten; kein Import-/Reparaturbaum. Definition und Proof müssen dieselbe endgültige Runtime-Farbsemantik verwenden. Die Vorschau bildet jede Zelle in einem 12×12-Pixelblock mit exakter RGBA-Palette und transparentem Leerfeld ab; der Reader vergleicht ihre dekodierten Pixel mit der Definition. Angezeigt wird die transient aus der Definition gerenderte Ansicht. Difficulty ist der bestehende Checked-Befund. exceptions ist die aktuelle RI-ONE-Liste konkreter frame-/palette-Ausnahmen mit Erklärung und Beleg.
+- rasters: höchstens 20 Objekte `id,label,definition,proof,difficulty,preview,review,exceptions`. Definition/preview sind Refs; proof/difficulty bleiben bei ungeprüften Sichtungsentwürfen ausdrücklich null, qualifizierte Angebote brauchen alle vier Refs auf aktuelle Nutzdaten; kein Import-/Reparaturbaum. Definition und Proof müssen dieselbe endgültige Runtime-Farbsemantik verwenden. Vorschau und Beschriftung folgen dem nachstehenden Sichtvertrag. Difficulty ist der bestehende Checked-Befund. exceptions ist die aktuelle RI-ONE-Liste konkreter frame-/palette-Ausnahmen mit Erklärung und Beleg.
 - Urteil: exakt `result,accepted,reason,method,actor,timestamp_utc`; result erfüllt/Warnung/nicht erfüllt/nicht geprüft, accepted bool. Negative und ungeprüfte Befunde bleiben unterscheidbar. Annahme braucht die konkrete echte Entscheidung; harte Kriterien sind nicht redaktionell heilbar.
 - selected: exakt `reveal,motif,raster,background`, jeweils ID oder null; background zusätzlich none/standard. Null bedeutet offen. Jede gesetzte Auswahl verlangt bereits vor Verdichtung eine gültige Entscheidung desselben Scopes; die unveränderte aktive Revealreferenz eines Hintergrundjobs benötigt keine neue Bildwahl. Angebote bleiben bis zur Entscheidung erreichbar. Danach bleiben nur gewählte Dateien und noch benötigte Eingaben.
 - decisions: höchstens acht Objekte `scope,binding,actor,timestamp_utc,statement`, je Scope genau eine noch gültige echte Erklärung. scope reveal/motif/raster/background/final/integration/budget; binding ist H des aktuellen semantischen Auswahlscope nach `current_authoring.binding`. UTC explizit Z/+00:00; ein nicht überlieferter Prüfzeitpunkt im Urteil bleibt null. Keine separate kopierte Erklärung, Prompt- oder Korrekturdatei. Tatsächliche Inhaltsänderung invalidiert abhängige Entscheidungen; reine Pfad-/Beschriftungsumstellung gleicher Bytes erhält kreative Wahlen. Endabnahme/Integration binden zusätzlich aktuelles Briefing, Titel/Kategorie, Rechte, Sichturteile und technische Ausnahmen.
@@ -46,6 +46,30 @@ Record höchstens 1 MiB, Definition 2 MiB, Proof 64 MiB, Bild 32 MiB,
 sonstige JSON-Nutzdatei 8 MiB, insgesamt höchstens 512 MiB/2048 aktive Dateien.
 Tiefe höchstens 32; eindeutige Schlüssel und endliche Zahlen. Kein ZIP,
 Regelbuch, Generator-/Codec-/Toolhasharchiv oder Inventar als neue Pflichtdatei.
+
+### Rastervorschau und Bindung
+
+- Aktuelle Darstellung und neue Vorschau-PNGs bilden jede Zelle ohne Glättung in
+  12×12 Pixeln ab. EMPTY ist transparent. Bei mono sind belegte Zellen opak
+  schwarz (#000000), bei color behalten sie ihre tatsächlichen RGB-Werte.
+  Kachel und Großansicht verwenden dieselbe aus der gebundenen Definition und
+  dem geprüften Modus gerenderte Ansicht.
+- Der explizite Checked-Modus muss zum ganzen genehmigten Parameterobjekt und
+  zur tatsächlichen Zahl unterschiedlicher belegter Zellwerte passen. Die
+  Modusgrenze für Produktion und Erstintegration steht in [ZA-1](../production/ZA1_ADAPTER.md#eingang-und-grenzen).
+- Der Reader prüft Dateibindung, dekodierte PNG-Maße und sämtliche RGBA-Pixel.
+  Ein bereits gebundenes mono-Original darf exakt die frühere farbgetreue
+  12×12-Darstellung enthalten. In einer Fortschreibung darf diese Fassung nur
+  aus dem Vorgänger für dieselbe Angebots-ID und dieselben Definitions- und
+  Vorschauhashes übernommen werden. Die Ansicht rendert auch dann neutral.
+  Neue Vorschauen müssen der aktuellen Darstellungsregel entsprechen.
+- Der Autor beschriftet neue monochrome Angebote mit Maßen, Modus und
+  Motivmerkmalen nach [Schritt 3](../production/authoring/PUZZLE_AUTHORING_STEP_3.md#45-geprüfte-raster-zur-menschlichen-auswahl).
+  Die Oberfläche übernimmt das gebundene Label. Ein altes Label kann über die
+  aktuelle Authoring-Fortschreibung redaktionell korrigiert werden. Beim Austausch
+  des Vorschau-PNGs bindet der Record die neuen gemessenen Bytes. Definition,
+  Proof, Difficulty und unveränderte semantische Entscheidungen können dabei
+  weiterverwendet werden.
 
 ## Zustände und aktuelle Prüfung
 
@@ -114,6 +138,11 @@ technische Siebentagesfrist. Rollout und Produktionsfreigabe setzen einen
 tatsächlich verfügbaren v2-Reader und bestätigten Originalzugriff voraus.
 
 ## Veröffentlichung und Ansichten
+
+Der Windows-Assistent kann die öffentliche REST-Abfrage der Originalmetadaten
+mit seiner [Windows-Benutzervariable](PRODUCTION_WORKSPACE.md#optionaler-rest-zugang-unter-windows)
+authentifizieren. Die Downloadanfrage bleibt anonym. Release- und Asset-ID,
+Name, Größe und SHA-256 bleiben verbindlich.
 
 Der gemeinsame Index enthält nur `puzzle_id,revision,record`-Verweise nach
 Index v1. Aktuelle Records verwenden revision=current. Keine workspace.json

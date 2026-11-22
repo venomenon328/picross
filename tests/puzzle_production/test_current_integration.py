@@ -26,7 +26,8 @@ class CurrentIntegrationTests(unittest.TestCase):
         for mode,status in (("mono","standard"),("color","none"),("color","selected")):
             with self.subTest(mode=mode,background=status):
                 root=checkout(self.work/(mode+"-"+status))
-                source=make(self.work/("input-"+mode+"-"+status),mode=mode,background=status)
+                source=make(self.work/("input-"+mode+"-"+status),mode=mode,background=status,
+                            colors=2 if mode == "color" else 1)
                 before=fingerprints(root)
                 plan = core.integrate(source,root)
                 self.assertEqual(plan["status"], "planned")
