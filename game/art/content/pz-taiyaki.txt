@@ -1,0 +1,4 @@
+author: OpenAI ImageGen (KI-generiert im Auftrag)
+changes: Unverändertes generiertes PNG; nur der Dateiname wurde vergeben.
+source: Native Bildgenerierung aus dem Taiyaki-Textbriefing, ohne Bildvorlage.
+usage_basis: Auftragsbezogene Neuerstellung und ausdrücklich beauftragte Veröffentlichung als Auswahloriginal im Projekt.
