@@ -26,6 +26,27 @@ def package():
 
 
 class PackageContract(unittest.TestCase):
+    def test_sync_server_selection_and_results(self):
+        plan = dict(modules=['sync.server'], player={'required': True}, source_head='a'*40,
+                    base_commit='b'*40, tested_checkout='c'*40, run_id='12', run_attempt='1')
+        self.assertEqual(ci.execution_parts(plan), ['player', 'sync.server'])
+        path = 'server/save_sync/sync/api.py'
+        def required(paths, **options):
+            return ci.player_requirement(paths, ['sync.server'], event='pull_request', **options)['required']
+        self.assertFalse(required([path, ci.PLAN_PATH, 'docs/game/SAVE_SYNC.md']))
+        self.assertTrue(required([path, 'tools/shared.py']))
+        self.assertTrue(required([path, 'content/registry.json']))
+        self.assertTrue(required([path], nonregular=[path]))
+        binding = {k: v for k, v in plan.items() if k not in ('modules', 'player')}
+        expected = {f'SYNC-A-{n:02}': 'passed' for n in range(1, 10)}
+        ci.validate_sync_result(plan, {'binding': binding, 'results': expected})
+        for bad in ({}, dict(list(expected.items())[1:]), dict(expected, **{'SYNC-A-01':'skipped'}),
+                    dict(expected, **{'SYNC-A-03':'failed'})):
+            with self.assertRaises(ValueError):
+                ci.validate_sync_result(plan, {'binding': binding, 'results': bad})
+        with self.assertRaises(ValueError):
+            ci.validate_sync_result(plan, {'binding': dict(binding, tested_checkout='d'*40), 'results': expected})
+
     def test_execution_parts_cover_exact_selection_and_reuse_export_player(self):
         plan = {'modules': ['production.catalog', 'tools', 'native.core'],
                 'player': {'required': True, 'reason': 'Code change'}}

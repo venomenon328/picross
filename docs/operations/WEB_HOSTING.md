@@ -31,7 +31,7 @@ Gebundene Godot-Standard-Toolchain, Single-Thread, WebGL 2 und WebAssembly; Desk
 Maus in Chromium und Firefox. Windows, Regeln, Schema 1 und Savevalidierung
 bleiben erhalten. Der gelieferte WEB-1-Weg ist statisch, ohne Backend, PWA oder
 Cloudsave und ohne automatisches Deployment. Der zusätzliche optionale
-[SYNC-Dienst](../game/SAVE_SYNC.md) ist als Soll freigegeben, noch nicht geliefert.
+[SYNC-Dienst](../game/SAVE_SYNC.md) ist als eigenständiger Server implementiert.
 Seine spätere Kontoanbindung ergänzt diesen Webweg; kontolose Browserpersistenz
 und statisches Deployment bleiben bestehen. Lieferstatus: [#821](https://github.com/venomenon328/picross/issues/821).
 P1 enthält kein Audio; der Webstart verwendet deshalb Godots Dummy-Audiotreiber

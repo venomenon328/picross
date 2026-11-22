@@ -304,8 +304,8 @@ Auswahl samt zusätzlichen Darstellungsdaten.
 
 ## 6. Speicherung und Wiederaufnahme
 
-Die optionale Konten-/Synchronisationsschicht ist in [SYNC](SAVE_SYNC.md) als
-Soll freigegeben und noch nicht implementiert. Dieser Abschnitt bleibt der
+Der [SYNC-Vertrag](SAVE_SYNC.md) beschreibt den eigenständigen Snapshotdienst
+und die noch ausstehende Kontoanbindung der Spielclients. Dieser Abschnitt bleibt der
 maßgebliche lokale Save-/Recoveryvertrag; der bisherige kontolose Speicherroot,
 Schema 1 und vollständige Validierung ändern sich dadurch nicht. Spätere
 Kontoprofile erhalten eigene lokale Saves, Fortsetzen-Merker und Syncmetadaten.
