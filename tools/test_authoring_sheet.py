@@ -23,33 +23,42 @@ assert.doesNotMatch(text,/Abschlussbereinigung|ausschließlich innerhalb dieser 
 assert.doesNotMatch(text,/Abschlussbereinigung eigener Arbeitsdaten nach WORKSPACE ausdrücklich beauftragt/);
 assert.equal(text,P.prompt(null,{brief:'Synthetischer Test, keine Produktion'},{...opts,cleanup:false}));
 assert.throws(()=>P.prompt(null,{},opts),/Motiv/);
-for(const [state,n,kind] of [['reveal_review',2,'reveal'],['motif_review',3,null],['motif_approved',3,null],
- ['raster_review',3,null],['raster_ready',4,'raster'],['background_review',5,'background'],['content_ready',5,null],['editorially_approved',5,null]]){
+for(const mode of ['mono','color'])for(const [state,n,current,kind] of [['brief_ready',1,1,null],['reveal_review',2,1,'reveal'],['motif_review',3,2,null],['motif_approved',3,3,null],
+ ['raster_review',3,3,null],['raster_ready',4,3,'raster'],['background_review',5,4,'background'],['content_ready',5,5,null],['editorially_approved',5,5,null],['registered',5,5,null]]){
+ v.facts.published={proposed:[{mode,foreground_colors:mode==='mono'?1:3}],approved:[]};
  v.facts.state=state;v.offers=kind?[{id:'A',kind,record,asset_ids:['bg']}]:[];
  const intent={selection:kind?'A':null,kind,parameters:'etwa 25 × 20',context:'Landschaft'};
  text=P.prompt(v,intent,opts);assert.match(text,new RegExp('Schritt '+n));
  assert.match(text,/kein Merge/);assert.ok(text.includes(record.file));assert.ok(text.includes('b'.repeat(40)));
+ assert.match(text,new RegExp('AGENTS.md.*Authoring 0.8.0, Schritt '+n+'\\.'));
+ assert.doesNotMatch(text,/monochrom|Monochrom|RGB|tools\.(work_publish|publish_git)|RI-ONE|Proof|Copilot|Reviewer|Endmatrix/);
  if(n<4)assert.doesNotMatch(text,/Kontextwunsch|Kontextzeichnungen|Hintergrundkandidaten/);
  if(kind)assert.throws(()=>P.prompt(v,{},opts),/wählen/);
- for(const action of ['resume','rework'])assert.ok(P.prompt(v,{action,feedback:'Linie korrigieren'},opts).includes(record.file));
+ for(const action of ['resume','rework']){
+  const changed=P.prompt(v,{action,feedback:'Linie korrigieren'},opts);
+  assert.ok(changed.includes(record.file));
+  assert.match(changed,new RegExp('Authoring 0.8.0, Schritt '+current+'\\.'));
+  assert.doesNotMatch(changed,/Ich wähle|Ich gebe|Ich erteile|Squash-Merge|Integration|monochrom|Monochrom|tools\./);
+  assert.match(changed,/kein Merge/);
+ }
 }
 v.facts.state='background_review';assert.match(P.prompt(v,{selection:'none'},opts),/ausdrücklich für keinen Hintergrund/);
-v.facts.state='content_ready';assert.match(P.prompt(v,{}, {...opts,merge:true}),/Bei erfüllten Bedingungen direkt per Squash-Merge nach main integrieren/);
+v.facts.state='content_ready';assert.match(P.prompt(v,{}, {...opts,merge:true}),/bei erfüllten Pflichtgates nach Authoring Schritt 5 §8 per Squash-Merge nach main integrieren/);
 for(const url of [null,'http://localhost:1234/job','https://github.com/venomenon328/picross/tree/main']){
  v.source_url=url;assert.throws(()=>P.prompt(v,{},opts),/Remote-Sicherung/);
 }
 v.source_url='https://github.com/venomenon328/picross/tree/'+'b'.repeat(40);v.facts.state='registered';
 assert.doesNotMatch(P.prompt(v,{},opts),/Ich erteile/);
 const backgroundChange=P.prompt(v,{action:'background_change',feedback:'Mehr Wald'},opts);
-assert.match(backgroundChange,/PUZZLE_BACKGROUNDS.md §11 \(HP-I1b2\)/);
+assert.match(backgroundChange,/Hintergrundrevision nach Authoring Schritt 5 §9: Mehr Wald/);
 assert.doesNotMatch(backgroundChange,/als aktuellen RI-ONE-Eingang vorbereiten/);
 v.source_url='https://github.com/venomenon328/picross/tree/'+'b'.repeat(40);v.facts.authoring_version='0.7.0';
 assert.throws(()=>P.prompt(v,{},opts),/historische/);
 v.facts.authoring_version='0.8.0';v.facts.state='background_review';v.revision='current';
 v.record={file:'content/authoring/pz-test/current/record.json',sha256:'d'.repeat(64)};
 text=P.prompt(v,{selection:'standard'},opts);
-assert.match(text,/Standardhintergrund/);assert.match(text,/einem aktuellen Metadatensatz/);
-assert.ok(text.includes(v.record.file));assert.match(text,/Integrationsbranch vom aktuellen main/);
+assert.match(text,/Standardhintergrund/);assert.match(text,/AGENTS.md.*Authoring 0.8.0, Schritt 5/);
+assert.ok(text.includes(v.record.file));assert.match(text,/beauftrage deren Integration/);
 assert.doesNotMatch(text,/Arbeitsbelege mitführen/);
 """
         result=subprocess.run(['node','-e',probe],cwd=ROOT,capture_output=True,text=True,encoding='utf-8')
@@ -66,12 +75,14 @@ const first = build(grid);
 assert.ok(first.includes(base.notes));
 assert.match(first,/Breite: exakt 28 Zellen.*Höhe: exakt 19 Zellen/s);
 assert.match(first,/ungefähr 4 Vordergrundfarben/);
-assert.match(first,/detaillierte farbige Abschlussbildoriginale/);
+assert.match(first,/Abschlussbilder als reveal_review zur Auswahl/);
+assert.doesNotMatch(first,/Monochrom|monochrom|ohne Leerfelder/);
 assert.match(build({...grid,sizeAccuracy:'approx',colorAccuracy:'exact'}),/Breite: ungefähr 28 Zellen.*Höhe: ungefähr 19 Zellen.*exakt 4/s);
-assert.match(build({mode:'mono'}),/monochrom, genau eine Vordergrundfarbe/);
+assert.match(build({mode:'mono'}),/Rastermodus: monochrom\./);
 assert.doesNotMatch(build({...grid,mode:'mono'}),/4 Vordergrundfarben/);
 assert.doesNotMatch(build({mode:'color'}),/Farbzahl:/);
-assert.match(build({colors:'1',colorAccuracy:'exact'}),/exakt eine Vordergrundfarbe.*Parameterfestlegung.*Monochrom/);
+assert.match(build({colors:'1',colorAccuracy:'exact'}),/Farbzahl: exakt eine Vordergrundfarbe\./);
+assert.doesNotMatch(build({colors:'1',colorAccuracy:'exact'}),/Parameterfestlegung|Monochrom/);
 assert.throws(()=>build({mode:'color',colors:'1',colorAccuracy:'exact'}),/2 bis 8/);
 assert.doesNotMatch(build({}),/Rastergröße:|Rastermodus:|Farbzahl:/);
 for(const bad of [{...grid,width:'0'},{...grid,height:'51'},
@@ -88,10 +99,15 @@ assert.equal(P.orderStep(value),2);
 assert.match(P.prompt(value,intent,{}),/Schritt 2.*Breite: exakt 28 Zellen/s);
 value.facts.state='motif_review';
 assert.doesNotMatch(P.prompt(value,intent,{}),/Breite: exakt 28 Zellen/);
-assert.match(P.prompt(value,intent,{}),/Monochrom und sichtbaren Motivmerkmalen/);
+assert.doesNotMatch(P.prompt(value,intent,{}),/Monochrom|RGB|Angebotslabel/);
 const correction=P.prompt(value,{...intent,action:'rework',feedback:'Raster anpassen'},{});
 assert.match(correction,/Breite: exakt 28 Zellen/);
+assert.match(correction,/Authoring 0.8.0, Schritt 2/);
 assert.doesNotMatch(correction,/Ich gebe.*frei/);
+value.facts.state='reveal_review';
+const revealCorrection=P.prompt(value,{...intent,action:'rework',feedback:'Kontur korrigieren',parameters:'Kelch erhalten'},{});
+assert.match(revealCorrection,/Authoring 0.8.0, Schritt 1/);
+assert.match(revealCorrection,/Breite: exakt 28 Zellen/);assert.match(revealCorrection,/Wünsche zur Motivvorlage: Kelch erhalten/);
 """
         result = subprocess.run(['node', '-e', probe], cwd=ROOT, capture_output=True,
                                 text=True, encoding='utf-8')
@@ -122,7 +138,7 @@ text=P.prompt(v,{...selected,removeGrid:{width:true,height:true,mode:true,colors
 assert.match(text,/Breite: bisherigen Wunsch ausdrücklich aufheben/);assert.match(text,/Farbzahl: bisherigen Wunsch ausdrücklich aufheben/);
 published.approved=[{...p,width:22}];
 assert.equal(P.publishedGrid(v).width,'22');
-text=P.prompt(v,{...selected,grid:{width:'25'}},{});assert.match(text,/Korrekturweg.*erneuten Entscheidung/);
+text=P.prompt(v,{...selected,grid:{width:'25'}},{});assert.match(text,/Neue Absicht.*Breite: ungefähr 25 Zellen/);
 v.facts.state='motif_review';
 assert.match(P.prompt(v,{},{}),/Schritt 3: Ich gebe.*Parameterkorridor.*frei/);
 text=P.prompt(v,{action:'rework',feedback:'Anpassen',grid:{width:'25'}},{});
@@ -171,7 +187,6 @@ for(const [axis,label,other] of [['width','Breite','Höhe'],['height','Höhe','B
  const text=P.prompt(v,{...selected,removeGrid:{[axis]:true}},{});
  assert.ok(text.includes(`${label}: bisherigen Wunsch ausdrücklich aufheben`));
  assert.doesNotMatch(text,new RegExp(other+':|'+other+' passend'));
- assert.match(text,/Andere Vorgaben bleiben bestehen/);
  assert.deepEqual(P.publishedGrid(v),base,'removal never mutates source');
  assert.throws(()=>P.prompt(v,{...selected,grid:{[axis]:''}},{}),/ausdrücklich aufheben/);
 }
@@ -219,24 +234,15 @@ for(const intent of [selected,{selection:'none'}]){
  const before=JSON.stringify(v), text=P.prompt(v,intent,{});
  const draft=P.prompt(v,intent,{merge:false});
  for(const order of [text,draft]){
-  assert.match(order,/kein unabhängiges PR-Zweitreview und kein GitHub-Copilot-Review anfordern/);
-  assert.match(order,/Keine Reviewer-Konten oder Freigaben zur Weitergabe des PR-Inhalts verlangen/);
-  assert.match(order,/keine PR-Inhalte an Copilot weitergeben/);
-  assert.match(order,/Copilot-Anfrage ist kein Mergeblocker/);
-  assert.doesNotMatch(order,/Zweitreview nur bei|auf (?:ein |das )?(?:unabhängiges )?PR-Review warten|Reviewfreigabe als Voraussetzung/i);
-  assert.match(order,/vollständigen Linien- oder Paarlinien-Proof unabhängig am finalen Raster prüfen und die Endmatrix vergleichen/);
-  assert.match(order,/vollständigen PR-Diff einschließlich Lieferdaten selbst prüfen/);
+  assert.match(order,/AGENTS.md.*Pflichtquellen für Authoring 0.8.0, Schritt 5/);
+  assert.doesNotMatch(order,/Copilot|Reviewer|Zweitreview|Proof|Endmatrix|PR-Diff|RI-ONE|tools\./);
  }
  assert.match(text,/Schritt 5/);assert.match(text,/Ich erteile die Endabnahme/);assert.match(text,/Integration/);
- assert.match(text,/aktuellen Head, Basis, erfolgreiche Pflichtchecks, Konfliktfreiheit, Endabnahme und Mergebefugnis bestätigen/);
- assert.match(text,/direkt per Squash-Merge nach main integrieren/);
- assert.match(text,/tatsächlichen GitHub-Mergesperre.*API-\/UI-Meldung.*Schutzregel/);
- assert.match(text,/Authoring Schritt 5 §9/);
- assert.match(text,/work_publish retire pz-test --expected <nach Completion veröffentlichter Arbeitscommit>/);
- assert.match(text,/Produktionsbranches, Arbeitsreleases und Tags zurücklesen/);
+ assert.match(text,/bei erfüllten Pflichtgates nach Authoring Schritt 5 §8 per Squash-Merge nach main integrieren/);
+ assert.match(text,/Produktionsabschluss nach §9 ausführen/);
  assert.doesNotMatch(text,/Zur Endabnahme vorbereiten|Keine zusätzliche Abschlussbereinigung|SHA-256|workspace.json/);
  assert.equal(text.split(record.file).length,2);assert.equal(JSON.stringify(v),before);
- assert.match(draft,/Draft-PR.*kein Merge/);assert.doesNotMatch(draft,/Squash-Merge|work_publish retire/);
+ assert.match(draft,/Draft-PR.*kein Merge/);assert.doesNotMatch(draft,/Squash-Merge|Produktionsabschluss/);
 }
 for(const action of ['resume','rework']){
  const text=P.prompt(v,{...selected,action,feedback:'Striche korrigieren'},{merge:true});
@@ -296,9 +302,12 @@ for(const cleanup of [true,false]){
  vm.runInNewContext(found[0],ctx);
  const text=ctx.workspaceText();
  assert.match(text,/Lokale Codex-Arbeitswurzel/);
- assert.match(text,/ausschließlich innerhalb dieser Arbeitswurzel/);
- assert.match(text,/Keine zusätzliche Abschlussbereinigung lokaler Arbeitsdaten beauftragt/);
- assert.doesNotMatch(text,/ausdrücklich beauftragt/);
+ assert.ok(text.includes('E:/Work'));
+ assert.doesNotMatch(text,/ausschließlich innerhalb|Abschlussbereinigung|nicht verfügbar|Ersatzpfad/);
+}
+for(const root of ['',null]){
+ const ctx={profile:()=>({root,task:{fields:{executor:'Codex'}}}),JSON};
+ vm.runInNewContext(found[0],ctx);assert.equal(ctx.workspaceText(),'');
 }
 """
         result = subprocess.run(['node', '-e', probe], cwd=ROOT, capture_output=True, text=True, encoding='utf-8')

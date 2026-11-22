@@ -1,11 +1,40 @@
 {
   "format": "development-ci-plan/v1",
   "issue": "https://github.com/venomenon328/picross/issues/797",
-  "package": "PW-FIND-A-SPEC",
-  "modules": [],
-  "purpose": "Freigegebene Spezifikation für kandidatenspezifische Befundentscheidungen in allen Produktionsphasen; erstes Implementierungspaket PW-FIND-A vorbereiten.",
-  "omitted": "Nur Fachvertragsänderungen und Paketplan, keine Produktimplementierung. Kern docs/ci-required ohne Zusatzmodule und Playerbau. Bei späterer Implementierung den in #797 festgelegten Plan mit tools und production.adapter aktivieren; Bedienprobe dann am Implementierungshead.",
-  "test_changes": [],
+  "package": "PW-FIND-A",
+  "modules": [
+    "tools",
+    "production.adapter"
+  ],
+  "purpose": "Kandidatenspezifische Befundentscheidungen vom Auftrag bis zur Integration prüfen.",
+  "omitted": "Solver, Bilder, Katalog, native Module, preflight und delivery bleiben außerhalb des Pakets. Regulärer Windowsbau und einmalige Browserbedienprobe am Lieferhead.",
+  "test_changes": [
+    {
+      "path": "tools/test_authoring_sheet.py",
+      "disposition": "change-scoped",
+      "reason": "Kleine synthetische Regression für Befundbindung, Bedienung oder Integrationsweg."
+    },
+    {
+      "path": "tools/test_production_workspace.py",
+      "disposition": "change-scoped",
+      "reason": "Kleine synthetische Regression für Befundbindung, Bedienung oder Integrationsweg."
+    },
+    {
+      "path": "tools/production_workspace/check_ui_loading.cjs",
+      "disposition": "change-scoped",
+      "reason": "Kleine synthetische Regression für Befundbindung, Bedienung oder Integrationsweg."
+    },
+    {
+      "path": "tests/puzzle_production/test_current_authoring.py",
+      "disposition": "change-scoped",
+      "reason": "Kleine synthetische Regression für Befundbindung, Bedienung oder Integrationsweg."
+    },
+    {
+      "path": "tests/puzzle_production/test_current_integration.py",
+      "disposition": "change-scoped",
+      "reason": "Kleine synthetische Regression für Befundbindung, Bedienung oder Integrationsweg."
+    }
+  ],
   "core_change": null,
   "evidence": {
     "mode": "none",

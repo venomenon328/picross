@@ -38,7 +38,7 @@ function updatePrompt(){
   }
   box.value=PW.prompt(detail,intent,options());
   button.disabled=false;
-  status.textContent=final?(options().merge?'Auftrag bis main – erst nach unabhängigem Review und allen Gates.':'Auftrag bis Draft-PR – kein Merge.'):'Den kopierten Auftrag im Chat senden.';
+  status.textContent=final?(options().merge?'Auftrag bis main und Produktionsabschluss – nach erfüllten Pflichtgates.':'Auftrag bis Draft-PR – kein Merge.'):'Den kopierten Auftrag im Chat senden.';
   status.className='hint';
  }catch(exc){
   box.value='';button.disabled=true;status.textContent=exc.message;status.className='validation';
@@ -181,7 +181,7 @@ function workflow(view,value){
   const scope=node('div',undefined,'finalScope');scope.id='finalScope';
   const label=node('label'),merge=node('input');merge.type='checkbox';merge.id='finalMerge';merge.checked=options().merge;
   merge.onchange=()=>{$('merge').checked=merge.checked;$('merge').onchange();};
-  label.append(merge,node('span',' Nach unabhängigem Review und allen Gates nach main mergen'));
+  label.append(merge,node('span',' Nach erfüllten Pflichtgates nach main mergen und Produktion abschließen'));
   scope.append(label,node('p','Erst der gesendete Auftrag erklärt die Endabnahme und den gewählten Umfang. Klicken, Kopieren und Aktualisieren bestätigen nichts.','hint'));section.append(scope);
  }
  const actions=node('div',undefined,'orderActions'),copy=node('button','Auftrag kopieren','primary');copy.id='copyOrder';

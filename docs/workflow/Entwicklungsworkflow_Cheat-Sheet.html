@@ -338,18 +338,13 @@ function context(t,f){
  return parts.join('\n');
 }
 function workspaceText(){
- const p=profile(),parts=[];
- if(p.root&&p.task.fields.executor==='Codex'){
-  parts.push('Lokale Codex-Arbeitswurzel: '+JSON.stringify(p.root)+'.');
-  parts.push('Neue eigene Checkouts, Worktrees, Downloads und temporäre Arbeitsdaten ausschließlich innerhalb dieser Arbeitswurzel anlegen. Ist sie nicht verfügbar, den Konflikt melden und keinen Ersatzpfad wählen.');
- }
- parts.push('Keine zusätzliche Abschlussbereinigung lokaler Arbeitsdaten beauftragt; laufinterne Test-/Artefaktbereinigung bleibt davon unberührt.');
- return parts.join('\n');
+ const p=profile();
+ return p.root&&p.task.fields.executor==='Codex'?'Lokale Codex-Arbeitswurzel: '+JSON.stringify(p.root)+'.':'';
 }
 function mergeText(){return profile().merge
  ?'Bei erfüllten Vor-Merge-Gates gemäß docs/dev-rules/WORKFLOW.md ist der Merge dieses PR ausdrücklich beauftragt. Keine Korrekturen.'
  :'Nur Review; keine Korrekturen und kein Merge.';}
-function outputText(){return 'Nenne kurz Ergebnis, maßgebliche Quelle und nächsten Schritt. Schließe mit genau einem vollständigen Ergebnis-JSON gemäß docs/dev-rules/HANDOFF.md ab. Prüfe es gegen docs/dev-rules/handoff.schema.json.';}
+function outputText(){return 'Schließe gemäß docs/dev-rules/HANDOFF.md mit genau einem vollständigen Ergebnis-JSON ab.';}
 function buildPrompt(){
  const p=profile(),t=currentTemplate(),errs=[];
  const f=Object.fromEntries(FIELD_IDS.map(k=>[k,usesField(t,k)?p.task.fields[k].trim():'']));
@@ -371,7 +366,7 @@ function buildPrompt(){
  let body='';
  switch(t.id){
  case 'idea':body='Besprich die folgende Idee auf Grundlage des Projekts und schlage eine abgegrenzte Lösung vor. Nur Beratung; nichts anlegen oder ändern.\n\n'+f.brief;break;
- case 'spec':body='Spezifiziere das folgende Vorhaben, erstelle oder aktualisiere das passende Issue mit sinnvollen Paketen und bereite das erste umsetzbare Paket gemäß Workflow vor. Noch nicht implementieren oder mergen.\n\n'+f.brief;break;
+ case 'spec':body='Spezifiziere das folgende Vorhaben im passenden Issue und bereite das erste umsetzbare Paket gemäß Workflow vor. Noch nicht implementieren oder mergen.\n\n'+f.brief;break;
  case 'bug':body='Untersuche den folgenden Fehler, erfasse ihn im passenden Bugfix-Issue und bereite die Behebung gemäß Workflow vor. Noch nicht implementieren oder mergen.\n\n'+f.brief;break;
  case 'approve':body='Die besprochene Lösung ist als Spezifikation freigegeben. Führe die zuständigen Issue-/Repositoryquellen nach und bereite das erste umsetzbare Paket vor. Noch nicht implementieren oder mergen.';break;
  case 'decision':body='Übernimm diese Entscheidung in Issue '+issue+' und die zuständigen verbindlichen Dokumente. Noch nicht implementieren oder mergen.\n\n'+f.brief;break;
@@ -379,25 +374,27 @@ function buildPrompt(){
  case 'next':body='Prüfe Issue '+issue+' und bereite das nächste sinnvoll umsetzbare Paket gemäß Workflow vor. Ist der gesamte Umfang erfüllt, dokumentiere den Abschluss und schließe das Issue. Noch nicht implementieren oder mergen.';break;
  case 'implement':case 'resume':
   if(t.id==='implement' && h?.spec_url)
-   body='Setze ausschließlich den in der verlinkten Paketentscheidung freigegebenen Umfang von Issue '+issue+' um. Lies dort die Kriterien und den Prüfplan. Stelle die geforderten technischen Nachweise im Draft-PR für das anschließende Review bereit.';
-  else body=(t.id==='resume'?'Setze die laufende Umsetzung von Issue ':'Implementiere Issue ')+issue+' im freigegebenen Scope vollständig gemäß Workflow. Liefere den Draft-PR mit Links zu den erforderlichen Reviewbelegen.';
-  body+=' Kein Merge.\n\n'+workspaceText();break;
- case 'review':case 'review-min':case 'rereview':body=(t.id==='rereview'?'Reviewe die Nacharbeit in PR '+pr+' zu den Befunden '+(f.findingIds||'aus dem benannten Review')+' aus '+f.reviewUrl+' einschließlich ihrer Auswirkungen. Prüfe die offenen Vor-Merge-Gates am neuen Head.':t.id==='review-min'?'Reviewe PR '+pr+' gemäß Workflow.':'Reviewe PR '+pr+' anhand des Diffs und der im PR verlinkten Originalbelege.')+' Dokumentiere das Ergebnis im PR.\n\n'+mergeText();break;
+   body='Setze den freigegebenen Umfang von Issue '+issue+' aus der verlinkten Paketentscheidung gemäß Workflow vollständig um. Liefere den Draft-PR.';
+  else body=(t.id==='resume'?'Setze die laufende Umsetzung von Issue ':'Implementiere Issue ')+issue+' im freigegebenen Scope vollständig gemäß Workflow. Liefere den Draft-PR.';
+  body+=' Kein Merge.';break;
+ case 'review':case 'review-min':case 'rereview':body=(t.id==='rereview'?'Reviewe die Nacharbeit in PR '+pr+' zu den Befunden '+(f.findingIds||'aus dem benannten Review')+' aus '+f.reviewUrl+' einschließlich ihrer Auswirkungen gemäß Workflow.':'Reviewe PR '+pr+' gemäß Workflow.')+' Dokumentiere das Ergebnis im PR.\n\n'+mergeText();break;
  case 'feedback':
-  body='Bereite meine Änderungswünsche zu PR '+pr+' vor. Gleiche sie mit Issue und bisherigem Review ab. Halte Umfang, Abnahmekriterien und Prüfbedarf im Issue/Paket fest und verlinke die Entscheidung im PR. Nutze für zusammengehörige Änderungen den offenen PR. Bei eigenständigem Umfang oder geschlossenem PR bereite ein separates Paket vor. Kläre offene Fachfragen. Rufe die veröffentlichten Quellen erneut auf und gleiche Kennungen, Bedeutung und Zuständigkeit ab. Für neue, umsetzungsreife Anforderungen verwende die gelesene Paketentscheidung als spec_url und specified / implement. Befundnacharbeit setzt einen Bericht voraus, der genau diese Befunde definiert. Bei fehlender Quelle die Vorbereitung als blockiert melden. Nur Vorbereitung, keine Produktänderung und kein Merge.';
+  body='Bereite meine Änderungswünsche zu PR '+pr+' gemäß Workflow vor. Halte die Entscheidung im Issue/Paket fest und verlinke sie im PR. Nur Vorbereitung, keine Produktänderung und kein Merge.';
   if(f.reviewUrl)body+='\nBisheriges Review: '+f.reviewUrl;
   body+='\n\nMeine Änderungswünsche:\n'+f.brief;
   break;
- case 'prepare-fix':body='Bereite die offenen blockierenden oder technisch erforderlichen Befunde '+(f.findingIds||'aus dem benannten Review')+' aus '+f.reviewUrl+' zu PR '+pr+' gemäß Workflow zur Umsetzung vor. Präzisiere belegte Befunde bei Bedarf in einem verlinkten Nachtrag. Öffne den veröffentlichten Bericht erneut und prüfe Kennungen, Erfolgskriterien und Zuständigkeit. Melde unbelegte Kennungen als offen. Noch nicht korrigieren oder mergen.';break;
- case 'fix':body='Behebe ausschließlich die beauftragten Befunde '+f.findingIds+' aus '+f.reviewUrl+' in PR '+pr+' gemäß Workflow. Gleiche jede Kennung mit Definition, Erfolgskriterium und Zuständigkeit im verlinkten Bericht ab. Liefere die technischen Belege im PR. Persönliche Abnahmen und das unabhängige Review erfolgen separat. Kein Merge.\n\n'+workspaceText();break;
- case 'ci-fix':body='Untersuche die aktuellen CI-Fehler von PR '+pr+' und behebe ihre Ursache im bestehenden Scope gemäß Workflow. Kein Merge.\n\n'+workspaceText();break;
+ case 'prepare-fix':body='Bereite die offenen blockierenden oder technisch erforderlichen Befunde '+(f.findingIds||'aus dem benannten Review')+' aus '+f.reviewUrl+' zu PR '+pr+' gemäß Workflow zur Umsetzung vor. Noch nicht korrigieren oder mergen.';break;
+ case 'fix':body='Behebe ausschließlich die beauftragten Befunde '+f.findingIds+' aus '+f.reviewUrl+' in PR '+pr+' gemäß Workflow. Kein Merge.';break;
+ case 'ci-fix':body='Untersuche die aktuellen CI-Fehler von PR '+pr+' und behebe ihre Ursache im bestehenden Scope gemäß Workflow. Kein Merge.';break;
  case 'accept':body='Dokumentiere die folgende tatsächlich durchgeführte manuelle Abnahme zu PR '+pr+' gemäß Workflow. Kein Merge.\n\n'+f.brief;break;
  case 'merge':body='Merge PR '+pr+' nach erfüllten Vor-Merge-Gates gemäß Workflow. Keine zusätzlichen Änderungen.'+(f.reviewUrl?'\nMaßgebliches Review: '+f.reviewUrl:'');break;
- case 'closeout':body='Prüfe den Abschluss von Issue '+issue+' und führe den vereinbarten Test-/Artefaktrückbau sowie die Statusnachführung gemäß Workflow durch. Nötige Änderungen als Draft-PR liefern; das Issue nur bei erfülltem Gesamtumfang schließen. Kein Merge.\n\n'+workspaceText();break;
+ case 'closeout':body='Prüfe den Abschluss von Issue '+issue+' und führe den vereinbarten Test-/Artefaktrückbau samt Statusnachführung gemäß Workflow aus. Bei erfülltem Gesamtumfang das Issue schließen. Nötige Änderungen als Draft-PR; kein Merge.';break;
  }
  if(f.brief&&!['spec','idea','bug','decision','accept','feedback'].includes(t.id))body+='\n\nZusätzliche Angaben:\n'+f.brief;
  if(f.modules)body+='\n\nCI-Modulvorgabe: '+f.modules+'.';
  if(note)body+='\n\n'+(t.id==='closeout'?'Gemeldete eigene Restpfade (Zuordnung prüfen)':'Ergänzender berichteter Arbeitsstand')+':\n'+note;
+ const workspace=t.who==='executor'?workspaceText():'';
+ if(workspace)body+='\n\n'+workspace;
  return {text:context(t,f)+'\n\n'+body.trim()+'\n\n'+outputText(),errors:errs,who:t.who==='executor'?f.executor:t.who};
 }
 function addPill(parent,text,accent=false){const node=document.createElement('span');node.className='pill'+(accent?' accent':'');node.textContent=text;parent.append(node);}
