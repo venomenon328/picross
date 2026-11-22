@@ -84,13 +84,13 @@ Auf der sicheren sichtbaren Papierseite steht eine ortsfeste Kopfgruppe:
 
 | Ansicht | Gruppe und Lage |
 | --- | --- |
-| Katalog | Beenden-X, Zahnrad, Hilfe am oberen rechten Rand der rechten Seite. |
+| Katalog | Zahnrad, Hilfe, Beenden-X am oberen rechten Rand der rechten Seite. |
 | Rätsel und stabiler Abschluss | Katalog-Rückpfeil, Zahnrad, Hilfe im rechten Arbeitskopf. |
 | Hilfe | Rückpfeil, Zahnrad, Hilfe am oberen rechten Rand der rechten Seite. |
 | Einstellungen | Rückpfeil, Zahnrad, Hilfe am oberen rechten Rand der linken Seite. |
 
-Der aktive Informationsort ist unterstrichen; erneute Wahl ist ein No-op für
-Abschnitt, Lesestelle und Bewegung. Rückweg und zugänglicher Name beziehen sich
+Die offene Informationsansicht trägt als einzige Aktion einen Doppelrahmen.
+Erneute Wahl erhält Abschnitt, Lesestelle und Bewegung. Rückweg und zugänglicher Name beziehen sich
 auf den tatsächlichen Besuchsursprung. Exakte Symboltooltips stehen in HZ/NAV-A.
 Hilfe, Einstellungen und Beenden bleiben auch ohne Session erreichbar.
 

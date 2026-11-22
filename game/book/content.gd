@@ -51,7 +51,10 @@ func _build() -> void:
 	album_button.image = load("res://art/book/nav-work.svg")
 	album_button.tooltip_text = "Zurück zum Katalog"
 	album_button.accessibility_name = "Zurück zum Katalog"
-	for id: String in ["help","menu","nav-information"]: actions[id].reparent(page)
+	for id: String in ["help","menu","nav-information"]:
+		var button: BookButton = actions[id]
+		button.top_navigation = true
+		button.reparent(page)
 	var old_album: Control = album
 	page.remove_child(old_album)
 	old_album.free()

@@ -8,6 +8,8 @@ const UiText = preload("res://ui/ui_text.gd")
 const PaperStyle = preload("res://ui/book_style.gd")
 var action_id: String = ""
 var content_surface: bool = false
+## Only the fixed outer navigation group uses selected for an active view.
+var top_navigation: bool = false
 ## Explicit study opt-in; the default product appearance is unchanged.
 var paper_transparent: bool = false:
 	set(value):
@@ -92,6 +94,7 @@ func _draw() -> void:
 	if content_surface: return
 	var hovered: bool = is_hovered() if page_pointer_mode < 0 else page_pointer_mode == DRAW_HOVER
 	var pressed_visual: bool = is_pressed() if page_pointer_mode < 0 else page_pointer_mode == DRAW_PRESSED
+	var outer_emphasis: bool = hovered or (top_navigation and has_focus())
 	var u: float = ui_scale
 	var box: Rect2 = Rect2(Vector2.ZERO, size)
 	var body: Color = Color("f6eedb")
@@ -112,12 +115,12 @@ func _draw() -> void:
 		var style = PaperStyle.make("button/"+action_id,u,body)
 		style.ink = INK if paper_transparent else PAPER if selected else Color("6d624d")
 		if paper_transparent:
-			style.selected = selected
+			style.selected = selected and not top_navigation
 			if disabled: style.ink = Color("8a887d")
 			elif pressed_visual: style.ink = Color("173e35")
-			elif hovered: style.ink = Color("376a60")
+			elif outer_emphasis: style.ink = Color("376a60")
 		draw_style_box(style,box)
-		if paper_transparent and not disabled and (hovered or pressed_visual):
+		if paper_transparent and not disabled and (outer_emphasis or pressed_visual):
 			# Retrace the existing contour continuously: hover and pressure belong
 			# to the button edge, with no floating short stroke above the caption.
 			for line: PackedVector2Array in style.contours(box):
@@ -133,7 +136,7 @@ func _draw() -> void:
 		var offset: Vector2 = (size-Vector2(26,26)*u)/2 + Vector2(0,u if pressed_visual else 0)
 		if not text.is_empty(): offset.x = 10*u
 		draw_texture_rect(image, Rect2(offset,Vector2(26,26)*u), false, ink)
-		if selected:
+		if selected and not top_navigation:
 			draw_line(Vector2(11*u,size.y-6*u),size-Vector2(11,6)*u,INK if paper_transparent else PAPER,2*u,true)
 	if disabled:
 		draw_line(Vector2(6*u,size.y-7*u),Vector2(10*u,size.y-7*u),Color("757970"),1.5*u,true)
@@ -147,14 +150,15 @@ func _draw() -> void:
 		var origin: Vector2 = Vector2(roundf((size.x-bounds.size.x)/2-bounds.position.x), UiText.line_baseline(font, fs, size.y))
 		if image != null: origin.x += 16*u
 		draw_string(font,origin,text,HORIZONTAL_ALIGNMENT_LEFT,-1,fs,ink)
-	if has_focus():
+	var inner_contour: bool = selected if top_navigation else has_focus()
+	if inner_contour:
 		# Keep focus outside the unchanged swatch; light ink remains visible on
 		# selected dark paper and does not disappear into the selection colour.
 		var inset: float = 3*u if swatch.a > 0 else 5*u
 		if swatch.a > 0:
 			draw_polyline(points(box.grow(-inset),2*u),PAPER if selected else INK,u,true)
 		else:
-			var focus_style = PaperStyle.make("button/"+action_id,u,Color.TRANSPARENT)
-			focus_style.focus = true
-			focus_style.ink = PAPER if selected and not paper_transparent else INK
-			draw_style_box(focus_style,box)
+			var inner_style = PaperStyle.make("button/"+action_id,u,Color.TRANSPARENT)
+			inner_style.focus = true
+			inner_style.ink = PAPER if selected and not paper_transparent else INK
+			draw_style_box(inner_style,box)

@@ -222,7 +222,13 @@ kleine Prüfungen tatsächlicher Controls: reine Pfeile mit exakten deutschen
 Tooltip-/Accessibilitynamen, alle verwendeten Symbolbuttons einschließlich
 dynamischer Farbfelder und deaktivierter Controls, erster/letzter/einziger
 gefilterter Spread, Kopf-/Fußgeometrie bei Resize/UI100/125, aktiver No-op,
-vollständiger Katalogbesuchskontext und beide Informationslesestellen. Trefferzahl
+vollständiger Katalogbesuchskontext und beide Informationslesestellen.
+[NAV-STATE-A / #822](https://github.com/venomenon328/picross/issues/822#paket-nav-state-a)
+prüft in denselben Prozessen die Katalogfolge Zahnrad, Hilfe, Beenden sowie die
+Rollenzuordnung und exklusive aktive Auswahl im Informationskopf. Katalog und
+Arbeitskopf sind auch nach Rückkehr ohne aktive Menüauswahl. Die einmalige
+Windows-Sichtprobe prüft die tatsächlich gezeichneten Konturen und die Bedienung.
+Trefferzahl
 und Informationsbildtitel teilen die obere Kante mit der seitlichen Symbolgruppe;
 kein zusätzlicher vertikaler Navigationsstreifen, vollständige Titelbilder ohne Kollision.
 Metadaten-Pixel, bestehende Modushilfe und passive Kartentreffer werden nach

@@ -1,9 +1,10 @@
 extends RefCounted
+const BookButton = preload("res://ui/book_button.gd")
 const ViewTitle = preload("res://ui/view_title.gd")
 ## One instance of each regular settings/help control, two local clip regions.
 var app: Control
 var help_scroll: ScrollContainer
-var right_return: Button
+var right_return: BookButton
 var section: String = "settings"
 var settings_heading: ViewTitle
 var help_heading: ViewTitle
@@ -27,8 +28,10 @@ func _init(owner: Control) -> void:
 	# One fixed group on whichever information page is visible. Reuse the
 	# regular controls and callbacks, including their motion/flush guards.
 	right_return = app.actions["nav-work"]
+	right_return.top_navigation = true
 	for id: String in ["settings","help"]:
-		var button: Button = app.information.get_node(id+"-access")
+		var button: BookButton = app.information.get_node(id+"-access")
+		button.top_navigation = true
 		button.text = ""
 		button.image = load("res://art/book/"+("menu" if id == "settings" else "help")+".svg")
 		button.action_id = "information-"+id
