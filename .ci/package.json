@@ -1,10 +1,10 @@
 {
   "format": "development-ci-plan/v1",
   "issue": "https://github.com/venomenon328/picross/issues/700",
-  "package": "PZ-HALO-HALO-INTEGRATION",
+  "package": "MACARON-LADENSZENEN",
   "modules": [],
-  "purpose": "Halo-Halo mit dem gewählten 10 × 25-Farbraster, dem Schmalglas-Reveal und der Pandan-Ube-Zeichnung in den Spielkatalog aufnehmen.",
-  "omitted": "Reine Rätselproduktion. Endmatrix, unabhängiger Linienproof, Hinweisbefund, Bildableitung und gebundene Registrierung werden im Produktionsweg geprüft. Für den PR genügen Quellen- und Plankern.",
+  "purpose": "Quellen und Paketplan für drei japanische Ladenansichten im Macaron-Auswahlschritt prüfen.",
+  "omitted": "Reine Rätselproduktion. Maße, Transparenz, Bildkanten und Einzelurteile wurden an den Originalen geprüft. Der Produktionsweg prüft die Rasterbindung. Der CI-Kern genügt.",
   "test_changes": [],
   "core_change": null,
   "evidence": {
