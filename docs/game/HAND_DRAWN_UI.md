@@ -52,9 +52,13 @@ Originalressourcen geprüft; vorhandene Pangolin-Zeichen bleiben Pangolin.
 Fehlglyphen, zufällige Ersatzzeichen und Systemfallback sind ausgeschlossen.
 Normale Zeichenketten, automatische Auslassung, Popup und Tooltip stimmen überein.
 
-Bakso-Kacheltitel behalten ihre besondere native Dreipunkt-Auslassung, weil
-Bakso U+2026 falsch zeichnet. Diese Ausnahme gilt ausschließlich für Bakso;
-Standardtext nutzt die echte Pangolin-Ellipse.
+Bakso-Kacheltitel nutzen gemessene Anzeigezeilen und drei Punkte als
+Auslassungszeichen. Bakso zeichnet U+2026 falsch. Andere gekürzte Pangolin-Texte
+verwenden die Pangolin-Ellipse. Die Katalogaktionen **Backup übernehmen** und
+**Backup erneuern** behalten hingegen die vollständige sichtbare Bezeichnung.
+Zeilen und Trefferhöhe werden mit der tatsächlichen kleinen Pangolin-Rolle
+an derselben Breite gemessen. Beide Beschriftungen verwenden die belegten
+Trennstellen aus der [lokalen Wortliste](CATALOG_HYPHENATION.md).
 
 Die Abschlussrolle wird mit deutschen Umlauten und `ß`, verwendeten lateinischen
 Akzenten sowie vietnamesischen Motivnamen geprüft. Vorhandene Zeichen bleiben

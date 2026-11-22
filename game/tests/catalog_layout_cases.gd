@@ -72,8 +72,56 @@ static func catalog_profiles(probe) -> void:
 	row.catalog_reveal = {}
 	probe.check(not registry.validate(data).is_empty(), "v9 rejects an incomplete profile binding")
 
+static func title_cases(probe) -> void:
+	var card: Card = Card.new()
+	probe.surface.add_child(card)
+	card.configure("Brandenburger Tor", "Testkategorie", "Blatt 01", true)
+	card.size = Vector2(182, 400)
+	card.layout_content()
+	probe.check(card.caption.text == "Branden-\nburger Tor" and card.caption.get_visible_line_count() == 2,
+		"KL-TRENN narrow initial Bakso card fully shows both parts with a hyphen")
+	probe.check(card.original_title == "Brandenburger Tor" and card.caption.accessibility_name == card.original_title,
+		"KL-TRENN display lines do not alter the accessible title")
+	var geometry := card.get_rect()
+	var title_rect := card.caption.get_rect()
+	var recovery_rect := card.image_area
+	var font: Font = card.caption.get_theme_font("font")
+	for sample: Array in [
+		["Brandenburger Tor", "Brandenburger\nTor", 1.0],
+		["Gänseblümchen", "Gänse-\nblümchen", 1.0],
+		["Wörterbuch", "Wörter-\nbuch", 1.25],
+		["Für Öl", "Für Öl", 1.25],
+		["Rote Äpfel", "Rote\nÄpfel", 1.0],
+	]:
+		card.ui_scale = sample[2]
+		card.original_title = sample[0]
+		var scale: float = card.ui_scale
+		var pixels := roundi(20.0 * scale)
+		var expected: PackedStringArray = sample[1].split("\n")
+		var width := 0.0
+		for line: String in expected:
+			width = maxf(width, Card.UiText.width(font, line, pixels))
+			for codepoint: int in range(line.length()):
+				probe.check(font.has_char(line.unicode_at(codepoint)), "KL-TRENN complete Bakso glyph")
+		card.size.x = width + 2 * roundf(10 * scale) + roundf(44 * scale) + roundf(8 * scale)
+		card.layout_content()
+		probe.check(card.caption.text == sample[1] and card.caption.get_visible_line_count() == expected.size(),
+			"KL-TRENN word boundaries, genuine breaks and native glyphs: " + sample[0])
+	card.ui_scale = 1.0
+	card.original_title = "Ein QzxvQzxvQzxvQzxvQzxvQzxv"
+	card.size = geometry.size
+	card.layout_content()
+	probe.check(card.caption.text.begins_with("Ein\n") and card.caption.text.ends_with("...")
+		and not card.caption.text.contains("-") and card.caption.get_visible_line_count() == 2,
+		"KL-TRENN two-line Bakso ellipsis when the word has no verified break")
+	probe.check(card.get_rect() == geometry and card.caption.get_rect() == title_rect and card.image_area == recovery_rect,
+		"KL-TRENN return to the same scale and width preserves title and image geometry")
+	card.free()
+
+
 static func run(probe) -> void:
 	catalog_profiles(probe)
+	title_cases(probe)
 	var app = probe.app
 	var album = app.album
 	var original: Dictionary = album.items.duplicate()
