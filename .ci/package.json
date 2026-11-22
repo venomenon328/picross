@@ -1,6 +1,6 @@
 {
   "format": "development-ci-plan/v1",
-  "issue": "https://github.com/venomenon328/picross/issues/816#issuecomment-7087158415",
+  "issue": "https://github.com/venomenon328/picross/issues/816",
   "package": "KORRIDOR-NORM-A",
   "modules": [],
   "purpose": "Normdiff und Paketplan im Kern docs/ci-required prüfen. Fünf textuelle Szenarien einmalig auf Normkonsistenz, Links und harte Gates abgleichen. Dokumente und Paketplan sind buildfrei.",
