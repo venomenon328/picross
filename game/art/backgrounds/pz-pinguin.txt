@@ -1,0 +1,4 @@
+author: OpenAI ImageGen, Bildproduktion durch Codex
+changes: Unveränderte PNG-Originalausgabe.
+source: In dieser Sitzung für das Pinguin-Kontextbriefing ohne externe Bildvorlage neu erzeugt.
+usage_basis: Für den beauftragten Picross-Produktionsstand generierte Kontextzeichnung.

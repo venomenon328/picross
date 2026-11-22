@@ -1,10 +1,10 @@
 {
   "format": "development-ci-plan/v1",
   "issue": "https://github.com/venomenon328/picross/issues/700",
-  "package": "PZ-FALAFEL-INTEGRATION",
+  "package": "PROD-PINGUIN",
   "modules": [],
-  "purpose": "Falafel mit raster-c (21 × 20, drei Vordergrundfarben), reveal-c und background-a2 im Profil picross-background-png2304x768-v1 unter Gerichte & Herzhaftes registrieren.",
-  "omitted": "Reine Rätselproduktion. Unabhängiger Proof, Endmatrix, Bildprofil und Lieferdaten werden im Produktionsweg geprüft. CI prüft Quellen und Paketplan ohne Player-Build.",
+  "purpose": "Erstintegration von pz-pinguin nach Authoring 0.8.0 mit Monoraster, Reveal samt Katalogprofilen und gewählter 3:1-Kontextzeichnung.",
+  "omitted": "Reine Rätselproduktion. Paarlinienproof, Endmatrix, Bewertung und Lieferbytes werden im Produktionsweg geprüft. Der CI-Quellenkern läuft ohne Player-Build und Zusatzmodule.",
   "test_changes": [],
   "core_change": null,
   "evidence": {
