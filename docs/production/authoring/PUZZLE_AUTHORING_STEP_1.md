@@ -50,3 +50,13 @@ keine automatisch freigegebene Abschlussbilddatei.
 
 Übergabe: reveal_review mit erreichbaren Originalen zur tatsächlichen Bildwahl/-freigabe.
 Keine Abstraktion vor dieser Entscheidung; neue Briefings erfinden keine ID/Gitquelle.
+
+### PW-FIND · Annahme und Revealwahl
+
+Freigegebener, noch nicht implementierter Sollweg nach
+[Kern §6.3](PUZZLE_AUTHORING.md#63-pw-find--phasenübergreifende-befundentscheidungen):
+Zulässige konkrete Bildbefunde dürfen zusammen mit der Wahl genau dieses
+Revealoriginals zur Abstraktion angenommen werden. Offene andere Kandidaten
+sperren die geeignete Wahl nicht. Nutzungsgrundlage, feste Motivgrenzen und
+wirkliche Bildwahl bleiben erforderlich. Korrekturgrundlage darf ein blockierter
+Kandidat sein; fortgeführte Befundannahmen wählen keine neuen Bildbytes vorab.

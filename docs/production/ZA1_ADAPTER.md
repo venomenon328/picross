@@ -37,6 +37,28 @@ Definition und Modus müssen zusammenpassen: Mono hat genau eine benutzte Vorder
 
 `approval.checks` führt exakt `reveal,motif,raster,palette,hint_legibility,background,final_content,integration`, jeweils true als dokumentierte tatsächliche Annahme. `evidence` bindet den realen Entscheidungstext. `selection_sha256` ist der kanonische Hash des vollständigen Manifests ohne `approval`. Bestehende gültige Entscheidungen dürfen übernommen werden; ein technischer Hash, erfundener Text oder Schweigen ist keine menschliche Freigabe. Neue kreative Bytes benötigen eine passende tatsächliche Entscheidung. Die technischen Grenzen allein ersetzen keine direkte Bildsichtung nach den [Bildtypnormen](images/README.md).
 
+## PW-FIND · Entscheidungen bis zur Integration
+
+Freigegebener Sollstand [PW-FIND-A / #797](https://github.com/venomenon328/picross/issues/797);
+Implementierung und Abnahme offen. Die oben geschlossene Eingangsform bleibt bis
+zur Lieferung maßgeblich. Die Erweiterung wird ausdrücklich versioniert und mit
+allen aktuellen Verbrauchern eingeführt, nicht als freie Zusatzfelder in v1.
+
+Finalizer, Export und Integration erhalten alle noch relevanten Befundannahmen
+und Behandlungsvorgaben aus sämtlichen Produktionsphasen. Die gegenwärtige
+Dreierliste in `quality.review` darf diesen erweiterten Entscheidungsumfang nicht
+abschneiden. Urteil, tatsächliche Annahme und Behandlung bleiben getrennt und an
+die gewählten Inhalte gebunden. Die fachliche Wirksamkeit definiert
+[Qualität §6.1](PUZZLE_QUALITY.md#61-pw-find--befundentscheidungen-in-allen-phasen).
+Ein gedeckt angenommener Befund darf nicht erneut blockieren; übrige technische
+Voraussetzungen, Rechte, Inhaltsbindungen und tatsächliche Endabnahme bleiben.
+
+Die Daten gehören zum aktuellen Integrationseingang. Sie werden keine zweite
+Runtime-Autorität und keine neue dauerhafte Produktionsakte. Erforderliche
+Produkt-/Rechtenachweise und technische Ausnahmen bleiben erhalten; normale
+Completion und Bereinigung folgen [RI-ONE §5](PUZZLE_INTEGRATION_SINGLE_PATH.md#5-completion-und-produktionsabschluss).
+Eine Behandlung ist kein automatischer Auftrag zu späterer Spiel-/Editoränderung.
+
 ## Aufruf und Ausgabe
 
 ```text

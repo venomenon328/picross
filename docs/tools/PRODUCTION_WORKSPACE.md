@@ -512,6 +512,62 @@ Mainintegration führt der Akteur den gebundenen Produktionsabschluss in
 Authoring Schritt 5 §9 direkt aus. Der nächste übernommene Listenstand blendet
 die integrierte ID aus.
 
+## PW-FIND · Befunde am Kandidaten
+
+**Freigegebener Sollstand [PW-FIND-A / #797](https://github.com/venomenon328/picross/issues/797),
+22.11.2026; noch kein bestätigtes Produktverhalten.** Umsetzung und Nachweise
+gehören zum dort vorbereiteten Paket. Fachliche Annahmesemantik besitzt
+[Qualität §6.1](../production/PUZZLE_QUALITY.md#61-pw-find--befundentscheidungen-in-allen-phasen),
+Daten-/Prüfbindung [PW-B](PW_B_CONTRACT.md#pw-find--freigegebene-erweiterung-der-entscheidungsdaten).
+
+In allen Phasen stehen konkrete Befunde direkt an der jeweiligen Reveal-,
+Motiv-, Raster- oder Hintergrundkarte. Die Schlussübersicht verwendet die
+gewählten Bestandteile; sie braucht keinen künstlichen fünften Kandidatentyp.
+Zusätzliche Befunde am Zusammenspiel stehen direkt an der konkret gebundenen
+Schlusskombination; ein betroffener Bestandteilwechsel verlangt ihre Neubewertung,
+ohne unveränderte Einzelannahmen aufzuheben.
+Ein Befund zeigt Kürzel, kurze Beschreibung und Zustand. Nähere Erklärung per
+Tooltip oder Aufklappen auch mit Tastatur erreichbar machen. Annahmefähige
+Befunde erhalten eine beschriftete Checkbox und „Umgang mit diesem Befund“.
+Bei einer nicht annehmbaren Voraussetzung ohne zugelassenen Ausnahmeweg
+stattdessen die konkrete fehlende Prüfung oder nötige Korrektur nennen.
+Unterstützte technische Ausnahmen dürfen diese Befundbedienung nutzen und müssen
+ihren vorgeschriebenen aktuellen Ausnahme- und Bindungsweg vollständig erfüllen.
+Auftragsweite Quellen-/Transportfehler bleiben
+getrennt sichtbar und werden nicht als redaktionell akzeptierbar angeboten.
+
+Gleiche Kriterien an mehreren Kandidaten und mehrere konkrete Befunde desselben
+Kriteriums behalten eigene Eingaben. Gültige Übernahmen zeigen Checkbox und
+bisherigen Text vorgefüllt mit kurzer Herkunftskennzeichnung. Bei erstmaliger
+Annahme ohne Text vor Absenden sichtbar „Unverändert beibehalten“ einsetzen;
+ein Placeholder allein ist kein übertragener Text. Individuelle übernommene
+Eingaben erhalten. Die wirksame Wählbarkeit wird bei Annahme oder Rücknahme
+unmittelbar neu angezeigt; andere Kandidaten bleiben unverändert.
+
+„Nächste Aktion“ bleibt erhalten:
+
+| Aktion | Bedeutung der Kandidatenwahl |
+| --- | --- |
+| Fortsetzen / Entscheidung senden | Den vorhandenen Kandidaten einschließlich der im selben Auftrag erklärten zulässigen Annahmen für die fällige Folge verwenden. Keine zusätzliche Annahme-/Auswahlrunde. |
+| Korrigieren | Den Kandidaten, auch mit offenen Blockern, als Grundlage der beschriebenen Änderung verwenden. Behandlungsvorgaben mitnehmen; keine kreative Wahl künftiger Bytes. |
+
+Checkbox, Texte und Auswahl bleiben bis zum tatsächlichen Absenden lokale
+Bedienabsichten. Das UI unterscheidet vorgemerkte und veröffentlichte Entscheidungen.
+Der Auftrag trägt neue Annahmen/Widerrufe mit Kandidaten-/Befundzuordnung,
+Behandlung, konkrete Wahl oder Korrekturgrundlage und nächste Aktion. Bereits
+veröffentlichte gültige Entscheidungen werden aus derselben festen Quelle gelesen;
+keine komplette Historie oder allgemeinen Regeln erneut in Prompts kopieren.
+
+Passives Suchen erhält die aktuelle gebundene Ansicht und Eingaben. Ausdrücklicher
+Job-/Quellenwechsel überträgt ungesendete Absichten nicht still auf neue Inhalte.
+Ein abgesendeter Widerruf folgt dem fachlichen Kandidatenscope. Die Oberfläche
+schreibt keine Produktionsdaten und behauptet nach Kopieren keinen neuen Stand.
+Nach Veröffentlichung müssen dieselben Annahmen und Behandlungstexte aus dem
+Record wieder sichtbar sein. Endabnahme, Integrations- und Mergebefugnis werden
+durch ein Häkchen nicht ergänzt. Die tatsächliche Bedienprobe für Karten,
+Erklärung/Fokus, Texte und Aktionseffekt steht im Paket; DOM-Nachbildung allein
+belegt keine Browserbedienung.
+
 ## PW2-B · Schlussübersicht und gebundener Auftrag
 
 Die normale Hintergrundentscheidung zeigt zuerst das tatsächlich gewählte Raster,

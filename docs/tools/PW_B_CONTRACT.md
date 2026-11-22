@@ -202,6 +202,59 @@ Für aktuelle Jobs genügt der aktuelle Quellencommit. Kein neuer Regelwerksnaps
 und kein Zugriff auf frühere Erzeugerbytes. Alte Snapshotformen bleiben nur als
 explizit historische Daten erkennbar; sie sind kein normaler Writerweg.
 
+## PW-FIND · freigegebene Erweiterung der Entscheidungsdaten
+
+**Sollstand [PW-FIND-A / #797](https://github.com/venomenon328/picross/issues/797),
+22.11.2026; Implementierung und Abnahme offen.** Die oben geschlossene v2-Form
+beschreibt weiterhin den ausführbaren Stand. Neue Formen werden im Paket
+ausdrücklich versioniert und mit allen aktuellen Verbrauchern konsistent
+eingeführt; bestehende v2-Bytes erhalten keine stillen Zusatzfelder oder neue
+Bedeutung. Unterstützte aktuelle v2-Stände bleiben lesbar. Eine gezielte
+Fortschreibung übernimmt nur tatsächlich belegte gültige Entscheidungen, keine
+vermeintliche Annahme aus einem Briefing. Historische Paket-/ZIPformen werden
+nicht migriert; laufende reale Produktionen sind kein Implementierungsfixture.
+
+Die neue Form muss im einzigen aktuellen Record folgende Informationen eindeutig
+voneinander trennen und geschlossen validieren:
+
+| Information | Bindung und Bedeutung |
+| --- | --- |
+| Konkreter Befund | Stabile eigene Kennung, Kandidat beziehungsweise gewählte Schlusskombination und relevante Inhaltsidentität, Kriterium/Teilregel, betroffene Eigenschaften, Kontext, Wirkung und tatsächliches Urteil samt Prüfbegründung/Methode. Mehrere Befunde je Kriterium sind möglich. |
+| Annahme/Widerruf | Genau dieser Befund an diesem Bezugsobjekt, tatsächliche Erklärung, Akteur und überlieferter Zeitpunkt. Keine Ableitung aus einer fremden Erklärung oder einem Kürzel im Freitext. |
+| Behandlung | Eigenständiger Nutzertext; sichtbar erklärte Standardbehandlung nur bei leerer erstmaliger Annahme. Befundbegründung und Behandlung überschreiben einander nicht. |
+| Fortführung | Unmittelbare Korrekturgrundlage, gültige frühere Entscheidung und nachvollziehbare Deckung des neuen Befunds. Kompakte aktuelle Herkunft statt vollständigem Kandidaten-/Entscheidungsarchiv. |
+| Bereitschaft | Aus aktuellen Voraussetzungen, Befunden und zulässigen wirksamen Annahmen je Kandidat abgeleitet; kein vom Erzeuger gesetzter pauschaler Bypass. |
+
+Die fachliche Deckung, Gleichheitsgrenzen und Widerrufswirkung definiert allein
+[Qualität §6.1](../production/PUZZLE_QUALITY.md#61-pw-find--befundentscheidungen-in-allen-phasen).
+Die Kandidatenbindung darf nicht durch eine unabhängige Änderung der übrigen
+Angebotsmenge entwertet werden. Materielle Änderungen invalidieren weiterhin die
+betroffenen kreativen Wahlen und technischen Nachweise. Eine fortgeführte Annahme
+ist keine automatische Auswahl des Nachfolgers.
+
+Prüfer, Projektion und Promptgenerator unterstützen gemischte Kandidatenstände.
+Ein qualifizierter Kandidat ist unabhängig von offenen Vergleichskandidaten
+auswählbar. Der globale Phasenstatus beschreibt den tatsächlichen Fortschritt
+und ersetzt keine Prüfung des ausgewählten Kandidaten. Auch ein blockierter
+Entwurf kann als Korrekturgrundlage adressiert werden; das setzt selected nicht
+auf eine unqualifizierte kreative Wahl. Nach tatsächlicher Wahl gelten die
+bisherigen Regeln zur Verdichtung und Entfernung nicht mehr benötigter Varianten.
+
+Ein abgesendeter Auftrag darf Annahme/Behandlung, Wahl und Folgeaktion zusammen
+erklären. Builder und Finalizer prüfen und binden die gültige Kombination ohne
+zusätzliche menschliche Annahmerunde. Bei fehlenden Voraussetzungen keine halb
+gültige Auswahl oder Phasenfortschaltung publizieren. Bereits gültig erklärte
+Annahmen können im tatsächlichen Reviewstand gesichert bleiben; ein anderer
+Blocker verlangt keine erneute Erklärung derselben unveränderten Annahme.
+Erwarteter Record, sichere Publikation, Wiederholung und Readback bleiben wirksam.
+
+Alle noch relevanten Vorgaben müssen auch nach Verdichtung und am Übergang zum
+[Integrationseingang](../production/ZA1_ADAPTER.md#pw-find--entscheidungen-bis-zur-integration)
+verfügbar bleiben. Ein alter globaler Blockertext darf einen angenommenen Befund
+nicht erneut sperren. Der lesende Dienst führt keinen Solver und keinen neuen
+fachlichen Writer aus. Kein zweiter Browserbestand, Promptarchiv, Regelbuchsnapshot
+oder historischer Vererbungsbaum; Retirement und benötigte Produktnachweise bleiben.
+
 ## Katalogprofile für Abschlussbilder
 
 Integrationseingang v1 und Authoringrecord v2 führen das gewählte Original. Die automatische Ableitung gehört zur Erstintegration. Completion vergleicht die aktuelle Revealquelle und beide tatsächlichen Profilbytes gegen den Integrationscommit.

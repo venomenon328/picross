@@ -217,6 +217,87 @@ Ein negatives Messergebnis bleibt auch bei Übernahme negativ. Sämtliche übrig
 Inhaltsgates bleiben erforderlich; die bloße Sichtung oder ein Freitextvermerk
 ist keine technische Ausnahme.
 
+### 6.1 PW-FIND · Befundentscheidungen in allen Phasen
+
+**Freigegebener Sollstand vom 22.11.2026, [PW-FIND-A / #797](https://github.com/venomenon328/picross/issues/797).**
+Die technische Umsetzung und Abnahme stehen noch aus. Bis zur Lieferung gelten
+die oben beschriebenen ausführbaren Formen; diese Spezifikation erlaubt keine
+freien Zusatzfelder oder das Umgehen bestehender Prüfungen. Der Zielstandard der
+Bildnormen und die harten Voraussetzungen werden nicht geändert.
+
+Ein konkreter Befund bindet Kandidat oder gewählte Schlusskombination, relevante
+Inhaltsbytes, Kriterien-ID, betroffene Teilregel/Eigenschaft, Kontext und
+beobachtete Wirkung. Mehrere unabhängige Befunde unter derselben Kriterien-ID
+bleiben getrennt entscheidbar.
+Gleiche Kriterien an verschiedenen Kandidaten erhalten eigene Annahmen und
+Behandlungen. Annahmen werden nicht durch das bloße Auftauchen eines Kürzels
+in einer anderen Erklärung belegt.
+
+Befunde am Zusammenspiel werden an die konkrete gewählte Zusammenstellung
+gebunden. Ein Wechsel betroffener Bestandteile verlangt ihre Neubewertung;
+unveränderte Einzelannahmen bleiben gültig. Dafür entsteht kein zusätzlicher
+kreativer Kandidatentyp.
+
+Urteil und seine Begründung, tatsächliche Nutzerannahme, Behandlungsvorgabe und
+technische Bereitschaft sind getrennte Tatsachen. Eine wirksame Annahme erhält
+das negative Urteil sichtbar und hebt genau dessen gedeckte Sperrwirkung auf.
+Die Behandlung ist eine verbindliche Vorgabe für die folgenden betroffenen
+Produktionsschritte. Sie darf die Befundbeschreibung nicht überschreiben.
+Bei erstmaliger Annahme ohne Eingabe wird vor Absenden sichtbar
+„Unverändert beibehalten“ eingesetzt; dieser Text gelangt in Auftrag und Record.
+Eine frühere individuelle Behandlung hat bei zulässiger Übernahme Vorrang.
+
+Annahmefähigkeit richtet sich nach der konkreten Teilregel. Eine Zuordnung nur
+nach Q-/H-Präfix oder ein frei gesetzter Bypass ist unzulässig. Bestehende frame-/
+palette-Ausnahmen behalten ihre aktuellen technischen Bindungen. Ungeprüfte oder
+fehlende Voraussetzungen, falsche Inhaltsbindungen und ungeklärte Rechte bleiben
+offen. Beim Hintergrund bleiben zusätzlich zu Q-HG01/H-07 echte Transparenz
+freier Räume und ausgeschlossene technische Kompositionsmanipulationen nach
+[Hintergrund §3.4](PUZZLE_BACKGROUNDS.md#34-effektiver-zustand-und-referenzgraph)
+unabdingbar; Q-HG03/Q-HG04 erlauben nur die dort zugelassenen Teilabweichungen.
+Eine Annahme hebt keine feste Auftragsgrenze oder geschützte Invariante auf.
+
+Bereitschaft wird je Kandidat bestimmt: Alle fälligen Voraussetzungen müssen
+erfüllt oder durch ihren zugelassenen Ausnahmeweg gedeckt sein, alle tatsächlich
+blockierenden redaktionellen Befunde erfüllt oder wirksam angenommen. Offene
+Befunde anderer Kandidaten sperren diesen Kandidaten nicht. Nicht qualifizierte
+Vergleichsentwürfe bleiben als solche erkennbar; ihre Sichtbarkeit erteilt keine
+Fortsetzungsfreigabe. Annahme, Wahl und Folgeauftrag dürfen in einer tatsächlichen
+Erklärung zusammenkommen. Eine zusätzliche menschliche Annahmerunde ist unnötig.
+Entsprechend gilt dies für die fällige Schlussentscheidung der gewählten Kombination.
+
+**Fortführung bei Korrekturen:** Der unmittelbare tatsächliche
+Korrekturausgangspunkt bestimmt die geltenden Annahmen. Der Nachfolger wird neu
+beurteilt. Nur bei belegter Deckung von Teilregel, betroffenen Eigenschaften,
+Kontext, Wirkung und akzeptiertem Umfang werden Annahme und bisheriger Text
+übernommen und als übernommen gekennzeichnet. Gleiches Kürzel, gleicher
+Beschreibungstext oder allein gleiche RGB-Werte genügen nicht. Neue, verschärfte
+oder unklar zuordenbare Befunde bleiben offen; ein früherer Text darf erkennbar
+als Vorschlag vorgefüllt werden. Regeländerungen mit neuer Bedeutung verlangen
+neue Bewertung, reine Pfad-/Textpflege ohne Bedeutungsänderung nicht pauschal.
+
+Übernommen wird die Entscheidung zum Umgang, kein altes Prüfergebnis und keine
+kreative Wahl neuer Bytes. Fachlich unveränderte passende Nachweise bleiben nach
+den bestehenden Änderungsregeln verwendbar. Verschwundene Befunde werden nicht
+künstlich erhalten; weiter geltende Vorgaben wie „Farbe beibehalten“ bleiben im
+aktuellen Produktionsbriefing. Herkunft und ursprüngliche tatsächliche Erklärung
+kompakt binden, keinen neuen Nutzerklick oder Nutzerzeitpunkt erfinden.
+
+Ein abgesendeter Widerruf gilt am betroffenen Kandidaten und für davon ausgehende
+Korrekturen, nicht für unabhängige Geschwister. Eine ältere Ahnenannahme darf ihn
+nicht erneut einschalten. Nur abhängige nächste Schritte werden wieder gesperrt;
+unabhängige gültige Entscheidungen bleiben erhalten. Bereits integrierte Inhalte
+werden dadurch nicht automatisch zurückgenommen.
+
+Die Checkbox bedeutet immer, dass der gedeckte Befund bestehen bleiben darf.
+Eine zugleich verlangte zwingende Behebung vor Fortsetzung ist ein konkret zu
+klärender Widerspruch. Freiwillige Verbesserung bleibt möglich. Annahmen und noch
+relevante Behandlungsvorgaben gelten bis zum Abschluss des laufenden Jobs; sie
+erzeugen keine automatische Spieländerung, Endabnahme, Integration oder neue
+dauerhafte Produktionsakte. Technische Form und Fortschreibung besitzt
+[PW-B](../tools/PW_B_CONTRACT.md#pw-find--freigegebene-erweiterung-der-entscheidungsdaten),
+Bedienung der [Produktionsassistent](../tools/PRODUCTION_WORKSPACE.md#pw-find--befunde-am-kandidaten).
+
 ## 7. Vier endliche synthetische Entscheidungsbeispiele
 
 Diese Beispiele sind reine historische Vertragsdurchläufe, keine Produktionspakete,

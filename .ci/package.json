@@ -1,10 +1,10 @@
 {
   "format": "development-ci-plan/v1",
-  "issue": "https://github.com/venomenon328/picross/issues/660",
-  "package": "PROD-TAIYAKI",
+  "issue": "https://github.com/venomenon328/picross/issues/797",
+  "package": "PW-FIND-A-SPEC",
   "modules": [],
-  "purpose": "Erstintegration von pz-taiyaki mit taiyaki-raster-a, reveal-a und taiyaki-background-c (HG31) nach Endabnahme.",
-  "omitted": "Reine Rätselproduktion. Linienproof, Endmatrix und Lieferbytes werden im Produktionsweg geprüft. Package CI prüft den Quellen- und Plankern ohne Zusatzmodule und Player-Build.",
+  "purpose": "Freigegebene Spezifikation für kandidatenspezifische Befundentscheidungen in allen Produktionsphasen; erstes Implementierungspaket PW-FIND-A vorbereiten.",
+  "omitted": "Nur Fachvertragsänderungen und Paketplan, keine Produktimplementierung. Kern docs/ci-required ohne Zusatzmodule und Playerbau. Bei späterer Implementierung den in #797 festgelegten Plan mit tools und production.adapter aktivieren; Bedienprobe dann am Implementierungshead.",
   "test_changes": [],
   "core_change": null,
   "evidence": {

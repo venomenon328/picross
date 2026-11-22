@@ -30,6 +30,7 @@ Vor technischer Benutzung zusätzlich Referenz lesen:
 
 | Operation | Pflichtquelle |
 | --- | --- |
+| Befundannahme, Behandlung, Widerruf und Fortführung auf Nachfolger | [Qualität §6 einschließlich §6.1](../PUZZLE_QUALITY.md#6-gezielte-redaktionelle-einzelfallentscheidung); für den freigegebenen PW-FIND-Sollweg zusätzlich unten §6.3 |
 | Paketbau/Veröffentlichung | [PW-B](../../tools/PW_B_CONTRACT.md), Tool-README PW-B/PB-A, unten §6 |
 | Rasterimport/Endproof | Tool-README RP-3, Datenvertrag/Ressourcen; [Produktion](../PUZZLE_PRODUCTION.md) §§4–5 |
 | Paarprofil | [PAIRED_LINES](../PAIRED_LINES.md) vollständig; Tool-README Paarlinienprofil; kein Routinepaarlauf bei gelöster Linienlogik |
@@ -179,6 +180,38 @@ Arbeitsbranch mit Alternativen wird nicht nach Main gemergt. Abschluss prüft da
 tatsächliche aktuelle Ergebnis. Der gültige Mainkatalog blendet registrierte
 IDs dauerhaft im Produktionsassistenten aus. Spätere Pflege folgt dem
 bestehenden Editor-/Revisionsweg.
+
+### 6.3 PW-FIND · phasenübergreifende Befundentscheidungen
+
+**Freigegebene Spezifikation [PW-FIND-A / #797](https://github.com/venomenon328/picross/issues/797),
+22.11.2026; technische Umsetzung noch offen.** Die derzeit ausführbaren
+Recordformen bleiben bis zur Lieferung maßgeblich. Die neue Annahmesemantik
+steht in [Qualität §6.1](../PUZZLE_QUALITY.md#61-pw-find--befundentscheidungen-in-allen-phasen),
+ihre technische Bindung in [PW-B](../../tools/PW_B_CONTRACT.md#pw-find--freigegebene-erweiterung-der-entscheidungsdaten).
+
+Der Sollweg gilt für Abschlussbild, Motivvorlage, Raster, Kontextzeichnung und
+Schlussübersicht. Ein Auftrag kann konkrete zulässige Befundannahmen samt
+Behandlung, aktuelle Kandidatenwahl und fällige Folgeaktion verbinden. Keine
+zusätzliche menschliche Runde allein zur Veröffentlichung der Annahmen.
+Fällige harte Voraussetzungen, echte Bild-/Motiv-/Parameterwahlen und Endabnahme
+bleiben erforderlich; auf spätere Phasen entfallende Prüfungen nicht vorziehen.
+
+„Korrigieren“ bezeichnet eine konkrete Arbeitsgrundlage, auch einen blockierten
+Kandidaten. Geltende Behandlungen bei den beauftragten Änderungen beachten;
+Annahme allein verlangt keine Reparatur. Nur die nach Qualität §6.1 gedeckten
+Befundannahmen auf neu beurteilte Nachfolger übertragen, keine kreative Wahl
+neuer Bytes. Korrigierte Ergebnisse zur fälligen tatsächlichen Wahl vorlegen.
+Budgets und freigegebener Korridor bleiben wirksam.
+
+Aktuelle Behandlungsvorgaben bis Endabnahme und Integration erhalten. Ein
+angenommener, weiterhin gedeckter Befund wird nicht erneut zum Blocker. Gültige
+Annahmen aus dem abgesendeten Auftrag bei anderen offenen Voraussetzungen im
+tatsächlichen Reviewstand sichern, ohne einen falschen Phasenerfolg zu behaupten.
+Für Übernahme/Widerruf genügt die noch relevante kompakte Entscheidungsbindung;
+keine neue Herstellungs-/Korrekturhistorie oder dauerhafte Produktionsakte.
+Schritt 5 §9 bleibt der Abschlussweg; spätere Spiel-/Editorarbeit ist ein eigener
+Auftrag. Der aktuelle Akteur prüft die relevanten Behandlungsvorgaben vor seiner
+Folgearbeit, statt nur den Phasenstatus oder eine alte Blockerliste zu übernehmen.
 
 ## 7. Freigaben und Abschlussausgabe
 

@@ -58,6 +58,18 @@ Die folgenden HP-W2-v1/v2-, Paket- und Sidecarformen dokumentieren ausdrücklich
 aktuellen Record nachfordern oder automatisch als Entstehungsarchiv neu erzeugen.
 Bildprofile, aktuelle Bildqualität und technische Import-/Runtimegarantien bleiben.
 
+### PW-FIND · aktuelle Befundannahmen
+
+Freigegebene, noch nicht implementierte Erweiterung
+[PW-FIND-A / #797](https://github.com/venomenon328/picross/issues/797): Annahmen
+und Behandlung werden am konkreten aktuellen Kandidaten nach
+[Qualität §6.1](PUZZLE_QUALITY.md#61-pw-find--befundentscheidungen-in-allen-phasen)
+entschieden. Zulässige Annahme und tatsächliche Original-/Profilwahl können im
+selben Auftrag stehen. Harte Bedingungen nach §3.4 und die kreative Wahl neuer
+Bytes bleiben erforderlich. Die technischen Formen werden in PW-B ausdrücklich
+versioniert; historische Manifest-/Sheetformen bleiben unverändert und werden
+nicht migriert.
+
 ## HG31 · zwei geschlossene Bildprofile
 
 Profilvertrag aus [#675](https://github.com/venomenon328/picross/issues/675),
