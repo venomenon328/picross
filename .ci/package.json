@@ -8,8 +8,21 @@
   "purpose": "Gemeinsamen Updater an der PG-Frozen-Importgrenze korrigieren und normale Starts des tatsächlich inspizierten Windows-Launchers vor jedem PG-Kandidatenabschluss prüfen.",
   "omitted": "Keine preflight-, native.*, production.*-, delivery- oder Chromium-Module. Der PG-Installerdispatch liefert den separaten Windowsstart und die einmalige Negativkontrolle. Der reguläre Playerbau bleibt im Kern.",
   "test_changes": [
-    "PG-Importgrenze im frischen Prozess sowie gemeinsame PW-/PE-/PG-Transportpfade und Fehlerzuordnung.",
-    "Ablehnung falscher oder vorzeitig beendeter Fenster und fehlender oder fremder Startresultate. Der PG-Installer prüft dauerhaft den normalen Frozenstart vor dem Kandidatenabschluss."
+    {
+      "path": "tools/test_app_updates.py",
+      "disposition": "change-scoped",
+      "reason": "Frischer PG-Import ohne Produktionsnamespace, anonyme Transporte und PW-REST-Pfad im tools-Modul."
+    },
+    {
+      "path": "tools/test_pg_launcher_smoke.py",
+      "disposition": "change-scoped",
+      "reason": "Kleine Verhaltensregressionen fuer falsche Fenster, Prozessfehler und fehlende oder fremde Startresultate."
+    },
+    {
+      "path": ".github/workflows/game-installer.yml",
+      "disposition": "change-scoped",
+      "reason": "Frozenstart vor jedem PG-Kandidatenabschluss. Die einmalige Negativkontrolle laeuft nur beim Diagnosedispatch."
+    }
   ],
   "core_change": null,
   "evidence": {
