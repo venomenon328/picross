@@ -115,6 +115,11 @@ tatsächlich verfügbaren v2-Reader und bestätigten Originalzugriff voraus.
 
 ## Veröffentlichung und Ansichten
 
+Der Windows-Assistent kann die öffentliche REST-Abfrage der Originalmetadaten
+mit seiner [Windows-Benutzervariable](PRODUCTION_WORKSPACE.md#optionaler-rest-zugang-unter-windows)
+authentifizieren. Die Downloadanfrage bleibt anonym. Release- und Asset-ID,
+Name, Größe und SHA-256 bleiben verbindlich.
+
 Der gemeinsame Index enthält nur `puzzle_id,revision,record`-Verweise nach
 Index v1. Aktuelle Records verwenden revision=current. Keine workspace.json
 oder current-view.json pro aktuellem Job: Liste, Bilder, Angebote und Folgeauftrag

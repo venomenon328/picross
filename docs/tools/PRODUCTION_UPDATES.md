@@ -330,8 +330,12 @@ reguläres Beenden verwirft einen laufenden Download. Nach abgeschlossener Über
 zeigt die Oberfläche den geordneten Stop; ein begonnener P2-Vorgang läuft aus.
 
 [`update_client.py`](../../tools/production_workspace/update_client.py) verwendet
-ausschließlich anonyme HTTPS-Releases des festen Repositorys. Keine Tokens,
-Proxy-/Credentialübernahme oder Produktionsremotes. Höchstens vier Seiten à 100
+HTTPS-Releases des festen Repositorys. Der installierte PW kann die
+Releasekatalogabfrage mit seiner
+[Windows-Benutzervariable](PRODUCTION_WORKSPACE.md#optionaler-rest-zugang-unter-windows)
+authentifizieren. PE, PG und sämtliche Downloadanfragen bleiben anonym. Der
+Client verwendet weder Umgebungsproxys noch Git-Credentials oder
+Produktionsremotes. Höchstens vier Seiten à 100
 Releases und 4 MiB, zehn Sekunden je Socketoperation, 60 Sekunden Metadatenbudget;
 unvollständiger Katalog ist ein Fehler. Höchste veröffentlichte 0.1.x-Version
 entscheidet, ohne älteren Fallback. API-Redirects sind verboten; Assetredirects

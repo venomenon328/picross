@@ -570,11 +570,14 @@ class TransportTests(unittest.TestCase):
             return self.final
 
     def transfer(self, response, limit=20, expected=None):
-        transport = client.Transport(); transport.opener = Mock()
-        transport.opener.open.return_value = response
+        transport = client.Transport()
+        opener = Mock()
+        opener.open.return_value = response
         output = BytesIO()
-        transport.transfer(client.API + '?per_page=100&page=1', output, limit, threading.Event(), time.monotonic()+10, expected=expected)
-        request = transport.opener.open.call_args.args[0]
+        with patch.object(client.github_rest, 'build_opener', return_value=opener):
+            transport.transfer(client.API + '?per_page=100&page=1', output, limit, threading.Event(),
+                               time.monotonic()+10, expected=expected)
+        request = opener.open.call_args.args[0]
         self.assertFalse(request.has_header('Authorization'))
         return output.getvalue()
 
@@ -602,12 +605,17 @@ class TransportTests(unittest.TestCase):
             handler.redirect_request(urllib.request.Request(client.API+'?page=1'),None,302,'',{},good)
 
     def test_offline_404_429_tls_timeout_are_errors_not_current(self):
-        for error in (OSError('offline'), TimeoutError(), urllib.error.URLError('TLS'),
-                      urllib.error.HTTPError(client.API,404,'missing',{},None),
-                      urllib.error.HTTPError(client.API,429,'rate limit',{},None)):
-            transport = client.Transport(); transport.opener = Mock(); transport.opener.open.side_effect = error
-            with self.subTest(error=type(error)), self.assertRaises(Exception):
-                transport.read(client.API+'?page=1',100,threading.Event(),time.monotonic()+1)
+        for error, kind in ((OSError('offline'), 'network'), (TimeoutError(), 'network'),
+                            (urllib.error.URLError('TLS'), 'network'),
+                            (urllib.error.HTTPError(client.API, 404, 'missing', {}, None), 'source'),
+                            (urllib.error.HTTPError(client.API, 429, 'rate limit', {}, None), 'rate_limit')):
+            transport = client.Transport()
+            opener = Mock()
+            opener.open.side_effect = error
+            with self.subTest(error=type(error)), patch.object(client.github_rest, 'build_opener', return_value=opener):
+                with self.assertRaises(client.github_rest.Failure) as failure:
+                    transport.read(client.API+'?page=1', 100, threading.Event(), time.monotonic()+1)
+                self.assertEqual(failure.exception.kind, kind)
 
 
 class LifecycleTests(unittest.TestCase):
