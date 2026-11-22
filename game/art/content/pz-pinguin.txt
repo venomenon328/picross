@@ -1,0 +1,4 @@
+author: OpenAI ImageGen, Bildproduktion durch Codex
+changes: Unveränderte PNG-Ausgabe des Generators.
+source: Native Bildgenerierung in dieser Codex-Sitzung ohne externe Bildvorlage.
+usage_basis: Für den beauftragten Picross-Produktionsstand aus dem Motivbriefing neu generiert.
