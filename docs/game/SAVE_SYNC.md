@@ -7,8 +7,7 @@ Konflikte und Wiederherstellung. Freigabe und Paketstatus: [#821](https://github
 
 ## 1. Geltung und Liefergrenze
 
-Die Lösung ist als Soll freigegeben, noch nicht implementiert oder abgenommen.
-SYNC-A liefert zuerst einen isoliert prüfbaren Konto-/Snapshotdienst. SYNC-B
+Der [isolierte Konto-/Snapshotdienst](../../server/save_sync/README.md) implementiert den Serverumfang von SYNC-A. SYNC-B
 bindet die Windows-/Webclients an; SYNC-C umfasst den separat beauftragten
 Livebetrieb und die persönliche geräteübergreifende Abnahme. Paketkriterien,
 Prüfplan, Ausführungswahl und tatsächlicher Lieferstatus stehen im Issue.
@@ -426,7 +425,7 @@ nicht bei normalem Dienst-/DB-Neustart.
 ## 6. Prüfung und Zuständigkeit
 
 Die konkrete Auswahl, Kernbaupflicht und Aufbewahrung stehen ausschließlich in
-[CI v2](../ci/CI_WORKFLOW_V2.md#sync-a-geplantes-servermodul), die paketbezogenen
+[CI v2](../ci/CI_WORKFLOW_V2.md#sync-a-servermodul), die paketbezogenen
 Kriterien SYNC-A-01–10 und ausgelassene Abdeckung in [#821 / SYNC-A](https://github.com/venomenon328/picross/issues/821#sync-a).
 SYNC-A benötigt echte HTTP-/PostgreSQL-/Compose-Prüfungen mit synthetischen Konten;
 ein erfolgreicher Diensttest ist keine Windows-/Web-Spielabnahme.
@@ -437,4 +436,4 @@ Fachliche Implementierungsquellen: [FastAPI zu pwdlib/Argon2](https://fastapi.ti
 [pg_restore](https://www.postgresql.org/docs/17/app-pgrestore.html).
 Die gewählte Bibliothek ersetzt nicht den hier festgelegten Zugriffs-, Konkurrenz-
 und Wiederholungsvertrag. Versionsbindung und tatsächlich ausgeführte Tests
-stehen erst im Implementierungsdiff und dessen Nachweisen.
+stehen im Serverbereich und im zugehörigen Implementierungs-PR.

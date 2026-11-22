@@ -86,6 +86,12 @@ jobs:
       - name: Install pinned cryptography only for selected tools regressions
         if: steps.plan.outputs.tools == 'true'
         run: '"${{ runner.temp }}/module-env/bin/pip" install --only-binary=:all: -r tools/production_workspace/requirements-update.txt'
+      - name: Record sync.server container environment
+        if: matrix.part == 'sync.server'
+        run: |
+          docker version --format 'Docker client {{.Client.Version}}, server {{.Server.Version}}'
+          docker compose version
+          uname -srmo
       - name: Install SSH tooling only for delivery verification
         if: steps.plan.outputs.delivery == 'true'
         run: |
