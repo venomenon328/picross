@@ -115,8 +115,16 @@ class Input:
         limit = 1024*1024 if structured else 65536
         review = io.json_bytes(self.bound(value['review'], limit), limit)
         if structured:
-            from .finding_decisions import check_selected
+            from .finding_decisions import check_selected, matching_modes
             check_selected(review, self.value)
+            require(self.entry['mode'] in matching_modes(review['parameters'], self.definition, len(self.definition['palette'])),
+                    'Selected raster differs from approved parameters')
+            if self.background:
+                from io import BytesIO
+                from PIL import Image
+                from .background_contract import SIZES
+                with Image.open(BytesIO(self.background['asset'])) as prepared:
+                    require(SIZES.get(prepared.size) == review['components']['background']['profile'], 'Selected background profile differs')
             decision(review)
         else:
             self.legacy_review(review)

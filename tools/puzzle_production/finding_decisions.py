@@ -55,6 +55,19 @@ def validate_parameters(parameters):
                 raster_parameters.require_color_count(mode, value['foreground_colors'])
 
 
+def matching_modes(parameters, definition, colours):
+    actual = {'width': definition['width'], 'height': definition['height'], 'foreground_colors': colours}
+    modes = set()
+    for option in parameters:
+        if 'constraints' in option:
+            if all(raster_parameters.accepts(option['constraints'][key], v) for key, v in actual.items()):
+                modes.add(option['imports'][0]['mode'])
+        elif (all(option['size_constraint'] != 'exact' or option[axis] == actual[axis] for axis in ('width', 'height'))
+              and (option['foreground_color_constraint'] != 'exact' or option['foreground_colors'] == colours)):
+            modes.add(option['mode'])
+    return modes
+
+
 def check_summaries(value, criteria):
     require(isinstance(value,dict) and set(value)<=criteria, 'Unknown visual criterion')
     for criterion, finding in value.items():
@@ -161,12 +174,7 @@ def validate(job, criteria):
 
 def carry(previous, job, source, target, *, continuing=()):
     """Run on a freshly assessed successor of the specified immediate base."""
-    require(previous['puzzle_id'] == job['puzzle_id'] and previous['format'] in FORMATS, 'Invalid correction base')
-    require(identity(previous, source) != identity(job, target) and target != COMBINATION and
-            source != COMBINATION and subjects(previous)[source].get('role') == subjects(job)[target].get('role'),
-            'Correction needs a new candidate of the same kind')
-    require(not any(item == target and identity(previous, item) == identity(job, target)
-                    for item in subjects(previous)), 'Cannot transfer to an existing sibling')
+    check_base(previous, job, source, target)
     # The actor identifies which instructions still apply even if the observed
     # defect has disappeared. Never recreate a finding just to retain its text.
     available = set(previous['instructions'].get(source, [])) | {
@@ -177,13 +185,27 @@ def carry(previous, job, source, target, *, continuing=()):
     for row in job['findings']:
         if row['target'] != target or row['decision'] is not None:
             continue
-        matches = [r for r in previous['findings'] if r['target'] == source and
-                   all(r[k] == row[k] for k in SEMANTICS)]
-        peers = [r for r in job['findings'] if r['target'] == target and all(r[k] == row[k] for k in SEMANTICS)]
-        if len(peers) == len(matches) == 1 and effective(matches[0]):
-            parent = matches[0]
-            row['decision'] = {**deepcopy(parent['decision']), 'binding': binding(row),
-                               'source': {'target': source, 'binding': binding(parent)}}
+        row['decision'] = covered_decision(previous, job, source, row)
+
+
+def check_base(previous, job, source, target):
+    require(previous['puzzle_id'] == job['puzzle_id'] and previous['format'] in FORMATS, 'Invalid correction base')
+    old_items, new_items = subjects(previous), subjects(job)
+    require(source in old_items and target in new_items and
+            old_items[source].get('role') == new_items[target].get('role'), 'Correction base has another role')
+    require(target not in old_items or identity(previous, target) != identity(job, target),
+            'Cannot transfer to an existing sibling')
+
+
+def covered_decision(previous, job, source, row):
+    def matching(rows, target):
+        return [r for r in rows if r['target'] == target and all(r[k] == row[k] for k in SEMANTICS)]
+    matches = matching(previous['findings'], source)
+    if len(matches) != 1 or not effective(matches[0]) or len(matching(job['findings'], row['target'])) != 1:
+        return None
+    parent = matches[0]
+    return {**deepcopy(parent['decision']), 'binding': binding(row),
+            'source': {'target': source, 'binding': binding(parent)}}
 
 
 def transition(previous, job):
@@ -206,11 +228,9 @@ def transition(previous, job):
         if not d or not d['source'] or row in old:
             continue
         require(previous and old, 'Missing immediate correction source')
-        candidate = deepcopy(row)
-        candidate['decision'] = None
-        probe = {**job, 'findings': [candidate if r is row else deepcopy(r) for r in job['findings']]}
-        carry(previous, probe, d['source']['target'], row['target'])
-        require(candidate == row, 'Acceptance not covered by immediate correction source')
+        source = d['source']['target']
+        check_base(previous, job, source, row['target'])
+        require(d == covered_decision(previous, job, source, row), 'Acceptance not covered by immediate correction source')
 
 
 def declare(row, *, expected, action, treatment, actor, timestamp_utc, statement):

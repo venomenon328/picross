@@ -350,14 +350,7 @@ class Checked:
         ap.require(definition['id']==self.job['puzzle_id'] and definition['width']<=50 and definition['height']<=50, 'Invalid current raster identity/size')
         used = raster_parameters.used_foreground(definition['solution'])
         params=self.job['parameters']['approved']
-        values={'width':definition['width'],'height':definition['height'],'foreground_colors':len(used)}
-        def accepts_option(p):
-            if 'constraints' in p:
-                return all(raster_parameters.accepts(p['constraints'][k],v) for k,v in values.items())
-            return (all(p['size_constraint']!='exact' or p[axis]==values[axis] for axis in ('width','height')) and
-                    (p['foreground_color_constraint']!='exact' or p['foreground_colors']==len(used)))
-        matching=[p for p in params if accepts_option(p)]
-        modes={p.get('mode') or p['imports'][0]['mode'] for p in matching}
+        modes = findings.matching_modes(params, definition, len(used))
         rating_value=(current_rating.validate(io.json_bytes(self.bound(raster['difficulty'],8*LIMIT),8*LIMIT),
                     definition_bytes=raw,active=False) if raster['difficulty'] is not None else None)
         structured = self.job['format'] in findings.FORMATS
