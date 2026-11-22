@@ -22,6 +22,11 @@
       "path": ".github/workflows/game-installer.yml",
       "disposition": "change-scoped",
       "reason": "Frozenstart vor jedem PG-Kandidatenabschluss. Die einmalige Negativkontrolle laeuft nur beim Diagnosedispatch."
+    },
+    {
+      "path": "tools/test_game_installer.py",
+      "disposition": "change-scoped",
+      "reason": "Der obligatorische PG-Startcheck bindet seine Fensterhelfer und OCR; PW-REST und die getrennte Update-Diagnose sind keine PG-Bauinputs."
     }
   ],
   "core_change": null,

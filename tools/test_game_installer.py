@@ -105,7 +105,10 @@ class GameInstallerTests(unittest.TestCase):
         for relative in ('game_app/gate.py', 'game_app/restart.py', 'production_workspace/update_client.py',
                          'production_workspace/packaging/UpdateHelper.cs', 'production_workspace/requirements-windows.txt'):
             self.assertTrue(selected('tools/' + relative), relative)
-        self.assertFalse(selected('tools/game_app/diagnose.py'))
+        for relative in ('diagnose.py', 'launcher_smoke.py', 'launcher_ocr.ps1'):
+            self.assertTrue(selected('tools/game_app/' + relative), relative)
+        self.assertFalse(selected('tools/game_app/update_diagnostic.py'))
+        self.assertFalse(selected('tools/puzzle_production/github_rest.py'))
         self.assertFalse(selected('tools/production_workspace/helper_diagnostic.py'))
         self.assertFalse(selected('tools/puzzle_editor/desktop.py'))
 
