@@ -62,7 +62,7 @@ def run(root, workspace, output, engine, environment, run_phase, python_phase, h
     plan = json.loads((root / ".ci/package.json").read_text(encoding="utf-8"))
     review = plan["evidence"]
     comparison_capture = (review["mode"] == "review" and date.fromisoformat(review["expires"]) > date.today()
-                          and "native/sync-b2-r01/interaction.json" in review["files"].get("native.catalog", []))
+                          and "native/groups/catalog/sync-b2-r01/interaction.json" in review["files"].get("native.catalog", []))
     import time
     from native_contract import CATALOG_MODES
     from native_results import bind_files

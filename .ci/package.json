@@ -87,9 +87,9 @@
         "sync.json"
       ],
       "native.catalog": [
-        "native/sync-b2-r01/conflict-ui100.png",
-        "native/sync-b2-r01/history-reset-ui125.png",
-        "native/sync-b2-r01/interaction.json"
+        "native/groups/catalog/sync-b2-r01/conflict-ui100.png",
+        "native/groups/catalog/sync-b2-r01/history-reset-ui125.png",
+        "native/groups/catalog/sync-b2-r01/interaction.json"
       ]
     }
   }
