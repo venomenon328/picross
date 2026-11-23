@@ -140,28 +140,51 @@ function gridFields(parent,expanded){
  }
  parent.append(panel);return panel;
 }
+const parameterKinds={exact:'exakt',approximate:'ungefähr',open:'offen'};
+function parameterConstraint(option,axis){
+ if(option.constraints)return option.constraints[axis];
+ return {kind:option[axis==='foreground_colors'?'foreground_color_constraint':'size_constraint'],
+         target:option[axis],minimum:null,maximum:null};
+}
+function parameterTarget(c,unit=''){
+ return c.kind==='open'?'offen':`${parameterKinds[c.kind]} ${c.target}${unit}`;
+}
+function parameterSummary(section,option){
+ for(const [axis,label] of Object.entries(PW.axes)){
+  const c=parameterConstraint(option,axis),unit=axis==='foreground_colors'?'':' Zellen';
+  section.append(node('p',`${label}: ${parameterTarget(c,unit)} · Untergrenze: ${c.minimum??'keine'} · Obergrenze: ${c.maximum??'keine'}`));
+ }
+ const mode=option.imports?.[0].mode??option.mode;
+ section.append(node('p',`Modus: ${mode==='color'?'farbig':'monochrom'}`));
+ const sides=option.derivation?.empty_edge_crop.map(side=>sideNames[side]);
+ const features=option.derivation?.protected_features;
+ section.append(node('p',`Erlaubte Beschnittseiten: ${sides?.join(', ')||'keine'}.`),
+                node('p',`Geschützte Merkmale: ${features?.join('; ')||'keine benannt'}.`));
+}
+function parameterLabel({option,index}){
+ const goals=Object.entries(PW.axes).map(([axis,label])=>`${label} ${parameterTarget(parameterConstraint(option,axis))}`);
+ return `Alternative ${index+1} · ${goals.join(' · ')}`;
+}
 function publishedContext(view,value){
  const p=value.facts.published,section=node('section',undefined,'publishedContext');
  section.append(node('h3','Überlieferte Vorgaben & Motivbriefing'));
- const status=p.role==='approved'?'Überlieferter freigegebener Parameterkorridor':p.role==='proposed'?'Veröffentlichte Wünsche – Korridor noch nicht freigegeben':'Keine strukturierten Rastervorgaben; siehe Motivbriefing.';
+ const forMotif=value.facts.candidates&&value.facts.state==='motif_review'&&p.proposed?.length;
+ const status=forMotif?'Parametervorschläge zur Motivfreigabe':p.role==='approved'?'Überlieferter freigegebener Parameterkorridor':p.role==='proposed'?'Veröffentlichte Wünsche – Korridor noch nicht freigegeben':'Keine strukturierten Rastervorgaben; siehe Motivbriefing.';
  section.append(node('p',status,'sourceRole'));
- const grid=PW.publishedGrid(value),parameterList=p.approved?.length?p.approved:p.proposed;
- const corridor=Array.isArray(parameterList)?parameterList.find(v=>v?.format==='picross-raster-parameters-v1'):null;
- if(corridor){
-  const kind={exact:'exakt',approximate:'ungefähr',open:'offen'};
-  for(const [axis,label] of [['width','Breite'],['height','Höhe'],['foreground_colors','Vordergrundfarben']]){
-   const c=corridor.constraints[axis];
-   section.append(node('p',`${label}: ${kind[c.kind]}${c.target===null?'':` ${c.target}`} · Untergrenze: ${c.minimum??'keine'} · Obergrenze: ${c.maximum??'keine'}`));
+ const grid=PW.publishedGrid(value),alternatives=PW.parameterOptions(!forMotif&&p.approved?.length?p.approved:p.proposed);
+ if(alternatives.length===1)parameterSummary(section,alternatives[0].option);
+ else if(alternatives.length>1){
+  for(const entry of alternatives){
+   const item=node('details');item.append(node('summary',parameterLabel(entry)));
+   parameterSummary(item,entry.option);section.append(item);
   }
-  section.append(node('p',`Geschützte Merkmale: ${corridor.derivation.protected_features.join('; ')||'keine benannt'}.`));
- }
- if(Object.keys(grid).length){
+ }else if(Object.keys(grid).length){
   const words=[];
   for(const [axis,label] of [['width','Breite'],['height','Höhe']])if(grid[axis])words.push(`${label}: ${grid.sizeAccuracy==='exact'?'exakt':'ungefähr'} ${grid[axis]} Zellen`);
   if(grid.mode)words.push(`Modus: ${grid.mode==='mono'?'monochrom':'farbig'}`);
   if(grid.colors)words.push(`${grid.colorAccuracy==='exact'?'Exakt':'Ungefähr'} ${grid.colors} Vordergrundfarben`);
   section.append(node('p',words.join(' · ')));
- }else if(p.role!=='absent'&&!corridor)section.append(node('p','Keine eindeutigen Einzelwerte; vollständige Parameter stehen in den technischen Details.','hint'));
+ }else if(p.role!=='absent')section.append(node('p','Keine eindeutigen Einzelwerte; vollständige Parameter stehen in den technischen Details.','hint'));
  const briefing=node('details');briefing.append(node('summary','Veröffentlichtes Motivbriefing'),node('div',p.brief.text,'briefText'));
  section.append(briefing);view.append(section);
 }
@@ -185,6 +208,8 @@ function metadata(view,value){
 function workflow(view,value){
  detail=value;
  const n=PW.step(value),order=PW.orderStep(value),section=node('section',undefined,'nextAction');
+ const motifReview=value?.facts.candidates&&value.facts.state==='motif_review';
+ const selectionHint='Die gewünschte Variante auf der Bildkarte wählen.';
  section.append(node('h3',PW.closing(value,intent)?(value.facts.state==='registered'?'Git-Abschluss fortsetzen':'Schlussauswahl abnehmen & integrieren'):value?.facts.next_step||'Motiv beschreiben'));
  if(!value)field(section,'Was soll dein Rätsel zeigen?','brief','Zum Beispiel eine reife Erdbeere');
  if(order===1)field(section,'Zusätzliche Motivhinweise (optional)','notes','Welche Details, Perspektive oder Stimmung sind dir wichtig?');
@@ -193,6 +218,7 @@ function workflow(view,value){
   input.onchange=()=>{intent.inputImage=input.files[0]?.name||'';updatePrompt();};
   label.append(input);section.append(label,node('p','Die ausgewählte Datei beim Senden an den Chat anhängen.','hint'));
  }
+ let parameterChoice;
  if(value){
   const label=node('label','Nächste Aktion'),select=node('select');select.id='nextActionMode';
   const diagnosticStage=['raster_review','raster_ready'].includes(value.facts.state)&&!value.facts.originals?.record?.selected?.raster;
@@ -221,7 +247,12 @@ function workflow(view,value){
   const frameReason=node('div');const reasonInput=field(frameReason,'Warum ist die Randabweichung für dieses Raster akzeptabel?','frameReason');
   reasonInput.id='frameReason';diagnosis.append(frameReason);section.append(diagnosis);
   select.onchange=()=>{
+   if(motifReview&&intent.action==='rework'&&select.value!=='rework'){
+    delete intent.selection;delete intent.kind;
+    if($('selectionStatus'))$('selectionStatus').textContent=selectionHint;
+   }
    intent.action=select.value;
+   if(parameterChoice)parameterChoice.hidden=select.value!=='continue';
    if($('correctionBase'))$('correctionBase').value=intent.selection||'';
    correction.hidden=!['rework','background_change'].includes(select.value);
    diagnosis.hidden=select.value!=='raster_diagnosis';
@@ -233,29 +264,28 @@ function workflow(view,value){
  }
  if(order===1||order===2){gridFields(section,order===2);if(order===2)field(section,'Neue/zusätzliche Wünsche zur Motivvorlage (optional)','parameters','Zum Beispiel Merkmale, die bei der Vereinfachung erhalten bleiben sollen');}
  if(order===4){const d=node('details');d.append(node('summary','Optionaler Kontextwunsch'));field(d,'Kontextwunsch','context');section.append(d);}
- if(value?.facts.candidates&&value.facts.state==='motif_review'){
-  const label=node('label','Parameteralternative'),select=node('select');
-  const empty=node('option','Bitte wählen');empty.value='';select.append(empty);
-  value.facts.published.proposed.forEach((option,i)=>{
-   const variants=option.imports||[option];
-   const labels=variants.map(v=>`${v.width} × ${v.height}, ${v.mode==='mono'||v.foreground_colors===1?'monochrom':v.foreground_colors+' Farben'}`);
-   const item=node('option',`Alternative ${i+1} · ${[...new Set(labels)].join(' / ')}`);item.value=String(i);select.append(item);
-  });
-  const description=node('p',undefined,'hint');
-  select.onchange=()=>{
-   intent.parameter=select.value===''?null:Number(select.value);
-   const option=value.facts.published.proposed[intent.parameter];
-   const features=option?.derivation?.protected_features||[];
-   const limits=Object.entries(option?.constraints||{}).map(([key,c])=>
-    ({width:'Breite',height:'Höhe',foreground_colors:'Vordergrundfarben'}[key])+' '+(c.kind==='exact'?'exakt '+c.target:c.kind==='approximate'?'etwa '+c.target:'offen')+
-    (c.minimum!==null||c.maximum!==null?' ('+(c.minimum??'–')+' bis '+(c.maximum??'–')+')':''));
-   description.textContent=[...limits,...(features.length?['Geschützte Merkmale: '+features.join(', ')]:[])].join(' · ');
-   updatePrompt();
-  };label.append(description);
-  label.append(select);section.append(label);
+ if(motifReview){
+  const alternatives=PW.parameterOptions(value.facts.published?.proposed);
+  if(alternatives.length>1){
+   parameterChoice=node('div');
+   const label=node('label','Parameteralternative'),select=node('select');
+   const empty=node('option','Bitte wählen');empty.value='';select.append(empty);
+   for(const entry of alternatives){
+    const item=node('option',parameterLabel(entry));item.value=String(entry.index);select.append(item);
+   }
+   const description=node('div',undefined,'hint');description.setAttribute('aria-live','polite');
+   select.onchange=()=>{
+    intent.parameter=select.value===''?null:Number(select.value);
+    const entry=alternatives.find(({index})=>index===intent.parameter);
+    description.replaceChildren();
+    if(entry)parameterSummary(description,entry.option);
+    updatePrompt();
+   };
+   label.append(select);parameterChoice.append(label,description);section.append(parameterChoice);
+  }
  }
  if(value?.offers.length||value?.facts.state==='background_review'){
-  const selected=node('p','Die gewünschte Variante auf der Bildkarte wählen.','hint');selected.id='selectionStatus';section.append(selected);
+  const selected=node('p',selectionHint,'hint');selected.id='selectionStatus';section.append(selected);
  }
  if(value?.facts.state==='background_review'){
   const none=node('button','Bewusst keinen Hintergrund wählen');none.onclick=()=>choose('none','background',none);none.dataset.choice='none';none.setAttribute('aria-pressed','false');section.append(none);

@@ -506,6 +506,14 @@ Integration. Ein neuer Quellstand oder geänderte relevante Bildbytes entwerten
 stale Auswahlabsichten gezielt. Kein automatischer Modellaufruf, keine Modell-API,
 kein Freigabewriter im Hilfsdienst und keine automatische Serienfreigabe.
 
+Bei der Motivfreigabe genügt die ausdrückliche Motivwahl, wenn der aktuelle
+Record genau einen vollständigen Parametervorschlag enthält. Bei mehreren
+vollständigen Vorschlägen ist eine eigene Auswahl erforderlich. Die Ansicht
+ordnet Ziel, Genauigkeit, Grenzen, erlaubte Beschnittseiten und geschützte
+Merkmale der jeweiligen Option zu. Der kopierte Auftrag bindet die Motiv-ID
+und den jeweiligen Eintrag in `parameters.proposed` im fixierten Record.
+Der Produktionsakteur liest und prüft dort das vollständige Original.
+
 Die lesende Oberfläche darf aktuelle Repositorydaten automatisch übernehmen;
 unabgesendete menschliche Eingaben nicht unbemerkt überschreiben. Persönliche
 Arbeitswurzel und Merge bleiben eigene ausdrücklich angezeigte

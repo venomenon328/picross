@@ -133,6 +133,32 @@ const PW = (()=>{
   return lines;
  }
  const axes={width:'Breite',height:'Höhe',foreground_colors:'Vordergrundfarben'};
+ function parameterOptions(parameters){
+  if(!Array.isArray(parameters))return [];
+  // The reader validates every published option. Keep the original indices and
+  // require the complete projected shape before offering a choice.
+  return parameters.flatMap((option,index)=>{
+   if(option?.format==='picross-raster-parameters-v1'){
+    const {constraints,imports,derivation}=option;
+    const complete=Object.keys(axes).every(axis=>{
+     const c=constraints?.[axis];
+     return c&&['approximate','exact','open'].includes(c.kind)&&
+      (c.kind==='open'?c.target===null:Number.isInteger(c.target))&&
+      [c.minimum,c.maximum].every(n=>n===null||Number.isInteger(n));
+    });
+    if(complete&&Array.isArray(imports)&&imports.length&&imports.every(entry=>entry&&
+       Object.keys(axes).every(axis=>Number.isInteger(entry[axis]))&&['mono','color'].includes(entry.mode)&&
+       typeof entry.method==='string'&&typeof entry.fit==='string'&&Array.isArray(entry.actual_crop)&&entry.actual_crop.length===4)&&
+       typeof derivation?.cell_edits==='boolean'&&Array.isArray(derivation.empty_edge_crop)&&
+       Array.isArray(derivation.protected_features))return [{option,index}];
+   }else if(option&&option.format===undefined&&Object.keys(axes).every(axis=>Number.isInteger(option[axis]))&&
+            ['exact','approximate'].includes(option.size_constraint)&&['exact','approximate'].includes(option.foreground_color_constraint)&&
+            (['mono','color'].includes(option.mode)||option.mode==null&&option.foreground_colors===1&&option.foreground_color_constraint==='exact')){
+    return [{option,index}];
+   }
+   return [];
+  });
+ }
  function cropChanges(crop){
   return Object.entries(crop.changes).map(([axis,c])=>`${axes[axis]}: Minimum ${c.previous} → ${c.proposed}`);
  }
@@ -227,10 +253,13 @@ const PW = (()=>{
    lines.push(`Schritt 2: Ich wähle und gebe Abschlussbild ${selected.id} unverändert frei. Motivvorlage und Parameterkorridor als motif_review vorlegen.`);
   }else if(value.facts.state==='motif_review'){
    if(cards){
-    const options=value.facts.published.proposed;
+    const proposed=parameterOptions(value.facts.published?.proposed);
+    if(!proposed.length)throw Error('Im gebundenen Datensatz fehlt ein vollständiger Parametervorschlag.');
     if(selected?.kind!=='motif')throw Error('Bitte die Motivvorlage wählen.');
-    if(!Number.isInteger(intent.parameter)||!options[intent.parameter])throw Error('Bitte eine vollständige Parameteralternative wählen.');
-    lines.push(`Schritt 3: Ich gebe Motivvorlage ${selected.id} und die Parameteralternative ${intent.parameter+1} unverändert frei: ${JSON.stringify(options[intent.parameter])}. Qualifizierte Rasterangebote vorlegen.`);
+    const choice=intent.parameter===undefined&&proposed.length===1?proposed[0]:proposed.find(({index})=>index===intent.parameter);
+    if(!choice)throw Error('Bitte eine vollständige Parameteralternative wählen.');
+    const entry=proposed.length===1?'den einzigen vollständigen Vorschlag':'die ausdrücklich gewählte Alternative';
+    lines.push(`Schritt 3: Ich gebe Motivvorlage ${selected.id} und ${entry} in parameters.proposed (Eintrag ${choice.index+1}, von 1 gezählt) unverändert frei. Lies und prüfe das vollständige Original im gebundenen Datensatz. Qualifizierte Rasterangebote vorlegen.`);
    }else lines.push('Schritt 3: Ich gebe die unveränderte Motivvorlage samt vorgeschlagenem Parameterkorridor im Datensatz frei. Qualifizierte Rasterangebote als raster_ready vorlegen.');
   }else if(!pickingRaster&&['motif_approved','raster_review'].includes(value.facts.state)){
    lines.push('Schritt 3: Die bereits freigegebene Rasterproduktion bis zu qualifizierten Rasterangeboten fortsetzen.');
@@ -264,6 +293,6 @@ const PW = (()=>{
   else lines.push('Commit, Push und Draft-PR im beauftragten Umfang; kein Merge.');
   return lines.join('\n\n');
  }
- return {steps,step,orderStep,prompt,choiceReady,publishedGrid,options,closing,finalAssets,axes,cropChanges};
+ return {steps,step,orderStep,prompt,choiceReady,publishedGrid,parameterOptions,options,closing,finalAssets,axes,cropChanges};
 })();
 if(typeof module!=='undefined')module.exports=PW;
