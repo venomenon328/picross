@@ -64,6 +64,14 @@ def seed(client,name):
     cells[0]=0
     value=dict(format='picross-progress/v1',definition_id=name,definition_revision=d['revision'],width=d['width'],height=d['height'],cells=cells,undo_used=False,completed=False)
     client.put(name,1,0,'snapshot',save=value)
+def persisted_cell(page):
+    return page.evaluate("""async () => {
+      const db=await new Promise((ok,no)=>{const r=indexedDB.open('/userfs');r.onsuccess=()=>ok(r.result);r.onerror=()=>no(r.error)});
+      const cells=[];await new Promise((ok,no)=>{const t=db.transaction('FILE_DATA','readonly'),r=t.objectStore('FILE_DATA').openCursor();
+        r.onsuccess=()=>{const c=r.result;if(!c)return;const k=String(c.key);
+          if(k.includes('/accounts/')&&k.includes('/saves/')&&k.endsWith('.json')) cells.push(JSON.parse(new TextDecoder().decode(c.value.contents)).cells[2]);
+          c.continue()};t.oncomplete=ok;t.onerror=()=>no(t.error)});db.close();return cells;
+    }""")
 def observe(page): return page.evaluate('window.b2Observation || {}')
 def wait(page,fn,name,timeout=75):
     print('stage',name,flush=True)
@@ -228,16 +236,20 @@ def execute(kind):
                 click(page,'puzzle/'+target)
                 wait(page,lambda s:'cell2' in s['points'] and not s['locked'],'ready for fault')
                 page.evaluate(Path(__file__).with_name('barriers.js').read_text())
-                page.evaluate("b2Gates.arm('dirty')")
+                assert persisted_cell(page)==[-1]
+                page.evaluate("b2Gates.failWrites();b2Gates.arm('dirty')")
                 click(page,'cell2')
                 page.wait_for_function("b2Gates.pending.has('dirty')")
-                page.evaluate("b2Gates.release('dirty',true)")
+                assert page.evaluate("b2Gates.events.some(x=>x.action.includes('real IDBFS failure received'))")
+                assert persisted_cell(page)==[-1]
+                page.evaluate("b2Gates.release('dirty');b2Gates.restoreWrites()")
                 click(page,'back')
                 st=wait(page,lambda s:'retry' in s['points'] and s['state']==0,'visible error with retry')
                 assert st['font_size']==23 and st['size']==[1280,720]
                 page.locator('canvas').screenshot(path=str(evidence/'status-ui125.png'))
                 click(page,'retry')
                 wait(page,lambda s:s['confirmed'],'retried local flush')
+                assert persisted_cell(page)==[st['cells'][2]] and st['cells'][2]!=-1
                 wait(page,lambda s:'Synchronisiert' in s['status'],'confirmed after retry',120)
                 # Rotate the synthetic test device with a real second login; the original browser token is now rejected.
                 assert Proxy.signed_in_device
