@@ -17,7 +17,7 @@
     {
       "path": "game/tests/run_tests.gd",
       "disposition": "change-scoped",
-      "reason": "B1-Fälle im bestehenden Prozess ausführen."
+      "reason": "B1-Fälle im bestehenden Prozess ausführen. Beim bisherigen Gastabschluss den vollständigen Namen auch über den regulären Kartenzeilenumbruch prüfen."
     },
     {
       "path": "game/tests/p14_integration.gd",

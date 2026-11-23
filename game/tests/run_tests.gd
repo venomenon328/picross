@@ -322,7 +322,9 @@ func test_scene() -> void:
 	check(not app.reveal_view.payload.is_empty(), "real completion artwork")
 	app.show_album()
 	check(app.title.get_theme_font("font") == app.WORK_TITLE_FONT, "KB completed catalog explicitly uses original Bakso")
-	check(app.choices[0].caption.text == fixture.reveal.name, "completed album entry")
+	var earned_card = app.choices[0]
+	check(earned_card.original_title == fixture.reveal.name and earned_card.caption.text.replace("\n", " ") == fixture.reveal.name,
+		"completed album entry retains the full motif name across display lines")
 	check(app.album_reveals[0].visible and not app.album_previews[0].visible and app.album_reveals[0].payload == fixture.reveal, "completed album has colored earned image")
 	if app.sessions.size() >= 3:
 		check(app.choices[2].caption.text == "Blatt 03", "album refresh preserves the neutral session title")
