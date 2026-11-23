@@ -1,0 +1,4 @@
+author: OpenAI ImageGen, angeleitet durch Codex
+changes: Unveränderte generierte Originaldatei.
+source: Native Bildgenerierung aus dem Kontextbriefing zum freigegebenen Oktopus-Motiv.
+usage_basis: Für den beauftragten Picross-Inhalt neu generierter Output ohne externe Bildvorlage.
