@@ -13,15 +13,17 @@ class Replies extends Transport:
 	var next := {}
 	var delayed := false
 	var account_status := 0
+	var settled_inventory := false
 	var paths: Array[String] = []
 
 	func send(_server: String, path: String, _method: int, _raw: String, _session: Dictionary) -> Dictionary:
 		paths.append(path)
 		if path == "/v1/account":
+			if not settled_inventory: return {"status":account_status,"retry_after":0,"generation":GENERATION,"body":{}}
 			return {"status":account_status,"retry_after":0,"generation":GENERATION,
 				"body":{"account_id":ACCOUNT,"device_id":DEVICE,"username":NAME}}
-		if path == "/v1/puzzles": return {"status":200,"generation":GENERATION,"body":{"items":[],"next_cursor":null}}
-		if path == "/v1/device/checkpoint":
+		if settled_inventory and path == "/v1/puzzles": return {"status":200,"generation":GENERATION,"body":{"items":[],"next_cursor":null}}
+		if settled_inventory and path == "/v1/device/checkpoint":
 			return {"status":200,"generation":GENERATION,"body":{"format":"picross-device-checkpoint/v1",
 				"account_id":ACCOUNT,"device_id":DEVICE,"last_request_seq":0,"last_request_hash":null,
 				"response_status":null,"response_body":null}}
@@ -46,8 +48,19 @@ static func press(r: SceneTree, control: Control) -> void:
 static func cell_transport(r: SceneTree, fixture: Replies) -> void:
 	var app: Control = r.app
 	var client: Node = app.accounts
-	client.schedule.success()
+	client.access.server = "https://sync-perf-%d.invalid" % Time.get_ticks_usec()
+	client.access.directory = client.Profile.ROOT.path_join(client.access.server.sha256_text())
+	var identity := session(ACCOUNT)
+	identity.merge({"server":client.access.server,"generation":GENERATION})
+	fixture.account_status = 200
+	fixture.settled_inventory = true
+	if not await client.activate(identity,true):
+		r.check(false,"SYNC-PERF isolated account opens")
+		return
 	await client.send_batch()
+	app.show_album()
+	app.select_puzzle(0)
+	await r.frames()
 	r.check(client.inventory_ready and not client.transport_busy and client.schedule.due == INF,
 		"SYNC-PERF inventory and startup batch settled")
 	var calls := fixture.paths.size()
@@ -213,7 +226,6 @@ static func run(r: SceneTree) -> void:
 	await r.frames()
 	app.select_puzzle(0)
 	await r.frames()
-	await cell_transport(r,fixture)
 	app.show_information("settings")
 	await r.frames()
 	var same_id: String = app.session.definition.id
@@ -289,6 +301,8 @@ static func run(r: SceneTree) -> void:
 	await r.frames()
 	r.check(not settings.message.text.contains("Angemeldet") and client.profile == null,
 		"SYNC-UX response from a superseded context cannot report success")
+	await cell_transport(r,fixture)
+	client.bind(null,{})
 	client.transport = original_transport
 	client.access = original_access
 	client.refresh_status()
