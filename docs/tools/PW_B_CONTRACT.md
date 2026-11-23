@@ -116,8 +116,13 @@ python -m tools.work_publish publish <id> --expected <arbeitscommit>
 python -m tools.work_publish retire <id> --expected <erwarteter-Arbeitscommit>
 ```
 
-Resume arbeitet auf einem eigenen Worktree am erwarteten Commit. Der Publisher
-benötigt angemeldetes gh mit Repository-Schreibrecht und vollständige Gitbasis.
+Resume arbeitet derzeit auf einem eigenen Worktree am erwarteten Commit. Der
+Publisher benötigt angemeldetes gh mit Repository-Schreibrecht und vollständige
+Gitbasis. Diese Basis darf von Worktrees gemeinsam genutzt werden. Das
+freigegebene Soll für dauerhaft wiederverwendete Sparse-Arbeitsplätze und die
+nötige Publishernachführung steht in
+[PW-LOCAL](PRODUCTION_GIT_WORKSPACE.md); der tatsächliche Lieferstand in
+[#859](https://github.com/venomenon328/picross/issues/859).
 Er prüft Rechte, Release-Mutierbarkeit und beide Generationen im Katalogbudget
 der installierten Appclients. Die kurzlebige Ref work-prod-control/catalog
 serialisiert Arbeitsänderungen und signierte PW-/PE-/PG-Veröffentlichungen. Jeder

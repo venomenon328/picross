@@ -1,6 +1,6 @@
 # Picross: Produktionsregeln
 
-**Version 0.8.0 · Dokumentrevision 12 · 21.11.2026 · PROD-SLIM**
+**Version 0.8.0 · Dokumentrevision 13 · 23.11.2026 · PW-LOCAL-Spezifikation**
 
 ## 1. Einstieg und Befugnisse
 
@@ -138,6 +138,12 @@ Materielles/Neuprüfungen: Schritt 3 §4.4.
 ## 6. Dateien, Übergabe und Wiederaufnahme
 
 ### 6.1 Ein aktueller Arbeitsstand
+
+Das freigegebene Soll für die lokale Ablage steht in
+[PW-LOCAL](../../tools/PRODUCTION_GIT_WORKSPACE.md): gemeinsame Git-Datenbank,
+stabiler Worktree je Rätsel und Sparse-Materialisierung. Umsetzung und Abnahme
+sind in [#859](https://github.com/venomenon328/picross/issues/859) noch offen;
+dieser Verweis behauptet keinen bereits verfügbaren Helfer.
 
 Neue pz-ID und stabilen Arbeitsbranch `content/pw/<puzzle_id>` von main anlegen.
 Je Job genau `content/authoring/<puzzle_id>/current/record.json` und die aktuell
