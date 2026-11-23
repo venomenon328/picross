@@ -32,6 +32,15 @@ static func press(r: SceneTree, control: Control) -> void:
 	r.click(control)
 	await r.frames()
 
+static func confirm(r: SceneTree, client: Node) -> void:
+	await r.frames()
+	for child: Node in client.get_children():
+		if child is ConfirmationDialog and child.visible:
+			r.click(child.get_ok_button())
+			await r.frames()
+			return
+	r.check(false,"SYNC-UX confirmation is available")
+
 static func run(r: SceneTree) -> void:
 	var app: Control = r.app
 	var client: Node = app.accounts
@@ -144,7 +153,33 @@ static func run(r: SceneTree) -> void:
 	await press(r,r.caption_button(settings.choices,"Abmelden"))
 	r.check(settings.message.text.contains("Lokale Sicherung") and fixture.calls == count and client.profile != null,
 		"SYNC-UX pending local flush blocks logout with feedback")
+	var prior_digest: String = client.profile._journal.digest
+	settings.message.text = "Vorherige Erfolgsmeldung."
+	await press(r,r.caption_button(settings.choices,"Gaststand übernehmen"))
+	await confirm(r,client)
+	r.check(app.information.visible and settings.message.text == client.FLUSH_FEEDBACK and client.profile._journal.digest == prior_digest,
+		"SYNC-UX-B01 confirmed guest import reports a pending flush without writing")
+	for remote: bool in [false,true]:
+		settings.message.text = "Vorherige Erfolgsmeldung."
+		settings.recover_slot(remote)
+		await confirm(r,client)
+		r.check(app.information.visible and settings.message.text == client.FLUSH_FEEDBACK and client.profile._journal.digest == prior_digest,
+			"SYNC-UX-B01 confirmation of either recovery choice reports a pending flush without writing")
 	client.profile._awaiting.erase("test")
+
+	client.transport_busy = true
+	settings.message.text = "Vorherige Erfolgsmeldung."
+	await press(r,r.caption_button(settings.choices,"Gaststand übernehmen"))
+	await confirm(r,client)
+	r.check(settings.message.text.contains("Abgleich läuft") and client.profile._journal.digest == prior_digest,
+		"SYNC-UX-B01 confirmed guest import reports a busy transport")
+	settings.message.text = "Vorherige Erfolgsmeldung."
+	settings.recover_slot(true)
+	await confirm(r,client)
+	r.check(settings.message.text.contains("Abgleich läuft") and client.profile._journal.digest == prior_digest,
+		"SYNC-UX-B01 confirmed recovery reports a busy transport")
+	client.transport_busy = false
+
 
 	fixture.next = reply(0)
 	await press(r,r.caption_button(settings.choices,"Abmelden"))

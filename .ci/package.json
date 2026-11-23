@@ -18,7 +18,7 @@
     {
       "path": "game/tests/sync_account_cases.gd",
       "disposition": "change-scoped",
-      "reason": "Sichtbarer Aktionsstatus, enge Settings, bestätigter Profilwechsel, Codelebensdauer und Fehler am tatsächlichen Controller."
+      "reason": "Sichtbarer Aktionsstatus, enge Settings, bestätigter Profilwechsel, Codelebensdauer und Fehler am tatsächlichen Controller. Die Bestätigungen für Gastimport und Fassungswahl melden Pflichtflush und laufenden Transport sichtbar (SYNC-UX-B01)."
     },
     {
       "path": "game/tests/sync_comparison_cases.gd",

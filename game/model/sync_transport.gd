@@ -23,7 +23,7 @@ func send(server: String, path: String, method: int, raw: String, session: Dicti
 				if field == "x-picross-generation": result.generation = value
 				if field == "retry-after" and value.is_valid_int(): result.retry_after = maxi(0,int(value))
 			var bytes: PackedByteArray = values[3]
-			if Recent.valid_utf8(bytes):
+			if (result.status != 204 or not bytes.is_empty()) and Recent.valid_utf8(bytes):
 				var content := bytes.get_string_from_utf8()
 				if Registry.unique_keys(content):
 					var body: Variant = JSON.parse_string(content)

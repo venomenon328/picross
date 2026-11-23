@@ -448,8 +448,20 @@ func abandon(req: Dictionary) -> void:
 			schedule.connected()
 	changing = false
 
+func can_start_confirmed_slot_action() -> bool:
+	if changing or transport_busy:
+		show_feedback("Eine Kontoaktion oder ein Abgleich läuft. Bitte abwarten und erneut versuchen.")
+		return false
+	if profile == null:
+		show_feedback("Bitte ein Kontoprofil öffnen und die Aktion erneut wählen.")
+		return false
+	if not safe_switch():
+		show_feedback(FLUSH_FEEDBACK)
+		return false
+	return true
+
 func import_guest(ids: Array) -> void:
-	if changing or profile == null or not safe_switch(): return
+	if not can_start_confirmed_slot_action(): return
 	var guest: RefCounted = app.create_store()
 	for id: String in ids:
 		if not app.session_indices.has(id): continue
@@ -473,7 +485,7 @@ func import_guest(ids: Array) -> void:
 	app.present_album()
 
 func choose_recovery_slot(id: String, remote: bool) -> void:
-	if changing or transport_busy or profile == null or not safe_switch(): return
+	if not can_start_confirmed_slot_action(): return
 	changing = true
 	var result := await read("/v1/puzzles/"+id)
 	if result.get("status") in [200,404]:
