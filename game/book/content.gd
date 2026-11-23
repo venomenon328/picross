@@ -11,6 +11,10 @@ signal return_requested
 signal catalog_shown
 signal exit_requested
 signal scale_changing
+const AccountClient = preload("res://book/account_client.gd")
+var accounts: AccountClient
+var account_status: Label
+var account_retry: BookButton
 var resetting_ending: bool = false
 var book: Node3D
 var info: RefCounted
@@ -97,11 +101,27 @@ func _build() -> void:
 	page.add_child(puzzle_background)
 	page.move_child(puzzle_background,1)
 	puzzle_background.hide()
+	account_status = label("Gast",18)
+	account_status.add_theme_font_override("font",album.summary.get_theme_font("font"))
+	account_status.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	page.add_child(account_status)
+	accounts = AccountClient.new()
+	add_child(accounts)
+	account_retry = _text_button("Kontosicherung erneut versuchen",func() -> void:
+		if accounts.profile: accounts.profile.retry_local())
+	account_retry.paper_transparent = true
+	album.notices.add_child(account_retry)
+	account_retry.hide()
+	accounts.configure(self)
 
 func _background_binding() -> Dictionary:
 	if session == null: return {}
 	var entry: Dictionary = Registry.by_id(str(session.definition.id))
 	return {"id":str(session.definition.id),"background":entry.get("background",{"status":"legacy","image_revision":null,"asset":null})}
+
+func _on_commit() -> void:
+	super._on_commit()
+	if accounts and session.completed: accounts.schedule.collect()
 
 func begin_background_visit() -> void:
 	if puzzle_background == null or session == null: return
@@ -134,6 +154,7 @@ func open_puzzle() -> void:
 		if visit != background_visit or background_binding.is_empty() or generation_token != book.generation: return
 		puzzle_background.publish(visit)
 	super.open_puzzle()
+	if accounts: accounts.schedule.enter()
 
 func _process(_delta: float) -> void:
 	if recent_retry == null: return
@@ -196,6 +217,7 @@ func _layout_book(prepare_board: bool = false) -> void:
 		else:
 			if save_retry.get_parent() != page: save_retry.reparent(page)
 			_place(save_retry,Rect2(work_repair_button.position,Vector2(340,44)*ui_scale))
+	if account_status != null: account_status.visible = album.visible
 	if album.summary != null: album.summary.visible = album.visible and catalog_error.is_empty()
 	if album.notice_area != null: album.notice_area.visible = album.visible
 	# Layout also runs while processing is disabled for the book capture. Bind
@@ -218,17 +240,22 @@ func _layout_book(prepare_board: bool = false) -> void:
 		var title_height: float = maxf(128*ui_scale,clampf(left_paper.size.y*0.14,64*ui_scale,110*ui_scale))
 		# Reserve a full retry target plus breathing room above the recent panel,
 		# even with no error. Showing/scrolling notices must not move the catalog.
-		# Navigation and count share the top edge. Only actual text height,
-		# notices and the existing recent/title budget determine later rows.
+		# The account status sits above the count; both rows use measured text heights.
 		album._style_controls(album.navigation)
 		var nav_width: float = album.navigation.get_combined_minimum_size().x
 		var summary_width: float = maxf(1,edge-nav_width-14*ui_scale-right_heading)
 		var summary_font: int = roundi(18*ui_scale)
 		album.summary.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		album.summary.add_theme_font_size_override("font_size",summary_font)
-		_place(album.summary,Rect2(Vector2(right_heading,heading_top),Vector2(summary_width,26*ui_scale)))
+		var summary_top := heading_top
+		if account_status != null:
+			account_status.add_theme_font_size_override("font_size",summary_font)
+			_place(account_status,Rect2(Vector2(right_heading,heading_top),Vector2(summary_width,0)))
+			account_status.size.y = account_status.get_minimum_size().y
+			summary_top += account_status.size.y + 2*ui_scale
+		_place(album.summary,Rect2(Vector2(right_heading,summary_top),Vector2(summary_width,26*ui_scale)))
 		var summary_height: float = maxf(26*ui_scale,album.summary.get_minimum_size().y)
-		var notice_top: float = heading_top+summary_height+2*ui_scale
+		var notice_top: float = summary_top+(summary_height if catalog_error.is_empty() else 0.0)+2*ui_scale
 		var panel_top: float = notice_top+52*ui_scale
 		var catalog_top: float = maxf(heading_top+title_height+28*ui_scale,panel_top+76*ui_scale)
 		album.right_pager.vertical = false
@@ -236,7 +263,7 @@ func _layout_book(prepare_board: bool = false) -> void:
 		_place(catalog_title, Rect2(Vector2(margin,heading_top),Vector2(left_paper.end.x-curve-inset-margin,title_height)))
 		catalog_title.fallback.add_theme_font_size_override("font_size",roundi(28*ui_scale))
 		if album.summary != null:
-			_place(album.summary,Rect2(Vector2(right_heading,heading_top),Vector2(summary_width,summary_height)))
+			_place(album.summary,Rect2(Vector2(right_heading,summary_top),Vector2(summary_width,summary_height)))
 		if album.navigation != null:
 			_place(album.navigation,Rect2(Vector2(edge-nav_width,heading_top),Vector2(nav_width,44*ui_scale)))
 		# Messages use the existing free heading area. Its fixed, scrollable
@@ -344,6 +371,7 @@ func return_to_work() -> void:
 	if book != null: book.information_routes.request_return()
 
 func present_album() -> void:
+	if accounts and not background_binding.is_empty(): accounts.schedule.leave()
 	leave_background_visit()
 	super.present_album()
 	catalog_shown.emit()
@@ -375,7 +403,19 @@ func _update_status() -> void:
 
 func leave_app() -> void: exit_requested.emit()
 
-func quit_after_flush() -> void: super.leave_app()
+func quit_after_flush() -> void:
+	if not _flush_current(): return
+	if accounts and accounts.profile:
+		if OS.has_feature("web"):
+			var deadline := Time.get_ticks_msec()+15000
+			while not accounts.profile.flush_confirmed():
+				if Time.get_ticks_msec() >= deadline:
+					accounts.problem = "Lokale Sicherung ausstehend. Erneut versuchen."
+					accounts.refresh_status()
+					return
+				await get_tree().process_frame
+		accounts.exiting()
+	super.leave_app()
 
 func _web_lifecycle(arguments: Array) -> void:
 	book.interrupt("leave")

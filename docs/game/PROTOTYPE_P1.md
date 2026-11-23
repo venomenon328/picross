@@ -1,5 +1,17 @@
 # P1 · Spiel-, Eingabe- und Speichervertrag
 
+## Kontosave mit Empfangsbasis
+
+Der getrennte Kontopfad verwendet picross-account-save/v1 mit format,
+definition_id, definition_revision, width, height, baseline, cells, history,
+cursor, undo_used, completed und view. Die Baseline enthält genau cells,
+undo_used und completed. Beide Raster müssen zur eigenen Definition passen.
+Der vollständige Replay einschließlich Redozweig startet bei der Baseline.
+Identischer Fortschritt erhält lokale Ansicht und History. Die Übernahme
+eines anderen Fortschritts setzt den Cursor auf null und die History auf
+eine leere Liste. Der Gastpfad verwendet weiterhin das geschlossene Schema 1.
+Protokoll und Kontopfade stehen in [SAVE_SYNC](SAVE_SYNC.md).
+
 ## 1. Geltung, Auftrag und Quellen
 
 Dieses Dokument besitzt logische Zellbearbeitung, Undo/Redo, lösungsunabhängige

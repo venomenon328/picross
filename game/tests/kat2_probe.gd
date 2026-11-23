@@ -189,6 +189,8 @@ func run() -> void:
 		await preload("res://tests/catalog_filter_cases.gd").rules(self)
 		await preload("res://tests/catalog_filter_cases.gd").navigation(self)
 		await preload("res://tests/recent_cases.gd").run(self)
+		await preload("res://tests/sync_comparison_cases.gd").run(self)
+		catalog_case("sync-b2-comparison")
 	elif mode == "information":
 		preload("res://tests/hz_cases.gd").run(self)
 		preload("res://tests/hz_c_cases.gd").run(self)

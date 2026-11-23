@@ -92,3 +92,13 @@ Zwei technische Clients verwenden echte HTTP-Verbindungen. Die beiden
 Compose-Projekte verwenden eigene Namen, lokale Ports, Datenvolumes und
 synthetische Konten. Das Modul entfernt sie nach dem Lauf. Der CI-Reader
 verlangt alle Kriterien und die konkrete Commit-/Laufbindung.
+
+## Gerätebeleg und Requestabbruch
+
+Der authentisierte Client kann für sein eigenes Gerät den letzten
+Requesthash, HTTP-Status und gespeicherten Receipt über GET /v1/device/checkpoint
+abgleichen. POST /v1/device/abandon schließt eine freie Originalsequenz
+ausdrücklich unter ihrem Originalhash ab. Beide Operationen verwenden die
+Generation und denselben Kontolock wie normale Mutationen. Die vorhandenen
+Gerätespalten werden durch Backup und Restore mitgeführt. Wireformen und
+Sequenzentscheidungen stehen in [SAVE_SYNC](../../docs/game/SAVE_SYNC.md).

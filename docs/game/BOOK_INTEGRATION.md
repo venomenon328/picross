@@ -97,8 +97,9 @@ Hilfe, Einstellungen und Beenden bleiben auch ohne Session erreichbar.
 Der Katalogfuß enthält links nur den Rückpfeil, daneben „Seite n von m“, rechts
 nur den Vorwärtspfeil. Pfeile blättern vollständige Doppelseiten; unmögliche
 Richtungen sind inaktiv sichtbar, bei einer Seite beide. Die gemeinsame
-Control-/Trefferfamilie folgt HZ. Die Symbolgruppe und Trefferzahl beginnen auf
-derselben Höhe ohne zusätzliche Höhenzeile. Seitlicher Textbedarf wird gemessen
+Control-/Trefferfamilie folgt HZ. Die Symbolgruppe und der Kontostatus beginnen auf derselben Höhe. Unmittelbar
+unter dem Status steht die Treffer-/Gelöstzeile. Beide verwenden Pangolin Regular
+mit gerundeten 18 × UI-Skalierung (18 bzw. 23 px). Seitlicher Textbedarf wird gemessen
 und bei Bedarf umbrochen. Fehlerclip, Fortsetzen-Panel, Sortierung/Filter,
 Titel und Controls bleiben kollisionsfrei.
 

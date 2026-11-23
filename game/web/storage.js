@@ -4,6 +4,7 @@ class PicrossStorage {
     this.label = label;
     this.retry = retry;
     this.ready = false;
+    this.accountJobs = new Map();
     this.pending = false;
     this.error = '';
     this.localErrors = {};
@@ -44,6 +45,25 @@ class PicrossStorage {
     this.ready = true;
     this.changed(); // A real transaction, not merely the capability check.
     return true;
+  }
+  // The Godot client polls a single-use ticket. An engine-initiated sync or
+  // another profile's callback cannot complete this operation.
+  accountSync(ticket) {
+    if (!this.ready || this.accountJobs.has(ticket)) return false;
+    this.accountJobs.set(ticket, 'pending');
+    this.fs.syncfs(false, error => {
+      if (this.accountJobs.get(ticket) === 'pending')
+        this.accountJobs.set(ticket, error ? 'failed' : 'saved');
+    });
+    return true;
+  }
+  get accountPending() {
+    return Array.from(this.accountJobs.values()).some(state => state !== 'saved');
+  }
+  accountResult(ticket) {
+    const result = this.accountJobs.get(ticket) || 'missing';
+    if (result !== 'pending') this.accountJobs.delete(ticket);
+    return result;
   }
   viewChanged() { this.viewPending = true; this.pending = true; this.render(); }
   get preferencePending() { return this.preferenceSaved !== this.preferenceGeneration; }

@@ -236,6 +236,18 @@ def account(request: Request):
         return auth.info(auth.session(db, request))
 
 
+@private.get("/device/checkpoint", response_model=m.Checkpoint)
+def checkpoint(request: Request):
+    with connect() as db:
+        return store.checkpoint(auth.session(db, request))
+
+
+@private.post("/device/abandon", response_model=m.Checkpoint)
+def abandon(request: Request, body: m.Abandon):
+    with connect() as db:
+        return store.abandon(db, auth.session(db, request), body)
+
+
 def pagination(
     limit: Annotated[int, Query(ge=1, le=100)] = 100,
     cursor: Annotated[str | None, Query(min_length=1, max_length=1024)] = None,

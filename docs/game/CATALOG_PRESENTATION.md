@@ -473,3 +473,10 @@ Normquelle oder dauerhafte Prüfpflicht. Aktuelle Prüfungen folgen dem
 ## Katalogprofile für Abschlussbilder
 
 Runtime v9 misst den eingepassten Bildraum aus der natürlichen Quellgröße. Nach der Sessionfreigabe lädt die Karte das kleinste Profil, dessen tatsächliche Pixel beide aufgerundeten Renderachsen abdecken. Bei größerem Bedarf verwendet sie das größte Profil. Beim Profilwechsel gibt sie die vorherige Textur und die letzte lokale Restskalierung frei. PNG-Alpha, Zentrierung und die Übernahme vorbereiteter Zielkarten gelten auch bei UI125.
+
+## Kontostatus im Buchkatalog
+
+Der filterunabhängige Gast-/Kontostatus steht rechts über der Treffer-/
+Gelöstzeile. Beide verwenden dieselbe Schrift und Größe. Der Status bleibt
+auch bei leerem oder fehlerhaftem Katalog sichtbar. Position und Höhenbudget
+folgen [BOOK_INTEGRATION](BOOK_INTEGRATION.md).

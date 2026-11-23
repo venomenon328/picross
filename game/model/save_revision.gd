@@ -44,6 +44,9 @@ static func hash_file(path: String) -> Variant:
 static func old_envelope(data: Variant, definition: Dictionary, store: RefCounted) -> bool:
 	if not data is Dictionary or not exact_keys(data,["schema","definition_id","definition_revision","width","height","cells","history","cursor","undo_used","completed","view"]): return false
 	if not store.integer(data.schema) or int(data.schema) != 1 or data.definition_id != definition.id: return false
+	return older_state(data,definition,store,{})
+
+static func older_state(data: Dictionary, definition: Dictionary, store: RefCounted, baseline: Dictionary) -> bool:
 	if not store.integer(data.definition_revision) or data.definition_revision <= 0 or data.definition_revision >= definition.revision: return false
 	if not store.integer(data.width) or not store.integer(data.height) or data.width < 1 or data.width > 50 or data.height < 1 or data.height > 50: return false
 	var count: int = int(data.width)*int(data.height)
@@ -56,6 +59,12 @@ static func old_envelope(data: Variant, definition: Dictionary, store: RefCounte
 	var replay: Array = []
 	replay.resize(count)
 	replay.fill(-1)
+	if not baseline.is_empty():
+		if not exact_keys(baseline,["cells","completed","undo_used"]) or not baseline.cells is Array or baseline.cells.size() != count: return false
+		if not baseline.completed is bool or not baseline.undo_used is bool or (baseline.undo_used and not data.undo_used): return false
+		for i: int in count:
+			if not store.valid_cell(baseline.cells[i],colors): return false
+			replay[i] = int(baseline.cells[i])
 	var at_cursor: Array = replay.duplicate()
 	for index: int in data.history.size():
 		var action: Variant = data.history[index]

@@ -14,4 +14,5 @@ class StorageContractTests(unittest.TestCase):
                                  str(root/'game/web/storage.js')], capture_output=True,
                                 text=True, timeout=15)
         self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+        self.assertIn('PASS account persistence ticket ownership and retry', result.stdout)
         self.assertIn('PASS recent callback ownership, isolation and retry', result.stdout)

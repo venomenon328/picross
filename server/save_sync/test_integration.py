@@ -2,6 +2,7 @@
 
 import concurrent.futures
 import copy
+import hashlib
 import http.client
 import json
 import os
@@ -228,7 +229,7 @@ def service(p, a):
     finally:
         p.sql("UPDATE instance SET version=2")
     api = a.http("GET", "/openapi.json").body
-    assert len(api["paths"]) == 15 and api["components"]["schemas"]["Save"]["additionalProperties"] is False
+    assert len(api["paths"]) == 17 and api["components"]["schemas"]["Save"]["additionalProperties"] is False
     headers = api["paths"]["/v1/account"]["get"]["responses"]["200"]["headers"]
     assert (
         headers["X-Picross-Generation"]["required"]
@@ -241,6 +242,11 @@ def access(p, a, foreign):
     body = a.register()
     a.http("POST", "/v1/auth/register", dict(body, username="other"), 409)
     foreign.register()
+    fresh = foreign.get("device/checkpoint")
+    assert fresh == {"format": "picross-device-checkpoint/v1", "account_id": foreign.get("account")["account_id"],
+                     "device_id": foreign.device, "last_request_seq": 0,
+                     "last_request_hash": None, "response_status": None, "response_body": None}
+    a.get("device/checkpoint?device_id=" + foreign.device, 422)
     alien = Client(p, foreign.name)
     alien.password, alien.device = foreign.password, a.device
     alien.login(401)
@@ -249,9 +255,11 @@ def access(p, a, foreign):
     foreign.get("puzzles/private", 404)
     assert foreign.put("private", 1, 1, "reset", 409, definition_revision=1).body["code"] == "conflict_saved"
     assert a.get("puzzles/private")["save"] == save("private")
+    abandon_orders(foreign)
     revoked = copy.copy(a)
     a.http("POST", "/v1/auth/logout", status=204)
     revoked.get("puzzles", 401)
+    revoked.get("device/checkpoint", 401)
     revoked.put("private", 2, 1, "reset", 401, definition_revision=1)
     a.login()
     p.sql("UPDATE devices SET expires_at=now()-interval '1 second' WHERE device_id='" + a.device + "'")
@@ -384,6 +392,33 @@ def retry(a):
     assert len(a.get("puzzles/race/history")["items"]) == 2
 
 
+def abandon_body(path, raw, seq, puzzle):
+    return {"format": "picross-request-abandon/v1", "request_seq": seq,
+            "expected_last_request_seq": seq - 1, "puzzle_id": puzzle,
+            "request_hash": hashlib.sha256(b"POST\n" + path.encode() + b"\n" + raw).hexdigest()}
+
+
+def abandon_orders(client):
+    # Exercise both serializations of requests competing for the same device slot.
+    path = "/v1/puzzles/order/mutations"
+    endpoint = "/v1/device/abandon"
+    for seq, original_first in ((2, True), (3, False)):
+        raw = compact(mutation(seq, seq - 2, "reset", definition_revision=1))
+        body = abandon_body(path, raw, seq, "order")
+        client.http("POST", path if original_first else endpoint, raw if original_first else body, drop=True)
+        checkpoint = client.http("POST", endpoint, body).body
+        receipt = client.http("POST", path, raw, 200 if original_first else 409)
+        assert checkpoint == client.get("device/checkpoint") == client.http("POST", endpoint, body).body
+        assert (checkpoint["response_status"], checkpoint["response_body"]) == (receipt.status, receipt.raw.decode())
+        assert checkpoint["last_request_hash"] == body["request_hash"] and checkpoint["last_request_seq"] == seq
+        assert receipt.body["code"] == ("ok" if original_first else "request_abandoned")
+        assert client.get("puzzles/order")["server_revision"] == 1
+        client.http("POST", endpoint, dict(body, request_hash="0" * 64), 409)
+    client.http("POST", endpoint, dict(body, request_seq=5, expected_last_request_seq=4), 409)
+    client.http("POST", endpoint, dict(body, request_seq=2, expected_last_request_seq=1), 409)
+    assert client.get("device/checkpoint") == checkpoint
+
+
 def reset(a, b):
     p = a.project
     generation = a.generation
@@ -499,6 +534,9 @@ def archive(a, b, restored, work):
         client.put("race", 24, 16, "reset", 409, definition_revision=1).body["code"]
         == "server_generation_changed"
     )
+    pending = abandon_body("/v1/puzzles/race/mutations", compact(mutation(24, 16, "reset", definition_revision=1)), 24, "race")
+    assert client.http("POST", "/v1/device/abandon", pending, 409).body["code"] == "server_generation_changed"
+    assert client.get("device/checkpoint") == a.get("device/checkpoint")
     for path, original in saved.items():
         assert client.get(path) == original
     second = copy.copy(b)

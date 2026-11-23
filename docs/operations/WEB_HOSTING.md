@@ -229,3 +229,12 @@ WEB-D01 prüft vor erstem Live-Deployment tatsächliches Zielsystem, Benutzer,
 Hostschlüssel, Pfad, URL/TLS und öffentliche oder geschützte Auslieferung.
 Persönliche Probe, Mergefreigabe und Live-Deployment bleiben separate Aufträge.
 
+## Optionale Konten
+
+Die Betreiberkonfiguration picross/sync/api_base im Godot-Projekt bestimmt
+die HTTPS-Basis vor dem Export. Ohne Wert startet der Gast lokal.
+picross/sync/loopback_test erlaubt HTTP ausschließlich für einen isolierten
+Loopback-Test. Der Dienst benötigt die konkrete Web-Origin in SYNC_ORIGINS.
+Der bestehende Web-Lock schützt die Hydration und den einzigen schreibenden Tab.
+Die Kontoaufträge nutzen denselben serialisierten IDBFS-Weg. Jeder Callback
+bestätigt nur das zugehörige Ticket. Ein Fehler lässt die Übertragung ausstehend.

@@ -517,3 +517,13 @@ Historische Prüferdokumente mit Motivspoiler: [F01](https://github.com/venomeno
 ## Katalogprofile für Abschlussbilder
 
 Der Katalog zeigt bei gelösten Rätseln eine proportionale Vorschau. Beim Öffnen des gelösten Blatts zeigt die Abschlussansicht das gewählte Original. Neue und begonnene Blätter behalten das Fragezeichen bzw. die eigene Füllminiatur.
+
+## Spielerkonto
+
+In den Einstellungen öffnet „Konto verwalten“ den optionalen Zugang zum
+konfigurierten Dienst. Für die Registrierung sind Einladung, Benutzername und
+Passwort erforderlich. Den einmal angezeigten Wiederherstellungscode sicher
+aufbewahren. Ein vorhandenes Konto lässt sich auch offline lokal öffnen.
+Der Katalog zeigt den Kontostatus über der Trefferzahl. Beim Abmelden kehrt
+das Spiel zum Gastprofil zurück. Gaststände lassen sich ausdrücklich einzeln
+oder gemeinsam übernehmen.

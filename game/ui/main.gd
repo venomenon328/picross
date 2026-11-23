@@ -48,6 +48,8 @@ var ui_scale_choice: OptionButton
 var actions: Dictionary = {}
 var laying_out: bool = false
 var sessions: Array[Session] = []
+const AccountProfile = preload("res://model/account_profile.gd")
+var account_profile: AccountProfile
 var store: SaveStore
 var slot_status: Array[String] = []
 var slot_errors: Array[String] = []
@@ -138,29 +140,7 @@ func _ready() -> void:
 		var client_offset: Vector2i = DisplayServer.window_get_position() - DisplayServer.window_get_position_with_decorations()
 		get_window().size = bounded_start(usable, decorations)
 		get_window().position = bounded_position(usable, get_window().size, decorations, client_offset)
-	var definitions: Array[Dictionary] = puzzle_definitions()
-	catalog_error = Registry.load_error
-	for data: Dictionary in definitions:
-		var error: String = validate_definition(data)
-		if not error.is_empty():
-			catalog_error = "Rätseldaten ungültig: " + error
-			sessions.clear()
-			slot_status.clear()
-			slot_errors.clear()
-			session_indices.clear()
-			break
-		var item: Session = Session.new(data)
-		var result: Dictionary = store.load_slot(data)
-		if result.get("revision_reset",false): revision_reset_ids.append(str(data.id))
-		if result.status in ["loaded", "recovered", "backup_invalid"]:
-			SaveStore.apply(result.data, item)
-		session_indices[str(data.id)] = sessions.size()
-		sessions.append(item)
-		slot_status.append(str(result.status))
-		slot_errors.append("")
-	session = sessions[0] if not sessions.is_empty() else null
-	recent = RecentPuzzle.new(RecentPuzzle.PATH if SaveStore.test_root_override.is_empty() else store.root.path_join("recent-metadata/recent-puzzle.json"))
-	recent.load_record()
+	_load_profile_slots()
 	_build()
 	if DisplaySettings.supported(self):
 		display_controller = DisplaySettings.Controller.new()
@@ -184,6 +164,62 @@ func _ready() -> void:
 	if not revision_reset_ids.is_empty(): call_deferred("_show_revision_notice")
 	if OS.get_cmdline_user_args().has("--p1-smoke"):
 		call_deferred("_smoke")
+
+func _load_profile_slots() -> void:
+	sessions.clear()
+	session_indices.clear()
+	slot_status.clear()
+	slot_errors.clear()
+	revision_reset_ids.clear()
+	pending_edits.clear()
+	var definitions: Array[Dictionary] = puzzle_definitions()
+	catalog_error = Registry.load_error
+	for data: Dictionary in definitions:
+		var error: String = validate_definition(data)
+		if not error.is_empty():
+			catalog_error = "Rätseldaten ungültig: " + error
+			sessions.clear()
+			slot_status.clear()
+			slot_errors.clear()
+			session_indices.clear()
+			break
+		var item: Session = Session.new(data)
+		var result: Dictionary = account_profile.load_slot(data) if account_profile else store.load_slot(data)
+		if result.get("revision_reset",false): revision_reset_ids.append(str(data.id))
+		if result.status in ["loaded", "recovered", "backup_invalid"]:
+			SaveStore.apply(result.data, item)
+		session_indices[str(data.id)] = sessions.size()
+		sessions.append(item)
+		slot_status.append(str(result.status))
+		slot_errors.append("")
+	session = sessions[0] if not sessions.is_empty() else null
+	recent = RecentPuzzle.new(RecentPuzzle.PATH if SaveStore.test_root_override.is_empty() else store.root.path_join("recent-metadata/recent-puzzle.json"))
+	if account_profile: recent = account_profile._recent
+	recent.load_record()
+
+func rebind_profile(profile: AccountProfile) -> void:
+	_cancel_interaction()
+	save_timer.stop()
+	reset_dialog.hide()
+	repair_dialog.hide()
+	_cancel_reset()
+	repair_id = ""
+	save_error = ""
+	account_profile = profile
+	store = profile._store if profile else create_store()
+	_load_profile_slots()
+	if session != null: _bind_session(0)
+	else: board.session = null
+	present_album()
+
+func _write_profile_slot(item: Session, view: Dictionary) -> String:
+	if not account_profile: return store.write_slot(item,view)
+	if account_profile.save(item,view) > 0: return ""
+	return _profile_error()
+
+func _profile_error() -> String:
+	var detail := account_profile.last_error()
+	return detail if not detail.is_empty() else "Kontostand konnte nicht gespeichert werden."
 
 func _show_revision_notice() -> void:
 	var notice := AcceptDialog.new()
@@ -608,7 +644,7 @@ func _save_current() -> bool:
 	if save_timer != null:
 		save_timer.stop()
 	session.view_state = board.capture_view()
-	save_error = "Backup vor weiterem Speichern bewusst übernehmen." if slot_status[sessions.find(session)] == "recovered" else store.write_slot(session, session.view_state)
+	save_error = "Backup vor weiterem Speichern bewusst übernehmen." if slot_status[sessions.find(session)] == "recovered" else _write_profile_slot(session, session.view_state)
 	if slot_status[sessions.find(session)] == "recovered": WebStorage.finished(str(session.definition.id), save_error)
 	slot_errors[sessions.find(session)] = save_error
 	if save_error.is_empty():
@@ -672,7 +708,10 @@ func _reset_selected() -> void:
 	var target: Session = sessions[index]
 	if target != session and not _flush_current(): return
 	if target == session and save_timer != null: save_timer.stop()
-	var error: String = store.reset_slot(store.key_for_definition(id))
+	var error := ""
+	if account_profile:
+		if account_profile.reset(id) <= 0: error = _profile_error()
+	else: error = store.reset_slot(store.key_for_definition(id))
 	if not error.is_empty():
 		slot_errors[index] = error
 		if target == session: save_error = error
@@ -724,12 +763,17 @@ func _repair_selected() -> void:
 	var target: Session = sessions[index]
 	if target != session and not _flush_current(): return
 	var renew: bool = slot_status[index] == "backup_invalid"
-	var error: String = store.discard_invalid_backup(target.definition) if renew else store.repair_from_backup(target.definition)
+	var error := ""
+	if account_profile:
+		var ok := account_profile.discard_invalid_backup(target.definition) if renew else account_profile.repair_from_backup(target.definition) > 0
+		if not ok: error = _profile_error()
+	else:
+		error = store.discard_invalid_backup(target.definition) if renew else store.repair_from_backup(target.definition)
 	# Renewal previously used _save_current() because only the active slot had
 	# a repair action. A card can target another slot: rotate that valid primary
 	# into a new backup without switching the board or writing the active slot.
 	if error.is_empty() and renew and target != session:
-		error = store.write_slot(target, target.view_state)
+		error = _write_profile_slot(target, target.view_state)
 		var disk_state: String = str(store.load_slot(target.definition).status)
 		slot_status[index] = disk_state
 	if error.is_empty():

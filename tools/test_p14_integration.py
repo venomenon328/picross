@@ -25,23 +25,25 @@ def evidence_fixture(directory):
         if action['kind'] == 'quit':
             (directory/(action['process']+'-save.json')).write_text(json.dumps({**oracle.state(),'view':dict(view)}), encoding='utf-8')
     def snapshot(row):
-        return dict(schema=1, definition_id='T-06', definition_revision=2, width=50, height=50, completed=False,
+        return dict(format="picross-account-save/v1", baseline=dict(cells=rows[9]["cells"], completed=False, undo_used=True), definition_id='T-06', definition_revision=2, width=50, height=50, completed=False,
                     **{k:row[k] for k in ('cells','history','cursor','undo_used','view')})
     def progress(saved):
-        return dict(format="picross-progress/v1", **{k:v for k,v in saved.items() if k not in ("schema","cursor","history","view")})
+        return dict(format="picross-progress/v1", **{k:v for k,v in saved.items() if k not in ("format","baseline","cursor","history","view")})
     first = progress(snapshot(rows[10]))
-    body = json.dumps(dict(format='picross-sync/v1', operation='snapshot', request_seq=1, base_server_revision=0, save=first))
-    request = dict(context='user://p1/accounts/'+PROFILE, device=DEVICE, generation=EPOCH, local=1,
-                   seq=1, base=0, method='POST', path='/v1/puzzles/T-06/mutations', body=body)
-    for stage, generation, index in [('writer',2,13),('reader',3,16)]:
+    body = json.dumps(dict(format='picross-sync/v1', operation='snapshot', request_seq=1, base_server_revision=7, save=first))
+    request = dict(context='user://p1/accounts/'+PROFILE, device=DEVICE, generation=EPOCH, local=2,
+                   seq=1, base=7, method='POST', path='/v1/puzzles/T-06/mutations', body=body)
+    for stage, generation, index in [('writer',3,13),('reader',4,16)]:
         saved = snapshot(rows[index])
+        saved["history"] = saved["history"][-1:]
+        saved["cursor"] -= 2
         (directory/(stage+'-account.json')).write_text(json.dumps(saved))
         payload = json.dumps(dict(context=dict(server=HOST,account=ACCOUNT,device=DEVICE),generation=EPOCH,
                                   local=generation,sequence=0,intent={},request=request,
-                                  entries={'1':{'value':first},str(generation):{'value':progress(saved)}}))
-        image = dict(format='picross-local-sync/v2',payload=payload,sha256=hashlib.sha256(payload.encode()).hexdigest())
+                                  entries={'2':{'value':first},str(generation):{'value':progress(saved),'base_server_revision':7}}))
+        image = dict(format='picross-local-sync/v3',payload=payload,sha256=hashlib.sha256(payload.encode()).hexdigest())
         (directory/(stage+'-journal.json')).write_text(json.dumps(image))
-    checkpoints = {11:(1,3),14:(2,2),15:(2,2),16:(3,3)}
+    checkpoints = {11:(2,1),14:(3,0),15:(3,0),16:(4,1)}
     for row in rows:
         values = checkpoints.get(row['action']['number'])
         row['account'] = dict(local=values[0], cursor=values[1], seq=1,
@@ -114,7 +116,7 @@ class IntegrationContractTests(unittest.TestCase):
             path.unlink()
             with self.assertRaises(FileNotFoundError):
                 verify_evidence(directory)
-            for field, value in [('device',ACCOUNT),('local',2),('body','{}')]:
+            for field, value in [('device',ACCOUNT),('local',1),('body','{}')]:
                 image = json.loads(raw)
                 state = json.loads(image['payload'])
                 state['request'][field] = value
@@ -132,7 +134,7 @@ class IntegrationContractTests(unittest.TestCase):
             image = json.loads(path.read_bytes())
             for key in ("view", "cells"):
                 state = json.loads(image["payload"])
-                first = state["entries"]["1"]["value"]
+                first = state["entries"]["2"]["value"]
                 if key == "view":
                     first[key] = {}
                 else:

@@ -1,15 +1,96 @@
 {
   "format": "development-ci-plan/v1",
-  "issue": "https://github.com/venomenon328/picross/issues/700",
-  "package": "PZ-OKTOPUS-INTEGRATION",
-  "modules": [],
-  "purpose": "Oktopus mit raster-a-r2 (27 × 22, monochrom), reveal-b und background-b im Profil picross-background-png2304x768-v1 unter Wasserwelt registrieren.",
-  "omitted": "Reine Rätselproduktion. Unabhängiger Proof, Endmatrix, Bildprofil und Lieferbytes werden im Produktionsweg geprüft. CI prüft Quellen und Paketplan ohne Player-Build.",
-  "test_changes": [],
+  "issue": "https://github.com/venomenon328/picross/issues/821",
+  "package": "SYNC-B2",
+  "modules": [
+    "native.core",
+    "native.history",
+    "native.catalog",
+    "sync.server"
+  ],
+  "purpose": "Kontoprofile, Empfangsbasis, sparsame Übertragung, Katalogbedienung und atomaren Gerätebeleg an HTTP/PostgreSQL prüfen.",
+  "omitted": "Produktions-, Auslieferungs- und übrige native Module, vollständige Toolsuite und permanente Browsermatrix sind für die in #821 abgegrenzten Pfade nicht ausgewählt.",
+  "test_changes": [
+    {
+      "path": "server/save_sync/test_integration.py",
+      "disposition": "change-scoped",
+      "reason": "Beide Reihenfolgen für Original und Abbruch, Gerätebindung und Restore mit echtem Dienst prüfen."
+    },
+    {
+      "path": "tools/p14_integration.py",
+      "disposition": "change-scoped",
+      "reason": "Übereinstimmung von Empfangsbasis, lokaler History und unverändertem Request in zwei Prozessen prüfen."
+    },
+    {
+      "path": "tools/test_p14_integration.py",
+      "disposition": "change-scoped",
+      "reason": "Reader mit gebundenem Request und neuer Empfangsbasis prüfen."
+    },
+    {
+      "path": "game/tests/p14_integration.gd",
+      "disposition": "change-scoped",
+      "reason": "Empfang und neue lokale Aktion mit Undo, Neustart und Redo in der vorhandenen Zweiprozessfolge."
+    },
+    {
+      "path": "game/tests/sync_cases.gd",
+      "disposition": "change-scoped",
+      "reason": "Geschlossene Kontoformen, Empfangsbasis, Konfliktentscheidungen und Sendeanlässe."
+    },
+    {
+      "path": "game/tests/navigation_cases.gd",
+      "disposition": "change-scoped",
+      "reason": "Status und Trefferzeile mit echter Bediengeometrie abgleichen."
+    },
+    {
+      "path": "tools/web_tests/storage_contract.cjs",
+      "disposition": "change-scoped",
+      "reason": "Profilgebundene Callbacks der tatsächlichen serialisierten Bridge prüfen."
+    },
+    {
+      "path": "tools/test_web_storage_contract.py",
+      "disposition": "change-scoped",
+      "reason": "Ausführung der neuen JavaScript-Gegenprobe verlangen."
+    },
+    {
+      "path": "game/tests/display_cases.gd",
+      "disposition": "change-scoped",
+      "reason": "Zusätzlichen tatsächlichen Kontozugang in den Einstellungen prüfen."
+    },
+    {
+      "path": "game/tests/kat2_probe.gd",
+      "disposition": "change-scoped",
+      "reason": "Gebundene Konflikt- und Versionsauswahl im vorhandenen Katalogprozess mit echter Mausbedienung prüfen."
+    },
+    {
+      "path": "game/tests/sync_comparison_cases.gd",
+      "disposition": "change-scoped",
+      "reason": "Fortschrittsvergleich, Reset, Rasterrevision und Auswahlsperren prüfen. Zwei UI-Originale für R01 bis zur B2-Abnahme erzeugen."
+    },
+    {
+      "path": "tools/native_contract.py",
+      "disposition": "change-scoped",
+      "reason": "Die Konflikt-/Versionsregression an den geprüften Katalogbericht binden."
+    },
+    {
+      "path": "tools/kat2_product.py",
+      "disposition": "temporary",
+      "reason": "Zwei Reviewbilder und Bedienbericht nur bei gültiger SYNC-B2-R01-Dateiauswahl erzeugen. Die Belegroute endet mit der B2-Abnahme."
+    }
+  ],
   "core_change": null,
   "evidence": {
-    "mode": "none",
-    "purpose": null,
-    "expires": null
+    "mode": "review",
+    "purpose": "Unabhängiger Reviewer venomenon328: HTTP-/PostgreSQL-Bericht und tatsächliche UI-/Bedienoriginale zu SYNC-B2-R01/B-01.",
+    "expires": "2026-11-30",
+    "files": {
+      "sync.server": [
+        "sync.json"
+      ],
+      "native.catalog": [
+        "native/groups/catalog/sync-b2-r01/conflict-ui100.png",
+        "native/groups/catalog/sync-b2-r01/history-reset-ui125.png",
+        "native/groups/catalog/sync-b2-r01/interaction.json"
+      ]
+    }
   }
 }

@@ -17,6 +17,10 @@ var selected_id: String = ""
 var elapsed: float = 0.0
 var release_barrier: bool = false
 var held_buttons: int = 0
+# The visible content temporarily leaves the tree during page capture. An
+# HTTPRequest would cancel there without delivering its completion signal.
+const AccountTransport = preload("res://model/sync_transport.gd")
+var account_transport: AccountTransport
 var app: Content
 var camera: Camera3D
 var leaf: MeshInstance3D
@@ -57,6 +61,8 @@ var binding := Binding.new()
 var information_routes: RefCounted
 
 func _ready() -> void:
+	account_transport = AccountTransport.new()
+	add_child(account_transport)
 	_build_book()
 	information_routes = InformationRoutes.new(self)
 	app = create_content()
