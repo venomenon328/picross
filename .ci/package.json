@@ -48,8 +48,13 @@
   ],
   "core_change": null,
   "evidence": {
-    "mode": "none",
-    "purpose": null,
-    "expires": null
+    "mode": "review",
+    "purpose": "Unabhängiger Reviewer: Original des HTTP-/DB-Durchstichs. Der einmalige Dispatch liefert separat ausschließlich windows-progress.zip und migration-progress.json am selben Produkt-Head.",
+    "expires": "2026-11-30",
+    "files": {
+      "sync.server": [
+        "sync.json"
+      ]
+    }
   }
 }
