@@ -198,7 +198,7 @@ def execute(kind):
                 wait(page,lambda s:s['size']==[1280,720],'1280x720')
                 click(page,'settings')
                 click(page,'scale')
-                page.keyboard.press('End');page.keyboard.press('Enter')
+                click(page,'scale125')
                 wait(page,lambda s:s['scale']==1.25,'UI125')
                 click(page,'info-back')
                 wait(page,lambda s:s['state']==0,'catalog UI125')

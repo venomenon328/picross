@@ -19,6 +19,10 @@ func _process(delta: float) -> void:
 	point(points,"undo",app.undo_button)
 	point(points,"redo",app.redo_button)
 	point(points,"scale",app.ui_scale_choice)
+	var menu: PopupMenu = app.ui_scale_choice.get_popup()
+	if menu.visible:
+		var last_item := Vector2(menu.position)+Vector2(menu.size)*Vector2(0.5,0.75)
+		points["scale125"] = [last_item.x,last_item.y]
 	if app.info: point(points,"info-back",app.info.right_return)
 	for b in app.settings_panel.find_children("*","Button",true,false):
 		if b.text == "Konto verwalten": point(points,"manage",b)
