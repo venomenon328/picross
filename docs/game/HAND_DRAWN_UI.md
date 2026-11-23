@@ -145,7 +145,10 @@ sie erzwingt kein neues Bitmap für jeden kleinen Rahmen.
 ## HZ-D04 · Vollständige Dropdowngestaltung
 
 Der Scope umfasst die vorhandene Kategorienauswahl, „Sortieren nach“ und die
-Rätselansicht in Einstellungen. Geschlossenes Feld und ausgeklappte Liste bilden
+Rätselansicht in Einstellungen. Kontoeingaben und Codefeld haben gezeichnete
+Umrisse auf dem sichtbaren Papier; Checkboxzeilen der Rätselansicht zeigen
+Symbol, Text und Fokusrahmen auf demselben Papier. Geschlossenes Auswahlfeld
+und ausgeklappte Liste bilden
 eine zusammengehörige Darstellung:
 
 | Bestandteil | Gestaltung und Verhalten |

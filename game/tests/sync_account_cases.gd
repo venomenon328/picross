@@ -4,7 +4,6 @@ const Transport = preload("res://model/sync_transport.gd")
 const ACCOUNT := "a8170001-0000-4000-8000-000000000001"
 const DEVICE := "a8170001-0000-4000-8000-000000000002"
 const GENERATION := "a8170001-0000-4000-8000-000000000003"
-const BROKEN_ACCOUNT := "a8170001-0000-4000-8000-000000000004"
 const NAME := "konto-mit-zweiunddreissig-zeichn"
 const DISPLAY_CODE := "x000000000000000000000000000000000000000000"
 
@@ -93,12 +92,12 @@ static func run(r: SceneTree) -> void:
 	await r.choose_option(settings.mode,1)
 	settings.password.text = "synthetic-pass"
 	settings.code.text = "synthetic-invitation"
-	fixture.next = reply(201,session(BROKEN_ACCOUNT,DISPLAY_CODE))
-	var denied_path: String = client.access.session_path(BROKEN_ACCOUNT)
+	fixture.next = reply(201,session(ACCOUNT,DISPLAY_CODE))
+	var denied_path: String = client.access.session_path(ACCOUNT)
 	# Force the real publish path to fail after HTTP success. Freshness is derived
 	# from this partial account directory, so open an actual journal first.
 	var broken = client.Profile.new()
-	r.check(broken.open(client.access.server,BROKEN_ACCOUNT,DEVICE,GENERATION,true),"SYNC-UX prepares isolated journal")
+	r.check(broken.open(client.access.server,ACCOUNT,DEVICE,GENERATION,true),"SYNC-UX prepares isolated journal")
 	DirAccess.make_dir_absolute(denied_path)
 	await press(r,settings.submit_button)
 	r.check(settings.message.text.contains("Konto erstellt, lokale Aktivierung fehlgeschlagen") and client.profile == null and settings.recovery_code.text == DISPLAY_CODE,
@@ -115,6 +114,7 @@ static func run(r: SceneTree) -> void:
 	r.check(settings.recovery_code.text.is_empty() and settings.password.text.is_empty() and settings.code.text.is_empty(),
 		"SYNC-UX closing clears transient fields")
 
+	r.check(DirAccess.remove_absolute(denied_path) == OK,"SYNC-UX removes the synthetic publication obstruction")
 	await r.choose_option(settings.mode,0)
 	settings.username.text = NAME
 	settings.password.text = "synthetic-pass"
@@ -128,6 +128,17 @@ static func run(r: SceneTree) -> void:
 		client.transport = original_transport
 		client.access = original_access
 		return
+	app.return_to_work()
+	await r.frames()
+	app.select_puzzle(0)
+	await r.frames()
+	app.show_information("settings")
+	await r.frames()
+	var same_id: String = app.session.definition.id
+	settings.password.text = "synthetic-pass"
+	await press(r,settings.submit_button)
+	r.check(settings.message.text == "Angemeldet." and app.information_origin == "work" and app.session.definition.id == same_id,
+		"SYNC-UX same-profile login keeps the original puzzle return route")
 	var count := fixture.calls
 	client.profile._awaiting["test"] = true
 	await press(r,r.caption_button(settings.choices,"Abmelden"))

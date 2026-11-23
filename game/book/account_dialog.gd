@@ -1,6 +1,8 @@
 extends VBoxContainer
 const Session = preload("res://model/session.gd")
 const BookChoice = preload("res://ui/book_choice.gd")
+const Paper = preload("res://ui/book_style.gd")
+const Controls = preload("res://ui/book_controls.gd")
 
 const MODES := {
 	"login": ["Anmelden", "Passwort", ""],
@@ -29,6 +31,7 @@ var choice_key := []
 var notice := VBoxContainer.new()
 var recovery_code := LineEdit.new()
 var copy_status := Label.new()
+var layout_scale := 0.0
 var copy_stamp := 0
 var copy_callbacks: Array[JavaScriptObject] = []
 
@@ -75,10 +78,23 @@ func configure(owner: Node) -> void:
 func layout(value: float) -> void:
 	mode.ui_scale = value
 	if puzzles != null: puzzles.ui_scale = value
+	if is_equal_approx(layout_scale,value): return
+	layout_scale = value
 	for container: VBoxContainer in [self,auth_form,choices,notice]:
 		container.add_theme_constant_override("separation",roundi(8*value))
 	for field: LineEdit in [username,password,code,recovery_code]:
 		field.custom_minimum_size.y = 44*value
+		var outline = Paper.make("settings/"+str(field.name),value,Color.TRANSPARENT)
+		outline.content_margin_left = 12*value
+		outline.content_margin_right = 12*value
+		field.add_theme_stylebox_override("normal",outline)
+		field.add_theme_stylebox_override("read_only",outline)
+		var focus = Paper.make("settings/"+str(field.name)+"/focus",value,Color.TRANSPARENT)
+		focus.focus = true
+		field.add_theme_stylebox_override("focus",focus)
+		for role: String in ["font_color","font_uneditable_color","font_selected_color","caret_color"]:
+			field.add_theme_color_override(role,Controls.INK)
+		field.add_theme_color_override("selection_color",Color("c5d6cd"))
 
 func settings_button(parent: Control, caption: String, action: Callable) -> Button:
 	var item: Button = client.app._text_button(caption,action)
