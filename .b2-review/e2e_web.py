@@ -17,6 +17,7 @@ class Proxy(BaseHTTPRequestHandler):
     drop=False
     trace=[]
     port=0
+    signed_in_device=None
     def log_message(self,*a): pass
     def forward(self):
         payload=self.rfile.read(int(self.headers.get('Content-Length','0')))
@@ -30,6 +31,7 @@ class Proxy(BaseHTTPRequestHandler):
             if self.path.endswith('/mutations') and self.command=='POST':
                 row.update(body=payload.decode(),receipt=data.decode())
             if self.command=='POST' and self.path.endswith('/auth/login'):
+                if resp.status==200: type(self).signed_in_device=json.loads(data)['device_id']
                 auth=json.loads(payload)
                 row['username_length']=len(auth.get('username',''))
                 row['password_present']=bool(auth.get('password'))
@@ -215,6 +217,24 @@ def execute(kind):
                 page.locator('canvas').screenshot(path=str(evidence/'status-ui125.png'))
                 click(page,'retry')
                 wait(page,lambda s:s['confirmed'],'retried local flush')
+                wait(page,lambda s:'Synchronisiert' in s['status'],'confirmed after retry',120)
+                # Rotate the synthetic test device with a real second login; the original browser token is now rejected.
+                assert Proxy.signed_in_device
+                client.http('POST','/v1/auth/login',dict(username=client.name,password=client.password,device_id=Proxy.signed_in_device,device_name='isolated rotation'))
+                locate_manage(page);click(page,'open-local')
+                wait(page,lambda s:'Erneut anmelden' in s['status'],'server confirmed 401',140)
+                assert any(r['status']==401 for r in Proxy.trace)
+                if observe(page)['state']==4:click(page,'info-back')
+                st=login(page,client)
+                assert st['profile'] and st['ready']
+                locate_manage(page);click(page,'Abmelden')
+                wait(page,lambda s:not s['profile'] and s['status'].startswith('Gast'),'local logout')
+                page.evaluate("b2Gates.replay('dirty')")
+                page.wait_for_timeout(400)
+                assert not observe(page)['profile'] and observe(page)['status'].startswith('Gast')
+                first=json.loads((evidence/'barriers.json').read_text())
+                (evidence/'barriers.json').write_text(json.dumps(first+page.evaluate('b2Gates.events'),indent=2))
+                (evidence/'http.json').write_text(json.dumps(Proxy.trace,indent=2))
             print('PASS',kind,evidence.name,flush=True)
         except Exception:
             (evidence/'http.json').write_text(json.dumps(Proxy.trace,indent=2))

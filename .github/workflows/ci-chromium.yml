@@ -66,6 +66,11 @@ jobs:
       - if: matrix.probe == 'chromium' || matrix.probe == 'firefox'
         run: xvfb-run -a python .b2-review/e2e_web.py ${{ matrix.probe }}
       - if: matrix.probe == 'windows'
+        name: Configure the isolated runner display for the normal product
+        shell: pwsh
+        run: |
+          if (Get-Command Set-DisplayResolution -ErrorAction SilentlyContinue) { Set-DisplayResolution -Width 1920 -Height 1080 -Force }
+      - if: matrix.probe == 'windows'
         run: python .b2-review/e2e_native.py
       - if: always()
         name: Hash individually selected non-secret originals

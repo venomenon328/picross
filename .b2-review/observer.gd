@@ -31,6 +31,7 @@ func _process(delta: float) -> void:
 		point(points,"password",dlg.password)
 		for b in dlg.find_children("*","Button",true,false):
 			if b.text in ["Anmelden","Abmelden"]: point(points,b.text,b)
+			if b.text.ends_with(" lokal öffnen"): point(points,"open-local",b)
 	var ids := []
 	for card in app.album.choices:
 		if is_instance_valid(card) and card.is_visible_in_tree() and app.album.scroll.get_global_rect().intersects(card.get_global_rect()):

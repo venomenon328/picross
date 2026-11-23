@@ -13,7 +13,7 @@ class Native:
         env=dict(os.environ,APPDATA=str(profile/'roaming'),LOCALAPPDATA=str(profile/'local'),TMP=str(profile/'temp'),TEMP=str(profile/'temp'),B2_OBSERVATION=str(self.obs))
         for k in ['APPDATA','LOCALAPPDATA','TEMP']:Path(env[k]).mkdir(parents=True,exist_ok=True)
         self.log=(evidence.parent/(profile.name+'-diag.log')).open('ab')
-        self.proc=subprocess.Popen([str(out/'picross.exe'),'--rendering-driver','opengl3','--audio-driver','Dummy'],cwd=out,env=env,stdout=self.log,stderr=self.log)
+        self.proc=subprocess.Popen([str(out/'picross.exe'),'--windowed','--resolution','1920x1080','--rendering-driver','opengl3','--audio-driver','Dummy'],cwd=out,env=env,stdout=self.log,stderr=self.log)
         stack.callback(self.close)
         self.window=0
         end=time.monotonic()+90
@@ -48,7 +48,7 @@ class Native:
     def resize(self,width,height):
         c=W.RECT();w=W.RECT()
         U.GetClientRect(self.window,ctypes.byref(c));U.GetWindowRect(self.window,ctypes.byref(w))
-        U.SetWindowPos(self.window,0,w.left,w.top,width+w.right-w.left-c.right,height+w.bottom-w.top-c.bottom,0x14)
+        U.SetWindowPos(self.window,-1,0,0,width+w.right-w.left-c.right,height+w.bottom-w.top-c.bottom,0x10)
         self.wait(lambda s:s['size']==[width,height],'window size')
     def click(self,key):
         st=self.wait(lambda s:key in s['points'],key)
@@ -62,8 +62,6 @@ class Native:
         U.SetCursorPos(screen.x,screen.y)
         time.sleep(.15)
         pos=(y<<16)|x
-        if U.GetForegroundWindow()!=self.window:
-            raise RuntimeError('Windows focus unavailable for the owned product')
         hit=U.WindowFromPoint(screen)
         if hit!=self.window and not U.IsChild(self.window,hit):
             raise RuntimeError('Owned target is obscured at '+str([x,y]))
@@ -98,8 +96,9 @@ def execute():
         Proxy.port=proj.port;serve(stack,18221,Proxy)
         client=Client(proj,'konto'+run+'x'*17);client.password=secrets.token_hex(20);client.register()
         game=Native(stack,evidence,folder)
-        st=game.wait(lambda s:s['ids'] and s['status']=='Gast','guest')
+        game.wait(lambda s:'size' in s,'first frame')
         game.resize(1920,1080)
+        st=game.wait(lambda s:s['ids'] and s['status']=='Gast','guest')
         assert not Proxy.trace
         target=st['ids'][0];seed(client,target)
         game.click('settings')
@@ -110,7 +109,7 @@ def execute():
         assert st['font_size']==18
         game.screenshot(evidence/'status-ui100.png')
         game.click('puzzle/'+target)
-        game.wait(lambda s:s['state']==3 and s['baseline'][:1]==[0] and 'cell1' in s['points'],'basis')
+        game.wait(lambda s:s['state']==3 and s['baseline'][:1]==[0] and 'cell1' in s['points'] and not s['locked'],'basis')
         time.sleep(1.6)
         Proxy.offline=True
         game.click('cell1');game.wait(lambda s:s['cursor']==1 and s['confirmed'],'offline edit')
