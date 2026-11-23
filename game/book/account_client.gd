@@ -10,7 +10,7 @@ const Session = preload("res://model/session.gd")
 var app: Control
 var profile: Profile
 var access := Access.new()
-var transport := Transport.new()
+var transport: Transport
 var schedule := Schedule.new()
 var identity := {}
 var inventory := {}
@@ -28,7 +28,7 @@ var device_schedules := {}
 
 func configure(owner: Control) -> void:
 	app = owner
-	add_child(transport)
+	transport = app.book.account_transport
 	dialog = Dialog.new()
 	add_child(dialog)
 	dialog.configure(self)

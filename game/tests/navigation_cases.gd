@@ -3,6 +3,7 @@ extends RefCounted
 const ButtonInk = preload("res://ui/book_button.gd")
 
 static func inventory(r: SceneTree) -> void:
+	r.check(r.app.accounts.transport.get_parent() == r.app.book and not r.app.is_ancestor_of(r.app.accounts.transport),"B2 ongoing HTTP survives reparenting the visual content during book navigation")
 	var count: int = 0
 	for node: Node in r.app.find_children("*","Button",true,false):
 		if not node is ButtonInk: continue
