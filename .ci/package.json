@@ -1,60 +1,15 @@
 {
   "format": "development-ci-plan/v1",
-  "issue": "https://github.com/venomenon328/picross/issues/821",
-  "package": "SYNC-PROGRESS",
-  "modules": [
-    "sync.server",
-    "native.core",
-    "native.history"
-  ],
-  "purpose": "Fortschrittsprojektion, lokale Vollsaves, Wiederanlauf, Sequenzbindung sowie HTTP/PostgreSQL und Restore prüfen.",
-  "omitted": "UI, HTTP-Spielclient und Browserpersistenz folgen in B2, Livebetrieb in C. Keine Änderung an Katalog, Produktion, Grafik oder Auslieferung.",
-  "test_changes": [
-    {
-      "path": "server/save_sync/test_integration.py",
-      "disposition": "change-scoped",
-      "reason": "Echte HTTP-/DB-Prüfung, Zellkonkurrenz, geschlossene Fortschrittsform und Restore."
-    },
-    {
-      "path": "game/tests/sync_cases.gd",
-      "disposition": "change-scoped",
-      "reason": "Lokale Bedienänderungen, unantastbare Altrequests und vollständige Recovery prüfen."
-    },
-    {
-      "path": "tools/p14_integration.py",
-      "disposition": "change-scoped",
-      "reason": "Fortschrittsrequest und lokale History/Ansicht getrennt an Originalen prüfen."
-    },
-    {
-      "path": "tools/test_p14_integration.py",
-      "disposition": "change-scoped",
-      "reason": "Fehlende, eingeschleuste und falsch gebundene Originaldaten verwerfen."
-    },
-    {
-      "path": "tools/native_results.py",
-      "disposition": "change-scoped",
-      "reason": "Erfolg der aktuellen Corefälle verlangen."
-    },
-    {
-      "path": "tools/test_ci_c.py",
-      "disposition": "change-scoped",
-      "reason": "Reader-Fixture an den aktuellen Coremarker binden."
-    },
-    {
-      "path": "tools/p1_product.py",
-      "disposition": "change-scoped",
-      "reason": "Aktuellen Coremarker im echten Prozess verlangen."
-    }
-  ],
+  "issue": "https://github.com/venomenon328/picross/issues/700",
+  "package": "Authoring 0.8.0: Geysir, Schritt 4",
+  "modules": [],
+  "purpose": "Buildfreier Draft zur Raster- und Kontextauswahl. Paketplan, Quellenbindung und Produktionsmetadaten prüfen.",
+  "omitted": "Nur Arbeitsrecord und Arbeitsindex. Keine Änderung an Spiel, Werkzeugen, Tests oder Runtime-Inhalten. Der Authoring-Builder und der Publisher prüfen die gebundenen Originale.",
+  "test_changes": [],
   "core_change": null,
   "evidence": {
-    "mode": "review",
-    "purpose": "Unabhängiger Reviewer: Original des HTTP-/DB-Durchstichs. Der einmalige Dispatch liefert separat ausschließlich windows-progress.zip und migration-progress.json am selben Produkt-Head.",
-    "expires": "2026-11-30",
-    "files": {
-      "sync.server": [
-        "sync.json"
-      ]
-    }
+    "mode": "none",
+    "purpose": null,
+    "expires": null
   }
 }
