@@ -1,0 +1,5 @@
+name: Transfer one measured review archive
+description: Accept one encrypted handoff for this run and verify the published bytes
+runs:
+  using: node24
+  main: index.cjs
