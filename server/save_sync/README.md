@@ -3,8 +3,14 @@
 Der Dienst implementiert den Serverteil des [SYNC-Vertrags](../../docs/game/SAVE_SYNC.md).
 Die Spielclients und der öffentliche Betrieb folgen in eigenen Paketen.
 Der Dienst hat keine Rätsellösungen. Die geprüfte Eigenschaft eines Snapshots heißt
-`schema_history_checked`. Sein vollständiges Schema und die Endpunkte liefert
+`progress_structure_checked`. Sein vollständiges Schema und die Endpunkte liefert
 `GET /openapi.json`.
+
+Start und `sync.admin migrate` aktualisieren Datenbankstand 1 atomar auf 2.
+Alle gespeicherten Snapshot- und Kandidatenfassungen erhalten die acht Felder von
+`picross-progress/v1`. Ein fehlerhafter Altbestand bricht die gesamte Transaktion
+ab. Backup und Restore unterstützen Stand 2. Alte Archive werden beim Restore
+vor der Veröffentlichung zurückgewiesen.
 
 ## Lokaler Betrieb
 

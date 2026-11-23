@@ -166,6 +166,11 @@ def negative_controls(plan, trace_path):
     return NEGATIVES
 
 
+def expected_progress(row):
+    return dict(format="picross-progress/v1", definition_id="T-06", definition_revision=2,
+                width=WIDTH, height=HEIGHT, cells=row["cells"], undo_used=row["undo_used"], completed=False)
+
+
 def verify_account(directory, states):
     rows = read_trace(directory/"trace.jsonl")
     prepared = None
@@ -173,7 +178,7 @@ def verify_account(directory, states):
     for stage, generation in (("writer", 2), ("reader", 3)):
         image = json.loads((directory/(stage+"-journal.json")).read_bytes())
         payload = image["payload"].encode()
-        assert image["format"] == "picross-local-sync/v1" and hashlib.sha256(payload).hexdigest() == image["sha256"], "account journal checksum"
+        assert image["format"] == "picross-local-sync/v2" and hashlib.sha256(payload).hexdigest() == image["sha256"], "account journal checksum"
         state = json.loads(payload)
         assert state["context"] == dict(server=HOST, account=ACCOUNT, device=DEVICE) and state["generation"] == EPOCH, "account binding"
         assert state["local"] == generation and state["sequence"] == 0 and state["intent"] == {}, "account generation"
@@ -187,10 +192,9 @@ def verify_account(directory, states):
         body = json.loads(raw)
         first = state["entries"]["1"]["value"]
         assert body == dict(format="picross-sync/v1", request_seq=1, base_server_revision=0, operation="snapshot", save=first), "prepared snapshot"
-        for key in ("cells","history","cursor","undo_used","view"):
-            assert first[key] == rows[10][key], "first account generation "+key
+        assert first == expected_progress(rows[10]), "first account progress"
         saved = json.loads((directory/(stage+"-account.json")).read_bytes())
-        assert saved == state["entries"][str(generation)]["value"], "journal/primary divergence"
+        assert state["entries"][str(generation)]["value"] == expected_progress(states[stage]), "queued progress divergence"
         assert saved["schema"] == 1 and saved["definition_id"] == "T-06" and saved["definition_revision"] == 2, "account puzzle"
         for key, value in states[stage].items():
             assert saved[key] == value, "account redo/save "+key

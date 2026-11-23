@@ -27,7 +27,9 @@ def evidence_fixture(directory):
     def snapshot(row):
         return dict(schema=1, definition_id='T-06', definition_revision=2, width=50, height=50, completed=False,
                     **{k:row[k] for k in ('cells','history','cursor','undo_used','view')})
-    first = snapshot(rows[10])
+    def progress(saved):
+        return dict(format="picross-progress/v1", **{k:v for k,v in saved.items() if k not in ("schema","cursor","history","view")})
+    first = progress(snapshot(rows[10]))
     body = json.dumps(dict(format='picross-sync/v1', operation='snapshot', request_seq=1, base_server_revision=0, save=first))
     request = dict(context='user://p1/accounts/'+PROFILE, device=DEVICE, generation=EPOCH, local=1,
                    seq=1, base=0, method='POST', path='/v1/puzzles/T-06/mutations', body=body)
@@ -36,8 +38,8 @@ def evidence_fixture(directory):
         (directory/(stage+'-account.json')).write_text(json.dumps(saved))
         payload = json.dumps(dict(context=dict(server=HOST,account=ACCOUNT,device=DEVICE),generation=EPOCH,
                                   local=generation,sequence=0,intent={},request=request,
-                                  entries={'1':{'value':first},str(generation):{'value':saved}}))
-        image = dict(format='picross-local-sync/v1',payload=payload,sha256=hashlib.sha256(payload.encode()).hexdigest())
+                                  entries={'1':{'value':first},str(generation):{'value':progress(saved)}}))
+        image = dict(format='picross-local-sync/v2',payload=payload,sha256=hashlib.sha256(payload.encode()).hexdigest())
         (directory/(stage+'-journal.json')).write_text(json.dumps(image))
     checkpoints = {11:(1,3),14:(2,2),15:(2,2),16:(3,3)}
     for row in rows:
@@ -120,6 +122,27 @@ class IntegrationContractTests(unittest.TestCase):
                 image['sha256'] = hashlib.sha256(image['payload'].encode()).hexdigest()
                 path.write_text(json.dumps(image))
                 with self.subTest(field=field), self.assertRaises(AssertionError):
+                    verify_evidence(directory)
+
+    def test_queue_and_matching_wire_require_exact_progress(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            directory = Path(tmp)
+            evidence_fixture(directory)
+            path = directory / "writer-journal.json"
+            image = json.loads(path.read_bytes())
+            for key in ("view", "cells"):
+                state = json.loads(image["payload"])
+                first = state["entries"]["1"]["value"]
+                if key == "view":
+                    first[key] = {}
+                else:
+                    del first[key]
+                body = json.loads(state["request"]["body"])
+                body["save"] = first
+                state["request"]["body"] = json.dumps(body)
+                payload = json.dumps(state)
+                path.write_text(json.dumps(dict(image, payload=payload, sha256=hashlib.sha256(payload.encode()).hexdigest())))
+                with self.assertRaisesRegex(AssertionError, "first account progress"):
                     verify_evidence(directory)
 
 

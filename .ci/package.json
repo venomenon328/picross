@@ -1,58 +1,49 @@
 {
   "format": "development-ci-plan/v1",
   "issue": "https://github.com/venomenon328/picross/issues/821",
-  "package": "SYNC-B1",
+  "package": "SYNC-PROGRESS",
   "modules": [
+    "sync.server",
     "native.core",
     "native.history"
   ],
-  "purpose": "Kontotrennung, Save/Journal-Wiederanlauf, persistente Requestidentität, Antwortzustände und echten Zweiprozess-Redo prüfen. Regulärer Spielerbau und einmalige Windows-Dateiprobe A01.",
-  "omitted": "Katalog, Abschluss, Adapter-, Grafik-, Export-, Browser-, HTTP-/DB- und Liefermodule sowie allgemeine Werkzeugtests liegen außerhalb B1. UI, Konto-IDBFS und Transport folgen in B2.",
+  "purpose": "Fortschrittsprojektion, lokale Vollsaves, Wiederanlauf, Sequenzbindung sowie HTTP/PostgreSQL und Restore prüfen.",
+  "omitted": "UI, HTTP-Spielclient und Browserpersistenz folgen in B2, Livebetrieb in C. Keine Änderung an Katalog, Produktion, Grafik oder Auslieferung.",
   "test_changes": [
+    {
+      "path": "server/save_sync/test_integration.py",
+      "disposition": "change-scoped",
+      "reason": "Echte HTTP-/DB-Prüfung, Zellkonkurrenz, geschlossene Fortschrittsform und Restore."
+    },
     {
       "path": "game/tests/sync_cases.gd",
       "disposition": "change-scoped",
-      "reason": "Native Profil-, Adapter-, Protokoll-, Revisions- und Unterbrechungsregressionen im vorhandenen Core-Prozess."
-    },
-    {
-      "path": "game/tests/run_tests.gd",
-      "disposition": "change-scoped",
-      "reason": "B1-Fälle im bestehenden Prozess ausführen. Beim bisherigen Gastabschluss den vollständigen Namen auch über den regulären Kartenzeilenumbruch prüfen."
-    },
-    {
-      "path": "game/tests/p14_integration.gd",
-      "disposition": "change-scoped",
-      "reason": "Zwei echte Prozesse erzeugen und laden eigene Kontodaten an benannten Checkpoints."
-    },
-    {
-      "path": "tools/p1_product.py",
-      "disposition": "change-scoped",
-      "reason": "B1-Coreabschluss und originale Accountdateien pro Neustartphase verlangen."
+      "reason": "Lokale Bedienänderungen, unantastbare Altrequests und vollständige Recovery prüfen."
     },
     {
       "path": "tools/p14_integration.py",
       "disposition": "change-scoped",
-      "reason": "Journal, Bytes, Bindungen und Redo mit unabhängigem Orakel lesen."
-    },
-    {
-      "path": "tools/native_artifacts.json",
-      "disposition": "change-scoped",
-      "reason": "Die vier zusätzlichen Originaldateien in native.history verlangen."
-    },
-    {
-      "path": "tools/native_results.py",
-      "disposition": "change-scoped",
-      "reason": "B1-Coremarker im Originalprotokoll verlangen."
-    },
-    {
-      "path": "tools/test_ci_c.py",
-      "disposition": "change-scoped",
-      "reason": "Synthetische Core-Reader-Fixture um das notwendige B1-Ergebnis ergänzen."
+      "reason": "Fortschrittsrequest und lokale History/Ansicht getrennt an Originalen prüfen."
     },
     {
       "path": "tools/test_p14_integration.py",
       "disposition": "change-scoped",
-      "reason": "Positive und gezielt fehlende, verfälschte und fremdgebundene Accountoriginale für den Reader."
+      "reason": "Fehlende, eingeschleuste und falsch gebundene Originaldaten verwerfen."
+    },
+    {
+      "path": "tools/native_results.py",
+      "disposition": "change-scoped",
+      "reason": "Erfolg der aktuellen Corefälle verlangen."
+    },
+    {
+      "path": "tools/test_ci_c.py",
+      "disposition": "change-scoped",
+      "reason": "Reader-Fixture an den aktuellen Coremarker binden."
+    },
+    {
+      "path": "tools/p1_product.py",
+      "disposition": "change-scoped",
+      "reason": "Aktuellen Coremarker im echten Prozess verlangen."
     }
   ],
   "core_change": null,
