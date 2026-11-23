@@ -1,5 +1,6 @@
 name: SYNC-B2 temporary technical originals
-on: workflow_dispatch
+on:
+  workflow_dispatch: {}
 permissions:
   contents: read
 jobs:
@@ -50,7 +51,8 @@ jobs:
         run: python -m playwright install --with-deps ${{ matrix.probe }}
       - if: matrix.probe != 'legacy'
         name: Export normal product with isolated service and read-only observer
-        env: {GITHUB_TOKEN: ${{ github.token }}}
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
         run: python .b2-review/build.py
       - if: matrix.probe == 'legacy'
         working-directory: repo
