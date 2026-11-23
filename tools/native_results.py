@@ -318,6 +318,8 @@ def check_phases(report, expected, directory):
                 validate_background_log((directory/'logs'/log['file']).read_text(encoding='utf-8'))
             if row.get('required_marker') and row['required_marker'] not in (directory/'logs'/log['file']).read_text(encoding='utf-8'):
                 raise ValueError('Missing native success marker')
+            if row['name'] == 'tests' and (directory/'logs'/log['file']).read_text(encoding='utf-8').splitlines().count('SYNC_B1_CORE_OK') != 1:
+                raise ValueError('Missing account profile/queue cases')
             if row['name'] == 'current-drawing-tests':
                 validate_zs2_log((directory/'logs'/log['file']).read_text(encoding='utf-8'))
 

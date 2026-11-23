@@ -15,6 +15,21 @@ FOREIGN = {'t09.json': b'foreign damaged primary\n', 't09.bak': b'foreign damage
 NEGATIVES = ['changed cell rejected', 'incomplete trace rejected']
 
 
+HOST = "https://sync.example.invalid"
+ACCOUNT = "10000000-0000-4000-8000-000000000001"
+DEVICE = "10000000-0000-4000-8000-000000000003"
+EPOCH = "10000000-0000-4000-8000-000000000004"
+SERVER = hashlib.sha256(HOST.encode()).hexdigest()
+PROFILE = SERVER + "/" + ACCOUNT
+OTHER_PROFILE = SERVER + "/10000000-0000-4000-8000-000000000002"
+OTHER_BYTES = b"foreign account progress sentinel\n"
+
+
+def profile_base(environment, host):
+    data = Path(environment["APPDATA" if host == "Windows" else "XDG_DATA_HOME"])
+    return data/("Godot" if host == "Windows" else "godot")/"app_userdata"/"picross · P1"/"p1/accounts"
+
+
 def build_plan():
     writer = [dict(kind='select', index=3), dict(kind='color', value=2),
               dict(kind='cell', start=[2, 2], end=[5, 2], button='left'),
@@ -151,6 +166,45 @@ def negative_controls(plan, trace_path):
     return NEGATIVES
 
 
+def verify_account(directory, states):
+    rows = read_trace(directory/"trace.jsonl")
+    prepared = None
+    digest = None
+    for stage, generation in (("writer", 2), ("reader", 3)):
+        image = json.loads((directory/(stage+"-journal.json")).read_bytes())
+        payload = image["payload"].encode()
+        assert image["format"] == "picross-local-sync/v1" and hashlib.sha256(payload).hexdigest() == image["sha256"], "account journal checksum"
+        state = json.loads(payload)
+        assert state["context"] == dict(server=HOST, account=ACCOUNT, device=DEVICE) and state["generation"] == EPOCH, "account binding"
+        assert state["local"] == generation and state["sequence"] == 0 and state["intent"] == {}, "account generation"
+        request = state["request"]
+        raw = request["body"].encode()
+        assert request == dict(context="user://p1/accounts/"+PROFILE, device=DEVICE, generation=EPOCH, local=1,
+                               seq=1, base=0, method="POST", path="/v1/puzzles/T-06/mutations", body=request["body"]), "request binding"
+        if prepared is not None:
+            assert raw == prepared, "restart request bytes"
+        prepared, digest = raw, hashlib.sha256(raw).hexdigest()
+        body = json.loads(raw)
+        first = state["entries"]["1"]["value"]
+        assert body == dict(format="picross-sync/v1", request_seq=1, base_server_revision=0, operation="snapshot", save=first), "prepared snapshot"
+        for key in ("cells","history","cursor","undo_used","view"):
+            assert first[key] == rows[10][key], "first account generation "+key
+        saved = json.loads((directory/(stage+"-account.json")).read_bytes())
+        assert saved == state["entries"][str(generation)]["value"], "journal/primary divergence"
+        assert saved["schema"] == 1 and saved["definition_id"] == "T-06" and saved["definition_revision"] == 2, "account puzzle"
+        for key, value in states[stage].items():
+            assert saved[key] == value, "account redo/save "+key
+    expected = {11:(1,3),14:(2,2),15:(2,2),16:(3,3)}
+    for row in rows:
+        number = row["action"]["number"]
+        observation = {}
+        if number in expected:
+            generation, cursor = expected[number]
+            observation = dict(local=generation, cursor=cursor, seq=1, body_sha256=digest)
+        assert row.get("account") == observation, "missing or unbound account checkpoint"
+    return digest
+
+
 def verify_evidence(directory):
     plan = json.loads((directory/'plan.json').read_text(encoding='utf-8'))
     states = validate_trace(plan, directory/'trace.jsonl')
@@ -160,8 +214,9 @@ def verify_evidence(directory):
             assert saved[key] == value, 'actual saved '+stage+' '+key
     foreign = json.loads((directory/'foreign-slots.json').read_text(encoding='utf-8'))
     hashes = {name: hashlib.sha256(value).hexdigest() for name,value in FOREIGN.items()}
+    hashes["other-account/t06.json"] = hashlib.sha256(OTHER_BYTES).hexdigest()
     assert foreign == {stage:hashes for stage in ('before','writer','reader')}, 'foreign slot bytes changed'
-    return dict(schema=2, actions=len(plan), processes=2, effective_transactions=4,
+    return dict(schema=3, account_request_sha256=verify_account(directory, states), actions=len(plan), processes=2, effective_transactions=4,
                 categories=dict(Counter(a['kind'] for a in plan)),
                 writer_cursor=states['writer']['cursor'], history_size=len(states['writer']['history']),
                 reader_cursor=states['reader']['cursor'], negative_controls=negative_controls(plan,directory/'trace.jsonl'),

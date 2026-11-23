@@ -9,6 +9,7 @@ static func exact_keys(value: Dictionary, expected: Array) -> bool:
 	return value.size() == expected.size() and expected.all(func(key: String) -> bool: return value.has(key))
 
 static func recent_path(store: RefCounted) -> String:
+	if not store.profile_recent_path.is_empty(): return store.profile_recent_path
 	return Recent.PATH if store.test_root_override.is_empty() else store.root.path_join("recent-metadata/recent-puzzle.json")
 
 static func marker_path(store: RefCounted, id: String, temporary: bool = false) -> String:

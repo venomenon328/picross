@@ -422,6 +422,67 @@ Warteschlangen gegen einen zurückgesetzten Serverbestand. Gerätewasserstände 
 dem Dump werden trotzdem nicht genullt. Generation wechselt nur bei Restore,
 nicht bei normalem Dienst-/DB-Neustart.
 
+## Nativer Profilkern (SYNC-B1)
+
+[AccountProfile](../../game/model/account_profile.gd) ist der native Einstieg für
+explizite Kontokontexte. Der Aufrufer liefert die konfigurierte HTTPS-API-Basis
+und die vom Dienst erhaltenen Konto-, Geräte- und Generationskennungen.
+`open(..., initialize=true)` ist ausschließlich für ein neu zugeordnetes Gerät
+mit bestätigtem Wasserstand 0 vorgesehen. Die Neuanlage beansprucht ein noch
+fehlendes Kontoverzeichnis. Das normale Öffnen prüft die vorhandenen Metadaten.
+Der Root ist `user://p1/accounts/<SHA-256 der API-Basis>/<Konto-UUID>/`.
+Die Profilinstanz kapselt SaveStore (`saves/`) und RecentPuzzle
+(`recent-puzzle.json`). Aufrufer bearbeiten Kontodaten nur über diese Instanz.
+Gerätepräferenzen und der Startpfad der Anwendung bleiben gerätelokal.
+
+`journal.json` enthält Format `picross-local-sync/v1`, den vollständigen
+JSON-Payload als UTF-8-Text und dessen SHA-256. Er bindet Kontext, erwartete
+Servergeneration, lokale Generation, verbrauchte Sequenz, ausstehende
+Fassungen/Entscheidungen, höchsten bekannten Stand pro Rätsel, einen vorbereiteten
+Request, den letzten Antwortbeleg, Schreibabsicht, gesicherte alte Rasterbytes und
+Abgleichsgrund. Mutationen halten während der kurzen lokalen Transaktion ein
+exklusiv angelegtes Lockverzeichnis und prüfen den zuvor gelesenen Journalhash.
+Ein zweiter, inzwischen veralteter Kontext muss erneut öffnen. Journalpublikation
+schreibt einen Geschwistertemp, flusht, schließt, vergleicht alle Bytes und
+ersetzt per Rename (unter Windows MoveFileEx mit Write-through). Erst ein
+erfolgreicher Vergleich des Ziels schließt die Publikation ab.
+
+Vor Slotänderung sichert das Journal die vollständige Schreib-/Resetabsicht.
+Nach dem P1-Temp-/Backupweg liest der Kern das Primary bzw. die Abwesenheit
+aller Resetziele zurück. Erst dann veröffentlicht er die zugeordnete Generation.
+Beim Wiederanlauf kann ein passendes Primary eine noch offene Absicht abschließen.
+Eine widersprüchliche Teilrotation, fremde Metadaten oder ein nach hartem
+Prozessabbruch stehengebliebener Lock sperren Änderungen bis zur Wiederherstellung.
+Die Übergabe `reconciliation()` benennt den eigenen Root, das Journal und die
+erhaltene Bindung. Der Kern stiehlt keine Locks. Ein Backup verlangt weiterhin
+ausdrückliche Reparatur. PE liest beim Rasterwechsel ausschließlich den
+Profilmerker. Vor der Bereinigung werden ältere Slotbytes mit ihrem Hash ins
+Journal übernommen. Vorbereitete Requests und Konfliktfassungen bleiben erhalten.
+
+`save`, `reset` und `decision` geben eine lokale Generation bzw. 0 bei einem
+Fehler zurück. `locally_confirmed` unterscheidet den abgeschlossenen nativen
+Dateivorgang von einem noch ausstehenden Adaptercallback. Jede Rückmeldung ist
+einmalig an ihren ursprünglichen Kontext und ihre Generation gebunden. Beim
+nativen Wiederöffnen belegt das zurückgelesene Journal die dauerhaften Einträge.
+Der jüngere Stand desselben Slots kann einen wartenden, bereits lokal bestätigten
+Snapshot derselben Rasterrevision ablösen. Ausstehende Requests, explizite
+Entscheidungen, alte Rasterrevisionen und abgewiesene Fassungen bleiben erhalten.
+
+`prepare` benötigt die lokale Generation und eine ausdrücklich übergebene
+Basisrevision. `resume_request` gibt den gespeicherten Auftrag zurück. Der
+Sender verwendet Methode, Pfad, Generationsheader und `body.to_utf8_buffer()`
+ohne erneute Serialisierung. Zugangsdaten kommen außerhalb dieses Bestands hinzu.
+`receive` verlangt den Originalauftrag, die beobachtete Servergeneration,
+HTTP-Status und den strikt dekodierten v1-Antwortbody. Ein Transportfehler lässt
+den Auftrag offen. Ein verbrauchtes Ergebnis veröffentlicht Beleg, Wasserstand,
+Slotstatus und Freigabe gemeinsam. Gesicherte Kandidaten behalten ihre ID,
+abgelehnte Fassungen den vollständigen lokalen Inhalt. Unverbrauchte
+Sequenzfehler und eine andere Servergeneration sperren automatische Wiederholung.
+Der spätere Bestandsabgleich entscheidet ausdrücklich über die weitere Verwendung.
+
+Der isolierte Harness benutzt diese API mit synthetischen Identitäten. Die
+nutzbare Kontoauswahl, HTTP-Anbindung und Browser-Kontopersistenz folgen in B2.
+
 ## 6. Prüfung und Zuständigkeit
 
 Die konkrete Auswahl, Kernbaupflicht und Aufbewahrung stehen ausschließlich in

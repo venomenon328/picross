@@ -9,6 +9,10 @@
       "integration/writer-save.json",
       "integration/reader-save.json",
       "integration/foreign-slots.json",
+      "integration/writer-journal.json",
+      "integration/reader-journal.json",
+      "integration/writer-account.json",
+      "integration/reader-account.json",
       "integration/summary.json"
     ],
     "catalog": [
