@@ -1,11 +1,19 @@
 {
   "format": "development-ci-plan/v1",
-  "issue": "https://github.com/venomenon328/picross/issues/700",
-  "package": "PZ-OKTOPUS-INTEGRATION",
-  "modules": [],
-  "purpose": "Oktopus mit raster-a-r2 (27 × 22, monochrom), reveal-b und background-b im Profil picross-background-png2304x768-v1 unter Wasserwelt registrieren.",
-  "omitted": "Reine Rätselproduktion. Unabhängiger Proof, Endmatrix, Bildprofil und Lieferbytes werden im Produktionsweg geprüft. CI prüft Quellen und Paketplan ohne Player-Build.",
-  "test_changes": [],
+  "issue": "https://github.com/venomenon328/picross/issues/859",
+  "package": "PW-PUBLISH-A",
+  "modules": [
+    "tools"
+  ],
+  "purpose": "Lesenden Publisher-Preflight, disjunkte Bestands- und Neuanlageprüfungen sowie expliziten Git-/REST-Kontext mit synthetischem Durchstich PW-PUBLISH-A-T01 prüfen. Werkzeugcode aktiviert den regulären Windows-x64-Playerbau.",
+  "omitted": "Keine Änderungen an Finalizer, Registrierung, Solver, Bildern, Spiel oder Server. Daher keine production.*, native.*, preflight, delivery, Browser- oder sync.server-Module. Kontrollierte API-Antworten und lokale Git-Remotes belegen keinen GitHub-Schreibzugriff.",
+  "test_changes": [
+    {
+      "path": "tools/test_work_publish.py",
+      "disposition": "change-scoped",
+      "reason": "Capability-/Fehlermatrix, Authbindung und Katalog-/Ref-/Asset-Schutz im vorhandenen synthetischen Publisher-Durchstich; T01 einmalig vor Review am Lieferstand mit kontrollierten API-Antworten und echtem lokalen Gittransport durchführen."
+    }
+  ],
   "core_change": null,
   "evidence": {
     "mode": "none",

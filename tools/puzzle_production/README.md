@@ -181,7 +181,28 @@ Der Akteur erstellt den Auftrag aus tatsächlichen Ergebnissen und Erklärungen;
 keine manuelle JSON-Pflege im Benutzerablauf. Finalize-background verarbeitet
 denselben aktuellen Fortschreibungsauftrag. Identische Wiederaufnahme vollendet
 nur die eigene offene Operation; nach Abschluss verschwindet ihr Journal.
-Der Akteur sichert das lokale Ergebnis mit `python -m tools.work_publish publish ID --expected new` bzw. der erwarteten Arbeits-SHA. Wiederaufnahme, Originalabruf und Abschluss folgen PW-B.
+Vor Originalabruf, Finalizer oder großem Checkout prüft der Akteur den geplanten
+Publisherzugang mit diesem Befehl aus dem vertrauenswürdigen Werkzeugstand.
+
+```text
+python -m tools.work_publish preflight ID --for publish --repository venomenon328/picross --expected new --auth env
+```
+
+Für einen laufenden Job ersetzt die erwartete Arbeits-SHA `new`. Mit
+`--for resume` oder `--for retire` und derselben SHA lässt sich der jeweilige
+Zugang vorprüfen. Der JSON-Bericht weist Gitrefs und Release-/Assetmetadaten
+aus. Erst die echte Publikation oder der Abschluss mit Remote-Readback belegt
+den jeweiligen Schreibzugriff. Eine frische eigene veränderbare Releasegeneration
+kann auch ohne Zugriff auf die Repository-Settings weitergeführt werden. Neue
+Releases erfordern eindeutig deaktivierte Unveränderlichkeit.
+
+Der Akteur sichert das lokale Ergebnis mit
+`python -m tools.work_publish publish ID --expected new --auth env`
+bzw. der erwarteten Arbeits-SHA. Für beide Befehle dieselbe explizite Authquelle
+verwenden. `env` verwendet `GH_TOKEN` oder `GITHUB_TOKEN`. Bei einem Konflikt
+die passende Variable mit `--auth GH_TOKEN` oder `--auth GITHUB_TOKEN` wählen.
+`--auth gh` wählt die aktive github.com-Anmeldung. Wiederaufnahme, Originalabruf
+und Abschluss folgen [PW-B](../../docs/tools/PW_B_CONTRACT.md#bau-auswahl-und-sichere-fortschreibung).
 
 `prepare-integration --repository ARBEITSCHECKOUT --record RECORD --output-dir NEU`
 leitet den aktuellen RI-ONE-Eingang ab. Eine reine Hintergrundpflege erzeugt

@@ -8,6 +8,7 @@ import re
 from . import publish_git as transport, work_publish
 from .production_workspace import repository as pw
 from .production_workspace.release_channel import GitHub, app_catalog_writer
+from .puzzle_production import github_rest
 from .puzzle_production.authoring_package import require
 
 
@@ -51,7 +52,7 @@ def service(root, event, api):
 
     try:
         check_live()
-        with app_catalog_writer(api, main):
+        with app_catalog_writer(api, main), github_rest.use_publisher_token(api.token):
             work_publish.remove_bound_release(root, job, expected, main, confirmed=True, before_delete=check_live)
             check_live()
             # Only acknowledge. The installed client owns work/tag ref removal.
