@@ -14,3 +14,6 @@ window/stretch/mode="disabled"
 renderer/rendering_method="gl_compatibility"
 renderer/rendering_method.mobile="gl_compatibility"
 environment/defaults/default_clear_color=Color(0.93, 0.90, 0.83, 1)
+
+[picross]
+sync/api_base="https://picross.venomenon.de/sync"
