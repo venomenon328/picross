@@ -8,6 +8,8 @@
   "test_changes": [],
   "core_change": null,
   "evidence": {
-    "mode": "none"
+    "mode": "none",
+    "purpose": null,
+    "expires": null
   }
 }
