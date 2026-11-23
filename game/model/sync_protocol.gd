@@ -75,8 +75,15 @@ static func request_hash(request: Dictionary) -> String:
 
 static func valid_record(row: Dictionary, id: String) -> bool:
 	if row.size() != 9 or not row.has_all(["puzzle_id","definition_revision","kind","device_id","device_name","server_revision","updated_at","save","validation"]): return false
-	if row.puzzle_id != id or not count(row.definition_revision,1) or not count(row.server_revision,1) or not uuid(row.device_id): return false
-	if not row.device_name is String or row.device_name.is_empty() or row.device_name.length()>64 or not row.updated_at is String or row.updated_at.is_empty(): return false
+	return count(row.server_revision,1) and row.updated_at is String and not row.updated_at.is_empty() and valid_saved_state(row,id)
+
+static func valid_candidate(row: Dictionary, id: String, candidate_id: Variant) -> bool:
+	if row.size() != 10 or not row.has_all(["puzzle_id","definition_revision","kind","device_id","device_name","candidate_id","base_server_revision","created_at","save","validation"]): return false
+	return uuid(candidate_id) and row.candidate_id == candidate_id and count(row.base_server_revision) and row.created_at is String and not row.created_at.is_empty() and valid_saved_state(row,id)
+
+static func valid_saved_state(row: Dictionary, id: String) -> bool:
+	if row.puzzle_id != id or not count(row.definition_revision,1) or not uuid(row.device_id): return false
+	if not row.device_name is String or row.device_name.is_empty() or row.device_name.length() > 64: return false
 	if row.kind == "reset": return row.save == null and row.validation == null
 	return row.kind == "snapshot" and row.validation == "progress_structure_checked" and valid_progress(row.save,id) and row.save.definition_revision == row.definition_revision
 

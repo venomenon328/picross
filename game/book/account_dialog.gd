@@ -1,4 +1,5 @@
 extends AcceptDialog
+const Session = preload("res://model/session.gd")
 ## Every destructive choice captures the owning profile and the displayed server revision.
 var client: Node
 var form := VBoxContainer.new()
@@ -127,38 +128,158 @@ func versions() -> void:
 	var stamp: int = client.epoch
 	if client.transport_busy or client.changing: return
 	client.changing = true
-	var current: Dictionary = await client.read("/v1/puzzles/"+id)
 	var conflicts: Dictionary = await client.fetch_pages("/v1/puzzles/"+id+"/conflicts")
 	var history: Dictionary = await client.fetch_pages("/v1/puzzles/"+id+"/history")
 	client.changing = false
-	if not visible or stamp != client.epoch or current.get("status") not in [200,404] or conflicts.is_empty() or history.is_empty(): return
-	var base: int = int(current.body.get("server_revision",0))
-	var selection := AcceptDialog.new()
-	selection.title = "Konflikte und Versionen"
-	add_child(selection)
-	var scroll := ScrollContainer.new()
-	selection.add_child(scroll)
-	var list := VBoxContainer.new()
-	scroll.add_child(list)
-	for row: Dictionary in conflicts.items:
-		if row.get("puzzle_id") != id or not client.Protocol.uuid(row.get("candidate_id")): continue
-		for action: String in ["resolve","discard"]:
-			var caption := ("Fassung übernehmen" if action == "resolve" else "Fassung verwerfen")+" · "+str(row.get("created_at",""))
-			button(list,caption,choose.bind(selection,stamp,id,action,row.candidate_id,base))
-	for row: Dictionary in history.items:
-		if row.get("puzzle_id") == id and client.Protocol.count(row.get("server_revision"),1):
-			button(list,"Version %d wiederherstellen" % row.server_revision,choose.bind(selection,stamp,id,"restore",row.server_revision,base))
-	if list.get_child_count() == 0:
-		var empty := Label.new()
-		empty.text = "Keine früheren Fassungen vorhanden."
-		list.add_child(empty)
-	selection.confirmed.connect(selection.queue_free)
-	selection.canceled.connect(selection.queue_free)
-	selection.popup_centered(Vector2i(450,320))
+	if not visible or stamp != client.epoch: return
+	if conflicts.is_empty() or history.is_empty():
+		message.text = "Konflikte und Versionen konnten nicht geladen werden."
+		return
+	var selection := version_window(self,"Konflikte und Versionen","Schließen")
+	var list := scrolling_content(selection)
+	var feedback := comparison_label(list,"")
+	var number := 0
+	for row: Variant in conflicts.items:
+		if not row is Dictionary or row.get("puzzle_id") != id or not client.Protocol.uuid(row.get("candidate_id")): continue
+		number += 1
+		button(list,"Konflikt %d vergleichen" % number,compare.bind(selection,feedback,stamp,id,"resolve",row.candidate_id,"Konflikt %d" % number))
+	for row: Variant in history.items:
+		if not row is Dictionary or row.get("puzzle_id") != id or not client.Protocol.count(row.get("server_revision"),1): continue
+		var heading := "Version %d" % int(row.server_revision)
+		button(list,heading+" vergleichen",compare.bind(selection,feedback,stamp,id,"restore",row.server_revision,heading))
+	if list.get_child_count() == 1:
+		comparison_label(list,"Keine Konflikte oder früheren Fassungen vorhanden.")
+	selection.popup_centered(dialog_size(Vector2i(460,320)))
 
-func choose(window: Window, stamp: int, id: String, action: String, value: Variant, base: int) -> void:
-	window.queue_free()
-	if client.epoch == stamp: confirm_choice("Auswahl für dieses Blatt bestätigen?",client.decide.bind(id,action,value,base))
+func version_window(parent: Window, heading: String, close_caption: String) -> AcceptDialog:
+	var window := AcceptDialog.new()
+	window.title = heading
+	window.theme = client.app.theme
+	window.transient = true
+	window.exclusive = true
+	window.get_ok_button().text = close_caption
+	parent.add_child(window)
+	window.confirmed.connect(window.queue_free)
+	window.canceled.connect(window.queue_free)
+	return window
+
+func dialog_size(base: Vector2i) -> Vector2i:
+	var scaled := Vector2i(Vector2(base)*client.app.ui_scale)
+	return scaled.min(Vector2i(client.app.size)-Vector2i(48,64))
+
+func scrolling_content(parent: Node) -> VBoxContainer:
+	var scroll := ScrollContainer.new()
+	scroll.follow_focus = true
+	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	parent.add_child(scroll)
+	var list := VBoxContainer.new()
+	list.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	list.add_theme_constant_override("separation",roundi(8*client.app.ui_scale))
+	scroll.add_child(list)
+	return list
+
+func comparison_label(parent: Control, text: String, heading: bool = false) -> Label:
+	var label := Label.new()
+	label.text = text
+	label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	label.add_theme_font_size_override("font_size",roundi((18 if heading else 16)*client.app.ui_scale))
+	parent.add_child(label)
+	return label
+
+func compare(selection: Window, feedback: Label, stamp: int, id: String, operation: String, value: Variant, heading: String) -> void:
+	if stamp != client.epoch or client.changing or client.transport_busy: return
+	feedback.text = "Fassungen werden geladen …"
+	client.changing = true
+	var current: Dictionary = await client.read("/v1/puzzles/"+id)
+	var base: int = client.current_choice_base(id,current)
+	var selected: Dictionary = await client.read_choice(id,operation,value) if base >= 0 else {}
+	client.changing = false
+	if not is_instance_valid(selection) or not selection.visible or stamp != client.epoch: return
+	if selected.is_empty():
+		feedback.text = "Fassungen konnten nicht verglichen werden. Bitte erneut versuchen."
+		return
+	feedback.text = ""
+	var index: int = client.app.session_indices[id]
+	var slot: Session = client.app.sessions[index]
+	var comparison := version_window(selection,"Fassungen vergleichen","Zurück")
+	var panel := VBoxContainer.new()
+	comparison.add_child(panel)
+	var list := scrolling_content(panel)
+	var size := dialog_size(Vector2i(920,400))
+	comparison_label(list,slot.neutral_title(),true)
+	var columns: BoxContainer = HBoxContainer.new() if size.x >= 720*client.app.ui_scale else VBoxContainer.new()
+	columns.add_theme_constant_override("separation",roundi(16*client.app.ui_scale))
+	list.add_child(columns)
+	var server_summary := "Noch kein Stand auf dem Server." if base == 0 else remote_summary(current.body,slot,client.choice_compatible(current.body,slot))
+	var compatible: bool = client.choice_compatible(selected,slot)
+	comparison_column(columns,"Lokal · dieses Gerät",local_summary(slot,index),"LocalSummary")
+	comparison_column(columns,"Aktueller Serverstand",server_summary,"ServerSummary")
+	comparison_column(columns,heading,remote_summary(selected,slot,compatible),"ChoiceSummary")
+	var result := comparison_label(panel,"")
+	var actions := HFlowContainer.new()
+	panel.add_child(actions)
+	if operation == "restore":
+		if compatible: button(actions,"Diese Version wiederherstellen",choose.bind(selection,comparison,result,actions,stamp,client.decide.bind(id,operation,value,base)))
+	else:
+		if compatible: button(actions,"Kandidatenfassung übernehmen",choose.bind(selection,comparison,result,actions,stamp,client.decide.bind(id,"resolve",value,base)))
+		button(actions,"Kandidatenfassung verwerfen",choose.bind(selection,comparison,result,actions,stamp,client.decide.bind(id,"discard",value,base)))
+	comparison.popup_centered(size)
+
+func comparison_column(parent: BoxContainer, heading: String, text: String, summary_name: String) -> void:
+	var column := VBoxContainer.new()
+	column.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	parent.add_child(column)
+	comparison_label(column,heading,true)
+	comparison_label(column,text).name = summary_name
+
+func local_summary(slot: Session, index: int) -> String:
+	var raster := "Rasterrevision %d · %d × %d" % [slot.definition.revision,slot.player.width,slot.player.height]
+	match client.app.slot_status[index]:
+		"error":
+			return raster+"\nLokaler Spielstand nicht lesbar."
+		"fresh":
+			if slot.definition.id in client.app.revision_reset_ids: return raster+"\nNach Rasterwechsel neu begonnen."
+			return raster+"\nLeeres Raster · kein lokaler Spielstand."
+	return raster+"\n"+progress_summary(slot.player.cells,slot.completed)
+
+func remote_summary(row: Dictionary, slot: Session, compatible: bool) -> String:
+	var own: String = " · dieses Gerät" if row.device_id == client.identity.device_id else ""
+	var device := "%s · Gerätekennung %s%s" % [row.device_name,row.device_id.left(8),own]
+	var timestamp: String = row.get("updated_at",row.get("created_at",""))
+	var version := "Version %d · " % row.server_revision if row.has("server_revision") else ""
+	var raster := "Rasterrevision %d" % row.definition_revision
+	var progress := "Zurückgesetzt · leerer Stand"
+	if row.kind == "snapshot":
+		raster += " · %d × %d" % [row.save.width,row.save.height]
+		progress = progress_summary(row.save.cells,row.save.completed)
+	if row.definition_revision != slot.definition.revision:
+		raster += " · inkompatibel mit Rasterrevision %d dieses Spiels" % slot.definition.revision
+	elif not compatible:
+		raster += " · für dieses Raster nicht verwendbar"
+	return "%s\n%s%s UTC\n%s\n%s" % [device,version,timestamp.left(19).replace("T"," "),raster,progress]
+
+func progress_summary(cells: Array, completed: bool) -> String:
+	var filled := 0
+	var crossed := 0
+	for cell: int in cells:
+		if cell > 0: filled += 1
+		elif cell == 0: crossed += 1
+	var state := "Abgeschlossen" if completed else ("Begonnen" if filled+crossed > 0 else "Keine Zelle markiert")
+	return "%s · %d ausgefüllt · %d als leer markiert · %d Zellen" % [state,filled,crossed,cells.size()]
+
+func choose(selection: Window, comparison: Window, result: Label, actions: Control, stamp: int, decision: Callable) -> void:
+	if stamp != client.epoch or client.changing or client.transport_busy: return
+	for action: Button in actions.get_children(): action.disabled = true
+	result.text = "Auswahl wird erneut geprüft …"
+	var accepted: bool = await decision.call()
+	if not is_instance_valid(comparison) or not comparison.visible: return
+	if accepted:
+		comparison.queue_free()
+		selection.queue_free()
+	else:
+		result.text = client.problem if not client.problem.is_empty() else "Auswahl konnte nicht gespeichert werden."
+		for action: Button in actions.get_children(): action.disabled = false
 
 func abandon() -> void:
 	var original: Dictionary = client.profile.resume_request()

@@ -1,5 +1,6 @@
 """Bounded native KAT-2 evidence in disposable projects/profiles; all fixtures test_only."""
 from copy import deepcopy
+from datetime import date
 import json
 from pathlib import Path
 import shutil
@@ -58,6 +59,10 @@ def run(root, workspace, output, engine, environment, run_phase, python_phase, h
     directory = output / "kat2"
     directory.mkdir()
     reports = []
+    plan = json.loads((root / ".ci/package.json").read_text(encoding="utf-8"))
+    review = plan["evidence"]
+    comparison_capture = (review["mode"] == "review" and date.fromisoformat(review["expires"]) > date.today()
+                          and "native/sync-b2-r01/interaction.json" in review["files"].get("native.catalog", []))
     import time
     from native_contract import CATALOG_MODES
     from native_results import bind_files
@@ -112,6 +117,8 @@ def run(root, workspace, output, engine, environment, run_phase, python_phase, h
             write_json(directory/'at-fixture.json',binding)
         env = environment.copy()
         env.update(P1_TEST_SAVE_ROOT=str(saves), KAT2_OUTPUT=str(directory), KAT2_MODE=mode)
+        if mode == "pages" and comparison_capture:
+            env["KAT2_SYNC_B2_REVIEW_DIR"] = str(output / "sync-b2-r01")
         if mode in ("pages", "adapter", "at"):
             run_phase("kat2-" + mode + "-import", [engine, "--headless", "--path", str(project), "--import"], phase_env=env)
         if host == "Linux":

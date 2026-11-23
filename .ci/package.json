@@ -55,16 +55,41 @@
       "path": "game/tests/display_cases.gd",
       "disposition": "change-scoped",
       "reason": "Zusätzlichen tatsächlichen Kontozugang in den Einstellungen prüfen."
+    },
+    {
+      "path": "game/tests/kat2_probe.gd",
+      "disposition": "change-scoped",
+      "reason": "Gebundene Konflikt- und Versionsauswahl im vorhandenen Katalogprozess mit echter Mausbedienung prüfen."
+    },
+    {
+      "path": "game/tests/sync_comparison_cases.gd",
+      "disposition": "change-scoped",
+      "reason": "Fortschrittsvergleich, Reset, Rasterrevision und Auswahlsperren prüfen. Zwei UI-Originale für R01 bis zur B2-Abnahme erzeugen."
+    },
+    {
+      "path": "tools/native_contract.py",
+      "disposition": "change-scoped",
+      "reason": "Die Konflikt-/Versionsregression an den geprüften Katalogbericht binden."
+    },
+    {
+      "path": "tools/kat2_product.py",
+      "disposition": "temporary",
+      "reason": "Zwei Reviewbilder und Bedienbericht nur bei gültiger SYNC-B2-R01-Dateiauswahl erzeugen. Die Belegroute endet mit der B2-Abnahme."
     }
   ],
   "core_change": null,
   "evidence": {
     "mode": "review",
-    "purpose": "Unabhängiger Reviewer: gebundener HTTP-/PostgreSQL-Bericht des Paketlaufs; Windows- und Browseroriginale separat.",
+    "purpose": "Unabhängiger Reviewer venomenon328: HTTP-/PostgreSQL-Bericht und tatsächliche UI-/Bedienoriginale zu SYNC-B2-R01/B-01.",
     "expires": "2026-11-30",
     "files": {
       "sync.server": [
         "sync.json"
+      ],
+      "native.catalog": [
+        "native/sync-b2-r01/conflict-ui100.png",
+        "native/sync-b2-r01/history-reset-ui125.png",
+        "native/sync-b2-r01/interaction.json"
       ]
     }
   }

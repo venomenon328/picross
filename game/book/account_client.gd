@@ -383,22 +383,41 @@ func choose_recovery_slot(id: String, remote: bool) -> void:
 			schedule.connected()
 	changing = false
 
-func decide(id: String, operation: String, value: Variant, base: int) -> void:
-	if changing or transport_busy or profile == null or not safe_switch(): return
+func current_choice_base(id: String, response: Dictionary) -> int:
+	if response.get("status") == 404 and response.body.get("code") == "not_found": return 0
+	if response.get("status") == 200 and Protocol.valid_record(response.body,id): return int(response.body.server_revision)
+	return -1
+
+func read_choice(id: String, operation: String, value: Variant) -> Dictionary:
+	var path := "/history/"+str(int(value)) if operation == "restore" else "/conflicts/"+str(value)
+	var result := await read("/v1/puzzles/"+id+path)
+	if result.get("status") != 200: return {}
+	var row: Dictionary = result.body
+	if operation == "restore":
+		return row if Protocol.valid_record(row,id) and row.server_revision == value else {}
+	return row if Protocol.valid_candidate(row,id,value) else {}
+
+func choice_compatible(row: Dictionary, slot: Session) -> bool:
+	return row.definition_revision == slot.definition.revision and (row.kind == "reset" or not profile._store.received(row.save,slot).is_empty())
+
+func decide(id: String, operation: String, value: Variant, base: int) -> bool:
+	if changing or transport_busy or profile == null or not safe_switch(): return false
 	changing = true
 	var current := await read("/v1/puzzles/"+id)
-	if current.get("status") not in [200,404] or current.body.get("server_revision",0) != base:
-		problem = "Fassung geändert. Bitte erneut auswählen."
+	var accepted := false
+	if current_choice_base(id,current) != base:
+		problem = "Serverstand geändert oder nicht verfügbar. Bitte erneut vergleichen."
 	else:
-		var path := "/history/"+str(int(value)) if operation == "restore" else "/conflicts/"+str(value)
-		var result := await read("/v1/puzzles/"+id+path)
-		if result.get("status") != 200 or result.body.get("puzzle_id") != id: problem = "Fassung nicht mehr verfügbar."
-		else:
-			var slot: Session = app.sessions[app.session_indices[id]]
-			var compatible: bool = result.body.get("definition_revision") == slot.definition.revision and (result.body.get("kind") == "reset" or not profile._store.received(result.body.get("save"),slot).is_empty())
-			if operation != "discard" and not compatible: problem = "Inkompatible Rasterrevision."
-			elif profile.decision(id,operation,value,base) > 0: schedule.collect()
+		var row := await read_choice(id,operation,value)
+		if row.is_empty(): problem = "Fassung nicht mehr verfügbar."
+		elif operation != "discard" and not choice_compatible(row,app.sessions[app.session_indices[id]]):
+			problem = "Fassung mit diesem Raster nicht verwendbar."
+		elif profile.decision(id,operation,value,base) > 0:
+			schedule.collect()
+			accepted = true
+		else: problem = "Auswahl konnte lokal nicht gespeichert werden."
 	changing = false
+	return accepted
 
 func next_request() -> Dictionary:
 	var req := profile.resume_request()
