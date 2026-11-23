@@ -1,60 +1,11 @@
 {
   "format": "development-ci-plan/v1",
-  "issue": "https://github.com/venomenon328/picross/issues/821",
-  "package": "SYNC-B1",
-  "modules": [
-    "native.core",
-    "native.history"
-  ],
-  "purpose": "Kontotrennung, Save/Journal-Wiederanlauf, persistente Requestidentität, Antwortzustände und echten Zweiprozess-Redo prüfen. Regulärer Spielerbau und einmalige Windows-Dateiprobe A01.",
-  "omitted": "Katalog, Abschluss, Adapter-, Grafik-, Export-, Browser-, HTTP-/DB- und Liefermodule sowie allgemeine Werkzeugtests liegen außerhalb B1. UI, Konto-IDBFS und Transport folgen in B2.",
-  "test_changes": [
-    {
-      "path": "game/tests/sync_cases.gd",
-      "disposition": "change-scoped",
-      "reason": "Native Profil-, Adapter-, Protokoll-, Revisions- und Unterbrechungsregressionen im vorhandenen Core-Prozess."
-    },
-    {
-      "path": "game/tests/run_tests.gd",
-      "disposition": "change-scoped",
-      "reason": "B1-Fälle im bestehenden Prozess ausführen. Beim bisherigen Gastabschluss den vollständigen Namen auch über den regulären Kartenzeilenumbruch prüfen."
-    },
-    {
-      "path": "game/tests/p14_integration.gd",
-      "disposition": "change-scoped",
-      "reason": "Zwei echte Prozesse erzeugen und laden eigene Kontodaten an benannten Checkpoints."
-    },
-    {
-      "path": "tools/p1_product.py",
-      "disposition": "change-scoped",
-      "reason": "B1-Coreabschluss und originale Accountdateien pro Neustartphase verlangen."
-    },
-    {
-      "path": "tools/p14_integration.py",
-      "disposition": "change-scoped",
-      "reason": "Journal, Bytes, Bindungen und Redo mit unabhängigem Orakel lesen."
-    },
-    {
-      "path": "tools/native_artifacts.json",
-      "disposition": "change-scoped",
-      "reason": "Die vier zusätzlichen Originaldateien in native.history verlangen."
-    },
-    {
-      "path": "tools/native_results.py",
-      "disposition": "change-scoped",
-      "reason": "B1-Coremarker im Originalprotokoll verlangen."
-    },
-    {
-      "path": "tools/test_ci_c.py",
-      "disposition": "change-scoped",
-      "reason": "Synthetische Core-Reader-Fixture um das notwendige B1-Ergebnis ergänzen."
-    },
-    {
-      "path": "tools/test_p14_integration.py",
-      "disposition": "change-scoped",
-      "reason": "Positive und gezielt fehlende, verfälschte und fremdgebundene Accountoriginale für den Reader."
-    }
-  ],
+  "issue": "https://github.com/venomenon328/picross/issues/700",
+  "package": "PZ-GOTTESANBETERIN-RASTER",
+  "modules": [],
+  "purpose": "Qualifiziertes Rasterangebot für Gottesanbeterin nach Authoring 0.8.0, Schritt 3.",
+  "omitted": "Der Draft dokumentiert den veröffentlichten PW-B-Arbeitsstand. Der Diff enthält den Paketplan. Quellen- und Planprüfung laufen ohne Zusatzmodule und ohne Player-Build. Die gebundenen Raster-, Proof-, Bewertungs- und Sichtprüfungen sind Teil der Produktion.",
+  "test_changes": [],
   "core_change": null,
   "evidence": {
     "mode": "none",
