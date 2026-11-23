@@ -216,5 +216,5 @@ func _layout_cards() -> void:
 	arranging = false
 
 func ensure_control_visible(control: Control) -> void:
-	if right_grid.is_ancestor_of(control): right_scroll.ensure_control_visible(control)
+	if right_grid.is_ancestor_of(control): ensure_in_scroll(right_scroll,control)
 	else: super.ensure_control_visible(control)
