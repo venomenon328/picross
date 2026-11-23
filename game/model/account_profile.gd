@@ -281,12 +281,12 @@ func confirm_equal(session: Session, record: Dictionary) -> bool:
 	var next := _state.duplicate(true)
 	var ok: bool = next.request.is_empty() and next.abandon.is_empty() and record.get("puzzle_id") == id and Protocol.count(record.get("server_revision"),1)
 	var disk := _store.load_slot(session.definition) if ok else {}
-	ok = ok and disk.get("status") == "loaded" and not _store.received(record.get("save"),session).is_empty() and Protocol.progress(disk.data) == record.save
+	ok = ok and disk.get("status") == "loaded" and not _store.received(record.get("save"),session).is_empty() and Protocol.progress(disk.data) == Protocol.progress(record.save)
 	if ok:
 		for key: String in next.entries.keys():
 			var entry: Dictionary = next.entries[key]
 			if entry.id != id: continue
-			if entry.operation != "snapshot" or entry.status != "pending" or entry.value != record.save or entry.get("imported",false):
+			if entry.operation != "snapshot" or entry.status != "pending" or Protocol.progress(entry.value) != Protocol.progress(record.save) or entry.get("imported",false):
 				ok = false
 				break
 			next.entries.erase(key)
@@ -320,7 +320,7 @@ func accept_record(session: Session, record: Dictionary) -> bool:
 		if entry.id == id and entry.status != "request_abandoned": dirty = true
 	var prior := _store.load_slot(session.definition) if _safe_slot(key) else {"status":"error"}
 	if not dirty and not session.gesture.active and prior.status in ["fresh","loaded"]:
-		var same: bool = prior.status == "fresh" if reset else prior.status == "loaded" and Protocol.progress(prior.data) == record.save
+		var same: bool = prior.status == "fresh" if reset else prior.status == "loaded" and Protocol.progress(prior.data) == Protocol.progress(record.save)
 		if same:
 			var next := _state.duplicate(true)
 			next.revisions[id] = {"server":record.server_revision,"confirmed_local":next.slots.get(id,{}).get("local",0)}

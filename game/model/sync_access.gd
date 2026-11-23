@@ -72,3 +72,32 @@ func accounts() -> Dictionary:
 		var data := credentials(id)
 		if not data.is_empty(): result[data.username] = id
 	return result
+
+## A damaged session can still identify its device without trusting its bearer token.
+func login_binding(username: String) -> Dictionary:
+	if not DirAccess.dir_exists_absolute(directory): return {}
+	var missing: Array[Dictionary] = []
+	for id: String in DirAccess.get_directories_at(directory):
+		if not Protocol.uuid(id): continue
+		var root := directory.path_join(id)
+		var session := read(session_path(id))
+		var marker := read(root.path_join("identity.json"))
+		var owner := ""
+		var device := ""
+		for data: Dictionary in [marker,session]:
+			if data.get("server") != server or data.get("account_id") != id: continue
+			if Protocol.matches(data.get("username"),"\\A[a-z0-9][a-z0-9_-]{2,31}\\z"): owner = data.username
+			if Protocol.uuid(data.get("device_id")):
+				if device != "" and device != data.device_id: return {"error":true}
+				device = data.device_id
+		if not owner.is_empty() and owner != username: continue
+		var journal := Profile.Journal.new(root)
+		var stored: Variant = journal.read_image().get("context")
+		if stored is Dictionary and stored.get("server") == server and stored.get("account") == id and Protocol.uuid(stored.get("device")):
+			if device != "" and stored.device != device: return {"error":true}
+			device = stored.device
+		var row := {"account_id":id,"device_id":device}
+		if owner == username: return row
+		missing.append(row)
+	if missing.size() == 1: return missing[0]
+	return {} if missing.is_empty() else {"error":true}

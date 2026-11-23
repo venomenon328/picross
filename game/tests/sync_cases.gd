@@ -36,6 +36,13 @@ static func write(path: String, raw: String) -> void:
 
 static func run(t: SceneTree) -> void:
 	var start: int = t.failures
+	var checkpoint := {"format":"picross-device-checkpoint/v1","account_id":ACCOUNT,"device_id":DEVICE,
+		"last_request_seq":1,"last_request_hash":"0".repeat(64),"response_status":200,"response_body":"{}"}
+	t.check(Protocol.valid_checkpoint(JSON.parse_string(JSON.stringify(checkpoint)),ACCOUNT,DEVICE),"B2 accepts the actual JSON-number receipt after browser restart")
+	checkpoint.response_status = 200.5
+	t.check(not Protocol.valid_checkpoint(checkpoint,ACCOUNT,DEVICE),"B2 rejects fractional receipt status")
+	var snapshot := {"format":Protocol.PROGRESS_FORMAT,"definition_id":"p","definition_revision":1,"width":1,"height":1,"cells":[0],"completed":false,"undo_used":false}
+	t.check(Protocol.progress(snapshot) == Protocol.progress(JSON.parse_string(JSON.stringify(snapshot))),"B2 identical HTTP progress keeps the local undo history")
 	var linked := Profile.ROOT.path_join((HOST+"/linked").sha256_text()).path_join(ACCOUNT)
 	t.check(DirAccess.dir_exists_absolute(linked) and not Profile.new().open(HOST+"/linked",ACCOUNT,DEVICE,EPOCH,true) and not Store.SaveRevision.Recent.safe_file(linked.path_join("journal.json")),"B1 real linked ancestor rejected")
 	if t.failures != start: return

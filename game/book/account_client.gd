@@ -24,6 +24,7 @@ var recovery_device := false
 var epoch := 0
 var status_key := []
 var unresolved_inventory := false
+var device_schedules := {}
 
 func configure(owner: Control) -> void:
 	app = owner
@@ -57,7 +58,8 @@ func activate(data: Dictionary, fresh: bool) -> bool:
 	if not target.open(access.server,data.account_id,data.device_id,data.generation,fresh):
 		problem = target.last_error()
 		return false
-	if not await access.publish(access.session_path(data.account_id),data) or not await access.choose(data.account_id):
+	var marker := {"server":data.server,"account_id":data.account_id,"device_id":data.device_id,"username":data.username}
+	if not await access.publish(access.session_path(data.account_id),data) or not await access.publish(access.directory.path_join(data.account_id).path_join("identity.json"),marker) or not await access.choose(data.account_id):
 		problem = "Profilwahl konnte nicht dauerhaft gespeichert werden."
 		return false
 	bind(target,data)
@@ -71,7 +73,12 @@ func bind(target: Profile, data: Dictionary) -> void:
 	inventory = {}
 	unresolved_inventory = false
 	inventory_ready = false
-	schedule = Schedule.new()
+	if profile:
+		var key := "%s/%s/%s" % [data.server,data.account_id,data.device_id]
+		if not device_schedules.has(key): device_schedules[key] = Schedule.new()
+		schedule = device_schedules[key]
+		schedule.active_since = INF
+	else: schedule = Schedule.new()
 	transport_busy = false
 	problem = ""
 	app.recent_signature = ""
@@ -90,14 +97,23 @@ func resume_local(account: String) -> void:
 	changing = false
 	refresh_status()
 
-func authenticate(action: String, username: String, password: String, code: String) -> void:
+func authenticate(action: String, username: String, password: String, code: String, replace_lost: bool = false) -> void:
 	if changing or access.server.is_empty() or (not safe_switch() and not (profile and not profile._blocked.is_empty() and app._flush_current())): return
 	changing = true
 	var body := {}
-	var saved: Dictionary = access.credentials(access.accounts().get(username.to_lower(),""))
+	var saved := access.login_binding(username.to_lower()) if action == "login" else {}
+	if saved.has("error"):
+		changing = false
+		problem = "Lokale Gerätebindung widersprüchlich."
+		refresh_status()
+		return
+	if action == "login" and not saved.is_empty() and saved.device_id == "" and not replace_lost:
+		changing = false
+		dialog.confirm_choice("Lokale Gerätekennung verloren. Ausdrücklich ein neues Gerät anmelden und den Bestand abgleichen?",authenticate.bind(action,username,password,code,true))
+		return
 	match action:
 		"login":
-			body = {"username":username,"password":password,"device_id":saved.get("device_id"),"device_name":OS.get_name()}
+			body = {"username":username,"password":password,"device_id":saved.get("device_id") if not replace_lost else null,"device_name":OS.get_name()}
 		"register":
 			body = {"username":username,"password":password,"invitation":code,"device_name":OS.get_name()}
 		"recover": body = {"username":username,"new_password":password,"recovery_code":code}
@@ -110,7 +126,7 @@ func authenticate(action: String, username: String, password: String, code: Stri
 	elif action in ["recover","recovery-code"]:
 		problem = ""
 		dialog.show_code(result.get("recovery_code",""))
-	elif Protocol.uuid(result.get("account_id")) and Protocol.uuid(result.get("device_id")) and Protocol.matches(result.get("token"),"\\A[A-Za-z0-9_-]{43}\\z") and result.get("username") == username.to_lower() and result.get("expires_at") is String and (saved.is_empty() or (saved.account_id == result.account_id and saved.device_id == result.device_id)):
+	elif Protocol.uuid(result.get("account_id")) and Protocol.uuid(result.get("device_id")) and Protocol.matches(result.get("token"),"\\A[A-Za-z0-9_-]{43}\\z") and result.get("username") == username.to_lower() and result.get("expires_at") is String and (saved.is_empty() or (saved.account_id == result.account_id and (saved.device_id == result.device_id or replace_lost))):
 		var data := {"server":access.server,"account_id":result.account_id,"device_id":result.device_id,"username":result.username,
 			"generation":response.generation,"token":result.token,"expires_at":result.expires_at}
 		var root := access.directory.path_join(data.account_id)
@@ -118,7 +134,7 @@ func authenticate(action: String, username: String, password: String, code: Stri
 			var fresh := not DirAccess.dir_exists_absolute(root)
 			if not await activate(data,fresh):
 				recovery_session = data
-				recovery_device = saved.is_empty()
+				recovery_device = replace_lost
 				problem = "Lokales Konto geschützt. Bestandsabgleich in Konto verwalten öffnen."
 		if action == "register": dialog.show_code(result.get("recovery_code",""))
 	else: problem = "Ungültige Kontobestätigung."
@@ -136,10 +152,10 @@ func recover_inventory(session_data: Dictionary) -> Dictionary:
 		var page: Dictionary = response.body
 		if page.size() != 2 or not page.has_all(["items","next_cursor"]) or not page.items is Array or page.items.size() > 100: return {}
 		for row: Variant in page.items:
-			if not row is Dictionary or row.size() != 3 or not Protocol.matches(row.get("puzzle_id"),"\\\\A[A-Za-z0-9_-]{1,128}\\\\z") or not Protocol.count(row.get("server_revision")) or not Protocol.count(row.get("conflict_count")) or listing.has(row.puzzle_id): return {}
+			if not row is Dictionary or row.size() != 3 or not Protocol.matches(row.get("puzzle_id"),"\\A[A-Za-z0-9_-]{1,128}\\z") or not Protocol.count(row.get("server_revision")) or not Protocol.count(row.get("conflict_count")) or listing.has(row.puzzle_id): return {}
 			listing[row.puzzle_id] = row
 		if page.next_cursor == null: return {"listing":listing}
-		if not Protocol.matches(page.next_cursor,"\\\\A[A-Za-z0-9_-]{1,1024}\\\\z") or page.items.is_empty() or seen.has(page.next_cursor) or seen.size() >= 2000: return {}
+		if not Protocol.matches(page.next_cursor,"\\A[A-Za-z0-9_-]{1,1024}\\z") or page.items.is_empty() or seen.has(page.next_cursor) or seen.size() >= 2000: return {}
 		cursor = page.next_cursor
 		seen[cursor] = true
 	return {}
@@ -251,7 +267,9 @@ func reconcile() -> bool:
 		if not row is Dictionary or row.size() != 3 or not Protocol.matches(row.get("puzzle_id"),"\\A[A-Za-z0-9_-]{1,128}\\z") or not Protocol.count(row.get("server_revision")) or not Protocol.count(row.get("conflict_count")) or listing.has(row.puzzle_id): return false
 		listing[row.puzzle_id] = row
 	var checkpoint := await read("/v1/device/checkpoint")
-	if checkpoint.get("status") != 200 or not Protocol.valid_checkpoint(checkpoint.body,identity.account_id,identity.device_id): return false
+	if checkpoint.get("status") != 200 or not Protocol.valid_checkpoint(checkpoint.body,identity.account_id,identity.device_id):
+		if problem.is_empty(): problem = "Gerätebeleg konnte nicht geprüft werden."
+		return false
 	var state := profile.status()
 	if not state.has("sequence"): return false
 	var request := profile.resume_request()
@@ -272,11 +290,20 @@ func reconcile() -> bool:
 			problem = "Unbekannte Rätseldefinition."
 			continue
 		if not await pull(id): return false
+	if not await wait_for_disk(profile): return false
 	inventory_ready = true
+	problem = "" if not unresolved_inventory else problem
 	return true
 
+func wait_for_disk(owner: Profile) -> bool:
+	if owner == null: return false
+	while owner == profile and not owner.flush_confirmed():
+		if not owner._blocked.is_empty() or owner._barrier_error or (owner._awaiting.is_empty() and owner._durable.values().has(false)): return false
+		await get_tree().process_frame
+	return owner == profile
+
 func pull(id: String) -> bool:
-	if not profile.flush_confirmed(): return false
+	if not await wait_for_disk(profile): return false
 	var result := await read("/v1/puzzles/"+id)
 	if result.get("status") == 404 and inventory[id].server_revision == 0: return true
 	if result.get("status") != 200: return false

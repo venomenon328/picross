@@ -25,7 +25,7 @@ func configure(owner: Node) -> void:
 	password.max_length = 128
 	code.secret = true
 	form.add_child(choices)
-	add_child(notice)
+	client.add_child(notice)
 	notice.title = "Wiederherstellungscode"
 	notice.confirmed.connect(clear_notice)
 	notice.canceled.connect(clear_notice)
@@ -107,7 +107,7 @@ func confirm_choice(caption: String, action: Callable) -> void:
 	var stamp: int = client.epoch
 	var question := ConfirmationDialog.new()
 	question.dialog_text = caption
-	add_child(question)
+	client.add_child(question)
 	question.confirmed.connect(func() -> void:
 		question.queue_free()
 		if client.epoch == stamp: action.call())

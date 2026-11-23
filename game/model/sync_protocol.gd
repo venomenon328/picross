@@ -84,7 +84,7 @@ static func valid_checkpoint(value: Dictionary, account: String, device: String)
 	if value.size() != 7 or not value.has_all(["format","account_id","device_id","last_request_seq","last_request_hash","response_status","response_body"]): return false
 	if value.format != "picross-device-checkpoint/v1" or value.account_id != account or value.device_id != device or not count(value.last_request_seq): return false
 	if value.last_request_seq == 0: return value.last_request_hash == null and value.response_status == null and value.response_body == null
-	return matches(value.last_request_hash,"\\A[0-9a-f]{64}\\z") and value.response_status in [200,409] and value.response_body is String
+	return matches(value.last_request_hash,"\\A[0-9a-f]{64}\\z") and count(value.response_status) and int(value.response_status) in [200,409] and value.response_body is String
 
 static func valid_reply(request: Dictionary, status: int, reply: Dictionary) -> bool:
 	var body: Dictionary = JSON.parse_string(request.body)
