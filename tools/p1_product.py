@@ -5,6 +5,7 @@ from __future__ import annotations
 from concurrent.futures import ThreadPoolExecutor
 from contextlib import contextmanager
 import argparse
+import hashlib
 import json
 import os
 import platform
@@ -199,6 +200,23 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     return parser.parse_args(argv)
 
 
+def prepare_profile_link(environment: dict, workspace: Path, host: str):
+    """A synthetic foreign root for the native account path guard."""
+    server = p14_integration.HOST + "/linked"
+    link = p14_integration.profile_base(environment, host)/hashlib.sha256(server.encode()).hexdigest()/p14_integration.ACCOUNT
+    outside = workspace/"foreign-account-target"
+    outside.mkdir()
+    link.parent.mkdir(parents=True)
+    if host == "Windows":
+        shell = Path(os.environ["SystemRoot"])/"System32/WindowsPowerShell/v1.0/powershell.exe"
+        subprocess.run([str(shell), "-NoProfile", "-NonInteractive", "-Command",
+                        "$ErrorActionPreference='Stop'; New-Item -ItemType Junction -Path $env:B1_LINK -Target $env:B1_TARGET | Out-Null"],
+                       env={**environment, "B1_LINK":str(link),"B1_TARGET":str(outside)}, check=True)
+    else:
+        link.symlink_to(outside, target_is_directory=True)
+    return link
+
+
 def run_integration(output: Path, workspace: Path, environment: dict, base: list[str], phase, host: str) -> dict:
     directory = output / "integration"
     directory.mkdir()
@@ -210,7 +228,14 @@ def run_integration(output: Path, workspace: Path, environment: dict, base: list
         (saves/name).write_bytes(data)
     def foreign_hashes():
         return {name: toolchain.sha256_file(saves/name) for name in p14_integration.FOREIGN}
-    foreign = dict(before=foreign_hashes())
+    account_root = p14_integration.profile_base(environment, host)
+    profile = account_root/p14_integration.PROFILE
+    other = account_root/p14_integration.OTHER_PROFILE/"saves/t06.json"
+    other.parent.mkdir(parents=True)
+    other.write_bytes(p14_integration.OTHER_BYTES)
+    def all_foreign_hashes():
+        return {**foreign_hashes(), "other-account/t06.json": toolchain.sha256_file(other)}
+    foreign = dict(before=all_foreign_hashes())
     environment.update(P1_TEST_SAVE_ROOT=str(saves), P1_INTEGRATION_PLAN=str(plan_path),
                        P1_INTEGRATION_TRACE=str(trace))
     try:
@@ -218,7 +243,9 @@ def run_integration(output: Path, workspace: Path, environment: dict, base: list
             phase("integration-"+stage, base + ["--script", "res://tests/p14_integration.gd", "--", "--"+flag],
                   "CI2_D_HISTORY_"+stage.upper()+"_OK")
             shutil.copyfile(saves/"t06.json", directory/(stage+"-save.json"))
-            foreign[stage] = foreign_hashes()
+            shutil.copyfile(profile/"journal.json", directory/(stage+"-journal.json"))
+            shutil.copyfile(profile/"saves/t06.json", directory/(stage+"-account.json"))
+            foreign[stage] = all_foreign_hashes()
         (directory/"foreign-slots.json").write_text(json.dumps(foreign)+"\n", encoding="utf-8")
         summary = p14_integration.verify_evidence(directory)
         (directory/"summary.json").write_text(json.dumps(summary, indent=2)+"\n", encoding="utf-8")
@@ -462,6 +489,8 @@ def main(argv: list[str] | None = None) -> int:
                         result["expected_failure"] = True
                     else:
                         require_clean_output(result, marker)
+                        if name == 'tests' and result['output'].splitlines().count('SYNC_B1_CORE_OK') != 1:
+                            raise toolchain.PreflightError('Missing account profile/queue cases')
                         if name == 'current-drawing-tests':
                             from zs2_evidence import validate_log
                             validate_log(result['output'])
@@ -479,7 +508,14 @@ def main(argv: list[str] | None = None) -> int:
             # Bind/copy before any test can mutate the base's generated caches.
             za1_prepared = za1_product.prepare_imports(project, workspace) if args.pilots else None
             if args.core:
-                run("tests", base + ["--script", "res://tests/run_tests.gd"], "P1_TESTS_OK")
+                profile_link = prepare_profile_link(environment, workspace, host)
+                try:
+                    run("tests", base + ["--script", "res://tests/run_tests.gd"], "P1_TESTS_OK")
+                finally:
+                    if host == "Windows":
+                        profile_link.rmdir()
+                    else:
+                        profile_link.unlink()
                 run("current-drawing-tests", base + ["--script", "res://tests/zs2_tests.gd", "--", "--p1-capture"], "ZS2_TESTS_OK")
                 run("expected-failure", base + ["--script", "res://tests/run_tests.gd", "--", "--force-failure"],
                       expected_failure=True)

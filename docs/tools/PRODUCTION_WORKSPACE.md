@@ -506,6 +506,16 @@ Integration. Ein neuer Quellstand oder geänderte relevante Bildbytes entwerten
 stale Auswahlabsichten gezielt. Kein automatischer Modellaufruf, keine Modell-API,
 kein Freigabewriter im Hilfsdienst und keine automatische Serienfreigabe.
 
+Mit der tatsächlich abgesendeten und an aktuelle Originalbytes gebundenen
+Kandidatenwahl ist die eng begrenzte Publisherbereinigung der ausgeschiedenen
+eigenen Alternativen bereits autorisiert. Dafür keine weitere Bestätigungsrunde
+im Assistenten, im Folgeauftrag oder im Produktionschat anfordern; die Prüfung
+und sichere Veröffentlichung folgen [PW-B](PW_B_CONTRACT.md). Scheitert nur
+der automatische Assetabbau, bleibt die gültige Bild-/Motiv-/Raster-/Hintergrundwahl
+bestehen; den technischen Rest gesondert ausweisen. Die eigenständig ausdrücklich
+bestätigte Entfernung einer vollständigen Produktion nach §4.4 ist davon
+nicht betroffen.
+
 Bei der Motivfreigabe genügt die ausdrückliche Motivwahl, wenn der aktuelle
 Record genau einen vollständigen Parametervorschlag enthält. Bei mehreren
 vollständigen Vorschlägen ist eine eigene Auswahl erforderlich. Die Ansicht

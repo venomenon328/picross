@@ -162,6 +162,19 @@ entfernen, sobald keine aktuelle Nutzung mehr besteht. Kein Archivieren und
 keine Wartepflicht auf Main. Gewählte Bilder/Raster/Proofs nur so lange erhalten,
 wie die aktuelle Phase sie braucht; wiederverwendete Dateien nicht duplizieren.
 
+Die im abgesendeten Auftrag ausdrücklich erklärte, aktuelle und eindeutig an
+Kandidaten-ID sowie unveränderte Originalbytes/Revision gebundene Wahl umfasst
+die anschließende Entfernung der dadurch ausgeschiedenen, nachweislich nicht
+mehr benötigten eigenen Alternativen samt exklusiver Hilfsdateien und
+Arbeitsrelease-Assets. Für diese gebundene Bereinigung bei Reveal, Motiv, Raster
+oder Hintergrund keine zweite menschliche Freigabe, Löschbestätigung oder
+Rückfrage verlangen. Ein bloßer Klick, das Kopieren oder ein unabgesendeter
+Entwurf sind keine Wahl. Unklare Eigentums- oder Referenzbindung sperrt nur die
+betroffene Löschung; fremde und weiterhin benötigte Originale bleiben erhalten.
+Ein Bereinigungsfehler setzt die gültige Auswahl unveränderter Bytes nicht
+zurück. Nach gesicherter Fortschreibung denselben Stand technisch fortsetzen,
+ohne die Bild- oder Rasterentscheidung erneut einzufordern.
+
 Keine Prompts, Seeds, Such-/Reparaturverläufe, Ablehnungs- oder Korrekturhistorie
 aufbewahren oder rekonstruieren. Temporäre Laufdaten sind erlaubt, ihr Fortbestand
 ist nach Vorliegen des aktuellen Ergebnisses keine Voraussetzung. Suchbudgets
