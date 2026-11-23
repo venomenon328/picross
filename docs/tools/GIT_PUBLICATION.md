@@ -7,30 +7,84 @@ verlangt die Vorabprüfung vor dem ersten Upload von Gitobjekten.
 
 | Situation | Geprüfter Einstieg |
 | --- | --- |
-| ChatGPT, geeigneter neuer Entwicklungsbranch | [Connector-Publisher](../../tools/publish_connector.py) und Connector-Git-Data-Operationen gemäß Ablauf unten |
+| ChatGPT, neuer Entwicklungsbranch ohne lokalen Checkout | Direkter geprüfter Connector-Git-Data-Ablauf gemäß Abschnitt unten |
+| ChatGPT mit bereits vorhandenem lokalen Checkout | Optional [Connector-Publisher](../../tools/publish_connector.py) mit Manifest und Git-Data-Operationen |
 | Neuer Arbeitsbranch über Git | `python -m tools.publish_git BRANCH --expected new` |
 | Bestehender Arbeitsbranch über Git | `python -m tools.publish_git BRANCH --expected SHA` |
 | Einzelner API-Commit auf bestehendem Arbeitsbranch | `python -m tools.publish_git BRANCH --expected SHA --api` mit Git-/gh-Zugriff |
 
-Beide Publisher verwenden dieselbe [Objektprüfung](../../tools/publish_git.py)
-und [Dateiklassifikation](../../tools/ci_growth.py). Sie erfassen alle ausgehenden
-Commits, auch vorübergehend hinzugefügte Dateien, Umbenennungsziele, Änderungen
-an bestehenden Dateien und Seitenlinien. Sie verlangen eine vollständige lokale
-Git-Datenbank und die bereinigte Historie. Die Arbeitsref-/PR-CI diagnostiziert
-nach einem Upload und kann ihn nicht rückgängig machen. Revieworiginale folgen
-dem [Zustellvertrag](../dev-rules/CI_CONTRACT.md#zustellung-an-einen-unabhängigen-reviewer).
+Die lokalen Publisher verwenden die gemeinsame [Objektprüfung](../../tools/publish_git.py)
+und [Dateiklassifikation](../../tools/ci_growth.py). Sie prüfen sämtliche
+ausgehenden Commits einschließlich Seitenlinien und benötigen dafür eine
+vollständige lokale Git-Datenbank. Der direkte Connector-Weg prüft dagegen
+seinen **einzigen neuen Commit** auf dem frisch gelesenen `main` anhand des
+vollständigen Remote-Baums, des Diffs und seiner einzigen Elternbindung.
+Beide Wege beachten dieselben verbotenen Dateiklassen. Ein lokaler Checkout
+ist für den direkten Connector-Weg **keine Voraussetzung**. Die Arbeitsref-/PR-CI
+diagnostiziert nach einem Upload und ersetzt keine Vorabkontrolle. Revieworiginale
+folgen dem [Zustellvertrag](../dev-rules/CI_CONTRACT.md#zustellung-an-einen-unabhängigen-reviewer).
 
-## Connector für neue Entwicklungsbranches
+## Direkter GitHub-Connector ohne lokalen Checkout
 
-Voraussetzungen sind der autorisierte eigene Arbeitsbranch (`feat/`, `fix/`,
-`chore/` oder `docs/`), lokale Git-Objekte und genau ein lokaler Commit direkt
-auf dem über den Connector aktuell gelesenen `main`. Für diesen Weg genügt ein
-vollständiger bereits verfügbarer lokaler Checkout auf dieser Basis. Der
-Publisher selbst benötigt kein GitHub-Netz und keine `gh`-Anmeldung. Wenn der
-frische Main-Commit lokal fehlt, die vollständige Basis beschaffen oder den
-konkreten fehlenden Schritt melden. Arbeitsbaumänderungen zuerst am committed
-Diff prüfen. Issue-/PR-Metadaten können entsprechend dem Auftrag unabhängig
-von diesem Commitweg über den Connector bearbeitet werden.
+Dies ist der bevorzugte ChatGPT-Publikationsweg für einen neuen, vom Auftrag
+gedeckten eigenen Branch (`feat/`, `fix/`, `chore/` oder `docs/`). Er erstellt
+genau **einen Commit mit dem frisch gelesenen `main` als einzigem Parent**.
+Dafür sind keine lokale Git-Datenbank, kein lokales Git-Netz und keine
+`gh`-Anmeldung erforderlich. Fehlen diese lokalen Werkzeuge, zunächst die
+tatsächlich verfügbaren GitHub-Connector-Git-Data-Fähigkeiten prüfen statt den
+Commit pauschal als unmöglich zu melden.
+
+1. **Vor dem ersten Upload:** `main`-Ref, Git-Commit und vollständigen
+   Basisbaum über den Connector lesen; den gewählten neuen Branchnamen und
+   die Abwesenheit auch kollidierender Refpräfixe prüfen. Alle ausgehenden
+   Pfade und Bytes vorab gegen den beauftragten Scope, vorhandene Datei-/Blob-
+   IDs und Modi, Geheimnisse und die verbotenen Klassen aus
+   [`ci_growth.py`](../../tools/ci_growth.py) kontrollieren. Nicht verifizierbare
+   Änderungen sind ein konkreter Blocker, kein Freibrief für ungeprüfte Uploads.
+2. **Blobs und Baum:** Ausschließlich die geprüften Änderungen über
+   `create_blob` erzeugen und jede resultierende Blob-SHA mit den ursprünglichen
+   Bytes durch einen echten Readback abgleichen. Den neuen Baum mit
+   `create_tree` auf dem gebundenen Basisbaum und genau diesen Änderungen
+   erstellen; den vollständigen Baum nachlesen und alle geänderten und
+   unveränderten Pfade samt Modus, Typ und Blob-SHA vergleichen. Bei Binärdaten
+   ist ein exakter Byte-/Hashweg nötig, kein bloßer Link oder Dateiname.
+3. **Commit und Diff:** `create_commit` ausschließlich mit einem Parent
+   (`main`-SHA) und dem kontrollierten Baum ausführen. Den Commit unabhängig
+   nachlesen, Parent, Baum und Nachricht prüfen und den vollständigen GitHub-
+   Commitvergleich gegen `main` auf genau den beauftragten Diff und die
+   unveränderten übrigen Dateien kontrollieren. Fehlende Diffdaten nicht als
+   erfolgreichen Vollvergleich ausgeben.
+4. **Branch bedingt erstellen:** Vor der Refmutation `main` und die
+   Abwesenheit des neuen Branches erneut lesen. Nur mit `create_branch` auf
+   die geprüfte Commit-SHA anlegen; eine bereits vorhandene Referenz darf
+   nicht überschrieben werden. Den Remote-Ref separat nachlesen und nur
+   die erwartete SHA als veröffentlicht melden. Wenn `main` geändert wurde,
+   zuerst die Prüfung auf frischer Basis erneuern.
+5. **PR und Gates:** Draft-PR auf dem verifizierten Head erstellen und
+   vollständigen Diff, echte CI-/Review-Gates und Mergebefugnis nach WORKFLOW
+   auswerten. Noch nicht referenzierte Git-Objekte sind keine veröffentlichte
+   Branchänderung.
+
+Bei **bestehenden PR-Branches** ist die Fortführung auf demselben Branch
+erforderlich. Ein Connector-Refupdate ist nur mit nachweislich **atomarer
+Headbindung in derselben Mutation** zulässig. Ein vorheriger SHA-Read oder
+ein nicht als atomar belegtes `expected_sha`-Feld am üblichen REST-Refupdate
+reicht nicht. Ohne solche Funktion für genau diese Branchfortschreibung den
+lokalen Publisher mit echter Lease verwenden und nur den betroffenen Schritt
+als blockiert melden. Nicht daraus auf generelle Connector-Unverfügbarkeit
+schließen und keinen neuen Ersatzbranch für denselben laufenden PR erfinden.
+
+## Optionaler lokaler Connector-Publisher
+
+Für einen bereits vorhandenen vollständigen lokalen Checkout bleibt
+[`publish_connector.py`](../../tools/publish_connector.py) verfügbar. Dieser
+**optionale** Weg erwartet lokale Git-Objekte und genau einen lokalen Commit
+direkt auf dem über den Connector frisch gelesenen `main`. Der lokale Publisher
+selbst braucht weder GitHub-Netz noch eine `gh`-Anmeldung. Fehlt die lokale
+Gitbasis, ist der oben beschriebene direkte Connector-Weg zu prüfen und zu
+verwenden; das Fehlen eines Checkouts ist kein allgemeiner Commitblocker.
+Arbeitsbaumänderungen werden auf dem lokalen Weg zuerst am committed Diff
+geprüft. Issue-/PR-Metadaten sind unabhängig von beiden Commitwegen zugänglich.
 
 Der Connector muss vollständige Git-Referenz- und Git-Commit-Metadaten lesen,
 Git-Blobs, -Trees und -Commits erstellen und einen Ref **ausschließlich bei
@@ -44,7 +98,7 @@ serverseitige `expectedHeadOid`-Bindung seiner Commitmutation. Einen laufenden
 PR auf seinem Branch fortführen. Fehlt dafür die sichere Schreibfähigkeit,
 bleiben Quellen-, Issue-, PR- und CI-Zugriff separat nutzbar.
 
-### Ausführung
+### Lokaler Manifestablauf
 
 Die Python-Befehle laufen im lokalen Checkout. JSON-Dateien und Manifest liegen
 in der eigenen Arbeitsablage. Antworten müssen aus den genannten Connector-GETs
@@ -91,7 +145,9 @@ Operation. Das Manifest enthält Quellbytes und gehört weder in Git noch ins PR
 ## Prüfungen
 
 `python -m unittest tools.test_publish_connector -v` prüft den Offline-Ablauf
-mit synthetischem Git-Verlauf. Ein tatsächlicher Connector-Durchstich muss
-seine GitHub-Mutationen und den getrennten Ref-Readback einzeln belegen. Ein
-lokaler Test oder ein erfolgreiches Issue-Schreiben allein belegt weder die
-Git-Data-Schreibfähigkeit noch eine erfolgreiche Commitpublikation.
+mit synthetischem Git-Verlauf. Ein tatsächlicher Connector-Durchstich – direkt oder mit lokalem Manifest –
+muss seine GitHub-Mutationen, die Basis-/Baumbindung und den getrennten Ref-
+Readback belegen. Der direkte Weg wurde für [#850 / PR #852](https://github.com/venomenon328/picross/pull/852)
+an einem neuen Dokumentenbranch mit Blob-, Baum-, Commit- und Ref-Readback
+sowie vollständigem GitHub-Diff und grüner PR-CI ausgeführt. Ein lokaler Test
+oder erfolgreiches Issue-Schreiben allein belegt keinen Commit-Upload.
