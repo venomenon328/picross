@@ -15,9 +15,11 @@ Ohne passenden Stand oder nach Abschluss/Reset ist das Panel verborgen. Öffnen 
 Ändern der Ansicht allein setzt keinen Merker; echtes Undo/Redo schon. Ein neuer Start
 zeigt weiterhin den Katalog. Der separate `user://p1/recent-puzzle.json` ändert keine
 Slotdatei. Fehler des Merkers haben im Katalog einen eigenen Retry; Save-/Backupfehler
-und deren bewusste Reparatur bleiben davon getrennt. Windows verwendet für atomaren
-Metadatenaustausch das mitgelieferte Windows PowerShell/.NET; dessen Ausfall verhindert
-nur die Aktualisierung des Merkers.
+und deren bewusste Reparatur bleiben davon getrennt. Unter Windows startet das Spiel
+einmal einen PowerShell-Helfer für den atomaren Austausch von Kontojournal und
+Metadaten. Jede bestätigte Aktion wartet auf ihre lokale Sicherung. Kann das
+Kontojournal nicht bestätigt werden, erscheint ein Speicherfehler. Betrifft der
+Fehler allein den Fortsetzen-Merker, lässt sich dieser im Katalog erneut speichern.
 
 **Buchintegration B-B / #493, #498:** Windows und Web starten den regulären
 Rätselkatalog als räumliches Buch. Kurzes Blättern

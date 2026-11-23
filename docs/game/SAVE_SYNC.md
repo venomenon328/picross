@@ -448,6 +448,25 @@ schreibt einen Geschwistertemp, flusht, schließt, vergleicht alle Bytes und
 ersetzt per Rename (unter Windows MoveFileEx mit Write-through). Erst ein
 erfolgreicher Vergleich des Ziels schließt die Publikation ab.
 
+Unter Windows initialisiert ein Autoload vor der ersten Spielszene einen gemeinsamen
+PowerShell/.NET-Prozess für Journal, Fortsetzen-Merker und die weiteren Aufrufer
+des Metadatenaustauschs. Nach einmaligem Add-Type und Bereitschaftsmeldung erhält
+der Helfer über eine private Pipe Auftragsnummer, Modus und beide absoluten Pfade
+als Base64-Daten. Der geprüfte Temp erhält für die Übergabe einen einmaligen
+Geschwisternamen. MoveFileExW verwendet WRITE_THROUGH, beim Ersetzen zusätzlich
+REPLACE_EXISTING. Nur die passende Erfolgsantwort schließt den Austausch ab.
+
+Für den Start gelten zehn Sekunden, für eine Auftragsantwort zwei Sekunden.
+Bei fehlender oder unpassender Antwort meldet der Aufrufer einen Fehler, holt
+einen noch vorhandenen Kandidaten nach Möglichkeit auf den Tempnamen zurück und
+schließt die Pipe. Ein zurückgebliebener Arbeitsname wird nie als Save geladen.
+Beim Wiederanlauf wird ein festhängender eigener Prozess beendet. Der neue Helfer
+passiert vor seiner Bereitschaft denselben Windows-Mutex wie die Austauschoperationen.
+Unter dem Mutex prüft der Helfer die Lebensdauer des zugehörigen Spielprozesses.
+Beim regulären Beenden schließt der Player die Pipe und beendet seinen Helfer.
+Ein Journalfehler führt in die bestehende Save-/Recoverybehandlung. Ein Fehler
+allein beim Fortsetzen-Merker bleibt am separaten Metadaten-Retry sichtbar.
+
 Vor Slotänderung sichert das Journal die vollständige Schreib-/Resetabsicht
 einschließlich des SHA-256 der erwarteten Primarybytes bei einem Save. Je Rätsel
 bindet es die letzte lokale Generation und einen Hash der Fortschrittsprojektion.

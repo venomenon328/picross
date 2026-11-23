@@ -53,6 +53,7 @@ static func run(t: SceneTree) -> void:
 	var host := HOST + "/core"
 	t.check(p.open(host,ACCOUNT,DEVICE,EPOCH,true,adapter),"B1 native initialization")
 	t.check(b.open(host,OTHER,DEVICE,EPOCH,true) and c.open(HOST+"/other",ACCOUNT,DEVICE,EPOCH,true),"B1 independent accounts and servers")
+	if OS.get_name() == "Windows": publisher_timeout(t, p._root)
 	t.check(not Profile.new().open(host,"../x",DEVICE,EPOCH,true),"B1 unsafe identity")
 	var b_hash := FileAccess.get_sha256(b._journal.path)
 	var c_hash := FileAccess.get_sha256(c._journal.path)
@@ -114,6 +115,43 @@ static func run(t: SceneTree) -> void:
 		rejected.sequence_consumed = not rejected.sequence_consumed
 		t.check(not Protocol.valid_reply(request,409,rejected),"B1 inconsistent consumption " + code)
 	if t.failures == start: print("SYNC_PROGRESS_CORE_OK")
+
+static func publisher_timeout(t: SceneTree, root: String) -> void:
+	var publisher := preload("res://model/windows_publisher.gd").new()
+	var target := root.path_join("timeout-test.json")
+	var temp := target + ".tmp"
+	write(target,"previous")
+	write(temp,"expired")
+	# This private child deliberately acts AFTER its caller timed out and closed
+	# stdin. It would overwrite the target if the expired source still existed.
+	var script := """
+$id,$flags,$src,$dst = [Console]::ReadLine().Split(' ')
+$null = [Console]::In.ReadToEnd()
+$source = [Text.Encoding]::UTF8.GetString([Convert]::FromBase64String($src))
+$target = [Text.Encoding]::UTF8.GetString([Convert]::FromBase64String($dst))
+if ([IO.File]::Exists($source)) { [IO.File]::Copy($source,$target,$true) }
+"""
+	var exe := OS.get_environment("SystemRoot").path_join("System32/WindowsPowerShell/v1.0/powershell.exe")
+	publisher.child = OS.execute_with_pipe(exe, ["-NoProfile","-NonInteractive","-EncodedCommand",
+		Marshalls.raw_to_base64(script.to_utf16_buffer())],false)
+	if publisher.child.is_empty():
+		t.check(false,"SYNC-PERF timeout fixture starts")
+		publisher.free()
+		return
+	publisher.available = true
+	t.check(not publisher.replace(temp,target,true),"SYNC-PERF lost acknowledgement reports failure")
+	write(temp,"newer")
+	var deadline := Time.get_ticks_msec()+5000
+	while OS.is_process_running(publisher.child.pid) and Time.get_ticks_msec()<deadline: OS.delay_msec(5)
+	t.check(not OS.is_process_running(publisher.child.pid) and FileAccess.get_file_as_string(target) == "previous",
+		"SYNC-PERF expired worker cannot publish or consume reused temp")
+	publisher._process(0)
+	t.check(not publisher.replace(temp,target,false) and FileAccess.get_file_as_string(target) == "previous",
+		"SYNC-PERF create-only publication preserves existing bytes after restart")
+	t.check(publisher.replace(temp,target,true) and FileAccess.get_file_as_string(target) == "newer",
+		"SYNC-PERF replacement worker publishes only the new request")
+	publisher._exit_tree()
+	publisher.free()
 
 static func basis_and_schedule(t: SceneTree, p: Profile, source: Session) -> void:
 	var slot := Session.new(source.definition)

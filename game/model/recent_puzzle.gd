@@ -4,6 +4,7 @@ const Session = preload("res://model/session.gd")
 const Registry = preload("res://model/content_registry.gd")
 const PATH: String = "user://p1/recent-puzzle.json"
 const FORMAT: String = "picross-recent-puzzle-v1"
+static var windows_filesystem: DirAccess
 var path: String
 var record: Dictionary = {}
 var desired: Dictionary = {}
@@ -58,8 +59,18 @@ static func read(location: String) -> Dictionary:
 
 static func safe_file(location: String) -> bool:
 	var absolute: String = ProjectSettings.globalize_path(location).replace("\\","/")
-	if absolute != absolute.simplify_path() or DirAccess.dir_exists_absolute(absolute): return false
+	if absolute != absolute.simplify_path(): return false
 	var cursor: String = absolute
+	if OS.get_name() == "Windows":
+		# Absolute paths query fresh Windows attributes. Reuse the accessor,
+		# never a link result, including for previously absent leaf files.
+		if windows_filesystem == null: windows_filesystem = DirAccess.open(OS.get_user_data_dir())
+		if windows_filesystem == null or windows_filesystem.dir_exists(absolute): return false
+		while cursor != cursor.get_base_dir():
+			if windows_filesystem.is_link(cursor): return false
+			cursor = cursor.get_base_dir()
+		return true
+	if DirAccess.dir_exists_absolute(absolute): return false
 	while cursor != cursor.get_base_dir():
 		var directory := DirAccess.open(cursor.get_base_dir())
 		if directory != null and directory.is_link(cursor.get_file()): return false
@@ -146,17 +157,9 @@ func _replace(temporary: String, replace_existing: bool = true) -> bool:
 		if not replace_existing and FileAccess.file_exists(path): return false
 		# POSIX rename and Emscripten MEMFS rename replace without a delete gap.
 		return DirAccess.rename_absolute(temporary,path) == OK
-	# Godot's Windows rename deletes the destination first. Use the Windows
-	# same-volume MoveFileExW replacement instead. ReplaceFileW also has a
-	# documented failure that removes the old target, so File.Replace is unsafe.
-	# The inbox PowerShell/.NET bridge needs no installed scripts,
-	# profiles, shell interpolation, downloads or user-controlled code. Only a
-	# changed ID/revision launches this hidden process (same record is a no-op).
-	var source: String = Marshalls.utf8_to_base64(ProjectSettings.globalize_path(temporary))
-	var target: String = Marshalls.utf8_to_base64(ProjectSettings.globalize_path(path))
-	var command: String = "$ErrorActionPreference='Stop';try{Add-Type -Name RecentFile -Namespace Picross -MemberDefinition '[System.Runtime.InteropServices.DllImport(\"kernel32.dll\",CharSet=System.Runtime.InteropServices.CharSet.Unicode,SetLastError=true)] public static extern bool MoveFileEx(string source,string target,uint flags);';$s=[Text.Encoding]::UTF8.GetString([Convert]::FromBase64String('%s'));$d=[Text.Encoding]::UTF8.GetString([Convert]::FromBase64String('%s'));if([Picross.RecentFile]::MoveFileEx($s,$d,%d)){exit 0};exit 1}catch{exit 1}" % [source,target,9 if replace_existing else 8]
-	var executable: String = OS.get_environment("SystemRoot").path_join("System32/WindowsPowerShell/v1.0/powershell.exe")
-	return OS.execute(executable,PackedStringArray(["-NoLogo","-NoProfile","-NonInteractive","-EncodedCommand",Marshalls.raw_to_base64(command.to_utf16_buffer())]),[],false,false) == 0
+	var tree := Engine.get_main_loop() as SceneTree
+	var publisher := tree.root.get_node_or_null("WindowsPublisher")
+	return publisher != null and publisher.replace(temporary, path, replace_existing)
 
 static func web_retry() -> void:
 	if OS.has_feature("web"): JavaScriptBridge.eval("window.picrossStorage.recentRetry()",true)

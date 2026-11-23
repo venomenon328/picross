@@ -34,7 +34,8 @@ static func run(probe) -> void:
 		restart.load_record()
 		probe.check(restart.record.id == first.definition.id,"K-B interrupted temp never becomes startup marker")
 	marker.fail_step = ""
-	probe.check(marker.retry() and marker.record.id == second.definition.id,"K-B explicit replacement retry publishes latest candidate")
+	probe.check(marker.retry() and Recent.read(path) == marker.record and marker.record.id == second.definition.id,
+		"K-B explicit replacement retry publishes latest candidate on disk")
 	probe.check(marker.clear_matching(str(first.definition.id)) and marker.record.id == second.definition.id,"K-B foreign reset leaves marker")
 	marker.fail_step = "delete"
 	original = FileAccess.get_file_as_bytes(path)

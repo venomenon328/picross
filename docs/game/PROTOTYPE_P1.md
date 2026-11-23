@@ -383,13 +383,12 @@ behauptet keinen dauerhaften Abschluss; beim Neustart gilt der validierte Diskst
 Metadatenfehler erhalten alte gültige Bytes und einen separaten nichtmodalen Retry.
 
 Ein vollständiger Geschwister-Temp wird geflusht, geschlossen und strikt zurückgelesen.
-Windows benutzt MoveFileExW mit REPLACE_EXISTING und WRITE_THROUGH ohne COPY_ALLOWED
-über das lokale Windows PowerShell/.NET ohne Profil/Console; Pfade werden ausschließlich
-als Base64-Daten übergeben. Temp und Ziel liegen zwingend im selben Verzeichnis.
-Godots destruktives Windows-Ziel-Rename und File.Replace/ReplaceFileW (dokumentierter
-Zielverlust bei Fehler 1176) werden nicht verwendet. POSIX/Web verwenden Rename. Derselbe
-bereits gespeicherte Merker startet keinen Hilfsprozess. Ein fehlendes/gesperrtes
-PowerShell bleibt ein isolierter Merkerfehler, keine fehlgeschlagene Rätselsicherung.
+Der [Windows-Publisher](../../game/model/windows_publisher.gd) startet beim Spielstart
+und bedient auch den Fortsetzen-Merker über seine private Pipe. Der Austausch
+verwendet MoveFileExW mit REPLACE_EXISTING und WRITE_THROUGH im selben Verzeichnis.
+Die Pfadprüfung liest die Windows-Dateiattribute für Ziel und Vorfahren bei jedem
+Zugriff erneut. POSIX/Web verwenden Rename. Ein identischer gültiger Merker
+überspringt den Austausch. Fehler beim Merker zeigt der Katalog separat an.
 Verzeichnisse, Links, ungültige Pfade und fremde Dateinamen werden zurückgewiesen.
 
 ## 7. Technikbindung und Prüfweg
