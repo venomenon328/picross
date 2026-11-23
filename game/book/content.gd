@@ -185,6 +185,14 @@ func resume_recent() -> void:
 	if presentation_locked or album.locked or not album.visible: return
 	super.resume_recent()
 
+func rebind_profile(profile: AccountProfile, profile_changed: bool = true) -> void:
+	super.rebind_profile(profile,profile_changed)
+	if profile_changed:
+		leave_background_visit()
+		book.return_context.clear()
+		if information.visible: book.information_routes.profile_changed()
+	_layout_book()
+
 func _layout_book(prepare_board: bool = false) -> void:
 	super._layout_book(prepare_board)
 	if album == null or surface == null or laying_out: return
@@ -208,6 +216,7 @@ func _layout_book(prepare_board: bool = false) -> void:
 	title.visible = work.visible or ending.visible
 	if catalog_title != null: catalog_title.visible = album.visible
 	if information.visible: info.layout()
+	if accounts != null and accounts.dialog != null: accounts.dialog.layout(ui_scale)
 	if save_retry != null:
 		save_retry.visible = session != null and not slot_errors[sessions.find(session)].is_empty() and not work_repair_button.visible
 		if album.visible:
@@ -404,6 +413,7 @@ func _update_status() -> void:
 func leave_app() -> void: exit_requested.emit()
 
 func quit_after_flush() -> void:
+	if accounts != null and accounts.navigation_locked(): return
 	if not _flush_current(): return
 	if accounts and accounts.profile:
 		if OS.has_feature("web"):

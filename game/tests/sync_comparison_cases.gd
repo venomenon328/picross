@@ -26,7 +26,7 @@ static func version(id: String, rev: int, raster: int, device: String, label: St
 		"device_id":device,"device_name":label,"server_revision":float(rev),"updated_at":STAMP,
 		"save":save,"validation":null if save == null else "progress_structure_checked"}
 
-static func visible_window(parent: Window) -> AcceptDialog:
+static func visible_window(parent: Node) -> AcceptDialog:
 	for child: Node in parent.get_children():
 		if child is AcceptDialog and child.visible: return child
 	return null
@@ -79,7 +79,7 @@ static func run(r: SceneTree) -> void:
 	fixture.rows = {root:remote,root+"/conflicts":{"items":[candidate],"next_cursor":null},
 		root+"/history":{"items":[past],"next_cursor":null},root+"/conflicts/"+CANDIDATE:candidate,root+"/history/7":past}
 	var local_version: int = profile.status().local
-	var dialog: AcceptDialog = client.dialog
+	var settings: Control = client.dialog
 	var captures := []
 	var review_directory := OS.get_environment("KAT2_SYNC_B2_REVIEW_DIR")
 	for scale: int in [100,125]:
@@ -88,16 +88,13 @@ static func run(r: SceneTree) -> void:
 		await r.frames()
 		if not app.information.visible: r.click(app.album.settings_button)
 		await r.frames()
-		var manage: Button = r.caption_button(app.information,"Konto verwalten")
-		app.info_scroll.ensure_control_visible(manage)
+		var versions: Button = r.caption_button(settings,"Konflikte und Versionen")
+		app.info_scroll.ensure_control_visible(versions)
 		await r.frames()
-		r.click(manage)
-		await r.frames()
-		r.check(dialog.visible,"B2 comparison account settings open by pointer")
-		r.click(r.caption_button(dialog,"Konflikte und Versionen"))
+		r.click(versions)
 		await r.frames()
 		await r.frames()
-		var listing := visible_window(dialog)
+		var listing := visible_window(settings)
 		r.check(listing != null,"B2 comparison list opens by pointer")
 		if listing == null: return
 		r.click(r.caption_button(listing,"Konflikt 1 vergleichen" if scale == 100 else "Version 7 vergleichen"))
@@ -134,7 +131,6 @@ static func run(r: SceneTree) -> void:
 			var journal: Dictionary = profile.status()
 			var entry: Dictionary = journal.entries.get(str(local_version+1),{})
 			r.check(journal.local == local_version+1 and entry.get("operation") == "discard" and entry.get("value") == CANDIDATE and entry.get("base_server_revision") == 9,"B2 explicit current comparison journals exactly the bound choice")
-			r.click(dialog.get_ok_button())
 			await r.frames()
 		else:
 			r.check(selected.contains("Windows · Gerätekennung f0000003") and selected.contains("2 ausgefüllt · 1 als leer markiert"),"B2 candidate shows distinct device and progress before a choice")
@@ -157,7 +153,6 @@ static func run(r: SceneTree) -> void:
 			await r.frames()
 			r.click(listing.get_ok_button())
 			await r.frames()
-			r.click(dialog.get_ok_button())
 			await r.frames()
 	if not review_directory.is_empty():
 		var proof := {"source_head":OS.get_environment("P1_PREFLIGHT_SOURCE_COMMIT"),

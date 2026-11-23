@@ -197,7 +197,8 @@ func _load_profile_slots() -> void:
 	if account_profile: recent = account_profile._recent
 	recent.load_record()
 
-func rebind_profile(profile: AccountProfile) -> void:
+func rebind_profile(profile: AccountProfile, profile_changed: bool = true) -> void:
+	var prior_id := str(session.definition.id) if session != null and not profile_changed else ""
 	_cancel_interaction()
 	save_timer.stop()
 	reset_dialog.hide()
@@ -208,9 +209,9 @@ func rebind_profile(profile: AccountProfile) -> void:
 	account_profile = profile
 	store = profile._store if profile else create_store()
 	_load_profile_slots()
-	if session != null: _bind_session(0)
+	if session != null: _bind_session(int(session_indices.get(prior_id,0)))
 	else: board.session = null
-	present_album()
+	if not information.visible: present_album()
 
 func _write_profile_slot(item: Session, view: Dictionary) -> String:
 	if not account_profile: return store.write_slot(item,view)

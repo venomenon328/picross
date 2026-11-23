@@ -250,6 +250,7 @@ func _begin(kind: String, prior: Dictionary = {}) -> void:
 	_prepare(generation)
 
 func request_open(id: String) -> bool:
+	if app.accounts != null and app.accounts.navigation_locked(): return false
 	if state != State.CATALOG or release_barrier or not app.session_indices.has(id): return false
 	var prior: Dictionary = context()
 	# Resolve and flush once, before any target animation. A rejected slot or
@@ -263,6 +264,7 @@ func request_open(id: String) -> bool:
 	return true
 
 func request_return() -> bool:
+	if app.accounts != null and app.accounts.navigation_locked(): return false
 	if state != State.WORK or release_barrier or app.information.visible or app.reveal_view.active: return false
 	if not (app.work.visible or app.ending.visible): return false
 	# Secure edits before hiding the work page. Later capture/settlement only
@@ -275,6 +277,7 @@ func request_return() -> bool:
 	return true
 
 func request_page(target: int) -> bool:
+	if app.accounts != null and app.accounts.navigation_locked(): return false
 	if state != State.CATALOG or release_barrier or target == app.album.page_index: return false
 	if target < 0 or target >= ceili(app.album.filtered_ids.size()/24.0): return false
 	target_page = target

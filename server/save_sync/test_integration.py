@@ -305,6 +305,53 @@ def recovery(a, b):
     a.code = a.http("POST", "/v1/auth/recovery-code", {"password": a.password}).body["recovery_code"]
     a.http("POST", "/v1/auth/recover", dict(args, recovery_code=replaced), 401)
     b.login()
+    password_bounds(a.project, a)
+
+
+def password_bounds(p, client):
+    fields = {"Register": "password", "Login": "password", "Recover": "new_password", "Confirm": "password"}
+    schemas = client.http("GET", "/openapi.json").body["components"]["schemas"]
+    for shape, field in fields.items():
+        definition = schemas[shape]["properties"][field]
+        assert (definition["minLength"], definition["maxLength"]) == (8, 128)
+
+    user = Client(p, "password-bounds")
+    # Two boundary spaces and a non-BMP character must survive without normalization.
+    user.password = " " + "🧩" * 6 + " "
+    seven = user.password[:-1]
+    register = {"username": user.name, "device_name": "synthetic",
+                "invitation": p.admin("invite"), "password": user.password}
+    login = {"username": user.name, "device_name": register["device_name"], "device_id": None}
+    assert user.http("POST", "/v1/auth/register", dict(register, password=seven), 422).body == {"code": "invalid_request"}
+    user.bind(user.http("POST", "/v1/auth/register", register, 201))
+    assert p.sql("SELECT split_part(password_hash, '$', 2) FROM accounts WHERE username='password-bounds'") == "argon2id"
+    login["device_id"] = user.device
+    assert user.http("POST", "/v1/auth/login", dict(login, password=seven), 422).body == {"code": "invalid_request"}
+    user.login()
+
+    assert user.http("POST", "/v1/auth/recovery-code", {"password": seven}, 422).body == {"code": "invalid_request"}
+    original = user.code
+    # Check the rejected rotation did not invalidate the original code.
+    check = {"username": user.name, "recovery_code": original, "new_password": seven}
+    assert user.http("POST", "/v1/auth/recover", check, 422).body == {"code": "invalid_request"}
+    assert user.get("account")["username"] == user.name
+    user.code = user.http("POST", "/v1/auth/recovery-code", {"password": user.password}).body["recovery_code"]
+    user.http("POST", "/v1/auth/recover", dict(check, new_password=user.password), 401)
+
+    check["recovery_code"] = user.code
+    assert user.http("POST", "/v1/auth/recover", check, 422).body == {"code": "invalid_request"}
+    user.get("account")
+    user.code = user.http("POST", "/v1/auth/recover", dict(check, new_password="🎨" * 8)).body["recovery_code"]
+    user.get("account", 401)
+    user.password = "🎨" * 8
+    user.login()
+
+    longest = "🧩" * 128
+    assert user.http("POST", "/v1/auth/recover", dict(check, recovery_code=user.code, new_password=longest + "y"), 422).body == {"code": "invalid_request"}
+    user.http("POST", "/v1/auth/recover", dict(check, recovery_code=user.code, new_password=longest))
+    user.password = longest
+    user.login()
+    print("SYNC-UX-03 password bounds, closed OpenAPI shapes and auth state verified", flush=True)
 
 
 def validation(a):

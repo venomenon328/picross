@@ -520,10 +520,15 @@ Der Katalog zeigt bei gelösten Rätseln eine proportionale Vorschau. Beim Öffn
 
 ## Spielerkonto
 
-In den Einstellungen öffnet „Konto verwalten“ den optionalen Zugang zum
-konfigurierten Dienst. Für die Registrierung sind Einladung, Benutzername und
-Passwort erforderlich. Den einmal angezeigten Wiederherstellungscode sicher
-aufbewahren. Ein vorhandenes Konto lässt sich auch offline lokal öffnen.
-Der Katalog zeigt den Kontostatus über der Trefferzahl. Beim Abmelden kehrt
-das Spiel zum Gastprofil zurück. Gaststände lassen sich ausdrücklich einzeln
-oder gemeinsam übernehmen.
+Unter „Spielerkonto“ in den Einstellungen stehen Anmeldung, Registrierung,
+Passwortwiederherstellung und die Aktionen des aktiven Kontos. Zur
+Registrierung brauchst du eine Einladung, einen Benutzernamen und ein Passwort
+mit 8–128 Unicode-Codepunkten. Leerzeichen zählen mit. Die Rückmeldung zur
+Aktion steht direkt im Formular. Aktives Profil und Synczustand haben eigene
+Zeilen. Der Katalog zeigt den Kontostatus weiter über der Trefferzahl.
+
+Den Wiederherstellungscode kannst du markieren oder über „Kopieren“ in die
+Zwischenablage übernehmen. Bewahre ihn sicher auf, bevor du die einmalige
+Anzeige schließt. Ein vorhandenes Konto lässt sich auch offline lokal öffnen.
+Beim Abmelden kehrt das Spiel zum Gastprofil zurück. Gaststände lassen sich
+ausdrücklich einzeln oder gemeinsam übernehmen.

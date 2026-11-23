@@ -7,6 +7,8 @@ const Transport = preload("res://model/sync_transport.gd")
 const Schedule = preload("res://model/sync_schedule.gd")
 const Dialog = preload("res://book/account_dialog.gd")
 const Session = preload("res://model/session.gd")
+const FLUSH_FEEDBACK := "Lokale Sicherung ausstehend oder fehlgeschlagen. Sicherung prüfen und erneut versuchen."
+const INVALID_REPLY := "Ungültige Antwort des Kontodiensts. Bitte erneut versuchen."
 var app: Control
 var profile: Profile
 var access := Access.new()
@@ -18,7 +20,7 @@ var transport_busy := false
 var changing := false
 var inventory_ready := false
 var problem := ""
-var dialog: AcceptDialog
+var dialog: Dialog
 var recovery_session := {}
 var recovery_device := false
 var epoch := 0
@@ -30,19 +32,21 @@ func configure(owner: Control) -> void:
 	app = owner
 	transport = app.book.account_transport
 	dialog = Dialog.new()
-	add_child(dialog)
-	dialog.configure(self)
 	var group: VBoxContainer = app._settings_group("Spielerkonto","account-settings")
-	group.add_child(app._text_button("Konto verwalten",dialog.open))
+	group.add_child(dialog)
+	dialog.configure(self)
+	refresh_status()
 	if not access.server.is_empty() and not access.active().is_empty(): _startup.call_deferred(access.active())
 
 func _startup(id: String) -> void:
 	if OS.has_feature("web"):
 		var storage: JavaScriptObject = JavaScriptBridge.get_interface("window").picrossStorage
 		while storage.pending and storage.error == "": await get_tree().process_frame
+	while app.presentation_locked: await get_tree().process_frame
 	if epoch == 0 and not changing: await resume_local(id)
 
 func safe_switch() -> bool:
+	if app.presentation_locked: return false
 	app._cancel_interaction()
 	if not app._flush_current(): return false
 	if profile != null and not profile.flush_confirmed():
@@ -66,6 +70,7 @@ func activate(data: Dictionary, fresh: bool) -> bool:
 	return true
 
 func bind(target: Profile, data: Dictionary) -> void:
+	var profile_changed: bool = identity.get("account_id","") != data.get("account_id","")
 	epoch += 1
 	recovery_session = {}
 	identity = data
@@ -82,63 +87,153 @@ func bind(target: Profile, data: Dictionary) -> void:
 	transport_busy = false
 	problem = ""
 	app.recent_signature = ""
-	app.rebind_profile(profile)
+	app.rebind_profile(profile,profile_changed)
 	if profile:
 		schedule.auth_paused = identity.token.is_empty() or Time.get_unix_time_from_datetime_string(identity.expires_at) <= Time.get_unix_time_from_system()
 		schedule.connected()
 	refresh_status()
 
 func resume_local(account: String) -> void:
-	if changing or not safe_switch(): return
-	changing = true
+	if changing or dialog.has_code(): return
+	if not safe_switch():
+		show_feedback(FLUSH_FEEDBACK)
+		return
+	start_action("Lokales Kontoprofil wird geöffnet …")
 	var data := access.credentials(account)
-	if data.is_empty(): problem = "Lokales Kontoprofil unlesbar."
-	else: await activate(data,false)
-	changing = false
-	refresh_status()
+	if data.is_empty():
+		finish_action("Lokales Kontoprofil unlesbar. Bitte erneut anmelden.")
+	elif await activate(data,false):
+		finish_action("Lokales Kontoprofil geöffnet.")
+	else:
+		finish_action("Lokales Kontoprofil konnte nicht geöffnet werden. Bitte erneut anmelden.")
 
 func authenticate(action: String, username: String, password: String, code: String, replace_lost: bool = false) -> void:
-	if changing or access.server.is_empty() or (not safe_switch() and not (profile and not profile._blocked.is_empty() and app._flush_current())): return
-	changing = true
-	var body := {}
+	if changing or dialog.has_code() or access.server.is_empty(): return
+	if password.length() < 8 or password.length() > 128 or password.to_utf8_buffer().size() > 1024:
+		show_feedback("Das Passwort muss 8–128 Unicode-Codepunkte enthalten.")
+		return
+	if not can_auth_switch():
+		show_feedback(FLUSH_FEEDBACK)
+		return
 	var saved := access.login_binding(username.to_lower()) if action == "login" else {}
 	if saved.has("error"):
-		changing = false
-		problem = "Lokale Gerätebindung widersprüchlich."
-		refresh_status()
+		show_feedback("Lokale Gerätebindung widersprüchlich. Bitte den geschützten Bestand prüfen.")
 		return
 	if action == "login" and not saved.is_empty() and saved.device_id == "" and not replace_lost:
-		changing = false
 		dialog.confirm_choice("Lokale Gerätekennung verloren. Ausdrücklich ein neues Gerät anmelden und den Bestand abgleichen?",authenticate.bind(action,username,password,code,true))
 		return
+	var body := {}
+	var running := ""
 	match action:
 		"login":
+			running = "Anmeldung läuft …"
 			body = {"username":username,"password":password,"device_id":saved.get("device_id") if not replace_lost else null,"device_name":OS.get_name()}
 		"register":
+			running = "Registrierung läuft …"
 			body = {"username":username,"password":password,"invitation":code,"device_name":OS.get_name()}
-		"recover": body = {"username":username,"new_password":password,"recovery_code":code}
-		"recovery-code": body = {"password":password}
-	var session_headers := identity if action == "recovery-code" else {}
+		"recover":
+			running = "Passwortwiederherstellung läuft …"
+			body = {"username":username,"new_password":password,"recovery_code":code}
+		"recovery-code":
+			running = "Codeerneuerung läuft …"
+			body = {"password":password}
+	if action == "recovery-code" and (profile == null or identity.token.is_empty() or schedule.auth_paused):
+		show_feedback("Bitte erneut anmelden und danach den Wiederherstellungscode erneuern.")
+		return
+	var stamp := epoch
+	start_action(running)
+	var session_headers := identity.duplicate() if action == "recovery-code" else {}
 	var response := await transport.send(access.server,"/v1/auth/"+action,HTTPClient.METHOD_POST,JSON.stringify(body),session_headers)
+	if stamp != epoch:
+		finish_action("")
+		return
+	dialog.clear_secrets()
+	var expected_status := 201 if action == "register" else 200
+	if response.status != expected_status:
+		finish_action(auth_error(action,response))
+		return
 	var result: Dictionary = response.body
-	if response.status not in [200,201] or not Protocol.uuid(response.generation):
-		problem = "Dienst nicht erreichbar." if response.status == 0 else "Kontoanfrage abgelehnt (HTTP %d)." % response.status
-	elif action in ["recover","recovery-code"]:
-		problem = ""
-		dialog.show_code(result.get("recovery_code",""))
-	elif Protocol.uuid(result.get("account_id")) and Protocol.uuid(result.get("device_id")) and Protocol.matches(result.get("token"),"\\A[A-Za-z0-9_-]{43}\\z") and result.get("username") == username.to_lower() and result.get("expires_at") is String and (saved.is_empty() or (saved.account_id == result.account_id and (saved.device_id == result.device_id or replace_lost))):
-		var data := {"server":access.server,"account_id":result.account_id,"device_id":result.device_id,"username":result.username,
-			"generation":response.generation,"token":result.token,"expires_at":result.expires_at}
-		var root := access.directory.path_join(data.account_id)
-		if safe_switch() or (profile and not profile._blocked.is_empty() and app._flush_current()):
-			var fresh := not DirAccess.dir_exists_absolute(root)
-			if not await activate(data,fresh):
-				recovery_session = data
-				recovery_device = replace_lost
-				problem = "Lokales Konto geschützt. Bestandsabgleich in Konto verwalten öffnen."
-		if action == "register": dialog.show_code(result.get("recovery_code",""))
-	else: problem = "Ungültige Kontobestätigung."
+	if not Protocol.uuid(response.generation):
+		finish_action(INVALID_REPLY)
+		return
+	var issued: Variant = result.get("recovery_code")
+	var valid_code := Protocol.matches(issued,"\\A[A-Za-z0-9_-]{43}\\z")
+	if action in ["recover","recovery-code"]:
+		if result.size() != 1 or not valid_code:
+			finish_action(INVALID_REPLY)
+			return
+		if action == "recover":
+			if identity.get("username") == username.to_lower(): schedule.auth_paused = true
+			dialog.set_mode("login")
+			finish_action("Passwort geändert. Bitte mit dem neuen Passwort anmelden.")
+		else:
+			finish_action("Neuer Wiederherstellungscode erstellt.")
+		dialog.show_code(issued)
+		return
+	if not valid_session(result,username,saved,replace_lost) or (not valid_code if action == "register" else issued != null):
+		finish_action(INVALID_REPLY)
+		return
+	var data := {"server":access.server,"account_id":result.account_id,"device_id":result.device_id,"username":result.username,
+		"generation":response.generation,"token":result.token,"expires_at":result.expires_at}
+	var feedback := ""
+	if can_auth_switch():
+		var fresh := not DirAccess.dir_exists_absolute(access.directory.path_join(data.account_id))
+		if await activate(data,fresh):
+			feedback = "Konto erstellt und angemeldet." if action == "register" else "Angemeldet."
+		else:
+			recovery_session = data
+			recovery_device = replace_lost
+	if feedback.is_empty():
+		feedback = "Konto erstellt, lokale Aktivierung fehlgeschlagen." if action == "register" else "Lokale Aktivierung fehlgeschlagen."
+		feedback += " Geschützten Bestand abgleichen oder erneut anmelden." if not recovery_session.is_empty() else " Lokale Sicherung prüfen und erneut anmelden."
+	finish_action(feedback)
+	if action == "register": dialog.show_code(issued)
+
+func valid_session(result: Dictionary, username: String, saved: Dictionary, replace_lost: bool) -> bool:
+	return (result.size() == 7 and result.has_all(["account_id","device_id","token","username","expires_at","last_request_seq","recovery_code"])
+		and Protocol.uuid(result.account_id) and Protocol.uuid(result.device_id)
+		and Protocol.matches(result.token,"\\A[A-Za-z0-9_-]{43}\\z") and result.username == username.to_lower()
+		and Protocol.matches(result.expires_at,"\\A[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}(?:[.][0-9]{6})?Z?\\z")
+		and Protocol.count(result.last_request_seq)
+		and (saved.is_empty() or (saved.account_id == result.account_id and (saved.device_id == result.device_id or replace_lost))))
+
+func auth_error(action: String, response: Dictionary) -> String:
+	match response.status:
+		0,503:
+			return "Kontodienst nicht erreichbar. Verbindung prüfen und erneut versuchen."
+		401:
+			if action == "recovery-code": return "Bestätigung fehlgeschlagen. Passwort prüfen oder erneut anmelden."
+			return "Zugangsdaten ungültig. Eingaben prüfen und erneut versuchen."
+		409:
+			if action == "register": return "Registrierung nicht verfügbar. Einladung und Benutzername prüfen oder den Betreiber kontaktieren."
+			return "Kontodienst verlangt einen neuen Abgleich. Bitte erneut anmelden."
+		422:
+			return "Eingaben ungültig. Benutzername, Passwort und gegebenenfalls Code prüfen."
+		429:
+			return "Zu viele Anfragen. Bitte später erneut versuchen."
+	return INVALID_REPLY
+
+func can_auth_switch() -> bool:
+	if app.presentation_locked: return false
+	return safe_switch() or (profile != null and not profile._blocked.is_empty() and app._flush_current())
+
+func navigation_locked() -> bool:
+	if dialog == null: return false
+	if dialog.has_code():
+		dialog.focus_code.call_deferred()
+		return true
+	return changing
+
+func start_action(feedback: String) -> void:
+	changing = true
+	show_feedback(feedback)
+
+func finish_action(feedback: String) -> void:
 	changing = false
+	show_feedback(feedback)
+
+func show_feedback(feedback: String) -> void:
+	dialog.message.text = feedback
 	refresh_status()
 
 func recover_inventory(session_data: Dictionary) -> Dictionary:
@@ -167,26 +262,26 @@ func recovery_checkpoint(data: Dictionary) -> Dictionary:
 
 func inspect_recovery() -> void:
 	if changing or recovery_session.is_empty(): return
-	changing = true
+	start_action("Geschützter Bestand wird geprüft …")
 	var data := recovery_session.duplicate()
 	var reader := Recovery.new(access.server,data.account_id,data.device_id,data.generation)
 	var pages := await recover_inventory(data)
 	var cp := await recovery_checkpoint(data)
 	if not pages.is_empty() and reader.inspect(cp,recovery_device):
+		finish_action("Bestandsabgleich geprüft. Bitte die Wiederherstellung bestätigen.")
 		dialog.confirm_choice(reader.effect+" Originale sichern und den Wiederanlauf fortsetzen?",finish_recovery.bind(reader,data))
-	else: problem = "Bindung, Sequenz oder Beleg widersprüchlich. Originale bleiben gesperrt."
-	changing = false
+	else: finish_action("Bindung, Sequenz oder Beleg widersprüchlich. Originale bleiben gesperrt.")
 
 func finish_recovery(reader: Recovery, data: Dictionary) -> void:
-	if changing or data != recovery_session or (not safe_switch() and not (profile and not profile._blocked.is_empty() and app._flush_current())): return
-	changing = true
-	var ok := await recover_bound(reader,data)
-	if ok:
-		await activate(data,false)
-		dialog.hide()
-	else: problem = "Wiederherstellung ausstehend. Erhaltene Originale erneut abgleichen."
-	changing = false
-	refresh_status()
+	if changing or data != recovery_session: return
+	if not can_auth_switch():
+		show_feedback(FLUSH_FEEDBACK)
+		return
+	start_action("Wiederanlauf läuft …")
+	if await recover_bound(reader,data) and await activate(data,false):
+		finish_action("Kontoprofil wiederhergestellt und aktiviert.")
+	else:
+		finish_action("Wiederherstellung ausstehend. Erhaltene Originale erneut abgleichen.")
 
 func recover_bound(reader: Recovery, data: Dictionary) -> bool:
 	var pages := await recover_inventory(data)
@@ -205,22 +300,30 @@ func recover_bound(reader: Recovery, data: Dictionary) -> bool:
 	return await access.publish(reader.root.path_join("recovery-receipt.json"),{"generation":data.generation,"checkpoint":cp,"source_hash":reader.source_hash})
 
 func logout() -> void:
-	if changing or profile == null or not safe_switch(): return
-	changing = true
+	if changing or dialog.has_code() or profile == null: return
+	if not safe_switch():
+		show_feedback(FLUSH_FEEDBACK)
+		return
+	start_action("Abmeldung läuft …")
 	var original := identity.duplicate()
 	var offline := original.duplicate()
 	offline.token = ""
 	if not await access.choose("") or not await access.publish(access.session_path(original.account_id),offline):
-		problem = "Lokale Abmeldung konnte nicht gespeichert werden."
-	else:
-		bind(null,{})
-		problem = "Lokal abgemeldet."
-		refresh_status()
-		if not original.token.is_empty():
-			var result := await transport.send(access.server,"/v1/auth/logout",HTTPClient.METHOD_POST,"",original)
-			if result.status == 204 and result.generation == original.generation: problem = "Abgemeldet."
-	changing = false
-	refresh_status()
+		finish_action("Lokale Abmeldung konnte nicht dauerhaft gespeichert werden. Bitte erneut versuchen.")
+		return
+	bind(null,{})
+	show_feedback("Lokal abgemeldet. Serverbestätigung ausstehend.")
+	var confirmed := false
+	if not original.token.is_empty():
+		var stamp := epoch
+		var result := await transport.send(access.server,"/v1/auth/logout",HTTPClient.METHOD_POST,"",original)
+		if epoch != stamp:
+			finish_action("")
+			return
+		confirmed = result.status == 204 and result.generation == original.generation
+	finish_action("Abgemeldet. Serversitzung beendet." if confirmed else "Lokal abgemeldet. Ende der Serversitzung nicht bestätigt.")
+	dialog.clear_secrets()
+	dialog.set_mode("login")
 
 func read(path: String, method: int = HTTPClient.METHOD_GET, raw: String = "") -> Dictionary:
 	var stamp := epoch
@@ -479,16 +582,19 @@ func exiting() -> void:
 	if profile and inventory_ready and schedule.now() >= schedule.retry_at: send_batch()
 
 func refresh_status() -> void:
-	if app == null or app.account_status == null: return
-	var key := [epoch,problem,inventory_ready,unresolved_inventory,transport_busy,schedule.auth_paused,
+	if app == null or dialog == null or app.account_status == null: return
+	var key := [epoch,changing,recovery_session.is_empty(),access.server,problem,inventory_ready,unresolved_inventory,transport_busy,schedule.auth_paused,
 		profile._journal.digest if profile else "",profile.flush_confirmed() if profile else true,profile.local_failed() if profile else false]
 	if key == status_key: return
 	status_key = key
 	app.account_retry.visible = profile != null and profile.local_failed()
 	var value := "Gast"
+	var mode := "Gast · lokales Profil"
+	var detail := "Kein Kontoabgleich"
 	if profile:
+		mode = ("Kontoprofil · lokal: " if schedule.auth_paused else "Angemeldet: ") + str(identity.username)
 		var state: Dictionary = profile.status()
-		var detail := "Abgleich ausstehend"
+		detail = "Abgleich ausstehend"
 		if profile.local_failed(): detail = "Lokale Sicherung fehlgeschlagen"
 		elif not problem.is_empty(): detail = problem
 		elif state.has("error"): detail = state.error
@@ -502,6 +608,11 @@ func refresh_status() -> void:
 		elif inventory_ready: detail = "Synchronisiert"
 		value = str(identity.username)+" · "+detail
 	elif not problem.is_empty(): value += " · "+problem
+	if access.server.is_empty(): detail = "Kontodienst für diesen Spielbau nicht eingerichtet"
+	dialog.profile_status.text = mode
+	dialog.sync_status.text = "Sync: "+detail
+	dialog.refresh_choices()
+	dialog.update_interaction()
 	if app.account_status.text != value:
 		app.account_status.text = value
 		app._layout_book()

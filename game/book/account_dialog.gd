@@ -1,46 +1,223 @@
-extends AcceptDialog
+extends VBoxContainer
 const Session = preload("res://model/session.gd")
-## Every destructive choice captures the owning profile and the displayed server revision.
+const BookChoice = preload("res://ui/book_choice.gd")
+
+const MODES := {
+	"login": ["Anmelden", "Passwort", ""],
+	"register": ["Registrieren", "Passwort", "Einladungscode"],
+	"recover": ["Passwort wiederherstellen", "Neues Passwort", "Wiederherstellungscode"],
+	"recovery-code": ["Neuen Wiederherstellungscode erzeugen", "Aktuelles Passwort", ""],
+}
+const COPY_FALLBACK := "Kopieren konnte nicht bestätigt werden. Code im Feld markieren und manuell kopieren."
+
 var client: Node
-var form := VBoxContainer.new()
+var profile_status := Label.new()
+var sync_status := Label.new()
+var auth_form := VBoxContainer.new()
+var mode := BookChoice.new()
 var username := LineEdit.new()
 var password := LineEdit.new()
 var code := LineEdit.new()
+var username_caption: Label
+var password_caption := Label.new()
+var code_caption := Label.new()
+var submit_button: Button
 var message := Label.new()
-var puzzles: OptionButton
+var puzzles: BookChoice
 var choices := VBoxContainer.new()
-var notice := AcceptDialog.new()
+var choice_key := []
+var notice := VBoxContainer.new()
+var recovery_code := LineEdit.new()
+var copy_status := Label.new()
+var copy_stamp := 0
+var copy_callbacks: Array[JavaScriptObject] = []
 
 func configure(owner: Node) -> void:
 	client = owner
-	title = "Spielerkonto"
-	add_child(form)
-	message.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	form.add_child(message)
-	for pair: Array in [[username,"Benutzername"],[password,"Passwort (bei Wiederherstellung das neue Passwort)"],[code,"Einladung oder Wiederherstellungscode"]]:
-		pair[0].placeholder_text = pair[1]
-		pair[0].accessibility_name = pair[1]
-		form.add_child(pair[0])
+	client.app.info_scroll.follow_focus = true
+	for control: Control in [profile_status,sync_status,auth_form,message]:
+		add_child(control)
+	for label: Label in [profile_status,sync_status,message,copy_status]:
+		label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	mode.name = "account-action"
+	mode.accessibility_name = "Kontoaktion"
+	mode.item_selected.connect(func(_index: int) -> void: set_mode(mode.get_selected_metadata()))
+	username_caption = client.app.label("Benutzername",14)
+	var hint: Label = client.app.label("8–128 Zeichen (Unicode-Codepunkte). Leerzeichen zählen mit.",14)
+	hint.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	for control: Control in [mode,username_caption,username,password_caption,password,hint,code_caption,code]:
+		auth_form.add_child(control)
+	username.name = "account-username"
 	username.max_length = 32
+	username.accessibility_name = "Benutzername"
+	password.name = "account-password"
 	password.secret = true
-	password.max_length = 128
+	code.name = "account-code"
 	code.secret = true
-	form.add_child(choices)
-	client.add_child(notice)
-	notice.title = "Wiederherstellungscode"
-	notice.confirmed.connect(clear_notice)
-	notice.canceled.connect(clear_notice)
-	visibility_changed.connect(func() -> void:
-		if not visible:
-			password.clear()
-			code.clear())
+	submit_button = settings_button(self,"Anmelden",submit)
+	add_child(notice)
+	add_child(choices)
+	submit_button.name = "submit-account-action"
+	var caption: Label = client.app.label("Diesen Wiederherstellungscode sicher aufbewahren. Er wird einmal angezeigt.",16)
+	caption.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	notice.add_child(caption)
+	recovery_code.name = "issued-recovery-code"
+	recovery_code.accessibility_name = "Wiederherstellungscode"
+	recovery_code.editable = false
+	recovery_code.drag_and_drop_selection_enabled = false
+	notice.add_child(recovery_code)
+	notice.add_child(copy_status)
+	settings_button(notice,"Kopieren",copy_code)
+	settings_button(notice,"Code schließen",clear_notice)
+	notice.hide()
+	refresh_choices()
 
-func clear_notice() -> void: notice.dialog_text = ""
+func layout(value: float) -> void:
+	mode.ui_scale = value
+	if puzzles != null: puzzles.ui_scale = value
+	for container: VBoxContainer in [self,auth_form,choices,notice]:
+		container.add_theme_constant_override("separation",roundi(8*value))
+	for field: LineEdit in [username,password,code,recovery_code]:
+		field.custom_minimum_size.y = 44*value
+
+func settings_button(parent: Control, caption: String, action: Callable) -> Button:
+	var item: Button = client.app._text_button(caption,action)
+	parent.add_child(item)
+	return item
+
+func set_mode(action: String, clear_fields: bool = true) -> void:
+	for i: int in range(mode.item_count):
+		if mode.get_item_metadata(i) == action:
+			mode.select(i)
+			break
+	var labels: Array = MODES[action]
+	submit_button.text = labels[0]
+	submit_button.accessibility_name = labels[0]
+	password_caption.text = labels[1]
+	password.accessibility_name = labels[1]
+	code_caption.text = labels[2]
+	code.accessibility_name = labels[2]
+	code_caption.visible = not code_caption.text.is_empty()
+	code.visible = code_caption.visible
+	username.visible = action != "recovery-code"
+	username_caption.visible = username.visible
+	if clear_fields: clear_secrets()
+
+func clear_secrets() -> void:
+	password.clear()
+	code.clear()
+
+func submit() -> void:
+	await client.authenticate(mode.get_selected_metadata(),username.text,password.text,code.text)
+
+func has_code() -> bool:
+	return notice.visible
 
 func show_code(value: String) -> void:
-	if not client.Protocol.matches(value,"\\A[A-Za-z0-9_-]{43}\\z"): return
-	notice.dialog_text = "Diesen Code sicher aufbewahren. Er wird einmal angezeigt.\n"+value
-	notice.popup_centered()
+	recovery_code.text = value
+	copy_status.text = ""
+	notice.show()
+	update_interaction()
+	focus_code.call_deferred()
+
+func focus_code() -> void:
+	if has_code() and recovery_code.is_visible_in_tree():
+		recovery_code.grab_focus()
+		client.app.info_scroll.ensure_control_visible(recovery_code)
+
+func clear_notice() -> void:
+	copy_stamp += 1
+	copy_callbacks.clear()
+	recovery_code.clear()
+	clear_secrets()
+	copy_status.text = ""
+	notice.hide()
+	update_interaction()
+	submit_button.grab_focus()
+
+func copy_code() -> void:
+	copy_stamp += 1
+	var stamp := copy_stamp
+	var value := recovery_code.text
+	if not OS.has_feature("web"):
+		DisplayServer.clipboard_set(value)
+		copy_result(DisplayServer.clipboard_get() == value,stamp)
+		return
+	var clipboard: JavaScriptObject = JavaScriptBridge.get_interface("navigator").clipboard
+	if clipboard == null:
+		copy_result(false,stamp)
+		return
+	copy_status.text = "Kopieren läuft …"
+	var success := JavaScriptBridge.create_callback(func(_args: Array) -> void: copy_result(true,stamp))
+	var failure := JavaScriptBridge.create_callback(func(_args: Array) -> void: copy_result(false,stamp))
+	copy_callbacks.assign([success,failure])
+	clipboard.writeText(value).then(success,failure)
+	await get_tree().create_timer(3.0).timeout
+	if stamp == copy_stamp and not copy_callbacks.is_empty(): copy_result(false,stamp)
+
+func copy_result(ok: bool, stamp: int) -> void:
+	if stamp != copy_stamp or not has_code(): return
+	copy_status.text = "Kopiert." if ok else COPY_FALLBACK
+	copy_callbacks.clear()
+
+func update_interaction() -> void:
+	var configured: bool = not client.access.server.is_empty()
+	auth_form.visible = configured and not has_code()
+	submit_button.visible = auth_form.visible
+	choices.visible = configured and not has_code()
+	mode.disabled = client.changing
+	submit_button.disabled = client.changing
+	for button: Button in choices.find_children("*","Button",true,false):
+		button.disabled = client.changing
+
+func refresh_choices() -> void:
+	var active: bool = client.profile != null
+	var accounts: Dictionary = client.access.accounts()
+	var recovery: bool = not client.recovery_session.is_empty()
+	var local_choices: bool = active and client.profile._state.get("entries",{}).values().any(func(e: Dictionary) -> bool: return e.status == "recovery_choice")
+	var has_request: bool = active and not client.profile.resume_request().is_empty()
+	var key := [client.epoch,accounts,recovery,local_choices,has_request]
+	if key == choice_key: return
+	choice_key = key
+	var previous: String = mode.get_selected_metadata() if mode.selected >= 0 else "login"
+	var actions := ["login","register","recover"]
+	if active: actions.append("recovery-code")
+	if mode.item_count != actions.size():
+		mode.clear()
+		for action: String in actions:
+			mode.add_item(MODES[action][0])
+			mode.set_item_metadata(mode.item_count-1,action)
+		set_mode(previous if previous in actions else "login",false)
+	var selected: int = puzzles.selected if puzzles != null and puzzles.item_count > 0 else 0
+	puzzles = null
+	for child: Node in choices.get_children():
+		choices.remove_child(child)
+		child.queue_free()
+	if recovery: settings_button(choices,"Geschützten Bestand abgleichen",client.inspect_recovery)
+	for account: String in accounts:
+		if active and accounts[account] == client.identity.account_id: continue
+		settings_button(choices,account+" lokal öffnen",client.resume_local.bind(accounts[account]))
+	if active:
+		settings_button(choices,"Abmelden",client.logout)
+		puzzles = BookChoice.new()
+		puzzles.name = "account-puzzle"
+		puzzles.accessibility_name = "Rätsel für Kontoaktionen"
+		choices.add_child(puzzles)
+		for slot in client.app.sessions:
+			puzzles.add_item(slot.album_title())
+			puzzles.set_item_metadata(puzzles.item_count-1,slot.definition.id)
+		if puzzles.item_count > 0:
+			puzzles.select(clampi(selected,0,puzzles.item_count-1))
+			settings_button(choices,"Konflikte und Versionen",versions)
+			settings_button(choices,"Gaststand übernehmen",import_guest.bind(false))
+			settings_button(choices,"Alle Gaststände übernehmen",import_guest.bind(true))
+			if local_choices:
+				settings_button(choices,"Lokale Fassung erneut anbieten",recover_slot.bind(false))
+				settings_button(choices,"Serverfassung laden",recover_slot.bind(true))
+		settings_button(choices,"Lokale Sicherung erneut versuchen",client.profile.retry_local)
+		if has_request: settings_button(choices,"Offenen Auftrag abbrechen …",abandon)
+	update_interaction()
+	client.app._layout_book()
 
 func button(parent: Control, caption: String, action: Callable) -> void:
 	var item := Button.new()
@@ -48,67 +225,12 @@ func button(parent: Control, caption: String, action: Callable) -> void:
 	item.pressed.connect(action)
 	parent.add_child(item)
 
-func submit(action: String) -> void:
-	var name_value := username.text
-	var secret_value := password.text
-	var code_value := code.text
-	hide()
-	await client.authenticate(action,name_value,secret_value,code_value)
-
-func open() -> void:
-	for child in choices.get_children():
-		choices.remove_child(child)
-		child.queue_free()
-	var configured: bool = not client.access.server.is_empty()
-	message.text = client.app.account_status.text if configured else "Der Kontodienst ist für diesen Spielbau noch nicht eingerichtet."
-	for field: LineEdit in [username,password,code]: field.visible = configured
-	if configured:
-		var actions := HFlowContainer.new()
-		choices.add_child(actions)
-		for pair: Array in [["Anmelden","login"],["Registrieren","register"],["Konto wiederherstellen","recover"]]:
-			button(actions,pair[0],submit.bind(pair[1]))
-		if not client.recovery_session.is_empty(): button(actions,"Geschützten Bestand abgleichen",client.inspect_recovery)
-		var accounts: Dictionary = client.access.accounts()
-		for name_value: String in accounts:
-			button(actions,name_value+" lokal öffnen",local_choice.bind(accounts[name_value]))
-		if client.profile:
-			button(actions,"Neuer Wiederherstellungscode",submit.bind("recovery-code"))
-			button(actions,"Abmelden",sign_out)
-			add_puzzle_actions()
-	popup_centered(Vector2i(mini(640,client.app.size.x-40),0))
-
-func local_choice(id: String) -> void:
-	hide()
-	await client.resume_local(id)
-
-func sign_out() -> void:
-	hide()
-	await client.logout()
-
-func add_puzzle_actions() -> void:
-	puzzles = OptionButton.new()
-	choices.add_child(puzzles)
-	for slot in client.app.sessions:
-		puzzles.add_item(slot.album_title())
-		puzzles.set_item_metadata(puzzles.item_count-1,slot.definition.id)
-	if puzzles.item_count == 0: return
-	var bar := HFlowContainer.new()
-	choices.add_child(bar)
-	button(bar,"Gaststand übernehmen",import_guest.bind(false))
-	button(bar,"Alle Gaststände übernehmen",import_guest.bind(true))
-	button(bar,"Konflikte und Versionen",versions)
-	if client.profile._state.entries.values().any(func(e: Dictionary) -> bool: return e.status == "recovery_choice"):
-		button(bar,"Lokale Fassung erneut anbieten",recover_slot.bind(false))
-		button(bar,"Serverfassung laden",recover_slot.bind(true))
-	button(bar,"Lokale Sicherung erneut versuchen",client.profile.retry_local)
-	if not client.profile.resume_request().is_empty():
-		button(bar,"Offenen Auftrag abbrechen …",abandon)
-
 func confirm_choice(caption: String, action: Callable) -> void:
 	var stamp: int = client.epoch
 	var question := ConfirmationDialog.new()
 	question.dialog_text = caption
 	client.add_child(question)
+	question.theme = client.app.theme
 	question.confirmed.connect(func() -> void:
 		question.queue_free()
 		if client.epoch == stamp: action.call())
@@ -126,12 +248,16 @@ func recover_slot(remote: bool) -> void:
 func versions() -> void:
 	var id: String = puzzles.get_selected_metadata()
 	var stamp: int = client.epoch
-	if client.transport_busy or client.changing: return
+	if client.transport_busy or client.changing:
+		message.text = "Bitte den laufenden Abgleich abwarten und erneut versuchen."
+		return
 	client.changing = true
+	client.refresh_status()
 	var conflicts: Dictionary = await client.fetch_pages("/v1/puzzles/"+id+"/conflicts")
 	var history: Dictionary = await client.fetch_pages("/v1/puzzles/"+id+"/history")
 	client.changing = false
-	if not visible or stamp != client.epoch: return
+	client.refresh_status()
+	if not is_visible_in_tree() or stamp != client.epoch: return
 	if conflicts.is_empty() or history.is_empty():
 		message.text = "Konflikte und Versionen konnten nicht geladen werden."
 		return
@@ -151,7 +277,7 @@ func versions() -> void:
 		comparison_label(list,"Keine Konflikte oder früheren Fassungen vorhanden.")
 	selection.popup_centered(dialog_size(Vector2i(460,320)))
 
-func version_window(parent: Window, heading: String, close_caption: String) -> AcceptDialog:
+func version_window(parent: Node, heading: String, close_caption: String) -> AcceptDialog:
 	var window := AcceptDialog.new()
 	window.title = heading
 	window.theme = client.app.theme
