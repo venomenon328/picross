@@ -138,6 +138,21 @@ Erst danach entfallen ersetzte Originale. Aktive Auswahlen haben keine
 technische Siebentagesfrist. Rollout und Produktionsfreigabe setzen einen
 tatsächlich verfügbaren v2-Reader und bestätigten Originalzugriff voraus.
 
+Die im abgesendeten Auftrag erklärte und an den aktuellen Record gebundene
+Kandidatenwahl deckt die anschließende automatische Bereinigung der nicht mehr
+referenzierten, eindeutig eigenen Arbeitsrelease-Assets bereits ab. Nach
+bestätigter Record-/Ref-Veröffentlichung führt `work_publish publish` diesen
+begrenzten Assetabgleich ohne weitere menschliche Löschfreigabe durch. Eigene,
+noch referenzierte, gewählte oder fremde Assets dürfen dadurch nicht entfallen;
+Asset-/Releaseidentität, Eigentum, SHA-Bindung, Konfliktschutz und Readback
+bleiben verbindlich. Bei API-, Rechte- oder Plattformblockade den gesicherten
+Arbeitscommit und die noch zu entfernenden eigenen Asset-IDs als technischen
+Rest melden und den identischen Publisher-/Wiederaufnahmepfad benutzen. Weder
+erneute Kandidatenwahl noch zweite Zustimmung zur normalen Bereinigung
+einfordern; technische Sicherheitsgrenzen nicht umgehen. Diese Auswahl ist
+keine Freigabe zum Löschen eines ganzen Arbeitsreleases/Produktionsbranches,
+zur abschließenden `retire`-Operation oder zum Merge.
+
 ## Veröffentlichung und Ansichten
 
 Der Windows-Assistent kann die öffentliche REST-Abfrage der Originalmetadaten

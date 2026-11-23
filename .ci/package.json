@@ -1,22 +1,11 @@
 {
   "format": "development-ci-plan/v1",
-  "issue": "https://github.com/venomenon328/picross/issues/838",
-  "package": "PW-PARAM-A",
-  "modules": ["tools"],
-  "purpose": "Motivwahl, verständliche Parameteralternativen, kompakten Auftrag, Quellbindung und identischen CMD-Fallback in den bestehenden Werkzeugtests prüfen. Werkzeugcode erfordert den regulären Windows-Spielerbau. Die einmalige PW-Loopback-Browserbedienprobe A-A01 bleibt bis A-R01 nachvollziehbar.",
-  "omitted": "Keine production.*, native.*, preflight, delivery oder allgemeine Chromiumdiagnose. Fachprüfer, Bild- und Rastererzeugung sowie Spielinteraktion liegen außerhalb des Diffs. Keine Live-WIP-Änderungen, kein tatsächlicher Windows-Spielstart oder Installer-Rollout.",
-  "test_changes": [
-    {
-      "path": "tools/test_production_workspace.py",
-      "disposition": "change-scoped",
-      "reason": "Synthetische Motivstände und Auftragsregressionen für Anzahl, vollständige Auswahl und Quellbindung im gewählten tools-Modul."
-    },
-    {
-      "path": "tools/production_workspace/check_ui_loading.cjs",
-      "disposition": "change-scoped",
-      "reason": "Bestehende DOM-Nachbildung für lesbare Grenzen, Kopierdaten und Übernahme eines umsortierten Angebots erweitern. A-A01 wird separat im echten Browser ausgeführt. Temporäre Browserproben enden mit A-R01."
-    }
-  ],
+  "issue": "https://github.com/venomenon328/picross/issues/850",
+  "package": "PRUNE-CHOICE-DOC",
+  "modules": [],
+  "purpose": "Die bestehende einmalige Kandidatenwahl und ihren begrenzten automatischen Arbeitsasset-Abbau in Authoring, PW-B und PW-Ausführungsanweisungen widerspruchsfrei präzisieren.",
+  "omitted": "Keine Werkzeug-, Spiel-, Produktionsdaten-, CI- oder Runtimeänderung; vorhandener Publisher und seine Regression bleiben unverändert. Keine Zusatzmodule, Browser-/Windowsproben oder reale Release-Asset-DELETEs für einen reinen Dokumentationsdiff.",
+  "test_changes": [],
   "core_change": null,
   "evidence": {
     "mode": "none",
