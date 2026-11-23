@@ -1,11 +1,36 @@
 {
   "format": "development-ci-plan/v1",
   "issue": "https://github.com/venomenon328/picross/issues/821",
-  "package": "SYNC-C-API",
-  "modules": [],
-  "purpose": "Die bestehende Konto-/Syncfunktion für reguläre Windows-/Webbuilds mit der festen HTTPS-API-Basis https://picross.venomenon.de/sync aktivieren; kein Live-Deployment.",
-  "omitted": "Keine Zusatzmodule: Server, Auth, Profilkern, Persistenz, UI und Hostingcode bleiben unverändert. docs + ci-required mit verpflichtendem Windows-Playerbau prüfen den Konfigurationsdiff; realer Webbuild, Deployment und Geräteabnahme sind gesonderte SYNC-C-Betriebsaufgaben.",
-  "test_changes": [],
+  "package": "SYNC-UX-FOLLOWUP",
+  "modules": [
+    "native.core",
+    "native.catalog",
+    "sync.server"
+  ],
+  "purpose": "Kontozugang und Fehlerrückmeldung in den Einstellungen, Profilrückweg, Wiederherstellungscode und API-Grenze am gemeinsamen Produktstand prüfen.",
+  "omitted": "Kein native.history oder weitere native Gruppen, preflight, production.*, tools, delivery oder automatische Browser-Matrix. Die einmalige Windows-/Chromium-/Firefox-Bedienung mit kontrollierten Fehlern erfolgt als SYNC-UX-T02.",
+  "test_changes": [
+    {
+      "path": "game/tests/kat2_probe.gd",
+      "disposition": "change-scoped",
+      "reason": "Gezielte Settingsprobe im vorhandenen Informationsteil der nativen Kataloggruppe."
+    },
+    {
+      "path": "game/tests/sync_account_cases.gd",
+      "disposition": "change-scoped",
+      "reason": "Sichtbarer Aktionsstatus, enge Settings, bestätigter Profilwechsel, Codelebensdauer und Fehler am tatsächlichen Controller. Die Bestätigungen für Gastimport und Fassungswahl melden Pflichtflush und laufenden Transport sichtbar (SYNC-UX-B01)."
+    },
+    {
+      "path": "game/tests/sync_comparison_cases.gd",
+      "disposition": "change-scoped",
+      "reason": "Vergleich und Entscheidungsorakel über den eingebetteten Kontobereich aufrufen."
+    },
+    {
+      "path": "server/save_sync/test_integration.py",
+      "disposition": "change-scoped",
+      "reason": "Grenzen und Nebenwirkungsfreiheit an echten Auth-HTTP-Endpunkten mit PostgreSQL und gebundenem OpenAPI-Schema."
+    }
+  ],
   "core_change": null,
   "evidence": {
     "mode": "none",

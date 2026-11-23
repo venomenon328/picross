@@ -2,7 +2,7 @@
 
 Der Dienst implementiert den Serverteil des [SYNC-Vertrags](../../docs/game/SAVE_SYNC.md).
 Die Spielclients und der öffentliche Betrieb folgen in eigenen Paketen.
-Der Dienst hat keine Rätsellösungen. Die geprüfte Eigenschaft eines Snapshots heißt
+Der Dienst prüft die Struktur des Rätselfortschritts. Die geprüfte Eigenschaft eines Snapshots heißt
 `progress_structure_checked`. Sein vollständiges Schema und die Endpunkte liefert
 `GET /openapi.json`.
 
@@ -35,7 +35,9 @@ Standardausgabe vertraulich übergeben. Register erzeugt Geräte-ID, Sitzung und
 Recoverycode. Login mit bekannter Geräte-ID ersetzt nur deren Sitzung. Tokens
 und Codes werden als SHA-256-Abdruck gespeichert. Passwörter verwenden die
 Argon2id-Empfehlung der gebundenen pwdlib/argon2-cffi (64 MiB, drei Iterationen,
-Parallelität vier). Jede Mutation bindet Antwort und Gerätewasserstand in derselben
+Parallelität vier). Registrierung, Anmeldung, Passwortwiederherstellung und
+Codeerneuerung verwenden 8–128 Unicode-Codepunkte und höchstens 1024 UTF-8-Bytes.
+Leerzeichen bleiben Teil des Passworts. Jede Mutation bindet Antwort und Gerätewasserstand in derselben
 Transaktion wie den Spielstand. Das Kontoschloss serialisiert konkurrierende
 Entscheidungen und Quotenprüfung für dieses Konto.
 
@@ -53,6 +55,15 @@ tatsächliche Peer-IP für das IP-Limit. Für einen öffentlichen Anschluss müs
 TLS, vertrauenswürdige Proxygrenze und Betriebswerte in SYNC-C eingerichtet
 und geprüft werden. Containerbasis und PostgreSQL-Image sind per Digest,
 Python-Pakete einschließlich transitiver Abhängigkeiten per Version/Hash gebunden.
+
+## Kompatibilität der Passwortgrenze
+
+Zuerst die neue API-Version bereitstellen und prüfen, danach die passenden
+Windows- und Webclients veröffentlichen oder verifizieren. Sobald neue
+Passwörter mit 8–11 Codepunkten vergeben wurden, weist eine API mit dem
+früheren Minimum 12 deren Anmeldung und Codeerneuerung ab. Bestehende längere
+Passwörter und Hashes bleiben nutzbar. Die neue Untergrenze benötigt keine
+Passwortmigration.
 
 ## Sicherung und kontrollierte Rücksicherung
 

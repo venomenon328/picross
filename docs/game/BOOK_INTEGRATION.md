@@ -314,6 +314,14 @@ Schriftrollen stehen in HZ. Diese Seite ist Teil des Informationsbesuchs und
 setzt keine Hinweisanker zurück; kein zusätzliches Beenden-Widget oder manueller
 Hinweisreset. Rückweg, Scroll-/Fokuskontext und Flush-/Recoveryguard folgen oben.
 
+„Spielerkonto“ liegt im vorhandenen Einstellungs-Scrollbereich. Kontoaktionen
+und ihre Ergebnisse bleiben neben aktivem Profil und Synczustand sichtbar. Ein
+Profilwechsel erneuert Store, Session und Rückziel. Die Einstellungen bleiben
+geöffnet, der Rückpfeil führt zum Katalog des aktiven Profils. Eine erneute
+Anmeldung im selben Profil erhält das bisherige Rückziel. Eine laufende
+Kontoaktion lässt sich abwarten. Ein ausgegebener Wiederherstellungscode bleibt
+bis zum bewussten Schließen erreichbar.
+
 ## Speicher- und Fehlergrenzen
 
 Vor einer Zielanimation werden gültige Ziel-ID und nötiger Flush geprüft.

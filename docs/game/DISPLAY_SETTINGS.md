@@ -56,7 +56,7 @@ Auf der **vorhandenen linken Buch-Einstellungsseite** erscheint ein Abschnitt �
 
 Die Auswahl bleibt über Buchseiten, Hilfe-/Katalog-/Arbeitsrückkehr konsistent. Keine zusätzliche Einstellungsseite oder generelle Schrift-/Buttonneugestaltung. Dialog, Bestätigung und Fehlinformation müssen innerhalb des aktuellen Viewports erreichbar sein.
 
-Genau **Anzeige** und **Rätselansicht** besitzen stabile handgezeichnete Rahmen
+**Anzeige**, **Rätselansicht** und **Spielerkonto** besitzen stabile handgezeichnete Rahmen
 mit verbundenen Titellaschen. Der Block steht mittig in der sicheren linken
 Papierfläche, höchstens 640 × UI breit; Inhalte bleiben linksbündig.
 Bildhaupttitel und Titelvorrang folgen [VIEW_TITLE_ART](VIEW_TITLE_ART.md),
@@ -71,6 +71,8 @@ Die vollständige Ansichtserklärung und die Erklärung der Vollbild-Desktopaufl
 stehen nur in den gestylten Fragezeichen-Tooltips, erreichbar per Hover und Fokus.
 Das separate Fragezeichen bleibt auch neben deaktivierter Größenwahl aktiv.
 Vertikales Scrollen erhält bei 1080p/720p × UI100/125 sämtliche Optionen.
+Der [Kontobereich](SAVE_SYNC.md) verwendet beschriftete Eingaben und dieselben
+skalierten Trefferflächen wie die übrigen Einstellungen.
 Kopfgruppe, Rückweg, Besuchsursprung, Übergang, Fokus und Scrollkontext folgen
 [BOOK_INTEGRATION](BOOK_INTEGRATION.md).
 

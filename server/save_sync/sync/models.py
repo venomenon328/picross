@@ -14,9 +14,13 @@ PuzzleId = Annotated[str, Field(pattern=r"^[A-Za-z0-9_-]{1,128}$")]
 Uuid = Annotated[str, Field(pattern=r"^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$")]
 Secret = Annotated[str, Field(pattern=r"^[A-Za-z0-9_-]{43}$")]
 Username = Annotated[str, Field(pattern=r"^[A-Za-z0-9][A-Za-z0-9_-]{2,31}$"), AfterValidator(str.lower)]
-Password = Annotated[str, Field(min_length=12, max_length=128)]
+def password_bytes(value: str) -> str:
+    if len(value.encode("utf-8")) > 1024:
+        raise ValueError("password byte length")
+    return value
 
 
+Password = Annotated[str, Field(min_length=8, max_length=128), AfterValidator(password_bytes)]
 
 def device_label(value):
     if any(unicodedata.category(c) == "Cc" for c in value):

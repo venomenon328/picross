@@ -115,7 +115,7 @@ erstellt. Einladungen gelten sieben Tage und werden atomar verbraucht. Kein
 
 - Benutzername: ASCII `[a-z0-9][a-z0-9_-]{2,31}` nach alleiniger Umwandlung
   von ASCII-Groß- in Kleinbuchstaben; eindeutig, kein Trim oder weiterer Alias.
-- Passwort: 12–128 Unicode-Codepunkte, höchstens 1024 UTF-8-Bytes; keine stille
+- Passwort: 8–128 Unicode-Codepunkte, höchstens 1024 UTF-8-Bytes; keine stille
   Normalisierung oder Kürzung. Argon2id über `pwdlib[argon2]`, Bibliotheksparameter
   dokumentieren; keine selbst entwickelte Passworthashfunktion.
 - Einladung, Recoverycode und Sitzungstoken: jeweils 32 kryptografisch zufällige
@@ -496,8 +496,23 @@ abgelehnte Fassungen den angebotenen Fortschritt. Unverbrauchte
 Sequenzfehler und eine andere Servergeneration sperren automatische Wiederholung.
 Der spätere Bestandsabgleich entscheidet ausdrücklich über die weitere Verwendung.
 
-Der reguläre Buchclient verwendet die Kontoauswahl in den Einstellungen. Die
-feste API-Basis ist Teil der Profilidentität. Zugangsdaten der Sitzung liegen
+Der reguläre Buchclient bietet Anmeldung, Registrieren mit Einladung,
+Passwortwiederherstellung, Codeerneuerung, Profilwahl und Abmeldung direkt in
+„Spielerkonto“ auf der Einstellungsseite an. Dort sind Aktionsstatus, aktives
+Profil und Synczustand getrennt sichtbar. Auth-Erfolg setzt eine gültige
+Serverantwort und dauerhaft bestätigte lokale Aktivierung voraus. Bei
+Registrierung mit fehlgeschlagener lokaler Aktivierung bleibt das bisherige
+Profil aktiv und der ausgegebene Code verfügbar. Passwortwiederherstellung
+fordert zur erneuten Anmeldung auf. Die lokale Abmeldung kann auch bei
+ausstehender Bestätigung des serverseitigen Sitzungsendes gelingen.
+
+Registrierung, Passwortwiederherstellung und Codeerneuerung zeigen den
+ausgegebenen Code im auswählbaren Feld bis zur bewussten Schließung. Kopieren
+überträgt nur den Code. Wenn sich der Clipboard-Zugriff nicht bestätigen lässt,
+bleibt der Weg über manuelle Auswahl und Kopieren sichtbar. Die Anzeige hält
+den Code nur vorübergehend im Formular.
+
+Die feste API-Basis ist Teil der Profilidentität. Zugangsdaten der Sitzung liegen
 getrennt von den Rätseldateien in session.json des Kontos. Die Auswahl im
 Serververzeichnis bleibt über einen Neustart erhalten.
 
