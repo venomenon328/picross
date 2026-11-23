@@ -3,6 +3,7 @@
 import argparse
 from pathlib import Path
 
+from .progress_migration import migrate_v1
 from .db import connect, digest, instance, issue_code
 
 
@@ -19,6 +20,9 @@ def main():
             db.execute("SELECT pg_advisory_xact_lock(821001)")
             if not db.execute("SELECT to_regclass('public.instance') AS t").fetchone()["t"]:
                 db.execute(Path("migrations/001.sql").read_text())
+            version = db.execute("SELECT version FROM instance WHERE singleton FOR UPDATE").fetchone()
+            if version and version["version"] == 1:
+                migrate_v1(db)
             instance(db)
         else:
             instance(db)

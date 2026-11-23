@@ -48,11 +48,14 @@ func open(server: String, account: String, device: String, generation: String, i
 func _open_locked(generation: String, initialize: bool) -> bool:
 	if initialize:
 		_state = {"context":_context.duplicate(), "generation":generation, "local":0, "sequence":0,
-			"entries":{}, "request":{}, "receipt":{}, "intent":{}, "revisions":{}, "archive":{}, "reconcile":""}
+			"slots":{}, "entries":{}, "request":{}, "receipt":{}, "intent":{}, "revisions":{}, "archive":{}, "reconcile":""}
 		if not _journal.publish(_state):
 			return false
 	else:
 		_state = _journal.read_image()
+		if _journal.legacy:
+			_blocked = "Altes Syncjournal; Originalrequest erfordert Bestandsabgleich."
+			return false
 		if not _valid_image() or _state.context != _context:
 			return false
 	if _state.generation != generation:
@@ -63,22 +66,29 @@ func _open_locked(generation: String, initialize: bool) -> bool:
 	_blocked = ""
 	for key: String in _state.entries:
 		_durable[key] = true
+	for slot: Dictionary in _state.slots.values():
+		_durable[str(int(slot.local))] = true
 	return true
 
 func _valid_image() -> bool:
-	if _state.size() != 11 or not _state.has_all(["context","generation","local","sequence","entries","request","receipt","intent","revisions","archive","reconcile"]):
+	if _state.size() != 12 or not _state.has_all(["context","generation","local","sequence","slots","entries","request","receipt","intent","revisions","archive","reconcile"]):
 		return false
-	for field: String in ["context","entries","request","receipt","intent","revisions","archive"]:
+	for field: String in ["context","slots","entries","request","receipt","intent","revisions","archive"]:
 		if not _state[field] is Dictionary: return false
 	if not Protocol.uuid(_state.generation) or not Protocol.count(_state.local) or not Protocol.count(_state.sequence) or not _state.reconcile is String:
 		return false
+	for id: String in _state.slots:
+		var slot: Variant = _state.slots[id]
+		if not slot is Dictionary or slot.size() != 2 or not Protocol.count(slot.get("local"),1) or slot.local > _state.local:
+			return false
+		if not Protocol.matches(slot.get("digest"),"\\A[0-9a-f]{64}\\z"): return false
 	for key: String in _state.entries:
 		var e: Variant = _state.entries[key]
 		if not _valid_entry(e) or key != str(int(e.local)) or e.local > _state.local:
 			return false
 	var intent: Dictionary = _state.intent
 	if not intent.is_empty():
-		if not _valid_entry(intent) or intent.local != _state.local + 1 or intent.operation not in ["snapshot","reset"]:
+		if not _valid_entry(intent,true) or intent.local != _state.local + 1 or intent.operation not in ["snapshot","reset"]:
 			return false
 	var req: Dictionary = _state.request
 	if not req.is_empty():
@@ -87,19 +97,22 @@ func _valid_image() -> bool:
 		var entry: Dictionary = _state.entries.get(str(int(req.local)),{})
 		if entry.is_empty() or not req.body is String or not Protocol.count(req.base): return false
 		var expected := _request_for(entry, int(_state.sequence)+1, int(req.base))
-		if expected.is_empty() or JSON.parse_string(req.body) != JSON.parse_string(expected.body): return false
+		if expected.is_empty() or not Journal.Registry.unique_keys(req.body) or JSON.parse_string(req.body) != JSON.parse_string(expected.body): return false
 		expected.body = req.body
 		if req != JSON.parse_string(JSON.stringify(expected)):
 			return false
 	return true
 
-func _valid_entry(entry: Variant) -> bool:
+func _valid_entry(entry: Variant, intent: bool = false) -> bool:
 	if not entry is Dictionary or not entry.has_all(["local","id","operation","value","status"]) or not Protocol.count(entry.local,1):
 		return false
 	if not Protocol.matches(entry.id,"\\A[A-Za-z0-9_-]{1,128}\\z") or not entry.status is String:
 		return false
 	if entry.operation == "snapshot":
-		return entry.value is Dictionary and entry.value.get("schema") == 1 and entry.value.get("definition_id") == entry.id
+		if intent:
+			var key := _store.key_for_definition(entry.id)
+			return not key.is_empty() and entry.value is Dictionary and Store.validate(entry.value,Definition.load_fixture(key)).is_empty()
+		return Protocol.valid_progress(entry.value,entry.id)
 	return not Protocol.mutation(entry,1,0).is_empty()
 
 func reconciliation() -> Dictionary:
@@ -238,6 +251,8 @@ func _change_slot(key: String, entry: Dictionary, action: Callable) -> int:
 	var next := _state.duplicate(true)
 	entry.local = int(next.local) + 1
 	entry.status = "pending"
+	if entry.operation == "snapshot":
+		entry.primary_sha256 = (JSON.stringify(entry.value,"",true,true) + "\n").sha256_text()
 	next.intent = entry
 	if not _publish(next): return 0
 	var before := _slot_hashes(key)
@@ -269,7 +284,7 @@ func _matches_primary(entry: Dictionary) -> bool:
 			if FileAccess.file_exists(_store.path_for(key,suffix)): return false
 		return true
 	var primary := _store._parse(_store.path_for(key), Definition.load_fixture(key))
-	return primary.status == "valid" and primary.data == JSON.parse_string(JSON.stringify(entry.value,"",true,true))
+	return FileAccess.get_sha256(_store.path_for(key)) == entry.get("primary_sha256") and primary.status == "valid" and primary.data == JSON.parse_string(JSON.stringify(entry.value,"",true,true))
 
 func _recover_intent() -> bool:
 	if _state.intent.is_empty(): return true
@@ -278,6 +293,18 @@ func _recover_intent() -> bool:
 		_blocked = "Spielstand und Schreibabsicht erfordern Wiederherstellung."
 		return false
 	var next := _state.duplicate(true)
+	next.local = entry.local
+	next.intent = {}
+	if entry.operation == "snapshot":
+		entry = entry.duplicate(true)
+		entry.erase("primary_sha256")
+		entry.value = Protocol.progress(entry.value)
+		var digest := JSON.stringify(entry.value,"",true,true).sha256_text()
+		var unchanged: bool = next.slots.get(entry.id,{}).get("digest") == digest
+		next.slots[entry.id] = {"local":entry.local,"digest":digest}
+		if unchanged: return _publish(next)
+	else:
+		next.slots.erase(entry.id)
 	# A prepared request, a rejected/conflicting version or an old raster must
 	# survive. Compact only superseded, already durable pending snapshots.
 	for key: String in next.entries.keys():
@@ -287,9 +314,7 @@ func _recover_intent() -> bool:
 				and previous.status == "pending" and _durable.get(key,false)
 				and previous.local != next.request.get("local",-1)):
 			next.entries.erase(key)
-	next.local = entry.local
 	next.entries[str(int(entry.local))] = entry
-	next.intent = {}
 	return _publish(next)
 
 func _confirm(version: int) -> int:

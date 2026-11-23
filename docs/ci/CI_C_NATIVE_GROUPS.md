@@ -349,7 +349,7 @@ Spuren. SYNC-B1 ergänzt Kontocheckpoints an Kommando 11 (Save und Request), 14
 (jüngerer Kontosave), 15 (neuer Prozess und Laden) und 16 (Redo und Save).
 Beide Journal-/Primary-Paare, die Requestbytes, eine Fremdkonto-Datei und die
 Beobachtungen im Trace werden unabhängig gelesen. Der technische Windowslauf
-ist einmalig für die B1-Abnahme. Keine versteckten Setupaktionen, 500er-Route
+für SYNC-PROGRESS-A01 prüft getrennt das vollständige lokale Primary, den reduzierten Request, lokale Bedienänderungen und die Altjournalsperre. Keine versteckten Setupaktionen, 500er-Route
 oder automatische Stressmatrix.
 [CI2-D-T01](https://github.com/venomenon328/picross/blob/6fe91a08a4d073547df43c6aebbe8ead4c45ae0f/docs/CI2_D_VERIFICATION.md) bleibt der historische Einführungsnachweis.
 

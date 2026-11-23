@@ -2,7 +2,8 @@ extends RefCounted
 ## Compare and publish one complete, checksummed journal image under a native writer lock.
 const Recent = preload("res://model/recent_puzzle.gd")
 const Registry = preload("res://model/content_registry.gd")
-const FORMAT = "picross-local-sync/v1"
+const FORMAT = "picross-local-sync/v2"
+var legacy := false
 var path: String
 var digest := ""
 var locked := false
@@ -32,8 +33,10 @@ func read_image() -> Dictionary:
 	if not Registry.unique_keys(raw):
 		return {}
 	var record: Variant = JSON.parse_string(raw)
-	if not record is Dictionary or record.size() != 3 or record.get("format") != FORMAT or not record.get("payload") is String:
+	if not record is Dictionary or record.size() != 3 or not record.get("payload") is String:
 		return {}
+	legacy = record.get("format") == "picross-local-sync/v1"
+	if not legacy and record.get("format") != FORMAT: return {}
 	var payload: String = record.payload
 	if payload.sha256_text() != record.get("sha256") or not Registry.unique_keys(payload):
 		return {}

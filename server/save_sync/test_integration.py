@@ -187,25 +187,14 @@ def mutation(seq, base, op, **fields):
 
 def save(puzzle, revision=1):
     return {
-        "schema": 1,
+        "format": "picross-progress/v1",
         "definition_id": puzzle,
         "definition_revision": revision,
         "width": 2,
         "height": 1,
         "cells": [91, -1],
-        "history": [[{"index": 0, "before": -1, "after": 91}], [{"index": 1, "before": -1, "after": 0}]],
-        "cursor": 1,
         "undo_used": True,
         "completed": False,
-        "view": {
-            "center": [1, 0.5],
-            "zoom": 20,
-            "overview": False,
-            "active_color": 91,
-            "tool": "fill",
-            "row_clue_reads": [{"anchor": "grid_end"}],
-            "column_clue_reads": [{"anchor": "outer_start"}, {"anchor": "grid_end"}],
-        },
     }
 
 
@@ -232,12 +221,12 @@ def service(p, a):
         "OPTIONS", "/v1/auth/login", status=400, headers=dict(cross_origin, Origin="https://other.example")
     )
     assert "access-control-allow-origin" not in denied.headers
-    p.sql("UPDATE instance SET version=2")
+    p.sql("UPDATE instance SET version=3")
     try:
         assert a.http("GET", "/health/ready", status=503).body == {"status": "unavailable"}
         assert a.http("GET", "/health/live").body == {"status": "ok"}
     finally:
-        p.sql("UPDATE instance SET version=1")
+        p.sql("UPDATE instance SET version=2")
     api = a.http("GET", "/openapi.json").body
     assert len(api["paths"]) == 15 and api["components"]["schemas"]["Save"]["additionalProperties"] is False
     headers = api["paths"]["/v1/account"]["get"]["responses"]["200"]["headers"]
@@ -328,20 +317,12 @@ def validation(a):
         (["format"], "v2"),
         (["extra"], 0),
         (["request_seq"], True),
-        (["save", "schema"], 2),
+        (["save", "format"], "other"),
         (["save", "definition_id"], "other"),
         (["save", "width"], 51),
-        (["save", "cells"], [-1, -1]),
-        (["save", "history", 1, 0, "before"], 0),
-        (["save", "history", 0], [{"index": 0, "before": -1, "after": 91}] * 2),
-        (["save", "cursor"], 3),
-        (["save", "undo_used"], False),
-        (["save", "view", "zoom"], 1),
-        (["save", "view", "center"], [-1, 0]),
-        (["save", "view", "row_clue_reads"], []),
-        (["save", "view", "column_clue_reads", 0], {"anchor": "middle", "start": 1, "end": 2}),
+        (["save", "cells"], [-1]),
         (["save", "completed"], 1),
-        (["save", "history"], None),
+        (["save", "view"], {}),
     ):
         body = copy.deepcopy(good)
         node = body
@@ -349,15 +330,18 @@ def validation(a):
             node = node[part]
         node[target[-1]] = value
         a.http("POST", path, body, 422)
+    legacy = copy.deepcopy(good)
+    del legacy["save"]["format"]
+    legacy["save"].update(schema=1, history=[], cursor=0, view={})
+    assert a.http("POST", path, legacy, 422).body["code"] == "invalid_request"
     palette = copy.deepcopy(good)
-    palette["save"]["history"] += [
-        [{"index": 0, "before": 91 if color == 1 else color - 1, "after": color}] for color in range(1, 9)
-    ]
+    palette["save"].update(width=9, cells=list(range(1, 10)))
     a.http("POST", path, palette, 422)
     assert a.get("account")["last_request_seq"] == 1
     a.get("puzzles/check", 404)
     assert a.http("POST", path, good).body["sequence_consumed"]
-    assert a.get("puzzles/check")["validation"] == "schema_history_checked"
+    record = a.get("puzzles/check")
+    assert record["save"] == good["save"] and record["validation"] == "progress_structure_checked"
 
 
 def competition(a, b):
@@ -365,19 +349,19 @@ def competition(a, b):
 
     def write(client, seq, value):
         snapshot = save("race")
-        snapshot["view"]["overview"] = value
+        snapshot["cells"][1] = value
         gate.wait(timeout=15)
         return client.put("race", seq, 0, "snapshot", None, save=snapshot)
 
     with concurrent.futures.ThreadPoolExecutor(2) as pool:
-        jobs = [pool.submit(write, a, 3, True), pool.submit(write, b, 1, False)]
+        jobs = [pool.submit(write, a, 3, 0), pool.submit(write, b, 1, 1)]
         results = sorted((job.result() for job in jobs), key=lambda r: r.status)
     assert [r.status for r in results] == [200, 409]
     cid = results[1].body["candidate_id"]
     assert results[1].body["code"] == "conflict_saved" and cid
     old = a.get("puzzles/race")
     other = a.get("puzzles/race/conflicts/" + cid)
-    assert old["save"]["view"]["overview"] != other["save"]["view"]["overview"]
+    assert old["save"]["cells"] != other["save"]["cells"]
     assert a.put("race", 4, 0, "resolve", 409, candidate_id=cid).body["code"] == "revision_conflict"
     assert a.put("check", 5, 1, "discard", 409, candidate_id=cid).body["code"] == "candidate_missing"
     assert a.get("puzzles/race") == old
@@ -523,6 +507,10 @@ def archive(a, b, restored, work):
     assert second.get("account")["last_request_seq"] == 8
     assert client.put("race", 7, 2, "reset", 409, definition_revision=1).body["code"] == "sequence_stale"
     assert client.put("race", 24, 16, "reset", definition_revision=1).body["server_revision"] == 17
+    previous = client.get("puzzles/check")["save"]
+    client.put("check", 25, 1, "reset", definition_revision=1)
+    client.put("check", 26, 2, "restore", history_revision=1)
+    assert client.get("puzzles/check")["save"] == previous == save("check")
 
 
 def remove_image(image):

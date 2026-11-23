@@ -52,9 +52,12 @@ nur die zugehörige lokale Generation, niemals später entstandene Änderungen.
 
 ### SYNC-G03: vollständige Fassungen statt Zellmerge
 
-Synchronisiert wird pro Rätsel ein vollständiger Schema-1-Snapshot einschließlich
-Zellen, History/Redo, Cursor, `undo_used`, `completed` und View. Keine Live-
-Zelloperationen, kein Zusammenmischen zweier Histories und kein Zeitstempelgewinner.
+Ein Snapshot überträgt die Rätselidentität, Rasterrevision, Dimensionen, aktuelle
+Zellen und die Durchgangsmerkmale `undo_used` und `completed`. Undo/Redo wirkt
+über den resultierenden Fortschritt. History, Cursor, aktive Farbe und sämtliche
+Ansichtsdaten bleiben im vollständigen lokalen Save. Eine identische Projektion
+braucht keinen weiteren Upload. Der spätere B2-Sender bündelt ausstehende
+Fortschritte zu den [beschlossenen Sammelanlässen](https://github.com/venomenon328/picross/issues/821#issuecomment-7095903230).
 Verschiedene Rätsel haben unabhängige aktuelle Stände. Für dasselbe Rätsel bleiben
 konkurrierende Fassungen erhalten, bis der Spieler ausdrücklich eine auswählt.
 
@@ -183,7 +186,7 @@ in dieser Tabelle sind ebenfalls sicher darstellbare ganze Zahlen.
 
 | `operation` | Zusätzliche Pflichtfelder | Wirkung |
 | --- | --- | --- |
-| `snapshot` | `save`: Schema-1-Objekt | Vollständigen Stand anbieten. |
+| `snapshot` | `save`: `picross-progress/v1` nach P04 | Aktuellen Fortschritt anbieten. |
 | `reset` | `definition_revision`: Zahl >= 1 | Bewussten Reset für diese Rasterrevision anbieten. |
 | `resolve` | `candidate_id`: UUIDv4 | Genau diesen erhaltenen Konflikt zum aktuellen Stand machen. |
 | `discard` | `candidate_id`: UUIDv4 | Genau diesen Konflikt ausdrücklich verwerfen; aktuellen Stand nicht ändern. |
@@ -243,39 +246,19 @@ Eine unbekannte Gerätekennung wird bei Mutationen nicht implizit angelegt.
 
 ### SYNC-P04: strukturelle Saveprüfung und Aussagegrenze
 
-Der Server prüft vor Speicherung die exakte äußere Schema-1-Feldmenge aus
-[SaveStore](../../game/model/save_store.gd): `schema`, `definition_id`,
-`definition_revision`, `width`, `height`, `cells`, `history`, `cursor`,
-`undo_used`, `completed`, `view`. Alle Felder sind Pflicht, keines ist `null`.
+Das innere Objekt `save` hat genau acht Pflichtfelder. `format` ist
+`picross-progress/v1`, `definition_id` entspricht dem URL-Rätsel und
+`definition_revision` ist eine positive sichere Ganzzahl. `width` und `height`
+liegen jeweils zwischen 1 und 50. `cells` enthält genau Breite × Höhe
+sichere Ganzzahlen ab −1 und höchstens acht verschiedene positive Farb-IDs.
+`undo_used` und `completed` sind boolesch. Zusätzliche Felder, null-Werte und
+der frühere Vollsave ergeben `422 invalid_request` vor dem Sequenzverbrauch.
 
-- `schema = 1`; ID entspricht dem URL-Rätsel; Definitionsrevision >= 1;
-  Breite/Höhe jeweils 1–50. `cells` hat exakt Breite × Höhe Elemente.
-- Zellwerte sind -1, 0 oder positive sichere Ganzzahlen. Höchstens acht
-  unterschiedliche positive Farb-IDs in Zellen, gesamter History und aktiver
-  Farbe zusammen. Die Anzahl ist begrenzt, nicht die IDs auf 1–8.
-- History ist eine Liste nichtleerer Aktionen; jede Aktion enthält höchstens
-  Breite × Höhe Änderungen mit exakt `index`, `before`, `after`, eindeutigen
-  Indizes 0 bis Zellzahl−1, zulässigen verschiedenen Vor-/Nachwerten. Vollständiges
-  widerspruchsfreies Replay ab -1 einschließlich Redo ist Pflicht.
-- Cursor liegt zwischen 0 und Historylänge; Replay am Cursor entspricht `cells`.
-  `undo_used` und `completed` sind boolesch; Cursor vor Historyende verlangt
-  `undo_used = true`. Kein Abschneiden oder Umordnen der History.
-- View enthält exakt `center`, `zoom`, `overview`, `active_color`, `tool`,
-  `row_clue_reads`, `column_clue_reads`. Mittelpunkt: zwei endliche Zahlen innerhalb
-  0..Breite beziehungsweise 0..Höhe; Zoom aus der bestehenden `SaveStore.ZOOMS`-
-  Liste; Overview boolesch; aktive Farbe positiv; Tool `fill`, `erase` oder `hand`.
-- Zeilen-/Spaltenlesepositionen sind Listen mit exakt Höhe/Breite Einträgen.
-  Eintrag exakt `{"anchor":"grid_end"}` oder `{"anchor":"outer_start"}`,
-  alternativ exakt `anchor = "middle"`, `start`, `end` mit ganzen Zahlen und
-  `0 < start < end < Linienlänge`. Die wirkliche Hinweistokenzahl prüft der Client.
-
-Serverprüfung heißt `schema_history_checked`: **keine** Bestätigung von Lösung,
-exakter Palette, tatsächlichen Hinweisen oder registriertem Inhalt. Dafür fehlen
-dem Dienst bewusst Definitions-/Lösungsdaten. Vor Anwendung prüft der Client
-immer vollständig mit `SaveStore.validate()` gegen seine eigene Definition und
-normalisiert erst danach gemäß P1. Unbekannte Versionen werden zurückgewiesen,
-nicht still migriert. Snapshotwerte bleiben semantisch erhalten; JSON-Whitespace
-und Schlüsselreihenfolge sind kein Bestandteil des Spielstands.
+`progress_structure_checked` bestätigt diese Struktur. Palette und Lösung kennt
+der Dienst nicht. Die spätere B2-Übernahme validiert gegen die eigene Definition.
+Gleicher Fortschritt erhält History und Ansicht. Ein übernommener anderer Stand
+beginnt mit einer lokalen Ausgangsmatrix und leerer History am Cursor 0. Eigene
+gültige Ansicht und Farbe bleiben erhalten. Der Empfang gehört zum B2-Paket.
 
 ### SYNC-P05: HTTP-Schnittstelle
 
@@ -310,7 +293,7 @@ ohne Steuerzeichen; rein beschreibend. Authrequests höchstens 16 KiB.
 | `Recovery` | `recovery_code`: neuer String. |
 | `Inventory` | `puzzle_id`, `server_revision` (>= 0; 0 ohne aktuellen Stand), `conflict_count` (>= 0, höchstens konfigurierte Konfliktquote). |
 | `Summary` | `puzzle_id`, `server_revision` (>= 1), `definition_revision` (>= 1), `kind` (`snapshot`/`reset`), `updated_at`, `device_id`, `device_name` (beschreibender Name zum Schreibzeitpunkt). |
-| `Record` | Alle `Summary`-Felder plus `save` (bei Snapshot Objekt, bei Reset null), `validation` (`schema_history_checked` bei Snapshot, null bei Reset). |
+| `Record` | Alle `Summary`-Felder plus `save` (bei Snapshot Objekt, bei Reset null), `validation` (`progress_structure_checked` bei Snapshot, null bei Reset). |
 | `CandidateSummary` | `candidate_id`, `puzzle_id`, `base_server_revision` (>= 0), `definition_revision`, `kind`, `created_at`, `device_id`, `device_name` (beschreibender Name zum Schreibzeitpunkt). |
 | `Candidate` | Alle `CandidateSummary`-Felder plus `save` und `validation` wie bei `Record`. |
 | `List` | `items`: Liste der pfadspezifischen Form; `next_cursor`: opaker String oder null. |
@@ -355,7 +338,7 @@ ohne neuen Kandidaten. Eine Auswahl, bewusste Verwerfung oder Historienrestaurat
 läuft ausschließlich über SYNC-P02 und die aktuelle Basis.
 
 Ein Mutationsrequest ist höchstens 16 MiB UTF-8; dessen Grenze wird vor teurem
-JSON-/Historyaufbau geprüft. Authbodygrenze steht in SYNC-P05. Der gesamte gespeicherte
+JSON-Aufbau geprüft. Authbodygrenze steht in SYNC-P05. Der gesamte gespeicherte
 Snapshotbestand aus aktuell/Historie/Konflikten hat standardmäßig höchstens
 512 MiB je Konto, maximal 2000 Rätsel und 100 registrierte Geräte. Berechnung auf
 der tatsächlich gespeicherten UTF-8-Snapshotdarstellung, nach der regulären
@@ -435,7 +418,7 @@ Die Profilinstanz kapselt SaveStore (`saves/`) und RecentPuzzle
 (`recent-puzzle.json`). Aufrufer bearbeiten Kontodaten nur über diese Instanz.
 Gerätepräferenzen und der Startpfad der Anwendung bleiben gerätelokal.
 
-`journal.json` enthält Format `picross-local-sync/v1`, den vollständigen
+`journal.json` enthält Format `picross-local-sync/v2`, den vollständigen
 JSON-Payload als UTF-8-Text und dessen SHA-256. Er bindet Kontext, erwartete
 Servergeneration, lokale Generation, verbrauchte Sequenz, ausstehende
 Fassungen/Entscheidungen, höchsten bekannten Stand pro Rätsel, einen vorbereiteten
@@ -447,7 +430,13 @@ schreibt einen Geschwistertemp, flusht, schließt, vergleicht alle Bytes und
 ersetzt per Rename (unter Windows MoveFileEx mit Write-through). Erst ein
 erfolgreicher Vergleich des Ziels schließt die Publikation ab.
 
-Vor Slotänderung sichert das Journal die vollständige Schreib-/Resetabsicht.
+Vor Slotänderung sichert das Journal die vollständige Schreib-/Resetabsicht
+einschließlich des SHA-256 der erwarteten Primarybytes bei einem Save. Je Rätsel
+bindet es die letzte lokale Generation und einen Hash der Fortschrittsprojektion.
+Bei unverändertem Hash wird der lokale Save bestätigt, während Warteschlange und
+vorbereiteter Request ihre Identität behalten. Nur die acht P04-Felder gelangen
+in sendefähige Snapshots. Ein Journal im Vorgängerformat `picross-local-sync/v1`
+bleibt einschließlich Originalrequest unverändert für den Bestandsabgleich gesperrt.
 Nach dem P1-Temp-/Backupweg liest der Kern das Primary bzw. die Abwesenheit
 aller Resetziele zurück. Erst dann veröffentlicht er die zugeordnete Generation.
 Beim Wiederanlauf kann ein passendes Primary eine noch offene Absicht abschließen.
@@ -476,12 +465,17 @@ ohne erneute Serialisierung. Zugangsdaten kommen außerhalb dieses Bestands hinz
 HTTP-Status und den strikt dekodierten v1-Antwortbody. Ein Transportfehler lässt
 den Auftrag offen. Ein verbrauchtes Ergebnis veröffentlicht Beleg, Wasserstand,
 Slotstatus und Freigabe gemeinsam. Gesicherte Kandidaten behalten ihre ID,
-abgelehnte Fassungen den vollständigen lokalen Inhalt. Unverbrauchte
+abgelehnte Fassungen den angebotenen Fortschritt. Unverbrauchte
 Sequenzfehler und eine andere Servergeneration sperren automatische Wiederholung.
 Der spätere Bestandsabgleich entscheidet ausdrücklich über die weitere Verwendung.
 
 Der isolierte Harness benutzt diese API mit synthetischen Identitäten. Die
 nutzbare Kontoauswahl, HTTP-Anbindung und Browser-Kontopersistenz folgen in B2.
+
+Die Migration von Datenbankstand 1 auf 2 projiziert aktuelle und frühere
+Versionen sowie Konfliktkandidaten in einer Transaktion. Resetmarker, Identitäten,
+Revisionen, Zeiten, Gerätewasserstände, Requesthashes und Antwortbelege bleiben
+erhalten. Readiness und Sicherung/Restore setzen Datenbankstand 2 voraus.
 
 ## 6. Prüfung und Zuständigkeit
 

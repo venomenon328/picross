@@ -29,7 +29,7 @@ def export(row, *, full=False):
     if full:
         if result["save"] is not None:
             result["save"] = json.loads(result["save"])
-        result["validation"] = "schema_history_checked" if result["kind"] == "snapshot" else None
+        result["validation"] = "progress_structure_checked" if result["kind"] == "snapshot" else None
     return result
 
 
