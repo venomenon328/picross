@@ -108,6 +108,8 @@ jobs:
           echo "$RUNNER_TEMP/b2-venv/bin" >> "$GITHUB_PATH"
       - name: Run original native catalog oracle
         env:
+          P1_BASE_COMMIT: a18533701f71e217854a1c9d3bd8c09ecf094565
+          P1_PREFLIGHT_SOURCE_COMMIT: d5aaf8384a4ad59eec557eed1f276bf118028ff2
           GITHUB_TOKEN: ${{ github.token }}
         run: python tools/p1_product.py --native-group catalog --cache-dir "$RUNNER_TEMP/p1-toolchain-cache" --output-dir "$RUNNER_TEMP/catalog-report"
       - if: always()
