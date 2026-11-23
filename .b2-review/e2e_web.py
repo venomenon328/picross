@@ -74,7 +74,7 @@ def wait(page,fn,name,timeout=75):
         page.wait_for_timeout(140)
     raise RuntimeError(name+' '+str({k:state.get(k) for k in ('state','status','profile','ready','cursor','cells','size','confirmed','busy')})+' controls '+str(list(state.get('points',{}))[:12]))
 def click(page,key):
-    st=wait(page,lambda s: key in s['points'],key)
+    st=wait(page,lambda s: key in s['points'] and not s['locked'] and not s['release_barrier'],key)
     x,y=st['points'][key]
     canvas=page.locator('canvas').bounding_box()
     page.mouse.click(canvas['x']+x,canvas['y']+y)
@@ -211,7 +211,11 @@ def execute(kind):
                     page.set_viewport_size({'width':1280,'height':page.viewport_size['height']+720-round(st['size'][1])})
                 wait(page,lambda s:s['size']==[1280,720],'1280x720')
                 click(page,'settings')
+                wait(page,lambda s:s['state']==4 and not s['locked'] and not s['release_barrier'],'settled scale settings')
+                page.wait_for_timeout(600)
                 click(page,'scale')
+                page.wait_for_timeout(900)
+                if 'scale125' not in observe(page)['points']: page.keyboard.press('Space')
                 click(page,'scale125')
                 wait(page,lambda s:s['scale']==1.25,'UI125')
                 click(page,'info-back')

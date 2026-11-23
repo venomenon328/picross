@@ -56,7 +56,7 @@ class Native:
         U.SetWindowPos(self.window,-1,0,0,width+w.right-w.left-c.right,height+w.bottom-w.top-c.bottom,0x10)
         self.wait(lambda s:s['size']==[width,height],'window size')
     def click(self,key):
-        st=self.wait(lambda s:key in s['points'],key)
+        st=self.wait(lambda s:key in s['points'] and not s['locked'] and not s['release_barrier'],key)
         x,y=map(round,st['points'][key])
         self.press_at(x,y)
     def press_at(self,x,y):
@@ -74,14 +74,20 @@ class Native:
         time.sleep(.18)
         U.mouse_event(4,0,0,0,0)
         time.sleep(.45)
-    def type(self,value):
-        for c in value:
+    def type(self,value,field):
+        self.wait(lambda s:s.get(field)==0,'empty native field')
+        for index,c in enumerate(value):
             vk=ord(c.upper())
             scan=U.MapVirtualKeyW(vk,0)<<16
-            U.PostMessageW(self.window,0x100,vk,scan|1)
-            time.sleep(.035)
-            U.PostMessageW(self.window,0x101,vk,scan|0xc0000001)
-            time.sleep(.02)
+            for attempt in range(3):
+                U.PostMessageW(self.window,0x100,vk,scan|1)
+                time.sleep(.08)
+                U.PostMessageW(self.window,0x101,vk,scan|0xc0000001)
+                try:
+                    self.wait(lambda s:s.get(field)==index+1,'key delivery',3)
+                    break
+                except RuntimeError:
+                    if attempt==2:raise
     def screenshot(self,path):
         req=Path(str(self.obs)+'.png.request')
         source=Path(str(self.obs)+'.png')
@@ -107,8 +113,8 @@ def execute():
         target=st['ids'][0];seed(client,target)
         game.click('settings')
         game.wait(lambda s:s['state']==4,'settings')
-        game.click('manage');game.click('username');game.type(client.name)
-        game.click('password');game.type(client.password);game.click('Anmelden')
+        game.click('manage');game.click('username');game.type(client.name,"name_length")
+        game.click('password');game.type(client.password,"password_length");game.click('Anmelden')
         st=game.wait(lambda s:s['profile'] and s['confirmed'] and s['ready'],'normal login',120)
         assert st['font_size']==18
         (evidence/'platform.json').write_text(json.dumps({'head':subprocess.check_output(['git','rev-parse','HEAD'],cwd=root,text=True).strip(),'engine':'4.7.2.stable.official.ed1daf0bf','size_ui100':st['size'],'ui':st['scale']}))
