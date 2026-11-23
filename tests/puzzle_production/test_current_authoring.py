@@ -180,6 +180,215 @@ class CurrentAuthoringTests(unittest.TestCase):
         git(self.root, 'checkout', '-qb', 'work', work)
         current.complete(self.root,current.path('pz-current'),product,current_input=exported)
 
+    def diagnostic_raster(self, key, matrix, revision, *, status='solved'):
+        from tools.puzzle_production import catalog_analysis, catalog_rating, current_rating
+        from tools.puzzle_production.contract import Budget
+        from tools.puzzle_production.editor_raster import clues
+        from tools.puzzle_production.solver import solve
+
+        definition = json.loads((self.input/'definition.json').read_bytes())
+        definition.update(width=len(matrix[0]), height=len(matrix), solution=matrix, revision=revision,
+                          rows=[clues(row) for row in matrix], columns=[clues(column) for column in zip(*matrix)])
+        raw = current.encoded(definition)
+        name = key+'-definition.json'
+        ref = self.file(name, raw)
+        proof = solve(catalog_rating.definition(raw)[1], Budget())
+        self.assertEqual(proof['status'], status)
+        rating = None
+        if status == 'solved':
+            checked = catalog_analysis.analyze_single(self.sources/name, self.work/(key+'-analysis'), production_mode='mono')
+            rating = self.file(key+'-rating.json', current.encoded(current_rating.from_checked(checked)))
+        return {'id': key, 'label': key, 'definition': ref, 'review': judgment(current.CRITERIA['raster']),
+                'preview': self.file(key+'.png', current.raster_preview(definition, mode='mono')),
+                'proof': self.file(key+'-proof.json', current.encoded(proof)), 'difficulty': rating,
+                'exceptions': []}
+
+    def diagnostic_job(self):
+        from PIL import Image
+        Image.new('RGBA', (80, 24), (30, 30, 30, 255)).save(self.input/'reveal.png')
+        self.raster_ready()
+        self.job = current.upgrade(self.job)
+        self.job['state'] = 'raster_review'
+        end = [[1]*17, [1]*17, [0]*17]
+        a = self.diagnostic_raster('raster-a', [[0]*3+row for row in end], 1)
+        b = self.diagnostic_raster('raster-b', end, 2)
+        frame = self.diagnostic_raster('raster-frame', [[0]+[1]*18+[0], [0]*20, [0]*20], 2)
+        option = {'format': current.raster_parameters.FORMAT,
+                  'constraints': {'width': {'kind': 'approximate', 'target': 20, 'minimum': 18, 'maximum': 22},
+                                  'height': {'kind': 'exact', 'target': 3, 'minimum': 3, 'maximum': 3},
+                                  'foreground_colors': {'kind': 'exact', 'target': 1, 'minimum': 1, 'maximum': 1}},
+                  'imports': [{'width': 20, 'height': 3, 'mode': 'mono', 'foreground_colors': 1,
+                               'method': 'area', 'fit': 'exact', 'actual_crop': [0, 0, 20, 3]}],
+                  'derivation': {'cell_edits': False, 'empty_edge_crop': ['left'], 'protected_features': []}}
+        self.job['parameters'] = {'approved': [option], 'proposed': [option]}
+        decide(self.job, 'motif')
+        motif = next(a for a in self.job['assets'] if a['id'] == self.job['selected']['motif'])
+        protection = {'before_sha256': a['definition']['sha256'], 'motif_sha256': motif['file']['sha256'],
+                      'cells': [[False]*20 for _ in end]}
+        b['crop_diagnosis'] = {'format': current.CROP_DIAGNOSIS, 'before': a['definition'], 'preview': a['preview'],
+                               'protection': self.file('protected.json', current.encoded(protection)),
+                               'parameters_sha256': current.digest(option), 'rectangle': [3, 0, 20, 3]}
+        self.job['rasters'] = [a, b, frame]
+
+    def select_for_integration(self, candidate):
+        self.job['selected'].update(raster=candidate, background='none')
+        for scope in ('raster', 'background', 'final', 'integration'):
+            decide(self.job, scope)
+        self.job['state'] = 'editorially_approved'
+
+    def read_diagnostics(self):
+        raw = current.encoded(self.job)
+        source = LocalSource(self.root)
+        return current.detail(source, None, current.projection(self.job, raw))['candidates']
+
+    def test_corridor_draft_requires_fresh_parameter_and_motif_decisions(self):
+        from tools.production_workspace.repository import Repository, configure
+        from tools.production_workspace.server import Service
+        self.diagnostic_job(); self.publish()
+        commit(self.root, 'synthetic diagnostics')
+        state = self.work/'state'
+        configure(self.root, state, refs=['main'])
+        service = Service(Repository(state))
+        listing = service.listing()
+        self.assertFalse(listing['errors'])
+        jid = listing['jobs'][0]['id']
+        detail = service.detail(jid)
+        cards = detail['facts']['candidates']
+        self.assertEqual([o['id'] for o in detail['offers']], ['raster-a'])
+        self.assertEqual({a['id']: a['role'] for a in detail['assets']}['raster-b'], 'raster_draft')
+        crop = cards['raster-b']['diagnostics']['crop']
+        self.assertEqual((crop['before'], crop['after'], crop['removed']['left'], crop['removed_cells']),
+                         ({'width': 20, 'height': 3}, {'width': 17, 'height': 3}, 3, 9))
+        self.assertEqual(crop['changes'], {'width': {'previous': 18, 'proposed': 17}})
+        a,b,_ = self.job['rasters']
+        for asset, ref in ((crop['before_asset'], a['preview']), ('raster-b', b['preview'])):
+            data, mime = service.picture(jid, asset)
+            self.assertEqual((io.checksum(data), mime), (ref['sha256'], 'image/png'))
+
+        original = deepcopy(self.job)
+        self.select_for_integration('raster-b')
+        with self.assertRaisesRegex(InvalidInput, 'parameter option'):
+            self.publish()
+        self.job = deepcopy(original)
+        self.job['parameters']['approved'] = [crop['alternative']]
+        with self.assertRaisesRegex(InvalidInput, 'Stale decision: motif'):
+            self.publish()
+        decide(self.job, 'motif')
+        with self.assertRaisesRegex(InvalidInput, 'stale parameters'):
+            self.publish()
+        self.job['rasters'][1]['crop_diagnosis']['parameters_sha256'] = current.digest(crop['alternative'])
+        self.select_for_integration('raster-b')
+        self.publish()
+        output = self.work/'approved-crop'
+        current.prepare(self.root, current.path('pz-current'), output)
+        self.assertEqual(integration_input.Input(output).definition['width'], 17)
+
+    def test_current_crop_rejects_false_originals_and_preserves_sibling_view(self):
+        self.diagnostic_job(); self.publish()
+        good = deepcopy(self.job)
+        b = self.job['rasters'][1]
+        before = b['crop_diagnosis']
+        path = self.root/before['protection']['file']
+        data = path.read_bytes()
+        path.write_bytes(b'changed')
+        try:
+            cards = self.read_diagnostics()
+            self.assertTrue(cards['raster-a']['qualified'])
+            self.assertNotIn('crop', cards['raster-b']['diagnostics'])
+            self.assertRegex(' '.join(cards['raster-b']['missing']), 'Beschnittoriginal oder -bindung nicht prüfbar')
+        finally:
+            path.write_bytes(data)
+        for scenario in ('protected-cell', 'exact-axis', 'unapproved-side', 'different-image', 'filled-cell'):
+            with self.subTest(scenario=scenario):
+                self.job = deepcopy(good)
+                a, b, frame = self.job['rasters']
+                crop = b['crop_diagnosis']
+                option = self.job['parameters']['approved'][0]
+                if scenario in ('exact-axis', 'unapproved-side'):
+                    if scenario == 'exact-axis':
+                        option['constraints']['width'].update(kind='exact', minimum=20, maximum=20)
+                    option['derivation']['empty_edge_crop'] = []
+                    crop['parameters_sha256'] = current.digest(option)
+                    decide(self.job, 'motif')
+                elif scenario == 'different-image':
+                    crop['preview'] = b['preview']
+                else:
+                    mask = json.loads(data)
+                    if scenario == 'filled-cell':
+                        definition = json.loads((self.root/a['definition']['file']).read_bytes())
+                        filled = self.diagnostic_raster('raster-filled', [[1]+row[1:] for row in definition['solution']], 1)
+                        crop.update(before=filled['definition'], preview=filled['preview'])
+                        mask['before_sha256'] = filled['definition']['sha256']
+                    else:
+                        mask['cells'][0][0] = True
+                    crop['protection'] = self.file(scenario+'.json', current.encoded(mask))
+                expected = {'protected-cell': 'nonempty or protected', 'filled-cell': 'nonempty or protected',
+                            'exact-axis': 'Unapproved empty-edge crop', 'unapproved-side': 'Unapproved empty-edge crop',
+                            'different-image': 'preview differs'}[scenario]
+                with self.assertRaisesRegex(InvalidInput, expected):
+                    self.publish()
+
+    def test_frame_diagnosis_and_exception_keep_independent_gates(self):
+        self.diagnostic_job(); self.publish()
+        cards = self.read_diagnostics()
+        frame = cards['raster-frame']['diagnostics']['frame']
+        self.assertEqual(frame['edges'], {'left': False, 'right': False, 'top': True, 'bottom': False})
+        self.assertEqual((frame['criterion'], frame['result'], frame['axes'], frame['exception']),
+                         ('H-01', 'nicht erfüllt', ['width'], None))
+        raster = self.job['rasters'][2]
+        exception = {'criterion': 'frame', 'candidate_id': raster['id'], 'revision': 2,
+                     'definition_sha256': raster['definition']['sha256'], 'actor': 'Synthetic owner',
+                     'timestamp_utc': '2026-11-22T10:00:00Z', 'statement': 'Allow the measured horizontal margin.',
+                     'evidence': self.file('frame-evidence.txt', b'Synthetic decision for raster-frame revision 2.')}
+        for field, value in [('candidate_id','raster-a'), ('revision',1), ('definition_sha256','0'*64),
+                             ('evidence',self.file('empty.txt', b' '))]:
+            with self.subTest(field=field):
+                raster['exceptions'] = [{**exception, field: value}]
+                with self.assertRaisesRegex(InvalidInput, 'frame exception|technical exception|exception evidence'):
+                    self.publish()
+        custom = deepcopy(self.job)
+        self.finding('raster-frame', 'frame-acceptance')
+        row = self.job['findings'][0]
+        row.update(criterion='H-01', rule='frame')
+        with self.assertRaisesRegex(InvalidInput, 'cannot be accepted'):
+            self.accept(row)
+        with self.assertRaisesRegex(InvalidInput, 'Invalid concrete finding'):
+            self.publish()
+        self.job = custom
+        self.job['rasters'][2]['exceptions'] = [exception]
+        self.publish()
+        cards = self.read_diagnostics()
+        self.assertTrue(cards['raster-frame']['qualified'])
+        self.assertEqual(cards['raster-frame']['diagnostics']['frame']['result'], 'nicht erfüllt')
+        self.assertEqual(cards['raster-frame']['diagnostics']['frame']['exception'], exception)
+        original = deepcopy(self.job)
+        stalled = self.diagnostic_raster('raster-stalled', [[0,1,0]+[0]*17, [0,0,1]+[0]*17, [0]*20],
+                                         2, status='stalled')
+        stalled['exceptions'] = [{**exception, 'candidate_id': stalled['id'], 'definition_sha256': stalled['definition']['sha256']}]
+        self.job['rasters'].append(stalled)
+        self.publish()
+        stalled_card = self.read_diagnostics()[stalled['id']]
+        self.assertFalse(stalled_card['qualified'])
+        self.assertIn('Vollständiger Logiknachweis fehlt', stalled_card['missing'])
+        self.assertIsNotNone(stalled_card['diagnostics']['frame']['exception'])
+        for missing in ('proof', 'difficulty'):
+            self.job = deepcopy(original)
+            self.job['rasters'][2][missing] = None
+            self.select_for_integration('raster-frame')
+            with self.assertRaisesRegex(InvalidInput, 'proof and difficulty'):
+                self.publish()
+        self.job = deepcopy(original)
+        self.select_for_integration('raster-frame')
+        self.publish()
+        output = self.work/'approved-frame'
+        current.prepare(self.root, current.path('pz-current'), output)
+        manifest = json.loads((output/'manifest.json').read_bytes())
+        manifest['quality']['exceptions'][0]['candidate_id'] = 'raster-a'
+        manifest['approval']['selection_sha256'] = integration_input.selection(manifest)
+        (output/'manifest.json').write_bytes(current.encoded(manifest))
+        with self.assertRaisesRegex(InvalidInput, 'Foreign or stale frame exception'):
+            integration_input.Input(output)
+
     def test_selected_background_profile_and_all_phase_treatments_reach_export(self):
         from io import BytesIO
         from PIL import Image
