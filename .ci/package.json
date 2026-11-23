@@ -8,12 +8,12 @@
     "native.catalog"
   ],
   "purpose": "Windows-Publikation für Journal und Fortsetzen-Merker, Save/Recovery, Neustart mit Redo und unverändertem Originalrequest sowie Zellaktion am ruhenden Kontotransport prüfen. Kern mit regulärem Windows-x64-Spielerbau.",
-  "omitted": "Windows-spezifische Publikation und Pfadprüfung. Web-Callback, Flush, Scheduler und Spielregeln bleiben erhalten. Kein sync.server, native.graphics, zusätzliche Export-/Completion-/Adapter-/Preflight-/Tools-/Produktions-/Deliverymodule oder Browser-Vollmatrix. Gepaarte Windows-Spielprobe mit Rohdaten und Interaktionsbeleg einmalig bis R01.",
+  "omitted": "Kein sync.server, native.graphics, zusätzliche Export-/Completion-/Adapter-/Preflight-/Tools-/Produktions-/Deliverymodule oder Browser-Vollmatrix. Einmalig bis zum unabhängigen Nachreview: gepaarte Windows-Spielprobe mit Originalen und gezielter Chromium-Kontosave mit IDBFS-Callback, Reload, Fehler und Retry wegen der berührten Intent-Bestätigungsroutine.",
   "test_changes": [
     {
       "path": "game/tests/sync_cases.gd",
       "disposition": "change-scoped",
-      "reason": "Verspäteter Windows-Helfer nach Timeout, erhaltener Altstand, Create-only-Schutz und frischer Austausch."
+      "reason": "Windows-Timeout mit gescheiterter Rücknahme, jüngerer Schreibinstanz, Originalbytes, Journalgeneration und Primary. Verlorene Quittung nach Austausch, Create-only und gegen verspätete Publikation abgesicherter Merker."
     },
     {
       "path": "game/tests/p14_integration.gd",

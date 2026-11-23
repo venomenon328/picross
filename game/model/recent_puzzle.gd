@@ -130,7 +130,19 @@ func retry() -> bool:
 		web_retry()
 		return true
 	if desired.is_empty():
-		if fail_step == "delete" or (FileAccess.file_exists(path) and DirAccess.remove_absolute(path) != OK): return _failed()
+		if fail_step == "delete": return _failed()
+		if OS.get_name() == "Windows":
+			var expected := ""
+			if FileAccess.file_exists(path):
+				var bytes := FileAccess.get_file_as_bytes(path)
+				if decode(bytes) != record: return _failed()
+				var hashing := HashingContext.new()
+				hashing.start(HashingContext.HASH_SHA256)
+				hashing.update(bytes)
+				expected = hashing.finish().hex_encode()
+			var publisher := windows_publisher()
+			if publisher == null or not publisher.clear(path, expected): return _failed()
+		elif FileAccess.file_exists(path) and DirAccess.remove_absolute(path) != OK: return _failed()
 	else:
 		if fail_step == "open" or DirAccess.make_dir_recursive_absolute(path.get_base_dir()) != OK: return _failed()
 		var temporary: String = path+".tmp"
@@ -157,9 +169,12 @@ func _replace(temporary: String, replace_existing: bool = true) -> bool:
 		if not replace_existing and FileAccess.file_exists(path): return false
 		# POSIX rename and Emscripten MEMFS rename replace without a delete gap.
 		return DirAccess.rename_absolute(temporary,path) == OK
-	var tree := Engine.get_main_loop() as SceneTree
-	var publisher := tree.root.get_node_or_null("WindowsPublisher")
+	var publisher := windows_publisher()
 	return publisher != null and publisher.replace(temporary, path, replace_existing)
+
+static func windows_publisher() -> Node:
+	var tree := Engine.get_main_loop() as SceneTree
+	return tree.root.get_node_or_null("WindowsPublisher")
 
 static func web_retry() -> void:
 	if OS.has_feature("web"): JavaScriptBridge.eval("window.picrossStorage.recentRetry()",true)

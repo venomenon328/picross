@@ -198,6 +198,9 @@ func _parse(path: String, definition: Dictionary) -> Dictionary:
 		return {"status": "invalid", "error": "Datei nicht lesbar."}
 	var bytes: PackedByteArray = file.get_buffer(file.get_length())
 	file.close()
+	return _parse_bytes(bytes, definition)
+
+func _parse_bytes(bytes: PackedByteArray, definition: Dictionary) -> Dictionary:
 	if not SaveRevision.Recent.valid_utf8(bytes): return {"status":"invalid","error":"Ungültiges UTF-8."}
 	var raw: String = bytes.get_string_from_utf8()
 	var parser: JSON = JSON.new()
@@ -242,7 +245,7 @@ func write_slot(session: Session, view: Dictionary) -> String:
 	WebStorage.finished(str(session.definition.id), error)
 	return error
 
-func _write_slot(session: Session, view: Dictionary) -> String:
+func _write_slot(session: Session, view: Dictionary, verified: Dictionary = {}) -> String:
 	var id: String = key_for_definition(str(session.definition.id))
 	if not id in registered_ids():
 		return "Unbekanntes Fixture."
@@ -264,6 +267,9 @@ func _write_slot(session: Session, view: Dictionary) -> String:
 		return "Älteren Spielstand zuerst über den Revisionsreset laden."
 	if DirAccess.make_dir_recursive_absolute(_absolute(root)) != OK:
 		return "Speicherverzeichnis nicht erstellbar."
+	if OS.get_name() == "Windows":
+		return _write_windows_slot(candidate, session.definition, temp_path, primary_path, backup_path,
+			previous.status == "valid", verified)
 	var file: FileAccess = FileAccess.open(temp_path, FileAccess.WRITE)
 	if file == null:
 		return "Temporäre Datei nicht schreibbar."
@@ -275,16 +281,49 @@ func _write_slot(session: Session, view: Dictionary) -> String:
 		return "Temporäre Datei nicht vollständig geschrieben."
 	if _parse(temp_path, session.definition).status != "valid":
 		return "Temporäre Datei besteht Validierung nicht."
-	if fail_step == "after_temp":
-		return "Testabbruch nach Tempvalidierung."
-	if previous.status == "valid":
-		if FileAccess.file_exists(backup_path) and DirAccess.remove_absolute(_absolute(backup_path)) != OK:
+	return _rotate_slot(temp_path, primary_path, backup_path, previous.status == "valid")
+
+func _write_windows_slot(candidate: Dictionary, definition: Dictionary, temporary: String, primary: String,
+		backup: String, rotate: bool, verified: Dictionary) -> String:
+	var publisher := SaveRevision.Recent.windows_publisher()
+	if publisher == null or not SaveRevision.Recent.safe_file(temporary):
+		return "Temporäre Datei nicht schreibbar."
+	var raw := JSON.stringify(candidate, "", true, not profile_recent_path.is_empty()) + "\n"
+	var bytes := raw.to_utf8_buffer()
+	if _parse_bytes(bytes, definition).status != "valid": return "Temporäre Datei besteht Validierung nicht."
+	var file := FileAccess.open(temporary, FileAccess.WRITE)
+	if file == null: return "Temporäre Datei nicht schreibbar."
+	# Take the independent read handle before writing. It follows the exact
+	# staged file across rename. Closing the writer still precedes both reads.
+	if not publisher.hold(temporary):
+		file.close()
+		return "Temporäre Datei nicht lesbar."
+	var written := file.store_buffer(bytes)
+	file.flush()
+	var error := file.get_error()
+	file.close()
+	var expected := raw.sha256_text()
+	if not written or error != OK or publisher.digest(temporary) != expected:
+		publisher.drop()
+		return "Temporäre Datei besteht Validierung nicht."
+	var failure := _rotate_slot(temporary, primary, backup, rotate)
+	if not failure.is_empty():
+		publisher.drop()
+		return failure
+	if publisher.digest(primary, true) != expected:
+		return "Temporäre Datei nicht als Primärstand bestätigt."
+	verified.merge({"path":primary, "sha256":expected})
+	return ""
+
+func _rotate_slot(temporary: String, primary: String, backup: String, rotate: bool) -> String:
+	if fail_step == "after_temp": return "Testabbruch nach Tempvalidierung."
+	if rotate:
+		if FileAccess.file_exists(backup) and DirAccess.remove_absolute(_absolute(backup)) != OK:
 			return "Altes Backup nicht entfernbar."
-		if DirAccess.rename_absolute(_absolute(primary_path), _absolute(backup_path)) != OK:
+		if DirAccess.rename_absolute(_absolute(primary), _absolute(backup)) != OK:
 			return "Primärstand nicht als Backup rotierbar."
-	if fail_step == "after_rotation":
-		return "Testabbruch nach Backuprotation."
-	if DirAccess.rename_absolute(_absolute(temp_path), _absolute(primary_path)) != OK:
+	if fail_step == "after_rotation": return "Testabbruch nach Backuprotation."
+	if DirAccess.rename_absolute(_absolute(temporary), _absolute(primary)) != OK:
 		return "Temporäre Datei nicht als Primärstand einsetzbar."
 	return ""
 

@@ -335,11 +335,14 @@ Aktuelle echte Windows-Originale bleiben ein einmaliger befristeter Reviewbeleg.
 
 SYNC-PERF ergänzt die Neustartprüfung um die lokal bestätigte Generation und
 das abgeschlossene Intent. In core prüft der Windows-Lauf einen verspäteten
-Helfer nach Pipe-Timeout, Create-only-Schutz und einen erfolgreichen Wiederanlauf.
+Helfer bei liegengebliebenem Kandidaten, eine jüngere Publikation und die frisch
+gelesene Journalgeneration mit zugehörigem Primary. Er prüft auch die verlorene
+Quittung nach erfolgtem Austausch, Create-only und den separat gelöschten Merker.
 Der vorhandene K-B-Fall in catalog liest den erneuerten Merker frisch von Disk.
 Die Kontoprobe in catalog/information betätigt nach ruhendem Bestandsabgleich
 Zelle, Undo und Redo und prüft lokale Bestätigung, Transportaufrufe und Fälligkeit.
-Der gepaarte Windows-Latenzvergleich bleibt einmaliger Paketnachweis.
+Der gepaarte Windows-Latenzvergleich und der Chromium-Test für Save,
+IDBFS-Callback, Fehler, Retry und Reload bleiben einmalige Paketnachweise.
 
 In `native.history` und der entsprechenden lokalen Auswahl gelten höchstens
 20 semantische Benutzerkommandos, sechs neue wirksame Transaktionen und genau

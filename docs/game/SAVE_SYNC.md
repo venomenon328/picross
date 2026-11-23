@@ -445,8 +445,11 @@ Abgleichsgrund. Mutationen halten während der kurzen lokalen Transaktion ein
 exklusiv angelegtes Lockverzeichnis und prüfen den zuvor gelesenen Journalhash.
 Ein zweiter, inzwischen veralteter Kontext muss erneut öffnen. Journalpublikation
 schreibt einen Geschwistertemp, flusht, schließt, vergleicht alle Bytes und
-ersetzt per Rename (unter Windows MoveFileEx mit Write-through). Erst ein
-erfolgreicher Vergleich des Ziels schließt die Publikation ab.
+ersetzt per Rename. Erst ein erfolgreicher Vergleich des Ziels schließt die
+Publikation ab. Unter Windows öffnet der Helfer den unabhängigen Lesehandle
+vor dem Schreiben und hält ihn über den Austausch. Der SHA-256 über sämtliche
+Bytes und der Dateikennungsvergleich binden den gelesenen Inhalt jeweils an
+den Kandidaten- und Zielpfad.
 
 Unter Windows initialisiert ein Autoload vor der ersten Spielszene einen gemeinsamen
 PowerShell/.NET-Prozess für Journal, Fortsetzen-Merker und die weiteren Aufrufer
@@ -457,12 +460,16 @@ Geschwisternamen. MoveFileExW verwendet WRITE_THROUGH, beim Ersetzen zusätzlich
 REPLACE_EXISTING. Nur die passende Erfolgsantwort schließt den Austausch ab.
 
 Für den Start gelten zehn Sekunden, für eine Auftragsantwort zwei Sekunden.
-Bei fehlender oder unpassender Antwort meldet der Aufrufer einen Fehler, holt
-einen noch vorhandenen Kandidaten nach Möglichkeit auf den Tempnamen zurück und
-schließt die Pipe. Ein zurückgebliebener Arbeitsname wird nie als Save geladen.
-Beim Wiederanlauf wird ein festhängender eigener Prozess beendet. Der neue Helfer
-passiert vor seiner Bereitschaft denselben Windows-Mutex wie die Austauschoperationen.
-Unter dem Mutex prüft der Helfer die Lebensdauer des zugehörigen Spielprozesses.
+Bei fehlender oder unpassender Antwort schließt der Aufrufer vor der Fehlermeldung
+seine Pipe. Ein noch vorhandener Kandidat kann auf den Tempnamen zurückgenommen
+werden. Liegengebliebene Arbeitsnamen nehmen an der Wiederaufnahme nicht teil.
+Unter dem gemeinsamen Windows-Mutex prüft der Helfer den Spielprozess und den
+offenen Auftragskanal vor der Mutation. Er hält die Sperre bis zum Ende des
+Austauschs. Andere Profilzugriffe passieren nach dem Erwerb des Lockverzeichnisses
+denselben Mutex, bevor sie Journal oder Slot prüfen. Damit berücksichtigen sie
+einen bereits ausgeführten Austausch auch bei verlorener Quittung. Der
+Merkeraustausch und das vergleichende Löschen des Merkers verwenden denselben
+Mutex. Der Neustart eines Helfers passiert ihn vor seiner Bereitschaft.
 Beim regulären Beenden schließt der Player die Pipe und beendet seinen Helfer.
 Ein Journalfehler führt in die bestehende Save-/Recoverybehandlung. Ein Fehler
 allein beim Fortsetzen-Merker bleibt am separaten Metadaten-Retry sichtbar.
@@ -475,7 +482,11 @@ vorbereiteter Request ihre Identität behalten. Nur die acht P04-Felder gelangen
 in sendefähige Snapshots. Ein Journal im Vorgängerformat `picross-local-sync/v1`
 bleibt einschließlich Originalrequest unverändert für den Bestandsabgleich gesperrt.
 Nach dem P1-Temp-/Backupweg liest der Kern das Primary bzw. die Abwesenheit
-aller Resetziele zurück. Erst dann veröffentlicht er die zugeordnete Generation.
+aller Resetziele zurück. Für Zell- und Ansichtssaves unter Windows kann derselbe
+gesperrte Aufruf die zuvor vollständig validierten Bytes über den gehaltenen
+Lesehandle nachweislich dem Primarypfad zuordnen. Intent und Rücklesung müssen
+denselben vollständigen Hash besitzen. Erst dann veröffentlicht der Kern die
+zugeordnete Generation.
 Beim Wiederanlauf kann ein passendes Primary eine noch offene Absicht abschließen.
 Eine widersprüchliche Teilrotation, fremde Metadaten oder ein nach hartem
 Prozessabbruch stehengebliebener Lock sperren Änderungen bis zur Wiederherstellung.

@@ -16,7 +16,7 @@ Ohne passenden Stand oder nach Abschluss/Reset ist das Panel verborgen. Öffnen 
 zeigt weiterhin den Katalog. Der separate `user://p1/recent-puzzle.json` ändert keine
 Slotdatei. Fehler des Merkers haben im Katalog einen eigenen Retry; Save-/Backupfehler
 und deren bewusste Reparatur bleiben davon getrennt. Unter Windows startet das Spiel
-einmal einen PowerShell-Helfer für den atomaren Austausch von Kontojournal und
+einmal einen PowerShell-Helfer für die Rückleseprüfung und den atomaren Austausch von Kontojournal und
 Metadaten. Jede bestätigte Aktion wartet auf ihre lokale Sicherung. Kann das
 Kontojournal nicht bestätigt werden, erscheint ein Speicherfehler. Betrifft der
 Fehler allein den Fortsetzen-Merker, lässt sich dieser im Katalog erneut speichern.
