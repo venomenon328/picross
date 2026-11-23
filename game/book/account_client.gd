@@ -8,6 +8,7 @@ const Schedule = preload("res://model/sync_schedule.gd")
 const Dialog = preload("res://book/account_dialog.gd")
 const Session = preload("res://model/session.gd")
 const FLUSH_FEEDBACK := "Lokale Sicherung ausstehend oder fehlgeschlagen. Sicherung prüfen und erneut versuchen."
+const CONFLICT_STATUS := "Konflikt – Lösung derzeit nicht verfügbar"
 const INVALID_REPLY := "Ungültige Antwort des Kontodiensts. Bitte erneut versuchen."
 var app: Control
 var profile: Profile
@@ -15,6 +16,7 @@ var access := Access.new()
 var transport: Transport
 var schedule := Schedule.new()
 var identity := {}
+var session_expiry := 0
 var inventory := {}
 var transport_busy := false
 var changing := false
@@ -74,6 +76,8 @@ func bind(target: Profile, data: Dictionary) -> void:
 	epoch += 1
 	recovery_session = {}
 	identity = data
+	session_expiry = Time.get_unix_time_from_datetime_string(data.expires_at) if target != null else 0
+	dialog.reset_form()
 	profile = target
 	inventory = {}
 	unresolved_inventory = false
@@ -89,7 +93,7 @@ func bind(target: Profile, data: Dictionary) -> void:
 	app.recent_signature = ""
 	app.rebind_profile(profile,profile_changed)
 	if profile:
-		schedule.auth_paused = identity.token.is_empty() or Time.get_unix_time_from_datetime_string(identity.expires_at) <= Time.get_unix_time_from_system()
+		schedule.auth_paused = identity.token.is_empty() or session_expiry <= Time.get_unix_time_from_system()
 		schedule.connected()
 	refresh_status()
 
@@ -103,12 +107,20 @@ func resume_local(account: String) -> void:
 	if data.is_empty():
 		finish_action("Lokales Kontoprofil unlesbar. Bitte erneut anmelden.")
 	elif await activate(data,false):
-		finish_action("Lokales Kontoprofil geöffnet.")
+		finish_action("")
 	else:
 		finish_action("Lokales Kontoprofil konnte nicht geöffnet werden. Bitte erneut anmelden.")
 
+func signed_in() -> bool:
+	return profile != null and not identity.token.is_empty() and not schedule.auth_paused and session_expiry > Time.get_unix_time_from_system()
+
+func can_authenticate(action: String) -> bool:
+	if access.server.is_empty(): return false
+	if action == "recovery-code": return signed_in()
+	return action in ["login","register","recover"] and not signed_in()
+
 func authenticate(action: String, username: String, password: String, code: String, replace_lost: bool = false) -> void:
-	if changing or dialog.has_code() or access.server.is_empty(): return
+	if changing or dialog.has_code() or not can_authenticate(action): return
 	if password.length() < 8 or password.length() > 128 or password.to_utf8_buffer().size() > 1024:
 		show_feedback("Das Passwort muss 8–128 Unicode-Codepunkte enthalten.")
 		return
@@ -137,9 +149,6 @@ func authenticate(action: String, username: String, password: String, code: Stri
 		"recovery-code":
 			running = "Codeerneuerung läuft …"
 			body = {"password":password}
-	if action == "recovery-code" and (profile == null or identity.token.is_empty() or schedule.auth_paused):
-		show_feedback("Bitte erneut anmelden und danach den Wiederherstellungscode erneuern.")
-		return
 	var stamp := epoch
 	start_action(running)
 	var session_headers := identity.duplicate() if action == "recovery-code" else {}
@@ -150,6 +159,12 @@ func authenticate(action: String, username: String, password: String, code: Stri
 	dialog.clear_secrets()
 	var expected_status := 201 if action == "register" else 200
 	if response.status != expected_status:
+		if action == "recovery-code" and response.status == 401:
+			# A wrong password and an invalid session have the same auth response.
+			await read("/v1/account")
+			if stamp != epoch:
+				finish_action("")
+				return
 		finish_action(auth_error(action,response))
 		return
 	var result: Dictionary = response.body
@@ -164,7 +179,6 @@ func authenticate(action: String, username: String, password: String, code: Stri
 			return
 		if action == "recover":
 			if identity.get("username") == username.to_lower(): schedule.auth_paused = true
-			dialog.set_mode("login")
 			finish_action("Passwort geändert. Bitte mit dem neuen Passwort anmelden.")
 		else:
 			finish_action("Neuer Wiederherstellungscode erstellt.")
@@ -188,6 +202,7 @@ func authenticate(action: String, username: String, password: String, code: Stri
 		feedback += " Geschützten Bestand abgleichen oder erneut anmelden." if not recovery_session.is_empty() else " Lokale Sicherung prüfen und erneut anmelden."
 	finish_action(feedback)
 	if action == "register": dialog.show_code(issued)
+	elif signed_in(): dialog.focus_actions()
 
 func valid_session(result: Dictionary, username: String, saved: Dictionary, replace_lost: bool) -> bool:
 	return (result.size() == 7 and result.has_all(["account_id","device_id","token","username","expires_at","last_request_seq","recovery_code"])
@@ -202,7 +217,8 @@ func auth_error(action: String, response: Dictionary) -> String:
 		0,503:
 			return "Kontodienst nicht erreichbar. Verbindung prüfen und erneut versuchen."
 		401:
-			if action == "recovery-code": return "Bestätigung fehlgeschlagen. Passwort prüfen oder erneut anmelden."
+			if action == "recovery-code":
+				return "Bestätigung fehlgeschlagen. Passwort prüfen." if signed_in() else "Sitzung ungültig. Bitte erneut anmelden."
 			return "Zugangsdaten ungültig. Eingaben prüfen und erneut versuchen."
 		409:
 			if action == "register": return "Registrierung nicht verfügbar. Einladung und Benutzername prüfen oder den Betreiber kontaktieren."
@@ -322,8 +338,7 @@ func logout() -> void:
 			return
 		confirmed = result.status == 204 and result.generation == original.generation
 	finish_action("Abgemeldet. Serversitzung beendet." if confirmed else "Lokal abgemeldet. Ende der Serversitzung nicht bestätigt.")
-	dialog.clear_secrets()
-	dialog.set_mode("login")
+	dialog.focus_actions()
 
 func read(path: String, method: int = HTTPClient.METHOD_GET, raw: String = "") -> Dictionary:
 	var stamp := epoch
@@ -333,14 +348,18 @@ func read(path: String, method: int = HTTPClient.METHOD_GET, raw: String = "") -
 		schedule.transient(result.retry_after)
 		problem = "Offline · lokal verfügbar"
 		return {}
-	if result.generation != identity.generation:
-		if Protocol.uuid(result.generation): profile.observe_generation(result.generation)
+	if Protocol.uuid(result.generation) and result.generation != identity.generation:
+		profile.observe_generation(result.generation)
 		schedule.auth_paused = true
 		problem = "Servergeneration prüfen."
 		return {}
 	if result.status == 401:
 		schedule.auth_paused = true
 		problem = "Erneut anmelden"
+		return {}
+	if result.generation != identity.generation:
+		schedule.auth_paused = true
+		problem = "Servergeneration prüfen."
 		return {}
 	return result
 
@@ -448,92 +467,6 @@ func abandon(req: Dictionary) -> void:
 			schedule.connected()
 	changing = false
 
-func can_start_confirmed_slot_action() -> bool:
-	if changing or transport_busy:
-		show_feedback("Eine Kontoaktion oder ein Abgleich läuft. Bitte abwarten und erneut versuchen.")
-		return false
-	if profile == null:
-		show_feedback("Bitte ein Kontoprofil öffnen und die Aktion erneut wählen.")
-		return false
-	if not safe_switch():
-		show_feedback(FLUSH_FEEDBACK)
-		return false
-	return true
-
-func import_guest(ids: Array) -> void:
-	if not can_start_confirmed_slot_action(): return
-	var guest: RefCounted = app.create_store()
-	for id: String in ids:
-		if not app.session_indices.has(id): continue
-		var index: int = app.session_indices[id]
-		var slot: Session = app.sessions[index]
-		var key: String = guest.key_for_definition(id)
-		# Read-only import: load_slot may run the guest's automatic revision reset.
-		var src: Dictionary = guest._parse(guest.path_for(key),slot.definition)
-		if src.status != "valid": continue
-		var imported := Session.new(slot.definition)
-		Profile.Store.apply(src.data,imported)
-		if profile.import_guest(imported) == 0:
-			problem = "Gastimport konnte nicht gespeichert werden."
-			break
-		var disk := profile.load_slot(slot.definition)
-		if disk.status == "loaded":
-			Profile.Store.apply(disk.data,slot)
-			app.slot_status[index] = "loaded"
-			if slot == app.session: app._bind_session(index)
-	schedule.collect()
-	app.present_album()
-
-func choose_recovery_slot(id: String, remote: bool) -> void:
-	if not can_start_confirmed_slot_action(): return
-	changing = true
-	var result := await read("/v1/puzzles/"+id)
-	if result.get("status") in [200,404]:
-		var basis: int = int(result.body.get("server_revision",0))
-		var slot: Session = app.sessions[app.session_indices[id]]
-		var acceptable: bool = not remote or (result.status == 200 and result.body.get("definition_revision") == slot.definition.revision and (result.body.get("kind") == "reset" or not profile._store.received(result.body.get("save"),slot).is_empty()))
-		if acceptable and profile.select_recovery(id,basis,remote):
-			if remote:
-				inventory_ready = false
-			schedule.connected()
-	changing = false
-
-func current_choice_base(id: String, response: Dictionary) -> int:
-	if response.get("status") == 404 and response.body.get("code") == "not_found": return 0
-	if response.get("status") == 200 and Protocol.valid_record(response.body,id): return int(response.body.server_revision)
-	return -1
-
-func read_choice(id: String, operation: String, value: Variant) -> Dictionary:
-	var path := "/history/"+str(int(value)) if operation == "restore" else "/conflicts/"+str(value)
-	var result := await read("/v1/puzzles/"+id+path)
-	if result.get("status") != 200: return {}
-	var row: Dictionary = result.body
-	if operation == "restore":
-		return row if Protocol.valid_record(row,id) and row.server_revision == value else {}
-	return row if Protocol.valid_candidate(row,id,value) else {}
-
-func choice_compatible(row: Dictionary, slot: Session) -> bool:
-	return row.definition_revision == slot.definition.revision and (row.kind == "reset" or not profile._store.received(row.save,slot).is_empty())
-
-func decide(id: String, operation: String, value: Variant, base: int) -> bool:
-	if changing or transport_busy or profile == null or not safe_switch(): return false
-	changing = true
-	var current := await read("/v1/puzzles/"+id)
-	var accepted := false
-	if current_choice_base(id,current) != base:
-		problem = "Serverstand geändert oder nicht verfügbar. Bitte erneut vergleichen."
-	else:
-		var row := await read_choice(id,operation,value)
-		if row.is_empty(): problem = "Fassung nicht mehr verfügbar."
-		elif operation != "discard" and not choice_compatible(row,app.sessions[app.session_indices[id]]):
-			problem = "Fassung mit diesem Raster nicht verwendbar."
-		elif profile.decision(id,operation,value,base) > 0:
-			schedule.collect()
-			accepted = true
-		else: problem = "Auswahl konnte lokal nicht gespeichert werden."
-	changing = false
-	return accepted
-
 func next_request() -> Dictionary:
 	var req := profile.resume_request()
 	if not req.is_empty(): return req
@@ -547,7 +480,7 @@ func next_request() -> Dictionary:
 	return profile.prepare(int(chosen.local),int(chosen.base_server_revision))
 
 func send_batch() -> void:
-	if transport_busy or changing or profile == null or not profile.flush_confirmed() or schedule.auth_paused: return
+	if transport_busy or changing or profile == null or not profile.flush_confirmed() or not signed_in(): return
 	transport_busy = true
 	var stamp := epoch
 	schedule.due = INF
@@ -584,6 +517,7 @@ func send_batch() -> void:
 
 func _process(_delta: float) -> void:
 	if app == null or profile == null: return
+	if not signed_in(): schedule.auth_paused = true
 	if schedule.ready() and not transport_busy: send_batch()
 	refresh_status()
 
@@ -595,7 +529,9 @@ func exiting() -> void:
 
 func refresh_status() -> void:
 	if app == null or dialog == null or app.account_status == null: return
-	var key := [epoch,changing,recovery_session.is_empty(),access.server,problem,inventory_ready,unresolved_inventory,transport_busy,schedule.auth_paused,
+	var authenticated := signed_in()
+	var server_conflict := inventory.values().any(func(row: Dictionary) -> bool: return row.conflict_count > 0)
+	var key := [epoch,changing,recovery_session.is_empty(),access.server,problem,inventory_ready,unresolved_inventory,transport_busy,authenticated,server_conflict,
 		profile._journal.digest if profile else "",profile.flush_confirmed() if profile else true,profile.local_failed() if profile else false]
 	if key == status_key: return
 	status_key = key
@@ -604,20 +540,23 @@ func refresh_status() -> void:
 	var mode := "Gast · lokales Profil"
 	var detail := "Kein Kontoabgleich"
 	if profile:
-		mode = ("Kontoprofil · lokal: " if schedule.auth_paused else "Angemeldet: ") + str(identity.username)
+		mode = ("Angemeldet: " if authenticated else "Kontoprofil · lokal: ") + str(identity.username)
 		var state: Dictionary = profile.status()
+		var entries: Dictionary = state.get("entries",{})
+		var conflict := server_conflict or entries.values().any(func(entry: Dictionary) -> bool: return entry.status in ["conflict_saved","recovery_choice","revision_conflict","conflict_limit"])
 		detail = "Abgleich ausstehend"
 		if profile.local_failed(): detail = "Lokale Sicherung fehlgeschlagen"
 		elif not problem.is_empty(): detail = problem
 		elif state.has("error"): detail = state.error
-		elif schedule.auth_paused: detail = "Erneut anmelden"
+		elif not authenticated: detail = "Erneut anmelden"
 		elif transport_busy: detail = "Abgleich läuft"
 		elif not profile.flush_confirmed(): detail = "Lokale Sicherung ausstehend"
-		elif state.entries.values().any(func(entry: Dictionary) -> bool: return entry.status != "pending"): detail = "Konflikt / Entscheidung nötig"
-		elif inventory.values().any(func(row: Dictionary) -> bool: return row.conflict_count > 0): detail = "Konflikt"
-		elif not state.entries.is_empty(): detail = "Übertragung ausstehend"
+		elif conflict: detail = CONFLICT_STATUS
+		elif entries.values().any(func(entry: Dictionary) -> bool: return entry.status != "pending"): detail = "Übertragung nicht bestätigt"
+		elif not entries.is_empty(): detail = "Übertragung ausstehend"
 		elif unresolved_inventory: detail = "Rätselstand prüfen"
 		elif inventory_ready: detail = "Synchronisiert"
+		if conflict and detail != CONFLICT_STATUS: detail += " · "+CONFLICT_STATUS
 		value = str(identity.username)+" · "+detail
 	elif not problem.is_empty(): value += " · "+problem
 	if access.server.is_empty(): detail = "Kontodienst für diesen Spielbau nicht eingerichtet"

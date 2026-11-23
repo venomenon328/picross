@@ -285,7 +285,14 @@ einen nichtleeren deutschen Tooltip und einen passenden zugänglichen Namen:
 | Minus / Plus | „Raster verkleinern“ / „Raster vergrößern“ |
 | Dynamische Farbfelder | „Farbe n wählen · aktiviert Füllen“ |
 | Katalog-/Abschlussreset | „Rätsel zurücksetzen“; Katalogname ergänzt gebundenes Blatt und Status |
-| Lokale Fragezeichen in Einstellungen | Vorhandene konkrete Erklärung für Fenstergröße bzw. Rätselansicht; Name nennt das erklärte Feld |
+| Lokale Fragezeichen in Einstellungen | Erklärung für Fenstergröße und Rätselansicht, am Passwortfeld exakt „Mindestens 8 Zeichen“ |
+
+Die lokalen Einstellungshilfen verwenden das vorhandene gezeichnete
+Fragezeichen ohne Rahmen oder eigenen Hintergrund. Die Zeichnung bleibt bei
+Hover, Fokus und Druck unverändert. Die mindestens 44 × UI große Trefferfläche
+ist per Tastatur fokussierbar. Hover und Tastaturfokus zeigen den lesbar
+platzierten Tooltip. Fokusverlust, Navigation und Layoutwechsel schließen ihn.
+Ein Klick löst keine weitere Aktion aus.
 
 Textbuttons, Checkboxen mit Text, Dropdowndekoration, passive Status-/Moduszeichen
 und Lehrsymbole werden dadurch nicht pauschal umgebaut. Keine Ganzkarten- oder

@@ -15,13 +15,13 @@ Prüfplan, Ausführungswahl und tatsächlicher Lieferstatus stehen im Issue.
 Das bestehende lokale Saveformat und seine vollständige Validierung bleiben in
 [P1 §6](PROTOTYPE_P1.md#6-speicherung-und-wiederaufnahme), die Browserpersistenz
 in [WEB_HOSTING](../operations/WEB_HOSTING.md) maßgeblich. Dieser Vertrag ergänzt
-eine äußere Konten-/Übertragungsschicht. Er behauptet keine heutige Cloudfunktion.
+eine äußere Konten-/Übertragungsschicht.
 
 ## 2. Produktgarantien
 
 ### SYNC-G01: vollständiger Betrieb ohne Konto
 
-Ohne Anmeldung bleibt die bisherige lokale Speicherung bestehen: Appidentität
+Das Gastprofil verwendet weiterhin die bisherige lokale Speicherung: Appidentität
 `picross · P1`, Schema 1 und `user://p1/saves/`. Windows und unterschiedliche
 Browserorigins/-profile bleiben getrennt. Kein Syncrequest, Registrierungszwang
 oder neues Onlinegate für Rätsel, Speichern und Wiederaufnahme.
@@ -34,12 +34,10 @@ Merker, Syncmetadaten, offene Konflikte und dauerhaft gespeicherte Uploads.
 Konten oder Server dürfen diese Daten nicht teilen. Gerätebezogene Anzeige-/
 Fensterpräferenzen bleiben lokal; sie werden nicht als Spielstand synchronisiert.
 
-Der bisherige lokale Stand wird weder verschoben noch automatisch überschrieben.
-Seine Übernahme ist eine ausdrückliche Auswahl einzelner/aller angebotenen
-Rätsel und verwendet denselben konfliktgesicherten Uploadweg. Abmelden kehrt
-zum bisherigen lokalen Profil zurück. Ausstehende Kontodaten bleiben für eine
-spätere Anmeldung erhalten. Eine Löschung solcher Daten verlangt eine gesonderte
-bewusste Entscheidung; Logout oder Tokenablauf genügt dafür nicht.
+Gast- und Kontospielstände bleiben getrennt. Der Client bietet keine Gastübernahme
+an. Abmelden kehrt zum Gastprofil zurück. Ausstehende Kontodaten und die
+ursprünglichen Bytes bereits gespeicherter Übertragungsaufträge bleiben bei
+Abmeldung oder Tokenablauf für eine spätere Anmeldung erhalten.
 
 Ein bereits lokal verfügbares Kontoprofil bleibt offline spielbar. Lokale
 Save-/Recoverygarantien, im Web einschließlich bestätigtem IDBFS-Callback,
@@ -59,13 +57,15 @@ Ansichtsdaten bleiben im vollständigen lokalen Save. Eine identische Projektion
 braucht keinen weiteren Upload. Der B2-Sender bündelt ausstehende
 Fortschritte zu den [beschlossenen Sammelanlässen](https://github.com/venomenon328/picross/issues/821#issuecomment-7095903230).
 Verschiedene Rätsel haben unabhängige aktuelle Stände. Für dasselbe Rätsel bleiben
-konkurrierende Fassungen erhalten, bis der Spieler ausdrücklich eine auswählt.
+konkurrierende Fassungen und die Schutzregeln für ausstehende lokale Fassungen
+erhalten. Inkompatible Rätselrevisionen bleiben als solche erkennbar. Der Client
+wendet nur vollständig validierbare Stände an.
 
-Die Auswahloberfläche zeigt den lokalen und den Serverstand mit verständlichen
-Geräte-/Fortschrittsangaben. Inkompatible Rätselrevisionen werden als solche
-erkennbar; der Client darf einen nicht vollständig validierbaren Stand nicht
-anwenden. Vor einer Konfliktentscheidung wird der aktuelle Serverstand erneut
-abgeglichen. Bei einem neuen Konflikt bleibt die bisherige Auswahl erhalten.
+Der Client zeigt ungelöste Konflikte und offene Fassungsentscheidungen im Status
+an. Er bietet derzeit weder Vergleich noch Auswahl, Verwerfung oder
+Wiederherstellung dieser Fassungen an. Er wählt bei einem Konflikt keinen
+automatischen Gewinner. Serverprotokoll, Versionsbestand, Konfliktkandidaten
+und Wiederholungsregeln gelten weiter.
 
 ### SYNC-G04: Reset, Inhalte und Abschluss
 
@@ -468,8 +468,8 @@ Gerätebeleg und paginiertem Bestandsabgleich. Ein noch ausführbarer Altrequest
 erfordert einen dauerhaft gesicherten Abbruchauftrag. Einem bereits verarbeiteten
 Original wird sein gespeicherter Beleg zugeordnet. Eine ältere Sequenz oder
 Generation erhält einen Hinweis auf die unbekannte historische Wirkung.
-Erhaltene lokale Slots bekommen den Status recovery_choice. Die Entscheidung
-für eine lokale oder entfernte Fassung prüft den aktuellen Stand erneut.
+Erhaltene lokale Slots bekommen den Status recovery_choice und bleiben für
+die Übertragung gesperrt. Der Client zeigt den ungelösten Zustand im Status an.
 Der Kern stiehlt keine Locks. Ein Backup verlangt weiterhin
 ausdrückliche Reparatur. PE liest beim Rasterwechsel ausschließlich den
 Profilmerker. Vor der Bereinigung werden ältere Slotbytes mit ihrem Hash ins
@@ -496,11 +496,18 @@ abgelehnte Fassungen den angebotenen Fortschritt. Unverbrauchte
 Sequenzfehler und eine andere Servergeneration sperren automatische Wiederholung.
 Der spätere Bestandsabgleich entscheidet ausdrücklich über die weitere Verwendung.
 
-Der reguläre Buchclient bietet Anmeldung, Registrieren mit Einladung,
-Passwortwiederherstellung, Codeerneuerung, Profilwahl und Abmeldung direkt in
-„Spielerkonto“ auf der Einstellungsseite an. Dort sind Aktionsstatus, aktives
-Profil und Synczustand getrennt sichtbar. Auth-Erfolg setzt eine gültige
-Serverantwort und dauerhaft bestätigte lokale Aktivierung voraus. Bei
+In „Spielerkonto“ stehen abgemeldet die direkten Aktionen Anmelden,
+Registrieren und Passwort wiederherstellen bereit. Die Auswahl öffnet nur das
+jeweilige Formular. Bei gültiger Sitzung stehen Abmelden und Neuerzeugung eines
+Wiederherstellungscodes bereit. Letztere öffnet ein Formular zur Bestätigung
+mit dem aktuellen Passwort. Ein vorhandenes lokales Kontoprofil kann ohne
+gültige Sitzung geöffnet bleiben und erlaubt dann erneutes Anmelden. Ein
+bloßer Netzfehler entwertet die Sitzung nicht. Geschützte Profil- und
+Gerätewiederaufnahme bleiben erreichbar.
+
+Aktionsstatus, aktives Profil und Synczustand sind getrennt sichtbar.
+Authentifizierungserfolg setzt eine gültige Serverantwort und dauerhaft
+bestätigte lokale Aktivierung voraus. Bei
 Registrierung mit fehlgeschlagener lokaler Aktivierung bleibt das bisherige
 Profil aktiv und der ausgegebene Code verfügbar. Passwortwiederherstellung
 fordert zur erneuten Anmeldung auf. Die lokale Abmeldung kann auch bei
@@ -510,7 +517,8 @@ Registrierung, Passwortwiederherstellung und Codeerneuerung zeigen den
 ausgegebenen Code im auswählbaren Feld bis zur bewussten Schließung. Kopieren
 überträgt nur den Code. Wenn sich der Clipboard-Zugriff nicht bestätigen lässt,
 bleibt der Weg über manuelle Auswahl und Kopieren sichtbar. Die Anzeige hält
-den Code nur vorübergehend im Formular.
+den Code nur vorübergehend im Formular. Nach dem Schließen erhält eine
+sichtbare Kontoaktion den Fokus.
 
 Die feste API-Basis ist Teil der Profilidentität. Zugangsdaten der Sitzung liegen
 getrennt von den Rätseldateien in session.json des Kontos. Die Auswahl im
