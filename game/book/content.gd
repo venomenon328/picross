@@ -14,6 +14,7 @@ signal scale_changing
 const AccountClient = preload("res://book/account_client.gd")
 var accounts: AccountClient
 var account_status: Label
+var account_retry: BookButton
 var resetting_ending: bool = false
 var book: Node3D
 var info: RefCounted
@@ -106,6 +107,11 @@ func _build() -> void:
 	page.add_child(account_status)
 	accounts = AccountClient.new()
 	add_child(accounts)
+	account_retry = _text_button("Kontosicherung erneut versuchen",func() -> void:
+		if accounts.profile: accounts.profile.retry_local())
+	account_retry.paper_transparent = true
+	album.notices.add_child(account_retry)
+	account_retry.hide()
 	accounts.configure(self)
 
 func _background_binding() -> Dictionary:

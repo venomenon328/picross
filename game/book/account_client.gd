@@ -298,7 +298,7 @@ func reconcile() -> bool:
 func wait_for_disk(owner: Profile) -> bool:
 	if owner == null: return false
 	while owner == profile and not owner.flush_confirmed():
-		if not owner._blocked.is_empty() or owner._barrier_error or (owner._awaiting.is_empty() and owner._durable.values().has(false)): return false
+		if not owner._blocked.is_empty() or owner.local_failed(): return false
 		await get_tree().process_frame
 	return owner == profile
 
@@ -462,14 +462,16 @@ func exiting() -> void:
 func refresh_status() -> void:
 	if app == null or app.account_status == null: return
 	var key := [epoch,problem,inventory_ready,unresolved_inventory,transport_busy,schedule.auth_paused,
-		profile._journal.digest if profile else "",profile.flush_confirmed() if profile else true]
+		profile._journal.digest if profile else "",profile.flush_confirmed() if profile else true,profile.local_failed() if profile else false]
 	if key == status_key: return
 	status_key = key
+	app.account_retry.visible = profile != null and profile.local_failed()
 	var value := "Gast"
 	if profile:
 		var state: Dictionary = profile.status()
 		var detail := "Abgleich ausstehend"
-		if not problem.is_empty(): detail = problem
+		if profile.local_failed(): detail = "Lokale Sicherung fehlgeschlagen"
+		elif not problem.is_empty(): detail = problem
 		elif state.has("error"): detail = state.error
 		elif schedule.auth_paused: detail = "Erneut anmelden"
 		elif transport_busy: detail = "Abgleich läuft"

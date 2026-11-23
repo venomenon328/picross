@@ -38,6 +38,7 @@ static func geometry(r: SceneTree) -> void:
 		if prior.has_area(): r.check(prior.end.x < box.position.x,"NAV-STATE-A: gear, help, quit in order")
 		prior = box
 	r.check(album.summary.size.x+1 >= album.summary.get_theme_font("font").get_multiline_string_size(album.summary.text,HORIZONTAL_ALIGNMENT_LEFT,album.summary.size.x,album.summary.get_theme_font_size("font_size")).x and album.summary.size.y+1 >= album.summary.get_minimum_size().y,"NAV-A: full count wraps only within measured side space")
+	r.check(app.account_status.get_theme_font("font") == album.summary.get_theme_font("font") and app.account_status.get_theme_font_size("font_size") == roundi(18*u),"D02: account status and count share Pangolin at the selected scale")
 	var left: Rect2 = app.book.projected_paper(false,-1)
 	var right: Rect2 = app.book.projected_paper(false,1)
 	for button: ButtonInk in [album.previous_button,album.next_button]:

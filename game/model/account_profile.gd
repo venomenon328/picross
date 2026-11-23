@@ -542,6 +542,9 @@ func retry_local() -> void:
 	for key: String in _durable.keys():
 		if not _durable[key] and not _awaiting.has(key): _confirm(int(key))
 
+func local_failed() -> bool:
+	return _barrier_error or (_awaiting.is_empty() and _durable.values().has(false))
+
 func flush_confirmed() -> bool:
 	return _blocked.is_empty() and _awaiting.is_empty() and not _durable.values().has(false) and _barrier.is_empty()
 
