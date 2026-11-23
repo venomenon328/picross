@@ -15,6 +15,12 @@ func validate_slot(data: Variant, definition: Dictionary) -> String:
 		return validate(data, definition)
 	return validate_account(data, definition)
 
+func older_slot(data: Variant, definition: Dictionary) -> bool:
+	if not data is Dictionary or not data.has("format"): return super.older_slot(data,definition)
+	if not keys(data,["format","definition_id","definition_revision","width","height","baseline","cells","history","cursor","undo_used","completed","view"]): return false
+	if data.format != ACCOUNT_FORMAT or data.definition_id != definition.id or not data.baseline is Dictionary or data.baseline.is_empty(): return false
+	return SaveRevision.older_state(data,definition,self,data.baseline)
+
 func slot_snapshot(session: Session, view: Dictionary) -> Dictionary:
 	var data := snapshot(session, view)
 	data.erase("schema")

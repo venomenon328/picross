@@ -50,6 +50,11 @@
       "path": "tools/test_web_storage_contract.py",
       "disposition": "change-scoped",
       "reason": "Ausführung der neuen JavaScript-Gegenprobe verlangen."
+    },
+    {
+      "path": "game/tests/display_cases.gd",
+      "disposition": "change-scoped",
+      "reason": "Zusätzlichen tatsächlichen Kontozugang in den Einstellungen prüfen."
     }
   ],
   "core_change": null,

@@ -57,6 +57,9 @@ class PicrossStorage {
     });
     return true;
   }
+  get accountPending() {
+    return Array.from(this.accountJobs.values()).some(state => state !== 'saved');
+  }
   accountResult(ticket) {
     const result = this.accountJobs.get(ticket) || 'missing';
     if (result !== 'pending') this.accountJobs.delete(ticket);

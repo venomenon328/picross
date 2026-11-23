@@ -461,7 +461,16 @@ Beim Wiederanlauf kann ein passendes Primary eine noch offene Absicht abschließ
 Eine widersprüchliche Teilrotation, fremde Metadaten oder ein nach hartem
 Prozessabbruch stehengebliebener Lock sperren Änderungen bis zur Wiederherstellung.
 Die Übergabe `reconciliation()` benennt den eigenen Root, das Journal und die
-erhaltene Bindung. Der Kern stiehlt keine Locks. Ein Backup verlangt weiterhin
+erhaltene Bindung. Bei einer ausdrücklich gewählten Wiederherstellung archiviert der Client
+Originaljournal und vorhandene Slotbytes im Profil unter recovery/ mit ihrem
+SHA-256. Der Benutzer bestätigt den Wiederanlauf nach neuer Authentisierung,
+Gerätebeleg und paginiertem Bestandsabgleich. Ein noch ausführbarer Altrequest
+erfordert einen dauerhaft gesicherten Abbruchauftrag. Einem bereits verarbeiteten
+Original wird sein gespeicherter Beleg zugeordnet. Eine ältere Sequenz oder
+Generation erhält einen Hinweis auf die unbekannte historische Wirkung.
+Erhaltene lokale Slots bekommen den Status recovery_choice. Die Entscheidung
+für eine lokale oder entfernte Fassung prüft den aktuellen Stand erneut.
+Der Kern stiehlt keine Locks. Ein Backup verlangt weiterhin
 ausdrückliche Reparatur. PE liest beim Rasterwechsel ausschließlich den
 Profilmerker. Vor der Bereinigung werden ältere Slotbytes mit ihrem Hash ins
 Journal übernommen. Vorbereitete Requests und Konfliktfassungen bleiben erhalten.

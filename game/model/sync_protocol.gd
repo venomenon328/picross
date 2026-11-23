@@ -73,6 +73,13 @@ static func mutation(entry: Dictionary, sequence: int, base: int) -> Dictionary:
 static func request_hash(request: Dictionary) -> String:
 	return ("%s\n%s\n%s" % [request.method,request.path,request.body]).sha256_text()
 
+static func valid_record(row: Dictionary, id: String) -> bool:
+	if row.size() != 9 or not row.has_all(["puzzle_id","definition_revision","kind","device_id","device_name","server_revision","updated_at","save","validation"]): return false
+	if row.puzzle_id != id or not count(row.definition_revision,1) or not count(row.server_revision,1) or not uuid(row.device_id): return false
+	if not row.device_name is String or row.device_name.is_empty() or row.device_name.length()>64 or not row.updated_at is String or row.updated_at.is_empty(): return false
+	if row.kind == "reset": return row.save == null and row.validation == null
+	return row.kind == "snapshot" and row.validation == "progress_structure_checked" and valid_progress(row.save,id) and row.save.definition_revision == row.definition_revision
+
 static func valid_checkpoint(value: Dictionary, account: String, device: String) -> bool:
 	if value.size() != 7 or not value.has_all(["format","account_id","device_id","last_request_seq","last_request_hash","response_status","response_body"]): return false
 	if value.format != "picross-device-checkpoint/v1" or value.account_id != account or value.device_id != device or not count(value.last_request_seq): return false

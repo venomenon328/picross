@@ -185,6 +185,9 @@ func validate_slot(data: Variant, definition: Dictionary) -> String:
 func slot_snapshot(session: Session, view: Dictionary) -> Dictionary:
 	return snapshot(session, view)
 
+func older_slot(data: Variant, definition: Dictionary) -> bool:
+	return SaveRevision.old_envelope(data,definition,self)
+
 func _parse(path: String, definition: Dictionary) -> Dictionary:
 	if not SaveRevision.Recent.safe_file(path):
 		return {"status":"invalid","error":"Unsicherer Speicherpfad."}
@@ -201,7 +204,7 @@ func _parse(path: String, definition: Dictionary) -> Dictionary:
 	if parser.parse(raw) != OK or not Registry.unique_keys(raw):
 		return {"status": "invalid", "error": "JSON beschädigt."}
 	var error: String = validate_slot(parser.data, definition)
-	if not error.is_empty() and SaveRevision.old_envelope(parser.data,definition,self):
+	if not error.is_empty() and older_slot(parser.data,definition):
 		return {"status":"older","data":parser.data}
 	return {"status": "valid", "data": parser.data} if error.is_empty() else {"status": "invalid", "error": error}
 

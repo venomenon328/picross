@@ -66,6 +66,7 @@ func open() -> void:
 		choices.add_child(actions)
 		for pair: Array in [["Anmelden","login"],["Registrieren","register"],["Konto wiederherstellen","recover"]]:
 			button(actions,pair[0],submit.bind(pair[1]))
+		if not client.recovery_session.is_empty(): button(actions,"Geschützten Bestand abgleichen",client.inspect_recovery)
 		var accounts: Dictionary = client.access.accounts()
 		for name_value: String in accounts:
 			button(actions,name_value+" lokal öffnen",local_choice.bind(accounts[name_value]))
@@ -95,6 +96,9 @@ func add_puzzle_actions() -> void:
 	button(bar,"Gaststand übernehmen",import_guest.bind(false))
 	button(bar,"Alle Gaststände übernehmen",import_guest.bind(true))
 	button(bar,"Konflikte und Versionen",versions)
+	if client.profile._state.entries.values().any(func(e: Dictionary) -> bool: return e.status == "recovery_choice"):
+		button(bar,"Lokale Fassung erneut anbieten",recover_slot.bind(false))
+		button(bar,"Serverfassung laden",recover_slot.bind(true))
 	button(bar,"Lokale Sicherung erneut versuchen",client.profile.retry_local)
 	if not client.profile.resume_request().is_empty():
 		button(bar,"Offenen Auftrag abbrechen …",abandon)
@@ -113,6 +117,10 @@ func confirm_choice(caption: String, action: Callable) -> void:
 func import_guest(all_slots: bool) -> void:
 	var ids: Array = client.app.session_indices.keys() if all_slots else [puzzles.get_selected_metadata()]
 	confirm_choice("Validierte Gaststände ins aktive Konto übernehmen? Die Gaststände bleiben erhalten.",client.import_guest.bind(ids))
+
+func recover_slot(remote: bool) -> void:
+	var id: String = puzzles.get_selected_metadata()
+	confirm_choice("Diese Fassung nach erneutem Abgleich ausdrücklich wählen?",client.choose_recovery_slot.bind(id,remote))
 
 func versions() -> void:
 	var id: String = puzzles.get_selected_metadata()

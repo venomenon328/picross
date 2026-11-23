@@ -399,7 +399,16 @@ func leave_app() -> void: exit_requested.emit()
 
 func quit_after_flush() -> void:
 	if not _flush_current(): return
-	if accounts: accounts.exiting()
+	if accounts and accounts.profile:
+		if OS.has_feature("web"):
+			var deadline := Time.get_ticks_msec()+15000
+			while not accounts.profile.flush_confirmed():
+				if Time.get_ticks_msec() >= deadline:
+					accounts.problem = "Lokale Sicherung ausstehend. Erneut versuchen."
+					accounts.refresh_status()
+					return
+				await get_tree().process_frame
+		accounts.exiting()
 	super.leave_app()
 
 func _web_lifecycle(arguments: Array) -> void:

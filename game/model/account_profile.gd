@@ -61,7 +61,10 @@ func _open_locked(generation: String, initialize: bool) -> bool:
 		if not _valid_image() or _state.context != _context:
 			return false
 	if _journal.previous_format:
+		var old_bytes := FileAccess.get_file_as_bytes(_journal.path)
+		if old_bytes.is_empty() or old_bytes.get_string_from_utf8().sha256_text() != _journal.digest: return false
 		var converted := _state.duplicate(true)
+		converted.archive[_journal.digest] = {"format":"picross-local-sync/v2","bytes":Marshalls.raw_to_base64(old_bytes)}
 		converted.abandon = {}
 		for entry: Dictionary in converted.entries.values():
 			if entry.local != converted.request.get("local",-1):
@@ -71,6 +74,7 @@ func _open_locked(generation: String, initialize: bool) -> bool:
 			entry.parent_local = 0
 		if not converted.intent.is_empty(): return false
 		if not _publish(converted): return false
+		_journal.previous_format = false
 	if _state.generation != generation:
 		_mark_generation(generation)
 		return false
@@ -114,6 +118,7 @@ func _valid_image() -> bool:
 			return false
 		var entry: Dictionary = _state.entries.get(str(int(req.local)),{})
 		if entry.is_empty() or not req.body is String or not Protocol.count(req.base): return false
+		if not _journal.previous_format and entry.base_server_revision != req.base: return false
 		var expected := _request_for(entry, int(_state.sequence)+1, int(req.base))
 		if expected.is_empty() or not Journal.Registry.unique_keys(req.body) or JSON.parse_string(req.body) != JSON.parse_string(expected.body): return false
 		expected.body = req.body
@@ -226,6 +231,27 @@ func clear_recent(id: String) -> bool:
 	_journal.release()
 	return ok
 
+func import_guest(session: Session) -> int:
+	var key := _store.key_for_definition(session.definition.id)
+	var candidate := Store.snapshot(session,session.view_state)
+	if key.is_empty() or not Store.validate(candidate,Definition.load_fixture(key)).is_empty() or not _begin(): return 0
+	var disk := _store.load_slot(session.definition)
+	var version := 0
+	if disk.status == "fresh" and not _state.revisions.has(session.definition.id) and _state.entries.values().all(func(e: Dictionary) -> bool: return e.id != session.definition.id):
+		version = _change_slot(key,{"id":session.definition.id,"operation":"snapshot","value":_store.slot_snapshot(session,session.view_state)},
+			func() -> String: return _store._write_slot(session,session.view_state))
+	elif disk.status in ["fresh","loaded"] and _state.local < Protocol.MAX_INTEGER:
+		# Keep the current local account save. The explicitly imported alternative
+		# is separate and competes against revision zero, even if a pull just ran.
+		var next := _state.duplicate(true)
+		version = int(next.local)+1
+		next.local = version
+		next.entries[str(version)] = {"id":session.definition.id,"operation":"snapshot","local":version,
+			"value":Protocol.progress(candidate),"status":"pending","base_server_revision":0,"parent_local":0,"imported":true}
+		if not _publish(next): version = 0
+	_journal.release()
+	return _confirm(version)
+
 func save(session: Session, view: Dictionary) -> int:
 	if _store == null: return 0
 	var candidate := _store.slot_snapshot(session,view)
@@ -249,6 +275,28 @@ func reset(id: String) -> int:
 
 ## Apply only at a safe UI boundary, after validating against the bundled definition.
 ## A remote observation never changes a dirty entry's edit basis.
+func confirm_equal(session: Session, record: Dictionary) -> bool:
+	var id: String = session.definition.id
+	if not flush_confirmed() or not _begin(): return false
+	var next := _state.duplicate(true)
+	var ok: bool = next.request.is_empty() and next.abandon.is_empty() and record.get("puzzle_id") == id and Protocol.count(record.get("server_revision"),1)
+	var disk := _store.load_slot(session.definition) if ok else {}
+	ok = ok and disk.get("status") == "loaded" and not _store.received(record.get("save"),session).is_empty() and Protocol.progress(disk.data) == record.save
+	if ok:
+		for key: String in next.entries.keys():
+			var entry: Dictionary = next.entries[key]
+			if entry.id != id: continue
+			if entry.operation != "snapshot" or entry.status != "pending" or entry.value != record.save or entry.get("imported",false):
+				ok = false
+				break
+			next.entries.erase(key)
+	if ok:
+		next.revisions[id] = {"server":record.server_revision,"confirmed_local":next.slots[id].local}
+		ok = _publish(next)
+	_journal.release()
+	if ok: _confirm_stage("comparison",int(next.slots[id].local))
+	return ok
+
 func accept_record(session: Session, record: Dictionary) -> bool:
 	var id: String = session.definition.id
 	if record.get("puzzle_id") != id or record.get("definition_revision") != session.definition.revision or not Protocol.count(record.get("server_revision"),1): return false
@@ -262,15 +310,16 @@ func accept_record(session: Session, record: Dictionary) -> bool:
 		candidate = _store.received(record.get("save"),session)
 		if candidate.is_empty(): return false
 		Store.apply(candidate,copy_session)
+		candidate = _store.slot_snapshot(copy_session,copy_session.view_state)
 	if not flush_confirmed() or not _begin(): return false
 	var key := _store.key_for_definition(id)
 	var ok := false
 	var version := 0
 	var dirty := false
 	for entry: Dictionary in _state.entries.values():
-		if entry.id == id: dirty = true
+		if entry.id == id and entry.status != "request_abandoned": dirty = true
 	var prior := _store.load_slot(session.definition) if _safe_slot(key) else {"status":"error"}
-	if not dirty and prior.status in ["fresh","loaded"]:
+	if not dirty and not session.gesture.active and prior.status in ["fresh","loaded"]:
 		var same: bool = prior.status == "fresh" if reset else prior.status == "loaded" and Protocol.progress(prior.data) == record.save
 		if same:
 			var next := _state.duplicate(true)
@@ -321,7 +370,7 @@ func _change_slot(key: String, entry: Dictionary, action: Callable) -> int:
 	# Inherit the actual local edit line, independently of later observations.
 	var latest := 0
 	for earlier: Dictionary in _state.entries.values():
-		if earlier.id == entry.id and earlier.operation == "snapshot" and earlier.status == "pending" and earlier.local > latest and entry.operation == "snapshot" and earlier.value.definition_revision == entry.value.definition_revision:
+		if not earlier.get("imported",false) and earlier.id == entry.id and earlier.operation == "snapshot" and earlier.status == "pending" and earlier.local > latest and entry.operation == "snapshot" and earlier.value.definition_revision == entry.value.definition_revision:
 			latest = int(earlier.local)
 			entry.base_server_revision = earlier.base_server_revision
 			entry.parent_local = _state.request.get("local",0) if earlier.local == _state.request.get("local",-1) else earlier.parent_local
@@ -388,7 +437,7 @@ func _recover_intent() -> bool:
 		var previous: Dictionary = next.entries[key]
 		if (entry.operation == "snapshot" and previous.operation == "snapshot"
 				and previous.id == entry.id and previous.value.definition_revision == entry.value.definition_revision
-				and previous.status == "pending" and _durable.get(key,false)
+				and not previous.get("imported",false) and previous.status == "pending" and _durable.get(key,false)
 				and previous.local != next.request.get("local",-1)):
 			next.entries.erase(key)
 	next.entries[str(int(entry.local))] = entry
@@ -396,20 +445,37 @@ func _recover_intent() -> bool:
 
 func _confirm(version: int) -> int:
 	if version > 0:
-		var ticket := {"context":_context.duplicate(),"generation":_state.generation,"local":version}
-		_awaiting[str(version)] = true
+		var ticket := {"context":_context.duplicate(),"generation":_state.generation,"local":version,"ticket":ResourceUID.id_to_text(ResourceUID.create_id())}
+		_awaiting[str(version)] = ticket
 		_durable[str(version)] = false
 		_adapter.confirm_local(ticket, _local_completed.bind(ticket.duplicate(true)))
 	return version
 
 func _local_completed(actual: Dictionary, success: bool, expected: Dictionary) -> void:
 	var key := str(int(expected.local))
-	if actual == expected and _awaiting.has(key):
+	if actual == expected and _awaiting.get(key) == expected:
 		_awaiting.erase(key)
 		_durable[key] = success
 
 func locally_confirmed(version: int) -> bool:
 	return _blocked.is_empty() and _durable.get(str(version),false)
+
+func select_recovery(id: String, base: int, remote: bool) -> bool:
+	if not Protocol.count(base) or not _begin(): return false
+	var next := _state.duplicate(true)
+	var selected := false
+	for key: String in next.entries.keys():
+		var entry: Dictionary = next.entries[key]
+		if entry.id == id and entry.status == "recovery_choice":
+			if remote: next.entries.erase(key)
+			else:
+				entry.status = "pending"
+				entry.base_server_revision = base
+			selected = true
+	var ok := selected and _publish(next)
+	_journal.release()
+	if ok: _confirm_stage("selection",int(next.local))
+	return ok
 
 func decision(id: String, operation: String, value: Variant, basis: int = -1) -> int:
 	if not operation in ["discard","resolve","restore"] or not _begin(): return 0
@@ -451,9 +517,9 @@ func prepare(version: int, base: int) -> Dictionary:
 		if not result.is_empty():
 			var next := _state.duplicate(true)
 			next.request = result
-			if entry.operation == "snapshot":
+			if entry.operation == "snapshot" and not entry.get("imported",false):
 				for younger: Dictionary in next.entries.values():
-					if younger.local > version and younger.id == entry.id and younger.status == "pending" and younger.operation == "snapshot" and younger.value.definition_revision == entry.value.definition_revision and younger.base_server_revision == base:
+					if not younger.get("imported",false) and younger.local > version and younger.id == entry.id and younger.status == "pending" and younger.operation == "snapshot" and younger.value.definition_revision == entry.value.definition_revision and younger.base_server_revision == base:
 						younger.parent_local = version
 			if not _publish(next): result = {}
 	_journal.release()
@@ -461,7 +527,7 @@ func prepare(version: int, base: int) -> Dictionary:
 	return result.duplicate(true) if _barrier.is_empty() else {}
 
 func _confirm_stage(stage: String, version: int) -> void:
-	_barrier = {"context":_context.duplicate(),"generation":_state.generation,"stage":stage,"local":version,"digest":_journal.digest}
+	_barrier = {"ticket":ResourceUID.id_to_text(ResourceUID.create_id()),"context":_context.duplicate(),"generation":_state.generation,"stage":stage,"local":version,"digest":_journal.digest}
 	_barrier_error = false
 	_journal.confirm_local(_barrier.duplicate(true), _stage_complete.bind(_barrier.duplicate(true)))
 
@@ -519,15 +585,20 @@ func receive(original: Dictionary, generation: String, http_status: int, reply: 
 		next.receipt = {"request":original.duplicate(true),"status":http_status,"reply":reply.duplicate(true)}
 		if reply.sequence_consumed:
 			next.sequence = original.seq
-			if reply.code != "request_abandoned":
+			if reply.code == "ok" and not entry.get("imported",false):
 				next.revisions[entry.id] = {"server":reply.server_revision,"confirmed_local":entry.local if reply.code == "ok" and entry.operation in ["snapshot","reset"] else next.revisions.get(entry.id,{}).get("confirmed_local",0)}
 			next.request = {}
 			next.abandon = {}
 			if reply.code == "ok":
 				for younger: Dictionary in next.entries.values():
-					if younger.id == entry.id and younger.status == "pending" and younger.operation == "snapshot" and entry.operation == "snapshot" and younger.value.definition_revision == entry.value.definition_revision and younger.parent_local == entry.local and younger.base_server_revision == original.base:
+					if not younger.get("imported",false) and younger.id == entry.id and younger.status == "pending" and younger.operation == "snapshot" and entry.operation == "snapshot" and younger.value.definition_revision == entry.value.definition_revision and younger.parent_local == entry.local and younger.base_server_revision == original.base:
 						younger.base_server_revision = reply.server_revision
 						younger.parent_local = 0
+				if entry.operation in ["resolve","discard"]:
+					for prior_key: String in next.entries.keys():
+						var prior: Dictionary = next.entries[prior_key]
+						if prior.id == entry.id and prior.status == "conflict_saved" and prior.get("response",{}).get("candidate_id") == entry.value:
+							next.entries.erase(prior_key)
 				next.entries.erase(key)
 			else:
 				if reply.code == "request_abandoned":

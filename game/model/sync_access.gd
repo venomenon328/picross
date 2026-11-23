@@ -17,7 +17,7 @@ func _init() -> void:
 func read(path: String) -> Dictionary:
 	if not Recent.safe_file(path): return {}
 	var bytes := FileAccess.get_file_as_bytes(path) if FileAccess.file_exists(path) else PackedByteArray()
-	if bytes.is_empty() or not Recent.valid_utf8(bytes): return {}
+	if bytes.is_empty() or bytes.size() > 16384 or not Recent.valid_utf8(bytes): return {}
 	var raw := bytes.get_string_from_utf8()
 	if not Registry.unique_keys(raw): return {}
 	var data: Variant = JSON.parse_string(raw)
