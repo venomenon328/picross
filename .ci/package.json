@@ -3,8 +3,8 @@
   "issue": "https://github.com/venomenon328/picross/issues/838",
   "package": "PZ-GEYSIR-RASTER-REVIEW",
   "modules": [],
-  "purpose": "Authoring 0.8.0, Schritt 3 für Geysir: das korrigierte Raster-d in Revision 3 mit gebundenen Originalen zur Wahl vorlegen.",
-  "omitted": "Der Diff führt den aktuellen Arbeitsrecord, Arbeitsindex und Paketplan. Quellen- und Plankern genügen ohne Player-Build oder Zusatzmodule. Deduktion, Schwierigkeit und Sichturteile wurden am konkreten Raster in der Produktion geprüft.",
+  "purpose": "Draft #865 auf aktueller Mainbasis für die ausdrückliche Wahl der gebundenen Revision 3 von raster-d prüfen.",
+  "omitted": "Der Diff beschränkt sich auf Arbeitsrecord, Arbeitsindex und Paketplan. Rasterprüfung und die Zuschaueransichten auf Spielpapier sind Produktionsprüfungen. Keine Hintergrundphase, Integration, Zusatzmodule oder Player-Build.",
   "test_changes": [],
   "core_change": null,
   "evidence": {
