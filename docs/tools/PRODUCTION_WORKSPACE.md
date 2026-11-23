@@ -506,6 +506,14 @@ Integration. Ein neuer Quellstand oder geänderte relevante Bildbytes entwerten
 stale Auswahlabsichten gezielt. Kein automatischer Modellaufruf, keine Modell-API,
 kein Freigabewriter im Hilfsdienst und keine automatische Serienfreigabe.
 
+Bei der Motivfreigabe genügt die ausdrückliche Motivwahl, wenn der aktuelle
+Record genau einen vollständigen Parametervorschlag enthält. Bei mehreren
+vollständigen Vorschlägen ist eine eigene Auswahl erforderlich. Die Ansicht
+ordnet Ziel, Genauigkeit, Grenzen, erlaubte Beschnittseiten und geschützte
+Merkmale der jeweiligen Option zu. Der kopierte Auftrag bindet die Motiv-ID
+und den jeweiligen Eintrag in `parameters.proposed` im fixierten Record.
+Der Produktionsakteur liest und prüft dort das vollständige Original.
+
 Die lesende Oberfläche darf aktuelle Repositorydaten automatisch übernehmen;
 unabgesendete menschliche Eingaben nicht unbemerkt überschreiben. Persönliche
 Arbeitswurzel und Merge bleiben eigene ausdrücklich angezeigte
@@ -606,7 +614,16 @@ sichtbar offen. `facts.originals.record` enthält den kanonischen Record;
 es gibt keinen zweiten Handoff als eigene Autorität.
 
 Bilder und relevante Parameter stehen vor dem Auftrag; handlungsrelevante Probleme
-bleiben sichtbar. Der standardmäßig geschlossene, kopierbare Detailbereich unten
+bleiben sichtbar. Die Rasteransicht zeigt qualifizierte Angebote und
+Sichtungsentwürfe nebeneinander. Ein negativer H-01-Randbefund benennt die
+betroffenen Kanten und zeigt eine gültige technische frame-Ausnahme mit eigenem
+Nachweis. Bei einem gebundenen Außenbeschnitt lassen sich beide Originale
+vergrößern; die Ansicht nennt Maße, Zellzahlen und die vorgeschlagene Änderung
+der ungefähren Untergrenze. Der kopierte Auftrag kann diese konkrete Änderung
+und die beabsichtigte Rasterwahl zusammen erklären. Die aktuelle Auswahl bleibt
+bis zur erneuten Prüfung durch den Produktionsakteur offen. Technische
+Diagnoseaufträge sind an die aktuelle Quelle und Endrevision gebunden.
+Der standardmäßig geschlossene, kopierbare Detailbereich unten
 enthält Original-JSON, Hashes, Revisionen, Commit-/Import- und Diagnosebindungen.
 Briefing und vollständige Parameter sind weiterhin erreichbar. Die vorhandene
 Snapshot-, Bildlade-, Quellwechsel-, P2- und Origin-Sicherheit bleibt erhalten.

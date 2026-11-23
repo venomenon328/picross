@@ -13,7 +13,7 @@ from . import catalog_method, catalog_added, palette_quality, verifier
 from .authoring_package import require
 from .contract import exact_keys, digest, Budget
 from .editor_raster import check_end
-from .raster_parameters import require_color_count, used_foreground
+from .raster_parameters import frame_edges, frame_failures, require_color_count, used_foreground
 
 FORMAT = "picross-integration-input-v1"
 FINDING_FORMAT = "picross-integration-input-v2"
@@ -114,11 +114,20 @@ class Input:
         structured = self.value['format'] == FINDING_FORMAT
         limit = 1024*1024 if structured else 65536
         review = io.json_bytes(self.bound(value['review'], limit), limit)
+        candidate = None
         if structured:
             from .finding_decisions import check_selected, matching_modes
+            from . import raster_parameters
             check_selected(review, self.value)
             require(self.entry['mode'] in matching_modes(review['parameters'], self.definition, len(self.definition['palette'])),
                     'Selected raster differs from approved parameters')
+            candidate = review['components']['raster']['id']
+            for option in review['parameters']:
+                if option.get('format') == raster_parameters.FORMAT and self.entry['mode'] in matching_modes(
+                        [option], self.definition, len(self.definition['palette'])):
+                    actual = {axis: self.definition[axis] for axis in ('width', 'height')}
+                    raster_parameters.result(option, {**actual, 'mode': self.entry['mode']}, self.definition['solution'], empty=0)
+                    break
             if self.background:
                 from io import BytesIO
                 from PIL import Image
@@ -128,7 +137,7 @@ class Input:
             decision(review)
         else:
             self.legacy_review(review)
-        self.exceptions(value["exceptions"])
+        self.exceptions(value["exceptions"], candidate=candidate)
 
     @staticmethod
     def legacy_review(review):
@@ -143,10 +152,9 @@ class Input:
             require(finding["result"]=="fulfilled" or finding["accepted"],
                     "Visual criterion needs actual acceptance: "+criterion)
 
-    def exceptions(self, exceptions):
-        matrix = self.definition["solution"]
-        frame_ok = (any(row[0] for row in matrix) or any(row[-1] for row in matrix)) and (any(matrix[0]) or any(matrix[-1]))
-        findings = [] if frame_ok else ["frame"]
+    def exceptions(self, exceptions, *, candidate):
+        frame = frame_failures(frame_edges(self.definition["solution"]))
+        findings = ["frame"] if frame else []
         palette = self.definition["palette"]
         for a, b in combinations(palette, 2):
             qa, qb = (palette_quality.quantized_oklab("#"+p["color"]) for p in (a, b))
@@ -157,8 +165,13 @@ class Input:
         actual = []
         for exception in exceptions:
             structured = self.value['format'] == FINDING_FORMAT
-            exact_keys(exception, {"criterion", "actor", "timestamp_utc", "statement", "evidence"} |
-                       ({'definition_sha256'} if structured else set()))
+            fields = {'definition_sha256'} if structured else set()
+            if structured and exception.get('criterion') == 'frame' and ('candidate_id' in exception or 'revision' in exception):
+                fields |= {'candidate_id', 'revision'}
+            exact_keys(exception, {"criterion", "actor", "timestamp_utc", "statement", "evidence"} | fields)
+            if 'candidate_id' in exception:
+                require(type(exception['revision']) is int and (exception['candidate_id'], exception['revision']) ==
+                        (candidate, self.definition['revision']), 'Foreign or stale frame exception')
             if structured:
                 require(exception['definition_sha256'] == self.value['definition']['sha256'], 'Stale technical exception')
             decision(exception)

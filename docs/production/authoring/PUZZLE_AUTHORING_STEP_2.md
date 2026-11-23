@@ -1,6 +1,6 @@
 # Schritt 2: Motivvorlage
 
-**Version 0.8.0 · Dokumentrevision 11 · 22.11.2026 · MONOV-P1**
+**Version 0.8.0 · Dokumentrevision 12 · 23.11.2026 · KORRIDOR-NORM-A**
 
 Pflicht: [Kern und Phasenroute](PUZZLE_AUTHORING.md#11-pflichtquellen-nach-phase),
 danach diese Phase und die dort zugeordnete Bildnorm. Zusätzlich:
@@ -34,9 +34,23 @@ Dies verlangt nicht mehrere tatsächliche Abstraktionsbilder.
   die empfohlene Palette und eine sinnvoll reduzierte Alternative erläutern,
   Farbrollen nach [MV-03](../images/MOTIF.md#mv-03-farbrollen) benennen.
   Keine zusätzliche Vollmatrix verlangen.
-- Maße, Seitenverhältnis und Palette zum Motiv wählen; vor Nachweis keine
-  Lösbarkeit versprechen. Materielle Abweichungen vor weiterer Produktion
-  entscheiden lassen.
+- Maße, Seitenverhältnis und Palette zum Motiv wählen. Vor Nachweis keine
+  Lösbarkeit versprechen. Für jede ungefähre Achse den frühen Wunsch als
+  **bevorzugten Zielwert** führen. Vorschlagskorridor mit Zielwert, expliziter
+  Unter- und Obergrenze, erlaubten Beschnittseiten und geschützten Merkmalen
+  begründen. Den Spielraum nach Motiv und Größe so bemessen, dass absehbarer
+  Beschnitt leerer Außenlinien und motivtreue Formkorrekturen Platz haben.
+  Exakte Achsen bleiben exakt und schließen Beschnitt auf ihrer Achse aus.
+- Beispiel für die Breite „ungefähr 20“: Wenn ein 20-Zellen-Import links
+  voraussichtlich drei leere Außenspalten hat, kann ein Vorschlag etwa Ziel 20
+  und Grenzen 17 bis 22 enthalten. Linksbeschnitt ist nur für leere,
+  ungeschützte Spalten vorgesehen. Silhouette und ein prägender Innenraum
+  bleiben geschützt. Die Untergrenze ermöglicht so ein motivtreues Endmaß 17.
+  Die Obergrenze lässt bei diesem Beispiel etwas Raum für einen größeren
+  Importstart, falls die Kontur ihn braucht. Andere Motive und Größen
+  erfordern eine eigene Begründung. Es gilt keine pauschale Prozenttoleranz.
+  Verbindlich wird der Korridor erst durch die tatsächliche Freigabe nach §2.4.
+  Materielle Abweichungen vor weiterer Produktion entscheiden lassen.
 
 ### 2.4 Abstraktionsfreigabe
 

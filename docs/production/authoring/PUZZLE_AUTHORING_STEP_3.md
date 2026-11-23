@@ -1,11 +1,11 @@
 # Schritt 3: Rasterangebote
 
-**Version 0.8.0 · Dokumentrevision 11 · 22.11.2026 · MONOV-P1**
+**Version 0.8.0 · Dokumentrevision 12 · 23.11.2026 · KORRIDOR-NORM-A**
 
 Pflicht: [Kern und Phasenroute](PUZZLE_AUTHORING.md#11-pflichtquellen-nach-phase),
 danach diese Phase und die dort zugeordnete Bildnorm. Zusätzlich:
-[Qualität](../PUZZLE_QUALITY.md) §2, §3.3–3.4 und §4; §5 bei fehlendem
-qualifiziertem Kandidaten, §6 bei konkreter Ausnahme. Farbe: operative §§8.4–8.5;
+[Qualität](../PUZZLE_QUALITY.md) §2, §3.3–3.4 und §4; §5 bei diagnostischer
+Sichtung, §6 bei konkreter Ausnahme. Farbe: operative §§8.4–8.5;
 §§8.1–8.3.1 nur bei einer konkreten historischen Referenzfrage.
 
 ## 4. Rasterproduktion und technische Pflichtprüfung
@@ -34,10 +34,13 @@ die eigene Hintergrundbereitschaft voraus. Keine vorgezogenen Hintergrundblocker
    Versuche zählen kumulativ. Neue Namen, Ordner oder Wiederaufnahme setzen weder
    Gesamt-/Such-/Reparaturbudgets noch den freigegebenen Korridor zurück.
 4. Vor teurer Qualifikation preisgünstige Ausschlüsse und Duplikate erkennen:
-   Maße/Werte/Palette, feste Wünsche, offensichtliche Form-/Randmängel und exakten
+   Maße/Werte/Palette, feste Wünsche, offensichtliche Formmängel und exakten
    Vergleich von Maßen, Palette und Zellwerten. Parametergebundene Kandidatenhashes
-   sind kein reiner Matrixvergleich. Nur aktuelle Angebote, Prüfergebnisse und offene Defizite erhalten.
-   Diese Vorprüfung ersetzt keine vollständige Prüfung eines angebotenen Rasters.
+   sind kein reiner Matrixvergleich. Bei einem sonst brauchbaren Kandidaten
+   einen negativen Randbefund oder einen motivtreuen leeren Außenbeschnitt unter
+   den ungefähren Korridor für die Sichtung nach §4.5 festhalten. Die
+   Vorprüfung ersetzt keine vollständige Qualifikation. Nur aktuelle Angebote,
+   Sichtungsentwürfe, Prüfergebnisse und offene Defizite erhalten.
 5. Unterschiedliche globale Maße, Crops oder Paletten benötigen getrennte Designs.
    Beim farbigen area-Pfad ist der Schwellenwert wirkungslos; reine Schwellenvarianten
    sind dort kein neuer Ansatz. Mono-Schwellen anhand des Bilds wählen. Verfahren
@@ -72,10 +75,13 @@ Jeder angebotene freigabefähige Kandidat erfüllt vollständig:
   Ein vollständig leeres Raster scheitert. Keine motivfremden Randpixel/Rahmen
   allein zum Bestehen der Regel hinzufügen.
 
-Eine tatsächliche menschliche Randregel-Ausnahme für eine konkrete Endrevision
-als konkrete frame-Ausnahme mit Akteur, Erklärung und aktuell gebundenem
-Belegtext nach PW-B/RI-ONE führen. Negativen aktuellen Befund sichtbar
-erhalten; kein pass-Flag oder allgemeiner Bypass. Alle übrigen Gates bleiben hart.
+Einen negativen Randbefund am tatsächlichen Raster als H-01-Befund mit den
+betroffenen Kanten sichtbar machen. Nur die ausdrücklich erteilte technische
+`frame`-Ausnahme für genau diesen Kandidaten und seine aktuelle Endrevision
+kann die Randverletzung decken. Akteur, Erklärung und aktuellen Beleg nach
+[PW-B](../../tools/PW_B_CONTRACT.md#pw-find--freigegebene-erweiterung-der-entscheidungsdaten)
+und [RI-ONE](../ZA1_ADAPTER.md) binden. Negativer Befund und Ausnahmebeleg bleiben
+getrennt sichtbar. Alle übrigen Gates bleiben hart.
 
 Vollständige gültige Deduktion belegt Eindeutigkeit. stalled beweist weder
 Mehrdeutigkeit noch Unlösbarkeit; aborted ist Abbruch. Exitcode 0, Importbündel,
@@ -145,8 +151,8 @@ werden zusätzlich durch RI-ONE geprüft. Kein ZIP-/Handoff-/Inventar- oder
 Regelbuchbinding. Fehlende oder ungeprüfte Sichtung bleibt ein Blocker.
 
 Historische F05-Referenzannahmen sind keine Ausnahme oder Freigabe eines neuen
-realen Kandidaten. Bei null qualifizierten Kandidaten §4.5 verwenden, mit echten
-Bildern, Defiziten und Korrekturmöglichkeiten; keine qualifizierten Angebote vortäuschen.
+realen Kandidaten. Diagnostische Entwürfe mit echten Bildern, Defiziten und
+Korrekturmöglichkeiten nach §4.5 vorlegen.
 
 ### 4.4 Reparaturen und Änderungen
 
@@ -161,6 +167,16 @@ Materielle Änderungen entscheiden lassen; eine Zelle ist nicht automatisch
 harmlos. Runden/Kandidaten/Änderungen zählen kumulativ unter allen Namen/Ordnern.
 Erst frisch geprüfter aktueller Record erlaubt raster_ready, ohne damit
 Rasterwahl, Hintergrund oder Endfreigabe zu erklären.
+
+Ergibt ausschließlich Beschnitt an erlaubten Außenseiten ein motivtreues Raster,
+dessen ungefähre Achse unter die genehmigte Untergrenze fällt, den tatsächlichen
+Zuschnitt nach §4.5 vorlegen. Nur ursprünglich leere, ungeschützte Außenlinien
+kommen dafür infrage. Die Maßabweichung bleibt bis zur ausdrücklichen Freigabe
+eines aktualisierten Korridors ein hartes Hindernis. Vor einer gültigen festen
+Ableitung sind neue Parameter- und Motivfreigabebindung herzustellen. Nach
+Zell- oder Maßänderung gelten die Neuprüfungen unten. Bei exakter Breite 20
+verbietet der Korridor links und rechts jeden Beschnitt und eine Endbreite 17
+bleibt unzulässig.
 
 Wenn kein visuell tragfähiger Kandidat vollständig zertifiziert ist, gezielte
 Verbesserungen versuchen, bevor allein wegen stalled oder belegtem multiple
@@ -229,25 +245,41 @@ bleiben gültig; Korrektur/Wiederaufnahme erteilen keine neue End- oder Mergefre
 Ein vollständig geeigneter, technisch und redaktionell qualifizierter Kandidat
 genügt. Bereits vorhandene sinnvoll unterschiedliche qualifizierte Alternativen
 dürfen mit kurzer Empfehlung angeboten werden. Keine Zwei-/Dreierquote und keine
-Erzeugung weiterer Varianten allein für eine Angebotszahl. Jedes Angebot erfüllt
-Korridor und §§4–5 vollständig: eigene technische Prüfung, visuelle Bewertung,
-Bildkonsistenz, gebundene Schwierigkeit oder zulässige ausdrücklich angenommene
-redaktionelle Abweichung nach Qualität §6. Gleiche Matrizen unter anderer ID oder
-anderem Solverprofil sind keine zusätzlichen Angebote. Empfehlung ist keine Wahl.
+Erzeugung weiterer Varianten allein für eine Angebotszahl. Jedes qualifizierte
+Angebot erfüllt Korridor und §§4–5 vollständig. Es benötigt eigene technische
+Prüfung, visuelle Bewertung, Bildkonsistenz und gebundene Schwierigkeit.
+Zulässige Ausnahmen und redaktionelle Abweichungen folgen Qualität §6.
+Gleiche Matrizen unter anderer ID oder anderem Solverprofil sind keine
+zusätzlichen Angebote. Empfehlung ist keine Wahl.
 
-Budgets werden nicht für eine Quote erweitert. Bei null qualifizierten Kandidaten
-nach Qualität §5 zwei bis drei möglichst unterschiedliche beste brauchbare
-bereits vorliegende Entwürfe zeigen, sofern vorhanden; bei nur einem diesen.
-Das ist Sichtung, keine neue Kandidatenerzeugungspflicht. Jede Ansicht nennt
-stabile ID/Revision, tatsächliches Raster/Reveal mit echten Links, Prüfungen/Lücken,
-Qualitätsdefizite und Korrekturmöglichkeiten sowie ausdrücklich
-`Sichtungsentwurf – nicht integrationsbereit`. Ohne brauchbaren Entwurf konkreten
-Nichtfund und nächsten Korrekturschritt nennen; keine Dateien erfinden.
+Nach [Qualität §5](../PUZZLE_QUALITY.md#5-diagnostische-sichtung) sonst überzeugende
+Kandidaten mit offenem Rand- oder ungefährem Maßproblem auch neben einem
+qualifizierten Angebot zeigen. Das qualifizierte Raster bleibt unabhängig
+wählbar. Bei null qualifizierten Kandidaten zwei bis drei möglichst
+unterschiedliche beste brauchbare bereits vorliegende Entwürfe zeigen, sofern
+vorhanden. Bei nur einem diesen zeigen. Ohne brauchbaren Entwurf den Nichtfund
+und den konkreten nächsten Korrekturschritt nennen. Sichtung setzt weder eine
+neue Erzeugungsquote noch höhere Budgets voraus.
 
-Sichtungsentwürfe sind keine Integrationsoptionen oder raster_ready. Raster_review
-bzw. blocked mit Grund führen. Erst zulässige Korrektur/Einzelfallentscheidung und
-alle technischen Nachweise erlauben den gültigen Auswahlweg. Fehlende Proofs oder
-unklare Rechte bleiben Blocker. Empfehlungen erteilen keine automatische Freigabe.
+Jeder `Sichtungsentwurf – nicht integrationsbereit` nennt stabile ID und Revision,
+verlinkt tatsächliches Raster und Reveal und zeigt Prüfergebnisse, Lücken und
+Handlungsoptionen. Bei einem Randbefund die verletzte Randbedingung samt
+betroffenen Kanten und den zulässigen Korrektur- oder `frame`-Ausnahmeweg zeigen.
+Bei einer Maßabweichung zusätzlich tatsächliche Ansichten und Maße vor und nach
+dem Beschnitt, entfernte Außenseiten, verletzte Grenze und den konkreten Vorschlag
+zur Parameteränderung zeigen. Beispiel für die Breite: Ziel ungefähr 20,
+freigegebenes Minimum 18, Startbreite 20, Endbreite 17 nach drei erlaubten leeren
+Außenspalten links. Minimum 17 bei unverändertem Ziel und unveränderter
+Obergrenze ausdrücklich zur Entscheidung stellen. Folgeprüfungen nach §4.4
+benennen.
+
+Der Entwurf bleibt unqualifiziert und dient der Sichtung oder Korrektur.
+Ohne qualifiziertes Angebot `raster_review` beziehungsweise `blocked` mit
+Grund führen. Fehlender oder negativer Deduktionsproof und ungeklärte Rechte
+bleiben Blocker. Wenn der aktuelle technische Weg einen Befund oder die
+Maßabweichung nicht gültig in der Werkstatt abbildet, die tatsächlichen Ansichten
+und den Befund im bestehenden Sichtungsbericht vorlegen und die technische
+Grenze benennen. Keine unqualifizierte Auswahl im Record publizieren.
 
 Jedes Angebot erhält stabile Kennung, Unterschiede, Maße/Modus/Istfarbzahl,
 Schwierigkeit und echte Rasteransicht. Ein gemeinsamer aktueller Record bindet
@@ -275,6 +307,17 @@ Fortsetzung zu Schritt 4 dürfen in derselben tatsächlichen Erklärung erfolgen
 Eine zusätzliche menschliche Runde allein zur Änderung des globalen Status
 entfällt. Vollständiger Logiknachweis, Schwierigkeit und übrige harte Bedingungen
 bleiben fällig; Befundannahme ersetzt ihre Prüfung nicht.
+
+Bei einer Randverletzung gilt ausschließlich die aktuelle `frame`-Ausnahme
+nach §4.2. Bei einer Korridorunterschreitung ist eine ausdrückliche
+Parameterentscheidung nötig. Eine redaktionelle Checkbox deckt keine
+Maßabweichung. Der Eigentümer kann den neuen Korridor und die beabsichtigte
+Kandidatenwahl für den nächsten Schritt in einem Auftrag erklären. Der Akteur
+bindet zuerst die neue Freigabe, prüft den konkreten Endstand frisch und
+vollzieht die Rasterwahl und Schritt 4 erst bei vollständig erfüllten
+Voraussetzungen und gültiger Wahlbindung. Die gemeinsame Erklärung spart eine
+zusätzliche Annahmerunde und gilt für den konkret bezeichneten Kandidaten,
+dessen Revision und die ausdrücklich freigegebenen Parameter.
 
 Ein blockierter Sichtungsentwurf bleibt als Korrekturgrundlage adressierbar.
 Ein angenommener Befund oder alter globaler Blockertext verlangt keine weitere

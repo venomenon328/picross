@@ -76,9 +76,10 @@ Regelbuch, Generator-/Codec-/Toolhasharchiv oder Inventar als neue Pflichtdatei.
 brief_ready/reveal_review brauchen gültiges Briefing und vorhandene Angebote;
 motif_review zusätzlich gewähltes freigegebenes Reveal und Motivangebot;
 motif_approved/raster_review zusätzlich echte Motiv-/Parameterfreigabe.
-raster_ready verlangt für jedes angebotene Raster Maße/Palette/Hinweise,
-vollständigen unabhängigen Proof mit Endmatrixvergleich, gebundene Difficulty,
-fällige Sichturteile und passende Parameter. Hintergrundarbeit ist vorher kein
+Die oben beschriebene v2-Form verlangt für `raster_ready` bei jedem angebotenen
+Raster Maße/Palette/Hinweise, vollständigen unabhängigen Proof mit
+Endmatrixvergleich, gebundene Difficulty, fällige Sichturteile und passende
+Parameter. Hintergrundarbeit ist vorher kein
 Blocker. background_review braucht eine wirkliche qualifizierte Rasterwahl.
 content_ready zusätzlich gültigen Hintergrund selected/none/standard, Rechte
 und Bildurteile einschließlich H-07. editorially_approved braucht echte Endabnahme
@@ -248,8 +249,44 @@ betroffenen kreativen Wahlen und technischen Nachweise. Eine fortgeführte Annah
 ist keine automatische Auswahl des Nachfolgers.
 
 Prüfer, Projektion und Promptgenerator unterstützen gemischte Kandidatenstände.
-Ein qualifizierter Kandidat ist unabhängig von offenen Vergleichskandidaten
-auswählbar. Der globale Phasenstatus beschreibt den tatsächlichen Fortschritt
+Die Detailprojektion prüft die Bereitschaft je Kandidat. Sie zeigt qualifizierte
+Raster als Rasterangebote und harte Sperren als Sichtungsentwürfe. Zum negativen
+H-01-Randbefund gehören die aus der Endmatrix gemessene Belegung aller Kanten,
+die betroffene Achse, Kandidat, Endrevision und Definitionshash. Neue technische
+`frame`-Ausnahmen enthalten zusätzlich `candidate_id,revision` am bisherigen
+`definition_sha256` und dem eigenen Erklärungsbeleg. Bestandseinträge im
+bisherigen Format bleiben in ihren ursprünglichen Bindungen lesbar. Der
+Reader und der [Integrationseingang](../production/ZA1_ADAPTER.md)
+prüfen die technische Ausnahme. Der negative Randbefund bleibt auch mit
+gültigem Ausnahmebeleg sichtbar.
+
+Ein v3-Raster kann optional `crop_diagnosis` mit dem Format
+`picross-raster-crop-diagnosis-v1` enthalten. Die geschlossene Bindung enthält
+`before,preview,protection,rectangle,parameters_sha256`. Die drei Refs messen
+die ursprüngliche Definition, ihre echte PNG-Vorschau und die Schutzdatei.
+Letztere enthält `before_sha256,motif_sha256,cells` mit einer vollständigen
+booleschen Zellmatrix. Bei genehmigten geschützten Merkmalen bindet die
+tatsächliche Motiventscheidung die Schutzdatei in `crop_protection` als
+Zuordnung vom Hash der Vorher-Definition zum Hash der Schutzdatei. Eine
+vorhandene Zuordnung muss passen. Das Rechteck enthält Zellkoordinaten
+`[links,oben,rechts,unten]` mit exklusivem rechten und unteren Ende. Der
+geprüfte Ausschnitt erhält alle Zellen, Farbbedeutungen und die Revealbindung
+innerhalb des Rechtecks. Die erlaubten Seiten und die freigegebene vollständige
+Parameteralternative gelten auch für die Diagnose.
+
+Die Detailprojektion zeigt die gebundenen Originale vor und nach dem Beschnitt,
+die tatsächlichen Maße, die entfernten Seiten und Zellzahlen und den konkreten
+Vorschlag zur Änderung der ungefähren Untergrenze. Andere Parameterwerte bleiben
+gültig. Fehlende oder abweichende Originale sperren diesen Entwurf. Nach
+ausdrücklicher Neufreigabe müssen der Cropbezug und die Motiventscheidung auf
+die genehmigte Alternative zeigen. Der finale Reader verlangt aktuelle
+Hinweise, vollständige unabhängige Deduktion mit Endmatrixvergleich,
+Difficulty und alle übrigen Pflichtprüfungen. Die Vorschlagsalternative
+ändert keine Auswahl oder Phase. Die Originale liegen im einen aktuellen
+Record und folgen dessen Verdichtung. Das optionale Feld wird bestehenden
+v2-/v3-Records nicht automatisch hinzugefügt.
+
+Der globale Phasenstatus beschreibt den tatsächlichen Fortschritt
 und ersetzt keine Prüfung des ausgewählten Kandidaten. Auch ein blockierter
 Entwurf kann als Korrekturgrundlage adressiert werden; das setzt selected nicht
 auf eine unqualifizierte kreative Wahl. Nach tatsächlicher Wahl gelten die

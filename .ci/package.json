@@ -1,10 +1,10 @@
 {
   "format": "development-ci-plan/v1",
   "issue": "https://github.com/venomenon328/picross/issues/700",
-  "package": "PZ-KRANICH-MOTIF",
+  "package": "PZ-KRANICH-RASTER",
   "modules": [],
-  "purpose": "Buildfreie Draft-Sichtung der Kranich-Motivvorlage und des Parameterkorridors aus Authoring-Schritt 2. Issue #700 ist die Vertragsreferenz für den PROD-SLIM-Arbeitsstand.",
-  "omitted": "Authoring-Record und Indexverweis sind reine Produktionsdaten. Quellen- und Plankern genügen für CI. Playerbau, Fachmodule und technische Artefaktaufbewahrung sind für diesen Reviewstand entbehrlich.",
+  "purpose": "Buildfreie Draft-Sichtung des qualifizierten Kranich-Rasterangebots aus Authoring-Schritt 3. Issue #700 ist die Vertragsreferenz für den PROD-SLIM-Arbeitsstand.",
+  "omitted": "Der Diff enthält nur den Authoring-Record, den Indexverweis und den Paketplan. Quellen- und Plankern genügen. Playerbau, Zusatzmodule und technische Artefaktaufbewahrung sind für diese Inhaltsänderung entbehrlich.",
   "test_changes": [],
   "core_change": null,
   "evidence": {

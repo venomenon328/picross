@@ -62,21 +62,10 @@ def transform(p, design, matrix):
     p = validate_plan(p)
     w, h = design['width'], design['height']
     mask = p['protected_mask']
-    ap.require(isinstance(mask, list) and len(mask) == h and all(isinstance(row, list) and len(row) == w and
-               all(type(v) is bool for v in row) for row in mask), 'Full boolean protection mask required')
     crop = p['crop']
-    ap.require(isinstance(crop, list) and len(crop) == 4, 'Cell crop must be one rectangle')
-    for n in crop:
-        integer(n, 0, 50, 'cell crop')
-    l, t, r, b = crop
-    ap.require(0 <= l < r <= w and 0 <= t < b <= h, 'Invalid cell crop rectangle')
     permissions = p['parameters']['derivation']
-    for side, changed in zip(parameters.SIDES, (l != 0, t != 0, r != w, b != h)):
-        ap.require(not changed or side in permissions['empty_edge_crop'], 'Unapproved empty-edge crop')
-    for y, row in enumerate(matrix):
-        for x, v in enumerate(row):
-            if not (l <= x < r and t <= y < b):
-                ap.require(v == 'empty' and not mask[y][x], 'Crop removes nonempty or protected reference cell')
+    parameters.crop_rectangle(crop, w, h, mask, permissions['empty_edge_crop'], matrix, empty='empty')
+    l, t, r, b = crop
     edits = p['edits']
     ap.require(isinstance(edits, list) and len(edits) <= p['budgets']['max_changes'], 'Fixed change budget exceeded')
     ap.require(not edits or permissions['cell_edits'], 'Cell edits not approved')

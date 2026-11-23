@@ -1,5 +1,6 @@
 'use strict';
 const $=id=>document.getElementById(id);
+const sideNames={left:'links',top:'oben',right:'rechts',bottom:'unten'};
 let token=location.hash.slice(1);
 try{if(token)sessionStorage.setItem('pw-session',token);else token=sessionStorage.getItem('pw-session')||'';}catch{}
 history.replaceState(null,'',location.pathname);
@@ -32,6 +33,12 @@ function refreshChoices(){
   status.dataset.ready=String(ready);
   status.textContent=ready?'Auswahl möglich':card.missing.length?'Prüfung ausstehend':open===1?'1 offener Befund':open+' offene Befunde';
  });
+ document.querySelectorAll('button[data-diagnosis]').forEach(button=>{
+  const target=button.dataset.target,kind=button.dataset.diagnosis;
+  const crop=detail.facts.candidates[target].diagnostics.crop;
+  button.disabled=!readyImages.has(target)||(kind==='crop'&&!readyImages.has(crop.before_asset));
+  button.setAttribute('aria-pressed',String(intent.action==='raster_diagnosis'&&intent.diagnosis?.target===target&&intent.diagnosis.kind===kind));
+ });
  document.querySelectorAll('button[data-candidate]').forEach(button=>{
   const target=button.dataset.candidate;
   button.disabled=!readyImages.has(target)||(intent.action!=='rework'&&!PW.choiceReady(detail,target,intent));
@@ -52,6 +59,16 @@ function updatePrompt(){
    const images=PW.finalAssets(detail,intent);
    if([images.raster,images.reveal,images.background].filter(Boolean).some(a=>!readyImages.has(a.id))){
     throw Error('Die Originalbilder der Schlussauswahl zuerst vollständig laden. Bei einem Bildfehler gezielt erneut laden.');
+   }
+  }
+  if(intent.action==='raster_diagnosis'&&intent.diagnosis){
+   if(pending&&!pending.jobs.some(job=>job.puzzle_id===active.puzzle_id&&job.ref===active.ref&&job.commit===active.commit)){
+    throw Error('Die Rasterquelle hat sich geändert. Neuen Stand laden und den Befund erneut wählen.');
+   }
+   const cards=detail.facts.candidates,target=intent.diagnosis.target;
+   const before=cards[target]?.diagnostics?.crop?.before_asset;
+   if(!readyImages.has(target)||(intent.diagnosis.kind==='crop'&&!readyImages.has(before))){
+    throw Error('Die gebundenen Originalbilder zuerst vollständig laden.');
    }
   }
   box.value=PW.prompt(detail,intent,options());
@@ -123,28 +140,51 @@ function gridFields(parent,expanded){
  }
  parent.append(panel);return panel;
 }
+const parameterKinds={exact:'exakt',approximate:'ungefähr',open:'offen'};
+function parameterConstraint(option,axis){
+ if(option.constraints)return option.constraints[axis];
+ return {kind:option[axis==='foreground_colors'?'foreground_color_constraint':'size_constraint'],
+         target:option[axis],minimum:null,maximum:null};
+}
+function parameterTarget(c,unit=''){
+ return c.kind==='open'?'offen':`${parameterKinds[c.kind]} ${c.target}${unit}`;
+}
+function parameterSummary(section,option){
+ for(const [axis,label] of Object.entries(PW.axes)){
+  const c=parameterConstraint(option,axis),unit=axis==='foreground_colors'?'':' Zellen';
+  section.append(node('p',`${label}: ${parameterTarget(c,unit)} · Untergrenze: ${c.minimum??'keine'} · Obergrenze: ${c.maximum??'keine'}`));
+ }
+ const mode=option.imports?.[0].mode??option.mode;
+ section.append(node('p',`Modus: ${mode==='color'?'farbig':'monochrom'}`));
+ const sides=option.derivation?.empty_edge_crop.map(side=>sideNames[side]);
+ const features=option.derivation?.protected_features;
+ section.append(node('p',`Erlaubte Beschnittseiten: ${sides?.join(', ')||'keine'}.`),
+                node('p',`Geschützte Merkmale: ${features?.join('; ')||'keine benannt'}.`));
+}
+function parameterLabel({option,index}){
+ const goals=Object.entries(PW.axes).map(([axis,label])=>`${label} ${parameterTarget(parameterConstraint(option,axis))}`);
+ return `Alternative ${index+1} · ${goals.join(' · ')}`;
+}
 function publishedContext(view,value){
  const p=value.facts.published,section=node('section',undefined,'publishedContext');
  section.append(node('h3','Überlieferte Vorgaben & Motivbriefing'));
- const status=p.role==='approved'?'Überlieferter freigegebener Parameterkorridor':p.role==='proposed'?'Veröffentlichte Wünsche – Korridor noch nicht freigegeben':'Keine strukturierten Rastervorgaben; siehe Motivbriefing.';
+ const forMotif=value.facts.candidates&&value.facts.state==='motif_review'&&p.proposed?.length;
+ const status=forMotif?'Parametervorschläge zur Motivfreigabe':p.role==='approved'?'Überlieferter freigegebener Parameterkorridor':p.role==='proposed'?'Veröffentlichte Wünsche – Korridor noch nicht freigegeben':'Keine strukturierten Rastervorgaben; siehe Motivbriefing.';
  section.append(node('p',status,'sourceRole'));
- const grid=PW.publishedGrid(value),parameterList=p.approved?.length?p.approved:p.proposed;
- const corridor=Array.isArray(parameterList)?parameterList.find(v=>v?.format==='picross-raster-parameters-v1'):null;
- if(corridor){
-  const kind={exact:'exakt',approximate:'ungefähr',open:'offen'};
-  for(const [axis,label] of [['width','Breite'],['height','Höhe'],['foreground_colors','Vordergrundfarben']]){
-   const c=corridor.constraints[axis];
-   section.append(node('p',`${label}: ${kind[c.kind]}${c.target===null?'':` ${c.target}`} · Untergrenze: ${c.minimum??'keine'} · Obergrenze: ${c.maximum??'keine'}`));
+ const grid=PW.publishedGrid(value),alternatives=PW.parameterOptions(!forMotif&&p.approved?.length?p.approved:p.proposed);
+ if(alternatives.length===1)parameterSummary(section,alternatives[0].option);
+ else if(alternatives.length>1){
+  for(const entry of alternatives){
+   const item=node('details');item.append(node('summary',parameterLabel(entry)));
+   parameterSummary(item,entry.option);section.append(item);
   }
-  section.append(node('p',`Geschützte Merkmale: ${corridor.derivation.protected_features.join('; ')||'keine benannt'}.`));
- }
- if(Object.keys(grid).length){
+ }else if(Object.keys(grid).length){
   const words=[];
   for(const [axis,label] of [['width','Breite'],['height','Höhe']])if(grid[axis])words.push(`${label}: ${grid.sizeAccuracy==='exact'?'exakt':'ungefähr'} ${grid[axis]} Zellen`);
   if(grid.mode)words.push(`Modus: ${grid.mode==='mono'?'monochrom':'farbig'}`);
   if(grid.colors)words.push(`${grid.colorAccuracy==='exact'?'Exakt':'Ungefähr'} ${grid.colors} Vordergrundfarben`);
   section.append(node('p',words.join(' · ')));
- }else if(p.role!=='absent'&&!corridor)section.append(node('p','Keine eindeutigen Einzelwerte; vollständige Parameter stehen in den technischen Details.','hint'));
+ }else if(p.role!=='absent')section.append(node('p','Keine eindeutigen Einzelwerte; vollständige Parameter stehen in den technischen Details.','hint'));
  const briefing=node('details');briefing.append(node('summary','Veröffentlichtes Motivbriefing'),node('div',p.brief.text,'briefText'));
  section.append(briefing);view.append(section);
 }
@@ -168,6 +208,8 @@ function metadata(view,value){
 function workflow(view,value){
  detail=value;
  const n=PW.step(value),order=PW.orderStep(value),section=node('section',undefined,'nextAction');
+ const motifReview=value?.facts.candidates&&value.facts.state==='motif_review';
+ const selectionHint='Die gewünschte Variante auf der Bildkarte wählen.';
  section.append(node('h3',PW.closing(value,intent)?(value.facts.state==='registered'?'Git-Abschluss fortsetzen':'Schlussauswahl abnehmen & integrieren'):value?.facts.next_step||'Motiv beschreiben'));
  if(!value)field(section,'Was soll dein Rätsel zeigen?','brief','Zum Beispiel eine reife Erdbeere');
  if(order===1)field(section,'Zusätzliche Motivhinweise (optional)','notes','Welche Details, Perspektive oder Stimmung sind dir wichtig?');
@@ -176,9 +218,16 @@ function workflow(view,value){
   input.onchange=()=>{intent.inputImage=input.files[0]?.name||'';updatePrompt();};
   label.append(input);section.append(label,node('p','Die ausgewählte Datei beim Senden an den Chat anhängen.','hint'));
  }
+ let parameterChoice;
  if(value){
   const label=node('label','Nächste Aktion'),select=node('select');select.id='nextActionMode';
-  for(const [id,text] of [['continue','Fortsetzen / Entscheidung senden'],['rework','Gezielt korrigieren'],['resume','Arbeit wieder aufnehmen'],...(value.facts.state==='registered'?[['background_change','Separater Hintergrundfolgeauftrag']]:[])]){
+  const diagnosticStage=['raster_review','raster_ready'].includes(value.facts.state)&&!value.facts.originals?.record?.selected?.raster;
+  const canDecide=diagnosticStage&&Object.values(value.facts.candidates||{}).some(({diagnostics:d})=>
+   d&&(d.frame&&!d.frame.exception||d.crop&&PW.cropChanges(d.crop).length));
+  const actions=[['continue','Fortsetzen / Entscheidung senden'],['rework','Gezielt korrigieren'],['resume','Arbeit wieder aufnehmen']];
+  if(canDecide)actions.push(['raster_diagnosis','Technische Rasterentscheidung']);
+  if(value.facts.state==='registered')actions.push(['background_change','Separater Hintergrundfolgeauftrag']);
+  for(const [id,text] of actions){
    const opt=node('option',text);opt.value=id;select.append(opt);
   }
   label.append(select);section.append(label);
@@ -193,33 +242,50 @@ function workflow(view,value){
    baseLabel.append(base);correction.append(baseLabel);
   }
   if(order===3)gridFields(correction,false);
-  select.onchange=()=>{intent.action=select.value;if($('correctionBase'))$('correctionBase').value=intent.selection||'';correction.hidden=!['rework','background_change'].includes(select.value);updatePrompt();};
+  const diagnosis=node('div');diagnosis.hidden=true;
+  const diagnosisTarget=node('p',undefined,'hint');diagnosis.append(diagnosisTarget);
+  const frameReason=node('div');const reasonInput=field(frameReason,'Warum ist die Randabweichung für dieses Raster akzeptabel?','frameReason');
+  reasonInput.id='frameReason';diagnosis.append(frameReason);section.append(diagnosis);
+  select.onchange=()=>{
+   if(motifReview&&intent.action==='rework'&&select.value!=='rework'){
+    delete intent.selection;delete intent.kind;
+    if($('selectionStatus'))$('selectionStatus').textContent=selectionHint;
+   }
+   intent.action=select.value;
+   if(parameterChoice)parameterChoice.hidden=select.value!=='continue';
+   if($('correctionBase'))$('correctionBase').value=intent.selection||'';
+   correction.hidden=!['rework','background_change'].includes(select.value);
+   diagnosis.hidden=select.value!=='raster_diagnosis';
+   if(diagnosis.hidden){delete intent.diagnosis;delete intent.frameReason;reasonInput.value='';}
+   diagnosisTarget.textContent=intent.diagnosis?`Auftrag für ${intent.diagnosis.target} · Endrevision ${intent.diagnosis.revision}`:'Bitte den Beschnitt oder den Randbefund auf der Bildkarte wählen.';
+   frameReason.hidden=intent.diagnosis?.kind!=='frame';
+   updatePrompt();
+  };
  }
  if(order===1||order===2){gridFields(section,order===2);if(order===2)field(section,'Neue/zusätzliche Wünsche zur Motivvorlage (optional)','parameters','Zum Beispiel Merkmale, die bei der Vereinfachung erhalten bleiben sollen');}
  if(order===4){const d=node('details');d.append(node('summary','Optionaler Kontextwunsch'));field(d,'Kontextwunsch','context');section.append(d);}
- if(value?.facts.candidates&&value.facts.state==='motif_review'){
-  const label=node('label','Parameteralternative'),select=node('select');
-  const empty=node('option','Bitte wählen');empty.value='';select.append(empty);
-  value.facts.published.proposed.forEach((option,i)=>{
-   const variants=option.imports||[option];
-   const labels=variants.map(v=>`${v.width} × ${v.height}, ${v.mode==='mono'||v.foreground_colors===1?'monochrom':v.foreground_colors+' Farben'}`);
-   const item=node('option',`Alternative ${i+1} · ${[...new Set(labels)].join(' / ')}`);item.value=String(i);select.append(item);
-  });
-  const description=node('p',undefined,'hint');
-  select.onchange=()=>{
-   intent.parameter=select.value===''?null:Number(select.value);
-   const option=value.facts.published.proposed[intent.parameter];
-   const features=option?.derivation?.protected_features||[];
-   const limits=Object.entries(option?.constraints||{}).map(([key,c])=>
-    ({width:'Breite',height:'Höhe',foreground_colors:'Vordergrundfarben'}[key])+' '+(c.kind==='exact'?'exakt '+c.target:c.kind==='approximate'?'etwa '+c.target:'offen')+
-    (c.minimum!==null||c.maximum!==null?' ('+(c.minimum??'–')+' bis '+(c.maximum??'–')+')':''));
-   description.textContent=[...limits,...(features.length?['Geschützte Merkmale: '+features.join(', ')]:[])].join(' · ');
-   updatePrompt();
-  };label.append(description);
-  label.append(select);section.append(label);
+ if(motifReview){
+  const alternatives=PW.parameterOptions(value.facts.published?.proposed);
+  if(alternatives.length>1){
+   parameterChoice=node('div');
+   const label=node('label','Parameteralternative'),select=node('select');
+   const empty=node('option','Bitte wählen');empty.value='';select.append(empty);
+   for(const entry of alternatives){
+    const item=node('option',parameterLabel(entry));item.value=String(entry.index);select.append(item);
+   }
+   const description=node('div',undefined,'hint');description.setAttribute('aria-live','polite');
+   select.onchange=()=>{
+    intent.parameter=select.value===''?null:Number(select.value);
+    const entry=alternatives.find(({index})=>index===intent.parameter);
+    description.replaceChildren();
+    if(entry)parameterSummary(description,entry.option);
+    updatePrompt();
+   };
+   label.append(select);parameterChoice.append(label,description);section.append(parameterChoice);
+  }
  }
  if(value?.offers.length||value?.facts.state==='background_review'){
-  const selected=node('p','Die gewünschte Variante auf der Bildkarte wählen.','hint');selected.id='selectionStatus';section.append(selected);
+  const selected=node('p',selectionHint,'hint');selected.id='selectionStatus';section.append(selected);
  }
  if(value?.facts.state==='background_review'){
   const none=node('button','Bewusst keinen Hintergrund wählen');none.onclick=()=>choose('none','background',none);none.dataset.choice='none';none.setAttribute('aria-pressed','false');section.append(none);
@@ -245,6 +311,9 @@ function workflow(view,value){
  actions.append(copy,status);section.append(actions,preview);view.append(section);updatePrompt();
 }
 function choose(id,kind,button){
+ if(intent.action==='raster_diagnosis'){
+  const mode=$('nextActionMode');mode.value='continue';mode.onchange();
+ }
  const label=id==='none'?'kein Hintergrund':detail?.offers.find(o=>o.id===id&&o.kind===kind)?.label||id;
  intent.selection=id;intent.kind=kind;if($('correctionBase'))$('correctionBase').value=id;
  document.querySelectorAll('[data-choice]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.choice===id)));
@@ -385,6 +454,53 @@ function findingControls(parent,value,target){
   label.append(check,node('span',' Abweichung annehmen'));textLabel.append(treatment);group.append(label,textLabel);show();
  }
 }
+function rasterDiagnosis(parent,value,asset,card){
+ const {frame,crop}=card.diagnostics;
+ const diagnosticStage=['raster_review','raster_ready'].includes(value.facts.state)&&!value.facts.originals.record.selected.raster;
+ const button=(kind,label)=>{
+  const option=node('button',label);option.dataset.diagnosis=kind;option.dataset.target=asset.id;option.disabled=true;
+  option.onclick=()=>{
+   const mode=$('nextActionMode');
+   if(intent.diagnosis?.target!==asset.id||intent.diagnosis?.kind!==kind){delete intent.frameReason;$('frameReason').value='';}
+   intent.diagnosis={kind,target:asset.id,sha:card.definition_sha256,revision:card.revision,parameters:crop?.parameters_sha256};
+   mode.value='raster_diagnosis';mode.onchange();
+   (kind==='frame'?$('frameReason'):$('copyOrder')).focus();
+  };parent.append(option);
+ };
+ if(!card.qualified)parent.append(node('p','Sichtungsentwurf – nicht integrationsbereit','validation'));
+ if(frame){
+  const detail=node('details',undefined,'finding');
+  detail.append(node('summary','H-01 · Randregel: nicht erfüllt'),
+    node('p',`Kandidat ${asset.id}, Endrevision ${card.revision}, ${card.width} × ${card.height} Zellen`),
+    node('p',['left','right','top','bottom'].map(side=>`${sideNames[side]} ${frame.edges[side]?'belegt':'leer'}`).join(' · ')),
+    node('p','Betroffene Achsen: '+frame.axes.map(axis=>PW.axes[axis]).join(', ')),
+    node('p','Definitions-SHA-256: '+card.definition_sha256));
+  parent.append(detail);
+  if(frame.exception){
+   const evidence=node('details',undefined,'finding');const e=frame.exception;
+   evidence.append(node('summary','Gebundene technische frame-Ausnahme'),
+    node('p',`${e.actor} · ${e.timestamp_utc}`),node('p',e.statement),
+    node('p',`Beleg ${e.evidence.file} · SHA-256 ${e.evidence.sha256}`));
+   parent.append(evidence);
+  }else if(diagnosticStage)button('frame','Technische frame-Ausnahme erklären');
+ }
+ if(crop){
+  const comparison=node('details',undefined,'finding');comparison.open=true;
+  const d=size=>`${size.width} × ${size.height}`;
+  comparison.append(node('summary','Gemessener Außenbeschnitt'),
+   node('p',`Vorher ${d(crop.before)} → nachher ${d(crop.after)} Zellen`),
+   node('p',Object.entries(crop.removed).filter(([,n])=>n).map(([side,n])=>
+    `${sideNames[side]} ${n} ${['left','right'].includes(side)?'Spalte(n)':'Zeile(n)'}`).join(' · ')+` · ${crop.removed_cells} leere Zellen`));
+  const limits=Object.keys(crop.changes).map(axis=>{
+   const c=crop.constraints[axis];
+   return `${PW.axes[axis]}: Ziel ${c.target}, Minimum ${c.minimum}, Maximum ${c.maximum??'offen'}`;
+  });
+  if(limits.length)comparison.append(node('p',`Alternative ${crop.parameter+1} · ${limits.join(' · ')}`),
+    node('p',`Vorschlag · ${PW.cropChanges(crop).join(' · ')} · alle übrigen Werte bleiben gültig.`));
+  parent.append(comparison);
+  if(diagnosticStage&&limits.length)button('crop','Korridor ändern und Rasterwahl beabsichtigen');
+ }
+}
 function assetCard(value,id,asset,selectable=true){
  const current=generation,signal=controller.signal;
  const figure=node('figure',undefined,'card'),canvas=node('div',undefined,'canvas'),status=node('p','Original wird geladen …');
@@ -392,6 +508,7 @@ function assetCard(value,id,asset,selectable=true){
  const caption=node('figcaption');caption.append(node('h3',asset.caption));
  const card=value.facts.candidates?.[asset.id];
  const offered=value.offers.some(o=>o.asset_ids.includes(asset.id));
+ if(card?.diagnostics)rasterDiagnosis(caption,value,asset,card);
  if(card&&offered&&selectable){
   const status=node('p',undefined,'readiness');status.dataset.readiness=asset.id;caption.append(status);
  }
@@ -401,7 +518,7 @@ function assetCard(value,id,asset,selectable=true){
   if(!card||offer.label!==asset.caption)caption.append(node('p',offer.label));
   const select=node('button','Diese Variante wählen');select.dataset.choice=offer.id;if(value.facts.candidates)select.dataset.candidate=asset.id;select.setAttribute('aria-pressed',String(intent.selection===offer.id));select.disabled=true;select.onclick=()=>choose(offer.id,offer.kind,select);caption.append(select);choices.push(select);
  }
- if(card&&selectable&&offered){
+ if(card&&selectable&&(offered||asset.role==='raster_draft')){
   const correction=node('button','Korrigieren');correction.dataset.reworkShortcut='true';
   correction.onclick=()=>{
    const mode=$('nextActionMode');mode.value='rework';mode.onchange();
@@ -411,6 +528,11 @@ function assetCard(value,id,asset,selectable=true){
  }
  const button=node('button','Großansicht öffnen');button.disabled=true;caption.append(button);
  figure.append(canvas,caption);
+ const beforeId=card?.diagnostics?.crop?.before_asset;
+ if(beforeId){
+  const before=value.assets.find(a=>a.id===beforeId);
+  if(before)figure.append(assetCard(value,id,before,false));
+ }
  const retry=node('button','Bild erneut laden');retry.hidden=true;caption.append(retry);
  const load=async()=>{
   retry.hidden=true;status.textContent='Original wird geladen …';status.className='';canvas.replaceChildren(status);
@@ -496,9 +618,10 @@ async function open(id,explicit=false){
   let gallery=view;
   if(value.facts.state==='background_review'){gallery=node('details',undefined,'backgroundOptions');gallery.id='backgroundOptions';gallery.open=true;gallery.append(node('summary','Kontextzeichnungen vergleichen & wählen'));view.append(gallery);}
   const shownComparisons=new Set();
+  const comparisonAssets=new Set(Object.values(value.facts.candidates||{}).map(c=>c.diagnostics?.crop?.before_asset));
   for(const roles of groups){
    const assets=value.assets.filter(a=>{
-    if(!roles.includes(a.role))return false;
+    if(!roles.includes(a.role)||comparisonAssets.has(a.id))return false;
     if(!value.facts.candidates&&['reveal','motif'].includes(a.role)){const key=a.role+':'+a.location.sha256;if(shownComparisons.has(key))return false;shownComparisons.add(key);}
     if(a.role==='raster'&&PW.step(value)===3&&value.offers.some(o=>o.kind==='raster')&&!value.offers.some(o=>o.kind==='raster'&&o.asset_ids.includes(a.id)))return false;
     return true;
@@ -594,7 +717,9 @@ async function checkSources(value){
  $('refresh').disabled=update.state==='running';
  if(update.state==='running'){$('sourceStatus').textContent=`Arbeitsstände werden gesucht · ${Math.floor(update.elapsed_seconds||0)} Sekunden`;}
  else if(!listing&&value.snapshot){adopt(value);}
- else if(listing&&value.snapshot!==listing.snapshot&&value.snapshot!==pending?.snapshot){pending=value;$('load').hidden=false;$('sourceStatus').textContent=sourceStatus(value)+' · aktive Ansicht bleibt unverändert';error(value.errors.join('\n'));}
+ else if(listing&&value.snapshot!==listing.snapshot&&value.snapshot!==pending?.snapshot){
+  pending=value;$('load').hidden=false;$('sourceStatus').textContent=sourceStatus(value)+' · aktive Ansicht bleibt unverändert';error(value.errors.join('\n'));updatePrompt();
+ }
  if(update.state==='error'){
   if(value.snapshot===listing?.snapshot){pending=null;$('load').hidden=true;}
   else if(value.snapshot===pending?.snapshot)pending=value;

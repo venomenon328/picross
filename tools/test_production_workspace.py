@@ -217,6 +217,81 @@ class ClosingViewTests(unittest.TestCase):
         with self.assertRaises(ValueError): ctx._selection()
 
 
+class MotifParameterTests(unittest.TestCase):
+    def setUp(self):
+        from tests.puzzle_production.test_current_authoring import CurrentAuthoringTests, decide
+        from tools.puzzle_production import current_authoring as current
+        fixture = CurrentAuthoringTests()
+        fixture.setUp()
+        self.addCleanup(fixture.doCleanups)
+        self.repo = fixture.root
+        job = current.upgrade(fixture.job)
+        job.update(state='motif_review', assets=[fixture.asset('reveal-a', 'reveal'), fixture.asset('motif-a', 'motif')])
+        job['selected']['reveal'] = 'reveal-a'
+        decide(job, 'reveal')
+        fixture.job = job
+
+        def constraint(kind, target, minimum, maximum):
+            return dict(kind=kind, target=target, minimum=minimum, maximum=maximum)
+
+        def option(width, height, colors, imports, sides, feature):
+            return {'format': 'picross-raster-parameters-v1',
+                    'constraints': dict(width=width, height=height, foreground_colors=colors),
+                    'imports': [dict(width=w, height=h, mode='color', foreground_colors=2,
+                                     method='area', fit='contain', actual_crop=[0, 0, 8, 5]) for w, h in imports],
+                    'derivation': dict(cell_edits=True, empty_edge_crop=sides, protected_features=[feature])}
+
+        first = option(constraint('approximate', 20, 18, 21), constraint('open', None, 18, 26),
+                       constraint('exact', 2, None, None), [(20, 23), (21, 25)], ['left', 'right'], 'Kontur A')
+        second = option(constraint('exact', 19, 19, 19), constraint('approximate', 24, 23, 25),
+                        constraint('open', None, 2, 3), [(19, 24)], [], 'Silhouette B')
+        self.commits = []
+        for proposed in ([], [first], [first, second], [second, first]):
+            fixture.job['parameters']['proposed'] = proposed
+            fixture.publish()
+            self.commits.append(commit(self.repo))
+        git(self.repo, 'checkout', '--detach', '-q')
+        self.state = fixture.work / 'pw-state'
+        configure(self.repo, self.state)
+
+    def service(self):
+        git(self.repo, 'update-ref', 'refs/heads/main', self.commits[1])
+        service = Service(Repository(self.state))
+        service.listing()
+        detail = service.detail
+
+        def synthetic_source(jid):
+            value = detail(jid)
+            # Exercise prompt binding locally without publishing fixture commits.
+            return {**value, 'source_url': 'https://github.com/fixture/test/tree/' + value['commit']}
+
+        service.detail = synthetic_source
+        stages = iter((2, 3, 0))
+        refresh = service.repository.refresh
+
+        def advance_source():
+            git(self.repo, 'update-ref', 'refs/heads/main', self.commits[next(stages, 0)])
+            return refresh()
+
+        service.repository.refresh = advance_source
+        return service
+
+    def test_motif_parameter_form_and_source_adoption(self):
+        service = self.service()
+        server = Server(service)
+        thread = threading.Thread(target=server.serve_forever, daemon=True)
+        thread.start()
+        try:
+            script = Path(__file__).parent / 'production_workspace/check_ui_loading.cjs'
+            result = subprocess.run(['node', str(script), server.origin, service.secret, '[]', 'parameters'],
+                                    capture_output=True, text=True, encoding='utf-8', timeout=30)
+            self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+        finally:
+            server.shutdown()
+            server.server_close()
+            thread.join()
+
+
 class MotifTests(unittest.TestCase):
     """B: real synthetic published snapshots; never a production corpus."""
     def setUp(self):
@@ -517,6 +592,84 @@ class WorkspaceTests(unittest.TestCase):
             self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
         finally:
             server.shutdown(); server.server_close(); thread.join()
+
+    def test_diagnostic_prompt_keeps_selection_and_declared_exceptions_distinct(self):
+        module = Path(__file__).parent / 'production_workspace/ui/workflow.js'
+        script = r"""
+const assert = require('node:assert/strict');
+const PW = require(process.argv[1]);
+const sha = 'a'.repeat(64), params = 'b'.repeat(64), commit = 'c'.repeat(40);
+const crop = {parameter:0, parameters_sha256:params, before:{width:20,height:3}, after:{width:17,height:3},
+              changes:{width:{previous:18,proposed:17}}};
+const value = {commit, source_url:'https://github.com/fixture/test/tree/'+commit,
+ puzzle_id:'pz-fixture', revision:'current', record:{file:'content/authoring/pz-fixture/current/record.json'},
+ offers:[{id:'a',kind:'raster'}], facts:{state:'raster_review', authoring_version:'0.8.0', blockers:[],
+ candidates:{a:{missing:[],findings:[]},
+             b:{missing:['Außerhalb der genehmigten Grenzen'],findings:[],definition_sha256:sha,revision:2,
+                diagnostics:{crop,frame:{exception:null}}}}}};
+const diagnosis = {target:'b',kind:'crop',sha,revision:2,parameters:params};
+const intent = {action:'raster_diagnosis',diagnosis};
+const combined = PW.prompt(value,intent);
+assert.match(combined,/Minimum 18 → 17/);
+assert.match(combined,/20 × 3 auf 17 × 3 Zellen/);
+assert.match(combined,/beabsichtige die Rasterwahl b/);
+assert.match(combined,/erst nach erfolgreichen Prüfungen/);
+assert.doesNotMatch(combined,/Ich wähle das qualifizierte Rasterangebot b/);
+assert.equal(PW.choiceReady(value,'b',intent),false);
+assert.match(PW.prompt(value,{kind:'raster',selection:'a'}),/Ich wähle das qualifizierte Rasterangebot a/);
+assert.throws(()=>PW.prompt(value,{kind:'raster',selection:'b'}),/qualifiziertes Rasterangebot/);
+assert.throws(()=>PW.prompt(value,{...intent,diagnosis:{...diagnosis,sha:params}}),/aktuellen Rasterbefund/);
+assert.throws(()=>PW.prompt(value,{...intent,diagnosis:{...diagnosis,parameters:sha}}),/veraltet/);
+const frame = {...intent,diagnosis:{...diagnosis,kind:'frame'}};
+assert.throws(()=>PW.prompt(value,frame),/begründen/);
+assert.match(PW.prompt(value,{...frame,frameReason:'Waagerechter Abstand gewollt'}),
+             /technische frame-Ausnahme.*Waagerechter Abstand gewollt/);
+value.facts.candidates.b.diagnostics.frame.exception = {statement:'Explicitly allowed'};
+assert.throws(()=>PW.prompt(value,{...frame,frameReason:'Schon gedeckt'}),/nicht verfügbar/);
+"""
+        result = subprocess.run(['node', '-e', script, str(module.resolve())], capture_output=True,
+                                text=True, encoding='utf-8', timeout=20)
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+
+    def test_motif_prompt_rejects_incomplete_and_invalid_parameter_choices(self):
+        module = Path(__file__).parent / 'production_workspace/ui/workflow.js'
+        script = r"""
+const assert = require('node:assert/strict');
+const PW = require(process.argv[1]);
+const commit = 'f'.repeat(40), invalid = {width: 12};
+const complete = {width:20,height:23,mode:'color',foreground_colors:2,
+                  size_constraint:'approximate',foreground_color_constraint:'exact'};
+const published = {approved:[complete],proposed:[invalid]};
+const value = {commit, source_url:'https://github.com/fixture/test/tree/'+commit,
+ puzzle_id:'pz-fixture', revision:'current', record:{file:'content/authoring/pz-fixture/current/record.json'},
+ offers:[{id:'motif-a',kind:'motif'}], facts:{state:'motif_review', authoring_version:'0.8.0',
+ candidates:{'motif-a':{missing:[],findings:[]}},blockers:[],published}};
+const intent = {selection:'motif-a',kind:'motif'};
+assert.throws(()=>PW.prompt(value,intent),/fehlt ein vollständiger Parametervorschlag/);
+published.proposed = [invalid,complete];
+assert.match(PW.prompt(value,intent),/einzigen vollständigen Vorschlag.*Eintrag 2/);
+assert.throws(()=>PW.prompt(value,{...intent,parameter:0}),/Parameteralternative wählen/);
+published.proposed.push({...complete,width:24});
+for(const parameter of [undefined,null,'2',0,-1,4,1.5])
+ assert.throws(()=>PW.prompt(value,{...intent,parameter}),/Parameteralternative wählen/);
+assert.match(PW.prompt(value,{...intent,parameter:2}),/ausdrücklich gewählte Alternative.*Eintrag 3/);
+assert.doesNotMatch(PW.prompt(value,{...intent,parameter:2}),/foreground_color_constraint/);
+value.facts.candidates['motif-a'].findings = [{id:'finding-a',binding:'a',criterion:'TEST',eligible:true}];
+const findings={a:{accepted:true,treatment:'Kontur {A} beibehalten'}};
+assert.match(PW.prompt(value,{...intent,parameter:2,findings}),/Kontur \{A\} beibehalten/);
+const correction=PW.prompt(value,{...intent,parameter:2,action:'rework',feedback:'Mehr Raum {oben}',
+                                 parameters:'Kante [A]',findings},{workroot:'E:/Auftrag'});
+assert.match(correction,/Mehr Raum \{oben\}/);
+assert.match(correction,/Kante \[A\]/);
+assert.match(correction,/Lokale Codex-Arbeitswurzel: E:\/Auftrag/);
+assert.doesNotMatch(correction,/gebe Motivvorlage|parameters\.proposed/);
+const resume=PW.prompt(value,{...intent,parameter:2,action:'resume'});
+assert.match(resume,/Schritt 2 am gebundenen Datensatz wieder aufnehmen/);
+assert.doesNotMatch(resume,/gebe Motivvorlage|parameters\.proposed/);
+"""
+        result = subprocess.run(['node', '-e', script, str(module.resolve())], capture_output=True,
+                                text=True, encoding='utf-8', timeout=20)
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
 
     def test_new_branch_namespace_skips_old_refs_and_reuses_unchanged_scans(self):
         sha = self.publish()

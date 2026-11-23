@@ -66,7 +66,8 @@ def validate(value, measured=True):
                'Äußerer Record muss der aktuellen kanonischen Revision entsprechen.')
     text(value['title'])
     ids = set()
-    ap.require(isinstance(value['assets'], list) and len(value['assets']) <= 100, 'Zu viele Assets.')
+    asset_limit = 140 if value['format'] == FINDING_FORMAT else 100
+    ap.require(isinstance(value['assets'], list) and len(value['assets']) <= asset_limit, 'Zu viele Assets.')
     for a in value['assets']:
         exact_keys(a, {'id', 'role', 'caption', 'location'})
         ap.require(isinstance(a['id'], str) and OPTION.fullmatch(a['id']) and a['id'] not in ids, 'Asset-ID fehlt oder ist doppelt.')

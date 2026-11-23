@@ -52,6 +52,15 @@ class FixedRasterTests(unittest.TestCase):
         p['parameters']['imports'][1]['mode'] = 'color'
         with self.assertRaises(ValueError): rp.validate(p['parameters'])
 
+    def test_empty_edge_diagnosis_keeps_fixed_raster_corridor_strict(self):
+        plan, candidate = prepare(self.root)
+        parameters = plan['parameters']
+        parameters['constraints']['width'].update(kind='approximate', target=4, minimum=4)
+        self.assertEqual(rp.crop_rectangle(plan['crop'], 4, 4, plan['protected_mask'],
+                         parameters['derivation']['empty_edge_crop'], candidate['matrix'], empty='empty')['left'], 1)
+        with self.assertRaisesRegex(ValueError, 'Final raster outside constraint: width'):
+            f.transform(plan, candidate['design'], candidate['matrix'])
+
     def test_negative_edit_crop_mask_and_budget_boundaries(self):
         p, c = prepare(self.root)
         cases = []
