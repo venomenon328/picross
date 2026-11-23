@@ -81,7 +81,7 @@ static func run(t: SceneTree) -> void:
 	t.check(reopened.receive(request,EPOCH,409,reply(request,"conflict_saved",2,OTHER)) and reopened.status().entries["2"].value == JSON.parse_string(JSON.stringify(Protocol.progress(Store.snapshot(session,session.view_state)))),"B1 candidate receipt preserves progress")
 	for operation: String in ["resolve","discard","restore"]:
 		var value: Variant = 1 if operation == "restore" else OTHER
-		var version := reopened.decision(session.definition.id,operation,value)
+		var version := reopened.decision(session.definition.id,operation,value,2)
 		request = reopened.prepare(version,2)
 		if request.is_empty(): return
 		var candidate: Variant = null if operation == "restore" else OTHER
@@ -98,6 +98,7 @@ static func run(t: SceneTree) -> void:
 	t.check(reopened.reconciliation().state.request == request and not Profile.new().open(host,ACCOUNT,DEVICE,EPOCH),"B1 reconciliation survives restart")
 	t.check(FileAccess.get_sha256(b._journal.path) == b_hash and FileAccess.get_sha256(c._journal.path) == c_hash,"B1 foreign profile bytes unchanged")
 	t.check(c.observe_generation(OTHER) == false and not Profile.new().open(HOST+"/other",ACCOUNT,DEVICE,EPOCH),"B1 restore generation persists reconciliation")
+	basis_and_schedule(t,b,session)
 	if not filesystem_cases(t,b,session): return
 	if not interruption(t,session) or not progress_cases(t,session): return
 	for code: String in ["sequence_reused","sequence_stale","sequence_gap","storage_limit","history_missing","candidate_missing","revision_conflict","conflict_limit"]:
@@ -106,6 +107,42 @@ static func run(t: SceneTree) -> void:
 		rejected.sequence_consumed = not rejected.sequence_consumed
 		t.check(not Protocol.valid_reply(request,409,rejected),"B1 inconsistent consumption " + code)
 	if t.failures == start: print("SYNC_PROGRESS_CORE_OK")
+
+static func basis_and_schedule(t: SceneTree, p: Profile, source: Session) -> void:
+	var slot := Session.new(source.definition)
+	var progress := Protocol.progress(Store.snapshot(slot,slot.view_state))
+	progress.cells[0] = 0
+	var data := p._store.received(progress,slot)
+	t.check(not data.is_empty() and data.baseline.cells == progress.cells and data.history.is_empty(),"account receives actual progress as basis")
+	if data.is_empty(): return
+	t.check(not Store.validate(data,source.definition).is_empty(),"guest rejects account envelope")
+	Store.apply(data,slot)
+	t.check(not slot.player.undo() and slot.player.commit([{"index":0,"before":0,"after":-1}]) and slot.player.undo() and slot.player.cells[0] == 0,"undo stops at nonempty received basis")
+	var identical := p._store.received(Protocol.progress(p._store.slot_snapshot(slot,slot.view_state)),slot)
+	t.check(identical.history == slot.player.history and identical.cursor == 0,"identical progress preserves redo")
+	var invalid := identical.duplicate(true)
+	invalid.baseline.cells[0] = -1
+	t.check(not p._store.validate_account(invalid,slot.definition).is_empty(),"reject corrupted replay basis")
+	var timer := preload("res://model/sync_schedule.gd").new()
+	var clock := [1000]
+	timer.clock = func() -> int: return clock[0]
+	timer.enter()
+	t.check(not timer.ready(),"cell edit does not schedule request")
+	timer.collect()
+	clock[0] += 1999
+	t.check(not timer.ready(),"two second coalescing")
+	clock[0] += 1
+	t.check(timer.ready(),"coalesced batch ready")
+	for delay: int in [30,60,120,240,300,300]:
+		timer.transient(0)
+		t.check(timer.retry_at == timer.now()+delay,"bounded device backoff")
+	timer.transient(400)
+	timer.connected()
+	t.check(timer.retry_at == timer.now()+400 and not timer.ready(),"reconnect respects Retry-After")
+	timer.success()
+	timer.due = INF
+	clock[0] = 601000
+	t.check(timer.ready(),"600 seconds since entry")
 
 static func progress_cases(t: SceneTree, session: Session) -> bool:
 	var p := Profile.new()

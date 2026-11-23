@@ -175,30 +175,34 @@ def verify_account(directory, states):
     rows = read_trace(directory/"trace.jsonl")
     prepared = None
     digest = None
-    for stage, generation in (("writer", 2), ("reader", 3)):
+    for stage, generation in (("writer", 3), ("reader", 4)):
         image = json.loads((directory/(stage+"-journal.json")).read_bytes())
         payload = image["payload"].encode()
-        assert image["format"] == "picross-local-sync/v2" and hashlib.sha256(payload).hexdigest() == image["sha256"], "account journal checksum"
+        assert image["format"] == "picross-local-sync/v3" and hashlib.sha256(payload).hexdigest() == image["sha256"], "account journal checksum"
         state = json.loads(payload)
         assert state["context"] == dict(server=HOST, account=ACCOUNT, device=DEVICE) and state["generation"] == EPOCH, "account binding"
         assert state["local"] == generation and state["sequence"] == 0 and state["intent"] == {}, "account generation"
         request = state["request"]
         raw = request["body"].encode()
-        assert request == dict(context="user://p1/accounts/"+PROFILE, device=DEVICE, generation=EPOCH, local=1,
-                               seq=1, base=0, method="POST", path="/v1/puzzles/T-06/mutations", body=request["body"]), "request binding"
+        assert request == dict(context="user://p1/accounts/"+PROFILE, device=DEVICE, generation=EPOCH, local=2,
+                               seq=1, base=7, method="POST", path="/v1/puzzles/T-06/mutations", body=request["body"]), "request binding"
         if prepared is not None:
             assert raw == prepared, "restart request bytes"
         prepared, digest = raw, hashlib.sha256(raw).hexdigest()
         body = json.loads(raw)
-        first = state["entries"]["1"]["value"]
-        assert body == dict(format="picross-sync/v1", request_seq=1, base_server_revision=0, operation="snapshot", save=first), "prepared snapshot"
+        first = state["entries"]["2"]["value"]
+        assert body == dict(format="picross-sync/v1", request_seq=1, base_server_revision=7, operation="snapshot", save=first), "prepared snapshot"
         assert first == expected_progress(rows[10]), "first account progress"
         saved = json.loads((directory/(stage+"-account.json")).read_bytes())
         assert state["entries"][str(generation)]["value"] == expected_progress(states[stage]), "queued progress divergence"
-        assert saved["schema"] == 1 and saved["definition_id"] == "T-06" and saved["definition_revision"] == 2, "account puzzle"
+        assert saved["format"] == "picross-account-save/v1" and saved["definition_id"] == "T-06" and saved["definition_revision"] == 2, "account puzzle"
+        assert saved["baseline"] == dict(cells=rows[9]["cells"], undo_used=True, completed=False), "received baseline"
         for key, value in states[stage].items():
+            if key == "history": value = value[-1:]
+            if key == "cursor": value -= 2
             assert saved[key] == value, "account redo/save "+key
-    expected = {11:(1,3),14:(2,2),15:(2,2),16:(3,3)}
+        assert state["entries"][str(generation)]["base_server_revision"] == 7, "original editing basis"
+    expected = {11:(2,1),14:(3,0),15:(3,0),16:(4,1)}
     for row in rows:
         number = row["action"]["number"]
         observation = {}

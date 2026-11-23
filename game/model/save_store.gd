@@ -84,6 +84,9 @@ static func validate(data: Variant, definition: Dictionary) -> String:
 		return "Ungültiges Speicherschema."
 	if not integer(data.schema) or int(data.schema) != 1:
 		return "Unbekannte Speicherversion."
+	return validate_state(data, definition, {})
+
+static func validate_state(data: Dictionary, definition: Dictionary, baseline: Dictionary) -> String:
 	if data.definition_id != definition.id or not integer(data.definition_revision) or int(data.definition_revision) != int(definition.revision):
 		return "Definition oder Revision passt nicht."
 	if not integer(data.width) or not integer(data.height) or int(data.width) != int(definition.width) or int(data.height) != int(definition.height):
@@ -104,6 +107,15 @@ static func validate(data: Variant, definition: Dictionary) -> String:
 	var replay: Array[int] = []
 	replay.resize(count)
 	replay.fill(-1)
+	if not baseline.is_empty():
+		if not keys(baseline, ["cells", "undo_used", "completed"]) or not baseline.cells is Array or baseline.cells.size() != count:
+			return "Ungültige Empfangsbasis."
+		if not baseline.undo_used is bool or (baseline.undo_used and not data.undo_used) or not baseline.completed is bool:
+			return "Ungültige Merkmale der Empfangsbasis."
+		for i: int in range(count):
+			if not valid_cell(baseline.cells[i], colors): return "Ungültige Zelle der Empfangsbasis."
+			replay[i] = int(baseline.cells[i])
+		if baseline.completed != solved(replay, definition): return "Abschluss der Empfangsbasis widerspricht der Matrix."
 	var at_cursor: Array[int] = replay.duplicate()
 	for action_index: int in range(data.history.size()):
 		var action: Variant = data.history[action_index]
@@ -124,8 +136,6 @@ static func validate(data: Variant, definition: Dictionary) -> String:
 			replay[int(change.index)] = int(change.after)
 		if action_index + 1 == int(data.cursor):
 			at_cursor = replay.duplicate()
-	if int(data.cursor) == 0:
-		at_cursor.fill(-1)
 	for i: int in range(count):
 		if at_cursor[i] != int(data.cells[i]):
 			return "Matrix und History-Cursor widersprechen sich."
@@ -154,6 +164,7 @@ static func snapshot(session: Session, view: Dictionary) -> Dictionary:
 
 static func apply(data: Dictionary, session: Session) -> void:
 	session.gesture.cancel()
+	session.account_baseline = data.get("baseline", {}).duplicate(true)
 	session.player.cells.clear()
 	for value: Variant in data.cells:
 		session.player.cells.append(int(value))
@@ -167,6 +178,12 @@ static func apply(data: Dictionary, session: Session) -> void:
 	session.player.undo_used = data.undo_used
 	session.completed = data.completed
 	session.view_state = data.view.duplicate(true)
+
+func validate_slot(data: Variant, definition: Dictionary) -> String:
+	return validate(data, definition)
+
+func slot_snapshot(session: Session, view: Dictionary) -> Dictionary:
+	return snapshot(session, view)
 
 func _parse(path: String, definition: Dictionary) -> Dictionary:
 	if not SaveRevision.Recent.safe_file(path):
@@ -183,7 +200,7 @@ func _parse(path: String, definition: Dictionary) -> Dictionary:
 	var parser: JSON = JSON.new()
 	if parser.parse(raw) != OK or not Registry.unique_keys(raw):
 		return {"status": "invalid", "error": "JSON beschädigt."}
-	var error: String = validate(parser.data, definition)
+	var error: String = validate_slot(parser.data, definition)
 	if not error.is_empty() and SaveRevision.old_envelope(parser.data,definition,self):
 		return {"status":"older","data":parser.data}
 	return {"status": "valid", "data": parser.data} if error.is_empty() else {"status": "invalid", "error": error}
@@ -227,8 +244,8 @@ func _write_slot(session: Session, view: Dictionary) -> String:
 	if not id in registered_ids():
 		return "Unbekanntes Fixture."
 	if SaveRevision.pending(self,id): return "Offener Revisionsreset; zuerst erneut laden."
-	var candidate: Dictionary = snapshot(session, view)
-	var error: String = validate(candidate, session.definition)
+	var candidate: Dictionary = slot_snapshot(session, view)
+	var error: String = validate_slot(candidate, session.definition)
 	if not error.is_empty():
 		return error
 	var primary_path: String = path_for(id)

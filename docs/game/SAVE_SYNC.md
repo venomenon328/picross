@@ -56,7 +56,7 @@ Ein Snapshot überträgt die Rätselidentität, Rasterrevision, Dimensionen, akt
 Zellen und die Durchgangsmerkmale `undo_used` und `completed`. Undo/Redo wirkt
 über den resultierenden Fortschritt. History, Cursor, aktive Farbe und sämtliche
 Ansichtsdaten bleiben im vollständigen lokalen Save. Eine identische Projektion
-braucht keinen weiteren Upload. Der spätere B2-Sender bündelt ausstehende
+braucht keinen weiteren Upload. Der B2-Sender bündelt ausstehende
 Fortschritte zu den [beschlossenen Sammelanlässen](https://github.com/venomenon328/picross/issues/821#issuecomment-7095903230).
 Verschiedene Rätsel haben unabhängige aktuelle Stände. Für dasselbe Rätsel bleiben
 konkurrierende Fassungen erhalten, bis der Spieler ausdrücklich eine auswählt.
@@ -244,6 +244,24 @@ lokaler Metadaten zuerst anmelden und Bestand abgleichen. Niemals alte Requests
 unter neuer Sequenz/Identität automatisch als neue Entscheidung ausgeben.
 Eine unbekannte Gerätekennung wird bei Mutationen nicht implizit angelegt.
 
+### Gerätebeleg und ausdrücklicher Abbruch (B2)
+
+GET /v1/device/checkpoint liest unter dem Kontolock ausschließlich das
+Sitzungsgerät. Die Antwort picross-device-checkpoint/v1 bindet account_id,
+device_id, last_request_seq, last_request_hash, response_status und response_body.
+Die letzten drei Felder sind bei Sequenz null leer (JSON null). Sonst enthält
+response_body den unverändert gespeicherten UTF-8-Text. Ein Wiederholungsbeleg
+muss Methode, Pfad und Originalbytes über den P03-Hash bestätigen.
+
+POST /v1/device/abandon erwartet picross-request-abandon/v1 mit request_seq,
+expected_last_request_seq, request_hash und puzzle_id. Dieselbe bereits
+verbrauchte Sequenz mit demselben Hash liefert den bestehenden Beleg. Für die
+nächste freie Sequenz speichert der Dienst unter dem Originalhash einen
+terminalen 409-Receipt mit rejected/request_abandoned und liefert den
+Checkpoint mit HTTP 200. Rätselbestand, Historie und Konflikte bleiben dabei
+erhalten. Die im Abbruchreceipt beobachtete Revision bestätigt keinen Upload.
+Restore verlangt weiterhin einen vollständigen Bestandsabgleich.
+
 ### SYNC-P04: strukturelle Saveprüfung und Aussagegrenze
 
 Das innere Objekt `save` hat genau acht Pflichtfelder. `format` ist
@@ -255,7 +273,7 @@ sichere Ganzzahlen ab −1 und höchstens acht verschiedene positive Farb-IDs.
 der frühere Vollsave ergeben `422 invalid_request` vor dem Sequenzverbrauch.
 
 `progress_structure_checked` bestätigt diese Struktur. Palette und Lösung kennt
-der Dienst nicht. Die spätere B2-Übernahme validiert gegen die eigene Definition.
+der Dienst nicht. Die B2-Übernahme validiert gegen die eigene Definition.
 Gleicher Fortschritt erhält History und Ansicht. Ein übernommener anderer Stand
 beginnt mit einer lokalen Ausgangsmatrix und leerer History am Cursor 0. Eigene
 gültige Ansicht und Farbe bleiben erhalten. Der Empfang gehört zum B2-Paket.
@@ -405,7 +423,7 @@ Warteschlangen gegen einen zurückgesetzten Serverbestand. Gerätewasserstände 
 dem Dump werden trotzdem nicht genullt. Generation wechselt nur bei Restore,
 nicht bei normalem Dienst-/DB-Neustart.
 
-## Nativer Profilkern (SYNC-B1)
+## Lokaler Profilkern und B2-Client
 
 [AccountProfile](../../game/model/account_profile.gd) ist der native Einstieg für
 explizite Kontokontexte. Der Aufrufer liefert die konfigurierte HTTPS-API-Basis
@@ -418,7 +436,7 @@ Die Profilinstanz kapselt SaveStore (`saves/`) und RecentPuzzle
 (`recent-puzzle.json`). Aufrufer bearbeiten Kontodaten nur über diese Instanz.
 Gerätepräferenzen und der Startpfad der Anwendung bleiben gerätelokal.
 
-`journal.json` enthält Format `picross-local-sync/v2`, den vollständigen
+`journal.json` enthält Format `picross-local-sync/v3`, den vollständigen
 JSON-Payload als UTF-8-Text und dessen SHA-256. Er bindet Kontext, erwartete
 Servergeneration, lokale Generation, verbrauchte Sequenz, ausstehende
 Fassungen/Entscheidungen, höchsten bekannten Stand pro Rätsel, einen vorbereiteten
@@ -469,8 +487,27 @@ abgelehnte Fassungen den angebotenen Fortschritt. Unverbrauchte
 Sequenzfehler und eine andere Servergeneration sperren automatische Wiederholung.
 Der spätere Bestandsabgleich entscheidet ausdrücklich über die weitere Verwendung.
 
-Der isolierte Harness benutzt diese API mit synthetischen Identitäten. Die
-nutzbare Kontoauswahl, HTTP-Anbindung und Browser-Kontopersistenz folgen in B2.
+Der reguläre Buchclient verwendet die Kontoauswahl in den Einstellungen. Die
+feste API-Basis ist Teil der Profilidentität. Zugangsdaten der Sitzung liegen
+getrennt von den Rätseldateien in session.json des Kontos. Die Auswahl im
+Serververzeichnis bleibt über einen Neustart erhalten.
+
+Jede ausstehende Fassung bindet ihre lokale Generation, base_server_revision
+und parent_local. Letzteres bezeichnet die zugehörige vorbereitete lokale
+Vorgängerfassung. Ein eigener angewendeter Snapshot kann diese Bearbeitungslinie
+auf seine bestätigte Revision fortführen. Ein späterer GET ändert die
+Bearbeitungsbasis einer bereits ausstehenden Fassung nicht. Die lokale
+Schreibabsicht eines Empfangs führt received_revision. Ihre Veröffentlichung
+aktualisiert Basis und lokalen Stand ohne einen Rückupload. Ein Abbruchauftrag
+liegt mit unveränderten Bodybytes unter abandon neben dem Originalrequest.
+Auf Web warten Slot-/Dirtyzustand, vorbereiteter Request oder Abbruch und
+anschließender Receipt jeweils auf eine eigene IDBFS-Transaktion.
+
+Der Sender bündelt beim Verlassen eines Rätsels und bei neuem Abschluss zwei
+Sekunden. Bei durchgehender Bearbeitung prüft er nach 600 Sekunden, ob sich
+der Fortschritt geändert hat. Fehlversuche verwenden 30, 60, 120, 240 und
+anschließend 300 Sekunden Wartezeit. Ein längeres Retry-After gilt weiter.
+Der Transporttimeout beträgt 30 Sekunden.
 
 Die Migration von Datenbankstand 1 auf 2 projiziert aktuelle und frühere
 Versionen sowie Konfliktkandidaten in einer Transaktion. Resetmarker, Identitäten,
