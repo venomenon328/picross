@@ -22,7 +22,10 @@ Entwicklungsarbeit und folgt vollständig dem nächsten Abschnitt.
 ## Entwicklungsarbeit: aktuelle Quellen
 
 In ChatGPT den verbundenen GitHub-Connector bevorzugt für aktuelle Quellen,
-Issues, PRs und CI verwenden. Zugriff und geprüfte Veröffentlichung nach
+Commits, Issues, PRs und CI verwenden. Ein geprüfter direkter Connector-Commit
+auf einem neuen Entwicklungsbranch benötigt weder lokalen Git-Checkout noch
+`gh`-Anmeldung. Die verbindliche Objekt-, Basis- und Refprüfung steht im
+[Git-Publikationsvertrag](docs/tools/GIT_PUBLICATION.md); Befugnisse nach
 [WORKFLOW §§2, 5](docs/dev-rules/WORKFLOW.md) ermitteln.
 
 Vor auftragsbezogener Entwicklungsarbeit vollständig lesen:

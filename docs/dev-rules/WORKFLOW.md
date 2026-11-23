@@ -70,10 +70,17 @@ Für Arbeits-, Integrations- und Reviewquellen gelten die unterstützten Wege im
 Git-Publikationsvertrag, den das Projektprofil verlinkt. Alle prüfen die
 ausgehenden Objekte vor dem ersten Upload, binden den erwarteten Refzustand bei
 der Mutation und lesen den veröffentlichten Remote-Commit zurück. In ChatGPT
-den geprüften Connector-Weg für geeignete neue Entwicklungsbranches bevorzugen.
-Für weitere Branchzustände gilt der lokale Publisher mit erwartetem Refzustand.
-Direkte Dateischreibwerkzeuge und ungeprüfte Git-Data-Aufrufe sind unzulässig.
-Laufbelege und lokale Originale über den Zustellvertrag liefern.
+für geeignete eigene neue Entwicklungsbranches den direkt geprüften GitHub-
+Connector-Weg **auch ohne lokalen Git-Checkout, Git-Netz oder `gh`** bevorzugen.
+Die vorhandene Git-/Manifest-Publikation ist eine Alternative, keine Pflicht
+für den direkten Connector-Weg. Bei bestehendem Arbeitsbranch nur eine
+nachweislich atomare erwartete Headbindung für die Connector-Mutation nutzen;
+andernfalls gilt für dessen Fortschreibung der lokale Publisher mit Lease.
+Fehlende lokale Werkzeuge allein dürfen nicht als fehlende Connector-
+Commitfähigkeit ausgegeben werden. Ungesicherte per-Datei-Schreiboperationen
+und ungeprüfte Git-Data-Aufrufe sind unzulässig; der vollständig verifizierte
+direkte Git-Data-Ablauf ist ausdrücklich zulässig. Laufbelege und lokale
+Originale über den Zustellvertrag liefern.
 
 Vor Änderungen Arbeitsbaum und Fremdänderungen prüfen. Standardbranch `feat/<issue>-<kurzname>`, `fix/<issue>-<kurzname>` oder `chore/<issue>-<kurzname>`; vorhandene beauftragte Branches fortführen. Keine Leercommits für vorzeitige PRs. Relevante Scope-/Produktwidersprüche konkret lösen, ohne unabhängige Arbeit anzuhalten.
 
