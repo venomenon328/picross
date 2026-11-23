@@ -1,10 +1,10 @@
 {
   "format": "development-ci-plan/v1",
-  "issue": "https://github.com/venomenon328/picross/issues/850",
-  "package": "PRUNE-CHOICE-DOC",
+  "issue": "https://github.com/venomenon328/picross/issues/854",
+  "package": "CHAT-CONNECT-DIRECT",
   "modules": [],
-  "purpose": "Die bestehende einmalige Kandidatenwahl und ihren begrenzten automatischen Arbeitsasset-Abbau in Authoring, PW-B und PW-Ausführungsanweisungen widerspruchsfrei präzisieren.",
-  "omitted": "Keine Werkzeug-, Spiel-, Produktionsdaten-, CI- oder Runtimeänderung; vorhandener Publisher und seine Regression bleiben unverändert. Keine Zusatzmodule, Browser-/Windowsproben oder reale Release-Asset-DELETEs für einen reinen Dokumentationsdiff.",
+  "purpose": "Geprüften GitHub-Connector-Commitpfad ohne lokalen Checkout offiziell zulassen und lokale Pfade optional halten.",
+  "omitted": "Reiner Dokumentations-/Routingdiff; keine Werkzeugimplementierung, keine Änderungen an CI, Spiel, Produktion, Release oder fremden Projektrechten. Bestehende Branchupdates bleiben an nachgewiesene atomare Headbindung gebunden.",
   "test_changes": [],
   "core_change": null,
   "evidence": {
