@@ -265,6 +265,14 @@ synchrones `hide()` am Godot-eigenen Popup während der Ereigniszustellung.
 Dies gilt auch für passive `CatalogTip`-Beschriftungen. Sinnvolle verzögerte
 Hilfen behalten ihre Darstellung nach dem HZ-Vertrag.
 
+Die linke Einstellungsseite enthält [Spielerkonto](SAVE_SYNC.md) mit direkt
+wählbaren, sitzungsabhängigen Aktionen. Formular- und Sitzungswechsel
+aktualisieren diese Seite im aktuellen Besuch. Beim Wechsel des lokalen Profils
+bindet der Rückweg den aktiven Katalog. Ein neu ausgegebener
+Wiederherstellungscode bleibt bis zum Schließen auf der Seite und hält
+währenddessen die Navigation gesperrt. Der Fokus kehrt danach auf eine sichtbare
+Kontoaktion zurück.
+
 ## Bildhaupttitel · BTI-C / #533
 
 Ressourcen, optische Zentrierung, Titelvorrang und Fallbacks stehen ausschließlich

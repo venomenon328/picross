@@ -634,6 +634,23 @@ Die gestrichenen Kreuzprodukte werden nicht in einen anderen Pflichtjob verlager
 Gezielte Untersuchungen konkreter Regressionen bleiben separat möglich. Frühere
 U01-/T01-Läufe sind Baselines ihrer tatsächlichen Commits, keine heutige Volltestpflicht.
 
+## Kontoeinstellungen · SYNC-UX-CLEANUP / #821
+
+Im vorhandenen Informationsprozess prüft sync_account_cases.gd die direkten
+Kontoaktionen, Sitzungswechsel, Codeanzeige und Fokus, Fehler beim lokalen
+Speichern, laufende Aktionen, veraltete Antworten und ungelösten Konfliktstatus.
+display_cases.gd prüft die zwei rahmenlosen Anzeigehilfen, ihre Trefferfläche
+und den Tooltip bei Fokus- und Skalenwechsel. Die Passwort-Hilfe wird im
+Kontofall geprüft.
+
+Der Pages-Prozess führt keinen Vergleichsfall oder Vergleichscheckpoint mehr.
+CATALOG_CASES, Producer und Reader verlangen die verbleibenden Checkpoints.
+Der Vergleichsbeleg wird nicht mehr erzeugt. Die Profil-, Journal-, Protokoll-
+und Schedulerprüfungen in native.core bleiben maßgeblich für gespeicherte
+Aufträge und Konfliktschutz. Windows- und Browser-Originale der neuen Bedienung
+gehören zum einmaligen
+[T02](https://github.com/venomenon328/picross/issues/821#issuecomment-7113818817).
+
 ## Adaptervorbereitung · #502 / P2-D-V01
 
 ZA-1 erhält eine eigene vollständige Kopie der gerade importierten synthetischen

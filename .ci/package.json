@@ -1,34 +1,43 @@
 {
   "format": "development-ci-plan/v1",
   "issue": "https://github.com/venomenon328/picross/issues/821",
-  "package": "SYNC-UX-FOLLOWUP",
+  "package": "SYNC-UX-CLEANUP",
   "modules": [
     "native.core",
-    "native.catalog",
-    "sync.server"
+    "native.catalog"
   ],
-  "purpose": "Kontozugang und Fehlerrückmeldung in den Einstellungen, Profilrückweg, Wiederherstellungscode und API-Grenze am gemeinsamen Produktstand prüfen.",
-  "omitted": "Kein native.history oder weitere native Gruppen, preflight, production.*, tools, delivery oder automatische Browser-Matrix. Die einmalige Windows-/Chromium-/Firefox-Bedienung mit kontrollierten Fehlern erfolgt als SYNC-UX-T02.",
+  "purpose": "Profil-, Journal- und Protokollschutz sowie Kontoaktionen, Rückmeldungen, Fokus und Einstellungshilfen am Produktstand prüfen.",
+  "omitted": "Kein sync.server, native.graphics, native.history, weitere native Gruppen, preflight, production.*, tools, delivery oder Browser-Vollmatrix. Der gezielte Readercheck und die einmalige Windows-/Chromium-/Firefox-Bedienung folgen T01 und T02.",
   "test_changes": [
-    {
-      "path": "game/tests/kat2_probe.gd",
-      "disposition": "change-scoped",
-      "reason": "Gezielte Settingsprobe im vorhandenen Informationsteil der nativen Kataloggruppe."
-    },
     {
       "path": "game/tests/sync_account_cases.gd",
       "disposition": "change-scoped",
-      "reason": "Sichtbarer Aktionsstatus, enge Settings, bestätigter Profilwechsel, Codelebensdauer und Fehler am tatsächlichen Controller. Die Bestätigungen für Gastimport und Fassungswahl melden Pflichtflush und laufenden Transport sichtbar (SYNC-UX-B01)."
+      "reason": "Sitzungsabhängige Formulare, Codeanzeige, Fehler, Fokus und ungelöster Konflikt im vorhandenen Produktprobeweg. Gastübernahme und manuelle Fassungswahl samt ausschließlich dafür ausgeführten Bestätigungsproben entfallen."
+    },
+    {
+      "path": "game/tests/display_cases.gd",
+      "disposition": "change-scoped",
+      "reason": "Zwei rahmenlose Anzeigehilfen und Tooltip bei Fokus- und Skalierungswechsel."
     },
     {
       "path": "game/tests/sync_comparison_cases.gd",
-      "disposition": "change-scoped",
-      "reason": "Vergleich und Entscheidungsorakel über den eingebetteten Kontobereich aufrufen."
+      "disposition": "remove",
+      "reason": "Der ausschließlich manuelle Konflikt-/Versionsvergleich entfällt."
     },
     {
-      "path": "server/save_sync/test_integration.py",
+      "path": "game/tests/kat2_probe.gd",
       "disposition": "change-scoped",
-      "reason": "Grenzen und Nebenwirkungsfreiheit an echten Auth-HTTP-Endpunkten mit PostgreSQL und gebundenem OpenAPI-Schema."
+      "reason": "Pages führt und meldet nur die verbleibenden Produktfälle."
+    },
+    {
+      "path": "tools/native_contract.py",
+      "disposition": "change-scoped",
+      "reason": "Verbleibende Pflichtcheckpoints im Pages-Inventar."
+    },
+    {
+      "path": "tools/kat2_product.py",
+      "disposition": "change-scoped",
+      "reason": "Katalogbelege ohne ausschließlich für den alten Vergleich vorgesehene Capture-Strecke."
     }
   ],
   "core_change": null,

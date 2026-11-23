@@ -266,14 +266,15 @@ in den aktuellen Monitorarbeitsbereich passt. Nicht passende Größen sind deakt
 Vollbild verwendet die aktuelle Desktopauflösung, zeigt diese lesbar an und erhält
 den letzten Fensterpreset für die Rückkehr. Die Windows-Desktopauflösung wird nicht geändert.
 
-Die Einstellungen zeigen zwei handgezeichnete Gruppen **Anzeige** und
-**Rätselansicht**, mittig auf der linken Buchseite. Feldname und Auswahl stehen
-nebeneinander. Nur **Fenstergröße** und **Rätselansicht** haben ein Fragezeichen,
-das beim Darüberfahren oder Tastaturfokus erklärt; die Fenstergrößenhilfe bleibt auch im Vollbild
+Die Einstellungen zeigen handgezeichnete Gruppen für **Anzeige**,
+**Rätselansicht** und **Spielerkonto** auf der linken Buchseite.
+Feldname und Auswahl stehen nebeneinander. Die rahmenlosen Fragezeichen bei
+**Fenstergröße** und **Rätselansicht** öffnen beim Darüberfahren oder per
+Tastaturfokus eine Erklärung. Die Fenstergrößenhilfe bleibt auch im Vollbild
 erreichbar. **UI-Skalierung** bietet **100 %** und **125 %** für die laufende Sitzung.
 Anzeigemodus und UI-Skalierung nutzen ohne Fragezeichen die volle Zeilenbreite.
 Die drei großen Seitentitel **Rätselkatalog**, **Hilfe** und **Einstellungen** sind
-offen schraffierte Graphit-Schriftzugbilder der freigegebenen V2-rev1-Familie; die beiden Einstellungsgruppen behalten ihre
+offen schraffierte Graphit-Schriftzugbilder der freigegebenen V2-rev1-Familie; die Einstellungsgruppen behalten ihre
 Bakso-Überschriften. Die Titel stehen fest über dem scrollbaren Inhalt.
 Der **Rückpfeil oben rechts** auf Einstellungen und Hilfe kehrt zum Besuchsursprung
 zurück. Tooltip und Zugänglichkeitsname erläutern das jeweilige Katalog-/Rätselziel.
@@ -307,6 +308,17 @@ Preset oder rahmenloses Vollbild. Unter 1280×720 erscheint die bestehende Minde
 zeigt mehr Raster oder ruhige Ränder; sie vergrößert die Arbeitszellen nicht automatisch.
 Die angebotenen Zoomstufen halten das gesamte Raster samt Rahmen innerhalb
 der tatsächlichen Fenster-/Hinweis-/UI-Grenzen.
+
+Unter **Spielerkonto** stehen **Anmelden**, **Registrieren** und
+**Passwort wiederherstellen** zur Auswahl. Die passende Eingabe öffnet sich
+erst mit der Auswahl. Angemeldet stehen **Abmelden** und **Neuen
+Wiederherstellungscode erzeugen** zur Verfügung. Das Fragezeichen am
+geöffneten Passwortfeld erklärt **Mindestens 8 Zeichen**. Ausgegebene
+Wiederherstellungscodes bleiben bis zum Schließen auswählbar und kopierbar.
+Gast- und Kontostände sind getrennt. Die Einstellungen zeigen lokale
+Speicherung, Übertragungsstatus und ungelöste Konflikte an. Eine manuelle
+Fassungsauswahl wird derzeit nicht angeboten. Details im
+[SYNC-Vertrag](../docs/game/SAVE_SYNC.md).
 
 ## Spielerhilfe im Buch
 

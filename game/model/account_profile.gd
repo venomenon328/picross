@@ -231,26 +231,6 @@ func clear_recent(id: String) -> bool:
 	_journal.release()
 	return ok
 
-func import_guest(session: Session) -> int:
-	var key := _store.key_for_definition(session.definition.id)
-	var candidate := Store.snapshot(session,session.view_state)
-	if key.is_empty() or not Store.validate(candidate,Definition.load_fixture(key)).is_empty() or not _begin(): return 0
-	var disk := _store.load_slot(session.definition)
-	var version := 0
-	if disk.status == "fresh" and not _state.revisions.has(session.definition.id) and _state.entries.values().all(func(e: Dictionary) -> bool: return e.id != session.definition.id):
-		version = _change_slot(key,{"id":session.definition.id,"operation":"snapshot","value":_store.slot_snapshot(session,session.view_state)},
-			func() -> String: return _store._write_slot(session,session.view_state))
-	elif disk.status in ["fresh","loaded"] and _state.local < Protocol.MAX_INTEGER:
-		# Keep the current local account save. The explicitly imported alternative
-		# is separate and competes against revision zero, even if a pull just ran.
-		var next := _state.duplicate(true)
-		version = int(next.local)+1
-		next.local = version
-		next.entries[str(version)] = {"id":session.definition.id,"operation":"snapshot","local":version,
-			"value":Protocol.progress(candidate),"status":"pending","base_server_revision":0,"parent_local":0,"imported":true}
-		if not _publish(next): version = 0
-	_journal.release()
-	return _confirm(version)
 
 func save(session: Session, view: Dictionary) -> int:
 	if _store == null: return 0
@@ -460,22 +440,6 @@ func _local_completed(actual: Dictionary, success: bool, expected: Dictionary) -
 func locally_confirmed(version: int) -> bool:
 	return _blocked.is_empty() and _durable.get(str(version),false)
 
-func select_recovery(id: String, base: int, remote: bool) -> bool:
-	if not Protocol.count(base) or not _begin(): return false
-	var next := _state.duplicate(true)
-	var selected := false
-	for key: String in next.entries.keys():
-		var entry: Dictionary = next.entries[key]
-		if entry.id == id and entry.status == "recovery_choice":
-			if remote: next.entries.erase(key)
-			else:
-				entry.status = "pending"
-				entry.base_server_revision = base
-			selected = true
-	var ok := selected and _publish(next)
-	_journal.release()
-	if ok: _confirm_stage("selection",int(next.local))
-	return ok
 
 func decision(id: String, operation: String, value: Variant, basis: int = -1) -> int:
 	if not operation in ["discard","resolve","restore"] or not _begin(): return 0
