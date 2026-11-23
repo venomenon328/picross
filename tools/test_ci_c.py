@@ -315,7 +315,7 @@ class NativeGate(unittest.TestCase):
             if name not in ('current-resource-hashes','verified-toolchain-assets','current-atlas-resources'):
                 log=self.root/'core/logs'/(name+'.log');log.parent.mkdir(parents=True,exist_ok=True)
                 log.write_bytes(selected_log().encode() if name == 'current-drawing-tests' else
-                                b'SYNC_B1_CORE_OK\n' if name == 'tests' else b'synthetic process output')
+                                b'SYNC_PROGRESS_CORE_OK\n' if name == 'tests' else b'synthetic process output')
                 report['checks'][-1]['log']=dict(file=log.name,retained_bytes=log.stat().st_size,
                     original_bytes=log.stat().st_size,abbreviated=False,sha256=digest(log))
         report['isolation']=dict(workspace='/tmp/core',project='/tmp/core/game',output='/tmp/output/core',

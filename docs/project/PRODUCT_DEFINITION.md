@@ -211,7 +211,8 @@ Das vollständige Solo-Spiel funktioniert offline, einschließlich Fortschritt u
 Optionale Spielerkonten und gemeinsame Spielstände zwischen Web und mehreren
 Windowsgeräten sind als [SYNC-Spezifikation](../game/SAVE_SYNC.md) freigegeben.
 Ohne Konto bleibt die bisherige lokale Speicherung getrennt. Ein Kontoprofil
-arbeitet ebenfalls offline und synchronisiert vollständige Spielstände später;
+arbeitet ebenfalls offline und überträgt später gebündelt den Rätselfortschritt.
+Undo-/Redo-Verlauf, Farbe und Ansicht bleiben auf dem Gerät;
 Gastübernahme, Konfliktentscheidung und Wiederherstellung sind ausdrücklich.
 Der eigenständige [Konto-/Speicherdienst](../../server/save_sync/README.md) ist implementiert.
 Clientanbindung und Livebetrieb folgen in gesonderten Paketen. Wertung, Ranglisten

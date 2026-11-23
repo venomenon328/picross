@@ -83,7 +83,7 @@ Der manuelle Einstieg in Package CI erlaubt die ausdrücklich angegebenen Module
 `sync.server` baut das wirkliche Serviceimage aus einem abgegrenzten Serverkontext,
 startet eine isolierte Compose-/PostgreSQL-Umgebung und prüft die HTTP-Grenze mit
 synthetischen Konten: Authentifizierung/Mandantentrennung, Einladung/Recovery,
-Save-/Historyvalidierung, echte konkurrierende Schreiber, Antwortverlust und
+geschlossene Fortschrittsstruktur, echte konkurrierende Schreiber, Antwortverlust und
 Sequenzwiederholung, Reset, Konfliktentscheidung, Kontingente, Neustart sowie
 echtes Backup/Restore in einer zweiten leeren Datenbank einschließlich sicherem
 Abgleich nach Restore. SQLite oder ausschließlich interne Funktionsaufrufe

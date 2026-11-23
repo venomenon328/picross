@@ -17,7 +17,7 @@ def connect():
 
 
 def instance(db):
-    row = db.execute("SELECT generation, cursor_key FROM instance WHERE singleton AND version=1").fetchone()
+    row = db.execute("SELECT generation, cursor_key FROM instance WHERE singleton AND version=2").fetchone()
     if not row:
         raise Failure(503, "unavailable")
     return row

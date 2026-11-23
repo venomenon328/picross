@@ -310,6 +310,7 @@ maßgebliche lokale Save-/Recoveryvertrag; der bisherige kontolose Speicherroot,
 Schema 1 und vollständige Validierung ändern sich dadurch nicht. Der native
 B1-Profilkern bindet eigene Saves, Fortsetzen-Merker und Syncmetadaten an den
 ausdrücklich geöffneten Kontext. Die reguläre Anwendung startet im Gastprofil.
+Der Syncstand projiziert daraus ausschließlich Identität, Revision, Dimensionen, Zellen, `undo_used` und `completed`. History, Cursor, Werkzeug, Farbe und Ansicht werden lokal gespeichert.
 Serverrevision/Resetmarker liegen außerhalb des Schema-1-Snapshots. Ein
 Serverempfang ersetzt keine vollständige Validierung vor Anwendung im Spiel.
 

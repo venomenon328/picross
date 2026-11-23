@@ -78,7 +78,7 @@ static func run(t: SceneTree) -> void:
 	t.check(reopened.open(host,ACCOUNT,DEVICE,EPOCH),"B1 native journal opens")
 	request = reopened.prepare(n2,1)
 	if request.is_empty(): return
-	t.check(reopened.receive(request,EPOCH,409,reply(request,"conflict_saved",2,OTHER)) and reopened.status().entries["2"].value == JSON.parse_string(JSON.stringify(Store.snapshot(session,session.view_state))),"B1 candidate receipt preserves redo snapshot")
+	t.check(reopened.receive(request,EPOCH,409,reply(request,"conflict_saved",2,OTHER)) and reopened.status().entries["2"].value == JSON.parse_string(JSON.stringify(Protocol.progress(Store.snapshot(session,session.view_state)))),"B1 candidate receipt preserves progress")
 	for operation: String in ["resolve","discard","restore"]:
 		var value: Variant = 1 if operation == "restore" else OTHER
 		var version := reopened.decision(session.definition.id,operation,value)
@@ -99,13 +99,52 @@ static func run(t: SceneTree) -> void:
 	t.check(FileAccess.get_sha256(b._journal.path) == b_hash and FileAccess.get_sha256(c._journal.path) == c_hash,"B1 foreign profile bytes unchanged")
 	t.check(c.observe_generation(OTHER) == false and not Profile.new().open(HOST+"/other",ACCOUNT,DEVICE,EPOCH),"B1 restore generation persists reconciliation")
 	if not filesystem_cases(t,b,session): return
-	if not interruption(t,session): return
+	if not interruption(t,session) or not progress_cases(t,session): return
 	for code: String in ["sequence_reused","sequence_stale","sequence_gap","storage_limit","history_missing","candidate_missing","revision_conflict","conflict_limit"]:
 		var rejected := reply(request,code,3)
 		t.check(Protocol.valid_reply(request,409,rejected),"B1 closed reply " + code)
 		rejected.sequence_consumed = not rejected.sequence_consumed
 		t.check(not Protocol.valid_reply(request,409,rejected),"B1 inconsistent consumption " + code)
-	if t.failures == start: print("SYNC_B1_CORE_OK")
+	if t.failures == start: print("SYNC_PROGRESS_CORE_OK")
+
+static func progress_cases(t: SceneTree, session: Session) -> bool:
+	var p := Profile.new()
+	var host := HOST + "/progress"
+	if not p.open(host,ACCOUNT,DEVICE,EPOCH,true): return false
+	var view := session.view_state.duplicate(true)
+	var first := p.save(session,view)
+	var req := p.prepare(first,0)
+	if req.is_empty(): return false
+	var progress: Dictionary = JSON.parse_string(req.body).save
+	t.check(Protocol.valid_progress(progress,session.definition.id), "progress-only request")
+	view.overview = not view.overview
+	var second := p.save(session,view)
+	t.check(second == first+1 and p.locally_confirmed(second) and p.status().entries.size() == 1 and p.resume_request() == req,"view saved with pending request untouched")
+	if not p.receive(req,EPOCH,200,reply(req,"ok",1)): return false
+	view.overview = not view.overview
+	var third := p.save(session,view)
+	var restarted := Profile.new()
+	if not restarted.open(host,ACCOUNT,DEVICE,EPOCH): return false
+	t.check(restarted.locally_confirmed(third) and restarted.status().entries.is_empty() and restarted.prepare(third,1).is_empty(),"confirmed progress needs no second upload")
+	# Construct an original v1 request in its checksummed journal envelope.
+	var image := restarted.status()
+	image.erase("slots")
+	image.request = req.duplicate(true)
+	var body: Dictionary = JSON.parse_string(req.body)
+	body.save = Store.snapshot(session,view)
+	image.request.body = JSON.stringify(body," ",false,true)
+	image.local = first
+	image.entries[str(first)] = {"id":session.definition.id,"local":first,"operation":"snapshot","value":body.save,"status":"pending"}
+	image.receipt = {}
+	image.sequence = 0
+	image.revisions = {}
+	var payload := JSON.stringify(image,"",true,true)
+	var raw := JSON.stringify({"format":"picross-local-sync/v1","payload":payload,"sha256":payload.sha256_text()})+"\n"
+	write(p._journal.path,raw)
+	var legacy := Profile.new()
+	t.check(not legacy.open(host,ACCOUNT,DEVICE,EPOCH) and legacy.resume_request().is_empty() and legacy.reconciliation().state.request.body == image.request.body and FileAccess.get_file_as_string(p._journal.path) == raw,"v1 original bytes and sequence retained for reconciliation")
+	print("SYNC_PROGRESS_WINDOWS_CASES local=%d sync_entries=0 legacy_sha256=%s" % [third,raw.sha256_text()])
+	return true
 
 static func filesystem_cases(t: SceneTree, p: Profile, session: Session) -> bool:
 	var key := p._store.key_for_definition(session.definition.id)
@@ -149,6 +188,14 @@ static func interruption(t: SceneTree, session: Session) -> bool:
 	fault.digest = profile._journal.digest
 	profile._journal = fault
 	t.check(profile.save(session,session.view_state) == 0 and not profile.locally_confirmed(1),"B1 interruption after slot, before journal commit reports no success")
+	var key := profile._store.key_for_definition(session.definition.id)
+	var primary := profile._store.path_for(key)
+	var original := FileAccess.get_file_as_string(primary)
+	var different: Dictionary = JSON.parse_string(original)
+	different.view.overview = not different.view.overview
+	write(primary,JSON.stringify(different))
+	t.check(not Profile.new().open(host,ACCOUNT,DEVICE,EPOCH),"recovery rejects another local view with identical progress")
+	write(primary,original)
 	var recovered := Profile.new()
 	if not recovered.open(host,ACCOUNT,DEVICE,EPOCH): return false
 	t.check(recovered.locally_confirmed(1) and recovered.load_slot(session.definition).status == "loaded" and not recovered.prepare(1,0).is_empty(),"B1 rebuild pending generation from actual primary and intent")

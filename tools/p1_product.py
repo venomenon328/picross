@@ -489,7 +489,7 @@ def main(argv: list[str] | None = None) -> int:
                         result["expected_failure"] = True
                     else:
                         require_clean_output(result, marker)
-                        if name == 'tests' and result['output'].splitlines().count('SYNC_B1_CORE_OK') != 1:
+                        if name == 'tests' and result['output'].splitlines().count('SYNC_PROGRESS_CORE_OK') != 1:
                             raise toolchain.PreflightError('Missing account profile/queue cases')
                         if name == 'current-drawing-tests':
                             from zs2_evidence import validate_log
