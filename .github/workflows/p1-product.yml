@@ -13,7 +13,7 @@ jobs:
           persist-credentials: false
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
-          ref: 295e77868225dd4161f33707386ca906d4c06b25
+          ref: 441e87139aec7fc9b3b12b3f970757788d59c4ce
           path: product
           persist-credentials: false
       - name: Windows native profile, replacement, restart and separate reader
@@ -24,10 +24,10 @@ jobs:
         run: |
           python -m pip install --only-binary=:all: -r tools/puzzle_production/requirements-image.txt
           if ($LASTEXITCODE) { exit $LASTEXITCODE }
-          python ../proof/tools/sync_b1_a01.py 295e77868225dd4161f33707386ca906d4c06b25
+          python ../proof/tools/sync_b1_a01.py 441e87139aec7fc9b3b12b3f970757788d59c4ce
       - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
         with:
-          name: sync-b1-a01-295e77868225dd4161f33707386ca906d4c06b25
+          name: sync-b1-a01-441e87139aec7fc9b3b12b3f970757788d59c4ce
           path: ${{ runner.temp }}/sync-b1-a01-windows.zip
           if-no-files-found: error
           retention-days: 7
