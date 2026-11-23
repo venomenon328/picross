@@ -19,7 +19,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     timeout-minutes: 50
     env:
-      PRODUCT: b90189b86c4643ac27cafa0d81b6e58d0ad5d3f6
+      PRODUCT: f3e59c7c91955a708dab1dfcb00fa4dd19e77887
       LIBGL_ALWAYS_SOFTWARE: '1'
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
@@ -100,7 +100,7 @@ jobs:
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
-          ref: b90189b86c4643ac27cafa0d81b6e58d0ad5d3f6
+          ref: f3e59c7c91955a708dab1dfcb00fa4dd19e77887
           fetch-depth: 2
           persist-credentials: false
       - uses: actions/cache/restore@0057852bfaa89a56745cba8c7296529d2fc39830
@@ -114,7 +114,7 @@ jobs:
       - name: Run original native catalog oracle
         env:
           P1_BASE_COMMIT: a18533701f71e217854a1c9d3bd8c09ecf094565
-          P1_PREFLIGHT_SOURCE_COMMIT: b90189b86c4643ac27cafa0d81b6e58d0ad5d3f6
+          P1_PREFLIGHT_SOURCE_COMMIT: f3e59c7c91955a708dab1dfcb00fa4dd19e77887
           GITHUB_TOKEN: ${{ github.token }}
         run: python tools/p1_product.py --native-group catalog --cache-dir "$RUNNER_TEMP/p1-toolchain-cache" --output-dir "$RUNNER_TEMP/catalog-report"
       - if: always()

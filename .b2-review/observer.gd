@@ -63,6 +63,10 @@ func _process(delta: float) -> void:
 		st.name_length = dlg.username.text.length()
 		st.password_length = dlg.password.text.length()
 	st.release_barrier = book.release_barrier
+	st.transport = app.accounts.transport_busy
+	st.changing = app.accounts.changing
+	st.http_nodes = app.accounts.transport.get_child_count()
+	st.active_device_sequence = app.accounts.profile._state.get("sequence") if app.accounts.profile else null
 	var raw := JSON.stringify(st)
 	if raw == last: return
 	last = raw

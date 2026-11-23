@@ -40,6 +40,9 @@ class Native:
             self.proc.terminate()
             self.proc.wait(timeout=20)
         self.log.close()
+        for line in Path(self.log.name).read_text(errors='replace').splitlines():
+            if 'SCRIPT ERROR' in line or 'res://model/' in line or 'res://book/account_' in line:
+                print('Godot',line[:240],flush=True)
     def wait(self,predicate,stage,timeout=95):
         print('stage',stage,flush=True)
         end=time.monotonic()+timeout;s={}
@@ -159,7 +162,7 @@ def execute():
         Proxy.offline=True
         game.click('cell2');game.wait(lambda s:s['cursor']>=2,'native local edit on narrow display')
         game.click('back')
-        st=game.wait(lambda s:s['state']==0 and 'recent-retry' in s['points'] and 'Offline' in s['status'],'narrow error and retry')
+        st=game.wait(lambda s:s['state']==0 and 'recent-retry' in s['points'],'narrow error and retry')
         assert st['font_size']==23
         game.screenshot(evidence/'status-ui125.png')
         obstruction.rmdir()

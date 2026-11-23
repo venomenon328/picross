@@ -136,6 +136,11 @@ def execute(kind):
             p=ctx.pages[0]
             p.set_default_timeout(60000)
             p.on('pageerror',lambda e: print('pageerror',str(e)[:180],flush=True))
+            def diagnostic(m):
+                line=m.text
+                if 'SCRIPT ERROR' in line or 'res://model/' in line or 'res://book/account_' in line:
+                    print('Godot',line[:240],flush=True)
+            p.on('console',diagnostic)
             p.goto('http://127.0.0.1:18212')
             return ctx,p
         ctx,page=launch()
