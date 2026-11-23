@@ -14,6 +14,7 @@ func _process(delta: float) -> void:
 	var points := {}
 	point(points,"settings",app.album.settings_button)
 	point(points,"retry",app.account_retry)
+	point(points,"recent-retry",app.recent_retry)
 	point(points,"help",app.album.help_button)
 	point(points,"back",app.album_button)
 	point(points,"undo",app.undo_button)
@@ -58,6 +59,10 @@ func _process(delta: float) -> void:
 		if FileAccess.file_exists(request):
 			get_viewport().get_texture().get_image().save_png(request.trim_suffix(".request"))
 			DirAccess.remove_absolute(request)
+	if dlg.visible:
+		st.name_length = dlg.username.text.length()
+		st.password_length = dlg.password.text.length()
+	st.release_barrier = book.release_barrier
 	var raw := JSON.stringify(st)
 	if raw == last: return
 	last = raw

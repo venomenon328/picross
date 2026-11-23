@@ -90,12 +90,23 @@ def locate_manage(page):
             page.mouse.wheel(0,520)
             page.wait_for_timeout(160)
     click(page,'manage')
+def type_field(page,value,field):
+    page.keyboard.press('Control+a');page.keyboard.press('Backspace')
+    wait(page,lambda s:s.get(field)==0,'field cleared')
+    for i,ch in enumerate(value):
+        for attempt in range(3):
+            page.keyboard.press(ch)
+            try:
+                page.wait_for_function('(p)=>window.b2Observation[p[0]]===p[1]',arg=[field,i+1],timeout=3000)
+                break
+            except Exception:
+                if attempt==2 or observe(page).get(field)!=i:raise
 def login(page,client):
     locate_manage(page)
     click(page,'username')
-    page.keyboard.type(client.name,delay=10)
+    type_field(page,client.name,'name_length')
     click(page,'password')
-    page.keyboard.type(client.password,delay=10)
+    type_field(page,client.password,'password_length')
     click(page,'Anmelden')
     return wait(page,lambda s:s['profile'] and s['ready'] and s['confirmed'],'normal login',140)
 def execute(kind):
@@ -108,6 +119,7 @@ def execute(kind):
         stack.callback(proj.down)
         proj.up('--build')
         client=Client(proj,'konto'+run+'x'*17)
+        client.password=secrets.token_hex(20)
         client.register()
         Proxy.port=proj.port
         serve(stack,18211,Proxy)

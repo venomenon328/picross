@@ -12,6 +12,11 @@ class Native:
         self.obs=profile/'observed.json';self.obs.unlink(missing_ok=True)
         env=dict(os.environ,APPDATA=str(profile/'roaming'),LOCALAPPDATA=str(profile/'local'),TMP=str(profile/'temp'),TEMP=str(profile/'temp'),B2_OBSERVATION=str(self.obs))
         for k in ['APPDATA','LOCALAPPDATA','TEMP']:Path(env[k]).mkdir(parents=True,exist_ok=True)
+        # Isolated display-only preference; account/save data start empty.
+        pref=Path(env['APPDATA'])/'Godot/app_userdata/picross · P1/p1/display-preference.json'
+        pref.parent.mkdir(parents=True,exist_ok=True)
+        if not pref.exists():
+            pref.write_text(json.dumps(dict(format='picross-display-preference-v1',mode='borderless',preset='1920x1080')),encoding='utf8')
         self.log=(evidence.parent/(profile.name+'-diag.log')).open('ab')
         self.proc=subprocess.Popen([str(out/'picross.exe'),'--windowed','--resolution','1920x1080','--rendering-driver','opengl3','--audio-driver','Dummy'],cwd=out,env=env,stdout=self.log,stderr=self.log)
         stack.callback(self.close)
@@ -97,7 +102,6 @@ def execute():
         client=Client(proj,'konto'+run+'x'*17);client.password=secrets.token_hex(20);client.register()
         game=Native(stack,evidence,folder)
         game.wait(lambda s:'size' in s,'first frame')
-        game.resize(1920,1080)
         st=game.wait(lambda s:s['ids'] and s['status']=='Gast','guest')
         assert not Proxy.trace
         target=st['ids'][0];seed(client,target)
@@ -107,9 +111,10 @@ def execute():
         game.click('password');game.type(client.password);game.click('Anmelden')
         st=game.wait(lambda s:s['profile'] and s['confirmed'] and s['ready'],'normal login',120)
         assert st['font_size']==18
+        (evidence/'platform.json').write_text(json.dumps({'head':subprocess.check_output(['git','rev-parse','HEAD'],cwd=root,text=True).strip(),'engine':'4.7.2.stable.official.ed1daf0bf','size_ui100':st['size'],'ui':st['scale']}))
         game.screenshot(evidence/'status-ui100.png')
         game.click('puzzle/'+target)
-        game.wait(lambda s:s['state']==3 and s['baseline'][:1]==[0] and 'cell1' in s['points'] and not s['locked'],'basis')
+        game.wait(lambda s:s['state']==3 and s['baseline'][:1]==[0] and 'cell1' in s['points'] and not s['locked'] and not s['release_barrier'],'basis')
         time.sleep(1.6)
         Proxy.offline=True
         game.click('cell1');game.wait(lambda s:s['cursor']==1 and s['confirmed'],'offline edit')
@@ -120,7 +125,10 @@ def execute():
         mutations=[r for r in Proxy.trace if 'receipt' in r]
         assert len(mutations)==2 and mutations[0].get('lost') and mutations[0]['body']==mutations[1]['body']
         assert client.get('puzzles/'+target)['server_revision']==2
-        game.close();game=Native(stack,evidence,folder)
+        game.close()
+        preference=next((folder/'roaming').rglob('display-preference.json'))
+        preference.write_text(json.dumps(dict(format='picross-display-preference-v1',mode='window',preset='1280x720')),encoding='utf8')
+        game=Native(stack,evidence,folder)
         game.wait(lambda s:s['profile'] and s['confirmed'] and s['ready'],'persisted account',120)
         game.click('puzzle/'+target)
         game.wait(lambda s:s['state']==3 and s['cursor']==1 and s['cells'][0]==0,'restart')
@@ -132,5 +140,28 @@ def execute():
         savefiles=list((account[0].parent/'saves').glob('*.json'));assert len(savefiles)==1
         shutil.copyfile(savefiles[0],evidence/'account-save.json')
         (evidence/'http.json').write_text(json.dumps(Proxy.trace,indent=2))
+        game.click('back');game.wait(lambda s:s['state']==0,'catalog for scaling')
+        game.click('settings');game.click('scale');game.click('scale125')
+        game.wait(lambda s:s['scale']==1.25,'UI125')
+        game.click('info-back')
+        # A real failing temporary marker path exercises the existing catalog retry.
+        obstruction=account[0].parent/'recent-puzzle.json.tmp'
+        assert not obstruction.exists()
+        obstruction.mkdir()
+        game.click('puzzle/'+target)
+        game.wait(lambda s:s['state']==3 and 'cell2' in s['points'] and not s['release_barrier'],'work with marker fault')
+        Proxy.offline=True
+        game.click('cell2');game.wait(lambda s:s['cursor']>=2,'native local edit on narrow display')
+        game.click('back')
+        st=game.wait(lambda s:s['state']==0 and 'recent-retry' in s['points'] and 'Offline' in s['status'],'narrow error and retry')
+        assert st['font_size']==23
+        game.screenshot(evidence/'status-ui125.png')
+        obstruction.rmdir()
+        game.click('recent-retry');game.wait(lambda s:'recent-retry' not in s['points'],'actual marker retry')
+        platform_file=evidence/'platform.json'
+        meta=json.loads(platform_file.read_bytes());meta['size_ui125']=st['size']
+        meta['observed']=['login','HTTP PostgreSQL','offline edit','lost applied response','identical retry','restart','undo to basis','redo','retry after I/O fault']
+        platform_file.write_text(json.dumps(meta))
+        assert meta['size_ui100']==[1920,1080] and meta['size_ui125']==[1280,720],meta
         print('PASS Windows',evidence.name)
 if __name__=='__main__':execute()
