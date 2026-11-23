@@ -1,29 +1,20 @@
 {
   "format": "development-ci-plan/v1",
-  "issue": "https://github.com/venomenon328/picross/issues/816",
-  "package": "KORRIDOR-TOOL-B",
-  "modules": [
-    "tools",
-    "production.adapter",
-    "production.images"
-  ],
-  "purpose": "PW-Reader, HTTP-Projektion, Node-Auftragslogik, Builder/RI-ONE und den Leerbeschnitt mit synthetischen Quellen prüfen. Kern und regulärer Windows-Spielerbau gemäß Diff. Einmalige echte PW-Loopback-Bedienprüfung B-A01 für B-R01, ohne dauerhaften Browserkorpus.",
-  "omitted": "Kein native.*, preflight, delivery oder separater Chromium-Matrixlauf. Spielinteraktion, Live-Windows-App-Rollout und echte Rätseldaten liegen außerhalb des Pakets.",
+  "issue": "https://github.com/venomenon328/picross/issues/838",
+  "package": "PW-PARAM-A",
+  "modules": ["tools"],
+  "purpose": "Motivwahl, verständliche Parameteralternativen, kompakten Auftrag, Quellbindung und identischen CMD-Fallback in den bestehenden Werkzeugtests prüfen. Werkzeugcode erfordert den regulären Windows-Spielerbau. Die einmalige PW-Loopback-Browserbedienprobe A-A01 bleibt bis A-R01 nachvollziehbar.",
+  "omitted": "Keine production.*, native.*, preflight, delivery oder allgemeine Chromiumdiagnose. Fachprüfer, Bild- und Rastererzeugung sowie Spielinteraktion liegen außerhalb des Diffs. Keine Live-WIP-Änderungen, kein tatsächlicher Windows-Spielstart oder Installer-Rollout.",
   "test_changes": [
-    {
-      "path": "tests/puzzle_production/test_current_authoring.py",
-      "disposition": "change-scoped",
-      "reason": "Diagnoseoriginale und Kandidatenisolierung, ausdrückliche Neufreigabe, separate technische Frame-Entscheidung bis RI-ONE und harte Gegenproben."
-    },
-    {
-      "path": "tests/puzzle_production/test_fixed_raster.py",
-      "disposition": "change-scoped",
-      "reason": "Gemeinsamer Leerbeschnittprüfer, unverändert hartes Endmaßgate."
-    },
     {
       "path": "tools/test_production_workspace.py",
       "disposition": "change-scoped",
-      "reason": "Kombinierter Kopierauftrag, Kandidatenauswahl und veraltete Bindungen am echten Promptgenerator."
+      "reason": "Synthetische Motivstände und Auftragsregressionen für Anzahl, vollständige Auswahl und Quellbindung im gewählten tools-Modul."
+    },
+    {
+      "path": "tools/production_workspace/check_ui_loading.cjs",
+      "disposition": "change-scoped",
+      "reason": "Bestehende DOM-Nachbildung für lesbare Grenzen, Kopierdaten und Übernahme eines umsortierten Angebots erweitern. A-A01 wird separat im echten Browser ausgeführt. Temporäre Browserproben enden mit A-R01."
     }
   ],
   "core_change": null,

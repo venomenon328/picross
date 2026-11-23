@@ -19,9 +19,21 @@ class Element {
 }
 const elements = new Map();
 const stored = new Map();
+let copied;
 const document = {
   documentElement: new Element('html'),
-  getElementById(id) { if (!elements.has(id)) elements.set(id, new Element(id)); return elements.get(id); },
+  getElementById(id) {
+    const view=elements.get('view');
+    const match=view&&descendants(view).find(el=>el.id===id);
+    if(match)return match;
+    if (!elements.has(id)) elements.set(id, new Element(id));
+    return elements.get(id);
+  },
+  querySelectorAll(selector) {
+    const [,tag,attribute]=selector.match(/^(\w*)\[data-([\w-]+)\]$/);
+    const key=attribute.replace(/-([a-z])/g,(_,letter)=>letter.toUpperCase());
+    return descendants(this.getElementById('view')).filter(el=>(!tag||el.tag===tag)&&Object.hasOwn(el.dataset,key));
+  },
   createElement: tag => new Element(tag)
 };
 const descendants = el => [el, ...el.children.flatMap(descendants)];
@@ -39,6 +51,7 @@ const context = vm.createContext({
   document, location: {hash: '#' + token, pathname: '/'}, history: {replaceState(){}},
   sessionStorage: {setItem(){}, getItem(){}},
   localStorage: {setItem(key,value){stored.set(key,value);}, getItem(key){return stored.get(key);}},
+  navigator: {clipboard:{async writeText(value){copied=value;}}},
   AbortController, setTimeout, clearTimeout,
   crypto: require('node:crypto').webcrypto,
   URL: {createObjectURL() { return 'blob:test-' + hashes.length; }, revokeObjectURL(){}},
@@ -77,6 +90,100 @@ const run = code => vm.runInContext(code, context);
   // Pointerless synthetic legacy inputs now require a deliberate version choice.
   if(mode==='published')await run('open(listing.jobs.find(j=>j.revision==="r01").id)');
   else if(run('detail===null'))await run('open(listing.jobs[0].id)');
+  if(mode==='parameters'){
+    const get=id=>document.getElementById(id);
+    const fields=()=>descendants(get('view'));
+    const selector=()=>fields().find(el=>el.tag==='label'&&el.textContent==='Parameteralternative')?.children[0];
+    const chooseMotif=()=>fields().find(el=>el.dataset.choice==='motif-a');
+    const ready=()=>until(()=>chooseMotif()?.disabled===false);
+    const prompt=()=>get('orderText').value;
+    const words=el=>descendants(el).map(child=>child.textContent||'').join('\n');
+    async function search(){
+      await get('refresh').onclick();
+      await until(()=>get('load').hidden===false);
+    }
+    const adopt=()=>get('load').onclick();
+    await ready();
+    assert.equal(selector(),undefined,'one option with two imports has no select');
+    assert.match(get('orderStatus').textContent,/Motivvorlage wählen/);
+    const record=run('JSON.stringify(detail.facts.originals.record)');
+    chooseMotif().onclick();
+    assert.equal(run('intent.parameter'),undefined);
+    await get('copyOrder').onclick();
+    assert.equal(copied,prompt());
+    assert.match(copied,/blob\/[a-f0-9]{40}\/content\/authoring\/pz-current\/current\/record\.json/);
+    assert.match(copied,/Motivvorlage motif-a und den einzigen vollständigen Vorschlag.*Eintrag 1/);
+    assert.doesNotMatch(copied,/actual_crop|protected_features|\bimports\b/);
+    assert.equal(run('JSON.stringify(detail.facts.originals.record)'),record);
+    const original=get('technicalDetails');
+    assert(!original.open);
+    await descendants(original).find(el=>el.textContent==='Übergabedaten kopieren').onclick();
+    assert.equal(JSON.parse(copied).facts.originals.record.parameters.proposed[0].imports.length,2);
+    assert.match(words(get('view')),/Breite: ungefähr 20 Zellen · Untergrenze: 18 · Obergrenze: 21/);
+    assert.match(words(get('view')),/Erlaubte Beschnittseiten: links, rechts/);
+    const mode=get('nextActionMode');
+    mode.value='rework';mode.onchange();
+    const correction=get('correctionBase');correction.value='motif-a';correction.onchange();
+    const feedback=get('correctionFeedback');feedback.value='Kontur {A} ergänzen';feedback.oninput();
+    assert.match(prompt(),/Kontur \{A\} ergänzen/);
+    assert.doesNotMatch(prompt(),/gebe Motivvorlage/);
+    mode.value='resume';mode.onchange();
+    assert.match(prompt(),/wieder aufnehmen/);
+    assert.doesNotMatch(prompt(),/gebe Motivvorlage/);
+    mode.value='continue';mode.onchange();
+    assert.equal(get('copyOrder').disabled,true,'a correction basis is never a motif approval');
+    chooseMotif().onclick();
+    await search();
+    assert.match(prompt(),/einzigen vollständigen Vorschlag/);
+    adopt();
+    await ready();
+    assert.equal(run('intent.selection'),undefined);
+    assert.equal(get('copyOrder').disabled,true);
+    chooseMotif().onclick();
+    assert.equal(get('copyOrder').disabled,true,'multiple options require deliberate choice');
+    const select=selector();
+    assert.equal(select.children[0].value,'');
+    assert.match(select.children[1].textContent,/Alternative 1.*Breite ungefähr 20/);
+    assert.match(select.children[2].textContent,/Alternative 2.*Breite exakt 19/);
+    function selectOption(index){
+      select.value=String(index);select.onchange();
+      return words(fields().find(el=>el.children.some(child=>child.children.includes(select))).children[1]);
+    }
+    const first=selectOption(0);
+    assert.match(first,/Höhe: offen · Untergrenze: 18 · Obergrenze: 26/);
+    assert.match(first,/Erlaubte Beschnittseiten: links, rechts/);
+    assert.match(first,/Kontur A/);
+    assert.doesNotMatch(first,/Silhouette B/);
+    const second=selectOption(1);
+    assert.match(second,/Vordergrundfarben: offen · Untergrenze: 2 · Obergrenze: 3/);
+    assert.match(second,/Erlaubte Beschnittseiten: keine/);
+    assert.match(second,/Silhouette B/);
+    assert.doesNotMatch(second,/Kontur A/);
+    assert.match(prompt(),/ausdrücklich gewählte Alternative.*Eintrag 2/);
+    const oldPrompt=prompt();
+    await search();
+    assert.equal(prompt(),oldPrompt,'passive search keeps choice and fixed source');
+    holdDetail=true;releaseDetail=null;
+    const stale=run('open(active.id)');
+    await until(()=>releaseDetail!==null);
+    adopt();
+    await ready();
+    releaseDetail();await stale;
+    assert.notEqual(run('detail.commit'),oldPrompt.match(/blob\/([a-f0-9]{40})/)[1]);
+    assert.equal(run('intent.selection'),undefined);
+    assert.equal(run('intent.parameter'),undefined);
+    assert.equal(get('copyOrder').disabled,true);
+    assert.match(selector().children[1].textContent,/Alternative 1.*Breite exakt 19/);
+    chooseMotif().onclick();
+    assert.equal(get('copyOrder').disabled,true,'reordering never transfers old parameter choice');
+    await search();adopt();await ready();
+    chooseMotif().onclick();
+    assert.equal(selector(),undefined);
+    assert.equal(get('copyOrder').disabled,true);
+    assert.match(get('orderStatus').textContent,/fehlt ein vollständiger Parametervorschlag/);
+    run('dispose()');
+    return;
+  }
   if(mode==='removal'){
     await until(()=>run('detail!==null'));
     const target=run('listing.jobs.find(j=>j.source==="remote"&&j.ref==="content/pw/pz-workspace-test")');
