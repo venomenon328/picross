@@ -8,6 +8,7 @@ const WebStorage = preload("res://model/web_storage.gd")
 const SaveRevision = preload("res://model/save_revision.gd")
 const ZOOMS: Array[int] = [12, 14, 16, 18, 20, 22, 24, 26, 28, 30, 32, 34, 36, 40, 44, 48, 54, 60, 66, 72]
 static var test_root_override: String = ""
+var profile_recent_path: String = ""
 var root: String
 var fail_step: String = "" # Deterministic filesystem interruption hook for isolated tests.
 
@@ -246,7 +247,7 @@ func _write_slot(session: Session, view: Dictionary) -> String:
 	var file: FileAccess = FileAccess.open(temp_path, FileAccess.WRITE)
 	if file == null:
 		return "Temporäre Datei nicht schreibbar."
-	file.store_string(JSON.stringify(candidate) + "\n")
+	file.store_string(JSON.stringify(candidate, "", true, not profile_recent_path.is_empty()) + "\n")
 	file.flush()
 	var write_error: Error = file.get_error()
 	file.close()
@@ -304,7 +305,7 @@ func _repair_from_backup(definition: Dictionary) -> String:
 	var file: FileAccess = FileAccess.open(temp_path, FileAccess.WRITE)
 	if file == null:
 		return "Wiederherstellungsdatei nicht schreibbar."
-	file.store_string(JSON.stringify(backup.data) + "\n")
+	file.store_string(JSON.stringify(backup.data, "", true, not profile_recent_path.is_empty()) + "\n")
 	file.flush()
 	var write_error: Error = file.get_error()
 	file.close()

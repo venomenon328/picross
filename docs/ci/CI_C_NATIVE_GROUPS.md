@@ -345,7 +345,12 @@ Navigation ohne Historymutation, Zustand/Ansicht/Undo-Merkmal nach Save/Neustart
 echter Redo und fremde Slotbytes. Das unabhängige Python-Orakel importiert keine
 produktive Historylogik und liest Plan, Trace, beide Saves, Fremdslot-Hashes und
 Summary. Zwei günstige Gegenproben verwerfen manipulierte Zellen und unvollständige
-Spuren. Keine versteckten Setupaktionen, 500er-Route oder automatische Stressmatrix.
+Spuren. SYNC-B1 ergänzt Kontocheckpoints an Kommando 11 (Save und Request), 14
+(jüngerer Kontosave), 15 (neuer Prozess und Laden) und 16 (Redo und Save).
+Beide Journal-/Primary-Paare, die Requestbytes, eine Fremdkonto-Datei und die
+Beobachtungen im Trace werden unabhängig gelesen. Der technische Windowslauf
+ist einmalig für die B1-Abnahme. Keine versteckten Setupaktionen, 500er-Route
+oder automatische Stressmatrix.
 [CI2-D-T01](https://github.com/venomenon328/picross/blob/6fe91a08a4d073547df43c6aebbe8ead4c45ae0f/docs/CI2_D_VERIFICATION.md) bleibt der historische Einführungsnachweis.
 
 ## P2-F-C-V01 / #502: Buch-Lifecycle nur auf ausdrücklichen Anlass

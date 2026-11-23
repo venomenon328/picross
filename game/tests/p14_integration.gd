@@ -2,6 +2,11 @@ extends SceneTree
 ## CI2-D: the same isolated profile across exactly two real processes.
 const SaveStore = preload("res://model/save_store.gd")
 const Main = preload("res://ui/main.gd")
+const SyncCases = preload("res://tests/sync_cases.gd")
+const Profile = preload("res://model/account_profile.gd")
+const Session = preload("res://model/session.gd")
+var account := Profile.new()
+var restored: Session
 var app: Main
 var dispatch_usec: int = 0
 var frames_usec: int = 0
@@ -20,6 +25,9 @@ func run() -> void:
 	var stage: String = "reader" if OS.get_cmdline_user_args().has("--read") else "writer"
 	if isolated.is_empty() or trace_path.is_empty() or plan_path.is_empty():
 		fail("isolated root, plan and trace required")
+		return
+	if not account.open(SyncCases.HOST,SyncCases.ACCOUNT,SyncCases.DEVICE,SyncCases.EPOCH,stage == "writer"):
+		fail("account open: " + str(account.reconciliation().reason))
 		return
 	SaveStore.test_root_override = isolated
 	root.size = Vector2i(1920, 1080)
@@ -47,6 +55,10 @@ func run() -> void:
 				return
 		else:
 			await perform(action)
+		var checkpoint := account_checkpoint(stage, int(action.number))
+		if checkpoint.has("error"):
+			fail(checkpoint.error)
+			return
 		var player = app.session.player
 		var changes: Array = []
 		for i: int in range(before.size()):
@@ -56,7 +68,7 @@ func run() -> void:
 			"history":player.history,"cursor":player.cursor,"undo_used":player.undo_used,
 			"view":app.board.capture_view(),"actual_cell":app.board.view.cell_size,"fit_ceiling":app.board.fit_ceiling,"elapsed_us":Time.get_ticks_usec()-began,
 			"recent":app.RecentPuzzle.read(app.recent.path),"recent_id":app.recent_id(),
-			"pid":OS.get_process_id(),"engine":Engine.get_version_info()}))
+			"account":checkpoint,"pid":OS.get_process_id(),"engine":Engine.get_version_info()}))
 		output.flush()
 	output.close()
 	print("CI2_D_HISTORY_", stage.to_upper(), "_OK")
@@ -147,3 +159,27 @@ func _mask(button: MouseButton) -> int:
 	if button == MOUSE_BUTTON_MIDDLE:
 		return MOUSE_BUTTON_MASK_MIDDLE
 	return 0
+
+# The writer captures real action 11 and the later quit. Reader loads a distinct
+# account session, repeats the planned redo there and saves that session.
+func account_checkpoint(stage: String, number: int) -> Dictionary:
+	if number == 11 or number == 14:
+		var version := account.save(app.session,app.board.capture_view())
+		if version != (1 if number == 11 else 2): return {"error":"account write " + str(number)}
+		if number == 11 and account.prepare(version,0).is_empty(): return {"error":"account prepare"}
+	elif number == 15:
+		var loaded := account.load_slot(app.session.definition)
+		if loaded.status != "loaded": return {"error":"account restart"}
+		restored = Session.new(app.session.definition)
+		SaveStore.apply(loaded.data,restored)
+	elif number == 16:
+		var cursor := restored.player.cursor
+		restored.redo()
+		if restored.player.cursor != cursor + 1 or account.save(restored,restored.view_state) != 3:
+			return {"error":"account redo"}
+	else:
+		return {}
+	var request := account.resume_request()
+	if request.is_empty(): return {"error":"missing prepared request in "+stage}
+	return {"local":account.status().local,"seq":request.seq,"body_sha256":str(request.body).sha256_text(),
+		"cursor":restored.player.cursor if restored != null else app.session.player.cursor}

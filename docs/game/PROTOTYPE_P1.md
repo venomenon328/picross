@@ -307,8 +307,9 @@ Auswahl samt zusätzlichen Darstellungsdaten.
 Der [SYNC-Vertrag](SAVE_SYNC.md) beschreibt den eigenständigen Snapshotdienst
 und die noch ausstehende Kontoanbindung der Spielclients. Dieser Abschnitt bleibt der
 maßgebliche lokale Save-/Recoveryvertrag; der bisherige kontolose Speicherroot,
-Schema 1 und vollständige Validierung ändern sich dadurch nicht. Spätere
-Kontoprofile erhalten eigene lokale Saves, Fortsetzen-Merker und Syncmetadaten.
+Schema 1 und vollständige Validierung ändern sich dadurch nicht. Der native
+B1-Profilkern bindet eigene Saves, Fortsetzen-Merker und Syncmetadaten an den
+ausdrücklich geöffneten Kontext. Die reguläre Anwendung startet im Gastprofil.
 Serverrevision/Resetmarker liegen außerhalb des Schema-1-Snapshots. Ein
 Serverempfang ersetzt keine vollständige Validierung vor Anwendung im Spiel.
 
