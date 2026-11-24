@@ -46,6 +46,9 @@ def get(path, limit, *, binary=False):
     headers = {'Accept': 'application/octet-stream' if binary else 'application/vnd.github+json',
                'Accept-Encoding': 'identity', 'User-Agent': 'picross-work-assets'}
     deadline = time.monotonic() + 60
+    if binary and path.startswith('/releases/assets/'):
+        with github_rest.open_api(API + path, headers, timeout=10, redirect=AssetRedirect()) as response:
+            return _read_response(response, limit, deadline)
     if binary:
         request = Request('https://github.com/' + REPOSITORY + path, headers=headers)
         with github_rest.transport_errors():
@@ -88,6 +91,10 @@ def read(ref, limit, *, releases=None):
             'Original asset missing from bound release')
     name = 'original-' + ref['sha256']
     require(rows[0]['name'] == name, 'Unexpected physical asset name')
-    raw = get('/releases/download/' + tag + '/' + name, ref['bytes'], binary=True)
+    if github_rest.publisher_token():
+        path = '/releases/assets/' + str(ident['asset_id'])
+    else:
+        path = '/releases/download/' + tag + '/' + name
+    raw = get(path, ref['bytes'], binary=True)
     require(content.ref(ref['file'], raw) == local_ref(ref), 'Original asset bytes differ')
     return raw

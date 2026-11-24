@@ -1,14 +1,20 @@
 """Bounded production transport regressions, using a private Git remote and synthetic pixels."""
+import base64
 from copy import deepcopy
+from hashlib import sha1
+from io import BytesIO
 import json
+import os
 from pathlib import Path
 import subprocess
 import tempfile
+from types import SimpleNamespace
 import unittest
 from unittest.mock import patch
+from urllib.error import HTTPError
 
 from tools import publish_git as guard, work_publish as pub
-from tools.puzzle_production import current_authoring as current, work_assets
+from tools.puzzle_production import current_authoring as current, github_rest, work_assets
 from tools.production_workspace import presentation
 from tools.production_workspace.sources import GitSource
 from tests.puzzle_production import test_current_authoring as fixtures
@@ -27,21 +33,44 @@ class WorkPublicationTests(unittest.TestCase):
         self.release = None
         self.assets = {}
         self.next_id = 100
+        self.api_calls = []
+        self.immutability = {'enabled': False}
+        self.repository = {'full_name': pub.REPO, 'permissions': {'push': False}}
         for module, name, value in [(guard,'REMOTE',self.remote),(guard,'CLEAN_MAIN',self.main),
-                                    (pub,'api',self.api),(pub,'upload',self.upload),
+                                    (pub,'api',self.api),(pub,'upload',self.publisher_upload),
+                                    (pub,'remote_record',self.read_record),
+                                    (pub,'select_token',lambda auth: 'synthetic-token'),
                                     (work_assets,'get',self.get)]:
             self.enterContext(patch.object(module,name,value))
 
+    def read_record(self, commit, job):
+        return GitSource(self.root).read(commit, current.path(job))
+
     def api(self,path,method='GET',value=None):
+        self.api_calls.append((path, method))
         if path == '':
-            return {'permissions':{'push':True}}
+            return self.repository
+        if path == 'git/ref/heads/main':
+            return {'ref': 'refs/heads/main',
+                    'object': {'type': 'commit', 'sha': guard.remote_head(self.root, 'refs/heads/main')}}
+        if path.startswith('git/commits/'):
+            oid = path.rsplit('/', 1)[1]
+            parents = fixtures.git(self.remote, 'show', '-s', '--format=%P', oid).split()
+            return {'sha': oid, 'parents': [{'sha': parent} for parent in parents]}
         if path == 'immutable-releases':
-            return {'enabled':False}
+            if isinstance(self.immutability, Exception):
+                raise self.immutability
+            return self.immutability
+        if path == 'actions/permissions':
+            result = getattr(self, 'settings_access', None)
+            if isinstance(result, Exception):
+                raise result
+            return result
         if path.startswith('releases?'):
             return [deepcopy(self.release)] if self.release else []
         if path == 'releases' and method == 'POST':
             self.assertEqual(value['make_latest'],'false')
-            fixtures.git(self.remote,'update-ref','refs/tags/' + value['tag_name'],self.main)
+            fixtures.git(self.remote,'update-ref','refs/tags/' + value['tag_name'],value['target_commitish'])
             self.release = {**value,'id':11,'immutable':False,'assets':[]}
         if path.startswith('releases/assets/') and method == 'DELETE':
             id_ = int(path.rsplit('/',1)[1])
@@ -52,6 +81,10 @@ class WorkPublicationTests(unittest.TestCase):
             self.assets.clear()
         return deepcopy(self.release)
 
+    def publisher_upload(self, release_id, tag, name, data):
+        self.assertEqual(release_id, self.release['id'])
+        self.upload(tag, name, data)
+
     def upload(self,tag,name,data):
         self.assertEqual(tag, self.release['tag_name'])
         self.next_id += 1
@@ -60,7 +93,8 @@ class WorkPublicationTests(unittest.TestCase):
 
     def get(self,path,limit,*,binary=False):
         if binary:
-            row = next(a for a in self.release['assets'] if a['name'] == path.rsplit('/',1)[1])
+            leaf = path.rsplit('/', 1)[1]
+            row = next(a for a in self.release['assets'] if leaf in (a['name'], str(a['id'])))
             return self.assets[row['id']]
         return json.dumps(self.release).encode()
 
@@ -73,10 +107,13 @@ class WorkPublicationTests(unittest.TestCase):
         f=self.fixture
         f.approved()
         publish=lambda expected: pub.push_job(self.root,'pz-current',expected)
-        real_upload=self.upload
+        real_upload=self.publisher_upload
         def interrupted(*args):
             real_upload(*args)
             raise ConnectionError('lost upload response')
+        plan = pub.preflight(self.root, 'publish', 'pz-current', None)
+        self.assertEqual(plan['release_state'], 'disabled')
+        self.assertIsNone(self.release)
         with patch.object(pub,'upload',interrupted), self.assertRaises(ConnectionError):
             publish(None)
         self.assertIsNone(guard.remote_head(self.root,'refs/heads/content/pw/pz-current'))
@@ -97,8 +134,17 @@ class WorkPublicationTests(unittest.TestCase):
         f.publish()
         with self.assertRaises(ValueError):
             publish(None)
+        self.immutability = github_rest.Failure('access', 'no Administration read', 403)
+        self.api_calls.clear()
         second=publish(first)
+        self.assertNotIn(('immutable-releases', 'GET'), self.api_calls)
         self.assertNotEqual(second,first)
+        self.assertEqual(guard.remote_head(self.root, 'refs/heads/content/pw/pz-current'), second)
+        resume_root = self.fixture.work / 'resume'
+        fixtures.git(self.root, 'worktree', 'add', '--detach', str(resume_root), second)
+        pub.preflight(resume_root, 'resume', 'pz-current', second)
+        self.assertEqual(pub.resume(resume_root, 'pz-current', second), current.path('pz-current'))
+        self.assertEqual((resume_root / view['file']).read_bytes(), original)
         self.assertEqual(presentation.asset_bytes(source,first,view),original)
         with self.assertRaises(ValueError):
             pub.finish(self.root,'pz-current',first,confirmed=True)
@@ -129,11 +175,103 @@ class WorkPublicationTests(unittest.TestCase):
             pub.finish(self.root, 'pz-current', second, confirmed=True)
         self.assertIsNone(guard.remote_head(self.root, tag))
         self.assertEqual(guard.remote_head(self.root, branch), second)
+        pub.preflight(self.root, 'retire', 'pz-current', second)
         self.assertEqual(pub.finish(self.root,'pz-current',second,confirmed=True),'closed')
         self.assertIsNone(guard.remote_head(self.root, branch))
         self.assertEqual(pub.finish(self.root,'pz-current',second,confirmed=True),'no-op')
         self.assertFalse(self.assets)
         self.assertIsNone(guard.remote_head(self.root,'refs/tags/work-prod-pz-current'))
+
+    def assert_early_rejection(self, expected, message):
+        refs = fixtures.git(self.remote, 'show-ref')
+        self.api_calls.clear()
+        with (patch.object(current, 'Checked') as originals, patch.object(pub, 'catalog_writer') as lock,
+              self.assertRaisesRegex(ValueError, message)):
+            pub.push_job(self.root, 'pz-current', expected)
+        originals.assert_not_called()
+        lock.assert_not_called()
+        self.assertTrue(all(method == 'GET' for _, method in self.api_calls))
+        self.assertEqual(fixtures.git(self.remote, 'show-ref'), refs)
+
+    def test_preflight_setting_matrix_and_read_only_404_disambiguation(self):
+        failure = github_rest.Failure
+        cases = [({'enabled': True}, None, 'setting enabled'),
+                 ({'enabled': 0}, None, 'setting unknown'),
+                 (None, None, 'setting unknown'),
+                 (failure('auth', 'HTTP 401', 401), None, 'HTTP 401'),
+                 (failure('access', 'HTTP 403', 403), None, 'HTTP 403'),
+                 (failure('access', 'HTTP 404', 404), None, 'setting unknown'),
+                 (failure('access', 'HTTP 404', 404), failure('access', 'HTTP 404', 404), 'HTTP 404'),
+                 (failure('rate_limit', 'HTTP 429', 429), None, 'HTTP 429'),
+                 (failure('network', 'network error'), None, 'network error')]
+        for setting, access, message in cases:
+            with self.subTest(message=message):
+                self.immutability, self.settings_access = setting, access
+                self.assert_early_rejection(None, message)
+        self.immutability = failure('access', 'HTTP 404', 404)
+        self.settings_access = {'enabled': True}
+        report = pub.preflight(self.root, 'publish', 'pz-current', None)
+        self.assertEqual(report['release_state'], 'disabled')
+        self.assertEqual(report['capabilities']['git_refs']['write'], 'unverified')
+        self.assertEqual(report['capabilities']['release_assets']['write'], 'unverified')
+        self.assertEqual(report['capabilities']['product_pr'], 'outside this operation')
+        self.assertIsNone(self.release)
+
+    def test_existing_release_must_be_fresh_owned_and_bound(self):
+        self.fixture.approved()
+        first = pub.push_job(self.root, 'pz-current', None)
+        original = deepcopy(self.release)
+        self.repository.pop('permissions')
+        self.immutability = {'enabled': True}
+        self.api_calls.clear()
+        report = pub.preflight(self.root, 'publish', 'pz-current', first)
+        self.assertEqual(report['release_id'], original['id'])
+        self.assertNotIn(('immutable-releases', 'GET'), self.api_calls)
+        for field, value, error in [('immutable', True, 'immutable'), ('immutable', None, 'mutability'),
+                                    ('body', 'foreign', 'Foreign work release'),
+                                    ('id', 21, 'generation changed'),
+                                    ('target_commitish', first, 'anchor changed')]:
+            with self.subTest(field=field, value=value):
+                self.release = {**original, field: value}
+                if value is None:
+                    del self.release[field]
+                self.assert_early_rejection(first, error)
+        self.release = None
+        self.assert_early_rejection(first, 'Bound work release is missing')
+        self.release = original
+        fixtures.git(self.remote, 'update-ref', 'refs/tags/work-prod-pz-current', first)
+        self.assert_early_rejection(first, 'generation changed')
+
+    def test_repository_job_and_generation_disagreement_fail_before_originals(self):
+        with self.assertRaisesRegex(ValueError, 'requested repository'):
+            pub.preflight(self.root, 'publish', 'pz-current', None, repository='another/repo')
+        self.repository['full_name'] = 'another/repo'
+        self.assert_early_rejection(None, 'different publisher repository')
+        self.repository['full_name'] = pub.REPO
+        self.assert_early_rejection(self.main, 'Expected work ref is missing')
+        with patch.object(pub, 'api', side_effect=lambda path: {'full_name': pub.REPO} if not path else {}):
+            self.assert_early_rejection(None, 'Git and REST main differ')
+        with self.assertRaises(ValueError):
+            pub.preflight(self.root, 'publish', '../invalid-job', None)
+
+    def test_setting_is_rechecked_before_create_after_early_preflight(self):
+        self.fixture.approved()
+        real_api = self.api
+        calls = 0
+
+        def settings_change(path, method='GET', value=None):
+            nonlocal calls
+            if path == 'immutable-releases':
+                calls += 1
+                return {'enabled': calls > 1}
+            return real_api(path, method, value)
+
+        with patch.object(pub, 'api', settings_change), self.assertRaisesRegex(ValueError, 'setting enabled'):
+            pub.push_job(self.root, 'pz-current', None)
+        self.assertEqual(calls, 2)
+        self.assertIsNone(self.release)
+        self.assertIsNone(guard.remote_head(self.root, 'refs/tags/work-prod-pz-current'))
+        self.assertIsNone(guard.remote_head(self.root, 'refs/heads/' + pub.release_catalog.LOCK_BRANCH))
 
     def test_publication_preserves_only_an_already_bound_legacy_mono_preview(self):
         f = self.fixture
@@ -536,3 +674,94 @@ class WorkPublicationTests(unittest.TestCase):
                     with pub.catalog_writer(self.root, self.main):
                         self.fail('Work publisher entered occupied lease')
             self.assertIsNone(guard.remote_head(self.root, ref))
+
+
+class PublisherTransportTests(unittest.TestCase):
+    def test_auth_context_is_explicit_and_workspace_shielding_remains(self):
+        with (patch.dict(os.environ, {'GH_TOKEN': 'one', 'GITHUB_TOKEN': 'two'}, clear=True),
+              patch.object(github_rest, '_workspace_token', None)):
+            with self.assertRaisesRegex(ValueError, 'Conflicting publisher credentials'):
+                pub.select_token('env')
+            self.assertEqual(pub.select_token('GITHUB_TOKEN'), 'two')
+            github_rest.load_workspace_token()
+            self.assertNotIn('GH_TOKEN', os.environ)
+            self.assertNotIn('GITHUB_TOKEN', os.environ)
+            with pub.publisher_auth('env'):
+                self.assertEqual(github_rest.publisher_token(), 'one')
+                with self.assertRaisesRegex(ValueError, 'credential changed'):
+                    with pub.publisher_auth('env', 'different'):
+                        self.fail('Unexpected credential change')
+            self.assertIsNone(github_rest.publisher_token())
+            with patch.object(pub.subprocess, 'check_output', side_effect=OSError) as gh:
+                with self.assertRaisesRegex(ValueError, 'Selected gh login unavailable'):
+                    pub.select_token('gh')
+                self.assertNotIn('GH_TOKEN', gh.call_args.kwargs['env'])
+            with self.assertRaisesRegex(ValueError, 'Missing or invalid publisher credential'):
+                with pub.publisher_auth('GH_TOKEN'):
+                    self.fail('An absent explicit token fell back to the workspace')
+
+    def test_git_remote_uses_token_only_in_ephemeral_subprocess_config(self):
+        token = 'synthetic-git-credential'
+        with (guard.use_remote_token(token),
+              patch.object(guard, 'check_push_url'),
+              patch.object(guard.subprocess, 'check_output', side_effect=[(guard.REMOTE + '\n').encode(), b'']) as run):
+            guard.git('.', 'ls-remote', '--refs', '--', guard.REMOTE, 'refs/heads/main')
+        (resolve, remote) = run.call_args_list
+        self.assertNotIn(token, repr(resolve))
+        self.assertNotIn(token, repr(remote.args))
+        header = base64.b64encode(('x-access-token:' + token).encode()).decode()
+        self.assertNotIn(header, repr(remote.args))
+        self.assertIn('Authorization: Basic ' + header, remote.kwargs['env'].values())
+        self.assertEqual(remote.kwargs['env']['GIT_TERMINAL_PROMPT'], '0')
+        with (guard.use_remote_token(token),
+              patch.object(guard, 'check_push_url'),
+              patch.object(guard.subprocess, 'check_output', return_value=b'https://another.invalid/repo\n') as run,
+              self.assertRaisesRegex(ValueError, 'Git destination differs')):
+            guard.remote_head('.', 'refs/heads/main')
+        self.assertEqual(run.call_count, 1)
+        rewrite = SimpleNamespace(returncode=0, stdout=b'url.https://other.invalid/.pushinsteadof\nhttps://github.com/\0')
+        with (guard.use_remote_token(token), patch.object(guard.subprocess, 'run', return_value=rewrite),
+              patch.object(guard.subprocess, 'check_output') as network,
+              self.assertRaisesRegex(ValueError, 'matching pushInsteadOf')):
+            guard.remote_head('.', 'refs/heads/main')
+        network.assert_not_called()
+
+    def test_http_errors_and_originals_use_the_selected_token(self):
+        token = 'synthetic-rest-credential'
+        responses = [HTTPError('unused', 401, '', {}, BytesIO(b'')),
+                     HTTPError('unused', 403, '', {}, BytesIO(b'')),
+                     HTTPError('unused', 404, '', {}, BytesIO(b'')),
+                     HTTPError('unused', 403, '', {'Retry-After': '60'}, BytesIO(b'')),
+                     OSError('synthetic-rest-credential must never be printed'), BytesIO(b'original')]
+        opener = SimpleNamespace(open=lambda req, **_: respond(req))
+
+        def respond(req):
+            self.assertEqual(req.get_header('Authorization'), 'Bearer ' + token)
+            result = responses.pop(0)
+            if isinstance(result, Exception):
+                raise result
+            return result
+
+        with (pub.publisher_auth('env', token),
+              patch.object(github_rest, 'build_opener', return_value=opener)):
+            for wanted in ('auth', 'access', 'access', 'rate_limit', 'network'):
+                with self.assertRaises(github_rest.Failure) as error:
+                    pub.api('releases/11')
+                self.assertEqual(error.exception.kind, wanted)
+                self.assertIn('GET releases/11', str(error.exception))
+                self.assertNotIn(token, str(error.exception))
+            self.assertEqual(work_assets.get('/releases/assets/42', 8, binary=True), b'original')
+        self.assertIsNone(github_rest.publisher_token())
+
+    def test_remote_record_binds_the_exact_contents_to_its_git_blob(self):
+        job = 'pz-current'
+        raw = b'{"synthetic": true}'
+        result = {'path': current.path(job), 'size': len(raw), 'type': 'file', 'encoding': 'base64',
+                  'content': base64.b64encode(raw).decode(),
+                  'sha': sha1(f'blob {len(raw)}\0'.encode() + raw).hexdigest()}
+        with patch.object(pub, 'api', return_value=result) as api:
+            self.assertEqual(pub.remote_record('a' * 40, job), raw)
+            api.assert_called_once_with(f'contents/{current.path(job)}?ref=' + 'a' * 40)
+            result['sha'] = 'b' * 40
+            with self.assertRaisesRegex(ValueError, 'differ from the Git blob'):
+                pub.remote_record('a' * 40, job)

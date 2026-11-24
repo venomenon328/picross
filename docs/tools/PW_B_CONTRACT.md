@@ -107,7 +107,25 @@ Request aus den aktuellen Ergebnissen und tatsächlichen Erklärungen.
 
 Builder und Finalizer bearbeiten den lokalen Arbeitsstand. Die lokal messbare
 Form v1 hat dieselben Inhaltsfelder und Dateibindungen ohne Transportidentität.
-Der Akteur führt vom eigenen Checkout aus folgende Befehle aus:
+Vor Originalabruf, Finalizer oder großem Checkout kann der Akteur aus einem
+fest gebundenen vertrauenswürdigen Werkzeugstand die geplante Operation prüfen.
+Für den folgenden Befehl genügen Git, GitHub-Zugang und der Werkzeugstand.
+
+```text
+python -m tools.work_publish preflight <id> --for publish --repository venomenon328/picross --expected <new-oder-arbeitscommit> --auth env
+```
+
+Die Python-API `work_publish.preflight(root, operation, job, expected,
+repository=..., auth=...)` akzeptiert als `root` ein vorhandenes Verzeichnis,
+als Operation `publish`, `resume` oder `retire` und für eine Erstpublikation
+`expected=None`. Der JSON-Bericht enthält Git-/REST-Basis, Arbeits-SHA,
+Release-/Tagbindung und den Prüfstatus je Fähigkeit. Gitref-Zugriff und
+Release-/Assetzugriff werden einzeln ausgewiesen. Schreibrechte und der Zugriff
+auf Originalbytes bleiben bis zur jeweiligen Operation offen. Produkt-PR und
+seine CI haben einen eigenen Zugang. Der Preflight führt nur Leseoperationen aus
+und wird nicht im Record abgelegt.
+
+Die eigentlichen Operationen laufen im eigenen Checkout.
 
 ```text
 python -m tools.work_publish publish <id> --expected new
@@ -116,10 +134,32 @@ python -m tools.work_publish publish <id> --expected <arbeitscommit>
 python -m tools.work_publish retire <id> --expected <erwarteter-Arbeitscommit>
 ```
 
-Resume arbeitet auf einem eigenen Worktree am erwarteten Commit. Der Publisher
-benötigt angemeldetes gh mit Repository-Schreibrecht und vollständige Gitbasis.
-Er prüft Rechte, Release-Mutierbarkeit und beide Generationen im Katalogbudget
-der installierten Appclients. Die kurzlebige Ref work-prod-control/catalog
+Resume arbeitet auf einem eigenen Worktree am erwarteten Commit. Für die
+Publikation benötigt der Publisher eine vollständige Gitbasis. Preflight und
+Ausführung verwenden dieselbe gewählte Authquelle. `--auth env` liest
+`GH_TOKEN` oder `GITHUB_TOKEN` und stoppt bei widersprüchlichen Werten.
+Die gleichnamigen expliziten `--auth`-Werte wählen bei Bedarf genau eine
+Variable. `--auth gh` verwendet gezielt die aktive Anmeldung für
+`github.com`. Ein fehlender gewählter Zugang stoppt. REST, Git-HTTPS und
+der gebundene Originalabruf verwenden den ausgewählten Token. Der lesende
+Windows-Assistent schützt den Token weiterhin vor Weitergabe an seine Kinder.
+
+Für eine bestehende eigene Releasegeneration liest der Publisher die konkrete
+Release-ID frisch zurück und bindet sie an Job, Tag und Anchor. `immutable:false`
+erlaubt deren Fortschreibung auch bei fehlendem Administration-Leserecht oder
+aktiviertem Setting für neue Releases. Unveränderliche, unklare oder fremde
+Generationen und eine fehlende bereits gebundene Generation stoppen den Ablauf.
+Ein neues Release erfordert eindeutig deaktivierte Unveränderlichkeit. Bei
+einem Settings-404 bestätigt derselbe Token den Zugriff über den lesenden
+[Actions-Settings-Endpunkt](https://docs.github.com/en/rest/actions/permissions#get-github-actions-permissions-for-a-repository)
+mit Administration(read) für genau dieses Repository. 401, 403,
+ein uneindeutiges 404 und ungültige Antworten lassen die Neuanlage offen.
+[GitHub-Settings-Vertrag](https://docs.github.com/en/rest/repos/repos#check-if-immutable-releases-are-enabled-for-a-repository)
+
+Release- und Refbindungen werden vor der tatsächlichen Publikation erneut geprüft.
+Die Schreiboperation und ihr Readback entscheiden über den Erfolg. Der Publisher
+prüft beide Generationen im Katalogbudget der installierten Appclients.
+Die kurzlebige Ref work-prod-control/catalog
 serialisiert Arbeitsänderungen und signierte PW-/PE-/PG-Veröffentlichungen. Jeder
 Arbeitswriter reserviert zusätzlich drei Releases mit je sieben Assets für die
 Appkanäle. Alle Writer prüfen Seitenzahl, Metadatenumfang
@@ -132,8 +172,8 @@ Einen aktiven oder unklaren Besitzer niemals überschreiben.
 
 Ein Job besitzt den Prerelease work-prod-<id> mit make_latest=false und einem
 Tag am bereinigten Maincommit. Neue Originale werden einzeln hochgeladen und
-über den öffentlichen Leser geprüft. Der Arbeitsref enthält ausschließlich
-Record und Indexdelta. Die erwartete Remote-SHA bindet die Veröffentlichung.
+über Release-/Asset-ID, Namensbindung, Größe und Hash zurückgelesen. Der Arbeitsref
+enthält ausschließlich Record und Indexdelta. Die erwartete Remote-SHA bindet die Veröffentlichung.
 Erst danach entfallen ersetzte Originale. Aktive Auswahlen haben keine
 technische Siebentagesfrist. Rollout und Produktionsfreigabe setzen einen
 tatsächlich verfügbaren v2-Reader und bestätigten Originalzugriff voraus.
@@ -157,8 +197,11 @@ zur abschließenden `retire`-Operation oder zum Merge.
 
 Der Windows-Assistent kann die öffentliche REST-Abfrage der Originalmetadaten
 mit seiner [Windows-Benutzervariable](PRODUCTION_WORKSPACE.md#optionaler-rest-zugang-unter-windows)
-authentifizieren. Die Downloadanfrage bleibt anonym. Release- und Asset-ID,
-Name, Größe und SHA-256 bleiben verbindlich.
+authentifizieren. Sein öffentlicher Originaldownload bleibt anonym. Im Publisher
+verwendet der Originalabruf den ausgewählten REST-Kontext und eine gegebenenfalls
+von GitHub gelieferte signierte Download-URL. Release- und Asset-ID, Name, Größe
+und SHA-256 bleiben verbindlich. Ein vollständiger Remote-Abschluss aus ChatGPT
+mit Produkt-PR und CI ist ein gesonderter Betriebsnachweis.
 
 Der gemeinsame Index enthält nur `puzzle_id,revision,record`-Verweise nach
 Index v1. Aktuelle Records verwenden revision=current. Keine workspace.json

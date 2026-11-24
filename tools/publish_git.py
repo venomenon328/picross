@@ -1,7 +1,10 @@
 """Check the exact outgoing history before sending Git objects to origin."""
 import argparse
 import base64
+from contextlib import contextmanager
+from contextvars import ContextVar
 import json
+import os
 import re
 import subprocess
 from pathlib import Path
@@ -13,12 +16,82 @@ except ImportError:
     from ci_growth import forbidden, SHA
     from work_refs import CLEAN_MAIN
 
-REMOTE = 'https://github.com/venomenon328/picross.git'
+GITHUB_REMOTE = 'https://github.com/venomenon328/picross.git'
+REMOTE = GITHUB_REMOTE
+_remote_token = ContextVar('git_remote_token', default=None)
 
+
+@contextmanager
+def use_remote_token(token):
+    scope = _remote_token.set(token)
+    try:
+        yield
+    finally:
+        _remote_token.reset(scope)
+
+
+def check_push_url(command, env):
+    try:
+        values = subprocess.run([*command, 'config', '-z', '--get-regexp', r'^url\..*\.pushinsteadof$'],
+                                env=env, capture_output=True, timeout=15)
+    except (OSError, subprocess.SubprocessError):
+        raise ValueError('Git push destination could not be verified; inspect the Git configuration') from None
+    if values.returncode not in (0, 1):
+        raise ValueError('Git push destination could not be verified; inspect the Git configuration')
+    for entry in values.stdout.split(b'\0'):
+        _, separator, prefix = entry.partition(b'\n')
+        if separator and GITHUB_REMOTE.encode().startswith(prefix):
+            raise ValueError('Git push destination may be rewritten; inspect matching pushInsteadOf configuration')
 
 def git(root, *args, data=None):
-    return subprocess.check_output(['git', '--no-replace-objects', '--no-lazy-fetch', '-C', str(root), *args],
-                                   input=data)
+    command = ['git', '--no-replace-objects', '--no-lazy-fetch', '-C', str(root)]
+    token = _remote_token.get()
+    if not token or REMOTE not in args:
+        return subprocess.check_output([*command, *args], input=data)
+    # Resolve rewrites without giving Git any publisher credential. The fixed
+    # URL is the only destination allowed to receive it.
+    env = {k: v for k, v in os.environ.items()
+           if not k.upper().startswith(('GIT_', 'GH_', 'GITHUB_TOKEN'))}
+    if REMOTE == GITHUB_REMOTE and ('push' in args or args[-1] == 'refs/heads/main'):
+        check_push_url(command, env)
+    try:
+        target = subprocess.check_output([*command, 'ls-remote', '--get-url', REMOTE],
+                                         env=env, stderr=subprocess.PIPE, timeout=15).decode().strip()
+    except (OSError, subprocess.SubprocessError, UnicodeError):
+        raise ValueError('Git destination could not be verified; inspect the Git configuration') from None
+    if target != REMOTE:
+        raise ValueError('Git destination differs from the configured publisher repository; inspect URL rewrites')
+    config = [('core.hooksPath', os.devnull), ('credential.helper', ''), ('core.askPass', ''),
+              ('http.followRedirects', 'false'), ('http.sslVerify', 'true'), ('http.extraHeader', '')]
+    if REMOTE == GITHUB_REMOTE:
+        env['GIT_ALLOW_PROTOCOL'] = 'https'
+        header = base64.b64encode(('x-access-token:' + token).encode('ascii')).decode('ascii')
+        key = 'http.' + GITHUB_REMOTE + '.extraHeader'
+        config.extend([(key, ''), (key, 'Authorization: Basic ' + header)])
+    env.update(GIT_CONFIG_COUNT=str(len(config)), GIT_TERMINAL_PROMPT='0', GCM_INTERACTIVE='never')
+    for idx, (key, value) in enumerate(config):
+        env[f'GIT_CONFIG_KEY_{idx}'] = key
+        env[f'GIT_CONFIG_VALUE_{idx}'] = value
+    try:
+        return subprocess.check_output([*command, *args], input=data, env=env, stderr=subprocess.PIPE, timeout=180)
+    except subprocess.CalledProcessError as exc:
+        # Git, helpers and remote hooks may return sensitive text. Classify it
+        # locally and only report the operation and a fixed recovery message.
+        error = (exc.stderr or b'').lower()
+        operation = next((word for word in args if word in ('ls-remote', 'fetch', 'push')), 'remote')
+        if b'401' in error or b'authentication failed' in error:
+            detail = 'authentication failed; verify the selected GitHub credential'
+        elif any(marker in error for marker in (b'403', b'permission', b'not found', b'denied')):
+            detail = 'access refused; check the concrete Git ref operation in the selected context'
+        elif any(marker in error for marker in (b'stale info', b'rejected', b'non-fast-forward')):
+            detail = 'ref update refused; read back the ref and check its expected generation'
+        elif b'429' in error or b'rate limit' in error:
+            detail = 'rate limited; wait before retrying after checking the ref'
+        else:
+            detail = 'transport failed; check the connection and read back the ref before retrying'
+        raise ValueError(f'Git {operation}: {detail}') from None
+    except (OSError, subprocess.TimeoutExpired):
+        raise ValueError('Git transport unavailable or timed out; check the connection and read back the ref') from None
 
 
 def check_range(root, head, bases, *, anchor=None):

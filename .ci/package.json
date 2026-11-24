@@ -1,17 +1,17 @@
 {
   "format": "development-ci-plan/v1",
   "issue": "https://github.com/venomenon328/picross/issues/859",
-  "package": "PW-CI-STORAGE",
+  "package": "PW-PUBLISH-A",
   "modules": [
     "tools"
   ],
-  "purpose": "K01-K04: bestehende Storage-Bridge-Testauswertung auf sieben benannte PASS-Fälle korrigieren; vollständige tools-Matrix und regulären Windows-x64-Playerbau prüfen. T01 belegt einmalig Basisfehler, Fix und negative Auswertungsproben.",
-  "omitted": "Nur Python-Test und Paketplan; keine Produkt-, Browser-, Speicher- oder Serveränderung. Keine production.*, native.*, preflight, delivery, sync.server oder Browserdiagnose. Die synthetische Node-Mechanismusprobe ist kein IndexedDB-Nachweis.",
+  "purpose": "Lesenden Publisher-Preflight, disjunkte Bestands- und Neuanlageprüfungen sowie expliziten Git-/REST-Kontext mit synthetischem Durchstich PW-PUBLISH-A-T01 prüfen. Werkzeugcode aktiviert den regulären Windows-x64-Playerbau.",
+  "omitted": "Keine Änderungen an Finalizer, Registrierung, Solver, Bildern, Spiel oder Server. Daher keine production.*, native.*, preflight, delivery, Browser- oder sync.server-Module. Kontrollierte API-Antworten und lokale Git-Remotes belegen keinen GitHub-Schreibzugriff.",
   "test_changes": [
     {
-      "path": "tools/test_ci2_c.py",
+      "path": "tools/test_work_publish.py",
       "disposition": "change-scoped",
-      "reason": "Bestehende Regression beibehalten; alle sieben benannten PASS-Fälle exakt einschließlich Multiplizität und erfolgreichen Node-Exit prüfen. T01 einmalig vor Review; keine neue Dauerfamilie."
+      "reason": "Capability-/Fehlermatrix, Authbindung und Katalog-/Ref-/Asset-Schutz im vorhandenen synthetischen Publisher-Durchstich; T01 einmalig vor Review am Lieferstand mit kontrollierten API-Antworten und echtem lokalen Gittransport durchführen."
     }
   ],
   "core_change": null,
