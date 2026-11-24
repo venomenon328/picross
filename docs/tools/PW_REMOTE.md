@@ -222,6 +222,16 @@ Parameterliste. Die neue Erklärung bindet den tatsächlich genehmigten vollstä
 Korridor und gegebenenfalls `crop_protection` (Definitionshash → Maskendateihash).
 Für geänderte Grenzen bei `budget` gelten `previous,limits,declaration` mit
 dem Digest der alten Limits. Jede Erklärung enthält `actor,timestamp_utc,statement`.
+Für ein gespeichertes Raster ohne frühere Maskendatei können RP-5 und feste
+Zelledits die vorhandene Merkmalsfreigabe direkt nutzen. Dazu in
+`feature_cells` jeden genehmigten Merkmaltext als `feature` mit zugehörigen
+geschützten Originalkoordinaten `cells:[[x,y],…]` angeben und die tatsächlich
+richtige Maske anhand des Motivs prüfen. Eine bereits gebundene Maske muss
+bytegenau passen. Für einen Beschnitt an geschützten Motiven gilt zusätzlich
+die PW-B-Bindung der Schutzdatei in der tatsächlichen Motiventscheidung.
+Bei RP-5 ist die Suchregion durch die ungeschützten Zellen festgelegt.
+Mit `region:[[x,y],…]` lässt sie sich vor der Suche auf einzelne
+ungeschützte Originalkoordinaten einschränken, etwa auf eine offene Lasche.
 Eine kombinierte Korridor- und Rasterentscheidung kann der Akteur aus derselben
 Erklärung in zwei gebundenen Requests vollziehen. Vor der Wahl die neue
 Qualifikation und aktuelle Source am bestätigten Arbeitsref zurücklesen.

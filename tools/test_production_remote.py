@@ -419,28 +419,32 @@ class RemoteTests(unittest.TestCase):
         full = [0, 0, 6, 4]
         edit = dict(x=4, y=0, before=0, after=1)
         fixed = {**common, 'crop': full, 'edits': [edit], 'max_changes': 2}
+        local = io.json_bytes((f.root / current.path(self.job)).read_bytes(), current.LIMIT)
         for bad in ({'edits': [edit, edit]}, {'edits': [{**edit, 'before': 1}]}, {'edits': [{**edit, 'after': 3}]},
                     {'edits': [{**edit, 'x': 2}]}, {'edits': [{**edit, 'x': 5}]}, {'crop': [2, 0, 6, 4]},
                     {'crop': [0, 1, 6, 4]}, {'mask_sha256': '0'*64}, {'source': {**start, 'revision': 2}}):
             with self.subTest(bad=bad), self.assertRaises(ValueError):
-                apply('fixed', {**fixed, **bad})
+                operations.execute({'fixed': {**fixed, **bad}}, local, f.root, f.sources)
         original_head = head
         self.assertEqual(apply('fixed', {**fixed, 'edits': []})[0]['status'], 'no-op')
         self.assertEqual(original_head, head)
         config = {'max_changes': 1, 'max_steps': 1, 'max_candidates': 1, 'search_seconds': 10, 'final_seconds': 15,
                   'search_lines': 10000, 'final_lines': 10000, 'seed': 9, 'order': 'seeded-frontier-v1', 'operators': ['single-cell']}
         plan = {**common, 'output': 'repaired', 'config': config, 'extra_changes_reason': None}
+        for region in ([[5, 0]], [[6, 0]], [[4, 0], [4, 0]]):
+            with self.subTest(region=region), self.assertRaises(ValueError):
+                operations.execute({'repair': {**plan, 'region': region}}, local, f.root, f.sources)
         missed, request = apply('repair', plan)
         self.assertEqual(missed['search']['reason'], 'candidate_limit')
         self.assertEqual(head, self.execute(request)['work'])
         self.assertEqual(record()['budgets']['used']['repair_rounds'], 1)
         with self.assertRaisesRegex(ValueError, 'already run'):
             apply('repair', plan)
-        repaired, _ = apply('repair', {**plan, 'config': {**config, 'max_candidates': 32, 'max_steps': 96}})
+        repaired, _ = apply('repair', {**plan, 'region': [[4, 0]], 'config': {**config, 'max_candidates': 32, 'max_steps': 96}})
         self.assertTrue(repaired['certified'])
         self.assertEqual(record()['budgets']['used']['repair_rounds'], 2)
         with self.assertRaisesRegex(ValueError, 'exhausted'):
-            apply('repair', plan)
+            apply('repair', {**plan, 'output': 'another'})
         paired, _ = apply('profile_check', {'source': start, 'profile': 'paired', 'rationale': 'Prüfe den offenen Linienstand'})
         self.assertTrue(paired['certified'])
         new = source('clasp')
@@ -463,11 +467,21 @@ class RemoteTests(unittest.TestCase):
         row = current.findings.subjects(record())['chosen']
         with self.assertRaisesRegex(ValueError, 'blocked'):
             apply('select', {'source': selected, 'finding_decisions': [], 'declaration': declaration})
+        review = fixtures.judgment(current.CRITERIA['raster'])
+        review['Q-H02']['result'] = 'Warnung'
+        observed = dict(id='hint', criterion='Q-H02', rule='hint-contrast', properties='Blauer Einer',
+                        context='Spaltenhinweis rechts', effect='Schwacher Kontrast', extent='Eine Ziffer',
+                        description='Der blaue Einer ist fein gezeichnet.', method='Synthetische Sichtung',
+                        actor='Fixture', timestamp_utc='2026-11-24T12:00:00Z', result='Warnung')
         apply('assessment', {'candidate': 'chosen', 'definition_sha256': selected['definition_sha256'],
-              'preview_sha256': row['preview']['sha256'], 'review': fixtures.judgment(current.CRITERIA['raster']),
-              'observations': [], 'ready': True})
+              'preview_sha256': row['preview']['sha256'], 'review': review, 'observations': [observed], 'ready': False})
+        accepted = {**declaration, 'id': 'hint', 'action': 'accept', 'treatment': 'Hinweis im Test belassen.',
+                    'expected': current.findings.binding(next(r for r in record()['findings'] if r['id'] == 'hint'))}
+        with self.assertRaises(ValueError):
+            apply('select', {'source': selected, 'finding_decisions': [{**accepted, 'expected': '0'*64}],
+                             'declaration': declaration})
         with patch.object(current.Checked, 'raster', side_effect=AssertionError('unexpected replay')):
-            apply('select', {'source': selected, 'finding_decisions': [], 'declaration': declaration})
+            apply('select', {'source': selected, 'finding_decisions': [accepted], 'declaration': declaration})
         self.assertEqual((record()['state'], record()['selected']['raster'], len(record()['rasters'])),
                          ('background_review', 'chosen', 1))
 

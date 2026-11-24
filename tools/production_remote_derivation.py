@@ -64,10 +64,19 @@ def protected(job, row, definition, change, option):
             'cells': change['cells']}
     pinned = next(d for d in job['decisions'] if d['scope'] == 'motif').get('crop_protection', {}).get(mask['before_sha256'])
     checksum = io.checksum(current.encoded(mask))
-    require(checksum == change['mask_sha256'] and (pinned == checksum or
-            pinned is None and not option['derivation']['protected_features']), 'Stale or unapproved protection mask')
+    require(checksum == change['mask_sha256'] and pinned in (None, checksum), 'Stale or unapproved protection mask')
     params.crop_rectangle([0, 0, definition['width'], definition['height']], definition['width'], definition['height'],
                           mask['cells'], [], definition['solution'], empty=0)
+    features = option['derivation']['protected_features']
+    if 'feature_cells' in change or pinned is None and features:
+        mapping = change.get('feature_cells', [])
+        require(sorted(item['feature'] for item in mapping) == sorted(features), 'Map every approved protected feature')
+        for item in mapping:
+            for x, y in item['cells']:
+                require(y < definition['height'] and x < definition['width'] and mask['cells'][y][x],
+                        'Feature coordinate must be protected')
+    if features and 'crop' in change and change['crop'] != [0, 0, definition['width'], definition['height']]:
+        require(pinned == checksum, 'Crop requires the bound motif protection approval')
     return mask
 
 
@@ -88,9 +97,15 @@ def search(matrix, definition, proof, option, change, round_number, scratch):
     cert = None if change['profile'] == 'line' else {
         'profile': 'paired-lines-color', 'max_pair_work': 20000000, 'max_pair_records': 250000}
     budget = Budget(config['search_seconds'], config['search_lines'])
+    mask = change['cells']
+    if 'region' in change:
+        allowed = set(map(tuple, change['region']))
+        require(all(x < definition['width'] and y < definition['height'] and not mask[y][x] for x, y in allowed),
+                'Repair region outside approved unprotected cells')
+        mask = [[(x, y) not in allowed for x in range(definition['width'])] for y in range(definition['height'])]
     start = monotonic()
     status, reason, selected, frontier, history, attempts = repair.explore(
-        wire, design, change['cells'], proof['final_domains'], config, budget, scratch, cert,
+        wire, design, mask, proof['final_domains'], config, budget, scratch, cert,
         admissible=lambda trial: params.used_foreground(trial, 'empty') == palette)
     result = {'outcome': status, 'reason': reason, 'candidates': len(history) +
               sum(a['outcome'] == 'evaluation_aborted' for a in attempts),
@@ -127,7 +142,9 @@ def produce(op, change, job, draft, row, raw, definition, root, scratch, files):
         same_profile = proof and proof['profile']['id'].startswith('paired-') == (change['profile'] == 'paired')
         if proof and (row['difficulty'] and proof['status'] == 'solved' or same_profile and proof['status'] == 'stalled'):
             return {**result, 'status': 'no-op', 'proof_status': proof['status']}
+        started = monotonic()
         certified = current_tools.raster(raw, output, mode=mode, profile=change['profile'])
+        result['certification_seconds'] = round(monotonic() - started, 6)
         if row['proof'] and row['proof']['sha256'] == certified['files']['proof']['sha256'] and not (
                 row['difficulty'] or certified['files']['difficulty']):
             return {**result, 'status': 'no-op', 'proof_status': certified['status']}
@@ -160,7 +177,10 @@ def produce(op, change, job, draft, row, raw, definition, root, scratch, files):
     require(change['output'] not in current.findings.subjects(job), 'Output candidate ID occupied')
     reserve(draft, search=op == 'repair')
     if op == 'repair':
-        plan_hash = digest({k: change[k] for k in ('source', 'profile', 'mask_sha256', 'config')})
+        plan = {k: change[k] for k in ('source', 'profile', 'mask_sha256', 'config')}
+        if 'region' in change:
+            plan['region'] = sorted(change['region'])
+        plan_hash = digest(plan)
         require(row.get('last_repair', {}).get('plan') != plan_hash, 'This repair plan has already run')
         require(proof['status'] in ('stalled', 'aborted'), 'Repair requires an unresolved current proof')
         require(change['profile'] == 'paired' or not proof['profile']['id'].startswith('paired-'), 'Paired reference requires paired repair')
@@ -187,7 +207,9 @@ def produce(op, change, job, draft, row, raw, definition, root, scratch, files):
     palette = [{'id': 'c' + str(p['id']), 'rgb': '#' + p['color']} for p in definition['palette']]
     palette_gate.early([['c'+str(v) if v else 'empty' for v in line] for line in changed],
                        {'palette': palette, 'source_id': change['output']})
+    started = monotonic()
     certified = current_tools.raster(next_def, output, mode=mode, profile=change['profile'], **limits)
+    result['certification_seconds'] = round(monotonic() - started, 6)
     if op == 'repair' and not certified['certified']:
         result['search'].update(outcome='aborted', reason='final_' + certified['status'])
         row['last_repair'].update(outcome='aborted', reason=result['search']['reason'])

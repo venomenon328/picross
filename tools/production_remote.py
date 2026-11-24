@@ -165,6 +165,9 @@ def preflight(root, req, auth):
         data = req['input']
         motif = next((a for a in record['assets'] if a['id'] == record['selected']['motif']), None)
         require(motif and motif['file']['sha256'] == data['motif_sha256'], 'Selected motif bytes changed')
+    if op == 'step3' and work == expected and not {'assessment', 'choice', 'design'}.intersection(req['input']):
+        from .production_remote_raster import check_published
+        check_published(next(iter(req['input'].values())), record)
     if op == 'step5':
         if record['format'] in current.findings.FORMATS:
             qualification = record.get('qualification')

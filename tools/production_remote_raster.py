@@ -1,5 +1,6 @@
 """Closed operations on the current PW raster record. Producer imports stay inside execution."""
 from copy import deepcopy
+from time import monotonic
 
 from .puzzle_production import catalog_io as io, current_authoring as current, raster_parameters as parameters
 from .puzzle_production.authoring_package import require, sha
@@ -25,7 +26,11 @@ FIELDS = {
 def validate(data):
     op, = data
     require(op in FIELDS, 'Unknown raster operation')
-    change = exact_keys(data[op], FIELDS[op])
+    value = data[op]
+    extra = {'feature_cells'} & value.keys() if isinstance(value, dict) and op in ('fixed', 'repair') else set()
+    if isinstance(value, dict) and op == 'repair' and 'region' in value:
+        extra.add('region')
+    change = exact_keys(value, FIELDS[op] | extra)
     if 'source' in change:
         source = exact_keys(change['source'], SOURCE)
         current.identifier(source['candidate'])
@@ -54,6 +59,17 @@ def validate(data):
         require(isinstance(cells, list) and 0 < len(cells) <= 50 and all(
             isinstance(row, list) and 0 < len(row) <= 50 and all(type(v) is bool for v in row) for row in cells),
             'Expected a bounded boolean protection mask')
+        if 'feature_cells' in change:
+            features = change['feature_cells']
+            require(isinstance(features, list) and len(features) <= 64, 'Invalid feature mapping')
+            for feature in features:
+                exact_keys(feature, {'feature', 'cells'})
+                current.text(feature['feature'], 'protected feature')
+                require(isinstance(feature['cells'], list) and 0 < len(feature['cells']) <= 2500, 'Missing feature cells')
+                for point in feature['cells']:
+                    require(isinstance(point, list) and len(point) == 2, 'Invalid feature coordinate')
+                    for n in point:
+                        integer(n, 0, 49, 'feature coordinate')
     if op == 'fixed':
         integer(change['max_changes'], 0, 2500, 'max_changes')
         require(isinstance(change['edits'], list) and len(change['edits']) <= change['max_changes'], 'Invalid fixed edits')
@@ -66,6 +82,14 @@ def validate(data):
             integer(n, 0, 50, 'crop')
     if op == 'repair':
         parameters.validate_search(change['config'], 50, 50)
+        if 'region' in change:
+            points = change['region']
+            require(isinstance(points, list) and 0 < len(points) <= 2500, 'Invalid repair region')
+            for point in points:
+                require(isinstance(point, list) and len(point) == 2, 'Invalid repair coordinate')
+                for n in point:
+                    integer(n, 0, 49, 'repair coordinate')
+            require(len(set(map(tuple, points))) == len(points), 'Duplicate repair coordinate')
         if change['extra_changes_reason'] is not None:
             current.text(change['extra_changes_reason'], 'additional changes rationale')
     if op == 'diagnosis':
@@ -107,6 +131,26 @@ def source_binding(job, row, definition):
     return {'candidate': row['id'], 'revision': definition['revision'], 'definition_sha256': row['definition']['sha256'],
             'matrix_sha256': digest(definition['solution']), 'proof_sha256': row['proof'] and row['proof']['sha256'],
             'motif_sha256': motif['file']['sha256'], 'parameters_sha256': digest(job['parameters']['approved'])}
+
+
+def check_published(change, job):
+    """Reject stale choices against the pinned record before fetching large originals."""
+    require(job['operation'] == 'production' and job['selected']['raster'] is None and
+            job['state'] in ('motif_approved', 'raster_review', 'raster_ready'), 'Expected an open raster decision')
+    assets = current.findings.subjects(job)
+    motif = assets[job['selected']['motif']]['file']['sha256']
+    if 'source' in change:
+        source = change['source']
+        row = next((r for r in job['rasters'] if r['id'] == source['candidate']), None)
+        require(row and row['definition']['sha256'] == source['definition_sha256'] and
+                (row['proof'] and row['proof']['sha256']) == source['proof_sha256'] and
+                source['motif_sha256'] == motif and source['parameters_sha256'] == digest(job['parameters']['approved']),
+                'Stale raster operation source')
+    elif 'approved' in change:
+        require(change['motif_sha256'] == motif and change['previous'] == digest(job['parameters']['approved']),
+                'Stale motif or parameters')
+    else:
+        require(change['previous'] == digest(job['budgets']['limits']), 'Stale budget decision')
 
 
 def replace_decision(job, scope, declaration):
@@ -164,8 +208,7 @@ def execute(options, job, root, scratch):
     validate(options)
     op, = options
     change = options[op]
-    require(job['operation'] == 'production' and job['state'] in ('motif_approved', 'raster_review', 'raster_ready')
-            and job['selected']['raster'] is None, 'Expected an open raster decision')
+    check_published(change, job)
     draft = deepcopy(job)
     files = []
     if op == 'parameters':
@@ -209,9 +252,13 @@ def execute(options, job, root, scratch):
             row['exceptions'].append(exception)
         else:
             from .production_remote_derivation import produce
+            start = monotonic()
             result = produce(op, change, job, draft, row, raw, definition, root, scratch, files)
+            result['production_seconds'] = round(monotonic() - start, 6)
             if result['status'] not in ('diagnosed', 'no-op'):
+                start = monotonic()
                 save(job, draft, files, root, scratch)
+                result['builder_seconds'] = round(monotonic() - start, 6)
             return result
     save(job, draft, files, root, scratch)
     return {'state': draft['state'], 'decision': op}
