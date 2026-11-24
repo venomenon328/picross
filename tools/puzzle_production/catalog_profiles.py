@@ -147,14 +147,18 @@ def svg_self_test():
 
 
 def generate(identifier, original, raw):
+    from .editor_image_input import validate_reveal
+    info = validate_reveal(raw, Path(original["file"]).suffix)
+    return render_profiles(identifier, original, raw, (info["width"], info["height"]))
+
+
+def render_profiles(identifier, original, raw, size):
     from PIL import Image, __version__
     from .current_content import ref
-    from .editor_image_input import validate_reveal
     require(__version__ == "12.3.0", "Catalog PNG requires Pillow 12.3.0")
     require(ref(original["file"], raw) == original, "Catalog original bytes differ")
     suffix = Path(original["file"]).suffix
-    checked = validate_reveal(raw, suffix)
-    w, h = checked["width"], checked["height"]
+    w, h = size
     pixels = decode_png(raw) if suffix == ".png" else None
     rows, files = [], {}
     for label, pw, ph in PROFILES:

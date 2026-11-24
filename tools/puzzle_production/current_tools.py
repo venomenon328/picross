@@ -16,7 +16,7 @@ from .background_contract import BackgroundError
 @io.bounded
 def raster(definition, output, *, mode, profile='line', method='picross-difficulty-0.4'):
     """Certify a current definition without import, repair or producer history."""
-    from . import catalog_rating, catalog_analysis, current_rating, solver, verifier
+    from . import catalog_rating, catalog_analysis, current_rating, solver
     from .editor_raster import check_end
     raw=current.encoded(definition)
     definition,puzzle,_,_=catalog_rating.definition(raw)
@@ -42,7 +42,7 @@ def raster(definition, output, *, mode, profile='line', method='picross-difficul
         checked=json.loads(process.stdout)
         current.encoded(checked)
         require(checked.get('proof_verified') is True,'Independent current proof not checked')
-        verifier.verify(puzzle,proof,Budget(120,100000))
+        current.qualification.remember(('verified-proof', puzzle.logic_hash, io.checksum((stage/'proof.json').read_bytes())), checked)
         rating_ref=None
         if checked.get('certified'):
             check_end(definition,proof)

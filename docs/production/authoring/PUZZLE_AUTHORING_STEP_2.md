@@ -7,6 +7,8 @@ danach diese Phase und die dort zugeordnete Bildnorm. Zusätzlich:
 [Qualität](../PUZZLE_QUALITY.md) §2/§3.2 und H-03/H-04 aus §4.
 Sicherung, Wiederaufnahme, gemeinsame Bildkorrektur und Abschlussausgabe: Kern §§6–7.
 
+Vor dem Motivangebot jede Vorlage zusammen mit der gewählten Revealreferenz und dem vorgeschlagenen Parameterkorridor beurteilen. Motivurteile, Rechte und Dateibindung gehören in denselben Arbeitsrecord.
+
 ## 2. Motivvorlage nach Revealfreigabe
 
 ### 2.1 Konfiguration nach Bildfreigabe

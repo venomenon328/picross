@@ -8,7 +8,7 @@ from pathlib import Path
 import shutil
 import tempfile
 
-from . import current_content as content, catalog_io as io, catalog_rating as rating
+from . import current_content as content, catalog_io as io, catalog_rating as rating, current_qualification
 from . import catalog_method, catalog_added, palette_quality, verifier
 from .authoring_package import require
 from .contract import exact_keys, digest, Budget
@@ -16,6 +16,7 @@ from .editor_raster import check_end
 from .raster_parameters import frame_edges, frame_failures, require_color_count, used_foreground
 
 FORMAT = "picross-integration-input-v1"
+PW_SOURCE = "pw-source.json"
 FINDING_FORMAT = "picross-integration-input-v2"
 FIELDS = {"format", "entry", "metadata", "definition", "reveal", "background",
           "difficulty", "proof", "quality", "approval", "test_only"}
@@ -31,7 +32,38 @@ def decision(value):
     check({k: value[k] for k in ("actor", "timestamp_utc", "statement")})
 
 
+def from_current(directory, manifest, files, checked):
+    """Consume the projection produced by current_authoring from its checked job."""
+    job = checked.job
+    from . import finding_decisions
+    if job['format'] not in finding_decisions.FORMATS:
+        return Input(directory)
+    selected = job['selected']
+    require(job['state'] in ('editorially_approved', 'registered')
+            and manifest['format'] == FINDING_FORMAT and manifest['approval']['selection_sha256'] == selection(manifest),
+            'Approved current selection required')
+    value = Input.__new__(Input)
+    value.root, value.raw, value.value = directory, files, manifest
+    value.entry = manifest['entry']
+    facts = checked.rasters[selected['raster']]
+    value.definition, value.checked = facts['definition'], facts['difficulty']
+    value.definition_raw = files[manifest['definition']['file']]
+    require(value.definition['reveal']['image'] == 'res://'+value.entry['reveal']
+            and value.definition['reveal']['name'] == manifest['metadata']['name']
+            and value.checked['production_mode'] == value.entry['mode'], 'Delivery differs from qualified raster')
+    def image(part):
+        return {key: files[part[key]['file']] for key in ('asset', 'notice')}
+    value.reveal = image(manifest['reveal'])
+    require(Path(manifest['reveal']['asset']['file']).suffix == Path(value.entry['reveal']).suffix,
+            'Reveal extension differs')
+    part = manifest['background']['image']
+    value.background = image(part) if part else None
+    value.reveal_size = checked.image_sizes[selected['reveal']]
+    return value
+
+
 class Input:
+    recheck_source = None
     @io.bounded
     def __init__(self, directory):
         self.root = io.external(directory)
@@ -102,7 +134,8 @@ class Input:
         path = io.safe(self.root, value["asset"]["file"])
         if kind == "reveal":
             from .image_validation import validate_reveal
-            validate_reveal(path, self.definition["width"], self.definition["height"])
+            info = validate_reveal(path, self.definition["width"], self.definition["height"])
+            self.reveal_size = (info["width"], info["height"])
             require(path.suffix == Path(self.entry["reveal"]).suffix, "Reveal extension differs")
         else:
             from .catalog_publication import _validate_background_image
@@ -180,14 +213,38 @@ class Input:
         require(sorted(actual) == sorted(findings), "Current frame/palette failures require their exact explicit exceptions")
 
     def recheck(self):
+        if self.recheck_source is not None:
+            self.recheck_source()
         for name, raw in self.raw.items():
             require(io.read(self.root, name, max(len(raw), 1)) == raw, "Input changed while validating: "+name)
+
+
+def open_input(directory, *, pw_root=None, job_id=None):
+    """Share a completed intake only inside the current batch, checking every byte."""
+    root = io.external(directory)
+    manifest = io.read(root, 'manifest.json', 1024 * 1024)
+    binding = io.read(root, PW_SOURCE, 4096, missing=True)
+    key = ('integration-input', io.checksum(manifest), binding)
+    previous = current_qualification.lookup(key)
+    if previous is not None:
+        previous.root = root
+        previous.recheck()
+        return previous
+    if binding is not None or pw_root is not None:
+        from .current_authoring import open_worktree_input
+        require(binding is not None and pw_root is not None, 'Bound delivery requires the PW worktree and source binding')
+        result = open_worktree_input(root, pw_root, job_id or io.json_bytes(binding, 4096)['job'])
+    else:
+        result = Input(root)
+    require(result.raw['manifest.json'] == manifest, 'Input changed while opening')
+    current_qualification.remember(key, result)
+    return result
 
 
 @io.bounded
 def export(source, output):
     """The sole current exporter; no original package or producer admission."""
-    current = Input(source)
+    current = open_input(source)
     output = io.external(output)
     require(not output.exists(), "Export output already exists")
     output.parent.mkdir(parents=True, exist_ok=True)
@@ -198,7 +255,9 @@ def export(source, output):
             target = io.safe(stage, name)
             target.parent.mkdir(parents=True, exist_ok=True)
             target.write_bytes(raw)
-        Input(stage)
+        # Verify the staged inventory against the exact bytes qualified above.
+        for name, raw in current.raw.items():
+            require(io.read(stage, name, len(raw)) == raw, "Exported input differs: " + name)
         current.recheck()
         from .catalog_publication import rename
         rename(stage, output, replace=False)

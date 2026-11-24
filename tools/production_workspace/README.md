@@ -391,6 +391,8 @@ RI-ONE-Eingang vorbereitet:
 
 ~~~sh
 python -m tools.puzzle_production.authoring_builder prepare-integration --repository /absoluter/arbeitscheckout --record content/authoring/pz-beispiel/current/record.json --output-dir /absoluter/aktueller-eingang
+python -m tools.puzzle_production.target_adapter plan --input /absoluter/aktueller-eingang --pw-worktree /absoluter/arbeitscheckout --checkout /absoluter/integrationscheckout
+python -m tools.puzzle_production.target_adapter register --input /absoluter/aktueller-eingang --pw-worktree /absoluter/arbeitscheckout --checkout /absoluter/integrationscheckout
 ~~~
 
 Der saubere Integrationsbranch entsteht vom aktuellen Main und übernimmt nur

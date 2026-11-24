@@ -1,5 +1,7 @@
 # RI: Zuverlässige und messbare Rätselintegration
 
+Bei der gebundenen PW-Erstintegration liefert Schritt 5 die gewählten Dateien mit den vorhandenen Sichtungen, technischen Nachweisen und Erklärungen. Vor dem Schreiben die Quellbytes, das aktuelle Ziel und die Berechtigung prüfen. Die beiden Katalogprofile werden für die Erstregistrierung zusammen erzeugt.
+
 ## Geltung und Quellen
 
 - **Status:** aktiver technischer Vertrag für aktuelle Inhaltsformen, Erstintegration und Recovery.

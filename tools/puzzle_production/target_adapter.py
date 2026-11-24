@@ -31,7 +31,9 @@ def main(argv=None):
         p=sub.add_parser(command)
         p.add_argument("--input",required=True,type=Path)
         if command=="export":p.add_argument("--output-dir",required=True,type=Path)
-        if command in ("plan","register"):p.add_argument("--checkout",required=True,type=Path)
+        if command in ("plan","register"):
+            p.add_argument("--checkout",required=True,type=Path)
+            p.add_argument("--pw-worktree",type=Path)
         if command=="register":
             p.add_argument("--publication-seconds",type=diagnostic.cli_seconds)
             p.add_argument("--recovery-seconds",type=diagnostic.cli_seconds)
@@ -59,9 +61,12 @@ def main(argv=None):
         elif args.command=="export": result=export(args.input,args.output_dir)
         elif args.command=="verify-export":result=verify_export(args.input)[1]
         elif args.command in ("plan","register"):
-            result=registry.registration(args.input,args.checkout,apply=args.command=="register",
-                publication_seconds=getattr(args,"publication_seconds",None),
-                recovery_seconds=getattr(args,"recovery_seconds",None))
+            from . import current_qualification, integration_input
+            with current_qualification.operation():
+                incoming = integration_input.open_input(args.input, pw_root=args.pw_worktree)
+                result=registry.registration(incoming,args.checkout,apply=args.command=="register",
+                    publication_seconds=getattr(args,"publication_seconds",None),
+                    recovery_seconds=getattr(args,"recovery_seconds",None))
         elif args.command=="recover-registration":result=registry.recover(args.checkout,recovery_seconds=args.recovery_seconds)
         elif args.command=="check-registry":result=registry.check_checkout(args.checkout)
         elif args.command=="sync-runtime":result=registry.sync_runtime(args.checkout)

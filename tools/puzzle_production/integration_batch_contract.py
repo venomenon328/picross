@@ -96,7 +96,11 @@ def validate_plan(value):
         operation = job["operation"]
         require(isinstance(operation, str) and operation in PHASES, "Unknown integration operation")
         source_ref(job["authorization"])
-        exact_keys(job["inputs"], INPUTS[operation])
+        fields = INPUTS[operation]
+        if operation == "register" and "pw_record" in job["inputs"]:
+            fields = fields | {"pw_record"}
+            require(job["inputs"]["pw_record"] is not None, "Bound registration requires its current record")
+        exact_keys(job["inputs"], fields)
         for key, ref in job["inputs"].items():
             source_ref(ref, directory=key in ("current", "work"))
             if ref is not None and key in ("current", "work"):

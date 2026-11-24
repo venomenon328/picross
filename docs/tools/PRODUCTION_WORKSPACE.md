@@ -1,5 +1,7 @@
 # PW: Produktionsassistent
 
+In der Auswahl zeigt der Assistent die gebundenen Angebote. Bei Hintergrundangeboten zeigt das Bild die vorbereitete PNG-Datei. Fehlende Voraussetzungen und konkrete Befunde stehen am Kandidaten. Die kombinierte Schlussentscheidung verwendet die angezeigte Revision.
+
 ## Geltung und Quellen
 
 - **Status:** aktiver Vertrag für Oberfläche, lokalen Git-/Bildzugriff und Ansichtsprojektion.

@@ -9,19 +9,19 @@ Abschlussausgabe folgen Kern §§6–7.
 
 ## 8. Abgenommenes Ergebnis ins Spiel integrieren
 
-Fehlen bei der Fortsetzung die gewählten Bildbytes, ruft ChatGPT die nötigen Originale und die profilgebundene Ableitung über den [Main-Worker](../../tools/PW_REMOTE.md#originale-in-chatgpt-sichten) ab. Die tatsächliche Sichtung und die bereits erklärte Schlussentscheidung gehen in denselben Finalizer ein.
+Bei der Fortsetzung liest der Main-Worker die gespeicherte Qualifikation und die gewählten Dateien aus dem gebundenen Arbeitsstand. Fehlende Sichtungen oder Ableitungen gehören in die zugehörige Produktionsphase. Ein frischer Chat kann eine kombinierte Wahl und Schlussentscheidung anhand des qualifizierten Angebots übermitteln.
 
 Vor Benutzung [RI](../PUZZLE_INTEGRATION.md), den aktuellen Eingang in [ZA-1](../ZA1_ADAPTER.md) und die passende CLI-Anleitung lesen. Schritt 5 setzt vollständige aktuelle Raster-/Hintergrundbereitschaft und tatsächliche Endfreigabe voraus. Bestehende gültige Entscheidungen verwenden, fehlende Entscheidungen niemals technisch erzeugen. Der Finalizer führt vorhandene tatsächliche Entscheidungen im einen aktuellen Record nach; Arbeitsmaterial ist keine Katalogautorität.
 
-Den aktuellen `picross-integration-input-v1` aus endgültiger Definition, Hinweisen/Palette, explizitem Mono-/Color-Modus, gewähltem Reveal, Hintergrund selected/none/standard, benötigten Notices/Rechten, Metadaten, geprüfter Difficulty, gültigem vollständigem Proof und wirklicher Inhalts-/Integrationsentscheidung zusammenstellen. Den vollständigen Linien- oder Paarlinien-Proof am finalen Raster unabhängig prüfen und die Endmatrix vergleichen. Kein zusätzlicher Suchsolverlauf zur Rekonstruktion alter Produktion. Keine Original-ZIP-, Producer-, Toolversions- oder historische Regelwerkszulassung.
+Den aktuellen `picross-integration-input-v1` aus endgültiger Definition, Hinweisen/Palette, explizitem Mono-/Color-Modus, gewähltem Reveal, Hintergrund selected/none/standard, benötigten Notices/Rechten, Metadaten, geprüfter Difficulty, gültigem vollständigem Proof und wirklicher Inhalts-/Integrationsentscheidung zusammenstellen. Der unabhängige Linien- oder Paarliniennachweis und der Endmatrixvergleich gehören vor das Rasterangebot. In Schritt 5 die Identität und Bytes der gewählten Lieferung gegen diesen Stand prüfen. Für separat eingereichte Eingangsverzeichnisse gilt die vollständige Eingangsprüfung nach ZA-1.
 
 ```text
 python -m tools.puzzle_production.authoring_builder prepare-integration --repository <arbeitscheckout> --record <aktueller-record> --output-dir <neue-übergabe>
-python -m tools.puzzle_production.target_adapter plan --input <übergabe> --checkout <produktionscheckout>
-python -m tools.puzzle_production.target_adapter register --input <übergabe> --checkout <produktionscheckout>
+python -m tools.puzzle_production.target_adapter plan --input <übergabe> --pw-worktree <arbeitscheckout> --checkout <produktionscheckout>
+python -m tools.puzzle_production.target_adapter register --input <übergabe> --pw-worktree <arbeitscheckout> --checkout <produktionscheckout>
 ```
 
-`prepare-integration` prüft und kopiert denselben vollständigen aktuellen Eingang wie `target_adapter export`; keine Entscheidungen werden ergänzt. Register prüft und plant selbst frisch. Identische aktuelle Wiederholung ist byte-/mtimegleicher No-op. Eine belegte ID mit anderem Inhalt braucht den gesonderten Änderungsauftrag. Aktuelle Qualitäts-, Bild-, Paletten-, Proof-, Rechte-, Kategorie-, Difficulty-, Pfad-, Slot- und test_only-Gates bleiben Pflicht.
+Im verwalteten PW-Arbeitscheckout bindet `prepare-integration` die Lieferung an Job, Arbeitscommit und SHA-256 des qualifizierten Records. Plan und Register lesen diesen Stand über `--pw-worktree` und vergleichen Manifest und Lieferbytes mit der freigegebenen Auswahl. Der Plan prüft auch die vorgesehenen Profilpfade und lässt das Ziel schreibfrei. Erst die tatsächliche Erstregistrierung erzeugt die beiden Katalogprofile. Eine identische Wiederholung ist ein No-op. Eine belegte ID mit anderem Inhalt braucht den gesonderten Änderungsauftrag.
 
 Publikation und Registrierungsrecovery haben getrennte 1800-s-Defaults und 300-s-Warnung. Fremde/unklare Bytes und offene Journale erhalten. Kontrollierter Abbruch, erfolgreiche Rückführung und offene Recovery getrennt berichten. Der Integrationsbatch benutzt denselben Kern nur für ausdrücklich vorbereitete und autorisierte Jobs; kein zusätzlicher Batchauftrag wird aus einer Einzelintegration abgeleitet.
 

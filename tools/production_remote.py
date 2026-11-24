@@ -45,7 +45,7 @@ def request(value):
     common = {'format', 'repository', 'job', 'operation', 'expected', 'record_sha256', 'tools', 'main', 'input'}
     require(isinstance(value, dict), 'Expected PW remote request')
     op = value.get('operation')
-    require(op in ('step3', 'step5', 'status', 'retire', *delivery.READS), 'Unknown PW operation')
+    require(op in ('step3', 'step4', 'step5', 'status', 'retire', *delivery.READS), 'Unknown PW operation')
     extra = {'product', 'pr'} if op in ('inspect-product', 'status', 'retire') else {'issue'} if op == 'step5' else set()
     exact_keys(value, common | extra)
     require(value['format'] == 'pw-remote-v1' and value['repository'] == pw.REPO, 'Different format or repository')
@@ -71,17 +71,26 @@ def request(value):
         design = data['design']
         require(isinstance(design, dict) and isinstance(design.get('variants'), list) and
                 len(design['variants']) == 1, 'One explicitly selected candidate per attempt')
+    elif op == 'step4':
+        require(isinstance(data, dict) and set(data) in ({'prepare'}, {'assessment'}), 'Expected background preparation or assessment')
+        if 'prepare' in data:
+            ids = data['prepare']
+            require(isinstance(ids, list) and 0 < len(ids) <= 100, 'Expected offered background IDs')
+            for candidate in ids:
+                current.identifier(candidate)
+            require(len(set(ids)) == len(ids), 'Duplicate background candidate')
+        else:
+            change = exact_keys(data['assessment'], {'candidate', 'original_sha256', 'sha256', 'profile', 'review', 'observations'})
+            current.identifier(change['candidate'])
+            sha(change['original_sha256'])
+            sha(change['sha256'])
+            current.findings.check_summaries(change['review'], current.CRITERIA['background'])
+            require(isinstance(change['observations'], list), 'Invalid background observations')
     elif op == 'step5':
         integer(value['issue'], 1, 2**53-1, 'product issue')
         require(isinstance(data, dict), 'Expected finalization input')
-        optional = {'prepared_review', 'finding_decisions'} & data.keys()
+        optional = {'finding_decisions'} & data.keys()
         exact_keys(data, {'background', 'decisions'} | optional)
-        if 'prepared_review' in data:
-            viewed = data['prepared_review']
-            exact_keys(viewed, {'original_sha256', 'profile', 'sha256', 'review'} | ({'observations'} & viewed.keys()))
-            sha(viewed['original_sha256'])
-            sha(viewed['sha256'])
-            current.findings.check_summaries(viewed['review'], current.CRITERIA['background'])
         declarations = data.get('finding_decisions', [])
         require(isinstance(declarations, list) and len(declarations) <= 128, 'Invalid finding declarations')
         seen = set()
@@ -144,9 +153,9 @@ def preflight(root, req, auth):
     request_id = digest(req)
     product = git.remote_head(root, 'refs/heads/' + prs.product_branch(job))
     lock = git.remote_head(root, 'refs/heads/' + pw.release_catalog.LOCK_BRANCH)
-    ci = workflow(prs.WORKFLOW) if op != 'step3' else None
+    ci = workflow(prs.WORKFLOW) if op not in ('step3', 'step4') else None
     worker = workflow(WORKFLOW)
-    if op in ('step3', 'step5') and work != expected:
+    if op in ('step3', 'step4', 'step5') and work != expected:
         require(work and owner(work, parent=expected) == request_id, 'Work changed outside this request')
         record = pw.bound_record(pw.remote_record(work, job), job)
     if op == 'step3' and 'design' in req['input']:
@@ -154,6 +163,11 @@ def preflight(root, req, auth):
         motif = next((a for a in record['assets'] if a['id'] == record['selected']['motif']), None)
         require(motif and motif['file']['sha256'] == data['motif_sha256'], 'Selected motif bytes changed')
     if op == 'step5':
+        if record['format'] in current.findings.FORMATS:
+            qualification = record.get('qualification')
+            require(qualification is not None and all(current.qualification.documented(row)
+                    for row in qualification['facts'].values()),
+                    'Bound candidate qualification missing. Complete the affected production phase first.')
         issue = pw.api('issues/' + str(req['issue']))
         require(issue['number'] == req['issue'] and 'pull_request' not in issue, 'Expected production issue')
         existing = prs.lookup(job)
@@ -205,7 +219,7 @@ def run(root, req, auth, token, *, diagnose=False, check_invocation=lambda: None
     require(ws.git(TOOLS, 'rev-parse', 'HEAD') == req['tools'] and not ws.changes(TOOLS),
             'Execute from the clean, explicitly pinned trusted tool checkout')
     times = dict.fromkeys(('queue', 'bootstrap', 'fetch_originals', 'computation', 'publication', 'ci', 'wait'))
-    with pw.publisher_auth(auth, token):
+    with pw.publisher_auth(auth, token), current.qualification.operation():
         with measured(times, 'fetch_originals'):
             report = preflight(root, req, auth)
         if diagnose:
@@ -270,6 +284,8 @@ def run(root, req, auth, token, *, diagnose=False, check_invocation=lambda: None
             with measured(times, 'computation'), tempfile.TemporaryDirectory(dir=paths['temporary']) as tmp:
                 if op == 'step3':
                     result.update(steps.step3(req, original, data, Path(tmp)))
+                elif op == 'step4':
+                    result.update(steps.step4(req, original, data, Path(tmp)))
                 else:
                     product = steps.step5(req, req_id, original, data, Path(paths['integration']), Path(tmp))
             with measured(times, 'publication'):
@@ -287,6 +303,9 @@ def run(root, req, auth, token, *, diagnose=False, check_invocation=lambda: None
             result['next'] = 'Read the approved motif and parameters for the raster design.'
         if op == 'step3' and 'assessment' in req['input']:
             result['next'] = 'Read the published assessments and present the current offers or inspection drafts.'
+        if op == 'step4':
+            result['next'] = ('Inspect the bound original and prepared PNG of each candidate.'
+                              if 'prepare' in req['input'] else 'Read the current background assessments.')
         if op == 'step5':
             require(git.remote_head(root, 'refs/heads/main') == req['main'] and
                     git.remote_head(root, 'refs/heads/' + prs.product_branch(job)) == product and

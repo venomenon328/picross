@@ -3,8 +3,8 @@ from copy import deepcopy
 from hashlib import sha1
 from . import current_content as content, current_registration as transaction
 from . import catalog_rating as rating, catalog_added as added, catalog_method, categories
-from . import catalog_io as io, operation_diagnostics as diagnostic
-from .integration_input import Input
+from . import catalog_io as io, catalog_profiles, operation_diagnostics as diagnostic
+from .integration_input import Input, open_input
 from .authoring_package import require
 
 
@@ -44,9 +44,37 @@ def same(current, incoming):
 
 @diagnostic.measured("Input/Plan")
 def integrate(export_dir, root, *, apply=False, fail_step=None, publication_seconds=None, recovery_seconds=None):
+    return Registration(export_dir).run(root, apply=apply, fail_step=fail_step,
+        publication_seconds=publication_seconds, recovery_seconds=recovery_seconds)
+
+
+class Registration:
+    """A single intake, usable for a read-only plan followed by fresh registration."""
+    def __init__(self, directory):
+        self.incoming = directory if isinstance(directory, Input) else open_input(directory)
+        self._profiles = None
+
+    def profiles(self, original):
+        from .catalog_profiles import render_profiles
+        from . import current_qualification as qualification
+        if self._profiles is None:
+            key = ('catalog-profiles', self.incoming.entry['id'], original['file'], original['sha256'])
+            self._profiles = qualification.lookup(key)
+            if self._profiles is None:
+                self._profiles = render_profiles(self.incoming.entry["id"], original, self.incoming.reveal["asset"],
+                                                 self.incoming.reveal_size)
+                qualification.remember(key, self._profiles)
+        return self._profiles
+
+    def run(self, root, **options):
+        self.incoming.recheck()
+        return _register(self, root, **options)
+
+
+def _register(operation, root, *, apply=False, fail_step=None, publication_seconds=None, recovery_seconds=None):
     diagnostic.seconds(publication_seconds); diagnostic.seconds(recovery_seconds)
     require(apply or publication_seconds is None and recovery_seconds is None, "Publication budgets require writing")
-    incoming = Input(export_dir)
+    incoming = operation.incoming
     if incoming.value["test_only"]:
         check_test_catalog(io.external(root))
     entry = incoming.entry
@@ -71,10 +99,7 @@ def integrate(export_dir, root, *, apply=False, fail_step=None, publication_seco
     value["entries"].append(entry); value["entries"].sort(key=lambda e: e["id"])
     value["metadata"].append(incoming.value["metadata"]); value["metadata"].sort(key=lambda e: e["id"])
     raw = incoming.definition_raw
-    from .catalog_profiles import generate
     original = content.ref("game/"+entry["reveal"], incoming.reveal["asset"])
-    catalog, profiles = generate(entry["id"], original, incoming.reveal["asset"])
-    reveal = content.source(entry, raw, {"image_revision": 1, "asset": original}, "reveal", catalog=catalog)
     background = content.source(entry, raw, {"image_revision": 1, "status": incoming.value["background"]["status"],
         "asset": content.ref("game/art/backgrounds/"+entry["id"]+".png", incoming.background["asset"]) if incoming.background else None}, "background")
     background_name = content.source_path(entry["id"], "background")
@@ -82,29 +107,41 @@ def integrate(export_dir, root, *, apply=False, fail_step=None, publication_seco
     value["backgrounds"].sort(key=lambda e: e["id"])
     content.validate(value, snapshot.catalog)
     active = rating.active_record(incoming.checked)
-    # Planning uses no timestamp and writes nothing. Apply builds this anew.
+    changes = {content.REGISTRY: content.encoded(value),
+               "game/"+entry["definition"]: raw, "game/"+entry["reveal"]: incoming.reveal["asset"],
+               content.notice_path(entry): incoming.reveal["notice"],
+               rating.path(entry["id"]): rating.encoded(active),
+               background_name: content.encoded(background)}
+    if incoming.background:
+        changes["game/art/backgrounds/"+entry["id"]+".png"] = incoming.background["asset"]
+        changes["game/art/backgrounds/"+entry["id"]+".txt"] = incoming.background["notice"]
+    reveal_name = content.source_path(entry["id"], "reveal")
+    profile_names = {catalog_profiles.path(entry["id"], label) for label, _, _ in catalog_profiles.PROFILES}
+    planned_names = set(changes) | profile_names | {reveal_name, content.RUNTIME}
+    for name in planned_names - {content.REGISTRY, content.RUNTIME}:
+        require(snapshot.read(name, missing=True) is None, "Occupied current path: "+name)
+    require(snapshot.read(added.path(entry["id"]), missing=True) is None, "Occupied added date")
+    incoming.recheck(); snapshot.recheck()
+    plan = {"status": "planned", "registered": False, "id": entry["id"], "category": category,
+            "changes": [{"path": n, "operation": "replace" if n in (content.REGISTRY, content.RUNTIME) else "add"} for n in sorted(planned_names)] +
+                       [{"path": added.path(entry["id"]), "operation": "add-on-success"}],
+            "user_saves_modified": False}
+    # A bound source already supplies the qualified geometry. Profile names
+    # are fixed, so a read-only plan can check every collision before rendering.
+    if not apply and incoming.recheck_source is not None:
+        return plan
+    catalog, profiles = operation.profiles(original)
+    require(set(profiles) == profile_names, 'Catalog profile paths differ from plan')
+    reveal = content.source(entry, raw, {"image_revision": 1, "asset": original}, "reveal", catalog=catalog)
     date = added.registration(entry["id"]) if apply else {"added_at": None}
     delivery = {"entry": entry, "metadata": incoming.value["metadata"], "reveal": reveal, "background": background,
                 "rating": active, "added": date}
     runtime = deepcopy(snapshot.runtime)
     runtime["entries"].append(content.runtime_row(delivery)); runtime["entries"].sort(key=lambda e: e["id"])
-    changes = {**profiles, content.REGISTRY: content.encoded(value), content.RUNTIME: content.encoded(runtime),
-               "game/"+entry["definition"]: raw, "game/"+entry["reveal"]: incoming.reveal["asset"],
-               content.notice_path(entry): incoming.reveal["notice"],
-               rating.path(entry["id"]): rating.encoded(active),
-               content.source_path(entry["id"], "reveal"): content.encoded(reveal),
-               background_name: content.encoded(background)}
-    if incoming.background:
-        changes["game/art/backgrounds/"+entry["id"]+".png"] = incoming.background["asset"]
-        changes["game/art/backgrounds/"+entry["id"]+".txt"] = incoming.background["notice"]
-    for name in set(changes) - {content.REGISTRY, content.RUNTIME}:
-        require(snapshot.read(name, missing=True) is None, "Occupied current path: "+name)
-    require(snapshot.read(added.path(entry["id"]), missing=True) is None, "Occupied added date")
+    changes.update(profiles)
+    changes[reveal_name] = content.encoded(reveal)
+    changes[content.RUNTIME] = content.encoded(runtime)
     incoming.recheck(); snapshot.recheck()
-    plan = {"status": "planned", "registered": False, "id": entry["id"], "category": category,
-            "changes": [{"path": n, "operation": "replace" if n in (content.REGISTRY, content.RUNTIME) else "add"} for n in sorted(changes)] +
-                       [{"path": added.path(entry["id"]), "operation": "add-on-success"}],
-            "user_saves_modified": False}
     if not apply: return plan
     changes[added.path(entry["id"])] = added.encoded(date)
     journal = transaction.prepare(snapshot, changes)

@@ -8,6 +8,8 @@ danach diese Phase und die dort zugeordnete Bildnorm. Zusätzlich:
 Sichtung, §6 bei konkreter Ausnahme. Farbe: operative §§8.4–8.5;
 §§8.1–8.3.1 nur bei einer konkreten historischen Referenzfrage.
 
+Vor dem Rasterangebot je endgültiger Revision Proof, Endmatrix, Difficulty, benutzte Farbpaare, Rand und gegebenenfalls Crop prüfen. Q-R01–04 und Q-H01–03 an den tatsächlichen Ansichten beurteilen. Die Mindestgröße des Revealbilds ergibt sich aus seinen gebundenen Maßen und dem neuen Raster.
+
 ## 4. Rasterproduktion und technische Pflichtprüfung
 
 Wenn ChatGPT die gebundenen Motiv- oder Rasterbytes fehlen, öffnet der Akteur sie über den [Remote-Originalabruf](../../tools/PW_REMOTE.md#originale-in-chatgpt-sichten). Die Sichtung des publizierten Rasters und seiner Zell-/Hinweisansicht gehört vor die Angebotsqualifikation.

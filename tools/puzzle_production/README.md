@@ -13,6 +13,8 @@ Alle Aufrufe starten im Repositoryroot; Bildbefehle benötigen die unten erläut
 | Bildtyp und Darstellung beurteilen | [Bildnormen](../../docs/production/images/README.md) und [Qualität](../../docs/production/PUZZLE_QUALITY.md) |
 | Logik, Rasterableitung und Analyse | Die jeweiligen Werkzeugabschnitte dieser Anleitung; [Produktionsvertrag](../../docs/production/PUZZLE_PRODUCTION.md) |
 
+Für aktuelle PW-Produktionen erfolgt die unabhängige Proofprüfung vor dem Rasterangebot. Hintergrundangebote enthalten das Original und die in Schritt 4 gespeicherte und gesichtete profilgebundene PNG-Datei. Ein externer Aufruf mit `--input` prüft das Eingangsverzeichnis vollständig. Die gebundene Remote-Integration verwendet die Ergebnisse der Kandidaten und bestätigt Quell- und Zielbytes.
+
 ## RI-ONE: aktuelle Integration
 
 Der aktuelle Eingang ist ein Verzeichnis mit `manifest.json` im Format
@@ -211,7 +213,11 @@ die passende Variable mit `--auth GH_TOKEN` oder `--auth GITHUB_TOKEN` wählen.
 und Abschluss folgen [PW-B](../../docs/tools/PW_B_CONTRACT.md#bau-auswahl-und-sichere-fortschreibung).
 
 `prepare-integration --repository ARBEITSCHECKOUT --record RECORD --output-dir NEU`
-leitet den aktuellen RI-ONE-Eingang ab. Eine reine Hintergrundpflege erzeugt
+leitet den aktuellen RI-ONE-Eingang ab. Im verwalteten PW-Jobworktree bindet
+die Übergabe den Arbeitscommit und den Recordhash. Für diese Lieferung
+`target_adapter plan` und `register` jeweils mit `--input NEU --pw-worktree ARBEITSCHECKOUT --checkout ZIEL`
+aufrufen. Der Plan prüft die Pfadbelegung, die Erstregistrierung erzeugt beide Katalogprofile.
+Eine reine Hintergrundpflege erzeugt
 statt Erstregistrierung den aktuellen gemeinsamen Editorrequest. Die Integration
 bekommt einen sauberen Branch vom aktuellen Main und ausschließlich ausgewählte
 finale Produktdaten. Completion und Retirement benötigen keine Arbeitsarchive im
@@ -1236,7 +1242,7 @@ Für eine freigegebene neue Produktion bleibt der vorbereitende Weg
 danach `analyze` oder `import`, abschließend
 `rebind --input <fertige-Definition> --rating <checked.json> --production-mode mono|color --output <neue-checked.json>`.
 Die geprüfte Bewertung wird als aktuelle Bewertung im finalen Input gebunden;
-`target_adapter plan/register --input` liest ausschließlich diesen Input. Rasteränderungen
+Der Standalone-Intake liest diesen Input. Die gebundene PW-Übergabe verwendet zusätzlich den aktuellen Jobworktree. Rasteränderungen
 benutzen den separaten aktuellen Editor.
 Register/Update verlangen für neue oder tatsächlich geänderte Logik genau die
 aktive Produktionsmethode; ohne Defaultdatei ist dies **0.3**. Ein 0.4-Checked-

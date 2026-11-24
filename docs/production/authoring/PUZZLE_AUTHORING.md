@@ -2,6 +2,8 @@
 
 **Version 0.8.0 · Dokumentrevision 13 · 24.11.2026 · PW-LOCAL-A**
 
+In den Schritten 1 bis 4 jedes zur Wahl gestellte Angebot an seinen tatsächlichen Dateien vollständig qualifizieren. Zulässige offene Mängel vor der Wahl mit ihren konkreten Folgen zeigen. Die Schlussentscheidung bindet die vorliegenden Befunde. Schritt 5 prüft Zuordnung, Befugnisse und Lieferung.
+
 ## 1. Einstieg und Befugnisse
 
 ### 1.1 Pflichtquellen nach Phase
@@ -18,7 +20,7 @@ rekursive Volllektüre aus.
 | 2 · Motivvorlage | [Schritt 2](PUZZLE_AUTHORING_STEP_2.md) | [MOTIF](../images/MOTIF.md); das gewählte Reveal als Originalreferenz |
 | 3 · Rasterangebote | [Schritt 3](PUZZLE_AUTHORING_STEP_3.md) | [RASTER](../images/RASTER.md); freigegebene Motivvorlage und Reveal als Originalreferenzen |
 | 4 · Kontextzeichnungen | [Schritt 4](PUZZLE_AUTHORING_STEP_4.md) | [BACKGROUND](../images/BACKGROUND.md) |
-| 5 · Abschluss/Integration | [Schritt 5](PUZZLE_AUTHORING_STEP_5.md) | Vorhandene gültige Bildurteile verwenden; bei neuer Sichtung die betroffene Bildtypnorm lesen |
+| 5 · Abschluss/Integration | [Schritt 5](PUZZLE_AUTHORING_STEP_5.md) | Gebundene Bildurteile und gewählte Dateien ausliefern |
 
 Korrektur/Wiederaufnahme: tatsächliche Phase lesen, gültige Entscheidungen und
 verbrauchte Budgets fortführen; bei geänderten Bytes zusätzlich

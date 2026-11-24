@@ -1,5 +1,6 @@
 """Prepare owned, revision-bound sparse worktrees for one production job."""
 import argparse
+from contextlib import contextmanager
 import json
 import os
 from pathlib import Path
@@ -72,6 +73,41 @@ def read_binding(root):
     require(value['path'] == str(root) and value['repository'] == REPO
             and git_root(root) == io.external(value['store']), 'Worktree ownership differs')
     return value
+
+
+@contextmanager
+def qualification(root, job, *, verify_parent=False):
+    """Reuse the published parent of a managed draft after checking the actual ref."""
+    if current.qualification.active() and not verify_parent:
+        yield
+        return
+    with current.qualification.operation():
+        binding = read_binding(root) if (root / '.git').is_file() else None
+        if binding and binding['role'] == 'job':
+            require(binding['job'] == job, 'Different qualification worktree')
+            head = git(root, 'rev-parse', 'HEAD')
+            raw = GitSource(root).read(head, current.path(job), current.LIMIT, missing=True)
+            if raw:
+                record = current.validate(io.json_bytes(raw, current.LIMIT))
+                if record.get('qualification') or verify_parent:
+                    require(record['format'] in current.PUBLISHED_FORMATS, 'Expected published PW parent')
+                    require(transport.remote_head(root, 'refs/heads/content/pw/' + job) == head and
+                            transport.remote_head(root, 'refs/tags/work-prod-' + job) == record['work_release']['anchor'],
+                            'Published qualification source changed')
+                    require(record['puzzle_id'] == job, 'Different qualification subject')
+                    refs = [ref for ref in current.references(record) if 'asset' in ref]
+                    release = io.json_bytes(current.work_assets.get('/releases/tags/work-prod-' + job, 4*current.LIMIT), 4*current.LIMIT)
+                    require(release['id'] == record['work_release']['id'] and release['tag_name'] == 'work-prod-' + job
+                            and release['prerelease'] and not release['draft'], 'Different qualification release')
+                    assets = {asset['id']: asset for asset in release['assets']}
+                    for ref in refs:
+                        asset = assets.get(ref['asset']['asset_id'])
+                        require(asset and asset['name'] == 'original-' + ref['sha256'] and asset['size'] == ref['bytes']
+                                and asset['state'] == 'uploaded', 'Different qualification original')
+                    current.qualification._published(record)
+            elif verify_parent:
+                require(transport.remote_head(root, 'refs/heads/content/pw/' + job) is None, 'PW work ref advanced')
+        yield
 
 
 def profile(db, commit, job, role):
@@ -249,10 +285,13 @@ def prepare(root, job, tools_commit, main, expected, *, integration=None, integr
         toolbox = open_tree(base, db, 'tools-' + tools_commit, tools_commit, job, 'tools')
         data = open_tree(base, db, 'job-' + job, expected or main, job, 'job')
         if originals:
-            from .work_publish import hydrate
+            from .work_publish import hydrate, bound_record
             from .production_worktree_publish import JOURNAL
             require(expected and not (gitdir(data) / JOURNAL).exists(), 'Expected published job without pending transaction')
-            hydrate(data, job, expected)
+            with current.qualification.operation():
+                published = GitSource(data).read(expected, current.path(job), current.LIMIT)
+                current.qualification._published(bound_record(published, job))
+                hydrate(data, job, expected)
         result = {'store': str(db), 'tools': str(toolbox), 'tool_commit': tools_commit, 'job': str(data),
                   'data_commit': expected or main, 'main': main, 'temporary': str(io.safe(base, 'tmp'))}
         if integration:

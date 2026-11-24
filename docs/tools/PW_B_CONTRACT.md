@@ -4,6 +4,8 @@ Dokument-ID: `authoring-current`
 Status: `active`
 Stand: 17.11.2026 · [PROD-SLIM / #700](https://github.com/venomenon328/picross/issues/700)
 
+Der Builder speichert `qualification` vom Format `picross-candidate-qualification-v1` im aktuellen strukturierten Produktionsrecord. Er übernimmt gebundene Befunde seines gespeicherten Vorgängers und erhebt fällige Maße und Rasterergebnisse an den Originalen. Ein Bauauftrag liefert die Kandidaten. Seine mitgesendeten Fakten sind keine Prüfquelle. Der getrennte Publisher und die Wiederaufnahme verwenden die im aktuellen Record gesicherten Ergebnisse nach Abgleich von Job, Inventar und Originalbytes. Für veröffentlichte Stände gelten zusätzlich die Arbeitsref-, Release- und Assetbindungen. Sichturteil und tatsächliche Entscheidung führt der Record getrennt.
+
 ## Phasen und Autorität
 
 Authoring 0.8.0 verwendet genau einen aktuellen Record je Job. Die fünf Schritte

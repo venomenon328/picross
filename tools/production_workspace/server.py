@@ -214,7 +214,13 @@ class Service:
 
     def detail(self, jid):
         job = self.job(jid)
-        facts = p.inspect(job['_source'], job['commit'], job['_projection'])
+        from tools.puzzle_production import current_qualification as qualification
+        from tools import work_refs
+        with qualification.operation():
+            if (job['ref'] == 'content/pw/' + job['puzzle_id'] and job['source'] == 'remote'
+                    and job.get('source_url') == f'https://github.com/{work_refs.REPOSITORY}/tree/{job["commit"]}'):
+                qualification._published(job['_record'])
+            facts = p.inspect(job['_source'], job['commit'], job['_projection'])
         projection = job['_projection']
         hidden = facts.get('hidden_assets', [])
         self.views.put(('validated', job['commit'], io.checksum(p.data(projection))),
@@ -226,7 +232,9 @@ class Service:
             for asset in projection['assets'] if asset['id'] not in hidden
         ]
         offers = [offer for offer in projection['offers']
-                  if offer['kind'] != 'raster' or not cards.get(offer['id'], {}).get('missing')]
+                  if not cards.get(offer['id'], {}).get('missing') and all(
+                      row['eligible'] or row.get('decision', {}) and row['decision']['action'] == 'accept'
+                      for row in cards.get(offer['id'], {}).get('findings', []))]
         return {**projection, 'assets': assets, 'offers': offers, 'facts': facts,
                 'source': job['source'], 'commit': job['commit'],
                 'source_url': job.get('source_url'), 'branch': job['ref'],
@@ -256,9 +264,15 @@ class Service:
         if raw is None:
             raw = p.asset_bytes(job['_source'], job['commit'], loc, mode=mode)
             from tools.puzzle_production import current_authoring
-            if job['_record'].get('format') in current_authoring.FORMATS:
-                current_authoring.image_info(raw,loc['file'],job['_record'])
-            else:p.image(raw)
+            # asset_bytes verifies the length and digest against the same
+            # projection already examined by detail(). A repository image in a
+            # qualified production record has already passed its decoder.
+            inspected = job['_record'].get('qualification') and loc['storage'] == 'repository'
+            if not inspected:
+                if job['_record'].get('format') in current_authoring.FORMATS:
+                    current_authoring.image_info(raw,loc['file'],job['_record'])
+                else:
+                    p.image(raw)
             self.views.put(cache_key, raw)
         else:
             self.metrics['image_cache_hits'] += 1
