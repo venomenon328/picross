@@ -318,6 +318,8 @@ class Checked:
                 missing = list(fact['missing'])
                 if not asset['rights']:
                     missing.append('Nutzungsrechte fehlen')
+                if asset['role'] == 'motif' and not (j['parameters']['proposed'] or j['parameters']['approved']):
+                    missing.append('Parametervorschlag für die Motivwahl fehlt')
                 if asset['role'] == 'background':
                     prepared = asset['prepared']
                     if not prepared:
@@ -371,15 +373,9 @@ class Checked:
             if not structured and selected['background'] not in ('none','standard'):
                 from .catalog_publication import _validate_background_image
                 asset=next(a for a in j['assets'] if a['id']==selected['background'])
-                render = (asset['prepared'] and asset['prepared']['file']) if structured else asset['file']
-                ap.require(render is not None, 'Prepared selected background required')
                 with tempfile.TemporaryDirectory(prefix='current-image-') as temp:
-                    p=Path(temp)/'background.png'; p.write_bytes(self.bound(render,32*LIMIT))
+                    p=Path(temp)/'background.png'; p.write_bytes(self.bound(asset['file'],32*LIMIT))
                     _validate_background_image(p)
-                    if structured:
-                        from .background_contract import SIZES
-                        shape = image_info(p.read_bytes(), render['file'], j)
-                        ap.require(SIZES.get((shape['width'], shape['height'])) == asset['profile'], 'Prepared profile differs')
         if phase>=8:
             ap.require('final' in decisions and 'integration' in decisions and not j['blockers'], 'Actual final content/integration decisions required')
         if phase==9:
@@ -650,6 +646,18 @@ class Checked:
 def check_transition(previous, job):
     findings.transition(previous, job)
     if job['format'] in findings.FORMATS:
+        if previous and previous['format'] in findings.FORMATS and job['operation'] == 'production':
+            prior_items = findings.subjects(previous)
+            items = findings.subjects(job)
+            for role in ('reveal', 'motif', 'raster'):
+                chosen = job['selected'][role]
+                if chosen is None or previous['selected'][role] == chosen:
+                    continue
+                fields = ('definition', 'proof', 'difficulty', 'preview', 'crop_diagnosis', 'review') if role == 'raster' else ('file', 'rights', 'review')
+                prior = prior_items.get(chosen)
+                ap.require(prior and all(qualification.content_identity(prior.get(k)) ==
+                                         qualification.content_identity(items[chosen].get(k)) for k in fields),
+                           'Choose the previously assessed ' + role + ' offer')
         chosen = job['selected']['background']
         if chosen not in (None, 'none', 'standard') and (not previous or previous['selected']['background'] != chosen):
             asset = findings.subjects(job)[chosen]
@@ -901,8 +909,11 @@ def projection(job, record_raw):
     before_ids = crop_asset_ids(job)
     for raster in job['rasters']:
         crop = raster.get('crop_diagnosis')
-        asset = ({'storage': 'repository', **raster['preview']} if structured and job.get('qualification')
-                 else {'storage': 'definition', **raster['definition']})
+        asset = {'storage': 'definition', **raster['definition']}
+        if structured and job.get('qualification'):
+            fact = job['qualification']['facts'].get(qualification.raster_key(job, raster))
+            if fact and not fact['legacy_preview']:
+                asset = {'storage': 'repository', **raster['preview']}
         if crop:
             asset = {'storage': 'repository', **raster['preview']}
             assets.append({'id': before_ids[raster['id']], 'role': 'raster_draft', 'caption': 'Vor Beschnitt',

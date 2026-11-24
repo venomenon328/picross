@@ -267,11 +267,12 @@ class Service:
             # asset_bytes verifies the length and digest against the same
             # projection already examined by detail(). A repository image in a
             # qualified production record has already passed its decoder.
-            if job['_record'].get('qualification') and loc['storage'] == 'repository':
-                pass
-            elif job['_record'].get('format') in current_authoring.FORMATS:
-                current_authoring.image_info(raw,loc['file'],job['_record'])
-            else:p.image(raw)
+            inspected = job['_record'].get('qualification') and loc['storage'] == 'repository'
+            if not inspected:
+                if job['_record'].get('format') in current_authoring.FORMATS:
+                    current_authoring.image_info(raw,loc['file'],job['_record'])
+                else:
+                    p.image(raw)
             self.views.put(cache_key, raw)
         else:
             self.metrics['image_cache_hits'] += 1

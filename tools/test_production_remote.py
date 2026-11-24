@@ -150,6 +150,12 @@ class RemoteTests(unittest.TestCase):
         self.check_background_delivery(before, viewed)
         published = pw.bound_record(self.read_record(before, self.job), self.job)
         qualification = current.qualification
+        raster = published['rasters'][0]
+        legacy = deepcopy(published)
+        legacy['qualification']['facts'][qualification.raster_key(legacy,raster)]['legacy_preview'] = True
+        for record, storage in ((published,'repository'), (legacy,'definition')):
+            assets = current.projection(record,current.encoded(record))['assets']
+            self.assertEqual(next(a['location']['storage'] for a in assets if a['id'] == raster['id']), storage)
         self.assertEqual(qualification.inventory(published), {k: v['kind'] for k, v in published['qualification']['facts'].items()})
         with qualification.operation():
             missing = deepcopy(published)
