@@ -643,6 +643,15 @@ class Checked:
                 ap.require(self.read(name,max(len(raw),1))==raw, 'Current input changed: '+name)
 
 
+def crop_evidence(raster):
+    # A corridor decision can rebind the same crop to newly approved parameters.
+    # Checked verifies the new parameter digest, decision and measured bounds.
+    crop = raster.get('crop_diagnosis')
+    if crop is None:
+        return None
+    return qualification.content_identity({k: v for k, v in crop.items() if k != 'parameters_sha256'})
+
+
 def check_transition(previous, job):
     findings.transition(previous, job)
     if job['format'] in findings.FORMATS:
@@ -653,11 +662,13 @@ def check_transition(previous, job):
                 chosen = job['selected'][role]
                 if chosen is None or previous['selected'][role] == chosen:
                     continue
-                fields = ('definition', 'proof', 'difficulty', 'preview', 'crop_diagnosis', 'review') if role == 'raster' else ('file', 'rights', 'review')
+                fields = ('definition', 'proof', 'difficulty', 'preview', 'review') if role == 'raster' else ('file', 'rights', 'review')
                 prior = prior_items.get(chosen)
                 ap.require(prior and all(qualification.content_identity(prior.get(k)) ==
                                          qualification.content_identity(items[chosen].get(k)) for k in fields),
                            'Choose the previously assessed ' + role + ' offer')
+                if role == 'raster':
+                    ap.require(crop_evidence(prior) == crop_evidence(items[chosen]), 'Choose the previously assessed crop')
         chosen = job['selected']['background']
         if chosen not in (None, 'none', 'standard') and (not previous or previous['selected']['background'] != chosen):
             asset = findings.subjects(job)[chosen]

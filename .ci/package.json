@@ -6,6 +6,7 @@
   "modules": ["tools", "production.adapter", "production.catalog"],
   "omitted": "Regulärer Windows-x64-Playerbau. Bild- und Solveralgorithmen bleiben auf dem bisherigen Stand. Der Adapter prüft ihren Aufruf und die Katalogtests prüfen die Transaktion. Keine Änderungen an Spiel, Browser, Server oder Deployment.",
   "test_changes": [
+    {"path": "tools/production_workspace/check_ui_loading.cjs", "disposition": "change-scoped", "reason": "Ein Motiv ohne Parametervorschlag ist im Assistenten zur Korrektur verfügbar und von der regulären Wahl ausgenommen."},
     {"path": "tools/test_production_remote.py", "disposition": "change-scoped", "reason": "Zwei vorab gerenderte Hintergrundangebote, gespeicherte Ausgabe, Antwortverlust und Fortsetzung aus einer Auswahl prüfen."},
     {"path": "tests/puzzle_production/test_current_authoring.py", "disposition": "change-scoped", "reason": "Vor der Hintergrundwahl die gespeicherten und gesichteten Profilbytes verlangen und ihre Auslieferung prüfen."}
   ],
