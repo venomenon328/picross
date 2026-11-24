@@ -19,7 +19,11 @@ BINDING = 'pw-local-worktree.json'
 NORMS = ('AGENTS.md', *authoring_rulebook.PATHS, 'docs/tools/PW_B_CONTRACT.md',
          'docs/tools/PRODUCTION_GIT_WORKSPACE.md', 'docs/production/ZA1_ADAPTER.md',
          'docs/production/PUZZLE_INTEGRATION.md', 'docs/production/PUZZLE_PRODUCTION.md',
-         'tools/puzzle_production/README.md')
+         'docs/production/PAIRED_LINES.md', 'docs/production/FIXED_RASTER.md',
+         'docs/production/PUZZLE_BACKGROUNDS.md', 'docs/production/REVEAL_TRANSPARENCY.md',
+         'docs/production/PUZZLE_INTEGRATION_SINGLE_PATH.md', 'docs/difficulty/SD2_INTEGRATION.md',
+         'docs/difficulty/SD2_ANALYZER.md', 'docs/difficulty/SD2_CALIBRATION.md',
+         'docs/tools/GIT_PUBLICATION.md', 'docs/tools/PUZZLE_EDITOR.md', 'tools/puzzle_production/README.md')
 
 
 def git(root, *args):
@@ -212,6 +216,12 @@ def prepare(root, job, tools_commit, main, expected, *, integration=None, integr
         transport.git(db, 'fetch', '--no-tags', '--no-write-fetch-head', '--', transport.REMOTE,
                       *sorted({main, tools_commit, expected or main, integration_head or main}))
         check_refs()
+        tracking = 'refs/remotes/origin/main'
+        old_main = git(db, 'for-each-ref', '--format=%(objectname)', tracking)
+        if old_main != main:
+            if old_main:
+                git(db, 'merge-base', '--is-ancestor', old_main, main)
+            git(db, 'update-ref', tracking, main, old_main or '0' * 40)
         if integration_head:
             git(db, 'merge-base', '--is-ancestor', main, integration_head)
         toolbox = open_tree(base, db, 'tools-' + tools_commit, tools_commit, job, 'tools')
