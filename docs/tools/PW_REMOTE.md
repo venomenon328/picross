@@ -77,7 +77,12 @@ Operationen. Die Bereitstellung gehört zum Betreiberauftrag.
 Ohne konfigurierte App verwendet Actions sein Repositorytoken. Ein damit
 erzeugtes PR-Ereignis kann auf Genehmigung warten. Der Akteur liest den
 tatsächlichen Laufstatus. Für den Regelbetrieb ist der ereignisauslösende
-App-Zugang im isolierten Kontext zu erproben.
+App-Zugang im isolierten Kontext zu erproben. Meldet der Worker nach geprüftem
+Doppelpush `pr-access-required`, kann der aufrufende Akteur den gebundenen
+Request im eigenen autorisierten Kontext fortsetzen. Bei Nutzung des Connectors
+zuerst Basis, Produkthead und vorhandene PRs lesen. Für die bedingte Neuanlage
+die Daten aus `production_remote_pr.product_pr` einschließlich der vollständigen
+Markierung übernehmen. Den zugehörigen PR und die Checks mit `status` bestätigen.
 [GitHub-Tokenverhalten](https://docs.github.com/en/actions/concepts/security/github_token)
 und [Triggerregeln](https://docs.github.com/en/actions/how-tos/write-workflows/choose-when-workflows-run/trigger-a-workflow).
 
@@ -89,7 +94,7 @@ ChatGPT-Auftrag sowie sein produktiver Authkontext sind gesondert abzunehmen.
 
 Der isolierte Testmodus `PICROSS_PW_REMOTE_TEST=1` bindet ausschließlich
 `venomenon328/picross-remote-test`, dessen numerische Repository-ID, ursprünglichen
-Git-Anker und synthetischen Job `pz-current`. Der Publisher prüft `test_only`;
+Git-Anker und synthetischen Job `pz-remote-t02`. Der Publisher prüft `test_only`;
 die Registrierung verlangt den committed synthetischen Katalogmarker. Die
 [Paketentscheidung](https://github.com/venomenon328/picross/issues/859#issuecomment-7131900027)
 trennt den isolierten Nachweis von der produktiven Betriebsfreigabe.

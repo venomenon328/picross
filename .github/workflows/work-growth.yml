@@ -15,7 +15,6 @@ jobs:
           persist-credentials: false
       - name: Inspect outgoing commit metadata
         env:
-          PICROSS_PW_REMOTE_TEST: ${{ github.repository_id == '1470169013' && '1' || '0' }}
           BEFORE: ${{ github.event.before }}
           HEAD: ${{ github.sha }}
           GH_TOKEN: ${{ github.token }}

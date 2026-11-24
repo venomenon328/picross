@@ -154,7 +154,7 @@ def retire(root, req, auth, token):
     return pw.finish(data, req['job'], req['expected'], auth=auth, token=token)
 
 
-def run(root, req, auth, token, *, diagnose=False):
+def run(root, req, auth, token, *, diagnose=False, check_invocation=lambda: None):
     request(req)
     require(ws.git(TOOLS, 'rev-parse', 'HEAD') == req['tools'] and not ws.changes(TOOLS),
             'Execute from the clean, explicitly pinned trusted tool checkout')
@@ -186,6 +186,7 @@ def run(root, req, auth, token, *, diagnose=False):
         require(io.read(area, 'request-id', 64) == req_id.encode(), 'Different private request directory')
         if op == 'retire':
             with measured(times, 'publication'):
+                check_invocation()
                 status = retire(area, req, auth, token)
             return {**result, 'status': status, 'next': 'Retirement verified against confirmed main.'}
         work, product = report['work_head'], report['product']
@@ -208,6 +209,7 @@ def run(root, req, auth, token, *, diagnose=False):
             if product is not None:
                 ws.check_product(data, job, product)
             with measured(times, 'publication'):
+                check_invocation()
                 work = pw.push_job(data, job, expected, auth=auth, token=token, remote_request=intent)
         elif work == expected:
             with measured(times, 'bootstrap'):
@@ -224,6 +226,7 @@ def run(root, req, auth, token, *, diagnose=False):
                 else:
                     product = steps.step5(req, req_id, original, data, Path(paths['integration']), Path(tmp))
             with measured(times, 'publication'):
+                check_invocation()
                 intent = {'id': req_id, 'main': req['main'], 'product': product if op == 'step5' else None}
                 current._atomic(ws.gitdir(data), 'pw-remote-intent.json', current.encoded(intent))
                 work = pw.push_job(data, job, expected, auth=auth, token=token, remote_request=intent)
@@ -237,6 +240,7 @@ def run(root, req, auth, token, *, diagnose=False):
                     git.remote_head(root, 'refs/heads/' + prs.product_branch(job)) == product and
                     owner(product, parent=req['main']) == req_id, 'Product publication not confirmed on bound basis')
             with measured(times, 'publication'):
+                check_invocation()
                 try:
                     pr = prs.product_pr(req, product, req_id, create=True)
                 except github_rest.Failure as exc:
@@ -331,8 +335,14 @@ def main():
             if args.action in ('worker', 'worker-preflight'):
                 req, mode, ref, source = event_request(root)
                 diagnose = args.action == 'worker-preflight' or mode == 'preflight'
-                result = run(root, req, args.auth, token, diagnose=diagnose)
+                def check_invocation():
+                    require(git.remote_head(root, ref) == source and git.remote_head(root, 'refs/heads/main') == req['main'],
+                            'Invocation withdrawn or main advanced before publication')
+                result = run(root, req, args.auth, token, diagnose=diagnose, check_invocation=check_invocation)
                 if args.action == 'worker-preflight':
+                    if mode == 'execute' and req['operation'] != 'status':
+                        require(result['catalog_lease'] == 'free',
+                                'Catalog lease occupied. Resume from the owning private journal before starting a new runner.')
                     images = mode == 'execute' and req['operation'] != 'status'
                     with open(os.environ['GITHUB_OUTPUT'], 'a', encoding='utf-8') as out:
                         print('images=' + str(images).lower(), file=out)

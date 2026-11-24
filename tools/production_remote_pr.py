@@ -88,6 +88,11 @@ def ci_status(req, pr, workflow_id):
     rows = jobs['jobs']
     require(len(rows) == jobs['total_count'] and all(j['run_id'] == run['id'] and j['head_sha'] == head
             for j in rows), 'Incomplete or foreign CI jobs')
+    # The optional attachment delivery job is present and skipped on ordinary PRs.
+    attachment = [j for j in rows if j['name'] == 'review-attachment']
+    require(len(attachment) <= 1 and all(j['conclusion'] == 'skipped' for j in attachment),
+            'Unexpected evidence delivery on the product PR')
+    rows = [j for j in rows if j['name'] != 'review-attachment']
     expected = {'docs', 'verify (source)', 'ci-required'}
     result['checks'] = {j['name']: j['conclusion'] for j in rows}
     if run['conclusion'] != 'success' or set(result['checks']) != expected or len(rows) != len(expected) or any(

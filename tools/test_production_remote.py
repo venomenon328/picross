@@ -76,7 +76,8 @@ class RemoteTests(unittest.TestCase):
             head = self.pr['head']['sha']
             merge = 'd' * 40 if self.state == 'wrong-merge' else self.pr['merge_commit_sha']
             names = ('docs',) if self.state == 'missing-job' else ('docs', 'verify (source)', 'ci-required')
-            return {'total_count': len(names), 'jobs': [{'name': n, 'head_sha': head, 'run_id': 11, 'conclusion': 'success',
+            return {'total_count': len(names) + 1, 'jobs': [{'name': 'review-attachment', 'head_sha': head, 'run_id': 11,
+                'conclusion': 'skipped'}] + [{'name': n, 'head_sha': head, 'run_id': 11, 'conclusion': 'success',
                 'steps': [{'name': f'PR 2 / {head} / {self.main} / {merge}', 'conclusion': 'success'}]} for n in names]}
         return self.fixture.api(path, method, value)
 
