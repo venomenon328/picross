@@ -6,6 +6,7 @@ import platform
 import shutil
 import subprocess
 import tempfile
+from urllib.error import HTTPError
 
 from . import p1_preflight as engine
 from . import work_refs
@@ -38,8 +39,11 @@ def resources(project):
             from hashlib import sha256
             spec = bindings['files'][name]
             url = f'https://raw.githubusercontent.com/venomenon328/picross/{bindings["commit"]}/game/{name}'
-            with urlopen(url, timeout=30) as response:
-                raw = response.read(spec['bytes'] + 1)
+            try:
+                with urlopen(url, timeout=30) as response:
+                    raw = response.read(spec['bytes'] + 1)
+            except HTTPError as exc:
+                raise ValueError(f'Test drawing resource {name}: HTTP {exc.code}') from exc
             require(len(raw) == spec['bytes'] and sha256(raw).hexdigest() == spec['sha256'], 'Different test art')
             target.write_bytes(raw)
 
@@ -57,9 +61,15 @@ def render(raw, private):
         shutil.copyfile(ROOT / 'tools/production_remote_view.gd', project / 'view.gd')
         (project / 'project.godot').write_text('config_version=5\n[rendering]\nrenderer/rendering_method="gl_compatibility"\n',
                                                encoding='utf-8')
-        urls = engine.official_asset_urls(engine.request_json(engine.RELEASE_API), (asset,))
+        try:
+            urls = engine.official_asset_urls(engine.request_json(engine.RELEASE_API), (asset,))
+        except HTTPError as exc:
+            raise ValueError(f'Pinned editor release metadata: HTTP {exc.code}') from exc
         archive = work / asset.name
-        engine.download_asset(urls[asset.name], archive, asset.sha256, 300)
+        try:
+            engine.download_asset(urls[asset.name], archive, asset.sha256, 300)
+        except HTTPError as exc:
+            raise ValueError(f'Pinned editor download: HTTP {exc.code}') from exc
         executable = engine.extract_editor(archive, work / 'engine', host)
         env = engine.isolated_environment(work, host)
         env = {k: v for k, v in env.items() if not k.startswith(('GH_', 'GITHUB_', 'ACTIONS_'))}

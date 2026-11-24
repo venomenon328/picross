@@ -72,13 +72,15 @@ def stage(req, record, ctx, output, read, recheck):
         files.mkdir(mode=0o700)
         for spec in specs:
             ref = spec['source']
-            if ref['file'] not in cache:
+            key = ((ref['asset']['release_id'], ref['asset']['asset_id']) if 'asset' in ref else ref['file'],
+                   ref['bytes'], ref['sha256'])
+            if key not in cache:
                 start = monotonic()
                 data = read(ref)
                 require(len(data) == ref['bytes'] and io.checksum(data) == ref['sha256'], 'Different original')
-                cache[ref['file']] = data
+                cache[key] = data
                 seconds['originals'] += monotonic() - start
-            data = cache[ref['file']]
+            data = cache[key]
             start = monotonic()
             if spec['derive'] == 'prepare-background':
                 original, prepared = private / 'original', private / 'prepared.png'
