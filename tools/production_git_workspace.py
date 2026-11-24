@@ -14,7 +14,7 @@ from .puzzle_production.authoring_builder import git_root, index_value, publish_
 from .puzzle_production.authoring_package import require
 from .production_workspace.sources import GitSource, check_commit
 
-REPO = 'venomenon328/picross'
+from .work_refs import REPOSITORY as REPO
 OWNER = 'pw-local-owner.json'
 BINDING = 'pw-local-worktree.json'
 NORMS = ('AGENTS.md', *authoring_rulebook.PATHS, 'docs/tools/PW_B_CONTRACT.md',

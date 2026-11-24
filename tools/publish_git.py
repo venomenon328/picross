@@ -11,12 +11,12 @@ from pathlib import Path
 
 try:
     from .ci_growth import forbidden, SHA
-    from .work_refs import CLEAN_MAIN
+    from .work_refs import CLEAN_MAIN, REPOSITORY
 except ImportError:
     from ci_growth import forbidden, SHA
-    from work_refs import CLEAN_MAIN
+    from work_refs import CLEAN_MAIN, REPOSITORY
 
-GITHUB_REMOTE = 'https://github.com/venomenon328/picross.git'
+GITHUB_REMOTE = 'https://github.com/' + REPOSITORY + '.git'
 REMOTE = GITHUB_REMOTE
 _remote_token = ContextVar('git_remote_token', default=None)
 
@@ -181,7 +181,7 @@ def publish(root, branch, head, expected, *, api=False):
                 additions.append({'path': path, 'contents': base64.b64encode(raw).decode()})
         message = git(root, 'show', '-s', '--format=%B', head).decode().strip().partition('\n')
         payload = {'query': 'mutation($input:CreateCommitOnBranchInput!){createCommitOnBranch(input:$input){commit{oid}}}',
-                   'variables': {'input': {'branch': {'repositoryNameWithOwner': 'venomenon328/picross', 'branchName': branch},
+                   'variables': {'input': {'branch': {'repositoryNameWithOwner': REPOSITORY, 'branchName': branch},
                                  'expectedHeadOid': actual, 'message': {'headline': message[0], 'body': message[2]},
                                  'fileChanges': {'additions': additions, 'deletions': deletions}}}}
         response = subprocess.check_output(['gh', 'api', '--hostname', 'github.com', 'graphql', '--input', '-'], input=json.dumps(payload).encode())
@@ -200,6 +200,29 @@ def publish(root, branch, head, expected, *, api=False):
         raise ValueError('Remote publication not confirmed')
     print(json.dumps(report))
     return result
+
+
+def publish_completion(root, job, work, expected, product, main):
+    """Both refs become visible together, including after a lost push response."""
+    from .puzzle_production.current_authoring import path
+    path(job)
+    work_ref = 'refs/heads/content/pw/' + job
+    product_ref = 'refs/heads/content/integrate-' + job
+    if (not all(isinstance(oid, str) and SHA.fullmatch(oid) for oid in (work, expected, product, main))
+            or git(root, 'show', '-s', '--format=%P', work).decode().strip() != expected
+            or git(root, 'show', '-s', '--format=%P', product).decode().strip() != main):
+        raise ValueError('Completion requires one bound work commit and one product commit on main')
+    check_range(root, work, [main, expected])
+    check_range(root, product, [main])
+    if (remote_head(root, 'refs/heads/main') != main or remote_head(root, work_ref) != expected
+            or remote_head(root, product_ref) is not None):
+        raise ValueError('Completion refs changed before atomic publication')
+    git(root, 'push', '--atomic', '--no-follow-tags', '--no-verify', '--recurse-submodules=no',
+        '--force-with-lease=' + work_ref + ':' + expected, '--force-with-lease=' + product_ref + ':',
+        '--', REMOTE, work + ':' + work_ref, product + ':' + product_ref)
+    if remote_head(root, work_ref) != work or remote_head(root, product_ref) != product:
+        raise ValueError('Read back both completion refs before retrying')
+    return work
 
 
 def main():
