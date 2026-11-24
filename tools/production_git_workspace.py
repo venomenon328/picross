@@ -3,6 +3,7 @@ import argparse
 import json
 import os
 from pathlib import Path
+import stat
 import subprocess
 import tempfile
 
@@ -147,6 +148,25 @@ def sparse_path(root):
     return io.external(git(root, 'rev-parse', '--path-format=absolute', '--git-path', 'info/sparse-checkout'))
 
 
+def check_sparse_extension(root, commit, name, *, integration):
+    target = io.safe(root, name)
+    if not target.exists():
+        return
+    message = 'Occupied sparse extension: ' + name
+    require(integration and target.is_file(), message)
+    entry = transport.git(root, '--literal-pathspecs', 'ls-tree', '-z', commit, '--', name)
+    raw_name = name.encode()
+    require(entry.count(b'\0') == 1 and entry.endswith(b'\t' + raw_name + b'\0'), message)
+    mode, kind, oid = entry.split(b'\t', 1)[0].split()
+    require(mode in (b'100644', b'100755') and kind == b'blob', message)
+    index = transport.git(root, '--literal-pathspecs', 'ls-files', '--stage', '-z', '--', name)
+    require(index == b' '.join((mode, oid, b'0')) + b'\t' + raw_name + b'\0', message)
+    if git(root, 'config', '--bool', 'core.filemode') == 'true':
+        require(bool(target.stat().st_mode & stat.S_IXUSR) == (mode == b'100755'), message)
+    raw = io.read(root, name, content.LIMIT)
+    require(transport.git(root, 'hash-object', '--stdin', data=raw).strip() == oid, message)
+
+
 def open_tree(base, db, leaf, commit, job, role, branch=None):
     path = io.safe(base, leaf)
     binding = {'repository': REPO, 'store': str(db), 'path': str(path), 'role': role,
@@ -167,13 +187,15 @@ def open_tree(base, db, leaf, commit, job, role, branch=None):
         expanded = sorted(set(prior) | set(needed))
         require(sorted(active) in (prior, expanded), 'Sparse profile changed outside this workspace')
         if expanded != prior:
-            # Add only newly bound paths. Reject an existing working file at a
-            # new target before Git updates the profile. Never narrow a profile.
+            # A committed registration can already have materialized new paths.
+            # Only exact integration bytes at the checked commit may be adopted.
             additions = sorted(set(expanded) - set(prior))
-            if sorted(active) == prior:
+            extending = sorted(active) == prior
+            if extending or role == 'integration':
                 for line in additions:
-                    name = line[1:].replace(r'\[', '[')
-                    require(not io.safe(path, name).exists(), 'Occupied sparse extension: ' + name)
+                    name = line[1:].replace(r'\[', '[').replace(r'\*', '*').replace(r'\?', '?')
+                    check_sparse_extension(path, commit, name, integration=role == 'integration')
+            if extending:
                 transport.git(path, 'sparse-checkout', 'add', '--stdin', data=('\n'.join(additions) + '\n').encode())
             require(sorted(sparse_path(path).read_text(encoding='utf-8').splitlines()) == expanded,
                     'Sparse extension not confirmed')

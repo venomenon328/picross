@@ -662,9 +662,9 @@ def build(request, source_root, root):
     with writer(git_root(root)/'authoring-builder.lock'):
         from tools import production_git_workspace as workspace
         from tools.production_worktree_publish import JOURNAL
-        binding = workspace.read_binding(root)
-        if binding is not None:
-            ap.require(binding['role'] == 'job' and binding['job'] == job['puzzle_id'], 'Wrong builder worktree')
+        worktree = workspace.read_binding(root)
+        if worktree is not None:
+            ap.require(worktree['role'] == 'job' and worktree['job'] == job['puzzle_id'], 'Wrong builder worktree')
             ap.require(not (workspace.gitdir(root) / JOURNAL).exists(), 'Finish the pending publish first')
             if not io.safe(root, 'content/authoring/'+job['puzzle_id']+'/.current-operation.json').exists():
                 workspace.check_work(root, job['puzzle_id'])

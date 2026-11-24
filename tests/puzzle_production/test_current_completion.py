@@ -22,8 +22,8 @@ class CurrentCompletionTests(unittest.TestCase):
             'test_retire_rejects_foreign_notice_added_after_main')
         self.work=Path(self.temp.name);self.root=checkout(self.work/'repo')
         self.source=make(self.work/'input',background='selected' if selected else 'standard')
-        self.git('init','-q','-b','main')
         catalog_integration.integrate(self.source,self.root,apply=True)
+        self.git('init','-q','-b','main')
         self.rows=[]
         self.phase('r01','reveal_review');self.phase('r04','editorially_approved')
         put(self.root,'content/authoring/pz-current/shared/review.txt',b'Synthetic shared work.\n')

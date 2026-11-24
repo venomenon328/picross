@@ -39,7 +39,10 @@ Remote-Ref, den lokalen detached HEAD, den Gitindex und beide Metadateien ab.
 In Schritt 5 ergänzt `--integration content/BRANCH` einen separaten
 Produktworktree auf der frisch geprüften Mainbasis. Für einen schon publizierten
 Integrationsbranch zusätzlich dessen tatsächliche SHA als `--integration-head`
-angeben. Nach Finalizer und Export den Adapter mit `--checkout INTEGRATION`
+angeben. Beim Wiederöffnen nach der Registrierung erweitert Git das Profil
+im selben Arbeitsordner. Bereits vorhandene neue Zielpfade müssen bytegleich
+und als reguläre Dateien in diesem Commit und im Index gebunden sein.
+Nach Finalizer und Export den Adapter mit `--checkout INTEGRATION`
 planen und frisch registrieren lassen. Die einzeln geprüften Pfade aus
 `changes` über `git add --sparse -- PFAD ...` stagen, den vollständigen Diff
 prüfen und den Produktstand committen. Completion erhält im Jobworktree die

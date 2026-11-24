@@ -7,6 +7,7 @@ import json
 import os
 from pathlib import Path
 import subprocess
+import sys
 import tempfile
 from types import SimpleNamespace
 import unittest
@@ -43,7 +44,7 @@ class WorkPublicationTests(unittest.TestCase):
                                     (work_assets,'get',self.get)]:
             self.enterContext(patch.object(module,name,value))
 
-    def managed(self):
+    def managed(self, *, test_catalog=True):
         from tools import production_git_workspace as space
         self.area = self.fixture.work / 'Rätsel mit Leerzeichen'
         self.area.mkdir()
@@ -54,6 +55,9 @@ class WorkPublicationTests(unittest.TestCase):
         (seed / '.gitignore').write_text('/content/authoring/pz-*/**\n!/content/authoring/pz-*/current/\n'
                                          '!/content/authoring/pz-*/current/record.json\n', encoding='utf-8')
         fixtures.git(seed, 'add', '.gitignore')
+        if not test_catalog:
+            from tools.puzzle_production.catalog_integration import TEST_CATALOG
+            (seed / TEST_CATALOG[0]).unlink()
         self.main = fixtures.commit(seed, 'synthetic data base')
         fixtures.git(seed, 'push', self.remote, self.main + ':refs/heads/main')
         norm = seed / 'docs/production/PAIRED_LINES.md'
@@ -107,6 +111,7 @@ class WorkPublicationTests(unittest.TestCase):
         self.assertEqual(fixtures.git(self.root, 'rev-parse', 'HEAD'), first)
         self.assertEqual(pub.push_job(self.root, job, None), first)
         pub.resume(self.root, job, first)
+        f.assert_budget_increase()
         f.approved()
         with self.assertRaisesRegex(ValueError, 'Unpublished local draft'):
             pub.finish(self.root, job, first, confirmed=True)
@@ -138,7 +143,6 @@ op = follow.Publication(Path(root), job, parent, base, target)
 follow.checkpoint = lambda step: os._exit(73) if step == boundary else None
 op.finish(target)
 """
-        import sys
         for boundary in ('head', 'index', 'record', 'authoring-index'):
             child = subprocess.run([sys.executable, '-B', '-c', program, str(self.root), job, first,
                                     self.main, second, boundary], cwd=Path(__file__).resolve().parents[1])
@@ -153,7 +157,11 @@ op.finish(target)
         current.prepare(self.root, current.path(job), output)
         export = f.work / 'export'
         target_adapter.export(output, export)
-        product = Path(open_job(second, integration='content/synthetic-product')['integration'])
+        product_branch = 'content/synthetic-product'
+        product = Path(open_job(second, integration=product_branch)['integration'])
+        patterns = space.sparse_path(product)
+        before_patterns = patterns.read_bytes()
+        self.assertFalse((product / integration.TEST_CATALOG[0]).exists())
         self.assertEqual(space.git_root(product), space.git_root(self.root))
         # Occupation is checked against Git even when the path is invisible.
         collision = f.work / 'occupied-product'
@@ -182,11 +190,64 @@ op.finish(target)
         fixtures.git(product, 'commit', '-qm', 'selected synthetic product')
         commit = fixtures.git(product, 'rev-parse', 'HEAD')
         self.assertEqual(set(fixtures.git(product, 'diff', '--name-only', self.main, commit).splitlines()), set(names))
+        self.assertEqual(guard.publish(product, product_branch, commit, None), commit)
+        self.assertEqual(patterns.read_bytes(), before_patterns)
+        self.assertFalse(space.changes(product))
+        target = product / hidden
+        before = target.read_bytes()
+        self.assertNotIn(('/' + hidden).encode(), before_patterns.splitlines())
+
+        # Git status can hide an edited path that is marked assume-unchanged.
+        fixtures.git(product, 'update-index', '--assume-unchanged', '--', hidden)
+        target.write_bytes(b'foreign replacement')
+        self.assertFalse(space.changes(product))
+        with self.assertRaisesRegex(ValueError, 'Occupied sparse extension'):
+            open_job(second, integration=product_branch, integration_head=commit)
+        self.assertEqual(target.read_bytes(), b'foreign replacement')
+        self.assertEqual(patterns.read_bytes(), before_patterns)
+        target.write_bytes(before)
+        fixtures.git(product, 'update-index', '--no-assume-unchanged', '--', hidden)
+        timestamps = {name: (product / name).stat().st_mtime_ns for name in names}
+
+        (product / 'foreign.txt').write_bytes(b'keep this untracked file')
+        with self.assertRaisesRegex(ValueError, 'Unexpected files'):
+            open_job(second, integration=product_branch, integration_head=commit)
+        (product / 'foreign.txt').unlink()
+        reopened = open_job(second, integration=product_branch, integration_head=commit)
+        self.assertEqual(Path(reopened['integration']), product)
+        self.assertIn(('/' + hidden).encode(), patterns.read_bytes().splitlines())
+        self.assertEqual({name: (product / name).stat().st_mtime_ns for name in names}, timestamps)
+        self.assertEqual(fixtures.git(product, 'rev-parse', 'HEAD'), commit)
+        self.assertEqual(guard.remote_head(product, 'refs/heads/' + product_branch), commit)
+        self.assertFalse(space.changes(product))
+        self.assertEqual(integration.integrate(export, product)['status'], 'no-op')
         projector.complete(self.root, current.path(job), commit, current_input=export)
         completed = pub.push_job(self.root, job, second)
         fixtures.git(product, 'push', self.remote, commit + ':refs/heads/main')
         self.assertEqual(pub.finish(self.root, job, completed), 'closed')
         self.assertEqual(pub.finish(self.root, job, completed), 'no-op')
+
+    def test_test_only_input_requires_bound_synthetic_catalog(self):
+        from tests.puzzle_production.current_fixtures import fingerprints
+        from tools.puzzle_production.catalog_integration import TEST_CATALOG
+        _, open_job = self.managed(test_catalog=False)
+        product = Path(open_job(integration='content/distinct-product')['integration'])
+        tool_checkout = Path(__file__).resolve().parents[1]
+        self.assertNotEqual(product, tool_checkout)
+        name, marker = TEST_CATALOG
+        for copied_marker in (False, True):
+            if copied_marker:
+                (product / name).write_bytes(marker)
+            before = fingerprints(product)
+            for command in ('plan', 'register'):
+                with self.subTest(command=command, copied_marker=copied_marker):
+                    result = subprocess.run(
+                        [sys.executable, '-B', '-m', 'tools.puzzle_production.target_adapter', command,
+                         '--input', str(self.fixture.input), '--checkout', str(product)],
+                        cwd=tool_checkout, capture_output=True, check=False, timeout=60)
+                    self.assertEqual(result.returncode, 2, result.stderr.decode())
+                    self.assertIn('Test-only input cannot enter product catalog', json.loads(result.stdout)['error'])
+                    self.assertEqual(fingerprints(product), before)
 
     def test_workspace_conflicts_and_sparse_namespace(self):
         from tools import production_git_workspace as space
@@ -200,7 +261,6 @@ op.finish(target)
         with self.assertRaises(ValueError):
             space.store_for(occupied, space.REPO)
         from tools.puzzle_production.authoring_builder import writer
-        import sys
         lock = Path(paths['store']) / 'authoring-builder.lock'
         with writer(lock):
             code = """import sys

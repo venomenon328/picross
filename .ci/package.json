@@ -13,7 +13,17 @@
     {
       "path": "tools/test_work_publish.py",
       "disposition": "change-scoped",
-      "reason": "Synthetische Sparse-Worktrees, Lease-/Prozesskonflikte, unterbrochene Veröffentlichung, Wiederaufnahme und Registrierungsgrenzen am echten Git prüfen."
+      "reason": "Synthetische Sparse-Worktrees, Lease-/Prozesskonflikte, unterbrochene Veröffentlichung, konkret genehmigte Budgeterhöhung, Wiederöffnung nach Produkt-Publish und test_only-Zielbindung am echten Git prüfen."
+    },
+    {
+      "path": "tests/puzzle_production/test_current_authoring.py",
+      "disposition": "change-scoped",
+      "reason": "Gültige Budgetfortschreibung und Ablehnung fehlender oder abweichender Entscheidungen sowie Zählerrücksetzung im bisherigen Checkout."
+    },
+    {
+      "path": "tests/puzzle_production/test_current_completion.py",
+      "disposition": "change-scoped",
+      "reason": "Bestehenden Completion-/Retirement-Test mit der expliziten synthetischen Zielbindung initialisieren."
     }
   ],
   "core_change": null,
