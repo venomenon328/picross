@@ -52,7 +52,34 @@ def step3(req, job, root, scratch):
             'next': 'Inspect the published raster, proof and preview before making a visual judgment.'}
 
 
-def finalize(req, job, root):
+def selected_background(draft, options, root, scratch):
+    choice = draft['selected']['background']
+    viewed = options.get('prepared_review')
+    if draft['format'] not in current.findings.FORMATS or choice in (None, 'standard', 'none'):
+        require(viewed is None, 'Unexpected prepared background review')
+        return []
+    asset = current.findings.subjects(draft)[choice]
+    if asset['prepared'] is not None and viewed is None:
+        return []
+    require(viewed and viewed['profile'] == asset['profile'] and viewed['original_sha256'] == asset['file']['sha256'],
+            'Actual prepared background review on selected original and profile required')
+    files = []
+    if asset['prepared'] is None:
+        rendered = current.prepare_background(io.safe(root, asset['file']['file']), scratch / 'background.png',
+                                              profile_id=asset['profile'])
+        path = f'content/authoring/{draft["puzzle_id"]}/data/prepared/{rendered["sha256"]}.png'
+        asset['prepared'] = {'original_sha256': viewed['original_sha256'], 'profile': asset['profile'],
+                             'file': {**rendered, 'file': path}}
+        files.append({'path': path, 'source': rendered['file'], 'bytes': rendered['bytes'], 'sha256': rendered['sha256']})
+    require(viewed['sha256'] == asset['prepared']['file']['sha256'] and
+            set(viewed['review']) == current.CRITERIA['background'] and
+            all(r['timestamp_utc'] and r['result'] != 'nicht geprüft' for r in viewed['review'].values()),
+            'Stale or incomplete prepared background review')
+    asset['review'] = deepcopy(viewed['review'])
+    return files
+
+
+def finalize(req, job, root, scratch):
     require(job['operation'] == 'production' and job['state'] in
             ('background_review', 'content_ready', 'editorially_approved'), 'Expected a selected raster for finalization')
     draft = deepcopy(job)
@@ -60,6 +87,13 @@ def finalize(req, job, root):
     if selection is not None:
         require(draft['selected']['background'] in (None, selection), 'Changed prior background choice')
         draft['selected']['background'] = selection
+    files = selected_background(draft, req['input'], root, scratch)
+    for declaration in req['input'].get('finding_decisions', []):
+        target, key = declaration['target'], declaration['id']
+        require(target in (*draft['selected'].values(), current.findings.COMBINATION), 'Unselected finding')
+        row = next((r for r in draft.get('findings', []) if (r['target'], r['id']) == (target, key)), None)
+        require(row is not None and row['decision'] is None, 'Expected an existing undecided finding')
+        current.findings.declare(row, **{k: v for k, v in declaration.items() if k not in ('target', 'id')})
     for choice in req['input']['decisions']:
         existing = next((d for d in draft['decisions'] if d['scope'] == choice['scope']), None)
         require(existing in (None, choice), 'Changed prior decision')
@@ -69,7 +103,7 @@ def finalize(req, job, root):
             {d['scope'] for d in draft['decisions']}, 'Actual final and integration decisions required')
     draft['state'] = 'editorially_approved'
     authoring_builder.finalize_background({'format': current.REQUEST, 'record': draft,
-        'expected': io.checksum(current.encoded(job)), 'files': []}, root, root)
+        'expected': io.checksum(current.encoded(job)), 'files': files}, scratch, root)
     return draft
 
 
@@ -81,7 +115,7 @@ def package(req):
 
 
 def step5(req, request_id, job, root, product, scratch):
-    finalize(req, job, root)
+    finalize(req, job, root, scratch)
     name = current.path(req['job'])
     current.prepare(root, name, scratch / 'final')
     exported = scratch / 'export'

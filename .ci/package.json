@@ -13,7 +13,7 @@
     {
       "path": "tools/test_production_remote.py",
       "disposition": "change-scoped",
-      "reason": "Echte lokale Git-Transaktionen und synthetische Originale über den Remote-Einstieg prüfen, einschließlich konkurrierender Refs, Antwortverlust, CI-Bindung, Leasebesitz und wiederholtem Retirement."
+      "reason": "Echte lokale Git-Transaktionen und synthetische Originale über den Remote-Einstieg prüfen, einschließlich konkurrierender Refs, Antwortverlust, CI-Bindung, Leasebesitz und wiederholtem Retirement. Der v3-Fall prüft die gewählte HG31-Ableitung mit Befundannahme und offene Rest-Assets nach bestätigtem Doppelpush."
     }
   ],
   "core_change": "Der vorhandene Checkout-Schritt in docs nennt bei PRs Nummer, Head, Basis und ausgecheckten Testmerge zur eindeutigen Zuordnung über die Actions-Jobs-API.",

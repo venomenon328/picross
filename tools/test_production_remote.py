@@ -13,6 +13,43 @@ from tools.puzzle_production import catalog_io as io, current_authoring as curre
 from tests.puzzle_production import test_current_authoring as fixtures
 
 
+def background_offer(f):
+    """Create two synthetic originals and bind the actor's inspection of the chosen derivative."""
+    from io import BytesIO
+    from PIL import Image
+    f.job = current.upgrade(f.job)
+    f.job['selected']['raster'] = f.job['rasters'][0]['id']
+    fixtures.decide(f.job, 'raster')
+    f.job['state'] = 'background_review'
+    for pos, key in enumerate(('cloud', 'sky'), 1):
+        pixels = Image.new('RGBA', (30, 10))
+        pixels.putpixel((pos, 5), (20, 30, 40, 255))
+        stream = BytesIO()
+        pixels.save(stream, format='PNG')
+        asset = f.asset(key, 'background')
+        asset.update(file=f.file(key+'.png', stream.getvalue()), profile='picross-background-png2304x768-v1', prepared=None)
+        f.job['assets'].append(asset)
+    f.finding('sky', 'stroke', 'Q-HG04', 'stroke-quality')
+    f.publish()
+    draft = deepcopy(f.job)
+    selected = current.findings.subjects(draft)['sky']
+    output = f.work / 'viewed-background.png'
+    viewed = current.prepare_background(f.sources/'sky.png', output, profile_id=selected['profile'])
+    with Image.open(output) as image:
+        assert image.size == (2304, 768)
+    draft['selected']['background'] = 'sky'
+    selected['prepared'] = {'original_sha256': selected['file']['sha256'], 'profile': selected['profile'], 'file': viewed}
+    row = draft['findings'][0]
+    f.accept(row)
+    declaration = {k: v for k, v in row['decision'].items() if k not in ('source', 'binding')}
+    for scope in ('background', 'final', 'integration'):
+        fixtures.decide(draft, scope)
+    return {'background': 'sky', 'decisions': [d for d in draft['decisions'] if d['scope'] in ('background','final','integration')],
+            'prepared_review': {'sha256': viewed['sha256'], 'profile': selected['profile'],
+                                'original_sha256': selected['file']['sha256'], 'review': selected['review']},
+            'finding_decisions': [{**declaration, 'expected': row['decision']['binding'], 'id': row['id'], 'target': 'sky'}]}
+
+
 class RemoteTests(unittest.TestCase):
     def setUp(self):
         fixture = publication.WorkPublicationTests()
@@ -30,7 +67,8 @@ class RemoteTests(unittest.TestCase):
         self.enterContext(patch.object(pw, 'api', side_effect=self.api))
         self.enterContext(patch.object(pw, 'remote_record', side_effect=self.read_record))
         method = 'content/difficulty-method.json'
-        (self.f.root / method).write_bytes((remote.TOOLS / method).read_bytes())
+        for name in (method, 'game/data/background-capability.json'):
+            (self.f.root / name).write_bytes((remote.TOOLS / name).read_bytes())
         self.main = fixtures.commit(self.f.root, 'synthetic current method')
         fixtures.git(self.f.root, 'push', str(self.repo), self.main + ':refs/heads/main')
         self.f.job['source_commit'] = self.main
@@ -88,6 +126,60 @@ class RemoteTests(unittest.TestCase):
 
     def execute(self, req, area=None, **kwargs):
         return remote.run(area or self.area, req, 'env', 'synthetic-token', **kwargs)
+
+    def test_v3_background_and_incomplete_asset_cleanup(self):
+        f = self.f
+        f.input = fixtures.make(f.work / 'current-input', method='picross-difficulty-0.4')
+        f.incoming = io.json_bytes((f.input / 'manifest.json').read_bytes(), current.LIMIT)
+        f.publish()
+        f.raster_ready()
+        options = background_offer(f)
+        before = pw.push_job(f.root, self.job, None)
+        req = self.req('step5', before, options, issue=1)
+        missing_view = {k: v for k, v in options.items() if k != 'prepared_review'}
+        cases = [(missing_view, 'Actual prepared background review'),
+                 ({**options, 'finding_decisions': []}, 'Stale decision|blocked'),
+                 ({**options, 'prepared_review': {**options['prepared_review'], 'sha256': '0' * 64}},
+                  'Stale or incomplete prepared background review')]
+        for data, error in cases:
+            with self.subTest(error=error), self.assertRaisesRegex(ValueError, error):
+                self.execute({**req, 'input': data})
+        deleted = []
+        def interrupt(path, method='GET', value=None):
+            if method == 'DELETE' and path.startswith('releases/assets/'):
+                deleted.append(int(path.split('/')[-1]))
+                raise ConnectionError('interrupted asset removal')
+            return self.api(path, method, value)
+        with patch.object(pw, 'api', side_effect=interrupt), self.assertRaises(ConnectionError):
+            self.execute(req)
+        self.assertTrue(deleted)
+        fresh = f.work / 'new-actor'
+        fresh.mkdir()
+        with self.assertRaisesRegex(ValueError, 'asset cleanup open.*' + str(deleted[0])):
+            self.execute(req, fresh)
+        self.assertEqual(self.post_count, 0)
+        self.fixture.upload('work-prod-' + self.job, 'original-' + 'f' * 64, b'foreign')
+        foreign = self.fixture.next_id
+        with self.assertRaisesRegex(ValueError, 'unbound IDs.*' + str(foreign)):
+            self.execute(req)
+        self.assertEqual(self.post_count, 0)
+        self.assertEqual(self.fixture.assets[foreign], b'foreign')
+        self.fixture.api('releases/assets/' + str(foreign), 'DELETE')  # Independent fixture owner.
+        done = self.execute(req)
+        self.assertEqual(done['status'], 'checks-passed')
+        self.assertEqual(self.execute(req, fresh)['head'], done['head'])
+        self.assertEqual(self.post_count, 1)
+        record = pw.bound_record(self.read_record(done['work'], self.job), self.job)
+        self.assertEqual(record['selected']['background'], 'sky')
+        self.assertEqual(record['assets'][-1]['prepared']['file']['sha256'], options['prepared_review']['sha256'])
+        self.assertTrue(current.findings.effective(record['findings'][0]))
+        fixtures.git(self.repo, 'update-ref', 'refs/heads/main', done['head'], self.main)
+        fixtures.git(self.toolbox, 'pull', '--ff-only')
+        self.pr.update(state='closed', merged=True, merged_at='2026-11-24T12:00:00Z', merge_commit_sha=done['head'])
+        retire = self.req('retire', done['work'], {}, pr=2, product=done['head'])
+        retire.update(main=done['head'], tools=done['head'])
+        self.assertEqual(self.execute(retire, fresh)['status'], 'closed')
+        self.assertEqual(self.execute(retire)['status'], 'no-op')
 
     def test_bound_raster_product_ci_recovery_and_retirement(self):
         f = self.f

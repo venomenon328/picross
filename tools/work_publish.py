@@ -495,7 +495,7 @@ def publish_locked(root, job, expected, main, checked, operation=None, remote_re
     retained = {r['asset']['asset_id'] for r in current.references(result) if 'asset' in r}
     previous_ids = {r['asset']['asset_id'] for r in old.values() if r['asset']['release_id'] == release['id']}
     obsolete = {asset['id'] for asset in attachments.values() if asset['id'] not in retained and
-                (asset['id'] in previous_ids or asset.get('label') == 'picross-original:' + tag and
+                (asset['id'] in previous_ids or not remote_request and asset.get('label') == 'picross-original:' + tag and
                  re.fullmatch(r'original-[0-9a-f]{64}', asset['name']))}
     if obsolete:
         try:
@@ -514,6 +514,26 @@ def publish_locked(root, job, expected, main, checked, operation=None, remote_re
                 raise github_rest.Failure(exc.kind, detail, exc.status) from None
             raise ValueError(detail) from None
     return actual
+
+
+def verify_published_assets(root, job, parent, head, raw):
+    """A committed successor alone does not acknowledge post-push cleanup."""
+    previous = bound_record(remote_record(parent, job), job)
+    current_record = bound_record(raw, job)
+    binding = current_record['work_release']
+    require(binding == previous['work_release'], 'Changed release generation after publication')
+    rows, _ = catalog()
+    release = fresh_generation(rows, job, transport.remote_head(root, 'refs/tags/work-prod-' + job), binding)
+    def identities(record):
+        return {r['asset']['asset_id'] for r in current.references(record) if 'asset' in r}
+    required = identities(current_record)
+    actual = {a['id'] for a in release['assets']}
+    require(transport.remote_head(root, 'refs/heads/content/pw/' + job) == head, 'Published work changed')
+    require(not required - actual, f'Missing bound assets {sorted(required - actual)}; inspect release {release["id"]}')
+    extra = actual - required
+    require(not extra, f'Confirmed work {head}; release {release["id"]} asset cleanup open. '
+            f'Predecessor IDs {sorted(extra & identities(previous))}, unbound IDs {sorted(extra - identities(previous))}. '
+            'Inspect unbound IDs separately. Resume the identical request from the original private publication journal.')
 
 
 def finish(root, job, expected, *, confirmed=False, repository=REPO, auth='env', token=None):

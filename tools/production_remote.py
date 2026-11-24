@@ -48,7 +48,24 @@ def request(value):
                 len(design['variants']) == 1, 'One explicitly selected candidate per attempt')
     elif op == 'step5':
         integer(value['issue'], 1, 2**53-1, 'product issue')
-        exact_keys(data, {'background', 'decisions'})
+        require(isinstance(data, dict), 'Expected finalization input')
+        optional = {'prepared_review', 'finding_decisions'} & data.keys()
+        exact_keys(data, {'background', 'decisions'} | optional)
+        if 'prepared_review' in data:
+            viewed = exact_keys(data['prepared_review'], {'original_sha256', 'profile', 'sha256', 'review'})
+            sha(viewed['original_sha256'])
+            sha(viewed['sha256'])
+            current.findings.check_summaries(viewed['review'], current.CRITERIA['background'])
+        declarations = data.get('finding_decisions', [])
+        require(isinstance(declarations, list) and len(declarations) <= 128, 'Invalid finding declarations')
+        seen = set()
+        for row in declarations:
+            exact_keys(row, {'target', 'id', 'expected', 'action', 'treatment', 'actor', 'timestamp_utc', 'statement'})
+            sha(row['expected'])
+            require(isinstance(row['target'], str) and isinstance(row['id'], str) and
+                    (row['target'], row['id']) not in seen and row['action'] == 'accept', 'Invalid finding acceptance')
+            seen.add((row['target'], row['id']))
+            current.human(row)
         if data['background'] not in (None, 'none', 'standard'):
             current.identifier(data['background'])
         require(isinstance(data['decisions'], list) and len(data['decisions']) <= 3, 'Invalid final decisions')
@@ -233,6 +250,7 @@ def run(root, req, auth, token, *, diagnose=False, check_invocation=lambda: None
         require(git.remote_head(root, 'refs/heads/content/pw/' + job) == work and
                 owner(work, parent=expected) == req_id, 'Work publication not confirmed')
         published = pw.remote_record(work, job)
+        pw.verify_published_assets(root, job, expected, work, published)
         result.update(work=work, published_record_sha256=sha256(published).hexdigest(), status='published',
                       next='Inspect the published raster offer.')
         if op == 'step5':

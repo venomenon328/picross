@@ -99,7 +99,30 @@ die Registrierung verlangt den committed synthetischen Katalogmarker. Die
 [Paketentscheidung](https://github.com/venomenon328/picross/issues/859#issuecomment-7131900027)
 trennt den isolierten Nachweis von der produktiven Betriebsfreigabe.
 
+### Hintergrundwahl und Befundannahmen in Schritt 5
+
+Bei einem v3-Angebot mit noch unvorbereiteter gewählter Zeichnung prüft der
+Akteur die deterministische Ableitung des angebotenen Originals mit dessen
+HG31-Profil. In `input.prepared_review` übergibt er `original_sha256`, `profile`,
+`sha256` der gesichteten Ausgabe und die vollständigen aktuellen Sichturteile
+unter `review` im bestehenden PW-B-Format. Der Worker erzeugt ausschließlich
+die gewählte Ableitung mit dem kanonischen Helfer und vergleicht ihren Hash.
+Bereits gesicherte gültige Wahlen gelten weiter. Für `none` und `standard`
+entfällt der Ableitungsnachweis.
+
+Mit `input.finding_decisions` kann derselbe Auftrag offene Befunde der Auswahl
+oder ihrer Kombination annehmen. Jeder Eintrag nennt `target`, Befund-`id`,
+den erwarteten PW-FIND-Bindungshash `expected`, `action=accept`, `treatment`,
+`actor`, `timestamp_utc` und `statement`. End- und Integrationsentscheidung
+binden den Stand einschließlich Befundannahmen, Sichturteilen und Ausgabehash.
+
 ## Antwortverlust und Wiederaufnahme
+
+Vor einer Erfolgsmeldung und der Produkt-PR-Anlage prüft der Remote-Einstieg
+den tatsächlichen Assetbestand der gebundenen Releasegeneration. Meldet er
+offene Rest-IDs aus dem Vorgänger, führt der Besitzer denselben Auftrag im
+ursprünglichen privaten Operationsordner fort. Ungebundene IDs sind separat
+zu klären. Der frische Aufruf führt dafür keine Löschung aus.
 
 Bei gleichem Auftrag bleibt die Request-ID stabil. Nach verlorener Ref-/PR-Antwort
 prüft der Akteur zuerst den gebundenen Nachfolgecommit, dessen Eltern, den
