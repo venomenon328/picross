@@ -148,7 +148,8 @@ class ClosingViewTests(unittest.TestCase):
         job['decisions'] = [d for d in job['decisions'] if d['scope'] == 'reveal']
         fixture.job = job
         fixture.publish()
-        view = current.projection(job, current.encoded(job))
+        stored = (fixture.root / current.path(job['puzzle_id'])).read_bytes()
+        view = current.projection(fixture.job, stored)
         self.assertEqual(p.validate(view)['offers'][0]['kind'], 'motif')
         facts = p.inspect(LocalSource(fixture.root), None, view)
         self.assertEqual(facts['candidates']['motif-a']['missing'], [])
