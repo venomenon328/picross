@@ -2,7 +2,7 @@
 import argparse
 import base64
 from hashlib import sha1
-from contextlib import contextmanager
+from contextlib import contextmanager, nullcontext
 from copy import deepcopy
 import json
 import os
@@ -254,7 +254,7 @@ def delete_ref(root, ref, expected):
 
 
 @contextmanager
-def catalog_writer(root, main):
+def catalog_writer(root, main, *, owner=None):
     """Serialize cooperating jobs across hosts. A killed process resumes from its local token."""
     git_root(root)
     state = io.external(transport.git(root, 'rev-parse', '--absolute-git-dir').decode().strip())
@@ -264,12 +264,17 @@ def catalog_writer(root, main):
         if not pending.exists():
             tree = transport.git(root, 'rev-parse', main + '^{tree}').decode().strip()
             nonce = transport.git(root, 'commit-tree', tree, '-p', main, '-m', 'Production catalog lease ' + uuid4().hex).decode().strip()
-            with pending.open('x', encoding='ascii') as stream:
-                stream.write(nonce)
-                stream.flush()
-                os.fsync(stream.fileno())
-        nonce = pending.read_text(encoding='ascii')
-        require(transport.SHA.fullmatch(nonce), 'Invalid local catalog owner identity')
+            encoded = nonce.encode('ascii') if owner is None else current.encoded({'owner': owner, 'nonce': nonce})
+            current._atomic(state, pending.name, encoded)
+        raw = io.read(state, pending.name, 8192)
+        if owner is None:
+            nonce = raw.decode('ascii')
+        else:
+            receipt = io.json_bytes(raw, 8192)
+            require(isinstance(receipt, dict) and receipt.get('owner') == owner,
+                    'Different operation owns the local catalog nonce; resume its original request')
+            nonce = receipt.get('nonce')
+        require(isinstance(nonce, str) and transport.SHA.fullmatch(nonce), 'Invalid local catalog owner identity')
         actual = transport.remote_head(root, ref)
         if actual is None:
             transport.publish(root, release_catalog.LOCK_BRANCH, nonce, None)
@@ -353,7 +358,9 @@ def _publish_draft(root, job, expected, repository, auth, *, managed=False):
     require(transport.remote_head(root, 'refs/heads/main') == main, 'Main advanced; refresh before acquiring the catalog lease')
     if managed and operation is None:
         operation = Publication(root, job, expected, main, report['work_head'])
-    with catalog_writer(root, main):
+    owner = {'operation': 'publish', 'job': job, 'expected': expected,
+             'draft': operation.value['draft']} if operation else None
+    with catalog_writer(root, main, owner=owner):
         actual = publish_locked(root, job, expected, main, checked, operation)
         if operation:
             require(actual == operation.bind(actual), 'Different published work commit')
@@ -496,14 +503,23 @@ def publish_locked(root, job, expected, main, checked, operation=None):
 def finish(root, job, expected, *, confirmed=False, repository=REPO, auth='env', token=None):
     """Check the exact completed record against current main, then close its namespace."""
     with publisher_auth(auth, token):
-        return _finish(io.external(root), job, expected, confirmed, repository, auth)
+        root = io.external(root)
+        binding = workspace.read_binding(root)
+        lock = writer(git_root(root) / 'authoring-builder.lock') if binding else nullcontext()
+        with lock:
+            return _finish(root, job, expected, confirmed, repository, auth, binding)
 
 
-def _finish(root, job, expected, confirmed, repository, auth):
-    binding = workspace.read_binding(root)
+def _finish(root, job, expected, confirmed, repository, auth, binding):
     if binding is not None:
         require(binding['role'] == 'job' and binding['job'] == job, 'Wrong retirement worktree')
         require(not (workspace.gitdir(root) / JOURNAL).exists(), 'Finish the pending publish before retirement')
+        require(workspace.git(root, 'rev-parse', 'HEAD') == expected, 'Different local retirement generation')
+        workspace.check_work(root, job)
+        raw = GitSource(root).read(expected, current.path(job), MIB)
+        local = io.read(root, current.path(job), MIB)
+        require(local in (raw, current.encoded(local_record(bound_record(raw, job)))),
+                'Unpublished local draft; reconcile it before retirement')
     # The pinned commit stays locally available after the remote branch is removed.
     def read_record(commit, job):
         source = GitSource(root, fetch_commit=lambda oid: transport.git(root, 'fetch', '--no-tags', '--', transport.REMOTE, oid))
@@ -512,7 +528,8 @@ def _finish(root, job, expected, confirmed, repository, auth):
     main = observe(root, 'retire', job, expected, repository, auth, read_record=read_record)['main']
     transport.git(root,'fetch','--no-tags','--',transport.REMOTE,main)
     require(transport.remote_head(root, 'refs/heads/main') == main, 'Main advanced; refresh before retirement')
-    with catalog_writer(root, main):
+    owner = {'operation': 'retire', 'job': job, 'expected': expected, 'confirmed': confirmed} if binding else None
+    with catalog_writer(root, main, owner=owner):
         targets = remove_bound_release(root, job, expected, main, confirmed=confirmed)
         if targets is None:
             return 'no-op'
@@ -600,7 +617,6 @@ def resume(root, job, expected, *, repository=REPO, auth='env', token=None):
 
 def _resume(root, job, expected, repository, auth):
     observe(root, 'resume', job, expected, repository, auth)
-    name = current.path(job)
     require(expected and transport.remote_head(root, 'refs/heads/content/pw/' + job) == expected,
             'Refresh the current work ref')
     require(transport.git(root, 'rev-parse', 'HEAD').decode().strip() == expected,
@@ -614,20 +630,24 @@ def _resume(root, job, expected, repository, auth):
         return hydrate(root, job, expected)
 
 
+def local_record(record):
+    draft = deepcopy(record)
+    draft['format'] = current.findings.LOCAL if record['format'] == current.findings.PUBLISHED else current.FORMAT
+    del draft['work_release']
+    for ref in current.references(draft):
+        ref.pop('asset', None)
+    return draft
+
+
 def hydrate(root, job, expected):
     """Reconstruct a pinned draft using Git objects and the verified original reader."""
     name = current.path(job)
     raw = GitSource(root).read(expected, name, MIB)
     record = current.validate(io.json_bytes(raw, MIB))
-    require(record['format'] in current.PUBLISHED_FORMATS, 'Bound external record required')
+    require(record['format'] in current.PUBLISHED_FORMATS and record['puzzle_id'] == job, 'Bound external record required')
     checked = current.Checked(record, lambda n, limit: io.read(root,n,limit))
-    draft = deepcopy(record)
-    draft['format'] = current.findings.LOCAL if record['format'] == current.findings.PUBLISHED else current.FORMAT
-    del draft['work_release']
-    assets = []
-    for ref in current.references(draft):
-        if ref.pop('asset', None):
-            assets.append(ref)
+    draft = local_record(record)
+    assets = [ref for ref in current.references(record) if 'asset' in ref]
     local = io.read(root, name, MIB)
     require(local in (raw, current.encoded(draft)), 'Local record changed')
     for ref in assets:

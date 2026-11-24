@@ -51,6 +51,9 @@ class WorkPublicationTests(unittest.TestCase):
         (seed / 'game/art/unused').mkdir(parents=True)
         (seed / 'game/art/unused/unselected.bin').write_bytes(b'x' * 8192)
         # The data revision intentionally has no Python entry point.
+        (seed / '.gitignore').write_text('/content/authoring/pz-*/**\n!/content/authoring/pz-*/current/\n'
+                                         '!/content/authoring/pz-*/current/record.json\n', encoding='utf-8')
+        fixtures.git(seed, 'add', '.gitignore')
         self.main = fixtures.commit(seed, 'synthetic data base')
         fixtures.git(seed, 'push', self.remote, self.main + ':refs/heads/main')
         (seed / 'tools').mkdir()
@@ -99,6 +102,8 @@ class WorkPublicationTests(unittest.TestCase):
         self.assertEqual(pub.push_job(self.root, job, None), first)
         pub.resume(self.root, job, first)
         f.approved()
+        with self.assertRaisesRegex(ValueError, 'Unpublished local draft'):
+            pub.finish(self.root, job, first, confirmed=True)
         before = deepcopy(f.job['decisions'])
         real_publish = guard.publish
         def lost_response(root, ref, head, expected, **kwargs):
@@ -206,6 +211,22 @@ except BuildError:
             self.assertEqual(child.returncode, 0)
             with self.assertRaisesRegex(ValueError, 'writer owns'):
                 open_job()
+        # Losing the response to lease creation preserves the local nonce.
+        owner = {'operation': 'retire', 'job': 'pz-current', 'expected': self.main}
+        real_publish = guard.publish
+        def lost_lease(*args, **kwargs):
+            real_publish(*args, **kwargs)
+            raise ConnectionError('lost lease response')
+        with patch.object(guard, 'publish', lost_lease), self.assertRaises(ConnectionError):
+            with pub.catalog_writer(self.root, self.main, owner=owner):
+                self.fail('lost response reached mutation')
+        nonce = guard.remote_head(self.root, 'refs/heads/' + pub.release_catalog.LOCK_BRANCH)
+        self.assertIsNotNone(nonce)
+        with self.assertRaisesRegex(ValueError, 'Different operation owns'):
+            with pub.catalog_writer(self.root, self.main, owner={**owner, 'operation': 'publish'}):
+                self.fail('foreign nonce admitted')
+        with pub.catalog_writer(self.root, self.main, owner=owner):
+            self.assertEqual(guard.remote_head(self.root, 'refs/heads/' + pub.release_catalog.LOCK_BRANCH), nonce)
         foreign = self.root / 'unknown'
         foreign.write_bytes(b'preserve')
         with self.assertRaisesRegex(ValueError, 'Unknown staged'):
