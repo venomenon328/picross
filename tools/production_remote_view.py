@@ -61,13 +61,13 @@ def render(raw, private):
         shutil.copyfile(ROOT / 'tools/production_remote_view.gd', project / 'view.gd')
         (project / 'project.godot').write_text('config_version=5\n[rendering]\nrenderer/rendering_method="gl_compatibility"\n',
                                                encoding='utf-8')
-        try:
-            urls = engine.official_asset_urls(engine.request_json(engine.RELEASE_API), (asset,))
-        except HTTPError as exc:
-            raise ValueError(f'Pinned editor release metadata: HTTP {exc.code}') from exc
+        # The version, filename and expected SHA-256 all come from the pinned
+        # preflight contract. Fetch the single official binary without spending
+        # the repository API quota on another project's release metadata.
+        url = f'https://github.com/godotengine/godot-builds/releases/download/{engine.RELEASE_TAG}/{asset.name}'
         archive = work / asset.name
         try:
-            engine.download_asset(urls[asset.name], archive, asset.sha256, 300)
+            engine.download_asset(url, archive, asset.sha256, 300)
         except HTTPError as exc:
             raise ValueError(f'Pinned editor download: HTTP {exc.code}') from exc
         executable = engine.extract_editor(archive, work / 'engine', host)
