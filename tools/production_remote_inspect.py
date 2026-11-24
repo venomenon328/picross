@@ -1,6 +1,5 @@
 """Read one current publication, stage the requested views and confirm the Actions upload."""
 from datetime import datetime, timedelta, timezone
-from io import BytesIO
 import os
 from pathlib import Path
 import subprocess
@@ -59,36 +58,6 @@ def read_git(commit, ref):
     return data
 
 
-def clue_view(raw, record):
-    from PIL import Image, ImageDraw
-    from .puzzle_production import catalog_rating
-    definition, _, _, _ = catalog_rating.definition(raw)
-    modes = current.findings.matching_modes(record['parameters']['approved'], definition, len(definition['palette']))
-    require(len(modes) == 1, 'Ambiguous raster mode')
-    neutral = modes == {'mono'}
-    palette = {p['id']: '#202020' if neutral else '#' + p['color'] for p in definition['palette']}
-    rows, columns = definition['rows'], definition['columns']
-    step = 22
-    left = max(map(len, rows), default=0)
-    top = max(map(len, columns), default=0)
-    view = Image.new('RGB', ((left + len(columns)) * step + 1, (top + len(rows)) * step + 1), 'white')
-    draw = ImageDraw.Draw(view)
-    def hint(x, y, clue):
-        draw.text(((x + 0.5) * step, (y + 0.5) * step), str(clue['length']), fill=palette[clue['color']], anchor='mm')
-    for y, clues in enumerate(rows, top):
-        for x, clue in enumerate(clues, left - len(clues)):
-            hint(x, y, clue)
-    for x, clues in enumerate(columns, left):
-        for y, clue in enumerate(clues, top - len(clues)):
-            hint(x, y, clue)
-    for y, row in enumerate(definition['solution'], top):
-        for x, color in enumerate(row, left):
-            draw.rectangle((x*step, y*step, (x+1)*step, (y+1)*step), fill=palette.get(color, 'white'), outline='#aaaaaa')
-    stream = BytesIO()
-    view.save(stream, format='PNG')
-    return stream.getvalue()
-
-
 def stage(req, record, ctx, output, read, recheck):
     """Only selected references are materialized. Never infer a visual decision."""
     specs = delivery.sources(req, record)
@@ -117,7 +86,8 @@ def stage(req, record, ctx, output, read, recheck):
                 current.prepare_background(original, prepared, profile_id=spec['profile'])
                 data = prepared.read_bytes()
             elif spec['derive'] == 'cells-clues':
-                data = clue_view(data, record)
+                from .production_remote_view import render
+                data = render(data, private)
             seconds['preparation'] += monotonic() - start
             (files / spec['file']).write_bytes(data)
             manifest['files'].append({**spec, 'bytes': len(data), 'sha256': io.checksum(data)})

@@ -21,26 +21,7 @@ def observations(draft, target, values):
             require({**existing, 'decision': None} == row, 'Existing finding changed during inspection')
 
 
-def validate_editorial(data):
-    if 'choice' in data:
-        change = exact_keys(data['choice'], {'candidate', 'motif_sha256', 'approved', 'declaration'})
-        current.ap.sha(change['motif_sha256'])
-        decision = change['declaration']
-        exact_keys(decision, {'actor', 'statement', 'timestamp_utc'} | ({'crop_protection'} & decision.keys()))
-        current.human(decision)
-        require(isinstance(change['approved'], list) and change['approved'], 'Actual approved parameters required')
-    else:
-        change = exact_keys(data['assessment'], {'candidate', 'definition_sha256', 'preview_sha256', 'review',
-                                                'observations', 'ready'})
-        for key in ('definition_sha256', 'preview_sha256'):
-            current.ap.sha(change[key])
-        current.findings.check_summaries(change['review'], current.CRITERIA['raster'])
-        require(type(change['ready']) is bool and isinstance(change['observations'], list), 'Invalid raster inspection')
-    current.identifier(change['candidate'])
-
-
 def editorial(job, options, root, scratch):
-    validate_editorial(options)
     draft = deepcopy(job)
     require(draft['operation'] == 'production' and draft['selected']['raster'] is None, 'Raster choice already closed')
     if 'choice' in options:

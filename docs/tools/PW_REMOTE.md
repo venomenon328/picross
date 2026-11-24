@@ -24,7 +24,11 @@ Publish den neuen Arbeitscommit und Record lesen. Für das konkrete Angebot
 `definition`, `preview`, `cells-clues`, `proof` und eine vorhandene
 `difficulty` anfordern. Bei einem Crop-Nachweis stehen auch `crop-before`,
 `crop-preview` und `crop-protection` zur Verfügung. Die Zell-/Hinweisansicht
-zeigt Lösung und Hinweisgruppen derselben Definition. Zur Produktprüfung den
+zeigt die vollständige Lösung und beide Hinweisachsen auf Spielpapier. Oben
+stehen die 24-Pixel-Zellen, unten 14 Pixel. Von links nach rechts werden
+normale, abgeschwächte und ausgekreuzte Hinweise mit der aktuellen
+Spielschrift und Kontur gezeichnet. Nur diese Rolle lädt den gebundenen
+Godot-Editor und die benötigten Zeichenressourcen. Zur Produktprüfung den
 vollständigen gebundenen PR-Diff lesen und benötigte Lieferoriginale mit
 `inspect-product`, `product`, `pr` und den Rollen `product-definition`,
 `product-reveal` oder `product-background` am bestätigten Integrationscommit abrufen.

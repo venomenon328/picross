@@ -38,6 +38,25 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: python3 -B -m tools.production_remote route --root "$RUNNER_TEMP" --auth GH_TOKEN
+      - name: Load pinned drawing resources for cell and clue inspection
+        if: steps.route.outputs.cells == 'true' && github.repository == 'venomenon328/picross'
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /tools/
+            /game/ui/scribble.gd
+            /game/ui/clue_typography.gd
+            /game/ui/clue_font.tres
+            /game/ui/cell_atlas.gd
+            /game/ui/atlas_mask.gdshader
+            /game/book/paper.png*
+            /game/art/cells/fill-small.png*
+            /game/art/cells/fill-medium.png*
+            /game/art/book/PlexSans.ttf
+            /game/art/drawing/DelightCoffee-Regular.ttf
       - name: Stage only requested originals and views
         if: steps.route.outputs.artifact != ''
         env:

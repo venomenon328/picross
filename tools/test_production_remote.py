@@ -175,6 +175,13 @@ class RemoteTests(unittest.TestCase):
         record = pw.bound_record(self.read_record(done['work'], self.job), self.job)
         self.assertEqual(record['selected']['background'], 'sky')
         self.assertEqual(record['assets'][-1]['prepared']['file']['sha256'], options['prepared_review']['sha256'])
+        product_request = self.req('inspect-product', done['work'], {'items': [
+            {'role': 'product-' + part, 'candidate': record['selected'][choice]}
+            for part, choice in [('definition', 'raster'), ('background', 'background'), ('reveal', 'reveal')]
+        ]}, product=done['head'], pr=2)
+        for item in delivery.sources(product_request, record):
+            ref = item['source']
+            self.assertEqual(io.checksum(GitSource(self.repo).read(done['head'], ref['file'])), ref['sha256'])
         self.assertTrue(current.findings.effective(record['findings'][0]))
         fixtures.git(self.repo, 'update-ref', 'refs/heads/main', done['head'], self.main)
         fixtures.git(self.toolbox, 'pull', '--ff-only')
@@ -353,6 +360,13 @@ class RemoteTests(unittest.TestCase):
 
 
 class RequestRefTests(unittest.TestCase):
+    def test_motif_choice_preflight_without_image_packages(self):
+        import sys
+        code = ("from tools.production_remote import validate_editorial; "
+                "validate_editorial({'choice': {'candidate': 'motif', 'motif_sha256': 'a'*64, 'approved': [{}], "
+                "'declaration': {'actor':'Test','statement':'Choose motif','timestamp_utc':'2026-11-24T00:00:00Z'}}})")
+        subprocess.run([sys.executable, '-S', '-B', '-c', code], cwd=remote.TOOLS, check=True)
+
     def test_trigger_requires_exact_main_tree_parent_live_ref_and_payload(self):
         main, source = 'a' * 40, 'b' * 40
         req = {'format': 'pw-remote-v1', 'repository': pw.REPO, 'job': 'pz-current', 'operation': 'status',

@@ -23,6 +23,24 @@ LIMIT = 60000
 TOOLS = Path(__file__).resolve().parents[1]
 
 
+def validate_editorial(data):
+    if 'choice' in data:
+        change = exact_keys(data['choice'], {'candidate', 'motif_sha256', 'approved', 'declaration'})
+        sha(change['motif_sha256'])
+        decision = change['declaration']
+        exact_keys(decision, {'actor', 'statement', 'timestamp_utc'} | ({'crop_protection'} & decision.keys()))
+        current.human(decision)
+        require(isinstance(change['approved'], list) and change['approved'], 'Actual approved parameters required')
+    else:
+        change = exact_keys(data['assessment'], {'candidate', 'definition_sha256', 'preview_sha256', 'review',
+                                                'observations', 'ready'})
+        for key in ('definition_sha256', 'preview_sha256'):
+            sha(change[key])
+        current.findings.check_summaries(change['review'], current.CRITERIA['raster'])
+        require(type(change['ready']) is bool and isinstance(change['observations'], list), 'Invalid raster inspection')
+    current.identifier(change['candidate'])
+
+
 def request(value):
     common = {'format', 'repository', 'job', 'operation', 'expected', 'record_sha256', 'tools', 'main', 'input'}
     require(isinstance(value, dict), 'Expected PW remote request')
@@ -44,7 +62,6 @@ def request(value):
     if op in delivery.READS:
         delivery.selectors(value)
     elif op == 'step3' and isinstance(data, dict) and set(data) in ({'choice'}, {'assessment'}):
-        from .production_remote_steps import validate_editorial
         validate_editorial(data)
     elif op == 'step3':
         exact_keys(data, {'motif_sha256', 'design', 'profile', 'label'})
@@ -266,6 +283,10 @@ def run(root, req, auth, token, *, diagnose=False, check_invocation=lambda: None
         pw.verify_published_assets(root, job, expected, work, published)
         result.update(work=work, published_record_sha256=sha256(published).hexdigest(), status='published',
                       next='Inspect the published raster offer.')
+        if op == 'step3' and 'choice' in req['input']:
+            result['next'] = 'Read the approved motif and parameters for the raster design.'
+        if op == 'step3' and 'assessment' in req['input']:
+            result['next'] = 'Read the published assessments and present the current offers or inspection drafts.'
         if op == 'step5':
             require(git.remote_head(root, 'refs/heads/main') == req['main'] and
                     git.remote_head(root, 'refs/heads/' + prs.product_branch(job)) == product and
@@ -381,6 +402,7 @@ def main():
                         result = {'route': 'read' if reading else 'write', 'mode': mode}
                         if reading and mode == 'execute':
                             result['artifact'] = delivery.artifact_name(inspect.github_context(req, source))
+                            result['cells'] = str(any(i['role'] == 'cells-clues' for i in req['input']['items'])).lower()
                         with open(os.environ['GITHUB_OUTPUT'], 'a', encoding='utf-8') as out:
                             for key, value in result.items():
                                 print(key + '=' + value, file=out)

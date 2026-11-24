@@ -81,7 +81,15 @@ def sources(req, record):
             selected = record['selected']['raster' if part == 'definition' else part]
             require(candidate == selected, 'Different product selection')
             runtime = result['runtime']
-            path = runtime['background']['asset'] if part == 'background' else runtime[part]
+            require(runtime['id'] == result['entry']['id'] == req['job'], 'Different product identity')
+            if part == 'background':
+                asset = runtime['background']['asset']
+                require(isinstance(asset, dict) and asset['file'] == 'art/backgrounds/' + req['job'] + '.png',
+                        'Foreign product background')
+                path = asset['file']
+            else:
+                path = runtime[part]
+                require(result['entry'][part] == path, 'Different registered product selection')
             # Completion binds these data files. Never read an arbitrary path from result.files.
             prefix = {'definition': 'data/content/', 'background': 'art/backgrounds/', 'reveal': 'art/content/'}[part]
             require(isinstance(path, str) and path.startswith(prefix) and re.fullmatch(
