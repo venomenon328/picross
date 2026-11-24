@@ -106,7 +106,49 @@ static func run(probe) -> void:
 	probe.check(app.recent_id().is_empty() and not app.recent_panel.visible,"K-B reset removes marker and panel")
 	app.album.reset_filters()
 	await retry_layout(probe)
+	if OS.get_name() == "Windows": await guest_without_publisher(probe)
 	probe.catalog_case("k-b-recent")
+
+static func guest_without_publisher(probe) -> void:
+	var app = probe.app
+	app.select_puzzle(1)
+	await probe.frames()
+	var publisher := Recent.windows_publisher()
+	var available: bool = publisher.available
+	var definition: Dictionary = app.session.definition
+	var key: String = app.store.key_for_definition(str(definition.id))
+	var primary: String = app.store.path_for(key)
+	var backup: String = app.store.path_for(key, ".bak")
+	var normal_marker: Recent = app.recent
+	app.recent = Recent.new(app.store.root.path_join("guest-without-publisher/recent-puzzle.json"))
+	var original_cursor: int = app.session.player.cursor
+	var original_cell: int = app.session.player.cells[0]
+	publisher.available = false
+	var point: Vector2 = app.board.global_position + app.board.view.cell_rect(Vector2i.ZERO).get_center()
+	probe.click_at(point, MOUSE_BUTTON_RIGHT if original_cell != 0 else MOUSE_BUTTON_LEFT)
+	var cursor: int = app.session.player.cursor
+	var edited: int = app.session.player.cells[0]
+	var guest_saved: bool = app.save_error.is_empty() and cursor == original_cursor + 1 and edited != original_cell
+	var marker_failed: bool = app.recent.pending and not app.recent.error.is_empty()
+	app._undo()
+	probe.click(app.album_button)
+	await probe.frames()
+	var slot: Dictionary = app.store.load_slot(definition)
+	var older: Dictionary = app.store._parse(backup, definition)
+	probe.check(guest_saved and marker_failed and app.save_error.is_empty() and app.album.visible
+		and FileAccess.file_exists(primary), "SYNC-PERF B03 guest action and Undo save, and navigation keeps the marker error separate")
+	probe.check(slot.status == "loaded" and int(slot.get("data",{}).get("cursor",-1)) == original_cursor
+		and older.status == "valid" and int(older.get("data",{}).get("cursor",-1)) == cursor,
+		"SYNC-PERF B03 fresh read validates undo Primary and committed backup")
+	app.select_puzzle(1)
+	await probe.frames()
+	probe.check(app.work.visible and app.session.player.cells[0] == original_cell
+		and app.session.player.cursor == original_cursor and app.session.player.history.size() == cursor,
+		"SYNC-PERF B03 reopening the guest puzzle restores Undo with its Redo branch")
+	publisher.available = available
+	probe.check(app.recent.retry(), "SYNC-PERF B03 marker retries independently when publisher returns")
+	app.recent = normal_marker
+	app.show_album()
 
 static func pixel(probe, index: int, filled: bool) -> void:
 	await probe.frames()

@@ -339,6 +339,8 @@ Helfer bei liegengebliebenem Kandidaten, eine jüngere Publikation und die frisc
 gelesene Journalgeneration mit zugehörigem Primary. Er prüft auch die verlorene
 Quittung nach erfolgtem Austausch, Create-only und den separat gelöschten Merker.
 Der vorhandene K-B-Fall in catalog liest den erneuerten Merker frisch von Disk.
+Auf Windows prüft er zusätzlich Zellaktion und Undo bei ausgefallenem Helfer
+sowie Navigation, frisches Lesen von Primary und Backup und separaten Merker-Retry.
 Die Kontoprobe in catalog/information betätigt nach ruhendem Bestandsabgleich
 Zelle, Undo und Redo und prüft lokale Bestätigung, Transportaufrufe und Fälligkeit.
 Der gepaarte Windows-Latenzvergleich und der Chromium-Test für Save,

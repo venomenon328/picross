@@ -286,7 +286,8 @@ func _write_slot(session: Session, view: Dictionary, verified: Dictionary = {}) 
 func _write_windows_slot(candidate: Dictionary, definition: Dictionary, temporary: String, primary: String,
 		backup: String, rotate: bool, verified: Dictionary) -> String:
 	var publisher := SaveRevision.Recent.windows_publisher()
-	if publisher == null or not SaveRevision.Recent.safe_file(temporary):
+	var guest := profile_recent_path.is_empty()
+	if not SaveRevision.Recent.safe_file(temporary):
 		return "Temporäre Datei nicht schreibbar."
 	var raw := JSON.stringify(candidate, "", true, not profile_recent_path.is_empty()) + "\n"
 	var bytes := raw.to_utf8_buffer()
@@ -295,7 +296,8 @@ func _write_windows_slot(candidate: Dictionary, definition: Dictionary, temporar
 	if file == null: return "Temporäre Datei nicht schreibbar."
 	# Take the independent read handle before writing. It follows the exact
 	# staged file across rename. Closing the writer still precedes both reads.
-	if not publisher.hold(temporary):
+	var held: bool = publisher != null and publisher.available and publisher.hold(temporary)
+	if not held and not guest:
 		file.close()
 		return "Temporäre Datei nicht lesbar."
 	var written := file.store_buffer(bytes)
@@ -303,14 +305,29 @@ func _write_windows_slot(candidate: Dictionary, definition: Dictionary, temporar
 	var error := file.get_error()
 	file.close()
 	var expected := raw.sha256_text()
-	if not written or error != OK or publisher.digest(temporary) != expected:
-		publisher.drop()
+	if not written or error != OK:
+		if held: publisher.drop()
+		return "Temporäre Datei besteht Validierung nicht."
+	var staged: String = publisher.digest(temporary) if held else ""
+	if guest and staged.is_empty():
+		# The helper only read the candidate. The Godot path can validate the
+		# staged bytes and perform the single rotation with the writer closed.
+		if _parse(temporary, definition).status != "valid":
+			return "Temporäre Datei besteht Validierung nicht."
+		return _rotate_slot(temporary, primary, backup, rotate)
+	if staged != expected:
+		if held: publisher.drop()
 		return "Temporäre Datei besteht Validierung nicht."
 	var failure := _rotate_slot(temporary, primary, backup, rotate)
 	if not failure.is_empty():
 		publisher.drop()
 		return failure
-	if publisher.digest(primary, true) != expected:
+	var published: String = publisher.digest(primary, true)
+	if guest and published.is_empty() and SaveRevision.Recent.safe_file(primary):
+		# Rotation already happened. Confirm the exact, fully validated
+		# bytes at Primary without touching any of the three slot paths.
+		published = FileAccess.get_sha256(primary)
+	if published != expected:
 		return "Temporäre Datei nicht als Primärstand bestätigt."
 	verified.merge({"path":primary, "sha256":expected})
 	return ""

@@ -23,7 +23,7 @@
     {
       "path": "game/tests/recent_cases.gd",
       "disposition": "change-scoped",
-      "reason": "Merker nach erfolgreichem Retry erneut von Disk lesen."
+      "reason": "Merker nach Retry frisch lesen. Windows-Gastaktion und Undo bei nicht verfügbarem Helfer mit gültigem Primary und Backup, Navigation, Wiederaufnahme und separatem Merker-Retry."
     },
     {
       "path": "game/tests/sync_account_cases.gd",

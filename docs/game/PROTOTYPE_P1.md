@@ -393,6 +393,14 @@ Zugriff erneut. POSIX/Web verwenden Rename. Ein identischer gültiger Merker
 überspringt den Austausch. Fehler beim Merker zeigt der Katalog separat an.
 Verzeichnisse, Links, ungültige Pfade und fremde Dateinamen werden zurückgewiesen.
 
+Fehlendes, gesperrtes oder ausgefallenes PowerShell blockiert die normale
+Windows-Gastsicherung nicht. Der SaveStore validiert in diesem Fall den
+geschlossenen Temp über Godot und rotiert danach einmal. Ist die Rotation
+bereits abgeschlossen, vergleicht der SaveStore bei ausgefallener Antwort die
+Primarybytes mit der vollständig validierten Fassung. Ein fehlgeschlagener
+Vergleich bleibt ein Savefehler. Der Merker meldet seinen Fehler separat und
+behält seinen Retry.
+
 ## 7. Technikbindung und Prüfweg
 
 ### 7.1 P1-Technik

@@ -17,9 +17,11 @@ zeigt weiterhin den Katalog. Der separate `user://p1/recent-puzzle.json` ändert
 Slotdatei. Fehler des Merkers haben im Katalog einen eigenen Retry; Save-/Backupfehler
 und deren bewusste Reparatur bleiben davon getrennt. Unter Windows startet das Spiel
 einmal einen PowerShell-Helfer für die Rückleseprüfung und den atomaren Austausch von Kontojournal und
-Metadaten. Jede bestätigte Aktion wartet auf ihre lokale Sicherung. Kann das
-Kontojournal nicht bestätigt werden, erscheint ein Speicherfehler. Betrifft der
-Fehler allein den Fortsetzen-Merker, lässt sich dieser im Katalog erneut speichern.
+Metadaten. Jede bestätigte Aktion wartet auf ihre lokale Sicherung. Falls der
+Helfer ausfällt, kann ein Gast über den validierten Godot-Speicherweg weiterspielen.
+Kann das Kontojournal nicht bestätigt werden, erscheint ein Speicherfehler.
+Betrifft der Fehler allein den Fortsetzen-Merker, lässt sich dieser im Katalog
+erneut speichern.
 
 **Buchintegration B-B / #493, #498:** Windows und Web starten den regulären
 Rätselkatalog als räumliches Buch. Kurzes Blättern
