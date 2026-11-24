@@ -4,7 +4,7 @@ import os
 from pathlib import Path
 import subprocess
 import tempfile
-from time import monotonic
+from time import monotonic, sleep
 from urllib.parse import quote
 
 from . import production_remote_delivery as delivery, production_remote_pr as prs, publish_git, work_publish as pw, work_refs
@@ -110,11 +110,34 @@ def github_context(req, source):
 
 def upload_record(req, ctx):
     artifact_id = int(os.environ['PW_ARTIFACT_ID'])
-    row = pw.api('actions/artifacts/' + str(artifact_id))
+    for delay in (0, 2, 5, 10):
+        if delay:
+            sleep(delay)
+        try:
+            row = pw.api('actions/artifacts/' + str(artifact_id))
+            break
+        except github_rest.Failure as exc:
+            if delay == 10 or exc.status not in (404, 502, 503, 504):
+                raise
     delivery.metadata(row, ctx, artifact_id, datetime.now(timezone.utc))
     require(row['digest'] == 'sha256:' + os.environ['PW_ARTIFACT_DIGEST'].removeprefix('sha256:'),
             'Upload and Actions metadata differ')
     return row
+
+
+def download_uploaded(artifact_id, archive):
+    # Fresh metadata can precede the availability of the binary endpoint.
+    for delay in (0, 2, 5, 10):
+        if delay:
+            sleep(delay)
+        with archive.open('wb') as stream:
+            result = subprocess.run(['gh', 'api', f'repos/{pw.REPO}/actions/artifacts/{artifact_id}/zip'],
+                                    stdout=stream, stderr=subprocess.PIPE, timeout=180,
+                                    env={**os.environ, 'GH_TOKEN': github_rest.publisher_token()})
+        if result.returncode == 0:
+            return
+        transient = any(f'HTTP {status}'.encode() in result.stderr for status in (404, 502, 503, 504))
+        require(transient and delay < 10, f'Cannot download uploaded Actions artifact {artifact_id}')
 
 
 def process(action, root, req, mode, ref, source, check):
@@ -141,9 +164,7 @@ def process(action, root, req, mode, ref, source, check):
     if action == 'inspect-verify':
         with tempfile.TemporaryDirectory(dir=root) as tmp:
             archive = Path(tmp) / 'artifact.zip'
-            with archive.open('xb') as stream:
-                subprocess.run(['gh', 'api', f'repos/{pw.REPO}/actions/artifacts/{row["id"]}/zip'], stdout=stream,
-                               check=True, timeout=180, env={**os.environ, 'GH_TOKEN': github_rest.publisher_token()})
+            download_uploaded(row['id'], archive)
             manifest = delivery.verify_archive(archive, row, ctx, req, raw, artifact_id=row['id'])
             require(current.encoded(manifest) == (root / 'pw-delivery/manifest.json').read_bytes(),
                     'Uploaded manifest differs from staging')

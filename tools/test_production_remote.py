@@ -360,6 +360,18 @@ class RemoteTests(unittest.TestCase):
 
 
 class RequestRefTests(unittest.TestCase):
+    def test_fresh_archive_recovers_after_transient_missing_binary(self):
+        from tempfile import TemporaryDirectory
+        replies = [(1, b'HTTP 404', b'partial'), (0, b'', b'original')]
+        def get(command, *, stdout, **kwargs):
+            code, error, data = replies.pop(0)
+            stdout.write(data)
+            return subprocess.CompletedProcess(command, code, stderr=error)
+        with TemporaryDirectory() as tmp, patch.object(inspect.subprocess, 'run', side_effect=get), patch.object(inspect, 'sleep'):
+            archive = Path(tmp) / 'delivery.zip'
+            inspect.download_uploaded(27, archive)
+            self.assertEqual(archive.read_bytes(), b'original')
+
     def test_motif_choice_preflight_without_image_packages(self):
         import sys
         code = ("from tools.production_remote import validate_editorial; "
