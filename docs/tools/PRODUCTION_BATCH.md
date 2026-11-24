@@ -1,5 +1,7 @@
 # Batchverarbeitung: lokale Produktion und autorisierte Einzelintegration
 
+Ein separat eingereichtes Eingangsverzeichnis benötigt dieselben Nachweise wie im Einzelaufruf. Der Batch bindet die Originale und den tatsächlichen Auftrag an den einzelnen Job und verwendet den gemeinsamen Registrierungswriter.
+
 ## Geltung und Quellen
 
 - **Status:** aktiver technischer Vertrag für zwei getrennte, ausdrücklich aufgerufene Runner.

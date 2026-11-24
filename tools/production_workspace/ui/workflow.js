@@ -265,7 +265,7 @@ const PW = (()=>{
    lines.push('Schritt 3: Die bereits freigegebene Rasterproduktion bis zu qualifizierten Rasterangeboten fortsetzen.');
   }else if(pickingRaster||value.facts.state==='raster_ready'){
    if(!selected||selected.kind!=='raster')throw Error('Bitte ein qualifiziertes Rasterangebot wählen.');
-   lines.push(`Schritt 4: Ich wähle das qualifizierte Rasterangebot ${selected.id}. Kontextzeichnungen als background_review zur Auswahl vorlegen.`);
+   lines.push(`Schritt 4: Ich wähle das qualifizierte Rasterangebot ${selected.id}. Jede Kontextzeichnung im vorgesehenen HG31-Profil vorbereiten, Original und fertige PNG-Datei sichten und die gebundenen Angebote als background_review vorlegen.`);
   }else{
    const final=finalAssets(value,intent);
    if(value.facts.state==='background_review'){

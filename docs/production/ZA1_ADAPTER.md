@@ -1,5 +1,7 @@
 # ZA-1: Aktueller Integrationseingang und kreative Vorbereitung
 
+Ein eigenständig übergebenes Verzeichnis benötigt die vollständige fachliche Eingangsprüfung. Im gebundenen PW-Auftrag erzeugt der Fachkern Manifest und Dateien unmittelbar aus dem geprüften Record. Die Quell-, Befugnis-, Ziel- und Transaktionsprüfungen gelten für beide Eingänge.
+
 ## Geltung und Quellen
 
 - **Status:** aktiver Vertrag für das geschlossene aktuelle Integrationsmanifest, seine Prüfung und die CLI.

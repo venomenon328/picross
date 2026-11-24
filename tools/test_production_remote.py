@@ -148,6 +148,29 @@ class RemoteTests(unittest.TestCase):
         f.raster_ready()
         before, viewed, options = background_offer(self)
         self.check_background_delivery(before, viewed)
+        published = pw.bound_record(self.read_record(before, self.job), self.job)
+        qualification = current.qualification
+        self.assertEqual(qualification.inventory(published), {k: v['kind'] for k, v in published['qualification']['facts'].items()})
+        with qualification.operation():
+            missing = deepcopy(published)
+            missing['qualification']['facts'].popitem()
+            with self.assertRaisesRegex(ValueError, 'inventory'):
+                qualification._published(missing)
+            claimed = deepcopy(published)
+            claimed['qualification'] = {'format': qualification.FORMAT, 'facts': {'0'*64: {'checks': True}}}
+            with self.assertRaises(ValueError):
+                qualification._published(claimed)
+            qualification._published(published)
+            stale = deepcopy(published)
+            stale['rasters'][0]['proof']['sha256'] = '0'*64
+            with self.assertRaisesRegex(ValueError, 'inventory'):
+                qualification._published(stale)
+        self.assertIsNone(qualification.lookup(next(iter(published['qualification']['facts']))))
+        from tools.puzzle_production import current_rating, palette_quality, verifier
+        for module, function in ((current, 'render_background'), (current.Checked, 'raster'), (current, 'image_facts'),
+                                 (current, 'prepared_facts'), (current_rating, 'validate'), (verifier, 'verify'),
+                                 (palette_quality, 'pair_status')):
+            self.enterContext(patch.object(module, function, side_effect=AssertionError('Replayed ' + function)))
         req = self.req('step5', before, options, issue=1)
         cases = [({**options, 'finding_decisions': []}, 'Stale decision|blocked'),
                  ({**options, 'background': 'cloud'}, 'Unselected finding|Stale decision')]

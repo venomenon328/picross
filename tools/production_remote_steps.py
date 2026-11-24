@@ -120,7 +120,7 @@ def step4(req, job, root, scratch):
                     == original, 'Background original changed')
             rendered = current.prepare_background(source, scratch / (key + '.png'), profile_id=asset['profile'])
             path = f'content/authoring/{draft["puzzle_id"]}/data/prepared/{key}/{rendered["sha256"]}.png'
-            asset['prepared'] = {'original_sha256': original['sha256'], 'profile': asset['profile'],
+            asset['prepared'] = {'original_sha256': original['sha256'], 'profile': asset['profile'], 'inspection': None,
                                  'file': {**rendered, 'file': path}}
             files.append({'path': path, 'source': rendered['file'], 'bytes': rendered['bytes'], 'sha256': rendered['sha256']})
     else:
@@ -132,12 +132,14 @@ def step4(req, job, root, scratch):
         require(set(viewed['review']) == current.CRITERIA['background']
                 and all(r['timestamp_utc'] and r['result'] != 'nicht geprüft' for r in viewed['review'].values()),
                 'Incomplete background assessment')
-        asset['prepared']['inspection'] = {'sha256': viewed['sha256'], 'review': deepcopy(viewed['review'])}
+        original_review = (asset['prepared'].get('inspection') or {}).get('original_review', asset['review'])
+        asset['prepared']['inspection'] = {'sha256': viewed['sha256'], 'review': deepcopy(viewed['review']),
+                                           'original_review': deepcopy(original_review)}
         observations(draft, asset['id'], viewed['observations'])
         # Summary keeps the worse result for each criterion across the two images.
         order = ('erfüllt', 'Warnung', 'nicht erfüllt', 'nicht geprüft')
         for criterion, finding in viewed['review'].items():
-            original = asset['review'].get(criterion)
+            original = original_review.get(criterion)
             require(original and original['timestamp_utc'] and original['result'] != 'nicht geprüft',
                     'Original background assessment missing')
             if order.index(finding['result']) > order.index(original['result']):
@@ -158,7 +160,7 @@ def finalize(req, job, root, scratch):
     chosen = draft['selected']['background']
     if chosen not in (None, 'none', 'standard') and draft['format'] in current.findings.FORMATS:
         prepared = current.findings.subjects(draft)[chosen]['prepared']
-        require(prepared and ('inspection' in prepared or job['selected']['background'] == chosen),
+        require(prepared and (prepared.get('inspection') or 'inspection' not in prepared and job['selected']['background'] == chosen),
                 'Complete the prepared background assessment in step 4')
     for declaration in req['input'].get('finding_decisions', []):
         target, key = declaration['target'], declaration['id']

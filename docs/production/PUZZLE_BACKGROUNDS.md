@@ -4,6 +4,8 @@ Dokument-ID: `background-technical`
 Status: `active`
 Vertrag: 1.0 · Dokumentrevision 20 · 17.11.2026 · PROD-SLIM / [#700](https://github.com/venomenon328/picross/issues/700)
 
+Für die aktuelle Produktion nach PW-B gilt der Prüfzeitpunkt aus [Authoring Schritt 4](authoring/PUZZLE_AUTHORING_STEP_4.md). Jedes angebotene Original wird mit seinem HG31-Profil vorbereitet. Original und gespeicherte Ausgabe werden vor der Wahl gesichtet. Der Auswahl-/Schlussauftrag übernimmt die konkrete fertige Datei.
+
 ## Zuständigkeit
 
 | Bereich | Normative Quelle |

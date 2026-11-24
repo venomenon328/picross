@@ -13,6 +13,8 @@ Alle Aufrufe starten im Repositoryroot; Bildbefehle benötigen die unten erläut
 | Bildtyp und Darstellung beurteilen | [Bildnormen](../../docs/production/images/README.md) und [Qualität](../../docs/production/PUZZLE_QUALITY.md) |
 | Logik, Rasterableitung und Analyse | Die jeweiligen Werkzeugabschnitte dieser Anleitung; [Produktionsvertrag](../../docs/production/PUZZLE_PRODUCTION.md) |
 
+Für aktuelle PW-Produktionen erfolgt die unabhängige Proofprüfung vor dem Rasterangebot. Hintergrundangebote enthalten das Original und die in Schritt 4 gespeicherte und gesichtete profilgebundene PNG-Datei. Ein externer Aufruf mit `--input` prüft das Eingangsverzeichnis vollständig. Die gebundene Remote-Integration verwendet die Ergebnisse der Kandidaten und bestätigt Quell- und Zielbytes.
+
 ## RI-ONE: aktuelle Integration
 
 Der aktuelle Eingang ist ein Verzeichnis mit `manifest.json` im Format

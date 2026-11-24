@@ -13,10 +13,10 @@ gebundenen `inspect`-Request, bevor er weitere Binärdownloads versucht. Das
 gilt auch für einen frischen Chat. Der kurze Produktionsauftrag genügt.
 `input.items` enthält je benötigter Rolle genau einen Eintrag, etwa
 `{"role":"motif","candidate":"motif-a"}`. Kandidaten, Profil und Referenzen
-aus dem frisch gelesenen Record nehmen. Für das gewählte Hintergrundangebot
+aus dem frisch gelesenen Record nehmen. Vor der Wahl für jedes Hintergrundangebot
 die Rollen `background` und `prepared` mit derselben ID anfordern. Bei
 `prepared:null` rendert der lesende Worker genau diese Zeichnung mit HP-W2.
-Bei gesicherter Ableitung liefert er deren Originalbytes. Für `none` und
+Für die reguläre Vorlage zuerst mit `step4` vorbereiten. Der Abruf liefert dann die gespeicherten Ausgabebytes. Für `none` und
 `standard` entfällt dieser Abruf.
 
 Für Schritt 3 das benötigte `reveal` und `motif` öffnen. Nach dem Schritt-3-

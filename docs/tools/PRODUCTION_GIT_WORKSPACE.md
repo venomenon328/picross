@@ -6,6 +6,8 @@ Entscheidung: 23.11.2026 · [#859 / PW-LOCAL-A](https://github.com/venomenon328/
 Zuständigkeit: lokale Objektablage, Produktionsworktrees, Sparse-Materialisierung
 und ihre Anbindung an die sichere Publikation.
 
+Für eine Wiederaufnahme den Arbeitsref und den erwarteten Commit lesen, Releasegeneration und Originale abgleichen und die dort gebundenen Kandidatenergebnisse verwenden. Ein Pfadwechsel bei bytegleichem Inhalt erfordert keine neue Bildentscheidung.
+
 ## Einstieg und Wiederaufnahme
 
 Der Akteur startet im vertrauenswürdigen Werkzeugcheckout und bindet die

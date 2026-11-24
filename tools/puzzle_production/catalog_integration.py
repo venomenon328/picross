@@ -4,7 +4,7 @@ from hashlib import sha1
 from . import current_content as content, current_registration as transaction
 from . import catalog_rating as rating, catalog_added as added, catalog_method, categories
 from . import catalog_io as io, operation_diagnostics as diagnostic
-from .integration_input import Input
+from .integration_input import Input, open_input
 from .authoring_package import require
 
 
@@ -51,14 +51,19 @@ def integrate(export_dir, root, *, apply=False, fail_step=None, publication_seco
 class Registration:
     """A single intake, usable for a read-only plan followed by fresh registration."""
     def __init__(self, directory):
-        self.incoming = directory if isinstance(directory, Input) else Input(directory)
+        self.incoming = directory if isinstance(directory, Input) else open_input(directory)
         self._profiles = None
 
     def profiles(self, original):
         from .catalog_profiles import render_profiles
+        from . import current_qualification as qualification
         if self._profiles is None:
-            self._profiles = render_profiles(self.incoming.entry["id"], original, self.incoming.reveal["asset"],
-                                             self.incoming.reveal_size)
+            key = ('catalog-profiles', self.incoming.entry['id'], original['file'], original['sha256'])
+            self._profiles = qualification.lookup(key)
+            if self._profiles is None:
+                self._profiles = render_profiles(self.incoming.entry["id"], original, self.incoming.reveal["asset"],
+                                                 self.incoming.reveal_size)
+                qualification.remember(key, self._profiles)
         return self._profiles
 
     def run(self, root, **options):

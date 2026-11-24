@@ -164,7 +164,9 @@ def preflight(root, req, auth):
         require(motif and motif['file']['sha256'] == data['motif_sha256'], 'Selected motif bytes changed')
     if op == 'step5':
         if record['format'] in current.findings.FORMATS:
-            require(record.get('qualification') is not None,
+            qualification = record.get('qualification')
+            require(qualification is not None and all(current.qualification.documented(row)
+                    for row in qualification['facts'].values()),
                     'Bound candidate qualification missing. Complete the affected production phase first.')
         issue = pw.api('issues/' + str(req['issue']))
         require(issue['number'] == req['issue'] and 'pull_request' not in issue, 'Expected production issue')

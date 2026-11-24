@@ -20,6 +20,7 @@ import zipfile
 from . import batch_io as bio, catalog_io as io, catalog_publication as publication
 from . import catalog_transaction as tx
 from . import integration_batch_contract as bc
+from . import current_qualification as qualification
 from . import integration_batch_operations as operations
 from . import operation_diagnostics as diagnostic
 from .contract import Aborted, InvalidInput, canonical_bytes, exact_keys
@@ -91,8 +92,8 @@ def _metadata(job, source):
     current = _ref(inputs["current"], source)
     if current is None:
         return
-    from .integration_input import Input
-    incoming = Input(current)
+    from .integration_input import open_input
+    incoming = open_input(current)
     bio.require(incoming.entry["id"] == job["puzzle_id"], "Current input belongs to another ID")
     if order is not None:
         bio.require(order["test_only"] == incoming.value["test_only"], "Order scope differs")
@@ -751,6 +752,7 @@ def _execute(ledger, plan, source, repo, target, history, actual_head, tool, *, 
     return result
 
 
+@qualification.operation()
 def run(plan_path, source_root, repo_root, target_root, work_root, history_root=None):
     started = time.monotonic()
     plan, raw, source, repo, target, work, history, actual_head, tool = _prepare(
@@ -776,6 +778,7 @@ def run(plan_path, source_root, repo_root, target_root, work_root, history_root=
             raise BatchTechnicalError(str(exc)) from exc
 
 
+@qualification.operation()
 def resume(plan_path, source_root, repo_root, target_root, work_root, history_root=None):
     started = time.monotonic()
     plan, raw, source, repo, target, work, history, actual_head, tool = _prepare(

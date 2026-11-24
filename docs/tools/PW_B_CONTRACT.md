@@ -4,6 +4,8 @@ Dokument-ID: `authoring-current`
 Status: `active`
 Stand: 17.11.2026 · [PROD-SLIM / #700](https://github.com/venomenon328/picross/issues/700)
 
+Der Publisher kann im strukturierten veröffentlichten Produktionsrecord `qualification` vom Format `picross-candidate-qualification-v1` speichern. Der Fachkern erhebt Maße, Rasterergebnisse und fehlende Voraussetzungen an den Originalen. Beim Lesen müssen die Inhaltsbindungen zu den aktuellen Kandidaten passen. Eine vom Aufrufer eingereichte lokale Kopie verleiht den enthaltenen Ergebnissen keine Autorität. Sichturteil und tatsächliche Entscheidung führt der bestehende Record getrennt.
+
 ## Phasen und Autorität
 
 Authoring 0.8.0 verwendet genau einen aktuellen Record je Job. Die fünf Schritte

@@ -2,6 +2,8 @@
 
 Finale Produktcommits werden mit `python -m tools.publish_git BRANCH --expected SHA` veröffentlicht. Für neue Branches gilt `--expected new`. Arbeitsassets und Wiederaufnahme folgen dem [PW-B-Vertrag](../tools/PW_B_CONTRACT.md).
 
+Eine aus dem qualifizierten PW-Record abgeleitete Lieferung und ein eigenständig eingelesener Eingang benutzen denselben Registrierungswriter. Im gebundenen Auftrag können Plan und Register die einmal erzeugten Profilbytes gemeinsam verwenden. Register liest das Ziel frisch und prüft die Quellbytes erneut.
+
 ## Geltung und Quellen
 
 - **Status:** aktiver fachlicher Vertrag für genau einen aktuellen Integrationsweg und eine aktuelle Inhaltsautorität.

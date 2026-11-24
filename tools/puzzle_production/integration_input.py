@@ -8,7 +8,7 @@ from pathlib import Path
 import shutil
 import tempfile
 
-from . import current_content as content, catalog_io as io, catalog_rating as rating
+from . import current_content as content, catalog_io as io, catalog_rating as rating, current_qualification
 from . import catalog_method, catalog_added, palette_quality, verifier
 from .authoring_package import require
 from .contract import exact_keys, digest, Budget
@@ -215,10 +215,28 @@ class Input:
             require(io.read(self.root, name, max(len(raw), 1)) == raw, "Input changed while validating: "+name)
 
 
+def open_input(directory):
+    """Share a completed intake only inside the current batch, checking every byte."""
+    if not current_qualification.active():
+        return Input(directory)
+    root = io.external(directory)
+    manifest = io.read(root, 'manifest.json', 1024 * 1024)
+    key = ('integration-input', io.checksum(manifest))
+    previous = current_qualification.lookup(key)
+    if previous is not None:
+        previous.root = root
+        previous.recheck()
+        return previous
+    result = Input(root)
+    require(result.raw['manifest.json'] == manifest, 'Input changed while opening')
+    current_qualification.remember(key, result)
+    return result
+
+
 @io.bounded
 def export(source, output):
     """The sole current exporter; no original package or producer admission."""
-    current = Input(source)
+    current = open_input(source)
     output = io.external(output)
     require(not output.exists(), "Export output already exists")
     output.parent.mkdir(parents=True, exist_ok=True)
