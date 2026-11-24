@@ -176,11 +176,14 @@ const run = code => vm.runInContext(code, context);
     assert.match(selector().children[1].textContent,/Alternative 1.*Breite exakt 19/);
     chooseMotif().onclick();
     assert.equal(get('copyOrder').disabled,true,'reordering never transfers old parameter choice');
-    await search();adopt();await ready();
-    chooseMotif().onclick();
+    await search();adopt();
+    await until(()=>run('detail?.facts.originals.record.parameters.proposed.length===0&&readyImages.has("motif-a")'));
+    assert.equal(chooseMotif(),undefined,'a motif without parameters is a correction draft');
     assert.equal(selector(),undefined);
     assert.equal(get('copyOrder').disabled,true);
-    assert.match(get('orderStatus').textContent,/fehlt ein vollständiger Parametervorschlag/);
+    assert.match(words(get('view')),/Parametervorschlag für die Motivwahl fehlt/);
+    const draftMode=get('nextActionMode');draftMode.value='rework';draftMode.onchange();
+    assert(get('correctionBase').children.some(option=>option.value==='motif-a'),'draft remains available for correction');
     run('dispose()');
     return;
   }
