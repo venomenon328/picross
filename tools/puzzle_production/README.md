@@ -218,6 +218,8 @@ finale Produktdaten. Completion und Retirement benötigen keine Arbeitsarchive i
 Produktcommit. Aktuelle angebotene Alternativen bleiben bis zur tatsächlichen
 Wahl erreichbar; danach entbehrliche Varianten ohne Archivierung entfernen.
 
+Für eine Remote-Ausführung nutzt der Akteur den [gebundenen CLI-/Actions-Einstieg](../../docs/tools/PW_REMOTE.md) für Preflight, Rasterangebot, Produkt-PR, CI-Readback und Retirement.
+
 ### Aktuelle Bild- und Rasterhelfer
 
 Die folgenden Befehle benutzen die vorhandenen Algorithmen in der isolierten

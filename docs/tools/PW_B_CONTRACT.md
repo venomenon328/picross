@@ -200,7 +200,7 @@ mit seiner [Windows-Benutzervariable](PRODUCTION_WORKSPACE.md#optionaler-rest-zu
 authentifizieren. Sein öffentlicher Originaldownload bleibt anonym. Im Publisher
 verwendet der Originalabruf den ausgewählten REST-Kontext und eine gegebenenfalls
 von GitHub gelieferte signierte Download-URL. Release- und Asset-ID, Name, Größe
-und SHA-256 bleiben verbindlich. Ein vollständiger Remote-Abschluss aus ChatGPT
+und SHA-256 bleiben verbindlich. Der [Remote-Einstieg](PW_REMOTE.md) bindet den vollständigen Record und dieselben Reader an den Auftrag. Ein vollständiger Remote-Abschluss aus ChatGPT
 mit Produkt-PR und CI ist ein gesonderter Betriebsnachweis.
 
 Der gemeinsame Index enthält nur `puzzle_id,revision,record`-Verweise nach

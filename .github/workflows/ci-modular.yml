@@ -33,7 +33,8 @@ jobs:
       - name: Start soft CI clock
         id: clock
         run: echo "started_at=$(date +%s)" >> "$GITHUB_OUTPUT"
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+      - name: ${{ github.event_name == 'pull_request' && format('PR {0} / {1} / {2} / {3}', github.event.pull_request.number, github.event.pull_request.head.sha, github.event.pull_request.base.sha, github.sha) || 'Checkout source' }}
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
           fetch-depth: 2
           persist-credentials: false

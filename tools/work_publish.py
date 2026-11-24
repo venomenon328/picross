@@ -16,6 +16,7 @@ from uuid import uuid4
 from . import publish_git as transport, production_git_workspace as workspace
 from .production_worktree_publish import Publication, JOURNAL, previous_operation
 from .app_products import PRODUCTS
+from . import work_refs
 from .puzzle_production import current_authoring as current, current_delivery, catalog_io as io, github_rest, work_assets
 from .puzzle_production.authoring_builder import git_root, index_value, writer
 from .puzzle_production.authoring_package import require
@@ -103,6 +104,8 @@ def repository_check(repository):
     info = api('')
     require(isinstance(info, dict) and isinstance(info.get('full_name'), str) and info['full_name'].casefold() == REPO,
             'GitHub returned a different publisher repository')
+    if work_refs.FIXTURE:
+        require(info.get('id') == work_refs.TEST_ID, 'Different isolated fixture repository ID')
 
 
 def creation_setting():
@@ -179,6 +182,7 @@ def observe(root, operation, job, expected, repository, auth, *, read_record=Non
         operation == 'publish' and expected is None or isinstance(expected, str) and transport.SHA.fullmatch(expected)),
         'Operation requires the expected full work commit (new only for first publication)')
     repository_check(repository)
+    require(not work_refs.FIXTURE or job == work_refs.TEST_JOB, 'Isolated fixture job required')
     main = transport.remote_head(root, 'refs/heads/main')
     require(main is not None, 'Remote main missing; check the Git repository and selected credential')
     api_main = api('git/ref/heads/main')
@@ -313,25 +317,28 @@ def release_for(rows, tag):
     return matches[0] if matches else None
 
 
-def push_job(root, job, expected, *, repository=REPO, auth='env', token=None):
+def push_job(root, job, expected, *, repository=REPO, auth='env', token=None, remote_request=None):
     with publisher_auth(auth, token):
-        return _push_job(io.external(root), job, expected, repository, auth)
+        return _push_job(io.external(root), job, expected, repository, auth, remote_request)
 
 
-def _push_job(root, job, expected, repository, auth):
+def _push_job(root, job, expected, repository, auth, remote_request=None):
     binding = workspace.read_binding(root)
     if binding is None:
+        require(remote_request is None, 'Remote requests require a managed job worktree')
         return _publish_draft(root, job, expected, repository, auth)
     require(binding['role'] == 'job' and binding['job'] == job, 'Wrong publication worktree')
     with writer(git_root(root) / 'authoring-builder.lock'):
-        return _publish_draft(root, job, expected, repository, auth, managed=True)
+        return _publish_draft(root, job, expected, repository, auth, managed=True, remote_request=remote_request)
 
 
-def _publish_draft(root, job, expected, repository, auth, *, managed=False):
+def _publish_draft(root, job, expected, repository, auth, *, managed=False, remote_request=None):
     prior = previous_operation(root, job, expected) if managed else None
     report = observe(root, 'publish', job, expected, repository, auth,
                      recovery_parent=prior['parent'] if prior else None)
     main = report['main']
+    if remote_request:
+        require(main == remote_request['main'], 'Main changed before publication')
     operation = None
     if prior and prior['confirmed'] and report['work_head'] != expected and not (workspace.gitdir(root) / JOURNAL).exists():
         actual = report['work_head']
@@ -352,6 +359,7 @@ def _publish_draft(root, job, expected, repository, auth, *, managed=False):
     raw = io.read(root, name, MIB)
     draft = current.compact(current.validate(io.json_bytes(raw, MIB)))
     require(draft['puzzle_id'] == job, 'Different production identity')
+    require(not work_refs.FIXTURE or draft['test_only'] is True, 'Isolated fixture requires test-only data')
     checked = current.Checked(draft, lambda n, limit: io.read(root, n, limit))
     transport.git(root, 'fetch', '--no-tags', '--', transport.REMOTE, main)
     transport.git(root, 'merge-base', '--is-ancestor', transport.CLEAN_MAIN, main)
@@ -361,13 +369,13 @@ def _publish_draft(root, job, expected, repository, auth, *, managed=False):
     owner = {'operation': 'publish', 'job': job, 'expected': expected,
              'draft': operation.value['draft']} if operation else None
     with catalog_writer(root, main, owner=owner):
-        actual = publish_locked(root, job, expected, main, checked, operation)
+        actual = publish_locked(root, job, expected, main, checked, operation, remote_request)
         if operation:
             require(actual == operation.bind(actual), 'Different published work commit')
     return operation.finish(actual) if operation else actual
 
 
-def publish_locked(root, job, expected, main, checked, operation=None):
+def publish_locked(root, job, expected, main, checked, operation=None, remote_request=None):
     draft = checked.job
     branch = 'content/pw/' + job
     ref = 'refs/heads/' + branch
@@ -470,11 +478,19 @@ def publish_locked(root, job, expected, main, checked, operation=None):
         index['entries'] = [e for e in index['entries'] if e['puzzle_id'] != job]
         index['entries'].append({'puzzle_id':job,'revision':'current','record':current.path(job)})
         index['entries'].sort(key=lambda e:(e['puzzle_id'],e['revision']))
-        head = metadata_commit(root, parent, {current.path(job):encoded,current.INDEX:current.encoded(index)},
-                               'Publish current ' + job)
+        message = 'Publish current ' + job
+        if remote_request:
+            message += '\n\nPW-Remote: ' + remote_request['id']
+        head = metadata_commit(root, parent, {current.path(job):encoded,current.INDEX:current.encoded(index)}, message)
         if operation:
             head = operation.bind(head)
-        actual = transport.publish(root, branch, head, expected)
+        if remote_request and remote_request.get('product'):
+            product = remote_request['product']
+            require(draft['state'] == 'registered' and draft['integration']['commit'] == product,
+                    'Product commit differs from current completion')
+            actual = transport.publish_completion(root, job, head, expected, product, main)
+        else:
+            actual = transport.publish(root, branch, head, expected)
     require(actual and transport.remote_head(root, ref) == actual, 'Publication not confirmed')
     retained = {r['asset']['asset_id'] for r in current.references(result) if 'asset' in r}
     previous_ids = {r['asset']['asset_id'] for r in old.values() if r['asset']['release_id'] == release['id']}
@@ -525,7 +541,12 @@ def _finish(root, job, expected, confirmed, repository, auth, binding):
         source = GitSource(root, fetch_commit=lambda oid: transport.git(root, 'fetch', '--no-tags', '--', transport.REMOTE, oid))
         return source.read(commit, current.path(job), MIB)
 
-    main = observe(root, 'retire', job, expected, repository, auth, read_record=read_record)['main']
+    observed = observe(root, 'retire', job, expected, repository, auth, read_record=read_record)
+    main = observed['main']
+    if (observed['work_head'] is None and observed['tag_anchor'] is None and observed['release_id'] is None
+            and not (workspace.gitdir(root) / 'work-production-catalog-owner').exists()
+            and transport.remote_head(root, 'refs/heads/' + release_catalog.LOCK_BRANCH) is None):
+        return 'no-op'
     transport.git(root,'fetch','--no-tags','--',transport.REMOTE,main)
     require(transport.remote_head(root, 'refs/heads/main') == main, 'Main advanced; refresh before retirement')
     owner = {'operation': 'retire', 'job': job, 'expected': expected, 'confirmed': confirmed} if binding else None

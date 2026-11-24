@@ -23,6 +23,8 @@ python -m tools.puzzle_production.target_adapter register --input <übergabe> --
 
 Publikation und Registrierungsrecovery haben getrennte 1800-s-Defaults und 300-s-Warnung. Fremde/unklare Bytes und offene Journale erhalten. Kontrollierter Abbruch, erfolgreiche Rückführung und offene Recovery getrennt berichten. Der Integrationsbatch benutzt denselben Kern nur für ausdrücklich vorbereitete und autorisierte Jobs; kein zusätzlicher Batchauftrag wird aus einer Einzelintegration abgeleitet.
 
+Im [Remote-Einstieg](../../tools/PW_REMOTE.md) übermittelt der Akteur die gebundenen Entscheidungen an den Main-Worker. Der Worker liefert den Produkt-PR und den tatsächlichen CI-Stand. Nach bestätigtem Merge folgt der separate Retirement-Aufruf.
+
 Für die Integration einen sauberen Branch vom aktuellen Main verwenden und nur gewählte finale Produktdaten übernehmen. Nach Registrierung Diff und Lieferbytes prüfen, den Registrierungsstand committen und Completion an denselben aktuellen Eingang binden:
 
 ```text

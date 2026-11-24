@@ -48,7 +48,7 @@ planen und frisch registrieren lassen. Die einzeln geprüften Pfade aus
 prüfen und den Produktstand committen. Completion erhält im Jobworktree die
 SHA dieses sauberen Integrationsworktrees und denselben geprüften Eingang.
 Produkt-PR, Mergefreigabe und Retirement folgen dem Auftrag für den Job.
-Der authentifizierte Remote-Gesamtdurchstich ist Gegenstand von PW-REMOTE-A.
+Der [Remote-Einstieg](PW_REMOTE.md) verwendet diese Arbeitsplätze für die gebundene Rasterproduktion und die Erstintegration. Seine Betriebsabnahme verlangt den isolierten Remote-Durchstich.
 
 ## 1. Gemeinsame Basis und stabile Arbeitsorte
 

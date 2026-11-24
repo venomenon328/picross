@@ -145,6 +145,13 @@ Operation. Das Manifest enthält Quellbytes und gehört weder in Git noch ins PR
    Arbeit erhalten und den tatsächlichen Refzustand prüfen. Ein Draft-PR nutzt
    die verifizierte Remote-SHA als Head.
 
+## Gekoppelte Erstintegration
+
+Beim [Remote-Abschluss](PW_REMOTE.md) prüft der Publisher beide ausgehenden
+Historien vor dem Upload. Ein atomarer Push aktualisiert den erwarteten
+Arbeitsref und erstellt den freien Produktref. Beide SHAs werden getrennt
+zurückgelesen, bevor der Akteur den Produkt-PR verwendet.
+
 ## Prüfungen
 
 `python -m unittest tools.test_publish_connector -v` prüft den Offline-Ablauf

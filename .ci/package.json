@@ -1,32 +1,22 @@
 {
   "format": "development-ci-plan/v1",
   "issue": "https://github.com/venomenon328/picross/issues/859",
-  "package": "PW-LOCAL-A",
+  "package": "PW-REMOTE-A",
   "modules": [
     "tools",
     "production.adapter",
     "production.catalog"
   ],
-  "purpose": "Gemeinsame Gitbasis, Sparse-Abhängigkeiten, Publisher-Recovery und getrennte Registrierung prüfen. T01–T04 einmalig vor Review einschließlich Windows und temporärem Linux.",
+  "purpose": "Gebundene Remote-Schritte 3 und 5, atomare Produktpublikation, PR-/CI-Zuordnung und separates Retirement prüfen. T01 synthetisch, T02 separat im ausdrücklich freigegebenen Testkontext.",
   "omitted": "Solver-, Bild-, Spiel-, Server-, Browser- und Auslieferungslogik bleiben unverändert. Regulärer Windows-x64-Bau für Werkzeugcode.",
   "test_changes": [
     {
-      "path": "tools/test_work_publish.py",
+      "path": "tools/test_production_remote.py",
       "disposition": "change-scoped",
-      "reason": "Synthetische Sparse-Worktrees, Lease-/Prozesskonflikte, unterbrochene Veröffentlichung, konkret genehmigte Budgeterhöhung, Wiederöffnung nach Produkt-Publish und test_only-Zielbindung am echten Git prüfen."
-    },
-    {
-      "path": "tests/puzzle_production/test_current_authoring.py",
-      "disposition": "change-scoped",
-      "reason": "Gültige Budgetfortschreibung und Ablehnung fehlender oder abweichender Entscheidungen sowie Zählerrücksetzung im bisherigen Checkout."
-    },
-    {
-      "path": "tests/puzzle_production/test_current_completion.py",
-      "disposition": "change-scoped",
-      "reason": "Bestehenden Completion-/Retirement-Test mit der expliziten synthetischen Zielbindung initialisieren."
+      "reason": "Echte lokale Git-Transaktionen und synthetische Originale über den Remote-Einstieg prüfen, einschließlich konkurrierender Refs, Antwortverlust, CI-Bindung, Leasebesitz und wiederholtem Retirement."
     }
   ],
-  "core_change": null,
+  "core_change": "Der vorhandene Checkout-Schritt in docs nennt bei PRs Nummer, Head, Basis und ausgecheckten Testmerge zur eindeutigen Zuordnung über die Actions-Jobs-API.",
   "evidence": {
     "mode": "none",
     "purpose": null,

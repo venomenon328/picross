@@ -10,7 +10,7 @@ from urllib.error import HTTPError
 from urllib.parse import urlsplit
 from urllib.request import HTTPRedirectHandler, ProxyHandler, Request, build_opener
 
-REPOSITORY = 'venomenon328/picross'
+from tools.work_refs import REPOSITORY
 API = 'https://api.github.com/repos/' + REPOSITORY
 TOKEN_NAMES = ('GH_TOKEN', 'GITHUB_TOKEN')
 _workspace_token = None
