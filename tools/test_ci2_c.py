@@ -84,7 +84,18 @@ class ShortBrowser(unittest.TestCase):
         result = subprocess.run(['node', str(ROOT/'tools/web_tests/storage_contract.cjs'),
                                  str(ROOT/'game/web/storage.js')], capture_output=True, text=True, timeout=20)
         self.assertEqual(result.returncode, 0, result.stdout+result.stderr)
-        self.assertEqual(len([line for line in result.stdout.splitlines() if line.startswith('PASS ')]), 6)
+        self.assertCountEqual(
+            [line for line in result.stdout.splitlines() if line.startswith('PASS ')],
+            [
+                'PASS unavailable persistent backend',
+                'PASS generations and unacknowledged view',
+                'PASS failed transaction and explicit retry',
+                'PASS slot-error isolation and thrown IDB construction',
+                'PASS isolated preference error, latest change and retry',
+                'PASS recent callback ownership, isolation and retry',
+                'PASS account persistence ticket ownership and retry',
+            ],
+        )
 
 
 if __name__ == '__main__':
