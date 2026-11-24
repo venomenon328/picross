@@ -615,6 +615,35 @@ class CurrentAuthoringTests(unittest.TestCase):
         notice.write_bytes(actual_notice);product=commit(self.root,'actual background rights')
         projector.complete(self.root,current.path('pz-current'),product,current_input=self.work/'bg-change')
 
+    def assert_budget_increase(self):
+        self.job['budgets']['used']['raster_candidates'] = 2
+        self.publish()
+        path = self.root / current.path('pz-current')
+        previous = path.read_bytes()
+
+        self.job['budgets']['limits']['raster_candidates'] += 1
+        with self.assertRaisesRegex(InvalidInput, 'Budget increase needs actual authorization'):
+            self.publish()
+        self.assertEqual(path.read_bytes(), previous)
+        decide(self.job, 'budget')
+        self.job['decisions'][-1]['binding'] = '0' * 64
+        with self.assertRaisesRegex(InvalidInput, 'Stale decision: budget'):
+            self.publish()
+        self.assertEqual(path.read_bytes(), previous)
+        decide(self.job, 'budget')
+        self.job['budgets']['used']['raster_candidates'] = 1
+        with self.assertRaisesRegex(InvalidInput, 'cannot reset consumed budgets'):
+            self.publish()
+        self.assertEqual(path.read_bytes(), previous)
+
+        self.job['budgets']['used']['raster_candidates'] = 2
+        expected = deepcopy(self.job)
+        self.publish()
+        self.assertEqual(self.job, expected)
+
+    def test_budget_increase_requires_bound_decision(self):
+        self.assert_budget_increase()
+
     def test_budget_reset_and_midpublication_foreign_edit_are_rejected(self):
         self.job['budgets']['used']['raster_candidates']=2;self.publish()
         self.job['budgets']['used']['raster_candidates']=1

@@ -302,6 +302,7 @@ SOURCE_GROUPS = {'tests/puzzle_production/background_catalog_fixtures.py': ('sol
  'tools/puzzle_production/sd2_rules.py': ('solver', 'images', 'adapter', 'catalog'),
  'tools/puzzle_production/sd2_verifier.py': ('solver', 'images', 'adapter', 'catalog'),
  'tools/puzzle_production/solver.py': ('solver', 'images', 'adapter', 'catalog'),
+ 'tools/puzzle_production/sparse_registration.py': ('solver', 'images', 'adapter', 'catalog'),
  'tools/puzzle_production/target_adapter.py': ('images', 'adapter', 'catalog'),
  'tools/puzzle_production/verifier.py': ('solver', 'images', 'adapter', 'catalog'),
  'tools/puzzle_production/za1_fixtures.py': ('images', 'adapter'),

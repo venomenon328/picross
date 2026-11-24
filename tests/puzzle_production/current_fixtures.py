@@ -19,6 +19,8 @@ def json_file(root,name,value):
 
 def checkout(root):
     root.mkdir(parents=True,exist_ok=True)
+    from tools.puzzle_production.catalog_integration import TEST_CATALOG
+    put(root, *TEST_CATALOG)
     cats={"format":categories.FORMAT,"categories":[{"id":"test","name":"Test","order":1}]}
     json_file(root,categories.PATH,cats)
     json_file(root,content.REGISTRY,{"format":content.FORMAT,"entries":[],"metadata":[],"backgrounds":[]})

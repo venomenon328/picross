@@ -196,8 +196,14 @@ den jeweiligen Schreibzugriff. Eine frische eigene veränderbare Releasegenerati
 kann auch ohne Zugriff auf die Repository-Settings weitergeführt werden. Neue
 Releases erfordern eindeutig deaktivierte Unveränderlichkeit.
 
+Nach dem Preflight richtet der Akteur den [PW-LOCAL-Arbeitsplatz](../../docs/tools/PRODUCTION_GIT_WORKSPACE.md)
+mit `python -B -m tools.production_git_workspace ID --root WURZEL --tools TOOL_SHA --main MAIN_SHA --expected new` ein.
+Bei Wiederaufnahme die aktuelle Arbeits-SHA und `--originals` angeben.
+Alle Fachbefehle aus dem ausgegebenen Werkzeugstand mit explizitem Datenpfad starten.
+Für die Integration liefert `--integration content/BRANCH` den eigenen Produktworktree.
+
 Der Akteur sichert das lokale Ergebnis mit
-`python -m tools.work_publish publish ID --expected new --auth env`
+`python -B -m tools.work_publish publish ID --workspace JOB --expected new --auth env`
 bzw. der erwarteten Arbeits-SHA. Für beide Befehle dieselbe explizite Authquelle
 verwenden. `env` verwendet `GH_TOKEN` oder `GITHUB_TOKEN`. Bei einem Konflikt
 die passende Variable mit `--auth GH_TOKEN` oder `--auth GITHUB_TOKEN` wählen.

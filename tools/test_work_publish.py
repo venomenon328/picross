@@ -7,6 +7,7 @@ import json
 import os
 from pathlib import Path
 import subprocess
+import sys
 import tempfile
 from types import SimpleNamespace
 import unittest
@@ -42,6 +43,286 @@ class WorkPublicationTests(unittest.TestCase):
                                     (pub,'select_token',lambda auth: 'synthetic-token'),
                                     (work_assets,'get',self.get)]:
             self.enterContext(patch.object(module,name,value))
+
+    def managed(self, *, test_catalog=True):
+        from tools import production_git_workspace as space
+        self.area = self.fixture.work / 'Rätsel mit Leerzeichen'
+        self.area.mkdir()
+        seed = self.fixture.root
+        (seed / 'game/art/unused').mkdir(parents=True)
+        (seed / 'game/art/unused/unselected.bin').write_bytes(b'x' * 8192)
+        # The data revision intentionally has no Python entry point.
+        (seed / '.gitignore').write_text('/content/authoring/pz-*/**\n!/content/authoring/pz-*/current/\n'
+                                         '!/content/authoring/pz-*/current/record.json\n', encoding='utf-8')
+        fixtures.git(seed, 'add', '.gitignore')
+        if not test_catalog:
+            from tools.puzzle_production.catalog_integration import TEST_CATALOG
+            (seed / TEST_CATALOG[0]).unlink()
+        self.main = fixtures.commit(seed, 'synthetic data base')
+        fixtures.git(seed, 'push', self.remote, self.main + ':refs/heads/main')
+        norm = seed / 'docs/production/PAIRED_LINES.md'
+        norm.parent.mkdir(parents=True)
+        norm.write_text('Synthetic paired-profile instructions.\n', encoding='utf-8')
+        fixtures.git(seed, 'add', 'docs/production/PAIRED_LINES.md')
+        (seed / 'tools').mkdir()
+        (seed / 'tools/version.py').write_text('VERSION = 1\n', encoding='utf-8')
+        fixtures.git(seed, 'add', 'tools/version.py')
+        fixtures.git(seed, 'commit', '-qm', 'independent synthetic tool revision')
+        self.tool = fixtures.git(seed, 'rev-parse', 'HEAD')
+        fixtures.git(seed, 'push', self.remote, self.tool + ':refs/heads/trusted-tools')
+
+        def open_job(expected=None, **options):
+            return space.prepare(self.area, 'pz-current', self.tool, self.main, expected, **options)
+        paths = open_job()
+        self.root = self.fixture.root = Path(paths['job'])
+        self.fixture.job['source_commit'] = self.main
+        fixtures.git(paths['store'], 'config', 'user.name', 'Synthetic writer')
+        fixtures.git(paths['store'], 'config', 'user.email', 'local@example.invalid')
+        return paths, open_job
+
+    def test_shared_sparse_job_publish_recovery_and_completion(self):
+        from tools import production_git_workspace as space, production_worktree_publish as follow
+        from tools.puzzle_production import catalog_integration as integration, target_adapter
+        from tools.production_workspace import projector
+        paths, open_job = self.managed()
+        job = 'pz-current'
+        branch = 'refs/heads/content/pw/' + job
+        f = self.fixture
+        other = space.prepare(self.area, 'pz-second', self.tool, self.main, None)
+        self.assertNotEqual(paths['job'], other['job'])
+        for root in (paths['job'], other['job'], paths['tools']):
+            self.assertEqual(space.git_root(Path(root)), Path(paths['store']))
+            self.assertFalse((Path(root) / 'game/art/unused/unselected.bin').exists())
+        self.assertTrue((Path(paths['tools']) / 'tools/version.py').is_file())
+        self.assertTrue((Path(paths['tools']) / 'docs/production/PAIRED_LINES.md').is_file())
+        self.assertEqual(fixtures.git(self.root, 'rev-parse', 'origin/main'), self.main)
+        self.assertFalse((self.root / 'tools/version.py').exists())
+        second_root = Path(other['job'])
+        brief = deepcopy(f.job)
+        brief.update(puzzle_id='pz-second', title='Independent second job')
+        current.build({'format': current.REQUEST, 'record': brief, 'expected': None, 'files': []}, f.sources, second_root)
+        other_head = pub.push_job(second_root, 'pz-second', None)
+        pub.resume(second_root, 'pz-second', other_head)
+        self.assertFalse((self.root / current.path('pz-second')).exists())
+        self.assertEqual(pub.finish(second_root, 'pz-second', other_head, confirmed=True), 'closed')
+        f.publish()
+        self.assertEqual(open_job(), paths)
+        first = pub.push_job(self.root, job, None)
+        self.assertEqual(fixtures.git(self.root, 'rev-parse', 'HEAD'), first)
+        self.assertEqual(pub.push_job(self.root, job, None), first)
+        pub.resume(self.root, job, first)
+        f.assert_budget_increase()
+        f.approved()
+        with self.assertRaisesRegex(ValueError, 'Unpublished local draft'):
+            pub.finish(self.root, job, first, confirmed=True)
+        before = deepcopy(f.job['decisions'])
+        real_publish = guard.publish
+        def lost_response(root, ref, head, expected, **kwargs):
+            result = real_publish(root, ref, head, expected, **kwargs)
+            if ref == 'content/pw/' + job:
+                raise ConnectionError('lost confirmed ref response')
+            return result
+        with patch.object(guard, 'publish', lost_response), self.assertRaises(ConnectionError):
+            pub.push_job(self.root, job, first)
+        second = guard.remote_head(self.root, branch)
+        self.assertNotEqual(second, first)
+        self.assertEqual(fixtures.git(self.root, 'rev-parse', 'HEAD'), first)
+        def interrupt(step):
+            if step == 'readback':
+                raise InterruptedError('confirmed')
+        with patch.object(follow, 'checkpoint', interrupt), self.assertRaises(InterruptedError):
+            pub.push_job(self.root, job, first)
+
+        # A new OS process dies at each local write boundary. Its pending state
+        # and detached HEAD/index survive and the public publisher finishes it.
+        program = """import os, sys
+from pathlib import Path
+from tools import production_worktree_publish as follow
+root, job, parent, base, target, boundary = sys.argv[1:]
+op = follow.Publication(Path(root), job, parent, base, target)
+follow.checkpoint = lambda step: os._exit(73) if step == boundary else None
+op.finish(target)
+"""
+        for boundary in ('head', 'index', 'record', 'authoring-index'):
+            child = subprocess.run([sys.executable, '-B', '-c', program, str(self.root), job, first,
+                                    self.main, second, boundary], cwd=Path(__file__).resolve().parents[1])
+            self.assertEqual(child.returncode, 73, boundary)
+        self.assertEqual(pub.push_job(self.root, job, first), second)
+        generation = deepcopy(self.assets)
+        self.assertEqual(open_job(second, originals=True)['job'], str(self.root))
+        local = json.loads((self.root/current.path(job)).read_bytes())
+        self.assertEqual(local['decisions'], before)
+        self.assertEqual(self.assets, generation)
+        output = f.work / 'final'
+        current.prepare(self.root, current.path(job), output)
+        export = f.work / 'export'
+        target_adapter.export(output, export)
+        product_branch = 'content/synthetic-product'
+        product = Path(open_job(second, integration=product_branch)['integration'])
+        patterns = space.sparse_path(product)
+        before_patterns = patterns.read_bytes()
+        self.assertFalse((product / integration.TEST_CATALOG[0]).exists())
+        self.assertEqual(space.git_root(product), space.git_root(self.root))
+        # Occupation is checked against Git even when the path is invisible.
+        collision = f.work / 'occupied-product'
+        fixtures.git(product, 'worktree', 'add', '--detach', '--no-checkout', str(collision), self.main)
+        fixtures.git(collision, 'sparse-checkout', 'set', '--no-cone', '/content/', '/game/data/registry.json',
+                     '/game/data/background-capability.json')
+        fixtures.git(collision, 'read-tree', '-mu', 'HEAD')
+        hidden = 'game/data/content/pz-current.json'
+        oid = subprocess.check_output(['git', '-C', str(collision), 'hash-object', '-w', '--stdin'], input=b'occupied').strip().decode()
+        fixtures.git(collision, 'update-index', '--add', '--cacheinfo', '100644', oid, hidden)
+        fixtures.git(collision, 'commit', '-qm', 'occupied sparse product')
+        self.assertFalse((collision / hidden).exists())
+        for apply in (False, True):
+            with self.assertRaisesRegex(ValueError, 'Occupied sparse'):
+                integration.integrate(export, collision, apply=apply)
+        plan = integration.integrate(export, product)
+        self.assertFalse(space.changes(product))
+        with self.assertRaisesRegex(RuntimeError, 'interruption'):
+            integration.integrate(export, product, apply=True, fail_step=2)
+        from tools.puzzle_production import current_registration
+        self.assertEqual(current_registration.recover(product)['status'], 'rolled-back')
+        registered = integration.integrate(export, product, apply=True)
+        self.assertEqual(registered['status'], 'registered')
+        names = [r['path'] for r in plan['changes']]
+        fixtures.git(product, 'add', '--sparse', '--', *names)
+        fixtures.git(product, 'commit', '-qm', 'selected synthetic product')
+        commit = fixtures.git(product, 'rev-parse', 'HEAD')
+        self.assertEqual(set(fixtures.git(product, 'diff', '--name-only', self.main, commit).splitlines()), set(names))
+        self.assertEqual(guard.publish(product, product_branch, commit, None), commit)
+        self.assertEqual(patterns.read_bytes(), before_patterns)
+        self.assertFalse(space.changes(product))
+        target = product / hidden
+        before = target.read_bytes()
+        self.assertNotIn(('/' + hidden).encode(), before_patterns.splitlines())
+
+        # Git status can hide an edited path that is marked assume-unchanged.
+        fixtures.git(product, 'update-index', '--assume-unchanged', '--', hidden)
+        target.write_bytes(b'foreign replacement')
+        self.assertFalse(space.changes(product))
+        with self.assertRaisesRegex(ValueError, 'Occupied sparse extension'):
+            open_job(second, integration=product_branch, integration_head=commit)
+        self.assertEqual(target.read_bytes(), b'foreign replacement')
+        self.assertEqual(patterns.read_bytes(), before_patterns)
+        target.write_bytes(before)
+        fixtures.git(product, 'update-index', '--no-assume-unchanged', '--', hidden)
+        timestamps = {name: (product / name).stat().st_mtime_ns for name in names}
+
+        (product / 'foreign.txt').write_bytes(b'keep this untracked file')
+        with self.assertRaisesRegex(ValueError, 'Unexpected files'):
+            open_job(second, integration=product_branch, integration_head=commit)
+        (product / 'foreign.txt').unlink()
+        reopened = open_job(second, integration=product_branch, integration_head=commit)
+        self.assertEqual(Path(reopened['integration']), product)
+        self.assertIn(('/' + hidden).encode(), patterns.read_bytes().splitlines())
+        self.assertEqual({name: (product / name).stat().st_mtime_ns for name in names}, timestamps)
+        self.assertEqual(fixtures.git(product, 'rev-parse', 'HEAD'), commit)
+        self.assertEqual(guard.remote_head(product, 'refs/heads/' + product_branch), commit)
+        self.assertFalse(space.changes(product))
+        self.assertEqual(integration.integrate(export, product)['status'], 'no-op')
+        projector.complete(self.root, current.path(job), commit, current_input=export)
+        completed = pub.push_job(self.root, job, second)
+        fixtures.git(product, 'push', self.remote, commit + ':refs/heads/main')
+        self.assertEqual(pub.finish(self.root, job, completed), 'closed')
+        self.assertEqual(pub.finish(self.root, job, completed), 'no-op')
+
+    def test_test_only_input_requires_bound_synthetic_catalog(self):
+        from tests.puzzle_production.current_fixtures import fingerprints
+        from tools.puzzle_production.catalog_integration import TEST_CATALOG
+        _, open_job = self.managed(test_catalog=False)
+        product = Path(open_job(integration='content/distinct-product')['integration'])
+        tool_checkout = Path(__file__).resolve().parents[1]
+        self.assertNotEqual(product, tool_checkout)
+        name, marker = TEST_CATALOG
+        for copied_marker in (False, True):
+            if copied_marker:
+                (product / name).write_bytes(marker)
+            before = fingerprints(product)
+            for command in ('plan', 'register'):
+                with self.subTest(command=command, copied_marker=copied_marker):
+                    result = subprocess.run(
+                        [sys.executable, '-B', '-m', 'tools.puzzle_production.target_adapter', command,
+                         '--input', str(self.fixture.input), '--checkout', str(product)],
+                        cwd=tool_checkout, capture_output=True, check=False, timeout=60)
+                    self.assertEqual(result.returncode, 2, result.stderr.decode())
+                    self.assertIn('Test-only input cannot enter product catalog', json.loads(result.stdout)['error'])
+                    self.assertEqual(fingerprints(product), before)
+
+    def test_workspace_conflicts_and_sparse_namespace(self):
+        from tools import production_git_workspace as space
+        from tools.puzzle_production.current_registration import Snapshot
+        paths, open_job = self.managed()
+        with self.assertRaises(ValueError):
+            space.prepare(self.area, 'pz-current', self.tool, self.main, None, repository='foreign/repo')
+        occupied = self.area / 'foreign'
+        occupied.mkdir()
+        (occupied / 'picross-production').mkdir()
+        with self.assertRaises(ValueError):
+            space.store_for(occupied, space.REPO)
+        from tools.puzzle_production.authoring_builder import writer
+        lock = Path(paths['store']) / 'authoring-builder.lock'
+        with writer(lock):
+            code = """import sys
+from pathlib import Path
+from tools.puzzle_production.authoring_builder import writer, BuildError
+try:
+    with writer(Path(sys.argv[1])):
+        sys.exit(1)
+except BuildError:
+    sys.exit(0)
+"""
+            child = subprocess.run([sys.executable, '-B', '-c', code, str(lock)],
+                                   cwd=Path(__file__).resolve().parents[1])
+            self.assertEqual(child.returncode, 0)
+            with self.assertRaisesRegex(ValueError, 'writer owns'):
+                open_job()
+        # Losing the response to lease creation preserves the local nonce.
+        owner = {'operation': 'retire', 'job': 'pz-current', 'expected': self.main}
+        real_publish = guard.publish
+        def lost_lease(*args, **kwargs):
+            real_publish(*args, **kwargs)
+            raise ConnectionError('lost lease response')
+        with patch.object(guard, 'publish', lost_lease), self.assertRaises(ConnectionError):
+            with pub.catalog_writer(self.root, self.main, owner=owner):
+                self.fail('lost response reached mutation')
+        nonce = guard.remote_head(self.root, 'refs/heads/' + pub.release_catalog.LOCK_BRANCH)
+        self.assertIsNotNone(nonce)
+        with self.assertRaisesRegex(ValueError, 'Different operation owns'):
+            with pub.catalog_writer(self.root, self.main, owner={**owner, 'operation': 'publish'}):
+                self.fail('foreign nonce admitted')
+        with pub.catalog_writer(self.root, self.main, owner=owner):
+            self.assertEqual(guard.remote_head(self.root, 'refs/heads/' + pub.release_catalog.LOCK_BRANCH), nonce)
+        foreign = self.root / 'unknown'
+        foreign.write_bytes(b'preserve')
+        with self.assertRaisesRegex(ValueError, 'Unknown staged'):
+            open_job()
+        fixtures.git(self.root, 'add', '--sparse', 'unknown')
+        with self.assertRaisesRegex(ValueError, 'Unknown staged'):
+            open_job()
+        self.assertEqual(foreign.read_bytes(), b'preserve')
+        product = Path(paths['store']).parent / 'collision-test'
+        fixtures.git(self.root, 'worktree', 'add', '--detach', '--no-checkout', str(product), self.main)
+        fixtures.git(product, 'sparse-checkout', 'set', '--no-cone', '/content/', '/game/data/')
+        fixtures.git(product, 'read-tree', '-mu', 'HEAD')
+        snapshot = Snapshot(product, 'pz-current')
+        for name in ('game/art/unused/unselected.bin', 'game/ART/unused/new', 'game/art/unused/unselected.bin/child',
+                     'game/art/unused'):
+            with self.subTest(name=name), self.assertRaisesRegex(ValueError, 'Occupied'):
+                snapshot.read(name, missing=True)
+        self.assertIsNone(snapshot.read('game/art/unused/new.png', missing=True))
+        fixtures.git(product, 'add', '--sparse', '-f', '--', 'content/categories.json')
+        (product / 'content/categories.json').write_bytes(b'changed')
+        with self.assertRaises(ValueError):
+            snapshot.recheck()
+        if os.name == 'nt':
+            with self.assertRaisesRegex(ValueError, 'case collision|Foreign production workspace'):
+                space.store_for(self.area.with_name(self.area.name.upper()), space.REPO)
+            link = self.area / 'junction'
+            subprocess.run(['cmd', '/c', 'mklink', '/J', str(link), str(occupied)], check=True, capture_output=True)
+            with self.assertRaisesRegex(ValueError, 'reparse'):
+                space.store_for(link, space.REPO)
+            link.rmdir()
 
     def read_record(self, commit, job):
         return GitSource(self.root).read(commit, current.path(job))

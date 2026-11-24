@@ -660,6 +660,14 @@ def build(request, source_root, root):
         ap.require(content.ref(item['path'],raw)==ref, 'Changed current payload')
         payload[item['path']]=raw; observed[item['source']]=raw
     with writer(git_root(root)/'authoring-builder.lock'):
+        from tools import production_git_workspace as workspace
+        from tools.production_worktree_publish import JOURNAL
+        worktree = workspace.read_binding(root)
+        if worktree is not None:
+            ap.require(worktree['role'] == 'job' and worktree['job'] == job['puzzle_id'], 'Wrong builder worktree')
+            ap.require(not (workspace.gitdir(root) / JOURNAL).exists(), 'Finish the pending publish first')
+            if not io.safe(root, 'content/authoring/'+job['puzzle_id']+'/.current-operation.json').exists():
+                workspace.check_work(root, job['puzzle_id'])
         journal_name='content/authoring/'+job['puzzle_id']+'/.current-operation.json'
         pending_raw=io.read(root,journal_name,20*LIMIT,missing=True)
         before=io.read(root,name,LIMIT,missing=True); after=encoded(job)
@@ -992,6 +1000,8 @@ def complete(root, record_path, commit, *, current_input):
     source=LocalSource(root)
     raw=source.read(None,record_path); job=io.json_bytes(raw,LIMIT)
     ap.require(record_path==path(job['puzzle_id']) and job['state'] in ('editorially_approved','registered'), 'Current final approval required')
+    from tools.production_git_workspace import check_product
+    check_product(root, job['puzzle_id'], commit)
     checked=Checked(job,lambda n,limit:source.read(None,n,limit))
     incoming=None
     if job['operation']=='production':
@@ -1020,6 +1030,7 @@ def complete(root, record_path, commit, *, current_input):
     after=deepcopy(job);after.update(state='registered',integration={'commit':commit,'result':result},blockers=[])
     if incoming is not None: incoming.recheck()
     source.recheck()
+    check_product(root, job['puzzle_id'], commit)
     request={'format':REQUEST,'record':after,'expected':io.checksum(raw),'files':[]}
     return build(request,root,root)
 

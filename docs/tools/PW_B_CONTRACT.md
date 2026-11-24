@@ -134,7 +134,7 @@ python -m tools.work_publish publish <id> --expected <arbeitscommit>
 python -m tools.work_publish retire <id> --expected <erwarteter-Arbeitscommit>
 ```
 
-Resume arbeitet auf einem eigenen Worktree am erwarteten Commit. Für die
+Der [PW-LOCAL-Einstieg](PRODUCTION_GIT_WORKSPACE.md) bindet den Jobworktree an den erwarteten Commit. Resume lädt die gebundenen Originale in denselben Ordner. Für die
 Publikation benötigt der Publisher eine vollständige Gitbasis. Preflight und
 Ausführung verwenden dieselbe gewählte Authquelle. `--auth env` liest
 `GH_TOKEN` oder `GITHUB_TOKEN` und stoppt bei widersprüchlichen Werten.

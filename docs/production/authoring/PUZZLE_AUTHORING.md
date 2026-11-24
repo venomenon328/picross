@@ -1,6 +1,6 @@
 # Picross: Produktionsregeln
 
-**Version 0.8.0 · Dokumentrevision 12 · 21.11.2026 · PROD-SLIM**
+**Version 0.8.0 · Dokumentrevision 13 · 24.11.2026 · PW-LOCAL-A**
 
 ## 1. Einstieg und Befugnisse
 
@@ -138,6 +138,12 @@ Materielles/Neuprüfungen: Schritt 3 §4.4.
 ## 6. Dateien, Übergabe und Wiederaufnahme
 
 ### 6.1 Ein aktueller Arbeitsstand
+
+Den Job mit `tools.production_git_workspace` an den aktuellen Arbeitscommit
+binden. Derselbe Rätselordner dient allen fünf Phasen und Korrekturen. In einer
+frischen Umgebung rekonstruiert `--originals` die gewählten Quellen aus dem
+fixierten Record. Arbeitswurzel, Werkzeugrevision und Aufrufe stehen im
+[PW-LOCAL-Vertrag](../../tools/PRODUCTION_GIT_WORKSPACE.md).
 
 Neue pz-ID und stabilen Arbeitsbranch `content/pw/<puzzle_id>` von main anlegen.
 Je Job genau `content/authoring/<puzzle_id>/current/record.json` und die aktuell

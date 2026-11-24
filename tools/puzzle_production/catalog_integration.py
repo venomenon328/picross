@@ -1,11 +1,28 @@
 """One integration core shared by CLI, assistant and batch."""
 from copy import deepcopy
-from pathlib import Path
+from hashlib import sha1
 from . import current_content as content, current_registration as transaction
 from . import catalog_rating as rating, catalog_added as added, catalog_method, categories
 from . import catalog_io as io, operation_diagnostics as diagnostic
 from .integration_input import Input
 from .authoring_package import require
+
+
+TEST_CATALOG = ('content/.picross-test-catalog', b'picross-synthetic-catalog-v1\n')
+
+
+def check_test_catalog(root):
+    name, marker = TEST_CATALOG
+    if io.safe(root, '.git').exists():
+        # The committed fixture marker also works when it is sparse-hidden.
+        # A marker copied into a product working tree cannot authorize it.
+        from tools.production_workspace.sources import git
+        oid = sha1(f'blob {len(marker)}\0'.encode() + marker).hexdigest()
+        expected = f'100644 blob {oid}\t{name}\0'.encode()
+        allowed = git(root, 'ls-tree', '-z', 'HEAD', '--', name) == expected
+    else:
+        allowed = io.read(root, name, len(marker), missing=True) == marker
+    require(allowed, "Test-only input cannot enter product catalog")
 
 
 def rating_result(value):
@@ -30,8 +47,8 @@ def integrate(export_dir, root, *, apply=False, fail_step=None, publication_seco
     diagnostic.seconds(publication_seconds); diagnostic.seconds(recovery_seconds)
     require(apply or publication_seconds is None and recovery_seconds is None, "Publication budgets require writing")
     incoming = Input(export_dir)
-    from .content_registry import ROOT
-    require(not incoming.value["test_only"] or Path(root).resolve() != ROOT.resolve(), "Test-only input cannot enter product catalog")
+    if incoming.value["test_only"]:
+        check_test_catalog(io.external(root))
     entry = incoming.entry
     snapshot = transaction.Snapshot(root, entry["id"])
     from .catalog_background import capability, image_profile
@@ -42,6 +59,12 @@ def integrate(export_dir, root, *, apply=False, fail_step=None, publication_seco
         require(same(snapshot.delivery, incoming), "Occupied ID differs; use the explicit revision operation")
         incoming.recheck(); snapshot.recheck()
         return {"status": "no-op", "registered": True, "id": entry["id"], "changes": [], "category": category}
+    if snapshot.tracked.names is not None:
+        from tools import production_git_workspace as workspace
+        binding = workspace.read_binding(snapshot.root)
+        if binding is not None:
+            require(binding['role'] == 'integration' and binding['job'] == entry['id'] and
+                    not workspace.changes(snapshot.root), 'Registration requires a clean bound integration worktree')
     method_record = catalog_method.from_bytes(snapshot.raw[catalog_method.PATH])
     require(rating.method(incoming.checked) == catalog_method.current(method_record)["method"], "New input requires current difficulty method")
     value = deepcopy(snapshot.registry)

@@ -9,6 +9,7 @@ from . import catalog_publication as publication, operation_diagnostics as diagn
 from .authoring_package import require
 from .contract import exact_keys, InvalidInput, Aborted
 from . import catalog_rating as rating, catalog_added as added, catalog_method
+from .sparse_registration import TrackedPaths
 
 FORMAT = "picross-current-registration-journal-v2"
 LOCK = "content/.registration-pending.json"
@@ -49,6 +50,9 @@ class Snapshot:
         self.root = io.external(root)
         self.identifier = rating.identity(identifier)
         self.raw = {}
+        self.tracked = TrackedPaths(self.root)
+        for name in (LOCK, STAGE):
+            self.tracked.check(name)
         require(not pending(self.root), "Pending publication requires recovery")
         self.catalog = categories.validate(self.json(categories.PATH, categories.MAX_BYTES))
         self.registry = content.validate(self.json(content.REGISTRY), self.catalog)
@@ -73,6 +77,7 @@ class Snapshot:
         self.recheck()
 
     def read(self, name, limit=content.LIMIT, *, missing=False):
+        self.tracked.check(name)
         if name not in self.raw:
             self.raw[name] = io.read(self.root, name, limit, missing=missing)
         return self.raw[name]
@@ -81,6 +86,7 @@ class Snapshot:
         return io.json_bytes(self.read(name, limit), limit)
 
     def recheck(self, *, locked=False):
+        self.tracked.recheck()
         require(locked or not pending(self.root), "Concurrent publication")
         for name, raw in self.raw.items():
             require(io.read(self.root, name, content.LIMIT, missing=True) == raw, "Changed dependency: "+name)
@@ -194,6 +200,8 @@ def _publish(snapshot, journal, *, publication_seconds=None, recovery_seconds=No
     root = snapshot.root
     sides = validate(journal)
     raw = content.encoded(journal)
+    for name in sides:
+        snapshot.tracked.check(temporary(name, io.checksum(raw)))
     require(len(raw) <= LIMIT, f"Registration journal {len(raw)} exceeds {LIMIT} bytes")
     with diagnostics.operation("Publication", publication_seconds or 1800,
                                "override" if publication_seconds is not None else "registration-default",
@@ -207,6 +215,7 @@ def _publish(snapshot, journal, *, publication_seconds=None, recovery_seconds=No
         boundary("after-journal")
         expected=dict(snapshot.raw)
         def guard():
+            snapshot.tracked.recheck()
             require(io.read(root,LOCK,LIMIT)==raw,"Writer lock changed")
             for path,data in expected.items():
                 require(io.read(root,path,content.LIMIT,missing=True)==data,"Changed current dependency: "+path)
@@ -255,6 +264,9 @@ def recover(root, *, recovery_seconds=None):
     root = io.external(root)
     with diagnostics.operation("Recovery", recovery_seconds or 1800,
                                "override" if recovery_seconds is not None else "registration-default"):
+        tracked = TrackedPaths(root)
+        for control in (LOCK, STAGE):
+            tracked.check(control)
         name = LOCK if io.safe(root, LOCK).exists() else STAGE
         raw = io.read(root, name, LIMIT, missing=True)
         if raw is None:
@@ -264,11 +276,14 @@ def recover(root, *, recovery_seconds=None):
         value = io.json_bytes(raw, LIMIT)
         sides = validate(value)
         require(content.encoded(value) == raw, "Noncanonical current journal")
+        for path in (*sides, *value['dependencies']):
+            tracked.check(path)
         current, temps = {}, {}
         for target, pair in sides.items():
             current[target] = io.read(root, target, content.LIMIT, missing=True)
             require(current[target] in pair, "Foreign target blocks recovery: "+target)
             temp_name = temporary(target, io.checksum(raw))
+            tracked.check(temp_name)
             temp = io.read(root, temp_name, content.LIMIT, missing=True)
             if temp is not None:
                 require(any(data is not None and data.startswith(temp) for data in pair), "Foreign temporary blocks recovery")
@@ -283,6 +298,7 @@ def recover(root, *, recovery_seconds=None):
             require(io.read(root, target, content.LIMIT) == temp, "Recovery temporary changed")
             io.safe(root, target).unlink(); publication.sync_directory(io.safe(root, target).parent)
         def guard():
+            tracked.recheck()
             require(io.read(root,LOCK,LIMIT)==raw,"Recovery lock changed")
             for path,data in current.items():
                 require(io.read(root,path,content.LIMIT,missing=True)==data,"Foreign recovery target: "+path)
