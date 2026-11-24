@@ -424,6 +424,11 @@ def rebind_checked(value, raw, *, production_mode):
 
 def active_record(checked, previous=None, *, report=None, kind="analysis"):
     from . import current_rating
+    if previous is None and checked.get('format') == current_rating.FORMAT:
+        from .current_qualification import delivery_rating
+        qualified = delivery_rating(checked)
+        if qualified is not None:
+            return qualified
     value = checked if checked.get("format") == current_rating.FORMAT else current_rating.from_checked(checked)
     return current_rating.active(value,previous)
 

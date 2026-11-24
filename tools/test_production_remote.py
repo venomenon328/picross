@@ -15,10 +15,11 @@ from tools.puzzle_production import catalog_io as io, current_authoring as curre
 from tests.puzzle_production import test_current_authoring as fixtures
 
 
-def background_offer(f):
-    """Create two synthetic originals and bind the actor's inspection of the chosen derivative."""
+def background_offer(case):
+    """Prepare both synthetic originals and inspect the saved bytes before choice."""
     from io import BytesIO
     from PIL import Image
+    f = case.f
     f.job = current.upgrade(f.job)
     f.job['selected']['raster'] = f.job['rasters'][0]['id']
     fixtures.decide(f.job, 'raster')
@@ -33,22 +34,32 @@ def background_offer(f):
         f.job['assets'].append(asset)
     f.finding('sky', 'stroke', 'Q-HG04', 'stroke-quality')
     f.publish()
-    draft = deepcopy(f.job)
+    work = pw.push_job(f.root, case.job, None)
+    req = case.req('step4', work, {'prepare': ['cloud', 'sky']})
+    with patch.object(current, 'prepare_background', wraps=current.prepare_background) as renderer:
+        work = case.execute(req)['work']
+        case.assertEqual(renderer.call_count, 2)
+        case.assertEqual(case.execute(req)['work'], work)
+        case.assertEqual(renderer.call_count, 2)
+    for candidate in ('cloud', 'sky'):
+        record = pw.bound_record(case.read_record(work, case.job), case.job)
+        asset = current.findings.subjects(record)[candidate]
+        viewed = asset['prepared']['file']
+        with Image.open(BytesIO(case.fixture.assets[viewed['asset']['asset_id']])) as image:
+            case.assertEqual(image.size, (2304, 768))
+        assessment = {'candidate': candidate, 'original_sha256': asset['file']['sha256'],
+                      'sha256': viewed['sha256'], 'profile': asset['profile'], 'review': asset['review'], 'observations': []}
+        work = case.execute(case.req('step4', work, {'assessment': assessment}))['work']
+    draft = pw.local_record(pw.bound_record(case.read_record(work, case.job), case.job))
     selected = current.findings.subjects(draft)['sky']
-    output = f.work / 'viewed-background.png'
-    viewed = current.prepare_background(f.sources/'sky.png', output, profile_id=selected['profile'])
-    with Image.open(output) as image:
-        assert image.size == (2304, 768)
     draft['selected']['background'] = 'sky'
-    selected['prepared'] = {'original_sha256': selected['file']['sha256'], 'profile': selected['profile'], 'file': viewed}
     row = draft['findings'][0]
     f.accept(row)
     declaration = {k: v for k, v in row['decision'].items() if k not in ('source', 'binding')}
     for scope in ('background', 'final', 'integration'):
         fixtures.decide(draft, scope)
-    return {'background': 'sky', 'decisions': [d for d in draft['decisions'] if d['scope'] in ('background','final','integration')],
-            'prepared_review': {'sha256': viewed['sha256'], 'profile': selected['profile'],
-                                'original_sha256': selected['file']['sha256'], 'review': selected['review']},
+    return work, selected['prepared']['file']['sha256'], {
+            'background': 'sky', 'decisions': [d for d in draft['decisions'] if d['scope'] in ('background','final','integration')],
             'finding_decisions': [{**declaration, 'expected': row['decision']['binding'], 'id': row['id'], 'target': 'sky'}]}
 
 
@@ -135,15 +146,11 @@ class RemoteTests(unittest.TestCase):
         f.incoming = io.json_bytes((f.input / 'manifest.json').read_bytes(), current.LIMIT)
         f.publish()
         f.raster_ready()
-        options = background_offer(f)
-        before = pw.push_job(f.root, self.job, None)
-        self.check_background_delivery(before, options)
+        before, viewed, options = background_offer(self)
+        self.check_background_delivery(before, viewed)
         req = self.req('step5', before, options, issue=1)
-        missing_view = {k: v for k, v in options.items() if k != 'prepared_review'}
-        cases = [(missing_view, 'Actual prepared background review'),
-                 ({**options, 'finding_decisions': []}, 'Stale decision|blocked'),
-                 ({**options, 'prepared_review': {**options['prepared_review'], 'sha256': '0' * 64}},
-                  'Stale or incomplete prepared background review')]
+        cases = [({**options, 'finding_decisions': []}, 'Stale decision|blocked'),
+                 ({**options, 'background': 'cloud'}, 'Unselected finding|Stale decision')]
         for data, error in cases:
             with self.subTest(error=error), self.assertRaisesRegex(ValueError, error):
                 self.execute({**req, 'input': data})
@@ -174,7 +181,7 @@ class RemoteTests(unittest.TestCase):
         self.assertEqual(self.post_count, 1)
         record = pw.bound_record(self.read_record(done['work'], self.job), self.job)
         self.assertEqual(record['selected']['background'], 'sky')
-        self.assertEqual(record['assets'][-1]['prepared']['file']['sha256'], options['prepared_review']['sha256'])
+        self.assertEqual(record['assets'][-1]['prepared']['file']['sha256'], viewed)
         product_request = self.req('inspect-product', done['work'], {'items': [
             {'role': 'product-' + part, 'candidate': record['selected'][choice]}
             for part, choice in [('definition', 'raster'), ('background', 'background'), ('reveal', 'reveal')]
@@ -355,7 +362,7 @@ class RemoteTests(unittest.TestCase):
             inspect.stage(req, record, ctx, f.work / 'stale-crop', lambda ref: read(ref) + b'changed', lambda: None)
         self.assertFalse((f.work / 'stale-crop').exists())
 
-    def check_background_delivery(self, work, options):
+    def check_background_delivery(self, work, viewed):
         from zipfile import ZipFile, ZipInfo
         from tools import work_refs
         req = self.req('inspect', work, {'items': [{'role': r, 'candidate': 'sky'} for r in ('background', 'prepared')]})
@@ -377,8 +384,8 @@ class RemoteTests(unittest.TestCase):
             reads.append(ref['asset']['asset_id'])
             return self.fixture.assets[reads[-1]]
         info = inspect.stage(req, record, ctx, files, read, lambda: None)
-        self.assertEqual((info['original_count'], len(reads)), (1, 1))
-        self.assertEqual(io.checksum((files / 'prepared.png').read_bytes()), options['prepared_review']['sha256'])
+        self.assertEqual((info['original_count'], len(reads)), (2, 2))
+        self.assertEqual(io.checksum((files / 'prepared.png').read_bytes()), viewed)
         self.assertEqual(git.remote_head(self.repo, lock), self.main)
         self.assertEqual(git.remote_head(self.repo, 'refs/heads/content/pw/' + self.job), work)
         fixtures.git(self.repo, 'update-ref', '-d', lock, self.main)

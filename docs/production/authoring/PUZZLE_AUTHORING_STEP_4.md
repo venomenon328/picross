@@ -11,7 +11,7 @@ Sicherung, Wiederaufnahme und Abschlussausgabe: Kern §§6–7.
 
 ### 6.3 Hintergrundarbeit in Schritt 4
 
-Für die gewählte Zeichnung kann ChatGPT Original und HP-W2-Ableitung über den [Remote-Originalabruf](../../tools/PW_REMOTE.md#originale-in-chatgpt-sichten) öffnen und die fälligen Urteile daran binden.
+Für jedes Angebot kann ChatGPT Original und gespeicherte HP-W2-Ableitung über den [Remote-Originalabruf](../../tools/PW_REMOTE.md#originale-in-chatgpt-sichten) öffnen und die fälligen Urteile an beide Dateien binden.
 
 1. Voraussetzung: tatsächliche Wahl eines vollständig qualifizierten Rasters.
    Danach Kontextbriefing und drei inhaltlich unterschiedliche echte
@@ -21,14 +21,13 @@ Für die gewählte Zeichnung kann ChatGPT Original und HP-W2-Ableitung über den
 2. Originale speichern; Q-HG01–Q-HG04 und H-07 nach dem Qualitätsvertrag tatsächlich
    prüfen. Maße aus den PNG-Bytes lesen; Prompt und Vorschau ersetzen dies nicht.
    Vor einer qualifizierten Auswahlvorlage nötige Korrekturen nach §6.3.1 ausführen.
-3. Geprüfte Kandidatenrevisionen als erreichbare isolierte Einzelbilder vorlegen.
-   Angebote, tatsächliche Entscheidung und aktuelle Bildurteile im gemeinsamen
-   Record nach PW-B führen; das passende HG31-Profil gehört bereits zum vorgelegten Auswahlscope.
-   Wahl oder ausdrückliches none bindet genau den vorgelegten Stand.
-4. Nur das gewählte Original mit dem ausdrücklich gewählten aktuellen HG31-Profil
-   mit dem aktuellen Bildhelfer vorbereiten; Ergebnisdatei und Bildurteile
-   prüfen. Bei none keine Bild- oder Nullbefunddatei erzeugen. Nach Ableitung die im Qualitätsvertrag fälligen Bildurteile
-   am fertigen Bild bestätigen. HP-W2-Erfolg allein ist kein Gestaltungsurteil.
+3. Jedes vorgesehene Original mit dem vereinbarten HG31-Profil vorbereiten.
+   Die fertige PNG-Datei speichern, öffnen und nach Q-HG01–04 und H-07 beurteilen.
+   Originalhash, Profil, Ausgabehash, Rechte und beide Sichtungen im aktuellen PW-Record sichern.
+4. Jede fertige PNG-Datei einzeln als Auswahlbild vorlegen. Das Original bleibt
+   als solches erreichbar. Zulässige offene Befunde mit der Wahl zur Entscheidung
+   stellen. Nach der Wahl ausschließlich die benötigten Dateien behalten. Bei
+   ausdrücklichem `none` oder `standard` entfällt die Lieferung eines eigenen Bildes.
 5. Eine offene Hintergrundwahl darf mit tatsächlicher Endabnahme im passend
    beauftragten Schlussauftrag erfolgen. Eine eindeutige gültige Wahl derselben
    unveränderten Datei nicht erneut verlangen. Die Schlussübersicht bezeichnet

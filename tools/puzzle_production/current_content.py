@@ -173,7 +173,9 @@ def selected(root, value, identifier, *, read=None):
     entry = next((e for e in value["entries"] if e["id"] == identifier), None)
     require(entry is not None, "Unknown current ID")
     raw = read("game/"+entry["definition"], 2*1024*1024)
-    definition = rating.definition(raw)[0]
+    from .current_qualification import registered_rating
+    qualified = registered_rating(io.checksum(raw), entry["mode"])
+    definition = io.json_bytes(raw, 2*1024*1024) if qualified is not None else rating.definition(raw)[0]
     require(definition["id"] == identifier, "Wrong current definition")
     result = {"entry": deepcopy(entry), "definition": raw,
               "metadata": deepcopy(next(m for m in value["metadata"] if m["id"] == identifier))}
@@ -203,8 +205,9 @@ def selected(root, value, identifier, *, read=None):
     if result["background"]["current"]["status"] == "selected":
         # PE-EDIT2 backgrounds may have no TXT; preserve actual presence/absence.
         result["background_notice"] = read("game/art/backgrounds/"+identifier+".txt", 65536, missing=True)
-    result["rating"] = rating.validate(io.json_bytes(read(rating.path(identifier), rating.LIMIT), rating.LIMIT),
-                                      definition_bytes=raw, production_mode=entry["mode"])
+    stored = io.json_bytes(read(rating.path(identifier), rating.LIMIT), rating.LIMIT)
+    result["rating"] = (qualified if qualified is not None and rating.encoded(stored) == rating.encoded(qualified)
+                        else rating.validate(stored, definition_bytes=raw, production_mode=entry["mode"]))
     result["added"] = added.validate(io.json_bytes(read(added.path(identifier), added.LIMIT), added.LIMIT), identifier)
     return result
 

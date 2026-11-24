@@ -31,6 +31,36 @@ def decision(value):
     check({k: value[k] for k in ("actor", "timestamp_utc", "statement")})
 
 
+def from_current(directory, manifest, files, checked):
+    """Consume the projection produced by current_authoring from its checked job."""
+    job = checked.job
+    from . import finding_decisions
+    if job['format'] not in finding_decisions.FORMATS:
+        return Input(directory)
+    selected = job['selected']
+    require(job['state'] in ('editorially_approved', 'registered')
+            and manifest['format'] == FINDING_FORMAT and manifest['approval']['selection_sha256'] == selection(manifest),
+            'Approved current selection required')
+    value = Input.__new__(Input)
+    value.root, value.raw, value.value = directory, files, manifest
+    value.entry = manifest['entry']
+    facts = checked.rasters[selected['raster']]
+    value.definition, value.checked = facts['definition'], facts['difficulty']
+    value.definition_raw = files[manifest['definition']['file']]
+    require(value.definition['reveal']['image'] == 'res://'+value.entry['reveal']
+            and value.definition['reveal']['name'] == manifest['metadata']['name']
+            and value.checked['production_mode'] == value.entry['mode'], 'Delivery differs from qualified raster')
+    def image(part):
+        return {key: files[part[key]['file']] for key in ('asset', 'notice')}
+    value.reveal = image(manifest['reveal'])
+    require(Path(manifest['reveal']['asset']['file']).suffix == Path(value.entry['reveal']).suffix,
+            'Reveal extension differs')
+    part = manifest['background']['image']
+    value.background = image(part) if part else None
+    value.reveal_size = checked.image_sizes[selected['reveal']]
+    return value
+
+
 class Input:
     @io.bounded
     def __init__(self, directory):
@@ -102,7 +132,8 @@ class Input:
         path = io.safe(self.root, value["asset"]["file"])
         if kind == "reveal":
             from .image_validation import validate_reveal
-            validate_reveal(path, self.definition["width"], self.definition["height"])
+            info = validate_reveal(path, self.definition["width"], self.definition["height"])
+            self.reveal_size = (info["width"], info["height"])
             require(path.suffix == Path(self.entry["reveal"]).suffix, "Reveal extension differs")
         else:
             from .catalog_publication import _validate_background_image
@@ -198,7 +229,9 @@ def export(source, output):
             target = io.safe(stage, name)
             target.parent.mkdir(parents=True, exist_ok=True)
             target.write_bytes(raw)
-        Input(stage)
+        # Verify the staged inventory against the exact bytes qualified above.
+        for name, raw in current.raw.items():
+            require(io.read(stage, name, len(raw)) == raw, "Exported input differs: " + name)
         current.recheck()
         from .catalog_publication import rename
         rename(stage, output, replace=False)

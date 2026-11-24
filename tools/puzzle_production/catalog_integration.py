@@ -44,9 +44,32 @@ def same(current, incoming):
 
 @diagnostic.measured("Input/Plan")
 def integrate(export_dir, root, *, apply=False, fail_step=None, publication_seconds=None, recovery_seconds=None):
+    return Registration(export_dir).run(root, apply=apply, fail_step=fail_step,
+        publication_seconds=publication_seconds, recovery_seconds=recovery_seconds)
+
+
+class Registration:
+    """A single intake, usable for a read-only plan followed by fresh registration."""
+    def __init__(self, directory):
+        self.incoming = directory if isinstance(directory, Input) else Input(directory)
+        self._profiles = None
+
+    def profiles(self, original):
+        from .catalog_profiles import render_profiles
+        if self._profiles is None:
+            self._profiles = render_profiles(self.incoming.entry["id"], original, self.incoming.reveal["asset"],
+                                             self.incoming.reveal_size)
+        return self._profiles
+
+    def run(self, root, **options):
+        self.incoming.recheck()
+        return _register(self, root, **options)
+
+
+def _register(operation, root, *, apply=False, fail_step=None, publication_seconds=None, recovery_seconds=None):
     diagnostic.seconds(publication_seconds); diagnostic.seconds(recovery_seconds)
     require(apply or publication_seconds is None and recovery_seconds is None, "Publication budgets require writing")
-    incoming = Input(export_dir)
+    incoming = operation.incoming
     if incoming.value["test_only"]:
         check_test_catalog(io.external(root))
     entry = incoming.entry
@@ -71,9 +94,8 @@ def integrate(export_dir, root, *, apply=False, fail_step=None, publication_seco
     value["entries"].append(entry); value["entries"].sort(key=lambda e: e["id"])
     value["metadata"].append(incoming.value["metadata"]); value["metadata"].sort(key=lambda e: e["id"])
     raw = incoming.definition_raw
-    from .catalog_profiles import generate
     original = content.ref("game/"+entry["reveal"], incoming.reveal["asset"])
-    catalog, profiles = generate(entry["id"], original, incoming.reveal["asset"])
+    catalog, profiles = operation.profiles(original)
     reveal = content.source(entry, raw, {"image_revision": 1, "asset": original}, "reveal", catalog=catalog)
     background = content.source(entry, raw, {"image_revision": 1, "status": incoming.value["background"]["status"],
         "asset": content.ref("game/art/backgrounds/"+entry["id"]+".png", incoming.background["asset"]) if incoming.background else None}, "background")

@@ -1,1 +1,14 @@
-{"core_change":null,"evidence":{"expires":null,"mode":"none","purpose":null},"format":"development-ci-plan/v1","issue":"https://github.com/venomenon328/picross/issues/884","modules":[],"omitted":"Reine Inhaltsintegration. Adapter und registrierte Lieferung im Produktionslauf geprüft.","package":"Integration-pz-kranich","purpose":"Gewählte finale Rätseldaten registrieren.","test_changes":[]}
+{
+  "format": "development-ci-plan/v1",
+  "issue": "https://github.com/venomenon328/picross/issues/886",
+  "package": "PW-INTEGRATION-SLIM",
+  "purpose": "Qualifikation vor der Auswahl, gebundene Wiederaufnahme und einmalige technische Lieferung prüfen.",
+  "modules": ["tools", "production.adapter", "production.catalog"],
+  "omitted": "Regulärer Windows-x64-Playerbau. Bild- und Solveralgorithmen bleiben auf dem bisherigen Stand. Der Adapter prüft ihren Aufruf und die Katalogtests prüfen die Transaktion. Keine Änderungen an Spiel, Browser, Server oder Deployment.",
+  "test_changes": [
+    {"path": "tools/test_production_remote.py", "disposition": "change-scoped", "reason": "Zwei vorab gerenderte Hintergrundangebote, gespeicherte Ausgabe, Antwortverlust und Fortsetzung aus einer Auswahl prüfen."},
+    {"path": "tests/puzzle_production/test_current_authoring.py", "disposition": "change-scoped", "reason": "Vor der Hintergrundwahl die gespeicherten und gesichteten Profilbytes verlangen und ihre Auslieferung prüfen."}
+  ],
+  "core_change": null,
+  "evidence": {"mode": "none", "purpose": null, "expires": null}
+}

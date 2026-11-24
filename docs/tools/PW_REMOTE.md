@@ -116,6 +116,7 @@ Eingänge erneut.
 | `inspect`, `inspect-product` | bei Produktprüfung `product`, `pr` | Explizite `items` aus dem aktuellen Record gemäß Originalabruf oben. Liefert die Originale mit Herkunft und Ablauf. |
 | `step3` | – | `motif_sha256`, vollständiges bestehendes Bilddesign unter `design` mit einem benannten Kandidaten, dazu `profile=line\|paired` und `label`. Die gewählte Motivdatei durchläuft Bild-/Rasterhelfer, Proof und unabhängigen Verifier. Der Builder ergänzt Kandidat und Zähler, der Publisher sichert die Ergebnisse zur Sichtung. |
 | `step5` | `issue` (bestehendes Produktionsissue) | `background` enthält die tatsächlich gewählte ID, `none`, `standard` oder JSON-null zur Wiederverwendung. `decisions` enthält nur tatsächlich erklärte, noch benötigte PW-B-Entscheidungen für background/final/integration mit Scope, Inhaltsbindung, Akteur, UTC-Zeit und Erklärung. Bereits abgenommener Record: `{"background":null,"decisions":[]}`. |
+| `step4` | – | `prepare` listet die IDs aller vorgesehenen Hintergrundangebote. Der Worker sichert jede kanonische PNG-Ausgabe. Nach dem Originalabruf schreibt `assessment` die tatsächliche Sichtung je Kandidat fort. |
 | `status` | `product` (Commit), `pr` (Nummer) | Leeres Objekt. Aktueller Produkt-PR und tatsächlicher PR-Lauf mit Head, Basis, Testmerge, Run, Attempt und Checkzuständen. Fehlende, ausstehende oder genehmigungspflichtige Läufe verlangen einen späteren Statusabruf. |
 | `retire` | `product`, `pr` | Leeres Objekt. Separater Prozess mit der nach Completion veröffentlichten Arbeits-SHA und dem aktuellen Main. Er prüft den gemergten zugeordneten PR, die Integration seines Mergecommits und die gelieferte Generation vor dem Retirement. |
 
@@ -129,7 +130,7 @@ Angebotsreife. Eine Sichtung verbraucht keinen weiteren Rasterversuch.
 Der Finalizer kann die Inhaltsbindung einer tatsächlich übermittelten
 Entscheidung aus den gebundenen Bytes, aktuellen Sichturteilen und akzeptierten
 Befunden selbst berechnen. Mitgelieferte Bindungen müssen übereinstimmen.
-`prepared_review.observations` nimmt aktuelle konkrete PW-FIND-Beobachtungen
+`step4` mit `input.assessment.observations` nimmt aktuelle konkrete PW-FIND-Beobachtungen
 an der Ableitung auf. Unveränderte kombinierte Erklärungen bleiben maßgeblich.
 
 Für Schritt 5 laufen Finalizer, Vorbereitung/Export, lesender Plan, frische
@@ -181,14 +182,13 @@ trennt den isolierten Nachweis von der produktiven Betriebsfreigabe.
 
 ### Hintergrundwahl und Befundannahmen in Schritt 5
 
-Bei einem v3-Angebot mit noch unvorbereiteter gewählter Zeichnung prüft der
-Akteur die deterministische Ableitung des angebotenen Originals mit dessen
-HG31-Profil. In `input.prepared_review` übergibt er `original_sha256`, `profile`,
-`sha256` der gesichteten Ausgabe und die vollständigen aktuellen Sichturteile
-unter `review` im bestehenden PW-B-Format. Der Worker erzeugt ausschließlich
-die gewählte Ableitung mit dem kanonischen Helfer und vergleicht ihren Hash.
-Bereits gesicherte gültige Wahlen gelten weiter. Für `none` und `standard`
-entfällt der Ableitungsnachweis.
+Vor der Auswahl fordert der Akteur in Schritt 4 die Vorbereitung aller
+angebotenen IDs an. Danach öffnet er die gespeicherten Originale und Ausgaben
+über `inspect`. Je Kandidat enthält `input.assessment` die Felder `candidate`,
+`original_sha256`, `profile`, `sha256` der Ausgabe, die vollständigen Urteile
+in `review` und die konkreten `observations`. Nach der Veröffentlichung genügt
+in Schritt 5 die gebundene Wahl mit den tatsächlichen Schlusserklärungen.
+Für `none` und `standard` entfällt der Ableitungsnachweis.
 
 Mit `input.finding_decisions` kann derselbe Auftrag offene Befunde der Auswahl
 oder ihrer Kombination annehmen. Jeder Eintrag nennt `target`, Befund-`id`,

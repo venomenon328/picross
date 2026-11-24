@@ -318,7 +318,7 @@ def release_for(rows, tag):
 
 
 def push_job(root, job, expected, *, repository=REPO, auth='env', token=None, remote_request=None):
-    with publisher_auth(auth, token):
+    with publisher_auth(auth, token), current.qualification.operation():
         return _push_job(io.external(root), job, expected, repository, auth, remote_request)
 
 
@@ -360,6 +360,8 @@ def _publish_draft(root, job, expected, repository, auth, *, managed=False, remo
     draft = current.compact(current.validate(io.json_bytes(raw, MIB)))
     require(draft['puzzle_id'] == job, 'Different production identity')
     require(not work_refs.FIXTURE or draft['test_only'] is True, 'Isolated fixture requires test-only data')
+    if expected:
+        current.qualification._published(bound_record(remote_record(expected, job), job))
     checked = current.Checked(draft, lambda n, limit: io.read(root, n, limit))
     transport.git(root, 'fetch', '--no-tags', '--', transport.REMOTE, main)
     transport.git(root, 'merge-base', '--is-ancestor', transport.CLEAN_MAIN, main)
@@ -439,6 +441,8 @@ def publish_locked(root, job, expected, main, checked, operation=None, remote_re
     result = deepcopy(draft)
     result['format'] = current.findings.PUBLISHED if draft['format'] in current.findings.FORMATS else work_assets.FORMAT
     result['work_release'] = {'id':release['id'],'anchor':anchor}
+    if draft['format'] in current.findings.FORMATS and draft['operation'] == 'production':
+        result['qualification'] = {'format': current.qualification.FORMAT, 'facts': checked.facts}
     if previous and 'work_release' in previous:
         require(previous['work_release'] == result['work_release'], 'Work release generation changed')
     for r in current.references(result):
@@ -622,9 +626,6 @@ def remove_bound_release(root, job, expected, main, *, confirmed, before_delete=
         require(record['state'] == 'registered' and record['integration'], 'Registration required')
         result = current_delivery.snapshot(lambda n,l,missing=False:source.read(main,n,l,missing),job)
         require(current_delivery.same(result, record['integration']['result']), 'Different confirmed main result')
-        if release:
-            checked = current.Checked(record, lambda n, limit: source.read(expected, n, limit), technical=False)
-            checked.matches(result)
     require(anchor is None or anchor == binding['anchor'], 'Different work tag generation')
     require(release is None or release['id'] == binding['id'], 'Different release generation')
     refs = [r['asset'] for r in current.references(record) if 'asset' in r]
@@ -633,6 +634,11 @@ def remove_bound_release(root, job, expected, main, *, confirmed, before_delete=
         require(all(r['release_id'] == release['id'] for r in refs)
                 and {a['id'] for a in release['assets']} == {r['asset_id'] for r in refs},
                 'Unexpected release contents; preserve other work')
+        if not confirmed:
+            with current.qualification.operation():
+                current.qualification._published(record)
+                checked = current.Checked(record, lambda n, limit: source.read(expected, n, limit), technical=False)
+                checked.matches(result)
     if anchor:
         transport.git(root,'merge-base','--is-ancestor',transport.CLEAN_MAIN,anchor)
         transport.git(root,'merge-base','--is-ancestor',anchor,main)
@@ -652,7 +658,7 @@ def remove_bound_release(root, job, expected, main, *, confirmed, before_delete=
 
 def resume(root, job, expected, *, repository=REPO, auth='env', token=None):
     """Reopen a pinned publication for the existing local builder/finalizer."""
-    with publisher_auth(auth, token):
+    with publisher_auth(auth, token), current.qualification.operation():
         return _resume(io.external(root), job, expected, repository, auth)
 
 
@@ -668,11 +674,15 @@ def _resume(root, job, expected, repository, auth):
             require(binding['role'] == 'job' and binding['job'] == job, 'Wrong resume worktree')
             require(not (workspace.gitdir(root) / JOURNAL).exists(), 'Finish the pending publish first')
             workspace.check_work(root, job)
+        published = remote_record(expected, job)
+        require(published == GitSource(root).read(expected, current.path(job), MIB), 'Different pinned qualification record')
+        current.qualification._published(bound_record(published, job))
         return hydrate(root, job, expected)
 
 
 def local_record(record):
     draft = deepcopy(record)
+    draft.pop('qualification', None)
     draft['format'] = current.findings.LOCAL if record['format'] == current.findings.PUBLISHED else current.FORMAT
     del draft['work_release']
     for ref in current.references(draft):

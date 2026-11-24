@@ -2,8 +2,8 @@
 from copy import deepcopy
 
 from . import production_git_workspace as ws, publish_git
-from .puzzle_production import authoring_builder, catalog_io as io, content_registry, current_authoring as current
-from .puzzle_production import current_tools, target_adapter
+from .puzzle_production import authoring_builder, catalog_io as io, catalog_integration, current_authoring as current
+from .puzzle_production import current_tools
 from .puzzle_production.authoring_package import require
 from .puzzle_production.contract import exact_keys
 
@@ -98,32 +98,53 @@ def step3(req, job, root, scratch):
             'next': 'Inspect the published raster, proof and preview before making a visual judgment.'}
 
 
-def selected_background(draft, options, root, scratch):
-    choice = draft['selected']['background']
-    viewed = options.get('prepared_review')
-    if draft['format'] not in current.findings.FORMATS or choice in (None, 'standard', 'none'):
-        require(viewed is None, 'Unexpected prepared background review')
-        return []
-    asset = current.findings.subjects(draft)[choice]
-    if asset['prepared'] is not None and viewed is None:
-        return []
-    require(viewed and viewed['profile'] == asset['profile'] and viewed['original_sha256'] == asset['file']['sha256'],
-            'Actual prepared background review on selected original and profile required')
+def step4(req, job, root, scratch):
+    """Store the exact derivatives first. Assessments refer to their saved bytes."""
+    require(job['format'] in current.findings.FORMATS and job['operation'] == 'production'
+            and job['state'] in ('background_review', 'content_ready'), 'Expected a current background offer')
+    draft = deepcopy(job)
+    selected = draft['selected']['background']
+    offers = {a['id']: a for a in draft['assets'] if a['role'] == 'background'
+              and selected in (None, a['id'])}
+    options = req['input']
     files = []
-    if asset['prepared'] is None:
-        rendered = current.prepare_background(io.safe(root, asset['file']['file']), scratch / 'background.png',
-                                              profile_id=asset['profile'])
-        path = f'content/authoring/{draft["puzzle_id"]}/data/prepared/{rendered["sha256"]}.png'
-        asset['prepared'] = {'original_sha256': viewed['original_sha256'], 'profile': asset['profile'],
-                             'file': {**rendered, 'file': path}}
-        files.append({'path': path, 'source': rendered['file'], 'bytes': rendered['bytes'], 'sha256': rendered['sha256']})
-    require(viewed['sha256'] == asset['prepared']['file']['sha256'] and
-            set(viewed['review']) == current.CRITERIA['background'] and
-            all(r['timestamp_utc'] and r['result'] != 'nicht geprüft' for r in viewed['review'].values()),
-            'Stale or incomplete prepared background review')
-    asset['review'] = deepcopy(viewed['review'])
-    observations(draft, choice, viewed.get('observations', []))
-    return files
+    if 'prepare' in options:
+        require(set(options['prepare']) == set(offers), 'Different background candidate inventory')
+        for key in options['prepare']:
+            asset = offers[key]
+            if asset['prepared'] is not None:
+                continue
+            original = asset['file']
+            source = io.safe(root, original['file'])
+            require(current.content.ref(original['file'], io.read(root, original['file'], 32 * current.LIMIT))
+                    == original, 'Background original changed')
+            rendered = current.prepare_background(source, scratch / (key + '.png'), profile_id=asset['profile'])
+            path = f'content/authoring/{draft["puzzle_id"]}/data/prepared/{key}/{rendered["sha256"]}.png'
+            asset['prepared'] = {'original_sha256': original['sha256'], 'profile': asset['profile'],
+                                 'file': {**rendered, 'file': path}}
+            files.append({'path': path, 'source': rendered['file'], 'bytes': rendered['bytes'], 'sha256': rendered['sha256']})
+    else:
+        viewed = options['assessment']
+        asset = offers.get(viewed['candidate'])
+        require(asset and asset['prepared'] and viewed['profile'] == asset['profile']
+                and viewed['original_sha256'] == asset['file']['sha256']
+                and viewed['sha256'] == asset['prepared']['file']['sha256'], 'Different prepared background')
+        require(set(viewed['review']) == current.CRITERIA['background']
+                and all(r['timestamp_utc'] and r['result'] != 'nicht geprüft' for r in viewed['review'].values()),
+                'Incomplete background assessment')
+        asset['prepared']['inspection'] = {'sha256': viewed['sha256'], 'review': deepcopy(viewed['review'])}
+        observations(draft, asset['id'], viewed['observations'])
+        # Summary keeps the worse result for each criterion across the two images.
+        order = ('erfüllt', 'Warnung', 'nicht erfüllt', 'nicht geprüft')
+        for criterion, finding in viewed['review'].items():
+            original = asset['review'].get(criterion)
+            require(original and original['timestamp_utc'] and original['result'] != 'nicht geprüft',
+                    'Original background assessment missing')
+            if order.index(finding['result']) > order.index(original['result']):
+                asset['review'][criterion] = deepcopy(finding)
+    current.build({'format': current.REQUEST, 'record': draft, 'expected': io.checksum(current.encoded(job)),
+                   'files': files}, scratch, root)
+    return {'backgrounds': list(offers)}
 
 
 def finalize(req, job, root, scratch):
@@ -134,7 +155,11 @@ def finalize(req, job, root, scratch):
     if selection is not None:
         require(draft['selected']['background'] in (None, selection), 'Changed prior background choice')
         draft['selected']['background'] = selection
-    files = selected_background(draft, req['input'], root, scratch)
+    chosen = draft['selected']['background']
+    if chosen not in (None, 'none', 'standard') and draft['format'] in current.findings.FORMATS:
+        prepared = current.findings.subjects(draft)[chosen]['prepared']
+        require(prepared and ('inspection' in prepared or job['selected']['background'] == chosen),
+                'Complete the prepared background assessment in step 4')
     for declaration in req['input'].get('finding_decisions', []):
         target, key = declaration['target'], declaration['id']
         require(target in (*draft['selected'].values(), current.findings.COMBINATION), 'Unselected finding')
@@ -153,7 +178,7 @@ def finalize(req, job, root, scratch):
             {d['scope'] for d in draft['decisions']}, 'Actual final and integration decisions required')
     draft['state'] = 'editorially_approved'
     authoring_builder.finalize_background({'format': current.REQUEST, 'record': draft,
-        'expected': io.checksum(current.encoded(job)), 'files': files}, scratch, root)
+        'expected': io.checksum(current.encoded(job)), 'files': []}, scratch, root)
     return draft
 
 
@@ -167,12 +192,11 @@ def package(req):
 def step5(req, request_id, job, root, product, scratch):
     finalize(req, job, root, scratch)
     name = current.path(req['job'])
-    current.prepare(root, name, scratch / 'final')
     exported = scratch / 'export'
-    target_adapter.export(scratch / 'final', exported)
-    plan = content_registry.registration(exported, product, apply=False)
+    operation = catalog_integration.Registration(current.prepare_input(root, name, exported))
+    plan = operation.run(product)
     require(plan['status'] == 'planned' and not ws.changes(product), 'Expected new registration and a clean read-only plan')
-    registered = content_registry.registration(exported, product, apply=True)
+    registered = operation.run(product, apply=True)
     require(registered['status'] == 'registered' and registered['changes'] == plan['changes'],
             'Fresh registration differs from selected plan')
     paths = {r['path'] for r in plan['changes']}

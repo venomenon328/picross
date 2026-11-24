@@ -414,11 +414,19 @@ class CurrentAuthoringTests(unittest.TestCase):
         self.job['state'] = 'content_ready'
         with self.assertRaisesRegex(InvalidInput,'Prepared'):
             self.publish()
+        self.job['selected']['background'] = None
+        self.job['decisions'] = [d for d in self.job['decisions'] if d['scope'] != 'background']
+        self.job['state'] = 'background_review'
         prepared = self.work/'prepared.png'
         current.prepare_background(self.sources/'sky-original.png',prepared,profile_id=asset['profile'])
         bound = current.findings.subjects(self.job)['sky']
         bound['prepared'] = {'original_sha256':asset['file']['sha256'],'profile':asset['profile'],
                              'file':self.file('sky-output.png',prepared.read_bytes())}
+        bound['prepared']['inspection'] = {'sha256': bound['prepared']['file']['sha256'],
+                                            'review': deepcopy(bound['review'])}
+        self.publish()
+        self.job['selected']['background'] = 'sky'
+        decide(self.job,'background')
         self.job['instructions']['sky'] = ['Kontur weiterhin hell halten']
         decide(self.job,'final')
         decide(self.job,'integration')
