@@ -52,6 +52,7 @@ def main(argv=None) -> int:
         else:
             child.add_argument("--proof", type=Path, required=True)
             child.add_argument("--report", type=Path)
+            child.add_argument("--deadline", type=float, help="Earlier monotonic deadline of the calling process")
     args = parser.parse_args(argv)
     report_path = (args.output_dir / "result.json" if args.command == "solve"
                    else args.report)
@@ -62,6 +63,9 @@ def main(argv=None) -> int:
             raise InvalidInput("Python 3.11 or newer is required")
         budget = Budget(args.seconds, args.max_lines, max_pair_work=args.max_pair_work,
                         max_pair_records=args.max_pair_records)
+        if args.command == "verify" and args.deadline is not None:
+            budget.deadline = min(budget.deadline, args.deadline)
+            budget.check()
         puzzle = validate_logic(load_json(args.input, max_bytes=LOGIC_BYTE_LIMIT))
         if args.command == "verify" and report_path:
             if (report_path.exists() or report_path.resolve() in

@@ -6,6 +6,7 @@ from pathlib import Path
 import subprocess
 import sys
 import tempfile
+from time import monotonic
 from . import catalog_io as io, current_authoring as current, current_content as content
 from .authoring_package import require
 from .raster_parameters import require_color_count, used_foreground
@@ -13,10 +14,38 @@ from .contract import Budget, Aborted
 from .background_contract import BackgroundError
 
 
+def independent_verification(logic, proof, seconds, lines, pair_work, pair_records, shared):
+    args = [sys.executable, '-m', 'tools.puzzle_production', 'verify',
+            '--input', str(logic), '--proof', str(proof)]
+    if shared is not None:
+        seconds = max(0, shared.deadline - monotonic())
+        lines = shared.max_lines - shared.lines
+        pair_work = shared.max_pair_work - shared.pair_work
+        pair_records = shared.max_pair_records  # Peak live storage, released between processes.
+        args.extend(['--deadline', str(shared.deadline)])
+    args.extend(['--seconds', str(seconds), '--max-lines', str(lines),
+                 '--max-pair-work', str(pair_work), '--max-pair-records', str(pair_records)])
+    process = subprocess.run(args, cwd=Path(__file__).resolve().parents[2],
+                             capture_output=True, timeout=seconds + 30)
+    require(process.returncode in (0, 4), 'Independent current proof process failed')
+    require(len(process.stdout) <= 1024 * 1024, 'Oversized proof process result')
+    checked = json.loads(process.stdout)
+    current.encoded(checked)
+    if shared is not None and process.returncode == 4 and checked.get('status') == 'aborted':
+        raise Aborted('verifier_' + (checked.get('message') or checked.get('reason') or 'aborted'))
+    require(checked.get('proof_verified') is True, 'Independent current proof not checked')
+    if shared is not None:
+        shared.lines += checked['line_evaluations']
+        shared.pair_work += checked.get('pair_work', 0)
+        shared.pair_peak_records = max(shared.pair_peak_records, checked.get('pair_peak_records', 0))
+        shared.check()
+    return checked
+
+
 @io.bounded
 def raster(definition, output, *, mode, profile='line', method='picross-difficulty-0.4',
            solve_seconds=120, solve_lines=100000, verify_seconds=120, verify_lines=100000,
-           max_pair_work=20000000, max_pair_records=250000):
+           max_pair_work=20000000, max_pair_records=250000, final_budget=None):
     """Certify a current definition without import, repair or producer history."""
     from . import catalog_rating, catalog_analysis, current_rating, solver
     from .editor_raster import check_end
@@ -31,30 +60,31 @@ def raster(definition, output, *, mode, profile='line', method='picross-difficul
     with tempfile.TemporaryDirectory(prefix='.current-raster-',dir=output.parent) as temporary:
         work=Path(temporary);stage=work/'result';stage.mkdir()
         (stage/'definition.json').write_bytes(raw)
-        budget = Budget(solve_seconds, solve_lines, max_pair_work=max_pair_work, max_pair_records=max_pair_records)
+        budget = final_budget or Budget(solve_seconds, solve_lines, max_pair_work=max_pair_work,
+                                        max_pair_records=max_pair_records)
         baseline = solver.solve(puzzle, budget)
         use_pair = profile == 'paired' and baseline['status'] == 'stalled'
         proof = solver.solve(puzzle, budget, profile='paired-lines-color') if use_pair else baseline
+        if final_budget is not None and proof['status'] == 'aborted':
+            raise Aborted('solver_' + proof['reason'])
         (stage/'proof.json').write_bytes(current.encoded(proof))
         # A fresh process consumes only logic/proof, never the known solution or image.
         (work/'logic.json').write_bytes(current.encoded(puzzle.to_wire()))
-        process=subprocess.run([sys.executable,'-m','tools.puzzle_production','verify','--input',str(work/'logic.json'),
-                                '--proof',str(stage/'proof.json'), '--seconds', str(verify_seconds),
-                                '--max-lines', str(verify_lines), '--max-pair-work', str(max_pair_work),
-                                '--max-pair-records', str(max_pair_records)], cwd=Path(__file__).resolve().parents[2],
-                               capture_output=True,timeout=verify_seconds+30)
-        require(process.returncode in (0, 4),'Independent current proof process failed')
-        require(len(process.stdout)<=1024*1024,'Oversized proof process result')
-        checked=json.loads(process.stdout)
-        current.encoded(checked)
-        require(checked.get('proof_verified') is True,'Independent current proof not checked')
+        if use_pair:
+            (work/'baseline.json').write_bytes(current.encoded(baseline))
+            if final_budget is not None:
+                independent_verification(work/'logic.json', work/'baseline.json', verify_seconds, verify_lines,
+                                         max_pair_work, max_pair_records, final_budget)
+        checked = independent_verification(work/'logic.json', stage/'proof.json', verify_seconds, verify_lines,
+                                           max_pair_work, max_pair_records, final_budget)
         current.qualification.remember(('verified-proof', puzzle.logic_hash, io.checksum((stage/'proof.json').read_bytes())), checked)
         rating_ref=None
         if checked.get('certified'):
             check_end(definition,proof)
+            if final_budget is not None:
+                final_budget.check()
             arguments={}
             if use_pair:
-                (work/'baseline.json').write_bytes(current.encoded(baseline))
                 arguments={'proof':stage/'proof.json','baseline':work/'baseline.json'}
             rating=catalog_analysis.analyze_single(stage/'definition.json',work/'analysis',production_mode=mode,method=method,**arguments)
             (stage/'difficulty.json').write_bytes(current.encoded(current_rating.from_checked(rating)))

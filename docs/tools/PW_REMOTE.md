@@ -220,6 +220,10 @@ Releasegeneration, Asset-IDs, Befunde und Entscheidungen.
 `previous,motif_sha256,approved,declaration`. `previous` bindet die alte
 Parameterliste. Die neue Erklärung bindet den tatsächlich genehmigten vollständigen
 Korridor und gegebenenfalls `crop_protection` (Definitionshash → Maskendateihash).
+Der Worker prüft frühere Beschnitte am neuen Korridor und Motivschutz. Kompatible
+Beschnitte behalten ihre Originalbelege. Inkompatible entfernt der Builder aus
+der aktuellen Auswahl, die Antwort nennt ihre IDs in `retired_crops`.
+Bereits verbrauchte Versuche zählen weiter.
 Für geänderte Grenzen bei `budget` gelten `previous,limits,declaration` mit
 dem Digest der alten Limits. Jede Erklärung enthält `actor,timestamp_utc,statement`.
 Für ein gespeichertes Raster ohne frühere Maskendatei können RP-5 und feste
@@ -241,7 +245,11 @@ gemessene Sekunden. Bei Festkorrektur, Profilprüfung oder RP-5 kommen Kandidat,
 Proofstatus und Zertifizierung bzw. bei Nichtfund Suchendgrund und Verbrauch
 hinzu. Die Zahl tatsächlich vorhandener Alternativen kann unter dem kumulativen
 Versuchszähler liegen. Nach Publikation die Ansichten über `inspect` öffnen.
-Der Worker reserviert für die Endzertifizierung die finalen RP-5-Budgets,
+Bei RP-5 teilen sich die Solverläufe und die unabhängige Verifikation der
+Endproofs das reservierte Abschlussbudget. Der Prüfer erhält die verbleibenden
+Linien und Paararbeit sowie dieselbe monotone Frist. Ein kontrollierter Abbruch
+speichert den konkreten Endgrund und den Verbrauch am bisherigen Entwurf.
+Der Worker verwendet
 bei fester Korrektur und Profilprüfung standardmäßig 120 Sekunden und 100000
 Linienauswertungen für den Solver sowie dieselben Grenzen für den Prüfer.
 

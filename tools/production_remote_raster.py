@@ -174,7 +174,33 @@ def file_ref(job, key, name, raw, scratch, files):
     return ref
 
 
-def revise_parameters(job, change):
+def compatible_crop(option, crop, before, protection):
+    if option.get('format') != parameters.FORMAT:
+        return False
+    colors = len(before['palette'])
+    mode = 'mono' if colors == 1 else 'color'
+    if mode not in current.findings.matching_modes([option], before, colors):
+        return False
+    left, top, right, bottom = crop['rectangle']
+    removed = (left, top, before['width'] - right, before['height'] - bottom)
+    permissions = option['derivation']
+    if any(count and side not in permissions['empty_edge_crop'] for side, count in zip(parameters.SIDES, removed)):
+        return False
+    if crop.get('edits') and not permissions['cell_edits']:
+        return False
+    pinned = protection.get(crop['before']['sha256'])
+    if (pinned is not None or permissions['protected_features']) and pinned != crop['protection']['sha256']:
+        return False
+    for axis, size in (('width', right - left), ('height', bottom - top)):
+        bound = option['constraints'][axis]
+        if not parameters.accepts(bound, size):
+            # Preserve the existing diagnostic route for a pure crop below an approximate minimum.
+            if crop.get('edits') or bound['kind'] != 'approximate' or size >= (bound['minimum'] or 1):
+                return False
+    return True
+
+
+def revise_parameters(job, change, root):
     motif = current.findings.subjects(job)[job['selected']['motif']]
     old = job['parameters']['approved']
     require(change['previous'] == digest(old) and change['motif_sha256'] == motif['file']['sha256'],
@@ -183,15 +209,27 @@ def revise_parameters(job, change):
     old_decision = next(d for d in job['decisions'] if d['scope'] == 'motif')
     declaration = {k: deepcopy(v) for k, v in old_decision.items() if k == 'crop_protection'}
     declaration.update(change['declaration'])
+    retired = []
     for row in job['rasters']:
         crop = row.get('crop_diagnosis')
-        if crop and not any(digest(p) == crop['parameters_sha256'] for p in new):
-            require(len(new) == 1 and new[0].get('format') == parameters.FORMAT, 'Expected updated crop corridor')
-            crop['parameters_sha256'] = digest(new[0])
+        if crop:
+            before = io.json_bytes(bound_bytes(root, crop['before']), 2 * current.LIMIT)
+            allowed = [digest(p) for p in new if compatible_crop(p, crop, before, declaration.get('crop_protection', {}))]
+            if not allowed:
+                retired.append(row['id'])
+            elif crop['parameters_sha256'] not in allowed:
+                crop['parameters_sha256'] = allowed[0]
+    if retired:
+        used = job['budgets']['used']
+        used['raster_candidates'] = max(used['raster_candidates'], len(job['rasters']))
+        job['rasters'] = [r for r in job['rasters'] if r['id'] not in retired]
+        job['findings'] = [r for r in job['findings'] if r['target'] not in retired]
+        for candidate in retired:
+            job['instructions'].pop(candidate, None)
     job['parameters']['approved'] = deepcopy(new)
     replace_decision(job, 'motif', declaration)
-    if job['rasters']:
-        job['state'] = 'raster_review'
+    job['state'] = 'raster_review' if job['rasters'] else 'motif_approved'
+    return retired
 
 
 def assess_findings(job, candidate, declarations):
@@ -211,8 +249,9 @@ def execute(options, job, root, scratch):
     check_published(change, job)
     draft = deepcopy(job)
     files = []
+    result = {}
     if op == 'parameters':
-        revise_parameters(draft, change)
+        result['retired_crops'] = revise_parameters(draft, change, root)
     elif op == 'budget':
         require(change['previous'] == digest(job['budgets']['limits']), 'Stale budget decision')
         draft['budgets']['limits'] = deepcopy(change['limits'])
@@ -261,4 +300,4 @@ def execute(options, job, root, scratch):
                 result['builder_seconds'] = round(monotonic() - start, 6)
             return result
     save(job, draft, files, root, scratch)
-    return {'state': draft['state'], 'decision': op}
+    return {'state': draft['state'], 'decision': op, **result}

@@ -6,7 +6,7 @@ from .production_remote_raster import bound_bytes, file_ref
 from .puzzle_production import catalog_io as io, catalog_rating, current_authoring as current, current_tools
 from .puzzle_production import diagnosis, editor_raster, raster_parameters as params, repair, verifier
 from .puzzle_production.authoring_package import require
-from .puzzle_production.contract import Budget, digest
+from .puzzle_production.contract import Aborted, Budget, digest
 
 
 def same_design(left, right):
@@ -21,12 +21,12 @@ def duplicate(job, definition, root):
     return None
 
 
-def read_proof(root, row, puzzle):
+def read_proof(root, row, puzzle, budget=None):
     require(row['proof'], 'A bound deduction proof is required')
     proof = io.json_bytes(bound_bytes(root, row['proof']), 64 * current.LIMIT)
     checked = current.qualification.lookup(('verified-proof', puzzle.logic_hash, row['proof']['sha256']))
     if checked is None:
-        checked = verifier.verify(puzzle, proof, Budget(120, 1000000))
+        checked = verifier.verify(puzzle, proof, budget or Budget(120, 1000000))
         require(checked['proof_verified'], 'Current proof was not independently verified')
         current.qualification.remember(('verified-proof', puzzle.logic_hash, row['proof']['sha256']), checked)
     return proof
@@ -80,7 +80,7 @@ def protected(job, row, definition, change, option):
     return mask
 
 
-def search(matrix, definition, proof, option, change, round_number, scratch):
+def search(matrix, definition, proof, option, change, round_number, scratch, budget):
     config = params.validate_search(change['config'], definition['width'], definition['height'])
     require(config['max_changes'] <= 2 or round_number > 1 and change['extra_changes_reason'],
             'Additional changes need a motivated later round')
@@ -96,7 +96,6 @@ def search(matrix, definition, proof, option, change, round_number, scratch):
     palette = {p['id'] for p in colors}
     cert = None if change['profile'] == 'line' else {
         'profile': 'paired-lines-color', 'max_pair_work': 20000000, 'max_pair_records': 250000}
-    budget = Budget(config['search_seconds'], config['search_lines'])
     mask = change['cells']
     if 'region' in change:
         allowed = set(map(tuple, change['region']))
@@ -133,7 +132,8 @@ def produce(op, change, job, draft, row, raw, definition, root, scratch, files):
 
     mode = 'mono' if len(definition['palette']) == 1 else 'color'
     _, puzzle, _, _ = catalog_rating.definition(raw)
-    proof = read_proof(root, row, puzzle) if op in ('diagnosis', 'repair') or op == 'profile_check' and row['proof'] else None
+    search_budget = Budget(change['config']['search_seconds'], change['config']['search_lines']) if op == 'repair' else None
+    proof = read_proof(root, row, puzzle, search_budget) if op in ('diagnosis', 'repair') or op == 'profile_check' and row['proof'] else None
     if op == 'diagnosis':
         return diagnose(change, puzzle, proof)
     result = {'status': 'computed', 'source': change['source'], 'operation': op}
@@ -161,7 +161,7 @@ def produce(op, change, job, draft, row, raw, definition, root, scratch, files):
     require(mode == option['imports'][0]['mode'], 'Raster mode differs from approved corridor')
     mask = protected(job, row, definition, change, option)
     matrix = definition['solution']
-    limits = {}
+    final_budget = None
     crop = None
     if op == 'fixed':
         rectangle = change['crop']
@@ -185,13 +185,14 @@ def produce(op, change, job, draft, row, raw, definition, root, scratch, files):
         require(proof['status'] in ('stalled', 'aborted'), 'Repair requires an unresolved current proof')
         require(change['profile'] == 'paired' or not proof['profile']['id'].startswith('paired-'), 'Paired reference requires paired repair')
         params.result(option, {**definition, 'mode': mode}, matrix, empty=0)
-        changed, summary = search(matrix, definition, proof, option, change, draft['budgets']['used']['repair_rounds'], scratch)
+        changed, summary = search(matrix, definition, proof, option, change, draft['budgets']['used']['repair_rounds'],
+                                  scratch, search_budget)
         result['search'] = summary
         row['last_repair'] = {'plan': plan_hash, 'definition_sha256': row['definition']['sha256'],
                               **{k: summary[k] for k in ('outcome', 'reason', 'candidates', 'proposals')}}
         if changed is None:
             return {**result, 'candidate': row['id'], 'outcome': summary['outcome']}
-        limits = {'solve_seconds': change['config']['final_seconds'], 'solve_lines': change['config']['final_lines']}
+        final_budget = Budget(change['config']['final_seconds'], change['config']['final_lines'])
     next_def = editor_raster.definition(definition, changed)
     require(params.used_foreground(changed) == {p['id'] for p in definition['palette']}, 'Used palette changed')
     effective = deepcopy(option)
@@ -205,10 +206,15 @@ def produce(op, change, job, draft, row, raw, definition, root, scratch, files):
     if prior:
         return {**result, 'candidate': prior, 'outcome': 'duplicate'}
     palette = [{'id': 'c' + str(p['id']), 'rgb': '#' + p['color']} for p in definition['palette']]
-    palette_gate.early([['c'+str(v) if v else 'empty' for v in line] for line in changed],
-                       {'palette': palette, 'source_id': change['output']})
     started = monotonic()
-    certified = current_tools.raster(next_def, output, mode=mode, profile=change['profile'], **limits)
+    try:
+        palette_gate.early([['c'+str(v) if v else 'empty' for v in line] for line in changed],
+                           {'palette': palette, 'source_id': change['output']}, budget=final_budget)
+        certified = current_tools.raster(next_def, output, mode=mode, profile=change['profile'], final_budget=final_budget)
+    except Aborted as exc:
+        if final_budget is None:
+            raise
+        certified = {'certified': False, 'status': str(exc)}
     result['certification_seconds'] = round(monotonic() - started, 6)
     if op == 'repair' and not certified['certified']:
         result['search'].update(outcome='aborted', reason='final_' + certified['status'])
