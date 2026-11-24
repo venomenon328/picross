@@ -35,7 +35,8 @@ def raster(definition, output, *, mode, profile='line', method='picross-difficul
         # A fresh process consumes only logic/proof, never the known solution or image.
         (work/'logic.json').write_bytes(current.encoded(puzzle.to_wire()))
         process=subprocess.run([sys.executable,'-m','tools.puzzle_production','verify','--input',str(work/'logic.json'),
-                                '--proof',str(stage/'proof.json')],capture_output=True,timeout=150)
+                                '--proof',str(stage/'proof.json')], cwd=Path(__file__).resolve().parents[2],
+                               capture_output=True,timeout=150)
         require(process.returncode==0,'Independent current proof process failed')
         require(len(process.stdout)<=1024*1024,'Oversized proof process result')
         checked=json.loads(process.stdout)

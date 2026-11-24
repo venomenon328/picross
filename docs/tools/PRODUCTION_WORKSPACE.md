@@ -5,7 +5,7 @@
 - **Status:** aktiver Vertrag für Oberfläche, lokalen Git-/Bildzugriff und Ansichtsprojektion.
 - **Normale Produktion:** ausschließlich [Authoring-Quellenroute](../production/authoring/PUZZLE_AUTHORING.md#11-pflichtquellen-nach-phase); dieser Gesamtvertrag ist keine pauschale Produktionspflichtlektüre.
 - **Geschlossene Authoring-/Projektionsformen:** [PW-B](PW_B_CONTRACT.md).
-- **Freigegebenes Soll zur lokalen Akteursablage:** [PW-LOCAL](PRODUCTION_GIT_WORKSPACE.md); getrennt vom lesenden Appcache, Lieferstand in [#859](https://github.com/venomenon328/picross/issues/859).
+- Für den schreibenden Akteur richtet [PW-LOCAL](PRODUCTION_GIT_WORKSPACE.md) die gemeinsame Gitbasis ein. Die App verwendet ihren eigenen lesenden Cache.
 - **Aktuelle Ansicht und Lieferung:** [PRODUCTION_CURRENT_VIEW](PRODUCTION_CURRENT_VIEW.md).
 - **Installer und Updatekanal:** [PRODUCTION_UPDATES](PRODUCTION_UPDATES.md); tatsächlicher Betriebsstatus im zuständigen Issue/Release.
 - **Bildgestaltung und Profile:** [Bildnormen](../production/images/README.md) beziehungsweise [Hintergrundtechnik](../production/PUZZLE_BACKGROUNDS.md).

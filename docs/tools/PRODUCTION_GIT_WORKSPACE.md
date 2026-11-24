@@ -1,15 +1,51 @@
 # PW-LOCAL: gemeinsame lokale Git-Arbeitsbasis
 
 Dokument-ID: `production-git-workspace`
-Status: freigegebenes Soll; Umsetzung und Abnahme noch offen
+Status: Werkzeugvertrag PW-LOCAL-A
 Entscheidung: 23.11.2026 · [#859 / PW-LOCAL-A](https://github.com/venomenon328/picross/issues/859#pw-local-a)
 Zuständigkeit: lokale Objektablage, Produktionsworktrees, Sparse-Materialisierung
 und ihre Anbindung an die sichere Publikation.
 
-Dieser Vertrag beschreibt die freigegebene Änderung, keine bereits gelieferte
-Funktion. Paket, tatsächlicher Lieferstand, Prüfplan und Ausführungsentscheidung
-stehen im Issue. Die Umsetzung wird im zugehörigen Spezifikations-Draft-PR
-fortgeführt; kein vorheriger separater Merge der Dokumente ist nötig.
+## Einstieg und Wiederaufnahme
+
+Der Akteur startet im vertrauenswürdigen Werkzeugcheckout und bindet die
+vollständigen Commit-SHAs. Der lesende Preflight aus [PW-B](PW_B_CONTRACT.md)
+prüft frühzeitig den für eine geplante Veröffentlichung gewählten Transport.
+
+```text
+python -B -m tools.production_git_workspace ID --root WURZEL --tools TOOL_SHA --main MAIN_SHA --expected new
+python -B -m tools.production_git_workspace ID --root WURZEL --tools TOOL_SHA --main MAIN_SHA --expected JOB_SHA --originals
+```
+
+Der erste Aufruf setzt einen freien Arbeitsref voraus. Der zweite prüft
+`content/pw/ID` und lädt dessen größen-, hash- und eigentumsgebundene Originale.
+Für private Originale kann der Akteur mit `--auth env` oder einer expliziten
+Tokenquelle denselben Lesezugang für Git und REST wählen. Ein lokaler
+Credentialhelper ist für Git ebenfalls möglich. Reine Berechnung benötigt Git,
+Python und die Werkzeugabhängigkeiten. Der Akteur kann für eine einzelne
+ChatGPT-Sitzung eine frische temporäre Arbeitswurzel verwenden.
+
+Das Ergebnis nennt `tools`, `tool_commit`, `job`, `data_commit`, `main`,
+`store` und `temporary`. Folgeprogramme mit Python `-B` aus `tools` ausführen,
+`PYTHONDONTWRITEBYTECODE=1` für Kinder und `TMPDIR`, unter Windows auch
+`TMP` und `TEMP`, auf `temporary` setzen. Den Jobpfad ausdrücklich als
+`--repository`, `--publish-to` bzw. `work_publish --workspace` übergeben.
+Nach einem Publish mit der zurückgelesenen SHA und `--originals` weiterarbeiten.
+Nach unterbrochenem Publish zuerst denselben Publisheraufruf im vorhandenen
+Jobordner mit der ursprünglichen erwarteten SHA wiederholen. Das persistierte
+Journal bindet Entwurf, Index und Kandidatencommit. Der Publisher gleicht den
+Remote-Ref, den lokalen detached HEAD, den Gitindex und beide Metadateien ab.
+
+In Schritt 5 ergänzt `--integration content/BRANCH` einen separaten
+Produktworktree auf der frisch geprüften Mainbasis. Für einen schon publizierten
+Integrationsbranch zusätzlich dessen tatsächliche SHA als `--integration-head`
+angeben. Nach Finalizer und Export den Adapter mit `--checkout INTEGRATION`
+planen und frisch registrieren lassen. Die einzeln geprüften Pfade aus
+`changes` über `git add --sparse -- PFAD ...` stagen, den vollständigen Diff
+prüfen und den Produktstand committen. Completion erhält im Jobworktree die
+SHA dieses sauberen Integrationsworktrees und denselben geprüften Eingang.
+Produkt-PR, Mergefreigabe und Retirement folgen dem Auftrag für den Job.
+Der authentifizierte Remote-Gesamtdurchstich ist Gegenstand von PW-REMOTE-A.
 
 ## 1. Gemeinsame Basis und stabile Arbeitsorte
 
@@ -57,10 +93,9 @@ den verwendeten Programmstand bestimmen. Der bisherige Schutz des lesenden
 [Produktionsassistenten](PRODUCTION_WORKSPACE.md) bleibt erhalten: keine
 ausführbaren Programme aus betrachteten Produktionsdaten.
 
-Die konkrete CLI und interne Verzeichnisaufteilung legt die Implementierung
-innerhalb dieser Regeln fest und dokumentiert sie in der Werkzeuganleitung.
-Normale Folgeaufträge verwenden diesen Einstieg. Die vorhandene kurze
-Quellenroute genügt; keine allgemeinen Gitregeln in jeden Prompt kopieren.
+Die gemeinsame Ablage liegt unter `picross-production` in der jeweiligen Wurzel.
+Der Helfer prüft Besitzvermerk, Repository, Git-Zuordnung, Rolle und Revision.
+Die Werkzeuganleitung beschreibt die [Fachbefehle](../../tools/puzzle_production/README.md).
 
 ## 3. Sparse-Checkout
 

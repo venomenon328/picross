@@ -13,7 +13,8 @@ import tempfile
 from urllib.parse import urlencode
 from uuid import uuid4
 
-from . import publish_git as transport
+from . import publish_git as transport, production_git_workspace as workspace
+from .production_worktree_publish import Publication, JOURNAL, previous_operation
 from .app_products import PRODUCTS
 from .puzzle_production import current_authoring as current, current_delivery, catalog_io as io, github_rest, work_assets
 from .puzzle_production.authoring_builder import git_root, index_value, writer
@@ -172,7 +173,7 @@ def fresh_generation(rows, job, anchor, binding):
     return latest
 
 
-def observe(root, operation, job, expected, repository, auth, *, read_record=None):
+def observe(root, operation, job, expected, repository, auth, *, read_record=None, recovery_parent=None):
     current.path(job)
     require(operation in OPERATIONS and (
         operation == 'publish' and expected is None or isinstance(expected, str) and transport.SHA.fullmatch(expected)),
@@ -192,7 +193,7 @@ def observe(root, operation, job, expected, repository, auth, *, read_record=Non
         commit = api('git/commits/' + actual)
         parents = commit.get('parents') if isinstance(commit, dict) else None
         require(isinstance(parents, list) and len(parents) == 1 and isinstance(parents[0], dict) and
-                commit.get('sha') == actual and parents[0].get('sha') == (expected or main),
+                commit.get('sha') == actual and parents[0].get('sha') == (expected or recovery_parent or main),
                 'Work ref changed; resume from the current record')
     elif operation == 'resume':
         require(actual == expected, 'Work ref changed; resume from the current record')
@@ -283,7 +284,7 @@ def catalog_writer(root, main):
 
 def metadata_commit(root, parent, files, message):
     """Construct from the expected remote tree. Never stage the actor's worktree."""
-    with tempfile.TemporaryDirectory(prefix='work-index-') as directory:
+    with tempfile.TemporaryDirectory(prefix='work-index-', dir=workspace.gitdir(root)) as directory:
         env = {**os.environ, 'GIT_INDEX_FILE': str(Path(directory) / 'index')}
         def git(*args, data=None):
             return subprocess.check_output(['git', '-C', str(root), *args], input=data, env=env).decode().strip()
@@ -313,7 +314,35 @@ def push_job(root, job, expected, *, repository=REPO, auth='env', token=None):
 
 
 def _push_job(root, job, expected, repository, auth):
-    main = observe(root, 'publish', job, expected, repository, auth)['main']
+    binding = workspace.read_binding(root)
+    if binding is None:
+        return _publish_draft(root, job, expected, repository, auth)
+    require(binding['role'] == 'job' and binding['job'] == job, 'Wrong publication worktree')
+    with writer(git_root(root) / 'authoring-builder.lock'):
+        return _publish_draft(root, job, expected, repository, auth, managed=True)
+
+
+def _publish_draft(root, job, expected, repository, auth, *, managed=False):
+    prior = previous_operation(root, job, expected) if managed else None
+    report = observe(root, 'publish', job, expected, repository, auth,
+                     recovery_parent=prior['parent'] if prior else None)
+    main = report['main']
+    operation = None
+    if prior and prior['confirmed'] and report['work_head'] != expected and not (workspace.gitdir(root) / JOURNAL).exists():
+        actual = report['work_head']
+        require(actual == prior['target'] == workspace.git(root, 'rev-parse', 'HEAD') and
+                workspace.git(root, 'write-tree') == workspace.git(root, 'rev-parse', actual + '^{tree}'),
+                'Different work generation after completed publication')
+        workspace.check_work(root, job)
+        source = GitSource(root)
+        require(io.read(root, current.path(job), MIB) == source.read(actual, current.path(job), MIB),
+                'Local draft changed; publish with the current work SHA')
+        return actual
+    if managed and prior:
+        operation = Publication(root, job, expected, main, report['work_head'])
+        if operation.value['confirmed']:
+            require(operation.target == report['work_head'], 'Confirmed remote commit changed')
+            return operation.finish(operation.target)
     name = current.path(job)
     raw = io.read(root, name, MIB)
     draft = current.compact(current.validate(io.json_bytes(raw, MIB)))
@@ -322,20 +351,28 @@ def _push_job(root, job, expected, repository, auth):
     transport.git(root, 'fetch', '--no-tags', '--', transport.REMOTE, main)
     transport.git(root, 'merge-base', '--is-ancestor', transport.CLEAN_MAIN, main)
     require(transport.remote_head(root, 'refs/heads/main') == main, 'Main advanced; refresh before acquiring the catalog lease')
+    if managed and operation is None:
+        operation = Publication(root, job, expected, main, report['work_head'])
     with catalog_writer(root, main):
-        return publish_locked(root, job, expected, main, checked)
+        actual = publish_locked(root, job, expected, main, checked, operation)
+        if operation:
+            require(actual == operation.bind(actual), 'Different published work commit')
+    return operation.finish(actual) if operation else actual
 
 
-def publish_locked(root, job, expected, main, checked):
+def publish_locked(root, job, expected, main, checked, operation=None):
     draft = checked.job
     branch = 'content/pw/' + job
     ref = 'refs/heads/' + branch
     actual = transport.remote_head(root, ref)
+    if operation is not None:
+        require(actual == expected or actual is not None and actual == operation.target,
+                'Work ref changed outside this local publication')
     tag = 'work-prod-' + job
     source = GitSource(root)
     if actual:
         transport.git(root, 'fetch', '--no-tags', '--', transport.REMOTE, actual)
-    parent = expected or main
+    parent = operation.value['parent'] if operation else expected or main
     previous_raw = source.read(parent, current.path(job), MIB, missing=True)
     previous = current.validate(io.json_bytes(previous_raw, MIB)) if previous_raw else None
     if actual != expected:
@@ -428,6 +465,8 @@ def publish_locked(root, job, expected, main, checked):
         index['entries'].sort(key=lambda e:(e['puzzle_id'],e['revision']))
         head = metadata_commit(root, parent, {current.path(job):encoded,current.INDEX:current.encoded(index)},
                                'Publish current ' + job)
+        if operation:
+            head = operation.bind(head)
         actual = transport.publish(root, branch, head, expected)
     require(actual and transport.remote_head(root, ref) == actual, 'Publication not confirmed')
     retained = {r['asset']['asset_id'] for r in current.references(result) if 'asset' in r}
@@ -461,6 +500,10 @@ def finish(root, job, expected, *, confirmed=False, repository=REPO, auth='env',
 
 
 def _finish(root, job, expected, confirmed, repository, auth):
+    binding = workspace.read_binding(root)
+    if binding is not None:
+        require(binding['role'] == 'job' and binding['job'] == job, 'Wrong retirement worktree')
+        require(not (workspace.gitdir(root) / JOURNAL).exists(), 'Finish the pending publish before retirement')
     # The pinned commit stays locally available after the remote branch is removed.
     def read_record(commit, job):
         source = GitSource(root, fetch_commit=lambda oid: transport.git(root, 'fetch', '--no-tags', '--', transport.REMOTE, oid))
@@ -563,24 +606,41 @@ def _resume(root, job, expected, repository, auth):
     require(transport.git(root, 'rev-parse', 'HEAD').decode().strip() == expected,
             'Use a dedicated worktree at the selected work commit')
     with writer(git_root(root) / 'authoring-builder.lock'):
-        raw = GitSource(root).read(expected, name, MIB)
-        record = current.validate(io.json_bytes(raw, MIB))
-        require(record['format'] in current.PUBLISHED_FORMATS, 'Bound external record required')
-        checked = current.Checked(record, lambda n, limit: io.read(root,n,limit))
-        draft = deepcopy(record)
-        draft['format'] = current.findings.LOCAL if record['format'] == current.findings.PUBLISHED else current.FORMAT
-        del draft['work_release']
-        for ref in current.references(draft):
-            if ref.pop('asset', None):
-                data = io.read(root,ref['file'],ref['bytes'],missing=True)
-                require(data in (None, checked.raw[ref['file']]), 'Local original changed')
-                if data is None:
-                    dest = io.safe(root, ref['file'])
-                    dest.parent.mkdir(parents=True,exist_ok=True)
-                    current._create(root,ref['file'],checked.raw[ref['file']])
-        local = io.read(root,name,MIB)
-        require(local in (raw,current.encoded(draft)), 'Local record changed')
-        current._atomic(root,name,current.encoded(draft))
+        binding = workspace.read_binding(root)
+        if binding is not None:
+            require(binding['role'] == 'job' and binding['job'] == job, 'Wrong resume worktree')
+            require(not (workspace.gitdir(root) / JOURNAL).exists(), 'Finish the pending publish first')
+            workspace.check_work(root, job)
+        return hydrate(root, job, expected)
+
+
+def hydrate(root, job, expected):
+    """Reconstruct a pinned draft using Git objects and the verified original reader."""
+    name = current.path(job)
+    raw = GitSource(root).read(expected, name, MIB)
+    record = current.validate(io.json_bytes(raw, MIB))
+    require(record['format'] in current.PUBLISHED_FORMATS, 'Bound external record required')
+    checked = current.Checked(record, lambda n, limit: io.read(root,n,limit))
+    draft = deepcopy(record)
+    draft['format'] = current.findings.LOCAL if record['format'] == current.findings.PUBLISHED else current.FORMAT
+    del draft['work_release']
+    assets = []
+    for ref in current.references(draft):
+        if ref.pop('asset', None):
+            assets.append(ref)
+    local = io.read(root, name, MIB)
+    require(local in (raw, current.encoded(draft)), 'Local record changed')
+    for ref in assets:
+        data = io.read(root, ref['file'], ref['bytes'], missing=True)
+        require(data in (None, checked.raw[ref['file']]), 'Local original changed')
+    for ref in assets:
+        dest = io.safe(root, ref['file'])
+        if not dest.exists():
+            dest.parent.mkdir(parents=True, exist_ok=True)
+            current._create(root, ref['file'], checked.raw[ref['file']])
+    require(io.read(root, name, MIB) == local, 'Local record changed during resume')
+    if local != current.encoded(draft):
+        current._atomic(root, name, current.encoded(draft))
     return name
 
 
@@ -593,6 +653,7 @@ def main():
     parser.add_argument('--auth', choices=AUTH_SOURCES, default='env',
                         help='Use the selected token source for REST, Git and original reads')
     parser.add_argument('--expected', required=True, help='Full published work commit (new only for first publication)')
+    parser.add_argument('--workspace', type=Path, help='Data worktree when run from the trusted tools checkout')
     args = parser.parse_args()
     diagnose = args.operation == 'preflight'
     if diagnose != (args.planned is not None):
@@ -601,7 +662,7 @@ def main():
     expected = None if args.expected == 'new' else args.expected
     if expected is None and operation != 'publish' or expected is not None and not transport.SHA.fullmatch(expected):
         parser.error('use --expected with a full commit SHA (new only for first publication)')
-    root = Path.cwd()
+    root = args.workspace or Path.cwd()
     try:
         token = select_token(args.auth)
         # The selected token is passed explicitly to REST and only the required

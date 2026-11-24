@@ -18,8 +18,7 @@ und [Dateiklassifikation](../../tools/ci_growth.py). Sie prüfen sämtliche
 ausgehenden Commits einschließlich Seitenlinien und benötigen dafür eine
 vollständige lokale Git-Datenbank. Diese darf mehreren Worktrees gemeinsam
 dienen; ein vollständiger eigener Clone je Arbeitsbaum ist keine Voraussetzung.
-Das freigegebene Soll zur produktionsbezogenen Wiederverwendung und zugehörigen
-Publisheränderungen steht in [PW-LOCAL](PRODUCTION_GIT_WORKSPACE.md).
+Der Einstieg für Produktionsworktrees und ihre Wiederaufnahme steht in [PW-LOCAL](PRODUCTION_GIT_WORKSPACE.md).
 Der direkte Connector-Weg prüft dagegen
 seinen **einzigen neuen Commit** auf dem frisch gelesenen `main` anhand des
 vollständigen Remote-Baums, des Diffs und seiner einzigen Elternbindung.

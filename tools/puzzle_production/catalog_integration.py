@@ -42,6 +42,12 @@ def integrate(export_dir, root, *, apply=False, fail_step=None, publication_seco
         require(same(snapshot.delivery, incoming), "Occupied ID differs; use the explicit revision operation")
         incoming.recheck(); snapshot.recheck()
         return {"status": "no-op", "registered": True, "id": entry["id"], "changes": [], "category": category}
+    if snapshot.tracked.names is not None:
+        from tools import production_git_workspace as workspace
+        binding = workspace.read_binding(snapshot.root)
+        if binding is not None:
+            require(binding['role'] == 'integration' and binding['job'] == entry['id'] and
+                    not workspace.changes(snapshot.root), 'Registration requires a clean bound integration worktree')
     method_record = catalog_method.from_bytes(snapshot.raw[catalog_method.PATH])
     require(rating.method(incoming.checked) == catalog_method.current(method_record)["method"], "New input requires current difficulty method")
     value = deepcopy(snapshot.registry)
