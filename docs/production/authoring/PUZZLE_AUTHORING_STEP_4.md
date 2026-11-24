@@ -11,6 +11,8 @@ Sicherung, Wiederaufnahme und Abschlussausgabe: Kern §§6–7.
 
 ### 6.3 Hintergrundarbeit in Schritt 4
 
+Für die gewählte Zeichnung kann ChatGPT Original und HP-W2-Ableitung über den [Remote-Originalabruf](../../tools/PW_REMOTE.md#originale-in-chatgpt-sichten) öffnen und die fälligen Urteile daran binden.
+
 1. Voraussetzung: tatsächliche Wahl eines vollständig qualifizierten Rasters.
    Danach Kontextbriefing und drei inhaltlich unterschiedliche echte
    ImageGen-Originale erzeugen. Reine Format-/Auflösungsvarianten zählen nicht

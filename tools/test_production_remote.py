@@ -1,5 +1,6 @@
 """Synthetic PW-REMOTE-A transport. Git, asset bytes, proof and registration are real locally."""
 from copy import deepcopy
+from datetime import datetime, timedelta, timezone
 import os
 from pathlib import Path
 import subprocess
@@ -7,6 +8,7 @@ import unittest
 from unittest.mock import patch
 
 from tools import production_remote as remote, production_remote_pr as prs, publish_git as git, work_publish as pw
+from tools import production_remote_delivery as delivery, production_remote_inspect as inspect
 from tools import test_work_publish as publication
 from tools.production_workspace.sources import GitSource
 from tools.puzzle_production import catalog_io as io, current_authoring as current
@@ -135,6 +137,7 @@ class RemoteTests(unittest.TestCase):
         f.raster_ready()
         options = background_offer(f)
         before = pw.push_job(f.root, self.job, None)
+        self.check_background_delivery(before, options)
         req = self.req('step5', before, options, issue=1)
         missing_view = {k: v for k, v in options.items() if k != 'prepared_review'}
         cases = [(missing_view, 'Actual prepared background review'),
@@ -206,7 +209,17 @@ class RemoteTests(unittest.TestCase):
         current_ref = 'refs/heads/content/pw/' + self.job
         self.assertEqual(git.remote_head(self.repo, current_ref), second)
 
-        # The actor now inspects and selects this actual offer. Supply final decisions separately.
+        review = {'candidate': 'remote', 'definition_sha256': step3['files']['definition']['sha256'],
+                  'preview_sha256': step3['files']['preview']['sha256'], 'ready': True,
+                  'observations': [], 'review': fixtures.judgment(current.CRITERIA['raster'])}
+        bad = self.req('step3', second, {'assessment': {**review, 'preview_sha256': '0' * 64}})
+        with self.assertRaisesRegex(ValueError, 'Different published raster'):
+            self.execute(bad)
+        assessed = self.execute(self.req('step3', second, {'assessment': review}))['work']
+        self.assertEqual(pw.bound_record(self.read_record(assessed, self.job), self.job)['budgets'],
+                         pw.bound_record(self.read_record(second, self.job), self.job)['budgets'])
+        second = assessed
+        # The actor now selects this assessed offer. Supply final decisions separately.
         actor = f.work / 'actor'
         actor.mkdir()
         paths = remote.ws.prepare(actor, self.job, self.main, self.main, second, originals=True)
@@ -270,6 +283,73 @@ class RemoteTests(unittest.TestCase):
         self.assertIsNone(self.fixture.release)
         self.assertIsNone(git.remote_head(self.repo, current_ref))
         self.assertIsNone(git.remote_head(self.repo, 'refs/tags/work-prod-' + self.job))
+
+
+    def check_background_delivery(self, work, options):
+        from zipfile import ZipFile, ZipInfo
+        from tools import work_refs
+        req = self.req('inspect', work, {'items': [{'role': r, 'candidate': 'sky'} for r in ('background', 'prepared')]})
+        raw = self.read_record(work, self.job)
+        ctx = delivery.context(req, 'b' * 40, 42, 2, 40, 1)
+        self.fixture.repository['id'] = delivery.REPOSITORIES[pw.REPO]
+        lock = 'refs/heads/' + pw.release_catalog.LOCK_BRANCH
+        fixtures.git(self.repo, 'update-ref', lock, self.main)
+        with patch.object(work_refs, 'FIXTURE', True), patch.object(work_refs, 'TEST_JOB', self.job):
+            _, record, release = inspect.bound(self.repo, req)
+            with self.assertRaisesRegex(ValueError, 'Stale record'):
+                inspect.bound(self.repo, {**req, 'record_sha256': '0' * 64})
+            with patch.dict(release, id=release['id'] + 1), patch.object(pw, 'api', side_effect=lambda path:
+                    release if path.startswith('releases/') else self.api(path)), self.assertRaises(ValueError):
+                inspect.bound(self.repo, req)
+        files = self.f.work / 'delivery'
+        reads = []
+        def read(ref):
+            reads.append(ref['asset']['asset_id'])
+            return self.fixture.assets[reads[-1]]
+        info = inspect.stage(req, record, ctx, files, read, lambda: None)
+        self.assertEqual((info['original_count'], len(reads)), (1, 1))
+        self.assertEqual(io.checksum((files / 'prepared.png').read_bytes()), options['prepared_review']['sha256'])
+        self.assertEqual(git.remote_head(self.repo, lock), self.main)
+        self.assertEqual(git.remote_head(self.repo, 'refs/heads/content/pw/' + self.job), work)
+        fixtures.git(self.repo, 'update-ref', '-d', lock, self.main)
+        for role, candidate in [('motif', 'sky'), ('prepared', 'absent'), ('command', 'sky')]:
+            with self.assertRaises(ValueError):
+                delivery.sources({**req, 'input': {'items': [{'role': role, 'candidate': candidate}]}}, record)
+        archive = self.f.work / 'actual.zip'
+        now = datetime.now(timezone.utc)
+        def pack(extra=None):
+            with ZipFile(archive, 'w') as zipfile:
+                for path in files.iterdir():
+                    if extra == 'symlink' and path.name == 'prepared.png':
+                        link = ZipInfo(path.name)
+                        link.external_attr = 0o120777 << 16
+                        zipfile.writestr(link, path.read_bytes())
+                    else:
+                        zipfile.write(path, path.name)
+                if extra and extra != 'symlink':
+                    zipfile.writestr(extra, b'foreign')
+            return {'id': 11, 'name': delivery.artifact_name(ctx), 'expired': False,
+                    'workflow_run': {'id': 42, 'head_sha': req['main'], 'head_branch': 'main',
+                                     'repository_id': ctx['repository_id'], 'head_repository_id': ctx['repository_id']},
+                    'created_at': now.isoformat(), 'expires_at': (now + timedelta(days=1)).isoformat(),
+                    'size_in_bytes': archive.stat().st_size, 'digest': 'sha256:' + io.checksum(archive.read_bytes())}
+        def verify(row, **args):
+            return delivery.verify_archive(archive, row, ctx, req, raw, artifact_id=11, **args)
+        meta = pack()
+        for change in ({'name': 'wrong-attempt'}, {'size_in_bytes': 1}, {'expired': True},
+                       {'id': 12}, {'digest': 'sha256:' + '0' * 64}):
+            with self.assertRaises(ValueError):
+                verify({**meta, **change})
+        output = self.f.work / 'opened'
+        files_checked = verify(meta, output=output)['files']
+        self.assertEqual([f['role'] for f in files_checked], ['background', 'prepared'])
+        self.assertEqual((output / 'prepared.png').read_bytes(), (files / 'prepared.png').read_bytes())
+        for extra in ('../foreign', 'extra.json', 'symlink', 'manifest.json'):
+            with self.assertRaisesRegex(ValueError, 'archive members'):
+                verify(pack(extra))
+        (files / 'background.png').write_bytes(b'different')
+        with self.assertRaisesRegex(ValueError, 'member length|member bytes'):
+            verify(pack())
 
 
 class RequestRefTests(unittest.TestCase):

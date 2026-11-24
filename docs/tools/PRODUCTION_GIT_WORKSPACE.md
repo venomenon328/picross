@@ -50,6 +50,8 @@ SHA dieses sauberen Integrationsworktrees und denselben geprüften Eingang.
 Produkt-PR, Mergefreigabe und Retirement folgen dem Auftrag für den Job.
 Der [Remote-Einstieg](PW_REMOTE.md) verwendet diese Arbeitsplätze für die gebundene Rasterproduktion und die Erstintegration. Seine Betriebsabnahme verlangt den isolierten Remote-Durchstich.
 
+Zur Sichtung oder Wiederaufnahme ohne eigenen Gitstore dient der [gebundene Originalabruf](PW_REMOTE.md#originale-in-chatgpt-sichten).
+
 ## 1. Gemeinsame Basis und stabile Arbeitsorte
 
 Je Repository und tatsächlicher lokaler Arbeitswurzel eine eigene gemeinsame

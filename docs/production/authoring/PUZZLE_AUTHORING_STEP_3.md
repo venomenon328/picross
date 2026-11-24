@@ -10,6 +10,8 @@ Sichtung, §6 bei konkreter Ausnahme. Farbe: operative §§8.4–8.5;
 
 ## 4. Rasterproduktion und technische Pflichtprüfung
 
+Wenn ChatGPT die gebundenen Motiv- oder Rasterbytes fehlen, öffnet der Akteur sie über den [Remote-Originalabruf](../../tools/PW_REMOTE.md#originale-in-chatgpt-sichten). Die Sichtung des publizierten Rasters und seiner Zell-/Hinweisansicht gehört vor die Angebotsqualifikation.
+
 Rasterprüfung hat einen eigenen Gegenstand. Hintergründe liefern keine Zellwerte
 und werden nicht durch Solvererfolg freigegeben. Für 0.8.0 ist vollständig
 qualifiziertes raster_ready ohne Hintergrund zulässig; content_ready setzt später

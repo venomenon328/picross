@@ -203,6 +203,8 @@ von GitHub gelieferte signierte Download-URL. Release- und Asset-ID, Name, Grö�
 und SHA-256 bleiben verbindlich. Der [Remote-Einstieg](PW_REMOTE.md) bindet den vollständigen Record und dieselben Reader an den Auftrag. Ein vollständiger Remote-Abschluss aus ChatGPT
 mit Produkt-PR und CI ist ein gesonderter Betriebsnachweis.
 
+Ein frischer Chat kann die ausgewählten Originale dieses Records, HG31-Ableitung und Rasteransichten über den [gebundenen Actions-Abruf](PW_REMOTE.md#originale-in-chatgpt-sichten) öffnen.
+
 Der gemeinsame Index enthält nur `puzzle_id,revision,record`-Verweise nach
 Index v1. Aktuelle Records verwenden revision=current. Keine workspace.json
 oder current-view.json pro aktuellem Job: Liste, Bilder, Angebote und Folgeauftrag
