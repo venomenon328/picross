@@ -189,6 +189,23 @@ def smoke(archive, destination):
                 child.kill(); child.wait(timeout=10)  # Only exact synthetic children created above.
 
 
+def check_raster_data_tree(repo, commit_id):
+    from tools.puzzle_production.catalog_integration import TEST_CATALOG, check_test_catalog
+
+    if git(repo, 'rev-parse', 'HEAD').decode('ascii').strip() != commit_id:
+        raise RuntimeError('Synthetischer Datencheckout steht auf einem anderen Commit als erwartet.')
+    check_test_catalog(repo)
+
+    raw = git(repo, 'ls-tree', '-rz', '--name-only', commit_id)
+    paths = raw.decode('utf-8', errors='surrogateescape').split('\0')[:-1]
+    for name in paths:
+        if name == TEST_CATALOG[0]:
+            continue
+        if not name.startswith(('content/', 'game/data/')) or Path(name).suffix not in {'.json', '.png'}:
+            raise RuntimeError(f'Synthetischer Datencheckout enthält eine fremde Datei: {name!r}')
+    return paths
+
+
 def raster_fixture(repo, root):
     from tests.puzzle_production.current_fixtures import checkout, make, put
     from tests.puzzle_production.test_current_authoring import decide, judgment
@@ -235,11 +252,7 @@ def raster_fixture(repo, root):
         entries.append({'puzzle_id': identifier, 'revision': 'current', 'record': name})
     put(repo, current.INDEX, current.encoded({'format': 'picross-authoring-index-v1', 'entries': entries}))
     commit_id = commit(repo)
-    paths = git(repo, 'ls-tree', '-r', '--name-only', commit_id).decode().splitlines()
-    if not paths or any(not name.startswith(('content/', 'game/data/')) or Path(name).suffix not in {'.json', '.png'}
-                        for name in paths):
-        raise RuntimeError('Synthetischer Datencheckout enthält ausführbare Quellen oder fremde Ressourcen.')
-    return commit_id, paths, entries
+    return commit_id, check_raster_data_tree(repo, commit_id), entries
 
 
 def start_frozen(app, state, work, *extra):

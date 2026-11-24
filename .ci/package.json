@@ -11,7 +11,7 @@
     {
       "path": "tools/test_production_installer.py",
       "disposition": "change-scoped",
-      "reason": "Explizite Writer-Exklusion und PYZ-Guard für beide Hilfstools prüfen."
+      "reason": "Writer-Exklusion und PYZ-Guard für beide Hilfstools prüfen. Die PW-Rasterfixture für 0.3 und 0.4 mit kanonischem Testmarker sowie Gegenproben für fehlende oder falsche Marker und fremde Git-Pfade ausführen."
     },
     {
       "path": "tools/test_editor_installer.py",
