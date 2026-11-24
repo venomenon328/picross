@@ -17,6 +17,11 @@ func acquire() -> bool:
 	if locked or not Recent.safe_file(path) or not Recent.safe_file(path + ".tmp"):
 		return false
 	locked = DirAccess.make_dir_absolute(lock_path) == OK
+	if locked and OS.get_name() == "Windows":
+		# Start profile I/O only after any previously admitted Windows exchange
+		# has finished. A closed client pipe precludes any later admission.
+		var publisher := Recent.windows_publisher()
+		if publisher == null or not publisher.fence(): release()
 	return locked
 
 func release() -> void:
@@ -61,10 +66,21 @@ func publish(state: Dictionary) -> bool:
 	if file == null:
 		return false
 	var bytes := raw.to_utf8_buffer()
+	var publisher := Recent.windows_publisher() if OS.get_name() == "Windows" else null
+	if OS.get_name() == "Windows" and (publisher == null or not publisher.hold(temporary)):
+		file.close()
+		return false
 	var written := file.store_buffer(bytes)
 	file.flush()
 	var error := file.get_error()
 	file.close()
+	if publisher != null:
+		var expected := raw.sha256_text()
+		if not written or error != OK or not publisher.replace(temporary, path, exists, expected):
+			publisher.drop()
+			return false
+		digest = expected
+		return true
 	if not written or error != OK or FileAccess.get_file_as_bytes(temporary) != bytes:
 		return false
 	if not Recent.new(path)._replace(temporary, exists) or FileAccess.get_file_as_bytes(path) != bytes:

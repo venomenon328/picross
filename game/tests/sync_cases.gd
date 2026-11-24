@@ -3,6 +3,7 @@ const Profile = preload("res://model/account_profile.gd")
 const Protocol = preload("res://model/sync_protocol.gd")
 const Store = preload("res://model/save_store.gd")
 const Session = preload("res://model/session.gd")
+const Publisher = preload("res://model/windows_publisher.gd")
 const HOST = "https://sync.example.invalid"
 const ACCOUNT = "10000000-0000-4000-8000-000000000001"
 const OTHER = "10000000-0000-4000-8000-000000000002"
@@ -53,6 +54,7 @@ static func run(t: SceneTree) -> void:
 	var host := HOST + "/core"
 	t.check(p.open(host,ACCOUNT,DEVICE,EPOCH,true,adapter),"B1 native initialization")
 	t.check(b.open(host,OTHER,DEVICE,EPOCH,true) and c.open(HOST+"/other",ACCOUNT,DEVICE,EPOCH,true),"B1 independent accounts and servers")
+	if OS.get_name() == "Windows": publisher_timeout(t, Session.new(t.fixture))
 	t.check(not Profile.new().open(host,"../x",DEVICE,EPOCH,true),"B1 unsafe identity")
 	var b_hash := FileAccess.get_sha256(b._journal.path)
 	var c_hash := FileAccess.get_sha256(c._journal.path)
@@ -114,6 +116,119 @@ static func run(t: SceneTree) -> void:
 		rejected.sequence_consumed = not rejected.sequence_consumed
 		t.check(not Protocol.valid_reply(request,409,rejected),"B1 inconsistent consumption " + code)
 	if t.failures == start: print("SYNC_PROGRESS_CORE_OK")
+
+static func publisher_timeout(t: SceneTree, session: Session) -> void:
+	var host := HOST + "/publisher-timeout"
+	var old := Profile.new()
+	if not old.open(host,ACCOUNT,DEVICE,EPOCH,true):
+		t.check(false,"SYNC-PERF timeout profile opens")
+		return
+	var journal: String = old._journal.path
+	var before := FileAccess.get_file_as_bytes(journal)
+	var delayed := Publisher.new()
+	var source: String = Publisher.COMMAND.replace("    $ok = $false", """
+    if ($flags -eq '9') {
+        [IO.File]::WriteAllText($target + '.tmp', 'occupied')
+        [IO.File]::WriteAllText($target + '.entered-test', $source)
+        while (![IO.File]::Exists($target + '.release-test') -and !$owner.HasExited) {
+            [Threading.Thread]::Sleep(10)
+        }
+    }
+    $ok = $false""")
+	delayed._start(source)
+	var publisher := Store.SaveRevision.Recent.windows_publisher()
+	var live: Dictionary = publisher.child
+	publisher.child = delayed.child
+	publisher.available = delayed.available
+	session.player.commit([{"index":0,"before":-1,"after":0}])
+	var failed := old.save(session,session.view_state)
+	publisher.child = live
+	publisher.available = true
+	publisher.set_process(false)
+	var stranded := FileAccess.get_file_as_string(journal + ".entered-test").replace("\\","/")
+	t.check(failed == 0 and FileAccess.file_exists(stranded) and FileAccess.get_file_as_string(journal+".tmp") == "occupied"
+		and FileAccess.get_file_as_bytes(journal) == before and old.load_slot(session.definition).status == "error",
+		"SYNC-PERF expired request reports failure with the old candidate still present and no local generation")
+	var newer := Profile.new()
+	t.check(newer.open(host,ACCOUNT,DEVICE,EPOCH),"SYNC-PERF competing writer acquires the released profile")
+	session.player.commit([{"index":1,"before":-1,"after":1}])
+	var version := newer.save(session,session.view_state)
+	var confirmed := FileAccess.get_sha256(journal)
+	write(journal+".release-test","released")
+	await_worker_exit(delayed)
+	var reader := Profile.new()
+	var readable := reader.open(host,ACCOUNT,DEVICE,EPOCH)
+	var restored := reader.load_slot(session.definition) if readable else {}
+	t.check(not OS.is_process_running(delayed.child.pid) and FileAccess.file_exists(stranded)
+		and FileAccess.get_sha256(journal) == confirmed and version == 1 and readable
+		and reader.locally_confirmed(1) and reader.status().intent.is_empty()
+		and restored_slot(restored, session, 2),
+		"SYNC-PERF late publisher cannot overwrite the independently reopened newer journal and Primary")
+	delayed._exit_tree()
+	delayed.free()
+
+	# Lose the second acknowledgement only: its Primary and confirmed journal
+	# are already durable, but the initiating caller still must report failure.
+	var lost := Publisher.new()
+	var after_move: String = Publisher.COMMAND.replace("$held = $null\nwhile", "$held = $null\n$moves = 0\nwhile")
+	after_move = after_move.replace("    [Console]::WriteLine($id + ' ' + [int]$ok)", """
+    if ($flags -eq '9' -and $ok) {
+        $moves += 1
+        if ($moves -eq 2) {
+            [IO.File]::WriteAllText($target + '.moved-test', 'moved')
+            [Threading.Thread]::Sleep(2600)
+        }
+    }
+    [Console]::WriteLine($id + ' ' + [int]$ok)""")
+	lost._start(after_move)
+	publisher.child = lost.child
+	publisher.available = lost.available
+	session.player.commit([{"index":2,"before":-1,"after":0}])
+	failed = newer.save(session,session.view_state)
+	publisher.child = live
+	publisher.available = true
+	publisher.set_process(false)
+	var reopened := Profile.new()
+	readable = reopened.open(host,ACCOUNT,DEVICE,EPOCH)
+	restored = reopened.load_slot(session.definition) if readable else {}
+	t.check(failed == 0 and FileAccess.file_exists(journal+".moved-test") and readable
+		and reopened.locally_confirmed(2) and reopened.status().intent.is_empty()
+		and restored_slot(restored, session, 3),
+		"SYNC-PERF lost acknowledgement never confirms to the caller and reopening reads the completed generation")
+	await_worker_exit(lost)
+	lost._exit_tree()
+	lost.free()
+
+	var target := old._root.path_join("recent-puzzle.json")
+	var previous := JSON.stringify({"format":Store.SaveRevision.Recent.FORMAT,"id":"T-01","revision":1})
+	var latest := JSON.stringify({"format":Store.SaveRevision.Recent.FORMAT,"id":"T-04","revision":1})
+	write(target,previous)
+	write(target+".tmp",previous)
+	var marker := Publisher.new()
+	marker._start(source)
+	t.check(not marker.replace(target+".tmp",target,true),"SYNC-PERF marker reports the same lost publication")
+	write(target+".tmp",latest)
+	t.check(not publisher.replace(target+".tmp",target,false) and publisher.replace(target+".tmp",target,true),
+		"SYNC-PERF create-only preserves the existing marker and replacement publishes newer bytes")
+	t.check(not publisher.clear(target,previous.sha256_text()) and publisher.clear(target,latest.sha256_text()),
+		"SYNC-PERF marker removal compares the current bytes inside the publication gate")
+	write(target+".release-test","released")
+	await_worker_exit(marker)
+	t.check(not FileAccess.file_exists(target),"SYNC-PERF late marker publication cannot undo a newer deletion")
+	marker._exit_tree()
+	marker.free()
+
+static func restored_slot(restored: Dictionary, session: Session, cursor: int) -> bool:
+	if restored.get("status") != "loaded": return false
+	var independent := Session.new(session.definition)
+	Store.apply(restored.data, independent)
+	return independent.player.cursor == cursor and independent.player.cells == session.player.cells
+
+static func await_worker_exit(publisher: Publisher) -> void:
+	if publisher.child.is_empty(): return
+	var deadline := Time.get_ticks_msec()+5000
+	while OS.is_process_running(publisher.child.pid) and Time.get_ticks_msec()<deadline:
+		OS.delay_msec(5)
 
 static func basis_and_schedule(t: SceneTree, p: Profile, source: Session) -> void:
 	var slot := Session.new(source.definition)

@@ -180,7 +180,8 @@ func account_checkpoint(stage: String, number: int) -> Dictionary:
 		if number == 11 and account.prepare(version,7).is_empty(): return {"error":"account prepare"}
 	elif number == 15:
 		var loaded := account.load_slot(app.session.definition)
-		if loaded.status != "loaded": return {"error":"account restart"}
+		if loaded.status != "loaded" or not account.locally_confirmed(3) or not account.status().intent.is_empty():
+			return {"error":"account restart with unconfirmed primary or outstanding intent"}
 		restored = Session.new(app.session.definition)
 		SaveStore.apply(loaded.data,restored)
 	elif number == 16:

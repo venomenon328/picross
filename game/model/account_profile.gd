@@ -237,8 +237,9 @@ func save(session: Session, view: Dictionary) -> int:
 	var candidate := _store.slot_snapshot(session,view)
 	var key := _store.key_for_definition(str(session.definition.id)) if _store else ""
 	if key.is_empty() or not Store.validate_account(candidate, Definition.load_fixture(key)).is_empty() or not _begin(): return 0
+	var verified := {}
 	var version := _change_slot(key, {"id":session.definition.id,"operation":"snapshot","value":candidate},
-		func() -> String: return _store._write_slot(session,view))
+		func() -> String: return _store._write_slot(session,view,verified), verified)
 	_journal.release()
 	return _confirm(version)
 
@@ -337,7 +338,7 @@ func discard_invalid_backup(definition: Dictionary) -> bool:
 	_journal.release()
 	return ok
 
-func _change_slot(key: String, entry: Dictionary, action: Callable) -> int:
+func _change_slot(key: String, entry: Dictionary, action: Callable, verified: Dictionary = {}) -> int:
 	_last_error = ""
 	if not _safe_slot(key) or _state.local >= Protocol.MAX_INTEGER:
 		_last_error = "Slotpfad oder Generationsgrenze ungültig."
@@ -370,7 +371,7 @@ func _change_slot(key: String, entry: Dictionary, action: Callable) -> int:
 		else:
 			_blocked = "Unterbrochene Speicherung; erneut öffnen."
 		return 0
-	if not _recover_intent(): return 0
+	if not _recover_intent(verified): return 0
 	return int(entry.local)
 
 func _slot_hashes(key: String) -> Array:
@@ -379,20 +380,25 @@ func _slot_hashes(key: String) -> Array:
 		hashes.append(Store.SaveRevision.hash_file(_store.path_for(key,suffix)))
 	return hashes
 
-func _matches_primary(entry: Dictionary) -> bool:
+func _matches_primary(entry: Dictionary, verified: Dictionary) -> bool:
 	var key := _store.key_for_definition(str(entry.id))
 	if not _safe_slot(key): return false
 	if entry.operation == "reset":
 		for suffix: String in Store.SaveRevision.SUFFIXES:
 			if FileAccess.file_exists(_store.path_for(key,suffix)): return false
 		return true
-	var primary := _store._parse(_store.path_for(key), Definition.load_fixture(key))
-	return FileAccess.get_sha256(_store.path_for(key)) == entry.get("primary_sha256") and primary.status == "valid" and primary.data == JSON.parse_string(JSON.stringify(entry.value,"",true,true))
+	var path := _store.path_for(key)
+	if OS.get_name() == "Windows" and not verified.is_empty():
+		# Same locked transaction. The receipt covers the actual Primary
+		# bytes and their complete, strictly validated local snapshot.
+		return verified.path == path and verified.sha256 == entry.primary_sha256
+	var primary := _store._parse(path, Definition.load_fixture(key))
+	return FileAccess.get_sha256(path) == entry.get("primary_sha256") and primary.status == "valid" and primary.data == JSON.parse_string(JSON.stringify(entry.value,"",true,true))
 
-func _recover_intent() -> bool:
+func _recover_intent(verified: Dictionary = {}) -> bool:
 	if _state.intent.is_empty(): return true
 	var entry: Dictionary = _state.intent
-	if not _matches_primary(entry):
+	if not _matches_primary(entry, verified):
 		_blocked = "Spielstand und Schreibabsicht erfordern Wiederherstellung."
 		return false
 	var next := _state.duplicate(true)
