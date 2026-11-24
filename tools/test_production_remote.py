@@ -292,6 +292,69 @@ class RemoteTests(unittest.TestCase):
         self.assertIsNone(git.remote_head(self.repo, 'refs/tags/work-prod-' + self.job))
 
 
+    def test_bound_crop_originals_round_trip(self):
+        from zipfile import ZipFile
+        from tools import work_refs
+
+        f = self.f
+        f.diagnostic_job()
+        f.publish()
+        work = pw.push_job(f.root, self.job, None)
+        roles = ('crop-before', 'crop-preview', 'crop-protection', 'definition', 'preview')
+        req = self.req('inspect', work, {'items': [{'role': role, 'candidate': 'raster-b'} for role in roles]})
+        ctx = delivery.context(req, 'b' * 40, 42, 2, 40, 1)
+        self.fixture.repository['id'] = ctx['repository_id']
+        with patch.object(work_refs, 'FIXTURE', True), patch.object(work_refs, 'TEST_JOB', self.job):
+            raw, record, release = inspect.bound(self.repo, req)
+            with self.assertRaisesRegex(ValueError, 'Stale record'):
+                inspect.bound(self.repo, {**req, 'record_sha256': '0' * 64})
+            staged = f.work / 'crop-delivery'
+
+            def read(ref):
+                return inspect.work_assets.read(ref, 64 * current.LIMIT, releases={release['tag_name']: release})
+
+            info = inspect.stage(req, record, ctx, staged, read, lambda: inspect.bound(self.repo, req))
+        self.assertEqual(info['original_count'], len(roles))
+        raster = next(r for r in record['rasters'] if r['id'] == 'raster-b')
+        crop = raster['crop_diagnosis']
+        originals = {'crop-before.json': crop['before'], 'crop-preview.png': crop['preview'],
+                     'crop-protection.json': crop['protection'], 'definition.json': raster['definition'],
+                     'preview.png': raster['preview']}
+        archive = f.work / 'crop.zip'
+        with ZipFile(archive, 'w') as bundle:
+            for path in staged.iterdir():
+                bundle.write(path, path.name)
+        now = datetime.now(timezone.utc)
+        artifact = {'id': 11, 'name': delivery.artifact_name(ctx), 'expired': False,
+                    'workflow_run': {'id': ctx['run'], 'head_sha': req['main'], 'head_branch': 'main',
+                                     'repository_id': ctx['repository_id'], 'head_repository_id': ctx['repository_id']},
+                    'created_at': now.isoformat(), 'expires_at': (now + timedelta(days=1)).isoformat(),
+                    'size_in_bytes': archive.stat().st_size, 'digest': 'sha256:' + io.checksum(archive.read_bytes())}
+        repo = {'full_name': req['repository'], 'id': ctx['repository_id']}
+        run = {'repository': repo, 'head_repository': repo, 'status': 'completed', 'conclusion': 'success'}
+        trigger = {**run, 'id': ctx['trigger'], 'run_attempt': ctx['trigger_attempt'], 'head_sha': ctx['commit'],
+                   'event': 'push', 'head_branch': ctx['ref'], 'path': '.github/workflows/work-growth.yml'}
+        worker = {**run, 'id': ctx['run'], 'run_attempt': ctx['attempt'], 'head_sha': req['main'],
+                  'event': 'workflow_run', 'head_branch': 'main', 'path': '.github/workflows/pw-remote.yml',
+                  'display_title': 'PW remote ' + ctx['ref']}
+        output = f.work / 'opened-crop'
+        manifest = delivery.consume(req, raw, trigger, worker, artifact, archive, output)
+        self.assertEqual({entry['file']: entry['source'] for entry in manifest['files']}, originals)
+        self.assertEqual({path.name: path.read_bytes() for path in output.iterdir()},
+                         {name: f.payload[Path(ref['file']).name] for name, ref in originals.items()})
+
+        for role, candidate, error in [('crop-original', 'raster-b', 'Unknown or duplicate delivery role'),
+                                       ('crop-before', 'raster-a', 'Requested original unavailable')]:
+            with self.subTest(role=role, candidate=candidate), self.assertRaisesRegex(ValueError, error):
+                delivery.sources({**req, 'input': {'items': [{'role': role, 'candidate': candidate}]}}, record)
+        for role, wrong in [('before', crop['preview']), ('preview', crop['before']), ('protection', crop['preview'])]:
+            with self.subTest(role=role), patch.dict(crop, {role: wrong}), self.assertRaisesRegex(
+                    ValueError, 'Unexpected delivery media type'):
+                delivery.sources(req, record)
+        with self.assertRaisesRegex(ValueError, 'Different original'):
+            inspect.stage(req, record, ctx, f.work / 'stale-crop', lambda ref: read(ref) + b'changed', lambda: None)
+        self.assertFalse((f.work / 'stale-crop').exists())
+
     def check_background_delivery(self, work, options):
         from zipfile import ZipFile, ZipInfo
         from tools import work_refs

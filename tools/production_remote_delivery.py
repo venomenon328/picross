@@ -123,8 +123,12 @@ def sources(req, record):
             require(ref['file'].startswith('content/authoring/' + req['job'] + '/') and 'asset' in ref,
                     'Expected a release original belonging to this production job')
         suffix = Path(ref['file']).suffix.lower() if derive is None else '.png'
-        allowed = {'.json'} if role in ('proof', 'difficulty', 'definition', 'product-definition') else {
-            '.png', '.jpg', '.jpeg', '.webp', '.svg'}
+        if role in ('proof', 'difficulty', 'definition', 'product-definition', 'crop-before', 'crop-protection'):
+            allowed = {'.json'}
+        elif role == 'crop-preview':
+            allowed = {'.png'}
+        else:
+            allowed = {'.png', '.jpg', '.jpeg', '.webp', '.svg'}
         require(suffix in allowed, 'Unexpected delivery media type')
         rows.append({**item, 'file': role + suffix, 'source': ref, 'derive': derive, 'profile': profile})
     return rows
