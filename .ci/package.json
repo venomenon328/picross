@@ -1,22 +1,25 @@
 {
   "format": "development-ci-plan/v1",
-  "issue": "https://github.com/venomenon328/picross/issues/859",
-  "package": "PW-REMOTE-A",
+  "issue": "https://github.com/venomenon328/picross/issues/881",
+  "package": "APP-FROZEN-FIX",
   "modules": [
-    "tools",
-    "production.adapter",
-    "production.catalog"
+    "tools"
   ],
-  "purpose": "Gebundene Remote-Schritte 3 und 5, atomare Produktpublikation, PR-/CI-Zuordnung und separates Retirement prüfen. T01 synthetisch, T02 separat im ausdrücklich freigegebenen Testkontext.",
-  "omitted": "Solver-, Bild-, Spiel-, Server-, Browser- und Auslieferungslogik bleiben unverändert. Regulärer Windows-x64-Bau für Werkzeugcode.",
+  "purpose": "PW/PE-Frozen-Importgrenzen und gemeinsamen Reader-Fingerprint korrigieren; tatsächliche MSI-Diagnosen getrennt.",
+  "omitted": "Keine Spiel-, Solver-, Adapter-, Katalog-, Server- oder Browserlogik geändert; regulärer Windows-Playerbau bleibt Pflicht.",
   "test_changes": [
     {
-      "path": "tools/test_production_remote.py",
+      "path": "tools/test_production_installer.py",
       "disposition": "change-scoped",
-      "reason": "Echte lokale Git-Transaktionen und synthetische Originale über den Remote-Einstieg prüfen, einschließlich konkurrierender Refs, Antwortverlust, CI-Bindung, Leasebesitz und wiederholtem Retirement. Der v3-Fall prüft die gewählte HG31-Ableitung mit Befundannahme und offene Rest-Assets nach bestätigtem Doppelpush."
+      "reason": "Explizite Writer-Exklusion und PYZ-Guard für beide Hilfstools prüfen."
+    },
+    {
+      "path": "tools/test_editor_installer.py",
+      "disposition": "change-scoped",
+      "reason": "PE-Fingerprint und strikte Analysis-Prüfung des gemeinsamen Readerinputs nachweisen."
     }
   ],
-  "core_change": "Der vorhandene Checkout-Schritt in docs nennt bei PRs Nummer, Head, Basis und ausgecheckten Testmerge zur eindeutigen Zuordnung über die Actions-Jobs-API.",
+  "core_change": null,
   "evidence": {
     "mode": "none",
     "purpose": null,

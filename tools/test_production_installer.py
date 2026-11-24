@@ -668,6 +668,26 @@ class AppReleaseTests(unittest.TestCase):
         self.assertFalse(set(build_windows.PE_WORKSPACE_EXCLUDES) &
                          {Path(name).stem for name in payload.PE_SHARED if name.endswith('.py')})
 
+    def test_production_writers_excluded_from_frozen_apps_not_fingerprinted(self):
+        from tools.app_products import PE, PG, PW
+        from tools.production_workspace import build_windows
+        expected = {
+            'tools.production_git_workspace', 'tools.production_worktree_publish',
+            'tools.publish_git', 'tools.work_publish', 'tools.production_remote',
+            'tools.production_remote_pr', 'tools.production_remote_steps',
+        }
+        self.assertEqual(set(build_windows.PRODUCTION_WRITER_EXCLUDES), expected)
+        for app in (PW, PE):
+            with self.subTest(app=app.key):
+                self.assertTrue(expected <= set(build_windows.frozen_excludes(app)))
+                self.assertTrue(payload.selected('tools/work_refs.py', app=app))
+                for name in expected:
+                    self.assertFalse(payload.selected(name.replace('.', '/') + '.py', app=app))
+                    with self.assertRaisesRegex(RuntimeError, 'Produktionswriter'):
+                        build_windows.verify_no_production_writers({name}, app)
+                build_windows.verify_no_production_writers({'tools.work_refs'}, app)
+        self.assertEqual(build_windows.frozen_excludes(PG), build_windows.FROZEN_EXCLUDES)
+
     def test_unknown_inputs_and_actual_collector_drift_are_errors(self):
         from tools.production_workspace import build_windows
         self.assertEqual(build_windows.FROZEN_EXCLUDES, ('tools.puzzle_production.za1_fixtures', 'tests'))

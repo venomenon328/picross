@@ -53,7 +53,7 @@ PE_DIAGNOSTIC = {'diagnostic.py', 'frozen_diagnostic.py'}
 
 
 def pe_selected(path):
-    if path in {'tools/__init__.py', 'tools/app_products.py', 'tools/msi_database.py', '.github/workflows/pe-installer.yml'}:
+    if path in {'tools/__init__.py', 'tools/app_products.py', 'tools/msi_database.py', 'tools/work_refs.py', '.github/workflows/pe-installer.yml'}:
         return True
     if path.startswith('tools/puzzle_editor/'):
         local = path[len('tools/puzzle_editor/'):]
