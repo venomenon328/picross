@@ -27,7 +27,7 @@ Die Abschlussrolle verwendet 50 logische Pixel bei UI100 und Gewicht 600. Die un
 | --- | --- |
 | Normale Spielertexte | Pangolin Regular auf sämtlichen normalen Textpfaden, auch direkter Zeichnung: Hilfe, Legenden, Katalogkategorien/-metadaten, Blatt-/Statuszeilen, Textbuttons, geschlossene/offene Auswahlen, Einstellungen, Dialoginhalt, Tooltips, Warn- und Recoverytexte. Kein Hilfe-only-Font und keine wählbare Schriftoption. |
 | Bildhaupttitel | „Rätselkatalog“, „Hilfe“ und „Einstellungen“ verwenden die Bildschriftzüge aus [VIEW_TITLE_ART](VIEW_TITLE_ART.md). Die zugehörigen Fontrollen bleiben Ressourcenfallbacks. |
-| Bakso Daging | Arbeits-Blatttitel und Kachelüberschriften (Motivtitel oder neutrale Blattkennung); Einstellungsgruppen „Anzeige“ und „Rätselansicht“ bei 20 × UI; Hilfe-Abschnitts- und Werkzeugüberschriften gemäß [HIL-TYPO-D01](https://github.com/venomenon328/picross/issues/535). |
+| Bakso Daging | Arbeits-Blatttitel und Kachelüberschriften (Motivtitel oder neutrale Blattkennung); Einstellungsgruppen „Anzeige“, „Rätselansicht“ und „Spielerkonto“ bei 20 × UI; Hilfe-Abschnitts- und Werkzeugüberschriften gemäß [HIL-TYPO-D01](https://github.com/venomenon328/picross/issues/535). |
 | Fraunces 600 | Bestehende übrige Informationsüberschriften sowie „Vollständiger Hinweis“ bei 13 × UI. |
 | Motivname im Abschluss | Dancing Script als eigene, sichtbar größere kalligrafische Rolle während der Namenseinblendung und im stabilen Bild-/Rasterabschluss. Arbeits-Blatttitel, Katalogtitel und übrige Rollen bleiben ihren vorhandenen Verträgen zugeordnet. Lokale Originalressource und Lizenz nach [Z2](Z2_SELECTION.md#freigegebene-erweiterung-dancing-script). |
 | Hinweisziffern und ausdrücklich daran gebundene Zähler | Delight Coffee und kontrolliert gebündelte Plex-Marker gemäß [CLUE_TYPOGRAPHY](CLUE_TYPOGRAPHY.md). |
@@ -145,7 +145,10 @@ sie erzwingt kein neues Bitmap für jeden kleinen Rahmen.
 ## HZ-D04 · Vollständige Dropdowngestaltung
 
 Der Scope umfasst die vorhandene Kategorienauswahl, „Sortieren nach“ und die
-Rätselansicht in Einstellungen. Geschlossenes Feld und ausgeklappte Liste bilden
+Rätselansicht in Einstellungen. Kontoeingaben und Codefeld haben gezeichnete
+Umrisse auf dem sichtbaren Papier; Checkboxzeilen der Rätselansicht zeigen
+Symbol, Text und Fokusrahmen auf demselben Papier. Geschlossenes Auswahlfeld
+und ausgeklappte Liste bilden
 eine zusammengehörige Darstellung:
 
 | Bestandteil | Gestaltung und Verhalten |
@@ -282,7 +285,14 @@ einen nichtleeren deutschen Tooltip und einen passenden zugänglichen Namen:
 | Minus / Plus | „Raster verkleinern“ / „Raster vergrößern“ |
 | Dynamische Farbfelder | „Farbe n wählen · aktiviert Füllen“ |
 | Katalog-/Abschlussreset | „Rätsel zurücksetzen“; Katalogname ergänzt gebundenes Blatt und Status |
-| Lokale Fragezeichen in Einstellungen | Vorhandene konkrete Erklärung für Fenstergröße bzw. Rätselansicht; Name nennt das erklärte Feld |
+| Lokale Fragezeichen in Einstellungen | Erklärung für Fenstergröße und Rätselansicht, am Passwortfeld exakt „Mindestens 8 Zeichen“ |
+
+Die lokalen Einstellungshilfen verwenden das vorhandene gezeichnete
+Fragezeichen ohne Rahmen oder eigenen Hintergrund. Die Zeichnung bleibt bei
+Hover, Fokus und Druck unverändert. Die mindestens 44 × UI große Trefferfläche
+ist per Tastatur fokussierbar. Hover und Tastaturfokus zeigen den lesbar
+platzierten Tooltip. Fokusverlust, Navigation und Layoutwechsel schließen ihn.
+Ein Klick löst keine weitere Aktion aus.
 
 Textbuttons, Checkboxen mit Text, Dropdowndekoration, passive Status-/Moduszeichen
 und Lehrsymbole werden dadurch nicht pauschal umgebaut. Keine Ganzkarten- oder

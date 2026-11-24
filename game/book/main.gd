@@ -17,6 +17,10 @@ var selected_id: String = ""
 var elapsed: float = 0.0
 var release_barrier: bool = false
 var held_buttons: int = 0
+# The visible content temporarily leaves the tree during page capture. An
+# HTTPRequest would cancel there without delivering its completion signal.
+const AccountTransport = preload("res://model/sync_transport.gd")
+var account_transport: AccountTransport
 var app: Content
 var camera: Camera3D
 var leaf: MeshInstance3D
@@ -57,6 +61,8 @@ var binding := Binding.new()
 var information_routes: RefCounted
 
 func _ready() -> void:
+	account_transport = AccountTransport.new()
+	add_child(account_transport)
 	_build_book()
 	information_routes = InformationRoutes.new(self)
 	app = create_content()
@@ -244,6 +250,7 @@ func _begin(kind: String, prior: Dictionary = {}) -> void:
 	_prepare(generation)
 
 func request_open(id: String) -> bool:
+	if app.accounts != null and app.accounts.navigation_locked(): return false
 	if state != State.CATALOG or release_barrier or not app.session_indices.has(id): return false
 	var prior: Dictionary = context()
 	# Resolve and flush once, before any target animation. A rejected slot or
@@ -257,6 +264,7 @@ func request_open(id: String) -> bool:
 	return true
 
 func request_return() -> bool:
+	if app.accounts != null and app.accounts.navigation_locked(): return false
 	if state != State.WORK or release_barrier or app.information.visible or app.reveal_view.active: return false
 	if not (app.work.visible or app.ending.visible): return false
 	# Secure edits before hiding the work page. Later capture/settlement only
@@ -269,6 +277,7 @@ func request_return() -> bool:
 	return true
 
 func request_page(target: int) -> bool:
+	if app.accounts != null and app.accounts.navigation_locked(): return false
 	if state != State.CATALOG or release_barrier or target == app.album.page_index: return false
 	if target < 0 or target >= ceili(app.album.filtered_ids.size()/24.0): return false
 	target_page = target

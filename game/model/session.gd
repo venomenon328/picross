@@ -8,6 +8,7 @@ var player: Player
 var gesture: Gesture = Gesture.new()
 var completed: bool = false
 var view_state: Dictionary = {}
+var account_baseline: Dictionary = {}
 
 func _init(data: Dictionary) -> void:
 	definition = data.duplicate(true)

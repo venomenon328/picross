@@ -3,6 +3,7 @@ extends RefCounted
 const ButtonInk = preload("res://ui/book_button.gd")
 
 static func inventory(r: SceneTree) -> void:
+	r.check(r.app.accounts.transport.get_parent() == r.app.book and not r.app.is_ancestor_of(r.app.accounts.transport),"B2 ongoing HTTP survives reparenting the visual content during book navigation")
 	var count: int = 0
 	for node: Node in r.app.find_children("*","Button",true,false):
 		if not node is ButtonInk: continue
@@ -34,10 +35,11 @@ static func geometry(r: SceneTree) -> void:
 		r.check(button.top_navigation and not button.selected,"NAV-STATE-A: catalog header has no active menu")
 		var box: Rect2 = button.get_global_rect()
 		r.check(viewport.encloses(box) and box.size == Vector2.ONE*44*u,"NAV-A: fixed catalog header hit target")
-		r.check(is_equal_approx(box.position.y,album.summary.global_position.y) and not box.intersects(album.summary.get_global_rect()) and not box.intersects(album.notice_area.get_global_rect()) and not box.intersects(app.recent_panel.get_global_rect()),"NAV-A: header beside count on same top edge, clear of retry and full recent panel")
+		r.check(is_equal_approx(box.position.y,app.account_status.global_position.y) and app.account_status.get_global_rect().end.y <= album.summary.global_position.y and not box.intersects(album.summary.get_global_rect()) and not box.intersects(album.notice_area.get_global_rect()) and not box.intersects(app.recent_panel.get_global_rect()),"NAV-A: header beside account status above count, clear of retry and full recent panel")
 		if prior.has_area(): r.check(prior.end.x < box.position.x,"NAV-STATE-A: gear, help, quit in order")
 		prior = box
 	r.check(album.summary.size.x+1 >= album.summary.get_theme_font("font").get_multiline_string_size(album.summary.text,HORIZONTAL_ALIGNMENT_LEFT,album.summary.size.x,album.summary.get_theme_font_size("font_size")).x and album.summary.size.y+1 >= album.summary.get_minimum_size().y,"NAV-A: full count wraps only within measured side space")
+	r.check(app.account_status.get_theme_font("font") == album.summary.get_theme_font("font") and app.account_status.get_theme_font_size("font_size") == roundi(18*u),"D02: account status and count share Pangolin at the selected scale")
 	var left: Rect2 = app.book.projected_paper(false,-1)
 	var right: Rect2 = app.book.projected_paper(false,1)
 	for button: ButtonInk in [album.previous_button,album.next_button]:

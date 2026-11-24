@@ -16,10 +16,18 @@ func moving() -> bool:
 func duration() -> float:
 	return PAN_SECONDS if book.motion_kind == "info-pan" else LEAF_SECONDS
 
+func profile_changed() -> void:
+	var app = book.app
+	var catalog: Dictionary = book.context()
+	catalog.merge({"page":0,"scroll":0,"right_scroll":0,"selection":"","session":""},true)
+	origin = {"kind":"catalog","id":"","catalog":catalog}
+	app.information_origin = "album"
+
 func request(section: String) -> bool:
 	if section not in ["settings","help"] or book.release_barrier: return false
 	if book.state not in [book.State.CATALOG,book.State.WORK,book.State.INFORMATION]: return false
 	var app = book.app
+	if app.accounts != null and app.accounts.navigation_locked(): return false
 	if book.state == book.State.INFORMATION:
 		if app.info.section == section: return false
 		source = app.info.section
@@ -46,6 +54,7 @@ func request(section: String) -> bool:
 
 func request_return() -> bool:
 	if book.state != book.State.INFORMATION or book.release_barrier or origin.is_empty(): return false
+	if book.app.accounts != null and book.app.accounts.navigation_locked(): return false
 	book.app._cancel_interaction()
 	if not book.app._flush_current(): return false
 	source = book.app.info.section

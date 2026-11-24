@@ -14,9 +14,13 @@ PuzzleId = Annotated[str, Field(pattern=r"^[A-Za-z0-9_-]{1,128}$")]
 Uuid = Annotated[str, Field(pattern=r"^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$")]
 Secret = Annotated[str, Field(pattern=r"^[A-Za-z0-9_-]{43}$")]
 Username = Annotated[str, Field(pattern=r"^[A-Za-z0-9][A-Za-z0-9_-]{2,31}$"), AfterValidator(str.lower)]
-Password = Annotated[str, Field(min_length=12, max_length=128)]
+def password_bytes(value: str) -> str:
+    if len(value.encode("utf-8")) > 1024:
+        raise ValueError("password byte length")
+    return value
 
 
+Password = Annotated[str, Field(min_length=8, max_length=128), AfterValidator(password_bytes)]
 
 def device_label(value):
     if any(unicodedata.category(c) == "Cc" for c in value):
@@ -137,8 +141,33 @@ class Mutation(Shape):
         "sequence_reused",
         "sequence_stale",
         "sequence_gap",
+        "request_abandoned",
     ]
     sequence_consumed: bool
+
+
+class Abandon(Shape):
+    format: Literal["picross-request-abandon/v1"]
+    request_seq: Positive
+    expected_last_request_seq: Natural
+    request_hash: Annotated[str, Field(pattern=r"^[0-9a-f]{64}$")]
+    puzzle_id: PuzzleId
+
+    @model_validator(mode="after")
+    def next_sequence(self):
+        if self.request_seq != self.expected_last_request_seq + 1:
+            raise ValueError("sequence does not follow expected checkpoint")
+        return self
+
+
+class Checkpoint(Shape):
+    format: Literal["picross-device-checkpoint/v1"]
+    account_id: Uuid
+    device_id: Uuid
+    last_request_seq: Natural
+    last_request_hash: Annotated[str, Field(pattern=r"^[0-9a-f]{64}$")] | None
+    response_status: Literal[200, 409] | None
+    response_body: str | None
 
 
 class Inventory(Shape):
@@ -199,6 +228,9 @@ class Error(Shape):
         "rate_limited",
         "unavailable",
         "server_generation_changed",
+        "sequence_reused",
+        "sequence_stale",
+        "sequence_gap",
     ]
 
 

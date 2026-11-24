@@ -163,19 +163,31 @@ func _mask(button: MouseButton) -> int:
 # The writer captures real action 11 and the later quit. Reader loads a distinct
 # account session, repeats the planned redo there and saves that session.
 func account_checkpoint(stage: String, number: int) -> Dictionary:
-	if number == 11 or number == 14:
-		var version := account.save(app.session,app.board.capture_view())
-		if version != (1 if number == 11 else 2): return {"error":"account write " + str(number)}
-		if number == 11 and account.prepare(version,0).is_empty(): return {"error":"account prepare"}
+	if number == 10:
+		restored = Session.new(app.session.definition)
+		var base := Profile.Protocol.progress(SaveStore.snapshot(app.session,app.board.capture_view()))
+		var record := {"kind":"snapshot","validation":"progress_structure_checked","save":base,
+			"puzzle_id":base.definition_id,"definition_revision":base.definition_revision,"server_revision":7}
+		if not account.accept_record(restored,record) or restored.player.undo(): return {"error":"receive basis"}
+		return {}
+	elif number == 11 or number == 14:
+		if number == 11:
+			if not restored.player.commit(app.session.player.history.back()): return {"error":"edit above basis"}
+		else: restored.undo()
+		restored.view_state = app.board.capture_view()
+		var version := account.save(restored,restored.view_state)
+		if version != (2 if number == 11 else 3): return {"error":"account write " + str(number)}
+		if number == 11 and account.prepare(version,7).is_empty(): return {"error":"account prepare"}
 	elif number == 15:
 		var loaded := account.load_slot(app.session.definition)
-		if loaded.status != "loaded": return {"error":"account restart"}
+		if loaded.status != "loaded" or not account.locally_confirmed(3) or not account.status().intent.is_empty():
+			return {"error":"account restart with unconfirmed primary or outstanding intent"}
 		restored = Session.new(app.session.definition)
 		SaveStore.apply(loaded.data,restored)
 	elif number == 16:
 		var cursor := restored.player.cursor
 		restored.redo()
-		if restored.player.cursor != cursor + 1 or account.save(restored,restored.view_state) != 3:
+		if restored.player.cursor != cursor + 1 or account.save(restored,restored.view_state) != 4:
 			return {"error":"account redo"}
 	else:
 		return {}

@@ -1,5 +1,17 @@
 # P1 · Spiel-, Eingabe- und Speichervertrag
 
+## Kontosave mit Empfangsbasis
+
+Der getrennte Kontopfad verwendet picross-account-save/v1 mit format,
+definition_id, definition_revision, width, height, baseline, cells, history,
+cursor, undo_used, completed und view. Die Baseline enthält genau cells,
+undo_used und completed. Beide Raster müssen zur eigenen Definition passen.
+Der vollständige Replay einschließlich Redozweig startet bei der Baseline.
+Identischer Fortschritt erhält lokale Ansicht und History. Die Übernahme
+eines anderen Fortschritts setzt den Cursor auf null und die History auf
+eine leere Liste. Der Gastpfad verwendet weiterhin das geschlossene Schema 1.
+Protokoll und Kontopfade stehen in [SAVE_SYNC](SAVE_SYNC.md).
+
 ## 1. Geltung, Auftrag und Quellen
 
 Dieses Dokument besitzt logische Zellbearbeitung, Undo/Redo, lösungsunabhängige
@@ -342,7 +354,7 @@ Präferenzen werden dadurch nicht still migriert oder gelöscht.
 
 Jede wirksame bestätigte Zellaktion und Undo/Redo werden sofort gesichert; Werkzeug/Farbe ebenfalls. Reine Ansicht darf kurz gebündelt werden, wird aber vor Album, Blattwechsel, Beenden und regulärer Window-Close-Anforderung geflusht. Vorschau wird zuerst verworfen. Fehler erscheinen sichtbar und dürfen keinen gesicherten Stand vortäuschen.
 
-Schreiben erfolgt als vollständige Tempfassung im selben Speicherroot mit Flush, Schließen und erneuter Parse-/Vertragsvalidierung. Nur ein gültiges bisheriges Primary wird als genau eine gültige Backupfassung rotiert; erst danach ersetzt der Kandidat das Primary. Ein Abbruch lässt wenigstens die vorherige gültige Fassung ladbar. Ein verwaistes Tempfile wird nicht geladen. Gültiges Primary hat Vorrang; bei fehlendem/defektem Primary wird ein gültiges Backup sichtbar geladen. Defekte oder inkompatible Fassungen werden nicht still überschrieben; das bewusste Übernehmen eines gültigen Backups erlaubt wieder Speichern. Bei gültigem Primary und defektem Backup wird der Primärstand geladen; eine bestätigte Backup-Erneuerung erlaubt wieder Speichern. Ohne gültige Fassung erscheint ein Fehlerzustand. Der bestätigte Reset entfernt ausschließlich Primary, Backup und Temp des ausgewählten Blatts und setzt nur dessen Session zurück.
+Schreiben erfolgt als vollständige Tempfassung im selben Speicherroot mit Flush, Schließen und Rücklesevalidierung. Unter Windows bindet der vollständige SHA-256 der Rücklesung die geschriebenen Bytes an die vorab geparste und vollständig validierte Fassung. Dazu öffnet der Helfer den Lesehandle vor dem Schreiben und prüft beim Lesen die Dateiidentität für Temp und Primary, jeweils nach dem Schließen des Schreibhandles. Nur ein gültiges bisheriges Primary wird als genau eine gültige Backupfassung rotiert; erst danach ersetzt der Kandidat das Primary. Ein Abbruch lässt wenigstens die vorherige gültige Fassung ladbar. Ein verwaistes Tempfile wird nicht geladen. Gültiges Primary hat Vorrang; bei fehlendem/defektem Primary wird ein gültiges Backup sichtbar geladen. Defekte oder inkompatible Fassungen werden nicht still überschrieben; das bewusste Übernehmen eines gültigen Backups erlaubt wieder Speichern. Bei gültigem Primary und defektem Backup wird der Primärstand geladen; eine bestätigte Backup-Erneuerung erlaubt wieder Speichern. Ohne gültige Fassung erscheint ein Fehlerzustand. Der bestätigte Reset entfernt ausschließlich Primary, Backup und Temp des ausgewählten Blatts und setzt nur dessen Session zurück.
 
 Prüfungen verwenden isolierte temporäre User-Daten; die aktuelle Prozessprüfung
 steht im [nativen CI-Vertrag](../ci/CI_C_NATIVE_GROUPS.md). Ein fehlgeschlagener Pflicht-Flush blockiert Album, Blattwechsel, Beenden und Window-Close bis zu einem erfolgreichen Retry. Ein aus gültigem Backup geladener Stand bleibt auch bei fehlendem Primary bis zur bewussten Übernahme schreibgesperrt. Temporäre Hintdrag-Subslots, Hoverbänder und Strichzähler gehören nicht zum Save.
@@ -371,14 +383,23 @@ behauptet keinen dauerhaften Abschluss; beim Neustart gilt der validierte Diskst
 Metadatenfehler erhalten alte gültige Bytes und einen separaten nichtmodalen Retry.
 
 Ein vollständiger Geschwister-Temp wird geflusht, geschlossen und strikt zurückgelesen.
-Windows benutzt MoveFileExW mit REPLACE_EXISTING und WRITE_THROUGH ohne COPY_ALLOWED
-über das lokale Windows PowerShell/.NET ohne Profil/Console; Pfade werden ausschließlich
-als Base64-Daten übergeben. Temp und Ziel liegen zwingend im selben Verzeichnis.
-Godots destruktives Windows-Ziel-Rename und File.Replace/ReplaceFileW (dokumentierter
-Zielverlust bei Fehler 1176) werden nicht verwendet. POSIX/Web verwenden Rename. Derselbe
-bereits gespeicherte Merker startet keinen Hilfsprozess. Ein fehlendes/gesperrtes
-PowerShell bleibt ein isolierter Merkerfehler, keine fehlgeschlagene Rätselsicherung.
+Der [Windows-Publisher](../../game/model/windows_publisher.gd) startet beim Spielstart
+und bedient auch den Fortsetzen-Merker über seine private Pipe. Der Austausch
+verwendet MoveFileExW mit REPLACE_EXISTING und WRITE_THROUGH im selben Verzeichnis.
+Der Helfer prüft den offenen Auftragskanal unter dem gemeinsamen Windows-Mutex.
+Das Löschen vergleicht die Merkerbytes unter derselben Sperre.
+Die Pfadprüfung liest die Windows-Dateiattribute für Ziel und Vorfahren bei jedem
+Zugriff erneut. POSIX/Web verwenden Rename. Ein identischer gültiger Merker
+überspringt den Austausch. Fehler beim Merker zeigt der Katalog separat an.
 Verzeichnisse, Links, ungültige Pfade und fremde Dateinamen werden zurückgewiesen.
+
+Fehlendes, gesperrtes oder ausgefallenes PowerShell blockiert die normale
+Windows-Gastsicherung nicht. Der SaveStore validiert in diesem Fall den
+geschlossenen Temp über Godot und rotiert danach einmal. Ist die Rotation
+bereits abgeschlossen, vergleicht der SaveStore bei ausgefallener Antwort die
+Primarybytes mit der vollständig validierten Fassung. Ein fehlgeschlagener
+Vergleich bleibt ein Savefehler. Der Merker meldet seinen Fehler separat und
+behält seinen Retry.
 
 ## 7. Technikbindung und Prüfweg
 

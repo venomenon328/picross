@@ -15,9 +15,13 @@ Ohne passenden Stand oder nach Abschluss/Reset ist das Panel verborgen. Öffnen 
 Ändern der Ansicht allein setzt keinen Merker; echtes Undo/Redo schon. Ein neuer Start
 zeigt weiterhin den Katalog. Der separate `user://p1/recent-puzzle.json` ändert keine
 Slotdatei. Fehler des Merkers haben im Katalog einen eigenen Retry; Save-/Backupfehler
-und deren bewusste Reparatur bleiben davon getrennt. Windows verwendet für atomaren
-Metadatenaustausch das mitgelieferte Windows PowerShell/.NET; dessen Ausfall verhindert
-nur die Aktualisierung des Merkers.
+und deren bewusste Reparatur bleiben davon getrennt. Unter Windows startet das Spiel
+einmal einen PowerShell-Helfer für die Rückleseprüfung und den atomaren Austausch von Kontojournal und
+Metadaten. Jede bestätigte Aktion wartet auf ihre lokale Sicherung. Falls der
+Helfer ausfällt, kann ein Gast über den validierten Godot-Speicherweg weiterspielen.
+Kann das Kontojournal nicht bestätigt werden, erscheint ein Speicherfehler.
+Betrifft der Fehler allein den Fortsetzen-Merker, lässt sich dieser im Katalog
+erneut speichern.
 
 **Buchintegration B-B / #493, #498:** Windows und Web starten den regulären
 Rätselkatalog als räumliches Buch. Kurzes Blättern
@@ -266,14 +270,15 @@ in den aktuellen Monitorarbeitsbereich passt. Nicht passende Größen sind deakt
 Vollbild verwendet die aktuelle Desktopauflösung, zeigt diese lesbar an und erhält
 den letzten Fensterpreset für die Rückkehr. Die Windows-Desktopauflösung wird nicht geändert.
 
-Die Einstellungen zeigen zwei handgezeichnete Gruppen **Anzeige** und
-**Rätselansicht**, mittig auf der linken Buchseite. Feldname und Auswahl stehen
-nebeneinander. Nur **Fenstergröße** und **Rätselansicht** haben ein Fragezeichen,
-das beim Darüberfahren oder Tastaturfokus erklärt; die Fenstergrößenhilfe bleibt auch im Vollbild
+Die Einstellungen zeigen handgezeichnete Gruppen für **Anzeige**,
+**Rätselansicht** und **Spielerkonto** auf der linken Buchseite.
+Feldname und Auswahl stehen nebeneinander. Die rahmenlosen Fragezeichen bei
+**Fenstergröße** und **Rätselansicht** öffnen beim Darüberfahren oder per
+Tastaturfokus eine Erklärung. Die Fenstergrößenhilfe bleibt auch im Vollbild
 erreichbar. **UI-Skalierung** bietet **100 %** und **125 %** für die laufende Sitzung.
 Anzeigemodus und UI-Skalierung nutzen ohne Fragezeichen die volle Zeilenbreite.
 Die drei großen Seitentitel **Rätselkatalog**, **Hilfe** und **Einstellungen** sind
-offen schraffierte Graphit-Schriftzugbilder der freigegebenen V2-rev1-Familie; die beiden Einstellungsgruppen behalten ihre
+offen schraffierte Graphit-Schriftzugbilder der freigegebenen V2-rev1-Familie; die Einstellungsgruppen behalten ihre
 Bakso-Überschriften. Die Titel stehen fest über dem scrollbaren Inhalt.
 Der **Rückpfeil oben rechts** auf Einstellungen und Hilfe kehrt zum Besuchsursprung
 zurück. Tooltip und Zugänglichkeitsname erläutern das jeweilige Katalog-/Rätselziel.
@@ -307,6 +312,9 @@ Preset oder rahmenloses Vollbild. Unter 1280×720 erscheint die bestehende Minde
 zeigt mehr Raster oder ruhige Ränder; sie vergrößert die Arbeitszellen nicht automatisch.
 Die angebotenen Zoomstufen halten das gesamte Raster samt Rahmen innerhalb
 der tatsächlichen Fenster-/Hinweis-/UI-Grenzen.
+
+Im Abschnitt [Spielerkonto](#spielerkonto) findest du die Kontoaktionen und
+die Bedeutung der Profil- und Syncanzeigen.
 
 ## Spielerhilfe im Buch
 
@@ -517,3 +525,28 @@ Historische Prüferdokumente mit Motivspoiler: [F01](https://github.com/venomeno
 ## Katalogprofile für Abschlussbilder
 
 Der Katalog zeigt bei gelösten Rätseln eine proportionale Vorschau. Beim Öffnen des gelösten Blatts zeigt die Abschlussansicht das gewählte Original. Neue und begonnene Blätter behalten das Fragezeichen bzw. die eigene Füllminiatur.
+
+## Spielerkonto
+
+Wähle in den Einstellungen **Anmelden**, **Registrieren** oder **Passwort
+wiederherstellen**, um das passende Formular zu öffnen. Zur Registrierung
+brauchst du eine Einladung, einen Benutzernamen und ein Passwort mit 8–128
+Unicode-Codepunkten und höchstens 1024 UTF-8-Bytes. Leerzeichen zählen mit.
+Das Fragezeichen am Passwortfeld erklärt die Mindestlänge. Die Rückmeldung
+zur Aktion steht direkt im Formular.
+
+Nach der Registrierung erscheint dein Wiederherstellungscode einmalig.
+Du kannst ihn markieren oder mit **Kopieren** in die Zwischenablage übernehmen.
+Bewahre ihn sicher auf, bevor du die Anzeige schließt. Angemeldet stehen
+**Abmelden** und **Neuen Wiederherstellungscode erzeugen** zur Verfügung.
+
+Deine Gaststände bleiben im Gastprofil. Das Spiel bietet keine Übernahme ins
+Konto an und überträgt Gaststände auch nicht automatisch. Ein auf diesem Gerät
+gespeichertes Kontoprofil kannst du offline öffnen. Beim Abmelden kehrst du
+zum Gastprofil zurück. Noch ausstehende Kontodaten bleiben für die spätere
+Übertragung im Kontoprofil erhalten.
+
+Die Einstellungen zeigen das aktive Profil, die lokale Speicherung und den
+Übertragungsstatus. Ungelöste Konflikte sind dort sichtbar. Eine manuelle
+Fassungsauswahl wird derzeit nicht angeboten. Im Katalog steht der Kontostatus
+über der Trefferzahl. Details im [SYNC-Vertrag](../docs/game/SAVE_SYNC.md).

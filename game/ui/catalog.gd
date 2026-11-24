@@ -532,7 +532,15 @@ func _style_controls(parent: Node) -> void:
 			node.custom_minimum_size = Vector2(44,44)*ui_scale if node.text.is_empty() else Vector2(maxf(44*ui_scale,Card.UiText.width(node.get_theme_font("font"),node.text,Card.UiText.small_size(ui_scale))+(56 if node.image != null else 16)*ui_scale),44*ui_scale)
 
 func ensure_control_visible(control: Control) -> void:
-	scroll.ensure_control_visible(control)
+	ensure_in_scroll(scroll,control)
+
+func ensure_in_scroll(scroller: ScrollContainer, control: Control) -> void:
+	# A tall card cannot fit entirely. Book and keyboard navigation must still
+	# bring its picture into view without clipping the top of the artwork.
+	if control is Card and control.size.y > scroller.size.y:
+		scroller.ensure_control_visible(control.picture)
+	else:
+		scroller.ensure_control_visible(control)
 
 static func _ignore_pointer(control: Control) -> void:
 	# Only decoration passes through. Each action consumes its own down/up route.

@@ -97,8 +97,9 @@ Hilfe, Einstellungen und Beenden bleiben auch ohne Session erreichbar.
 Der Katalogfuß enthält links nur den Rückpfeil, daneben „Seite n von m“, rechts
 nur den Vorwärtspfeil. Pfeile blättern vollständige Doppelseiten; unmögliche
 Richtungen sind inaktiv sichtbar, bei einer Seite beide. Die gemeinsame
-Control-/Trefferfamilie folgt HZ. Die Symbolgruppe und Trefferzahl beginnen auf
-derselben Höhe ohne zusätzliche Höhenzeile. Seitlicher Textbedarf wird gemessen
+Control-/Trefferfamilie folgt HZ. Die Symbolgruppe und der Kontostatus beginnen auf derselben Höhe. Unmittelbar
+unter dem Status steht die Treffer-/Gelöstzeile. Beide verwenden Pangolin Regular
+mit gerundeten 18 × UI-Skalierung (18 bzw. 23 px). Seitlicher Textbedarf wird gemessen
 und bei Bedarf umbrochen. Fehlerclip, Fortsetzen-Panel, Sortierung/Filter,
 Titel und Controls bleiben kollisionsfrei.
 
@@ -264,6 +265,14 @@ synchrones `hide()` am Godot-eigenen Popup während der Ereigniszustellung.
 Dies gilt auch für passive `CatalogTip`-Beschriftungen. Sinnvolle verzögerte
 Hilfen behalten ihre Darstellung nach dem HZ-Vertrag.
 
+Die linke Einstellungsseite enthält [Spielerkonto](SAVE_SYNC.md) mit direkt
+wählbaren, sitzungsabhängigen Aktionen. Formular- und Sitzungswechsel
+aktualisieren diese Seite im aktuellen Besuch. Beim Wechsel des lokalen Profils
+bindet der Rückweg den aktiven Katalog. Ein neu ausgegebener
+Wiederherstellungscode bleibt bis zum Schließen auf der Seite und hält
+währenddessen die Navigation gesperrt. Der Fokus kehrt danach auf eine sichtbare
+Kontoaktion zurück.
+
 ## Bildhaupttitel · BTI-C / #533
 
 Ressourcen, optische Zentrierung, Titelvorrang und Fallbacks stehen ausschließlich
@@ -312,6 +321,14 @@ Anordnung, Gruppen, Felder und Erklärungen folgen DISPLAY_SETTINGS. Die
 Schriftrollen stehen in HZ. Diese Seite ist Teil des Informationsbesuchs und
 setzt keine Hinweisanker zurück; kein zusätzliches Beenden-Widget oder manueller
 Hinweisreset. Rückweg, Scroll-/Fokuskontext und Flush-/Recoveryguard folgen oben.
+
+„Spielerkonto“ liegt im vorhandenen Einstellungs-Scrollbereich. Kontoaktionen
+und ihre Ergebnisse bleiben neben aktivem Profil und Synczustand sichtbar. Ein
+Profilwechsel erneuert Store, Session und Rückziel. Die Einstellungen bleiben
+geöffnet, der Rückpfeil führt zum Katalog des aktiven Profils. Eine erneute
+Anmeldung im selben Profil erhält das bisherige Rückziel. Eine laufende
+Kontoaktion lässt sich abwarten. Ein ausgegebener Wiederherstellungscode bleibt
+bis zum bewussten Schließen erreichbar.
 
 ## Speicher- und Fehlergrenzen
 
