@@ -313,16 +313,8 @@ zeigt mehr Raster oder ruhige Ränder; sie vergrößert die Arbeitszellen nicht 
 Die angebotenen Zoomstufen halten das gesamte Raster samt Rahmen innerhalb
 der tatsächlichen Fenster-/Hinweis-/UI-Grenzen.
 
-Unter **Spielerkonto** stehen **Anmelden**, **Registrieren** und
-**Passwort wiederherstellen** zur Auswahl. Die passende Eingabe öffnet sich
-erst mit der Auswahl. Angemeldet stehen **Abmelden** und **Neuen
-Wiederherstellungscode erzeugen** zur Verfügung. Das Fragezeichen am
-geöffneten Passwortfeld erklärt **Mindestens 8 Zeichen**. Ausgegebene
-Wiederherstellungscodes bleiben bis zum Schließen auswählbar und kopierbar.
-Gast- und Kontostände sind getrennt. Die Einstellungen zeigen lokale
-Speicherung, Übertragungsstatus und ungelöste Konflikte an. Eine manuelle
-Fassungsauswahl wird derzeit nicht angeboten. Details im
-[SYNC-Vertrag](../docs/game/SAVE_SYNC.md).
+Im Abschnitt [Spielerkonto](#spielerkonto) findest du die Kontoaktionen und
+die Bedeutung der Profil- und Syncanzeigen.
 
 ## Spielerhilfe im Buch
 
@@ -536,15 +528,25 @@ Der Katalog zeigt bei gelösten Rätseln eine proportionale Vorschau. Beim Öffn
 
 ## Spielerkonto
 
-Unter „Spielerkonto“ in den Einstellungen stehen Anmeldung, Registrierung,
-Passwortwiederherstellung und die Aktionen des aktiven Kontos. Zur
-Registrierung brauchst du eine Einladung, einen Benutzernamen und ein Passwort
-mit 8–128 Unicode-Codepunkten. Leerzeichen zählen mit. Die Rückmeldung zur
-Aktion steht direkt im Formular. Aktives Profil und Synczustand haben eigene
-Zeilen. Der Katalog zeigt den Kontostatus weiter über der Trefferzahl.
+Wähle in den Einstellungen **Anmelden**, **Registrieren** oder **Passwort
+wiederherstellen**, um das passende Formular zu öffnen. Zur Registrierung
+brauchst du eine Einladung, einen Benutzernamen und ein Passwort mit 8–128
+Unicode-Codepunkten und höchstens 1024 UTF-8-Bytes. Leerzeichen zählen mit.
+Das Fragezeichen am Passwortfeld erklärt die Mindestlänge. Die Rückmeldung
+zur Aktion steht direkt im Formular.
 
-Den Wiederherstellungscode kannst du markieren oder über „Kopieren“ in die
-Zwischenablage übernehmen. Bewahre ihn sicher auf, bevor du die einmalige
-Anzeige schließt. Ein vorhandenes Konto lässt sich auch offline lokal öffnen.
-Beim Abmelden kehrt das Spiel zum Gastprofil zurück. Gaststände lassen sich
-ausdrücklich einzeln oder gemeinsam übernehmen.
+Nach der Registrierung erscheint dein Wiederherstellungscode einmalig.
+Du kannst ihn markieren oder mit **Kopieren** in die Zwischenablage übernehmen.
+Bewahre ihn sicher auf, bevor du die Anzeige schließt. Angemeldet stehen
+**Abmelden** und **Neuen Wiederherstellungscode erzeugen** zur Verfügung.
+
+Deine Gaststände bleiben im Gastprofil. Das Spiel bietet keine Übernahme ins
+Konto an und überträgt Gaststände auch nicht automatisch. Ein auf diesem Gerät
+gespeichertes Kontoprofil kannst du offline öffnen. Beim Abmelden kehrst du
+zum Gastprofil zurück. Noch ausstehende Kontodaten bleiben für die spätere
+Übertragung im Kontoprofil erhalten.
+
+Die Einstellungen zeigen das aktive Profil, die lokale Speicherung und den
+Übertragungsstatus. Ungelöste Konflikte sind dort sichtbar. Eine manuelle
+Fassungsauswahl wird derzeit nicht angeboten. Im Katalog steht der Kontostatus
+über der Trefferzahl. Details im [SYNC-Vertrag](../docs/game/SAVE_SYNC.md).

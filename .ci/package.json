@@ -1,36 +1,11 @@
 {
   "format": "development-ci-plan/v1",
   "issue": "https://github.com/venomenon328/picross/issues/821",
-  "package": "SYNC-PERF",
-  "modules": [
-    "native.core",
-    "native.history",
-    "native.catalog"
-  ],
-  "purpose": "Windows-Publikation für Journal und Fortsetzen-Merker, Save/Recovery, Neustart mit Redo und unverändertem Originalrequest sowie Zellaktion am ruhenden Kontotransport prüfen. Kern mit regulärem Windows-x64-Spielerbau.",
-  "omitted": "Kein sync.server, native.graphics, zusätzliche Export-/Completion-/Adapter-/Preflight-/Tools-/Produktions-/Deliverymodule oder Browser-Vollmatrix. Einmalig bis zum unabhängigen Nachreview: gepaarte Windows-Spielprobe mit Originalen und gezielter Chromium-Kontosave mit IDBFS-Callback, Reload, Fehler und Retry wegen der berührten Intent-Bestätigungsroutine.",
-  "test_changes": [
-    {
-      "path": "game/tests/sync_cases.gd",
-      "disposition": "change-scoped",
-      "reason": "Windows-Timeout mit gescheiterter Rücknahme, jüngerer Schreibinstanz, Originalbytes, Journalgeneration und Primary. Verlorene Quittung nach Austausch, Create-only und gegen verspätete Publikation abgesicherter Merker."
-    },
-    {
-      "path": "game/tests/p14_integration.gd",
-      "disposition": "change-scoped",
-      "reason": "Beim vorhandenen echten Prozessneustart bestätigte Generation und abgeschlossenen Intent kontrollieren."
-    },
-    {
-      "path": "game/tests/recent_cases.gd",
-      "disposition": "change-scoped",
-      "reason": "Merker nach Retry frisch lesen. Windows-Gastaktion und Undo bei nicht verfügbarem Helfer mit gültigem Primary und Backup, Navigation, Wiederaufnahme und separatem Merker-Retry."
-    },
-    {
-      "path": "game/tests/sync_account_cases.gd",
-      "disposition": "change-scoped",
-      "reason": "Echte Zellaktion und Undo/Redo mit lokaler Generation und ausbleibendem Transport/Uploadtimer nach Bestandsabgleich."
-    }
-  ],
+  "package": "SYNC-FINAL",
+  "modules": [],
+  "purpose": "T01: docs und ci-required prüfen Spielanleitung und Paketplan. T02 prüft einmalig bis R01 den nativen Windows-Registrierungsweg mit gültiger und ungültiger Formulareingabe gegen isoliertes FastAPI/PostgreSQL.",
+  "omitted": "Reiner Dokument- und Plandiff ohne geänderte Produktgrenze. Kein Spielerbau, kein native.catalog, native.core, sync.server, Performance- oder Browserlauf. Betriebs- und persönliche Geräteabnahmen entfallen für #821 gemäß D01.",
+  "test_changes": [],
   "core_change": null,
   "evidence": {
     "mode": "none",
