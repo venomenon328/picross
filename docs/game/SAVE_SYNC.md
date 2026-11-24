@@ -15,13 +15,13 @@ Prüfplan, Ausführungswahl und tatsächlicher Lieferstatus stehen im Issue.
 Das bestehende lokale Saveformat und seine vollständige Validierung bleiben in
 [P1 §6](PROTOTYPE_P1.md#6-speicherung-und-wiederaufnahme), die Browserpersistenz
 in [WEB_HOSTING](../operations/WEB_HOSTING.md) maßgeblich. Dieser Vertrag ergänzt
-eine äußere Konten-/Übertragungsschicht. Er behauptet keine heutige Cloudfunktion.
+eine äußere Konten-/Übertragungsschicht.
 
 ## 2. Produktgarantien
 
 ### SYNC-G01: vollständiger Betrieb ohne Konto
 
-Ohne Anmeldung bleibt die bisherige lokale Speicherung bestehen: Appidentität
+Das Gastprofil verwendet weiterhin die bisherige lokale Speicherung: Appidentität
 `picross · P1`, Schema 1 und `user://p1/saves/`. Windows und unterschiedliche
 Browserorigins/-profile bleiben getrennt. Kein Syncrequest, Registrierungszwang
 oder neues Onlinegate für Rätsel, Speichern und Wiederaufnahme.
@@ -34,12 +34,10 @@ Merker, Syncmetadaten, offene Konflikte und dauerhaft gespeicherte Uploads.
 Konten oder Server dürfen diese Daten nicht teilen. Gerätebezogene Anzeige-/
 Fensterpräferenzen bleiben lokal; sie werden nicht als Spielstand synchronisiert.
 
-Der bisherige lokale Stand wird weder verschoben noch automatisch überschrieben.
-Seine Übernahme ist eine ausdrückliche Auswahl einzelner/aller angebotenen
-Rätsel und verwendet denselben konfliktgesicherten Uploadweg. Abmelden kehrt
-zum bisherigen lokalen Profil zurück. Ausstehende Kontodaten bleiben für eine
-spätere Anmeldung erhalten. Eine Löschung solcher Daten verlangt eine gesonderte
-bewusste Entscheidung; Logout oder Tokenablauf genügt dafür nicht.
+Gast- und Kontospielstände bleiben getrennt. Der Client bietet keine Gastübernahme
+an. Abmelden kehrt zum Gastprofil zurück. Ausstehende Kontodaten und die
+ursprünglichen Bytes bereits gespeicherter Übertragungsaufträge bleiben bei
+Abmeldung oder Tokenablauf für eine spätere Anmeldung erhalten.
 
 Ein bereits lokal verfügbares Kontoprofil bleibt offline spielbar. Lokale
 Save-/Recoverygarantien, im Web einschließlich bestätigtem IDBFS-Callback,
@@ -52,17 +50,22 @@ nur die zugehörige lokale Generation, niemals später entstandene Änderungen.
 
 ### SYNC-G03: vollständige Fassungen statt Zellmerge
 
-Synchronisiert wird pro Rätsel ein vollständiger Schema-1-Snapshot einschließlich
-Zellen, History/Redo, Cursor, `undo_used`, `completed` und View. Keine Live-
-Zelloperationen, kein Zusammenmischen zweier Histories und kein Zeitstempelgewinner.
+Ein Snapshot überträgt die Rätselidentität, Rasterrevision, Dimensionen, aktuelle
+Zellen und die Durchgangsmerkmale `undo_used` und `completed`. Undo/Redo wirkt
+über den resultierenden Fortschritt. History, Cursor, aktive Farbe und sämtliche
+Ansichtsdaten bleiben im vollständigen lokalen Save. Eine identische Projektion
+braucht keinen weiteren Upload. Der B2-Sender bündelt ausstehende
+Fortschritte zu den [beschlossenen Sammelanlässen](https://github.com/venomenon328/picross/issues/821#issuecomment-7095903230).
 Verschiedene Rätsel haben unabhängige aktuelle Stände. Für dasselbe Rätsel bleiben
-konkurrierende Fassungen erhalten, bis der Spieler ausdrücklich eine auswählt.
+konkurrierende Fassungen und die Schutzregeln für ausstehende lokale Fassungen
+erhalten. Inkompatible Rätselrevisionen bleiben als solche erkennbar. Der Client
+wendet nur vollständig validierbare Stände an.
 
-Die Auswahloberfläche zeigt den lokalen und den Serverstand mit verständlichen
-Geräte-/Fortschrittsangaben. Inkompatible Rätselrevisionen werden als solche
-erkennbar; der Client darf einen nicht vollständig validierbaren Stand nicht
-anwenden. Vor einer Konfliktentscheidung wird der aktuelle Serverstand erneut
-abgeglichen. Bei einem neuen Konflikt bleibt die bisherige Auswahl erhalten.
+Der Client zeigt ungelöste Konflikte und offene Fassungsentscheidungen im Status
+an. Er bietet derzeit weder Vergleich noch Auswahl, Verwerfung oder
+Wiederherstellung dieser Fassungen an. Er wählt bei einem Konflikt keinen
+automatischen Gewinner. Serverprotokoll, Versionsbestand, Konfliktkandidaten
+und Wiederholungsregeln gelten weiter.
 
 ### SYNC-G04: Reset, Inhalte und Abschluss
 
@@ -112,7 +115,7 @@ erstellt. Einladungen gelten sieben Tage und werden atomar verbraucht. Kein
 
 - Benutzername: ASCII `[a-z0-9][a-z0-9_-]{2,31}` nach alleiniger Umwandlung
   von ASCII-Groß- in Kleinbuchstaben; eindeutig, kein Trim oder weiterer Alias.
-- Passwort: 12–128 Unicode-Codepunkte, höchstens 1024 UTF-8-Bytes; keine stille
+- Passwort: 8–128 Unicode-Codepunkte, höchstens 1024 UTF-8-Bytes; keine stille
   Normalisierung oder Kürzung. Argon2id über `pwdlib[argon2]`, Bibliotheksparameter
   dokumentieren; keine selbst entwickelte Passworthashfunktion.
 - Einladung, Recoverycode und Sitzungstoken: jeweils 32 kryptografisch zufällige
@@ -183,7 +186,7 @@ in dieser Tabelle sind ebenfalls sicher darstellbare ganze Zahlen.
 
 | `operation` | Zusätzliche Pflichtfelder | Wirkung |
 | --- | --- | --- |
-| `snapshot` | `save`: Schema-1-Objekt | Vollständigen Stand anbieten. |
+| `snapshot` | `save`: `picross-progress/v1` nach P04 | Aktuellen Fortschritt anbieten. |
 | `reset` | `definition_revision`: Zahl >= 1 | Bewussten Reset für diese Rasterrevision anbieten. |
 | `resolve` | `candidate_id`: UUIDv4 | Genau diesen erhaltenen Konflikt zum aktuellen Stand machen. |
 | `discard` | `candidate_id`: UUIDv4 | Genau diesen Konflikt ausdrücklich verwerfen; aktuellen Stand nicht ändern. |
@@ -241,41 +244,39 @@ lokaler Metadaten zuerst anmelden und Bestand abgleichen. Niemals alte Requests
 unter neuer Sequenz/Identität automatisch als neue Entscheidung ausgeben.
 Eine unbekannte Gerätekennung wird bei Mutationen nicht implizit angelegt.
 
+### Gerätebeleg und ausdrücklicher Abbruch (B2)
+
+GET /v1/device/checkpoint liest unter dem Kontolock ausschließlich das
+Sitzungsgerät. Die Antwort picross-device-checkpoint/v1 bindet account_id,
+device_id, last_request_seq, last_request_hash, response_status und response_body.
+Die letzten drei Felder sind bei Sequenz null leer (JSON null). Sonst enthält
+response_body den unverändert gespeicherten UTF-8-Text. Ein Wiederholungsbeleg
+muss Methode, Pfad und Originalbytes über den P03-Hash bestätigen.
+
+POST /v1/device/abandon erwartet picross-request-abandon/v1 mit request_seq,
+expected_last_request_seq, request_hash und puzzle_id. Dieselbe bereits
+verbrauchte Sequenz mit demselben Hash liefert den bestehenden Beleg. Für die
+nächste freie Sequenz speichert der Dienst unter dem Originalhash einen
+terminalen 409-Receipt mit rejected/request_abandoned und liefert den
+Checkpoint mit HTTP 200. Rätselbestand, Historie und Konflikte bleiben dabei
+erhalten. Die im Abbruchreceipt beobachtete Revision bestätigt keinen Upload.
+Restore verlangt weiterhin einen vollständigen Bestandsabgleich.
+
 ### SYNC-P04: strukturelle Saveprüfung und Aussagegrenze
 
-Der Server prüft vor Speicherung die exakte äußere Schema-1-Feldmenge aus
-[SaveStore](../../game/model/save_store.gd): `schema`, `definition_id`,
-`definition_revision`, `width`, `height`, `cells`, `history`, `cursor`,
-`undo_used`, `completed`, `view`. Alle Felder sind Pflicht, keines ist `null`.
+Das innere Objekt `save` hat genau acht Pflichtfelder. `format` ist
+`picross-progress/v1`, `definition_id` entspricht dem URL-Rätsel und
+`definition_revision` ist eine positive sichere Ganzzahl. `width` und `height`
+liegen jeweils zwischen 1 und 50. `cells` enthält genau Breite × Höhe
+sichere Ganzzahlen ab −1 und höchstens acht verschiedene positive Farb-IDs.
+`undo_used` und `completed` sind boolesch. Zusätzliche Felder, null-Werte und
+der frühere Vollsave ergeben `422 invalid_request` vor dem Sequenzverbrauch.
 
-- `schema = 1`; ID entspricht dem URL-Rätsel; Definitionsrevision >= 1;
-  Breite/Höhe jeweils 1–50. `cells` hat exakt Breite × Höhe Elemente.
-- Zellwerte sind -1, 0 oder positive sichere Ganzzahlen. Höchstens acht
-  unterschiedliche positive Farb-IDs in Zellen, gesamter History und aktiver
-  Farbe zusammen. Die Anzahl ist begrenzt, nicht die IDs auf 1–8.
-- History ist eine Liste nichtleerer Aktionen; jede Aktion enthält höchstens
-  Breite × Höhe Änderungen mit exakt `index`, `before`, `after`, eindeutigen
-  Indizes 0 bis Zellzahl−1, zulässigen verschiedenen Vor-/Nachwerten. Vollständiges
-  widerspruchsfreies Replay ab -1 einschließlich Redo ist Pflicht.
-- Cursor liegt zwischen 0 und Historylänge; Replay am Cursor entspricht `cells`.
-  `undo_used` und `completed` sind boolesch; Cursor vor Historyende verlangt
-  `undo_used = true`. Kein Abschneiden oder Umordnen der History.
-- View enthält exakt `center`, `zoom`, `overview`, `active_color`, `tool`,
-  `row_clue_reads`, `column_clue_reads`. Mittelpunkt: zwei endliche Zahlen innerhalb
-  0..Breite beziehungsweise 0..Höhe; Zoom aus der bestehenden `SaveStore.ZOOMS`-
-  Liste; Overview boolesch; aktive Farbe positiv; Tool `fill`, `erase` oder `hand`.
-- Zeilen-/Spaltenlesepositionen sind Listen mit exakt Höhe/Breite Einträgen.
-  Eintrag exakt `{"anchor":"grid_end"}` oder `{"anchor":"outer_start"}`,
-  alternativ exakt `anchor = "middle"`, `start`, `end` mit ganzen Zahlen und
-  `0 < start < end < Linienlänge`. Die wirkliche Hinweistokenzahl prüft der Client.
-
-Serverprüfung heißt `schema_history_checked`: **keine** Bestätigung von Lösung,
-exakter Palette, tatsächlichen Hinweisen oder registriertem Inhalt. Dafür fehlen
-dem Dienst bewusst Definitions-/Lösungsdaten. Vor Anwendung prüft der Client
-immer vollständig mit `SaveStore.validate()` gegen seine eigene Definition und
-normalisiert erst danach gemäß P1. Unbekannte Versionen werden zurückgewiesen,
-nicht still migriert. Snapshotwerte bleiben semantisch erhalten; JSON-Whitespace
-und Schlüsselreihenfolge sind kein Bestandteil des Spielstands.
+`progress_structure_checked` bestätigt diese Struktur. Palette und Lösung kennt
+der Dienst nicht. Die B2-Übernahme validiert gegen die eigene Definition.
+Gleicher Fortschritt erhält History und Ansicht. Ein übernommener anderer Stand
+beginnt mit einer lokalen Ausgangsmatrix und leerer History am Cursor 0. Eigene
+gültige Ansicht und Farbe bleiben erhalten. Der Empfang gehört zum B2-Paket.
 
 ### SYNC-P05: HTTP-Schnittstelle
 
@@ -310,7 +311,7 @@ ohne Steuerzeichen; rein beschreibend. Authrequests höchstens 16 KiB.
 | `Recovery` | `recovery_code`: neuer String. |
 | `Inventory` | `puzzle_id`, `server_revision` (>= 0; 0 ohne aktuellen Stand), `conflict_count` (>= 0, höchstens konfigurierte Konfliktquote). |
 | `Summary` | `puzzle_id`, `server_revision` (>= 1), `definition_revision` (>= 1), `kind` (`snapshot`/`reset`), `updated_at`, `device_id`, `device_name` (beschreibender Name zum Schreibzeitpunkt). |
-| `Record` | Alle `Summary`-Felder plus `save` (bei Snapshot Objekt, bei Reset null), `validation` (`schema_history_checked` bei Snapshot, null bei Reset). |
+| `Record` | Alle `Summary`-Felder plus `save` (bei Snapshot Objekt, bei Reset null), `validation` (`progress_structure_checked` bei Snapshot, null bei Reset). |
 | `CandidateSummary` | `candidate_id`, `puzzle_id`, `base_server_revision` (>= 0), `definition_revision`, `kind`, `created_at`, `device_id`, `device_name` (beschreibender Name zum Schreibzeitpunkt). |
 | `Candidate` | Alle `CandidateSummary`-Felder plus `save` und `validation` wie bei `Record`. |
 | `List` | `items`: Liste der pfadspezifischen Form; `next_cursor`: opaker String oder null. |
@@ -355,7 +356,7 @@ ohne neuen Kandidaten. Eine Auswahl, bewusste Verwerfung oder Historienrestaurat
 läuft ausschließlich über SYNC-P02 und die aktuelle Basis.
 
 Ein Mutationsrequest ist höchstens 16 MiB UTF-8; dessen Grenze wird vor teurem
-JSON-/Historyaufbau geprüft. Authbodygrenze steht in SYNC-P05. Der gesamte gespeicherte
+JSON-Aufbau geprüft. Authbodygrenze steht in SYNC-P05. Der gesamte gespeicherte
 Snapshotbestand aus aktuell/Historie/Konflikten hat standardmäßig höchstens
 512 MiB je Konto, maximal 2000 Rätsel und 100 registrierte Geräte. Berechnung auf
 der tatsächlich gespeicherten UTF-8-Snapshotdarstellung, nach der regulären
@@ -422,7 +423,7 @@ Warteschlangen gegen einen zurückgesetzten Serverbestand. Gerätewasserstände 
 dem Dump werden trotzdem nicht genullt. Generation wechselt nur bei Restore,
 nicht bei normalem Dienst-/DB-Neustart.
 
-## Nativer Profilkern (SYNC-B1)
+## Lokaler Profilkern und B2-Client
 
 [AccountProfile](../../game/model/account_profile.gd) ist der native Einstieg für
 explizite Kontokontexte. Der Aufrufer liefert die konfigurierte HTTPS-API-Basis
@@ -435,7 +436,7 @@ Die Profilinstanz kapselt SaveStore (`saves/`) und RecentPuzzle
 (`recent-puzzle.json`). Aufrufer bearbeiten Kontodaten nur über diese Instanz.
 Gerätepräferenzen und der Startpfad der Anwendung bleiben gerätelokal.
 
-`journal.json` enthält Format `picross-local-sync/v1`, den vollständigen
+`journal.json` enthält Format `picross-local-sync/v3`, den vollständigen
 JSON-Payload als UTF-8-Text und dessen SHA-256. Er bindet Kontext, erwartete
 Servergeneration, lokale Generation, verbrauchte Sequenz, ausstehende
 Fassungen/Entscheidungen, höchsten bekannten Stand pro Rätsel, einen vorbereiteten
@@ -444,17 +445,62 @@ Abgleichsgrund. Mutationen halten während der kurzen lokalen Transaktion ein
 exklusiv angelegtes Lockverzeichnis und prüfen den zuvor gelesenen Journalhash.
 Ein zweiter, inzwischen veralteter Kontext muss erneut öffnen. Journalpublikation
 schreibt einen Geschwistertemp, flusht, schließt, vergleicht alle Bytes und
-ersetzt per Rename (unter Windows MoveFileEx mit Write-through). Erst ein
-erfolgreicher Vergleich des Ziels schließt die Publikation ab.
+ersetzt per Rename. Erst ein erfolgreicher Vergleich des Ziels schließt die
+Publikation ab. Unter Windows öffnet der Helfer den unabhängigen Lesehandle
+vor dem Schreiben und hält ihn über den Austausch. Der SHA-256 über sämtliche
+Bytes und der Dateikennungsvergleich binden den gelesenen Inhalt jeweils an
+den Kandidaten- und Zielpfad.
 
-Vor Slotänderung sichert das Journal die vollständige Schreib-/Resetabsicht.
+Unter Windows initialisiert ein Autoload vor der ersten Spielszene einen gemeinsamen
+PowerShell/.NET-Prozess für Journal, Fortsetzen-Merker und die weiteren Aufrufer
+des Metadatenaustauschs. Nach einmaligem Add-Type und Bereitschaftsmeldung erhält
+der Helfer über eine private Pipe Auftragsnummer, Modus und beide absoluten Pfade
+als Base64-Daten. Der geprüfte Temp erhält für die Übergabe einen einmaligen
+Geschwisternamen. MoveFileExW verwendet WRITE_THROUGH, beim Ersetzen zusätzlich
+REPLACE_EXISTING. Nur die passende Erfolgsantwort schließt den Austausch ab.
+
+Für den Start gelten zehn Sekunden, für eine Auftragsantwort zwei Sekunden.
+Bei fehlender oder unpassender Antwort schließt der Aufrufer vor der Fehlermeldung
+seine Pipe. Ein noch vorhandener Kandidat kann auf den Tempnamen zurückgenommen
+werden. Liegengebliebene Arbeitsnamen nehmen an der Wiederaufnahme nicht teil.
+Unter dem gemeinsamen Windows-Mutex prüft der Helfer den Spielprozess und den
+offenen Auftragskanal vor der Mutation. Er hält die Sperre bis zum Ende des
+Austauschs. Andere Profilzugriffe passieren nach dem Erwerb des Lockverzeichnisses
+denselben Mutex, bevor sie Journal oder Slot prüfen. Damit berücksichtigen sie
+einen bereits ausgeführten Austausch auch bei verlorener Quittung. Der
+Merkeraustausch und das vergleichende Löschen des Merkers verwenden denselben
+Mutex. Der Neustart eines Helfers passiert ihn vor seiner Bereitschaft.
+Beim regulären Beenden schließt der Player die Pipe und beendet seinen Helfer.
+Ein Journalfehler führt in die bestehende Save-/Recoverybehandlung. Ein Fehler
+allein beim Fortsetzen-Merker bleibt am separaten Metadaten-Retry sichtbar.
+
+Vor Slotänderung sichert das Journal die vollständige Schreib-/Resetabsicht
+einschließlich des SHA-256 der erwarteten Primarybytes bei einem Save. Je Rätsel
+bindet es die letzte lokale Generation und einen Hash der Fortschrittsprojektion.
+Bei unverändertem Hash wird der lokale Save bestätigt, während Warteschlange und
+vorbereiteter Request ihre Identität behalten. Nur die acht P04-Felder gelangen
+in sendefähige Snapshots. Ein Journal im Vorgängerformat `picross-local-sync/v1`
+bleibt einschließlich Originalrequest unverändert für den Bestandsabgleich gesperrt.
 Nach dem P1-Temp-/Backupweg liest der Kern das Primary bzw. die Abwesenheit
-aller Resetziele zurück. Erst dann veröffentlicht er die zugeordnete Generation.
+aller Resetziele zurück. Für Zell- und Ansichtssaves unter Windows kann derselbe
+gesperrte Aufruf die zuvor vollständig validierten Bytes über den gehaltenen
+Lesehandle nachweislich dem Primarypfad zuordnen. Intent und Rücklesung müssen
+denselben vollständigen Hash besitzen. Erst dann veröffentlicht der Kern die
+zugeordnete Generation.
 Beim Wiederanlauf kann ein passendes Primary eine noch offene Absicht abschließen.
 Eine widersprüchliche Teilrotation, fremde Metadaten oder ein nach hartem
 Prozessabbruch stehengebliebener Lock sperren Änderungen bis zur Wiederherstellung.
 Die Übergabe `reconciliation()` benennt den eigenen Root, das Journal und die
-erhaltene Bindung. Der Kern stiehlt keine Locks. Ein Backup verlangt weiterhin
+erhaltene Bindung. Bei einer ausdrücklich gewählten Wiederherstellung archiviert der Client
+Originaljournal und vorhandene Slotbytes im Profil unter recovery/ mit ihrem
+SHA-256. Der Benutzer bestätigt den Wiederanlauf nach neuer Authentisierung,
+Gerätebeleg und paginiertem Bestandsabgleich. Ein noch ausführbarer Altrequest
+erfordert einen dauerhaft gesicherten Abbruchauftrag. Einem bereits verarbeiteten
+Original wird sein gespeicherter Beleg zugeordnet. Eine ältere Sequenz oder
+Generation erhält einen Hinweis auf die unbekannte historische Wirkung.
+Erhaltene lokale Slots bekommen den Status recovery_choice und bleiben für
+die Übertragung gesperrt. Der Client zeigt den ungelösten Zustand im Status an.
+Der Kern stiehlt keine Locks. Ein Backup verlangt weiterhin
 ausdrückliche Reparatur. PE liest beim Rasterwechsel ausschließlich den
 Profilmerker. Vor der Bereinigung werden ältere Slotbytes mit ihrem Hash ins
 Journal übernommen. Vorbereitete Requests und Konfliktfassungen bleiben erhalten.
@@ -476,12 +522,59 @@ ohne erneute Serialisierung. Zugangsdaten kommen außerhalb dieses Bestands hinz
 HTTP-Status und den strikt dekodierten v1-Antwortbody. Ein Transportfehler lässt
 den Auftrag offen. Ein verbrauchtes Ergebnis veröffentlicht Beleg, Wasserstand,
 Slotstatus und Freigabe gemeinsam. Gesicherte Kandidaten behalten ihre ID,
-abgelehnte Fassungen den vollständigen lokalen Inhalt. Unverbrauchte
+abgelehnte Fassungen den angebotenen Fortschritt. Unverbrauchte
 Sequenzfehler und eine andere Servergeneration sperren automatische Wiederholung.
 Der spätere Bestandsabgleich entscheidet ausdrücklich über die weitere Verwendung.
 
-Der isolierte Harness benutzt diese API mit synthetischen Identitäten. Die
-nutzbare Kontoauswahl, HTTP-Anbindung und Browser-Kontopersistenz folgen in B2.
+In „Spielerkonto“ stehen abgemeldet die direkten Aktionen Anmelden,
+Registrieren und Passwort wiederherstellen bereit. Die Auswahl öffnet nur das
+jeweilige Formular. Bei gültiger Sitzung stehen Abmelden und Neuerzeugung eines
+Wiederherstellungscodes bereit. Letztere öffnet ein Formular zur Bestätigung
+mit dem aktuellen Passwort. Ein vorhandenes lokales Kontoprofil kann ohne
+gültige Sitzung geöffnet bleiben und erlaubt dann erneutes Anmelden. Ein
+bloßer Netzfehler entwertet die Sitzung nicht. Geschützte Profil- und
+Gerätewiederaufnahme bleiben erreichbar.
+
+Aktionsstatus, aktives Profil und Synczustand sind getrennt sichtbar.
+Authentifizierungserfolg setzt eine gültige Serverantwort und dauerhaft
+bestätigte lokale Aktivierung voraus. Bei
+Registrierung mit fehlgeschlagener lokaler Aktivierung bleibt das bisherige
+Profil aktiv und der ausgegebene Code verfügbar. Passwortwiederherstellung
+fordert zur erneuten Anmeldung auf. Die lokale Abmeldung kann auch bei
+ausstehender Bestätigung des serverseitigen Sitzungsendes gelingen.
+
+Registrierung, Passwortwiederherstellung und Codeerneuerung zeigen den
+ausgegebenen Code im auswählbaren Feld bis zur bewussten Schließung. Kopieren
+überträgt nur den Code. Wenn sich der Clipboard-Zugriff nicht bestätigen lässt,
+bleibt der Weg über manuelle Auswahl und Kopieren sichtbar. Die Anzeige hält
+den Code nur vorübergehend im Formular. Nach dem Schließen erhält eine
+sichtbare Kontoaktion den Fokus.
+
+Die feste API-Basis ist Teil der Profilidentität. Zugangsdaten der Sitzung liegen
+getrennt von den Rätseldateien in session.json des Kontos. Die Auswahl im
+Serververzeichnis bleibt über einen Neustart erhalten.
+
+Jede ausstehende Fassung bindet ihre lokale Generation, base_server_revision
+und parent_local. Letzteres bezeichnet die zugehörige vorbereitete lokale
+Vorgängerfassung. Ein eigener angewendeter Snapshot kann diese Bearbeitungslinie
+auf seine bestätigte Revision fortführen. Ein späterer GET ändert die
+Bearbeitungsbasis einer bereits ausstehenden Fassung nicht. Die lokale
+Schreibabsicht eines Empfangs führt received_revision. Ihre Veröffentlichung
+aktualisiert Basis und lokalen Stand ohne einen Rückupload. Ein Abbruchauftrag
+liegt mit unveränderten Bodybytes unter abandon neben dem Originalrequest.
+Auf Web warten Slot-/Dirtyzustand, vorbereiteter Request oder Abbruch und
+anschließender Receipt jeweils auf eine eigene IDBFS-Transaktion.
+
+Der Sender bündelt beim Verlassen eines Rätsels und bei neuem Abschluss zwei
+Sekunden. Bei durchgehender Bearbeitung prüft er nach 600 Sekunden, ob sich
+der Fortschritt geändert hat. Fehlversuche verwenden 30, 60, 120, 240 und
+anschließend 300 Sekunden Wartezeit. Ein längeres Retry-After gilt weiter.
+Der Transporttimeout beträgt 30 Sekunden.
+
+Die Migration von Datenbankstand 1 auf 2 projiziert aktuelle und frühere
+Versionen sowie Konfliktkandidaten in einer Transaktion. Resetmarker, Identitäten,
+Revisionen, Zeiten, Gerätewasserstände, Requesthashes und Antwortbelege bleiben
+erhalten. Readiness und Sicherung/Restore setzen Datenbankstand 2 voraus.
 
 ## 6. Prüfung und Zuständigkeit
 

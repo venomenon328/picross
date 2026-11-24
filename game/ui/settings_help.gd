@@ -1,12 +1,25 @@
 extends "res://ui/book_button.gd"
-## Local focus entry for the same styled tooltip used by mouse hover.
+## Stationary paper icon with the shared tooltip and a keyboard focus entry.
+const ICON = preload("res://art/book/help.svg")
+const Text = preload("res://ui/ui_text.gd")
 var focus_tip: Control
 var focus_layer: CanvasLayer
 
 func _ready() -> void:
+	focus_mode = Control.FOCUS_ALL
 	super._ready()
 	focus_entered.connect(func() -> void: call_deferred("show_focus_tooltip"))
 	pressed.connect(show_focus_tooltip)
+
+func layout(value: float) -> void:
+	ui_scale = value
+	custom_minimum_size = Vector2.ONE*44*value
+	add_theme_font_override("font",Text.small_font(Text.small_size(value)))
+	add_theme_font_size_override("font_size",Text.small_size(value))
+
+func _draw() -> void:
+	var extent := Vector2.ONE*26*ui_scale
+	draw_texture_rect(ICON,Rect2((size-extent)/2,extent),false,INK)
 
 func _get_tooltip(at_position: Vector2) -> String:
 	return "" if is_instance_valid(focus_tip) else super._get_tooltip(at_position)

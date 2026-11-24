@@ -108,6 +108,13 @@ static func scroll_steps(node: Node, u: float) -> void:
 	for child: Node in node.get_children(true): scroll_steps(child,u)
 
 static func checks(target: Theme, u: float) -> void:
+	var spacing := StyleBoxEmpty.new()
+	spacing.content_margin_left = 10*u
+	spacing.content_margin_right = 10*u
+	spacing.content_margin_top = 5*u
+	spacing.content_margin_bottom = 5*u
+	for state: String in ["normal","hover","pressed","hover_pressed","disabled"]:
+		target.set_stylebox(state,"CheckBox",spacing)
 	for name: String in ["checked","unchecked","checked_disabled","unchecked_disabled"]:
 		target.set_icon(name,"CheckBox",icon("checkbox-checked" if name.begins_with("checked") else "checkbox-empty",u,name.ends_with("disabled")))
 	target.set_color("checkbox_checked_color","CheckBox",Color.WHITE)

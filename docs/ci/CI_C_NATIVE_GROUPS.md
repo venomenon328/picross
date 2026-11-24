@@ -333,6 +333,19 @@ Aktuelle echte Windows-Originale bleiben ein einmaliger befristeter Reviewbeleg.
 
 ## Kurze Historyroute
 
+SYNC-PERF ergänzt die Neustartprüfung um die lokal bestätigte Generation und
+das abgeschlossene Intent. In core prüft der Windows-Lauf einen verspäteten
+Helfer bei liegengebliebenem Kandidaten, eine jüngere Publikation und die frisch
+gelesene Journalgeneration mit zugehörigem Primary. Er prüft auch die verlorene
+Quittung nach erfolgtem Austausch, Create-only und den separat gelöschten Merker.
+Der vorhandene K-B-Fall in catalog liest den erneuerten Merker frisch von Disk.
+Auf Windows prüft er zusätzlich Zellaktion und Undo bei ausgefallenem Helfer
+sowie Navigation, frisches Lesen von Primary und Backup und separaten Merker-Retry.
+Die Kontoprobe in catalog/information betätigt nach ruhendem Bestandsabgleich
+Zelle, Undo und Redo und prüft lokale Bestätigung, Transportaufrufe und Fälligkeit.
+Der gepaarte Windows-Latenzvergleich und der Chromium-Test für Save,
+IDBFS-Callback, Fehler, Retry und Reload bleiben einmalige Paketnachweise.
+
 In `native.history` und der entsprechenden lokalen Auswahl gelten höchstens
 20 semantische Benutzerkommandos, sechs neue wirksame Transaktionen und genau
 zwei echte Spielprozesse (Schreiben, frisches Laden/Redo). Der aktuelle feste Plan
@@ -349,7 +362,7 @@ Spuren. SYNC-B1 ergänzt Kontocheckpoints an Kommando 11 (Save und Request), 14
 (jüngerer Kontosave), 15 (neuer Prozess und Laden) und 16 (Redo und Save).
 Beide Journal-/Primary-Paare, die Requestbytes, eine Fremdkonto-Datei und die
 Beobachtungen im Trace werden unabhängig gelesen. Der technische Windowslauf
-ist einmalig für die B1-Abnahme. Keine versteckten Setupaktionen, 500er-Route
+für SYNC-PROGRESS-A01 prüft getrennt das vollständige lokale Primary, den reduzierten Request, lokale Bedienänderungen und die Altjournalsperre. Keine versteckten Setupaktionen, 500er-Route
 oder automatische Stressmatrix.
 [CI2-D-T01](https://github.com/venomenon328/picross/blob/6fe91a08a4d073547df43c6aebbe8ead4c45ae0f/docs/CI2_D_VERIFICATION.md) bleibt der historische Einführungsnachweis.
 
@@ -633,6 +646,23 @@ Auswahl, fehlende/doppelte/unausgeführte Fälle und gefälschte Grenzbelege.
 Die gestrichenen Kreuzprodukte werden nicht in einen anderen Pflichtjob verlagert.
 Gezielte Untersuchungen konkreter Regressionen bleiben separat möglich. Frühere
 U01-/T01-Läufe sind Baselines ihrer tatsächlichen Commits, keine heutige Volltestpflicht.
+
+## Kontoeinstellungen · SYNC-UX-CLEANUP / #821
+
+Im vorhandenen Informationsprozess prüft sync_account_cases.gd die direkten
+Kontoaktionen, Sitzungswechsel, Codeanzeige und Fokus, Fehler beim lokalen
+Speichern, laufende Aktionen, veraltete Antworten und ungelösten Konfliktstatus.
+display_cases.gd prüft die zwei rahmenlosen Anzeigehilfen, ihre Trefferfläche
+und den Tooltip bei Fokus- und Skalenwechsel. Die Passwort-Hilfe wird im
+Kontofall geprüft.
+
+Der Pages-Prozess führt keinen Vergleichsfall oder Vergleichscheckpoint mehr.
+CATALOG_CASES, Producer und Reader verlangen die verbleibenden Checkpoints.
+Der Vergleichsbeleg wird nicht mehr erzeugt. Die Profil-, Journal-, Protokoll-
+und Schedulerprüfungen in native.core bleiben maßgeblich für gespeicherte
+Aufträge und Konfliktschutz. Windows- und Browser-Originale der neuen Bedienung
+gehören zum einmaligen
+[T02](https://github.com/venomenon328/picross/issues/821#issuecomment-7113818817).
 
 ## Adaptervorbereitung · #502 / P2-D-V01
 

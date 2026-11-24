@@ -1,5 +1,6 @@
 """Bounded, redirect-free REST reads for the fixed production repository."""
 from contextlib import contextmanager
+from contextvars import ContextVar
 from datetime import datetime, timezone
 import http.client
 import json
@@ -13,6 +14,7 @@ REPOSITORY = 'venomenon328/picross'
 API = 'https://api.github.com/repos/' + REPOSITORY
 TOKEN_NAMES = ('GH_TOKEN', 'GITHUB_TOKEN')
 _workspace_token = None
+_publisher_token = ContextVar('publisher_token', default=None)
 
 
 def _windows_user_token():
@@ -37,6 +39,34 @@ def load_workspace_token():
     primary, fallback = (os.environ.pop(name, '').strip() for name in TOKEN_NAMES)
     # The clean update helper starts its successor without either environment key.
     _workspace_token = primary or fallback or (_windows_user_token() if os.name == 'nt' else None)
+
+
+def publisher_token():
+    return _publisher_token.get()
+
+
+@contextmanager
+def use_publisher_token(token):
+    if not token or not re.fullmatch(r'[A-Za-z0-9._~+/\-]+=*', token):
+        raise Failure('auth', 'Missing or invalid publisher credential')
+    current = publisher_token()
+    if current is not None and current != token:
+        raise Failure('auth', 'Publisher credential changed during the operation')
+    scope = _publisher_token.set(token)
+    try:
+        yield
+    finally:
+        _publisher_token.reset(scope)
+
+
+def publisher_environment_token():
+    candidates = {os.environ.get(name, '').strip() for name in TOKEN_NAMES} - {''}
+    if _workspace_token:
+        candidates.add(_workspace_token)
+    if len(candidates) != 1:
+        message = 'Conflicting publisher credentials' if candidates else 'No publisher credential in GH_TOKEN or GITHUB_TOKEN'
+        raise Failure('auth', message + '; select the intended credential explicitly')
+    return candidates.pop()
 
 
 class Failure(ValueError):
@@ -109,21 +139,25 @@ def transport_errors(*, api=False, authenticated=False):
 
 
 @contextmanager
-def open_api(url, headers, *, timeout, use_workspace_token=True, token=None):
+def open_api(url, headers, *, timeout, use_workspace_token=True, token=None,
+             method='GET', data=None, upload=False, redirect=None):
     parsed = urlsplit(url)
     repo_path = '/repos/' + REPOSITORY
-    if (parsed.scheme != 'https' or parsed.netloc != 'api.github.com' or parsed.fragment or
+    host = 'uploads.github.com' if upload else 'api.github.com'
+    if upload and (method != 'POST' or not re.fullmatch(repo_path + r'/releases/[1-9][0-9]*/assets', parsed.path)):
+        raise ValueError('Unexpected GitHub upload URL')
+    if (parsed.scheme != 'https' or parsed.netloc != host or parsed.fragment or
             (parsed.path != repo_path and not parsed.path.startswith(repo_path + '/')) or
             re.search(r'[\s\x00-\x1f\x7f\\]', url)):
         raise ValueError('Unexpected GitHub API URL')
     if token is None and use_workspace_token:
-        token = _workspace_token
-    request = Request(url, headers=headers, method='GET')
+        token = publisher_token() or _workspace_token
+    request = Request(url, headers=headers, method=method, data=data)
     if token:
         if not re.fullmatch(r'[A-Za-z0-9._~+/\-]+=*', token):
             raise Failure('auth', 'GitHub-Token hat ein ungültiges Format. Windows-Umgebungsvariable prüfen und neu starten.')
         # Defense in depth: urllib never copies this header to a redirect request.
         request.add_unredirected_header('Authorization', 'Bearer ' + token)
     with transport_errors(api=True, authenticated=bool(token)):
-        with build_opener(ProxyHandler({}), NoRedirect()).open(request, timeout=timeout) as response:
+        with build_opener(ProxyHandler({}), redirect or NoRedirect()).open(request, timeout=timeout) as response:
             yield response

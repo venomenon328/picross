@@ -2,9 +2,15 @@
 
 Der Dienst implementiert den Serverteil des [SYNC-Vertrags](../../docs/game/SAVE_SYNC.md).
 Die Spielclients und der öffentliche Betrieb folgen in eigenen Paketen.
-Der Dienst hat keine Rätsellösungen. Die geprüfte Eigenschaft eines Snapshots heißt
-`schema_history_checked`. Sein vollständiges Schema und die Endpunkte liefert
+Der Dienst prüft die Struktur des Rätselfortschritts. Die geprüfte Eigenschaft eines Snapshots heißt
+`progress_structure_checked`. Sein vollständiges Schema und die Endpunkte liefert
 `GET /openapi.json`.
+
+Start und `sync.admin migrate` aktualisieren Datenbankstand 1 atomar auf 2.
+Alle gespeicherten Snapshot- und Kandidatenfassungen erhalten die acht Felder von
+`picross-progress/v1`. Ein fehlerhafter Altbestand bricht die gesamte Transaktion
+ab. Backup und Restore unterstützen Stand 2. Alte Archive werden beim Restore
+vor der Veröffentlichung zurückgewiesen.
 
 ## Lokaler Betrieb
 
@@ -29,7 +35,9 @@ Standardausgabe vertraulich übergeben. Register erzeugt Geräte-ID, Sitzung und
 Recoverycode. Login mit bekannter Geräte-ID ersetzt nur deren Sitzung. Tokens
 und Codes werden als SHA-256-Abdruck gespeichert. Passwörter verwenden die
 Argon2id-Empfehlung der gebundenen pwdlib/argon2-cffi (64 MiB, drei Iterationen,
-Parallelität vier). Jede Mutation bindet Antwort und Gerätewasserstand in derselben
+Parallelität vier). Registrierung, Anmeldung, Passwortwiederherstellung und
+Codeerneuerung verwenden 8–128 Unicode-Codepunkte und höchstens 1024 UTF-8-Bytes.
+Leerzeichen bleiben Teil des Passworts. Jede Mutation bindet Antwort und Gerätewasserstand in derselben
 Transaktion wie den Spielstand. Das Kontoschloss serialisiert konkurrierende
 Entscheidungen und Quotenprüfung für dieses Konto.
 
@@ -47,6 +55,15 @@ tatsächliche Peer-IP für das IP-Limit. Für einen öffentlichen Anschluss müs
 TLS, vertrauenswürdige Proxygrenze und Betriebswerte in SYNC-C eingerichtet
 und geprüft werden. Containerbasis und PostgreSQL-Image sind per Digest,
 Python-Pakete einschließlich transitiver Abhängigkeiten per Version/Hash gebunden.
+
+## Kompatibilität der Passwortgrenze
+
+Zuerst die neue API-Version bereitstellen und prüfen, danach die passenden
+Windows- und Webclients veröffentlichen oder verifizieren. Sobald neue
+Passwörter mit 8–11 Codepunkten vergeben wurden, weist eine API mit dem
+früheren Minimum 12 deren Anmeldung und Codeerneuerung ab. Bestehende längere
+Passwörter und Hashes bleiben nutzbar. Die neue Untergrenze benötigt keine
+Passwortmigration.
 
 ## Sicherung und kontrollierte Rücksicherung
 
@@ -86,3 +103,13 @@ Zwei technische Clients verwenden echte HTTP-Verbindungen. Die beiden
 Compose-Projekte verwenden eigene Namen, lokale Ports, Datenvolumes und
 synthetische Konten. Das Modul entfernt sie nach dem Lauf. Der CI-Reader
 verlangt alle Kriterien und die konkrete Commit-/Laufbindung.
+
+## Gerätebeleg und Requestabbruch
+
+Der authentisierte Client kann für sein eigenes Gerät den letzten
+Requesthash, HTTP-Status und gespeicherten Receipt über GET /v1/device/checkpoint
+abgleichen. POST /v1/device/abandon schließt eine freie Originalsequenz
+ausdrücklich unter ihrem Originalhash ab. Beide Operationen verwenden die
+Generation und denselben Kontolock wie normale Mutationen. Die vorhandenen
+Gerätespalten werden durch Backup und Restore mitgeführt. Wireformen und
+Sequenzentscheidungen stehen in [SAVE_SYNC](../../docs/game/SAVE_SYNC.md).

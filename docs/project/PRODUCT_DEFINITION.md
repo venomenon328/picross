@@ -211,11 +211,16 @@ Das vollständige Solo-Spiel funktioniert offline, einschließlich Fortschritt u
 Optionale Spielerkonten und gemeinsame Spielstände zwischen Web und mehreren
 Windowsgeräten sind als [SYNC-Spezifikation](../game/SAVE_SYNC.md) freigegeben.
 Ohne Konto bleibt die bisherige lokale Speicherung getrennt. Ein Kontoprofil
-arbeitet ebenfalls offline und synchronisiert vollständige Spielstände später;
-Gastübernahme, Konfliktentscheidung und Wiederherstellung sind ausdrücklich.
-Der eigenständige [Konto-/Speicherdienst](../../server/save_sync/README.md) ist implementiert.
-Clientanbindung und Livebetrieb folgen in gesonderten Paketen. Wertung, Ranglisten
-und dauerhafte „jemals gelöst“-Statistik gehören nicht zum Synchronisierungsumfang. Lieferstatus: [#821](https://github.com/venomenon328/picross/issues/821).
+arbeitet ebenfalls offline und überträgt später gebündelt den Rätselfortschritt.
+Undo-/Redo-Verlauf, Farbe und Ansicht bleiben auf dem Gerät. Anmelden,
+Registrieren und Passwortwiederherstellung öffnen ihre Formulare in den
+Einstellungen. Angemeldet sind Abmeldung und Codeerneuerung verfügbar.
+Gast- und Kontospielstände bleiben getrennt. Ungelöste Konflikte werden angezeigt,
+ihre Fassungen bleiben ohne Auswahl im Spielclient erhalten.
+Der eigenständige [Konto-/Speicherdienst](../../server/save_sync/README.md) und
+die Clientanbindung sind implementiert. Die Betriebsabnahme folgt separat.
+Wertung, Ranglisten und dauerhafte „jemals gelöst“-Statistik gehören nicht
+zum Synchronisierungsumfang. Lieferstatus in [#821](https://github.com/venomenon328/picross/issues/821).
 
 Ein plausibles Prüf- und Übertragungsmodell ist zu spezifizieren. Es wird kein manipulationssicherer Wettkampf und keine nachweisbare Verhinderung externer Lösungshilfen versprochen. Online-Ranglisten ergänzen das Spiel, bestimmen aber nicht seinen Hauptzweck.
 

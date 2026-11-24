@@ -84,6 +84,9 @@ static func validate(data: Variant, definition: Dictionary) -> String:
 		return "Ungültiges Speicherschema."
 	if not integer(data.schema) or int(data.schema) != 1:
 		return "Unbekannte Speicherversion."
+	return validate_state(data, definition, {})
+
+static func validate_state(data: Dictionary, definition: Dictionary, baseline: Dictionary) -> String:
 	if data.definition_id != definition.id or not integer(data.definition_revision) or int(data.definition_revision) != int(definition.revision):
 		return "Definition oder Revision passt nicht."
 	if not integer(data.width) or not integer(data.height) or int(data.width) != int(definition.width) or int(data.height) != int(definition.height):
@@ -104,6 +107,15 @@ static func validate(data: Variant, definition: Dictionary) -> String:
 	var replay: Array[int] = []
 	replay.resize(count)
 	replay.fill(-1)
+	if not baseline.is_empty():
+		if not keys(baseline, ["cells", "undo_used", "completed"]) or not baseline.cells is Array or baseline.cells.size() != count:
+			return "Ungültige Empfangsbasis."
+		if not baseline.undo_used is bool or (baseline.undo_used and not data.undo_used) or not baseline.completed is bool:
+			return "Ungültige Merkmale der Empfangsbasis."
+		for i: int in range(count):
+			if not valid_cell(baseline.cells[i], colors): return "Ungültige Zelle der Empfangsbasis."
+			replay[i] = int(baseline.cells[i])
+		if baseline.completed != solved(replay, definition): return "Abschluss der Empfangsbasis widerspricht der Matrix."
 	var at_cursor: Array[int] = replay.duplicate()
 	for action_index: int in range(data.history.size()):
 		var action: Variant = data.history[action_index]
@@ -124,8 +136,6 @@ static func validate(data: Variant, definition: Dictionary) -> String:
 			replay[int(change.index)] = int(change.after)
 		if action_index + 1 == int(data.cursor):
 			at_cursor = replay.duplicate()
-	if int(data.cursor) == 0:
-		at_cursor.fill(-1)
 	for i: int in range(count):
 		if at_cursor[i] != int(data.cells[i]):
 			return "Matrix und History-Cursor widersprechen sich."
@@ -154,6 +164,7 @@ static func snapshot(session: Session, view: Dictionary) -> Dictionary:
 
 static func apply(data: Dictionary, session: Session) -> void:
 	session.gesture.cancel()
+	session.account_baseline = data.get("baseline", {}).duplicate(true)
 	session.player.cells.clear()
 	for value: Variant in data.cells:
 		session.player.cells.append(int(value))
@@ -168,6 +179,15 @@ static func apply(data: Dictionary, session: Session) -> void:
 	session.completed = data.completed
 	session.view_state = data.view.duplicate(true)
 
+func validate_slot(data: Variant, definition: Dictionary) -> String:
+	return validate(data, definition)
+
+func slot_snapshot(session: Session, view: Dictionary) -> Dictionary:
+	return snapshot(session, view)
+
+func older_slot(data: Variant, definition: Dictionary) -> bool:
+	return SaveRevision.old_envelope(data,definition,self)
+
 func _parse(path: String, definition: Dictionary) -> Dictionary:
 	if not SaveRevision.Recent.safe_file(path):
 		return {"status":"invalid","error":"Unsicherer Speicherpfad."}
@@ -178,13 +198,16 @@ func _parse(path: String, definition: Dictionary) -> Dictionary:
 		return {"status": "invalid", "error": "Datei nicht lesbar."}
 	var bytes: PackedByteArray = file.get_buffer(file.get_length())
 	file.close()
+	return _parse_bytes(bytes, definition)
+
+func _parse_bytes(bytes: PackedByteArray, definition: Dictionary) -> Dictionary:
 	if not SaveRevision.Recent.valid_utf8(bytes): return {"status":"invalid","error":"Ungültiges UTF-8."}
 	var raw: String = bytes.get_string_from_utf8()
 	var parser: JSON = JSON.new()
 	if parser.parse(raw) != OK or not Registry.unique_keys(raw):
 		return {"status": "invalid", "error": "JSON beschädigt."}
-	var error: String = validate(parser.data, definition)
-	if not error.is_empty() and SaveRevision.old_envelope(parser.data,definition,self):
+	var error: String = validate_slot(parser.data, definition)
+	if not error.is_empty() and older_slot(parser.data,definition):
 		return {"status":"older","data":parser.data}
 	return {"status": "valid", "data": parser.data} if error.is_empty() else {"status": "invalid", "error": error}
 
@@ -222,13 +245,13 @@ func write_slot(session: Session, view: Dictionary) -> String:
 	WebStorage.finished(str(session.definition.id), error)
 	return error
 
-func _write_slot(session: Session, view: Dictionary) -> String:
+func _write_slot(session: Session, view: Dictionary, verified: Dictionary = {}) -> String:
 	var id: String = key_for_definition(str(session.definition.id))
 	if not id in registered_ids():
 		return "Unbekanntes Fixture."
 	if SaveRevision.pending(self,id): return "Offener Revisionsreset; zuerst erneut laden."
-	var candidate: Dictionary = snapshot(session, view)
-	var error: String = validate(candidate, session.definition)
+	var candidate: Dictionary = slot_snapshot(session, view)
+	var error: String = validate_slot(candidate, session.definition)
 	if not error.is_empty():
 		return error
 	var primary_path: String = path_for(id)
@@ -244,6 +267,9 @@ func _write_slot(session: Session, view: Dictionary) -> String:
 		return "Älteren Spielstand zuerst über den Revisionsreset laden."
 	if DirAccess.make_dir_recursive_absolute(_absolute(root)) != OK:
 		return "Speicherverzeichnis nicht erstellbar."
+	if OS.get_name() == "Windows":
+		return _write_windows_slot(candidate, session.definition, temp_path, primary_path, backup_path,
+			previous.status == "valid", verified)
 	var file: FileAccess = FileAccess.open(temp_path, FileAccess.WRITE)
 	if file == null:
 		return "Temporäre Datei nicht schreibbar."
@@ -255,16 +281,66 @@ func _write_slot(session: Session, view: Dictionary) -> String:
 		return "Temporäre Datei nicht vollständig geschrieben."
 	if _parse(temp_path, session.definition).status != "valid":
 		return "Temporäre Datei besteht Validierung nicht."
-	if fail_step == "after_temp":
-		return "Testabbruch nach Tempvalidierung."
-	if previous.status == "valid":
-		if FileAccess.file_exists(backup_path) and DirAccess.remove_absolute(_absolute(backup_path)) != OK:
+	return _rotate_slot(temp_path, primary_path, backup_path, previous.status == "valid")
+
+func _write_windows_slot(candidate: Dictionary, definition: Dictionary, temporary: String, primary: String,
+		backup: String, rotate: bool, verified: Dictionary) -> String:
+	var publisher := SaveRevision.Recent.windows_publisher()
+	var guest := profile_recent_path.is_empty()
+	if not SaveRevision.Recent.safe_file(temporary):
+		return "Temporäre Datei nicht schreibbar."
+	var raw := JSON.stringify(candidate, "", true, not profile_recent_path.is_empty()) + "\n"
+	var bytes := raw.to_utf8_buffer()
+	if _parse_bytes(bytes, definition).status != "valid": return "Temporäre Datei besteht Validierung nicht."
+	var file := FileAccess.open(temporary, FileAccess.WRITE)
+	if file == null: return "Temporäre Datei nicht schreibbar."
+	# Take the independent read handle before writing. It follows the exact
+	# staged file across rename. Closing the writer still precedes both reads.
+	var held: bool = publisher != null and publisher.available and publisher.hold(temporary)
+	if not held and not guest:
+		file.close()
+		return "Temporäre Datei nicht lesbar."
+	var written := file.store_buffer(bytes)
+	file.flush()
+	var error := file.get_error()
+	file.close()
+	var expected := raw.sha256_text()
+	if not written or error != OK:
+		if held: publisher.drop()
+		return "Temporäre Datei besteht Validierung nicht."
+	var staged: String = publisher.digest(temporary) if held else ""
+	if guest and staged.is_empty():
+		# The helper only read the candidate. The Godot path can validate the
+		# staged bytes and perform the single rotation with the writer closed.
+		if _parse(temporary, definition).status != "valid":
+			return "Temporäre Datei besteht Validierung nicht."
+		return _rotate_slot(temporary, primary, backup, rotate)
+	if staged != expected:
+		if held: publisher.drop()
+		return "Temporäre Datei besteht Validierung nicht."
+	var failure := _rotate_slot(temporary, primary, backup, rotate)
+	if not failure.is_empty():
+		publisher.drop()
+		return failure
+	var published: String = publisher.digest(primary, true)
+	if guest and published.is_empty() and SaveRevision.Recent.safe_file(primary):
+		# Rotation already happened. Confirm the exact, fully validated
+		# bytes at Primary without touching any of the three slot paths.
+		published = FileAccess.get_sha256(primary)
+	if published != expected:
+		return "Temporäre Datei nicht als Primärstand bestätigt."
+	verified.merge({"path":primary, "sha256":expected})
+	return ""
+
+func _rotate_slot(temporary: String, primary: String, backup: String, rotate: bool) -> String:
+	if fail_step == "after_temp": return "Testabbruch nach Tempvalidierung."
+	if rotate:
+		if FileAccess.file_exists(backup) and DirAccess.remove_absolute(_absolute(backup)) != OK:
 			return "Altes Backup nicht entfernbar."
-		if DirAccess.rename_absolute(_absolute(primary_path), _absolute(backup_path)) != OK:
+		if DirAccess.rename_absolute(_absolute(primary), _absolute(backup)) != OK:
 			return "Primärstand nicht als Backup rotierbar."
-	if fail_step == "after_rotation":
-		return "Testabbruch nach Backuprotation."
-	if DirAccess.rename_absolute(_absolute(temp_path), _absolute(primary_path)) != OK:
+	if fail_step == "after_rotation": return "Testabbruch nach Backuprotation."
+	if DirAccess.rename_absolute(_absolute(temporary), _absolute(primary)) != OK:
 		return "Temporäre Datei nicht als Primärstand einsetzbar."
 	return ""
 

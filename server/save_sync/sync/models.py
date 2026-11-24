@@ -1,4 +1,4 @@
-"""Closed wire shapes and definition-independent Schema 1 validation."""
+"""Closed wire shapes and definition-independent progress validation."""
 
 import unicodedata
 from typing import Annotated, Generic, Literal, TypeVar
@@ -14,9 +14,13 @@ PuzzleId = Annotated[str, Field(pattern=r"^[A-Za-z0-9_-]{1,128}$")]
 Uuid = Annotated[str, Field(pattern=r"^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$")]
 Secret = Annotated[str, Field(pattern=r"^[A-Za-z0-9_-]{43}$")]
 Username = Annotated[str, Field(pattern=r"^[A-Za-z0-9][A-Za-z0-9_-]{2,31}$"), AfterValidator(str.lower)]
-Password = Annotated[str, Field(min_length=12, max_length=128)]
-ZOOMS = (12, 14, 16, 18, 20, 22, 24, 26, 28, 30, 32, 34, 36, 40, 44, 48, 54, 60, 66, 72)
+def password_bytes(value: str) -> str:
+    if len(value.encode("utf-8")) > 1024:
+        raise ValueError("password byte length")
+    return value
 
+
+Password = Annotated[str, Field(min_length=8, max_length=128), AfterValidator(password_bytes)]
 
 def device_label(value):
     if any(unicodedata.category(c) == "Cc" for c in value):
@@ -31,83 +35,22 @@ class Shape(BaseModel):
     model_config = ConfigDict(extra="forbid", strict=True, allow_inf_nan=False)
 
 
-class Edge(Shape):
-    anchor: Literal["grid_end", "outer_start"]
-
-
-class Middle(Shape):
-    anchor: Literal["middle"]
-    start: Positive
-    end: Positive
-
-
-class View(Shape):
-    center: Annotated[list[float], Field(min_length=2, max_length=2)]
-    zoom: Positive
-    overview: bool
-    active_color: Positive
-    tool: Literal["fill", "erase", "hand"]
-    row_clue_reads: list[Edge | Middle]
-    column_clue_reads: list[Edge | Middle]
-
-
-class Change(Shape):
-    index: Natural
-    before: Cell
-    after: Cell
-
-
 class Save(Shape):
-    schema_version: Annotated[int, Field(alias="schema", ge=1, le=1)]
+    format: Literal["picross-progress/v1"]
     definition_id: PuzzleId
     definition_revision: Positive
     width: Size
     height: Size
     cells: list[Cell]
-    history: list[list[Change]]
-    cursor: Natural
     undo_used: bool
     completed: bool
-    view: View
 
     @model_validator(mode="after")
-    def check_replay(self):
-        size = self.width * self.height
-        if len(self.cells) != size or self.cursor > len(self.history):
-            raise ValueError("dimensions or cursor")
-        if self.cursor < len(self.history) and not self.undo_used:
-            raise ValueError("redo without undo")
-        board = [-1] * size
-        colors = {self.view.active_color}
-        for step, action in enumerate(self.history):
-            if step == self.cursor and board != self.cells:
-                raise ValueError("cursor state")
-            if not 1 <= len(action) <= size:
-                raise ValueError("action size")
-            seen = set()
-            for change in action:
-                i = change.index
-                if i >= size or i in seen or change.before == change.after or board[i] != change.before:
-                    raise ValueError("invalid history")
-                board[i] = change.after
-                seen.add(i)
-                if change.after > 0:
-                    colors.add(change.after)
-                    if len(colors) > 8:
-                        raise ValueError("palette")
-        if self.cursor == len(self.history) and board != self.cells:
-            raise ValueError("cursor state")
-        x, y = self.view.center
-        if not (0 <= x <= self.width and 0 <= y <= self.height and self.view.zoom in ZOOMS):
-            raise ValueError("view")
-        for lines, count, length in (
-            (self.view.row_clue_reads, self.height, self.width),
-            (self.view.column_clue_reads, self.width, self.height),
-        ):
-            if len(lines) != count or any(
-                isinstance(line, Middle) and not line.start < line.end < length for line in lines
-            ):
-                raise ValueError("clue position")
+    def check_cells(self):
+        if len(self.cells) != self.width * self.height:
+            raise ValueError("cell count")
+        if len({cell for cell in self.cells if cell > 0}) > 8:
+            raise ValueError("palette")
         return self
 
 
@@ -198,8 +141,33 @@ class Mutation(Shape):
         "sequence_reused",
         "sequence_stale",
         "sequence_gap",
+        "request_abandoned",
     ]
     sequence_consumed: bool
+
+
+class Abandon(Shape):
+    format: Literal["picross-request-abandon/v1"]
+    request_seq: Positive
+    expected_last_request_seq: Natural
+    request_hash: Annotated[str, Field(pattern=r"^[0-9a-f]{64}$")]
+    puzzle_id: PuzzleId
+
+    @model_validator(mode="after")
+    def next_sequence(self):
+        if self.request_seq != self.expected_last_request_seq + 1:
+            raise ValueError("sequence does not follow expected checkpoint")
+        return self
+
+
+class Checkpoint(Shape):
+    format: Literal["picross-device-checkpoint/v1"]
+    account_id: Uuid
+    device_id: Uuid
+    last_request_seq: Natural
+    last_request_hash: Annotated[str, Field(pattern=r"^[0-9a-f]{64}$")] | None
+    response_status: Literal[200, 409] | None
+    response_body: str | None
 
 
 class Inventory(Shape):
@@ -229,7 +197,7 @@ class CandidateSummary(Entry):
 
 class Content(Shape):
     save: Save | None
-    validation: Literal["schema_history_checked"] | None
+    validation: Literal["progress_structure_checked"] | None
 
 
 class Record(Summary, Content):
@@ -260,6 +228,9 @@ class Error(Shape):
         "rate_limited",
         "unavailable",
         "server_generation_changed",
+        "sequence_reused",
+        "sequence_stale",
+        "sequence_gap",
     ]
 
 

@@ -32,7 +32,7 @@ Maus in Chromium und Firefox. Windows, Regeln, Schema 1 und Savevalidierung
 bleiben erhalten. Der gelieferte WEB-1-Weg ist statisch, ohne Backend, PWA oder
 Cloudsave und ohne automatisches Deployment. Der zusätzliche optionale
 [SYNC-Dienst](../game/SAVE_SYNC.md) ist als eigenständiger Server implementiert.
-Seine spätere Kontoanbindung ergänzt diesen Webweg; kontolose Browserpersistenz
+Das Übertragungsformat enthält nur Rätselfortschritt. Lokale History, Farbe und Ansicht gehören zum Browser-Save. Seine spätere Kontoanbindung ergänzt diesen Webweg; kontolose Browserpersistenz
 und statisches Deployment bleiben bestehen. Lieferstatus: [#821](https://github.com/venomenon328/picross/issues/821).
 P1 enthält kein Audio; der Webstart verwendet deshalb Godots Dummy-Audiotreiber
 und erzeugt keine unbenötigten Browser-Audiokontexte.
@@ -229,3 +229,12 @@ WEB-D01 prüft vor erstem Live-Deployment tatsächliches Zielsystem, Benutzer,
 Hostschlüssel, Pfad, URL/TLS und öffentliche oder geschützte Auslieferung.
 Persönliche Probe, Mergefreigabe und Live-Deployment bleiben separate Aufträge.
 
+## Optionale Konten
+
+Die Betreiberkonfiguration picross/sync/api_base im Godot-Projekt bestimmt
+die HTTPS-Basis vor dem Export. Ohne Wert startet der Gast lokal.
+picross/sync/loopback_test erlaubt HTTP ausschließlich für einen isolierten
+Loopback-Test. Der Dienst benötigt die konkrete Web-Origin in SYNC_ORIGINS.
+Der bestehende Web-Lock schützt die Hydration und den einzigen schreibenden Tab.
+Die Kontoaufträge nutzen denselben serialisierten IDBFS-Weg. Jeder Callback
+bestätigt nur das zugehörige Ticket. Ein Fehler lässt die Übertragung ausstehend.

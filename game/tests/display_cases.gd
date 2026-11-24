@@ -164,7 +164,7 @@ static func run(r: SceneTree) -> void:
 			r.app.show_information("settings")
 			await r.frames()
 			var groups: Array = [r.app.settings_panel.get_node("display-options"),r.app.settings_panel.get_node("puzzle-options")]
-			r.check(groups[0].heading.text == "Anzeige" and groups[1].heading.text == "Rätselansicht" and r.app.settings_panel.get_child_count() == 2,"N02: exactly two framed settings groups")
+			r.check(groups[0].heading.text == "Anzeige" and groups[1].heading.text == "Rätselansicht" and r.app.settings_panel.get_node("account-settings").heading.text == "Spielerkonto" and r.app.settings_panel.get_child_count() == 3,"B2: account access alongside display and puzzle settings")
 			r.check(r.app.settings_title.get_theme_font("font") == catalog_font and catalog_size == roundi(28*scale) and r.app.settings_title.get_theme_font_size("font_size") == catalog_size,"BTI: settings text fallback retains Bakso resource and size")
 			for group: Control in groups:
 				r.check(group.heading.get_theme_font("font") == catalog_font and group.heading.get_theme_font_size("font_size") == roundi(20*scale) and group.heading.get_theme_font_size("font_size") < catalog_size,"N03-E01: smaller Bakso 20 group titles retain original resource")
@@ -185,7 +185,7 @@ static func run(r: SceneTree) -> void:
 				r.check(field.caption.global_position.x < choice.global_position.x and absf(field.caption.get_global_rect().get_center().y-choice.get_global_rect().get_center().y) < 1 and choice.size.y >= 44*scale,"N03: inline label and HZ choice "+str(field.name))
 				if field.caption.text in ["Fenstergröße","Rätselansicht"]:
 					help_count += 1
-					r.check(help != null and help.global_position.x >= choice.get_global_rect().end.x and absf(help.get_global_rect().end.x-field.get_global_rect().end.x) < 1 and help.size.x >= 44*scale and help.size.y >= 44*scale and help.focus_mode == Control.FOCUS_ALL and not help.tooltip_text.is_empty(),"N03: independent help at safe row edge "+str(field.name))
+					r.check(help != null and help.global_position.x >= choice.get_global_rect().end.x and absf(help.get_global_rect().end.x-field.get_global_rect().end.x) < 1 and help.size.x >= 44*scale and help.size.y >= 44*scale and help.focus_mode == Control.FOCUS_ALL and help.text.is_empty() and help.get_theme_stylebox("normal") is StyleBoxEmpty and not help.tooltip_text.is_empty(),"N03: independent icon-only help at safe row edge "+str(field.name))
 				else:
 					r.check(help == null and field.get_child_count() == 2 and absf(choice.get_global_rect().end.x-field.get_global_rect().end.x) < 1,"N03: no help/focus placeholder; dropdown fills released width and gap "+str(field.name))
 				r.check(last_x < 0 or absf(choice.global_position.x-last_x)<1,"N02: common measured columns")
@@ -203,6 +203,13 @@ static func run(r: SceneTree) -> void:
 			tip_help.grab_focus()
 			await r.frames()
 			r.check(is_instance_valid(tip_help.focus_tip) and Rect2(Vector2.ZERO,Vector2(size)).encloses(tip_help.focus_tip.get_global_rect()),"N02: focus opens styled help inside viewport")
+			tip_help.layout(1.25 if scale == 1.0 else 1.0)
+			r.check(not is_instance_valid(tip_help.focus_tip),"N02: scale change dismisses help")
+			tip_help.layout(scale)
+			r.app.ui_scale_choice.grab_focus()
+			tip_help.grab_focus()
+			await r.frames()
+			r.check(is_instance_valid(tip_help.focus_tip),"N02: help reopens on new focus")
 			r.app.ui_scale_choice.grab_focus()
 			await r.frames()
 			r.check(not is_instance_valid(tip_help.focus_tip),"N02: focus exit dismisses help")

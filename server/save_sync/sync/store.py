@@ -8,6 +8,7 @@ import json
 from fastapi.responses import Response
 
 from .db import Failure, quota, stamp
+from .models import Mutation
 
 VERSION = " FROM versions WHERE account_id=%s AND puzzle_id=%s"
 CANDIDATE = " FROM candidates WHERE account_id=%s AND puzzle_id=%s"
@@ -29,7 +30,7 @@ def export(row, *, full=False):
     if full:
         if result["save"] is not None:
             result["save"] = json.loads(result["save"])
-        result["validation"] = "schema_history_checked" if result["kind"] == "snapshot" else None
+        result["validation"] = "progress_structure_checked" if result["kind"] == "snapshot" else None
     return result
 
 
@@ -190,6 +191,67 @@ def apply(db, device, key, current, body):
     db.execute("DELETE" + VERSION + " AND server_revision<%s", (*key, revision - 10))
     check_quota(db, key[0])
     return "ok", revision, cid
+
+
+def checkpoint(device):
+    seq = device["last_request_seq"]
+    signature, status, payload = (device[k] for k in ("request_hash", "response_status", "response_body"))
+    if seq == 0:
+        if any(value is not None for value in (signature, status, payload)):
+            raise Failure(503, "unavailable")
+    else:
+        if signature is None or len(signature) != 32 or not isinstance(payload, str):
+            raise Failure(503, "unavailable")
+        try:
+            receipt = Mutation.model_validate_json(payload)
+        except ValueError:
+            raise Failure(503, "unavailable") from None
+        if (receipt.request_seq != seq or not receipt.sequence_consumed
+                or status != (200 if receipt.code == "ok" else 409)):
+            raise Failure(503, "unavailable")
+        if receipt.code == "conflict_saved":
+            valid = receipt.outcome == "conflict" and receipt.candidate_id is not None
+        elif receipt.code == "ok":
+            valid = receipt.outcome == "applied" or (receipt.outcome == "discarded" and receipt.candidate_id is not None)
+        else:
+            valid = (receipt.outcome == "rejected" and receipt.candidate_id is None
+                     and receipt.code not in ("sequence_reused", "sequence_stale", "sequence_gap"))
+        if not valid:
+            raise Failure(503, "unavailable")
+    return {
+        "format": "picross-device-checkpoint/v1", "account_id": str(device["account_id"]),
+        "device_id": str(device["device_id"]), "last_request_seq": seq,
+        "last_request_hash": signature.hex() if signature is not None else None,
+        "response_status": status, "response_body": payload,
+    }
+
+
+def abandon(db, device, body):
+    if device["needs_inventory"]:
+        raise Failure(409, "server_generation_changed")
+    prior = checkpoint(device)
+    last = prior["last_request_seq"]
+    if body.request_seq == last:
+        if body.request_hash == prior["last_request_hash"]:
+            return prior
+        raise Failure(409, "sequence_reused")
+    if body.expected_last_request_seq != last:
+        raise Failure(409, "sequence_stale" if body.request_seq < last else "sequence_gap")
+    current = db.execute(
+        "SELECT server_revision FROM puzzles WHERE account_id=%s AND puzzle_id=%s",
+        (device["account_id"], body.puzzle_id),
+    ).fetchone()
+    receipt = Mutation(
+        format="picross-sync/v1", request_seq=body.request_seq, outcome="rejected",
+        server_revision=current["server_revision"] if current else 0, candidate_id=None,
+        code="request_abandoned", sequence_consumed=True,
+    )
+    saved = db.execute(
+        """UPDATE devices SET last_request_seq=%s,request_hash=%s,response_status=409,response_body=%s
+           WHERE device_id=%s RETURNING *""",
+        (body.request_seq, bytes.fromhex(body.request_hash), receipt.model_dump_json(), device["device_id"]),
+    ).fetchone()
+    return checkpoint(saved)
 
 
 def mutate(db, device, puzzle, body, request):

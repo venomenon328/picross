@@ -3,6 +3,7 @@
 import argparse
 import os
 import subprocess
+import sys
 import tempfile
 from pathlib import Path
 
@@ -38,8 +39,8 @@ LOCKDOWN = """
 -- pg_restore clears search_path in the SQL stream; explicitly select the service schema.
 SET LOCAL search_path = pg_catalog, public;
 DO $$ BEGIN
- IF (SELECT count(*) FROM instance WHERE singleton AND version=1) <> 1 THEN
-   RAISE EXCEPTION 'Unsupported backup';
+ IF (SELECT count(*) FROM instance WHERE singleton AND version=2) <> 1 THEN
+   RAISE EXCEPTION 'Expected database version 2' USING ERRCODE = 'PS002';
  END IF;
 END $$;
 UPDATE instance SET generation=gen_random_uuid(), cursor_key=uuid_send(gen_random_uuid()) || uuid_send(gen_random_uuid());
@@ -54,7 +55,7 @@ def backup(path):
     state = subprocess.check_output(
         [*PSQL, "-Atc", "SELECT version FROM instance WHERE singleton"], text=True
     )
-    if state.strip() != "1":
+    if state.strip() != "2":
         raise ValueError("Unsupported source database")
     # An incomplete dump never takes the name of a completed backup.
     with tempfile.NamedTemporaryFile(dir=path.parent, delete=False) as target:
@@ -92,12 +93,17 @@ def restore(path):
             [*DB, "pg_restore", "--no-owner", "--no-acl", "--file=-"], stdin=archive, stdout=sql, check=True
         )
         sql.seek(0)
-        subprocess.run(
+        restored = subprocess.run(
             [*PSQL, "--single-transaction", "-c", EMPTY, "-f", "-", "-c", LOCKDOWN],
             stdin=sql,
             stdout=subprocess.DEVNULL,
-            check=True,
+            stderr=subprocess.PIPE,
         )
+        if restored.returncode:
+            if b"ERROR:  PS002" in restored.stderr:
+                raise ValueError("Unsupported backup: database version 2 required")
+            sys.stderr.buffer.write(restored.stderr)
+            restored.check_returncode()
 
 
 if __name__ == "__main__":

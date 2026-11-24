@@ -1,5 +1,7 @@
 """Publish or retire one current production job. Run as python -m tools.work_publish."""
 import argparse
+import base64
+from hashlib import sha1
 from contextlib import contextmanager
 from copy import deepcopy
 import json
@@ -8,11 +10,12 @@ import re
 from pathlib import Path
 import subprocess
 import tempfile
+from urllib.parse import urlencode
 from uuid import uuid4
 
 from . import publish_git as transport
 from .app_products import PRODUCTS
-from .puzzle_production import current_authoring as current, current_delivery, catalog_io as io, work_assets
+from .puzzle_production import current_authoring as current, current_delivery, catalog_io as io, github_rest, work_assets
 from .puzzle_production.authoring_builder import git_root, index_value, writer
 from .puzzle_production.authoring_package import require
 from .production_workspace.sources import GitSource
@@ -22,12 +25,212 @@ REPO = work_assets.REPOSITORY
 MIB = 1024**2
 
 
+OPERATIONS = ('publish', 'resume', 'retire')
+AUTH_SOURCES = ('env', 'GH_TOKEN', 'GITHUB_TOKEN', 'gh')
+
+
+def select_token(auth):
+    require(auth in AUTH_SOURCES, 'Unknown publisher authentication context')
+    if auth == 'env':
+        return github_rest.publisher_environment_token()
+    if auth != 'gh':
+        return os.environ.get(auth, '').strip()
+    env = {k: v for k, v in os.environ.items() if k.upper() not in (*github_rest.TOKEN_NAMES, 'GH_DEBUG')}
+    try:
+        return subprocess.check_output(['gh', 'auth', 'token', '--hostname', 'github.com'], env=env,
+                                       stderr=subprocess.PIPE, timeout=15).decode('ascii').strip()
+    except (OSError, subprocess.SubprocessError, UnicodeError):
+        raise github_rest.Failure('auth', 'Selected gh login unavailable; check the active github.com login') from None
+
+
+@contextmanager
+def publisher_auth(auth, token=None):
+    require(auth in AUTH_SOURCES, 'Unknown publisher authentication context')
+    token = select_token(auth) if token is None else token
+    with github_rest.use_publisher_token(token), transport.use_remote_token(token):
+        yield
+
+
+def request(endpoint, method, *, value=None, data=None, upload=False):
+    token = github_rest.publisher_token()
+    require(token, 'Publisher authentication context is missing')
+    headers = {'Accept': 'application/vnd.github+json', 'X-GitHub-Api-Version': '2022-11-28',
+               'Cache-Control': 'no-cache', 'User-Agent': 'picross-work-publish'}
+    url = github_rest.API
+    if upload:
+        url = url.replace('api.github.com', 'uploads.github.com')
+        headers['Content-Type'] = 'application/octet-stream'
+    elif value is not None:
+        headers['Content-Type'] = 'application/json'
+        data = json.dumps(value).encode()
+    url += '/' + endpoint if endpoint else ''
+    try:
+        with github_rest.open_api(url, headers, timeout=90 if upload else 15, token=token,
+                                  data=data, method=method, upload=upload) as response:
+            raw = response.read(4 * MIB + 1)
+        require(len(raw) <= 4 * MIB, 'GitHub response exceeds the publisher byte limit')
+        try:
+            return json.loads(raw) if raw.strip() else None
+        except ValueError:
+            raise ValueError(f'{method} {endpoint or REPO}: invalid GitHub JSON; check the operation before retrying') from None
+    except github_rest.Failure as exc:
+        if exc.kind == 'rate_limit':
+            detail = str(exc)
+        elif exc.kind == 'auth':
+            detail = 'authentication failed; check the selected credential'
+        elif exc.status in (409, 422):
+            detail = 'operation rejected; inspect the bound generation and request before retrying'
+        elif exc.kind == 'access':
+            detail = 'operation unavailable in the selected context; check this endpoint and its concrete access'
+        else:
+            detail = 'transport or service error; check connectivity'
+        status = f' (HTTP {exc.status})' if exc.status else ''
+        recovery = '; read back the work ref and release before retrying' if method != 'GET' else ''
+        raise github_rest.Failure(exc.kind, f'{method} {endpoint or REPO}{status}: {detail}{recovery}',
+                                  exc.status) from None
+
+
 def api(path, method='GET', value=None):
-    args = ['gh', 'api', '--hostname', 'github.com', '-X', method, ('repos/' + REPO + '/' + path).rstrip('/')]
-    if value is not None:
-        args += ['--input', '-']
-    raw = subprocess.check_output(args, input=json.dumps(value).encode() if value is not None else None, timeout=60)
-    return json.loads(raw) if raw.strip() else None
+    return request(path, method, value=value)
+
+
+def repository_check(repository):
+    require(repository == REPO, 'Publisher repository does not match the requested repository')
+    if os.environ.get('GITHUB_ACTIONS') == 'true':
+        require(os.environ.get('GITHUB_REPOSITORY', '').casefold() == REPO,
+                'Actions repository differs from the publisher repository')
+    info = api('')
+    require(isinstance(info, dict) and isinstance(info.get('full_name'), str) and info['full_name'].casefold() == REPO,
+            'GitHub returned a different publisher repository')
+
+
+def creation_setting():
+    try:
+        settings = api('immutable-releases')
+    except github_rest.Failure as exc:
+        if exc.kind != 'access' or exc.status != 404:
+            raise
+        # GitHub hides settings behind 404 as well as using that status for
+        # disabled. Prove Administration(read) with the same token and repo.
+        access = api('actions/permissions')
+        if isinstance(access, dict) and type(access.get('enabled')) is bool:
+            return 'disabled'
+        return 'unknown'
+    if isinstance(settings, dict) and type(settings.get('enabled')) is bool:
+        return 'enabled' if settings['enabled'] else 'disabled'
+    return 'unknown'
+
+
+def require_creation_setting():
+    try:
+        setting = creation_setting()
+    except github_rest.Failure as exc:
+        raise github_rest.Failure(exc.kind, 'New release setting unknown. ' + str(exc), exc.status) from None
+    require(setting == 'disabled', f'New release setting {setting}; creation requires confirmed disabled immutability')
+    return setting
+
+
+def remote_record(commit, job):
+    name = current.path(job)
+    value = api(f'contents/{name}?ref={commit}')
+    require(isinstance(value, dict) and value.get('type') == 'file' and value.get('path') == name and
+            value.get('encoding') == 'base64' and type(value.get('size')) is int and
+            0 < value['size'] <= MIB and isinstance(value.get('content'), str),
+            'Invalid production record response at the expected commit')
+    try:
+        raw = base64.b64decode(''.join(value['content'].splitlines()), validate=True)
+    except ValueError:
+        raise ValueError('Invalid production record encoding') from None
+    blob = sha1(f'blob {len(raw)}\0'.encode() + raw).hexdigest()
+    require(len(raw) == value['size'] and value.get('sha') == blob, 'Production record bytes differ from the Git blob')
+    return raw
+
+
+def bound_record(raw, job):
+    record = current.validate(io.json_bytes(raw, MIB))
+    require(record['puzzle_id'] == job and record['format'] in current.PUBLISHED_FORMATS,
+            'Published record does not match the requested job')
+    return record
+
+
+def fresh_generation(rows, job, anchor, binding):
+    tag = 'work-prod-' + job
+    listed = release_for(rows, tag)
+    if listed is None:
+        require(binding is None, 'Bound work release is missing; restore or recover the bound generation')
+        require(anchor is None, 'Work tag is occupied without an owned release; inspect the tag')
+        return None
+    release_id = listed.get('id')
+    require(type(release_id) is int and release_id > 0, 'Invalid work release ID')
+    if binding is not None:
+        require(binding['id'] == release_id and binding['anchor'] == anchor,
+                'Work release generation changed; refresh the bound record')
+    latest = owned_release(api('releases/' + str(release_id)), job)
+    require(latest.get('id') == release_id and transport.SHA.fullmatch(anchor or '') and
+            latest.get('target_commitish') == anchor, 'Work tag or release anchor changed; read back the generation')
+    require(isinstance(latest.get('assets'), list), 'Invalid work release assets')
+    return latest
+
+
+def observe(root, operation, job, expected, repository, auth, *, read_record=None):
+    current.path(job)
+    require(operation in OPERATIONS and (
+        operation == 'publish' and expected is None or isinstance(expected, str) and transport.SHA.fullmatch(expected)),
+        'Operation requires the expected full work commit (new only for first publication)')
+    repository_check(repository)
+    main = transport.remote_head(root, 'refs/heads/main')
+    require(main is not None, 'Remote main missing; check the Git repository and selected credential')
+    api_main = api('git/ref/heads/main')
+    remote_object = api_main.get('object') if isinstance(api_main, dict) else None
+    require(isinstance(remote_object, dict) and api_main.get('ref') == 'refs/heads/main' and
+            remote_object.get('type') == 'commit' and remote_object.get('sha') == main,
+            'Git and REST main differ; refresh both in the selected context')
+    actual = transport.remote_head(root, 'refs/heads/content/pw/' + job)
+    reader = read_record if read_record is not None else remote_record
+    if operation == 'publish' and actual != expected:
+        require(actual, 'Expected work ref is missing; refresh the bound record')
+        commit = api('git/commits/' + actual)
+        parents = commit.get('parents') if isinstance(commit, dict) else None
+        require(isinstance(parents, list) and len(parents) == 1 and isinstance(parents[0], dict) and
+                commit.get('sha') == actual and parents[0].get('sha') == (expected or main),
+                'Work ref changed; resume from the current record')
+    elif operation == 'resume':
+        require(actual == expected, 'Work ref changed; resume from the current record')
+    elif operation == 'retire':
+        require(actual in (expected, None), 'Different production generation; refresh the retirement target')
+    binding = bound_record(reader(expected, job), job)['work_release'] if expected else None
+    if operation == 'publish' and actual != expected:
+        recovered = bound_record(reader(actual, job), job)['work_release']
+        require(binding in (None, recovered), 'Work release generation changed; refresh the bound record')
+        binding = recovered
+    tag = 'work-prod-' + job
+    anchor = transport.remote_head(root, 'refs/tags/' + tag)
+    rows, elapsed = catalog()
+    listed = release_for(rows, tag)
+    if operation == 'retire' and listed is None:
+        require(anchor in (None, binding['anchor']) and not any(row.get('id') == binding['id'] for row in rows),
+                'Retirement release or tag generation differs; inspect remote state')
+        release = None
+        release_state = 'absent (retirement may already have removed it)'
+    else:
+        release = fresh_generation(rows, job, anchor, binding)
+        release_state = 'existing mutable generation' if release else require_creation_setting()
+    if operation == 'publish':
+        release_catalog.capacity(rows, elapsed, tag, 0, reserved_apps=len(PRODUCTS))
+    capabilities = {'git_refs': {'read': 'checked', 'write': 'unverified' if operation != 'resume' else 'not required'},
+                    'release_assets': {'metadata': 'checked', 'originals': 'verify at use',
+                                       'write': 'unverified' if operation != 'resume' else 'not required'},
+                    'product_pr': 'outside this operation'}
+    return {'repository': REPO, 'operation': operation, 'job': job, 'expected': expected,
+            'auth': auth, 'main': main, 'work_head': actual, 'tag_anchor': anchor,
+            'release_id': release['id'] if release else None, 'release_state': release_state,
+            'capabilities': capabilities}
+
+
+def preflight(root, operation, job, expected, *, repository=REPO, auth='env', token=None):
+    """Read-only transport and generation diagnosis, independent of a local checkout."""
+    with publisher_auth(auth, token):
+        return observe(root, operation, job, expected, repository, auth)
 
 
 def catalog():
@@ -35,9 +238,10 @@ def catalog():
 
 
 def owned_release(row, job):
-    require(row['tag_name'] == 'work-prod-' + job and row['body'] == 'Picross production job ' + job
-            and row['prerelease'] is True and row['draft'] is False and row['immutable'] is False,
-            'Foreign or immutable work release')
+    require(isinstance(row, dict) and row.get('tag_name') == 'work-prod-' + job and
+            row.get('body') == 'Picross production job ' + job and row.get('prerelease') is True and
+            row.get('draft') is False, 'Foreign work release; verify the job and tag ownership')
+    require(row.get('immutable') is False, 'Work release is immutable or mutability is unknown; inspect this generation')
     return row
 
 
@@ -90,31 +294,34 @@ def metadata_commit(root, parent, files, message):
         return git('commit-tree', git('write-tree'), '-p', parent, '-m', message)
 
 
-def upload(tag, asset_name, data):
-    with tempfile.TemporaryDirectory(prefix='work-upload-') as tmp:
-        file = Path(tmp) / asset_name
-        file.write_bytes(data)
-        subprocess.run(['gh', 'release', 'upload', tag, str(file) + '#picross-original:' + tag, '--repo', REPO], check=True, timeout=300)
+def upload(release_id, tag, asset_name, data):
+    query = urlencode({'name': asset_name, 'label': 'picross-original:' + tag})
+    request(f'releases/{release_id}/assets?{query}', 'POST', data=data, upload=True)
 
 
 def release_for(rows, tag):
+    require(all(isinstance(row, dict) and isinstance(row.get('tag_name'), str) for row in rows),
+            'Invalid release catalog entries')
     matches = [r for r in rows if r['tag_name'] == tag]
     require(len(matches) <= 1, 'Duplicate work release')
     return matches[0] if matches else None
 
 
-def push_job(root, job, expected):
-    root = io.external(root)
+def push_job(root, job, expected, *, repository=REPO, auth='env', token=None):
+    with publisher_auth(auth, token):
+        return _push_job(io.external(root), job, expected, repository, auth)
+
+
+def _push_job(root, job, expected, repository, auth):
+    main = observe(root, 'publish', job, expected, repository, auth)['main']
     name = current.path(job)
     raw = io.read(root, name, MIB)
     draft = current.compact(current.validate(io.json_bytes(raw, MIB)))
     require(draft['puzzle_id'] == job, 'Different production identity')
     checked = current.Checked(draft, lambda n, limit: io.read(root, n, limit))
-    main = transport.remote_head(root, 'refs/heads/main')
     transport.git(root, 'fetch', '--no-tags', '--', transport.REMOTE, main)
     transport.git(root, 'merge-base', '--is-ancestor', transport.CLEAN_MAIN, main)
-    require(api('')['permissions']['push'] and api('immutable-releases')['enabled'] is False,
-            'Writable mutable release repository required')
+    require(transport.remote_head(root, 'refs/heads/main') == main, 'Main advanced; refresh before acquiring the catalog lease')
     with catalog_writer(root, main):
         return publish_locked(root, job, expected, main, checked)
 
@@ -134,6 +341,9 @@ def publish_locked(root, job, expected, main, checked):
     if actual != expected:
         require(actual and transport.git(root, 'show', '-s', '--format=%P', actual).decode().strip() == parent,
                 'Work ref changed; resume from the current record')
+    if expected:
+        require(previous and previous['puzzle_id'] == job and previous['format'] in current.PUBLISHED_FORMATS,
+                'Expected work commit does not contain the published job')
     if previous:
         require(previous['test_only'] == draft['test_only'] and previous['operation'] == draft['operation']
                 and all(draft['budgets']['used'][k] >= v for k,v in previous['budgets']['used'].items()),
@@ -143,23 +353,34 @@ def publish_locked(root, job, expected, main, checked):
     current.check_transition(previous, draft)
     checked.check_new_previews(previous)
     rows, elapsed = catalog()
-    release = release_for(rows, tag)
+    tag_ref = 'refs/tags/' + tag
+    anchor = transport.remote_head(root, tag_ref)
+    binding = previous.get('work_release') if previous else None
+    if actual != expected:
+        recovered = bound_record(source.read(actual, current.path(job), MIB), job)['work_release']
+        require(binding in (None, recovered), 'Work release generation changed; refresh the bound record')
+        binding = recovered
+    release = fresh_generation(rows, job, anchor, binding)
     old = {r['sha256']:r for r in current.references(previous) if 'asset' in r} if previous else {}
     refs = current.references(draft)
     own = {r['sha256']:r for r in refs if current.own(job, r['file'])}
     present = {a['name'] for a in release['assets']} if release else set()
     additions = sum('original-' + h not in present for h in own)
     release_catalog.capacity(rows, elapsed, tag, additions, reserved_apps=len(PRODUCTS))
-    tag_ref = 'refs/tags/' + tag
-    anchor = transport.remote_head(root, tag_ref)
+    require(transport.remote_head(root, ref) == actual and transport.remote_head(root, tag_ref) == anchor and
+            transport.remote_head(root, 'refs/heads/main') == main,
+            'Main, work ref or tag changed after preflight; refresh before mutating the release')
     if release is None:
-        require(actual == expected and not (previous and 'work_release' in previous) and anchor is None,
-                'Work release missing or tag occupied')
-        release = api('releases', 'POST', {'tag_name': tag, 'target_commitish': main, 'name': tag,
-                      'body': 'Picross production job ' + job, 'draft':False, 'prerelease':True, 'make_latest':'false'})
+        require_creation_setting()
+        require(transport.remote_head(root, tag_ref) is None and transport.remote_head(root, ref) == expected and
+                transport.remote_head(root, 'refs/heads/main') == main,
+                'Main, work ref or tag changed before release creation; refresh the bindings')
+        created = owned_release(api('releases', 'POST', {'tag_name': tag, 'target_commitish': main, 'name': tag,
+                               'body': 'Picross production job ' + job, 'draft': False, 'prerelease': True,
+                               'make_latest': 'false'}), job)
         anchor = transport.remote_head(root, tag_ref)
-    owned_release(release, job)
-    require(anchor == release['target_commitish'], 'Work tag identity changed')
+        require(anchor == main, 'New work tag differs from the expected main anchor')
+        release = fresh_generation([created], job, anchor, None)
     transport.git(root, 'merge-base', '--is-ancestor', transport.CLEAN_MAIN, anchor)
     transport.git(root, 'merge-base', '--is-ancestor', anchor, main)
     attachments = {a['name']: a for a in release['assets']}
@@ -185,9 +406,11 @@ def publish_locked(root, job, expected, main, checked):
                     asset = None
             if asset is None:
                 require(actual == expected, 'A competing record won publication')
-                upload(tag, asset_name, checked.raw[r['file']])
-                latest = owned_release(api('releases/' + str(release['id'])), job)
-                asset = next(a for a in latest['assets'] if a['name'] == asset_name)
+                upload(release['id'], tag, asset_name, checked.raw[r['file']])
+                latest = fresh_generation([release], job, transport.remote_head(root, tag_ref), result['work_release'])
+                matches = [a for a in latest['assets'] if a['name'] == asset_name]
+                require(len(matches) == 1, 'Uploaded original not confirmed; read back the work release before retrying')
+                asset = matches[0]
                 attachments[asset_name] = asset
             identity = {'repository':REPO,'job':job,'release_id':release['id'],'asset_id':asset['id']}
         r['asset'] = identity
@@ -209,22 +432,43 @@ def publish_locked(root, job, expected, main, checked):
     require(actual and transport.remote_head(root, ref) == actual, 'Publication not confirmed')
     retained = {r['asset']['asset_id'] for r in current.references(result) if 'asset' in r}
     previous_ids = {r['asset']['asset_id'] for r in old.values() if r['asset']['release_id'] == release['id']}
-    for asset in attachments.values():
-        owned = (asset.get('label') == 'picross-original:' + tag and
-                 re.fullmatch(r'original-[0-9a-f]{64}',asset['name']))
-        if asset['id'] not in retained and (asset['id'] in previous_ids or owned):
-            api('releases/assets/' + str(asset['id']), 'DELETE')
+    obsolete = {asset['id'] for asset in attachments.values() if asset['id'] not in retained and
+                (asset['id'] in previous_ids or asset.get('label') == 'picross-original:' + tag and
+                 re.fullmatch(r'original-[0-9a-f]{64}', asset['name']))}
+    if obsolete:
+        try:
+            require(transport.remote_head(root, ref) == actual, 'Work ref changed before asset cleanup')
+            latest = fresh_generation([release], job, transport.remote_head(root, tag_ref), result['work_release'])
+            for asset in latest['assets']:
+                if asset['id'] in obsolete:
+                    require(asset['id'] in previous_ids or (asset.get('label') == 'picross-original:' + tag and
+                            re.fullmatch(r'original-[0-9a-f]{64}', asset['name'])),
+                            'Obsolete asset no longer has the expected ownership')
+                    api('releases/assets/' + str(asset['id']), 'DELETE')
+                    obsolete.remove(asset['id'])
+        except ValueError as exc:
+            detail = f'Confirmed work commit {actual}; asset cleanup open for {sorted(obsolete)}. {exc}'
+            if isinstance(exc, github_rest.Failure):
+                raise github_rest.Failure(exc.kind, detail, exc.status) from None
+            raise ValueError(detail) from None
     return actual
 
 
-def finish(root, job, expected, *, confirmed=False):
+def finish(root, job, expected, *, confirmed=False, repository=REPO, auth='env', token=None):
     """Check the exact completed record against current main, then close its namespace."""
-    root = io.external(root)
-    current.path(job)
-    require(transport.SHA.fullmatch(expected or ''), 'Expected work commit required')
-    main = transport.remote_head(root, 'refs/heads/main')
-    require(main is not None, 'Remote main missing; integration cannot be confirmed')
+    with publisher_auth(auth, token):
+        return _finish(io.external(root), job, expected, confirmed, repository, auth)
+
+
+def _finish(root, job, expected, confirmed, repository, auth):
+    # The pinned commit stays locally available after the remote branch is removed.
+    def read_record(commit, job):
+        source = GitSource(root, fetch_commit=lambda oid: transport.git(root, 'fetch', '--no-tags', '--', transport.REMOTE, oid))
+        return source.read(commit, current.path(job), MIB)
+
+    main = observe(root, 'retire', job, expected, repository, auth, read_record=read_record)['main']
     transport.git(root,'fetch','--no-tags','--',transport.REMOTE,main)
+    require(transport.remote_head(root, 'refs/heads/main') == main, 'Main advanced; refresh before retirement')
     with catalog_writer(root, main):
         targets = remove_bound_release(root, job, expected, main, confirmed=confirmed)
         if targets is None:
@@ -284,8 +528,8 @@ def remove_bound_release(root, job, expected, main, *, confirmed, before_delete=
     require(release is None or release['id'] == binding['id'], 'Different release generation')
     refs = [r['asset'] for r in current.references(record) if 'asset' in r]
     if release:
-        owned_release(release,job)
-        require(release['target_commitish'] == anchor and all(r['release_id'] == release['id'] for r in refs)
+        release = fresh_generation(rows, job, anchor, binding)
+        require(all(r['release_id'] == release['id'] for r in refs)
                 and {a['id'] for a in release['assets']} == {r['asset_id'] for r in refs},
                 'Unexpected release contents; preserve other work')
     if anchor:
@@ -305,9 +549,14 @@ def remove_bound_release(root, job, expected, main, *, confirmed, before_delete=
     return branch, actual, tagref, anchor
 
 
-def resume(root, job, expected):
+def resume(root, job, expected, *, repository=REPO, auth='env', token=None):
     """Reopen a pinned publication for the existing local builder/finalizer."""
-    root = io.external(root)
+    with publisher_auth(auth, token):
+        return _resume(io.external(root), job, expected, repository, auth)
+
+
+def _resume(root, job, expected, repository, auth):
+    observe(root, 'resume', job, expected, repository, auth)
     name = current.path(job)
     require(expected and transport.remote_head(root, 'refs/heads/content/pw/' + job) == expected,
             'Refresh the current work ref')
@@ -337,30 +586,41 @@ def resume(root, job, expected):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('operation', choices=['publish','resume','retire'])
+    parser.add_argument('operation', choices=['preflight', *OPERATIONS])
     parser.add_argument('job')
+    parser.add_argument('--for', dest='planned', choices=OPERATIONS, help='Operation to diagnose with preflight')
+    parser.add_argument('--repository', default=REPO, help='Expected publisher repository')
+    parser.add_argument('--auth', choices=AUTH_SOURCES, default='env',
+                        help='Use the selected token source for REST, Git and original reads')
     parser.add_argument('--expected', required=True, help='Full published work commit (new only for first publication)')
     args = parser.parse_args()
+    diagnose = args.operation == 'preflight'
+    if diagnose != (args.planned is not None):
+        parser.error('--for is required with preflight and only with preflight')
+    operation = args.planned if diagnose else args.operation
     expected = None if args.expected == 'new' else args.expected
-    if expected is not None and not transport.SHA.fullmatch(expected):
-        parser.error('--expected must be a full commit SHA')
-    if args.operation == 'retire' and expected is None:
-        parser.error('retire requires the full published work commit as --expected')
+    if expected is None and operation != 'publish' or expected is not None and not transport.SHA.fullmatch(expected):
+        parser.error('use --expected with a full commit SHA (new only for first publication)')
     root = Path.cwd()
-    if args.operation == 'retire':
-        current.path(args.job)
-        try:
-            print(finish(root, args.job, expected))
-        except (ValueError, OSError, subprocess.SubprocessError) as exc:
-            detail = str(exc) if isinstance(exc, ValueError) else type(exc).__name__
-            tag = 'work-prod-' + args.job
-            parser.exit(1, f'Produktionsabschluss offen ({detail}). '
-                        f'Produktionsbranch content/pw/{args.job}, Arbeitsrelease und Tag {tag} prüfen.\n'
-                        f'Nach Klärung im selben Checkout wiederholen: '
-                        f'python -m tools.work_publish retire {args.job} --expected {expected}\n')
-        return
-    operation = {'publish':push_job, 'resume':resume}[args.operation]
-    print(operation(root, args.job, expected))
+    try:
+        token = select_token(args.auth)
+        # The selected token is passed explicitly to REST and only the required
+        # Git network subprocesses. Local Git and unrelated children need none.
+        for key in github_rest.TOKEN_NAMES:
+            os.environ.pop(key, None)
+        options = {'repository': args.repository, 'auth': args.auth, 'token': token}
+        if diagnose:
+            result = preflight(root, operation, args.job, expected, **options)
+            print(json.dumps(result, sort_keys=True))
+        else:
+            execute = {'publish': push_job, 'resume': resume, 'retire': finish}[operation]
+            print(execute(root, args.job, expected, **options))
+    except (ValueError, OSError, subprocess.SubprocessError) as exc:
+        detail = str(exc) if isinstance(exc, ValueError) else type(exc).__name__
+        binding = f'Expected work commit {args.expected}.'
+        state = ('Only read operations attempted.' if diagnose else
+                 'If a write was attempted, check the work ref, tag and release before retrying in the same context.')
+        parser.exit(1, f'{args.operation} ({operation}) {args.job}: {detail}. {binding} {state}\n')
 
 
 if __name__ == '__main__':

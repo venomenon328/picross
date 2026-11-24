@@ -196,6 +196,8 @@ func run() -> void:
 		await preload("res://tests/view_title_cases.gd").run(self)
 		await preload("res://tests/marginalia_cases.gd").run(self)
 		await preload("res://tests/navigation_cases.gd").work(self)
+		await preload("res://tests/sync_account_cases.gd").run(self)
+		await new_app()
 		await information_saves()
 	elif mode == "kb":
 		await compact_buttons()

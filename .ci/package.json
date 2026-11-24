@@ -2,10 +2,20 @@
   "format": "development-ci-plan/v1",
   "issue": "https://github.com/venomenon328/picross/issues/859",
   "package": "PW-LOCAL-A",
-  "modules": [],
-  "purpose": "Nur freigegebene Spezifikation und Quellenrouting für gemeinsame Git-Datenbank, dauerhafte Rätselworktrees, Sparse-Checkout und Publisherfortsetzung; keine Produktimplementierung.",
-  "omitted": "Werkzeug-, Adapter-, Katalog-, native und Browserprüfungen sind für diesen reinen Dokumentdiff nicht angefordert. Vor dem ersten Codecommit im selben PR gemäß #859 auf tools, production.adapter und production.catalog umstellen; reguläre Buildklassifikation bleibt.",
-  "test_changes": [],
+  "modules": [
+    "tools",
+    "production.adapter",
+    "production.catalog"
+  ],
+  "purpose": "Gemeinsame Gitbasis, Sparse-Abhängigkeiten, Publisher-Recovery und getrennte Registrierung prüfen. T01–T04 einmalig vor Review einschließlich Windows und temporärem Linux.",
+  "omitted": "Solver-, Bild-, Spiel-, Server-, Browser- und Auslieferungslogik bleiben unverändert. Regulärer Windows-x64-Bau für Werkzeugcode.",
+  "test_changes": [
+    {
+      "path": "tools/test_work_publish.py",
+      "disposition": "change-scoped",
+      "reason": "Synthetische Sparse-Worktrees, Lease-/Prozesskonflikte, unterbrochene Veröffentlichung, Wiederaufnahme und Registrierungsgrenzen am echten Git prüfen."
+    }
+  ],
   "core_change": null,
   "evidence": {
     "mode": "none",
