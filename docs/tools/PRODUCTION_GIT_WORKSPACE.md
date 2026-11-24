@@ -6,6 +6,8 @@ Entscheidung: 23.11.2026 · [#859 / PW-LOCAL-A](https://github.com/venomenon328/
 Zuständigkeit: lokale Objektablage, Produktionsworktrees, Sparse-Materialisierung
 und ihre Anbindung an die sichere Publikation.
 
+Der Builder sichert neue Kandidatenbefunde im aktuellen Record des Jobworktrees. Getrennte Publikation und Wiederaufnahme verwenden diese Befunde. Bei der Erstintegration übergibt der Akteur genau diesen Jobworktree mit `--pw-worktree` an Plan und Register. Der separate Integrationsworktree ist das Ziel. Die Befehlsfolge steht in [Authoring Schritt 5](../production/authoring/PUZZLE_AUTHORING_STEP_5.md#8-abgenommenes-ergebnis-ins-spiel-integrieren).
+
 Für eine Wiederaufnahme den Arbeitsref und den erwarteten Commit lesen, Releasegeneration und Originale abgleichen und die dort gebundenen Kandidatenergebnisse verwenden. Ein Pfadwechsel bei bytegleichem Inhalt erfordert keine neue Bildentscheidung.
 
 ## Einstieg und Wiederaufnahme
@@ -44,7 +46,7 @@ Integrationsbranch zusätzlich dessen tatsächliche SHA als `--integration-head`
 angeben. Beim Wiederöffnen nach der Registrierung erweitert Git das Profil
 im selben Arbeitsordner. Bereits vorhandene neue Zielpfade müssen bytegleich
 und als reguläre Dateien in diesem Commit und im Index gebunden sein.
-Nach Finalizer und Export den Adapter mit `--checkout INTEGRATION`
+Nach Finalizer und Export den Adapter mit `--pw-worktree JOB --checkout INTEGRATION`
 planen und frisch registrieren lassen. Die einzeln geprüften Pfade aus
 `changes` über `git add --sparse -- PFAD ...` stagen, den vollständigen Diff
 prüfen und den Produktstand committen. Completion erhält im Jobworktree die

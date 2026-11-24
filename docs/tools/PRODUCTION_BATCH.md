@@ -504,8 +504,13 @@ Der aktuelle Plan ist `picross-integration-batch-plan-v2`. Die geschlossene
 `integration_batch_contract.py` geprüft. Jeder Job führt eine eigene gebundene
 `authorization`; ein Inputstatus ersetzt keinen Auftrag.
 
-- `register`: `inputs` enthält exakt `current`, eine inventarisierte Referenz auf
-  den finalen Inputordner nach ZA-1. `parameters` ist `{}`. Die Phasen bleiben
+- `register`: `inputs.current` inventarisiert den finalen Inputordner nach ZA-1.
+  Für eine gebundene PW-Lieferung enthält das Inventar auch `pw-source.json`.
+  Dazu bindet `inputs.pw_record` den tatsächlichen Record im verwalteten Jobworktree
+  als Dateireferenz mit `file`, `bytes` und `sha256`. Beide Pfade liegen unter
+  dem expliziten Quellroot. Run und Resume lesen diese Bindung vor dem Export
+  und dem Zielabgleich. Bei externen Eingängen entfällt `pw_record` und der
+  native Intake prüft den Inhalt vollständig. `parameters` ist `{}`. Die Phasen bleiben
   `export`, `plan`, `apply`, `reconcile`; alle benutzen denselben aktuellen Kern.
 - `background_adopt`: `inputs` enthält exakt `request` und `work`, den aktuellen
   Editorrequest v2 und seine ausgewählten Dateien. `parameters` ist `{}`.

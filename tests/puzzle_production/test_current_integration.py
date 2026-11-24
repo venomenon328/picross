@@ -15,6 +15,25 @@ from tools.puzzle_production import editor_change
 from tools.puzzle_production.contract import InvalidInput
 
 
+def registration_batch(source, current, repo, *, record=None):
+    from tools.puzzle_production import batch_io
+    evidence = put(source, "order.txt", b"Synthetic batch integration order.\n")
+    authorization = json_file(source, "order.json", {"format":"picross-integration-order-v1",
+        "operation":"register", "puzzle_id":"pz-current", "revision":"r01", "actor":"Synthetic test",
+        "timestamp_utc":"2026-11-16T00:00:00Z", "statement":"Integrate this synthetic selection.",
+        "evidence":evidence, "test_only":True})
+    inputs = {"current":{"directory":current.relative_to(source).as_posix(), "files":batch_io.inventory(current)}}
+    if record is not None:
+        inputs["pw_record"] = content.ref(record.relative_to(source).as_posix(), record.read_bytes())
+    return {"format":"picross-integration-batch-plan-v2","batch_id":"current-test","revision":1,
+            "previous_plan_sha256":None,"source_commit":subprocess.check_output(["git","rev-parse","HEAD"],cwd=repo,text=True).strip(),
+            "jobs":[{"job_id":"first","puzzle_id":"pz-current","revision":"r01","operation":"register",
+                     "authorization":authorization,"inputs":inputs,"parameters":{},
+                     "budgets":{"export_seconds":300,"plan_seconds":300,"reconcile_seconds":300,
+                                "publication_seconds":1800,"recovery_seconds":1800},
+                     "max_attempts":dict.fromkeys(("export","plan","apply","reconcile"),3)}]}
+
+
 class CurrentIntegrationTests(unittest.TestCase):
     def setUp(self):
         self.temp=tempfile.TemporaryDirectory()
@@ -172,18 +191,7 @@ class CurrentIntegrationTests(unittest.TestCase):
         from tools.puzzle_production import integration_batch_runner as runner, batch_io
         repo=Path(__file__).resolve().parents[2]
         source=self.work/"sources";make(source/"current")
-        evidence=put(source,"order.txt",b"Synthetic batch integration order.\n")
-        order={"format":"picross-integration-order-v1","operation":"register","puzzle_id":"pz-current",
-               "revision":"r01","actor":"Synthetic test","timestamp_utc":"2026-11-16T00:00:00Z",
-               "statement":"Integrate this synthetic selection.","evidence":evidence,"test_only":True}
-        authorization=json_file(source,"order.json",order)
-        plan={"format":"picross-integration-batch-plan-v2","batch_id":"current-test","revision":1,
-              "previous_plan_sha256":None,"source_commit":subprocess.check_output(["git","rev-parse","HEAD"],cwd=repo,text=True).strip(),
-              "jobs":[{"job_id":"first","puzzle_id":"pz-current","revision":"r01","operation":"register",
-                       "authorization":authorization,"inputs":{"current":{"directory":"current","files":batch_io.inventory(source/"current")}},
-                       "parameters":{},"budgets":{"export_seconds":300,"plan_seconds":300,"reconcile_seconds":300,
-                                                   "publication_seconds":1800,"recovery_seconds":1800},
-                       "max_attempts":dict.fromkeys(("export","plan","apply","reconcile"),3)}]}
+        plan=registration_batch(source,source/"current",repo)
         path=self.work/"batch.json";path.write_bytes(content.encoded(plan))
         work=self.work/"batch-work"
         original=catalog_io.read

@@ -93,7 +93,15 @@ def _metadata(job, source):
     if current is None:
         return
     from .integration_input import open_input
-    incoming = open_input(current)
+    pw_root = None
+    if "pw_record" in inputs:
+        from . import current_authoring
+        record, _ = _file(inputs["pw_record"], source)
+        name = Path(current_authoring.path(job["puzzle_id"]))
+        bio.require(record.parts[-len(name.parts):] == name.parts, "Expected the selected PW job record")
+        pw_root = record.parents[len(name.parts) - 1]
+        bio.require(pw_root.is_relative_to(source), "PW worktree outside the selected source root")
+    incoming = open_input(current, pw_root=pw_root, job_id=job["puzzle_id"])
     bio.require(incoming.entry["id"] == job["puzzle_id"], "Current input belongs to another ID")
     if order is not None:
         bio.require(order["test_only"] == incoming.value["test_only"], "Order scope differs")
@@ -139,6 +147,7 @@ def _prepare(plan_path, source_root, repo_root, target_root, work_root=None, his
     return plan, raw, source, repo, target, work, history, actual_head, tool
 
 
+@qualification.operation()
 def validate(plan_path, source_root, repo_root, target_root, work_root=None, history_root=None):
     plan, raw, *rest = _prepare(plan_path, source_root, repo_root, target_root, work_root, history_root)
     return {"status": "valid", "batch_id": plan["batch_id"], "plan_sha256": bio.sha(raw),

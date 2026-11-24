@@ -16,6 +16,7 @@ from .editor_raster import check_end
 from .raster_parameters import frame_edges, frame_failures, require_color_count, used_foreground
 
 FORMAT = "picross-integration-input-v1"
+PW_SOURCE = "pw-source.json"
 FINDING_FORMAT = "picross-integration-input-v2"
 FIELDS = {"format", "entry", "metadata", "definition", "reveal", "background",
           "difficulty", "proof", "quality", "approval", "test_only"}
@@ -62,6 +63,7 @@ def from_current(directory, manifest, files, checked):
 
 
 class Input:
+    recheck_source = None
     @io.bounded
     def __init__(self, directory):
         self.root = io.external(directory)
@@ -211,23 +213,29 @@ class Input:
         require(sorted(actual) == sorted(findings), "Current frame/palette failures require their exact explicit exceptions")
 
     def recheck(self):
+        if self.recheck_source is not None:
+            self.recheck_source()
         for name, raw in self.raw.items():
             require(io.read(self.root, name, max(len(raw), 1)) == raw, "Input changed while validating: "+name)
 
 
-def open_input(directory):
+def open_input(directory, *, pw_root=None, job_id=None):
     """Share a completed intake only inside the current batch, checking every byte."""
-    if not current_qualification.active():
-        return Input(directory)
     root = io.external(directory)
     manifest = io.read(root, 'manifest.json', 1024 * 1024)
-    key = ('integration-input', io.checksum(manifest))
+    binding = io.read(root, PW_SOURCE, 4096, missing=True)
+    key = ('integration-input', io.checksum(manifest), binding)
     previous = current_qualification.lookup(key)
     if previous is not None:
         previous.root = root
         previous.recheck()
         return previous
-    result = Input(root)
+    if binding is not None or pw_root is not None:
+        from .current_authoring import open_worktree_input
+        require(binding is not None and pw_root is not None, 'Bound delivery requires the PW worktree and source binding')
+        result = open_worktree_input(root, pw_root, job_id or io.json_bytes(binding, 4096)['job'])
+    else:
+        result = Input(root)
     require(result.raw['manifest.json'] == manifest, 'Input changed while opening')
     current_qualification.remember(key, result)
     return result

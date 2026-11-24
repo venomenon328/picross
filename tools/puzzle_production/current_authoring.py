@@ -122,7 +122,7 @@ def references(job, *, include_diagnostics=True):
 def validate(job):
     structured = job.get('format') in findings.FORMATS
     published = job.get('format') in PUBLISHED_FORMATS
-    qualified = published and structured and 'qualification' in job
+    qualified = structured and job['operation'] == 'production' and 'qualification' in job
     exact_keys(job, FIELDS | ({'findings', 'instructions'} if structured else set()) | ({'work_release'} if published else set())
                | ({'qualification'} if qualified else set()))
     if qualified:
@@ -334,6 +334,11 @@ class Checked:
                 pending_background = (asset['role'] == 'background' and phase in (6, 7) and missing in
                                       (['Prepared background required in step 4'], ['Sichtung der fertigen PNG-Datei fehlt']))
                 self.candidate(asset, missing, required=asset['id'] in selected.values() and not pending_background)
+            elif structured and j['operation'] == 'production' and asset['role'] == 'input':
+                binding = qualification.key(j, asset, 'input', asset['file'])
+                if not qualification.lookup(binding):
+                    image_info(raw, asset['file']['file'], j)
+                    qualification.remember(binding, True)
             else:
                 image_info(raw, asset['file']['file'], j)
                 if ready:
@@ -417,6 +422,10 @@ class Checked:
                                       'mode': fact['mode'], 'diagnostics': deepcopy(fact['diagnostics'])}
         if fact['legacy_preview']:
             self.legacy_previews.add(raster['id'])
+        if ready:
+            ap.require(fact['diagnostics']['qualification']['parameter_match'],
+                       'Raster requires one complete approved parameter option and an unambiguous explicit mode')
+            ap.require(raster['proof'] and raster['difficulty'], 'Qualified raster needs proof and difficulty')
         self.candidate(raster, list(fact['missing']), required=ready or job['selected']['raster'] == raster['id'])
         if not fact['missing']:
             qualification.bind_delivery(raster['definition']['sha256'], difficulty)
@@ -791,7 +800,25 @@ def build(request, source_root, root):
                 workspace.check_work(root, job['puzzle_id'])
         journal_name='content/authoring/'+job['puzzle_id']+'/.current-operation.json'
         pending_raw=io.read(root,journal_name,20*LIMIT,missing=True)
-        before=io.read(root,name,LIMIT,missing=True); after=encoded(job)
+        before=io.read(root,name,LIMIT,missing=True)
+        previous = validate(io.json_bytes(before, LIMIT)) if before is not None else None
+        if pending_raw is None and io.checksum(before) != request['expected']:
+            # Only an exact retry may already have installed builder-owned facts.
+            requested = {k: v for k, v in job.items() if k != 'qualification'}
+            ap.require(previous and requested == {k: v for k, v in previous.items() if k != 'qualification'},
+                       'Current record conflict')
+        if previous:
+            ap.require(previous['puzzle_id'] == job['puzzle_id'], 'Different current job')
+            qualification._published(previous)
+        journal = io.json_bytes(pending_raw, 20*LIMIT) if pending_raw is not None else None
+        if journal is not None:
+            ap.require(journal['request_sha256'] == digest(request), 'Another current operation requires its identical request')
+            qualification._published(validate(journal['after']))
+        def read(n,limit): return payload[n] if n in payload else io.read(root,n,limit)
+        checked=Checked(job,read)
+        if job['format'] in findings.FORMATS and job['operation'] == 'production':
+            job = {**job, 'qualification': {'format': qualification.FORMAT, 'facts': checked.facts}}
+        after=encoded(job)
         index_raw=io.read(root,INDEX,8*LIMIT,missing=True)
         index=index_value(index_raw) if index_raw is not None else {'format':'picross-authoring-index-v1','entries':[]}
         row={'puzzle_id':job['puzzle_id'],'revision':'current','record':name}
@@ -799,7 +826,6 @@ def build(request, source_root, root):
         next_index['entries'].sort(key=lambda r:(r['puzzle_id'],r['revision']))
         index_after=encoded(next_index)
         if pending_raw is not None:
-            journal=io.json_bytes(pending_raw,20*LIMIT)
             exact_keys(journal, {'format','request_sha256','before','after','index_before','index_after','remove','writes'})
             ap.require(journal['format']=='picross-current-authoring-operation-v1' and journal['request_sha256']==digest(request) and journal['after']==job,
                        'Another current operation requires its identical request')
@@ -817,9 +843,9 @@ def build(request, source_root, root):
             next_index=journal['index_after']; index_after=encoded(next_index)
         else:
             ap.require(io.checksum(before)==request['expected'] or before==after, 'Current record conflict')
-            old=io.json_bytes(before,LIMIT) if before is not None else None
+            old=previous
             if old is not None:
-                validate(old); ap.require(old['test_only']==job['test_only'], 'Cannot change production scope')
+                ap.require(old['test_only']==job['test_only'], 'Cannot change production scope')
                 ap.require(old['operation']==job['operation'] and all(job['budgets']['used'][k]>=v for k,v in old['budgets']['used'].items()), 'Current job cannot reset consumed budgets')
                 if any(job['budgets']['limits'][k]>v for k,v in old['budgets']['limits'].items()):
                     ap.require(any(d['scope']=='budget' and d['binding']==binding(job,'budget') for d in job['decisions']), 'Budget increase needs actual authorization')
@@ -834,8 +860,6 @@ def build(request, source_root, root):
             journal={'format':'picross-current-authoring-operation-v1','request_sha256':digest(request),'before':old,'after':job,
                      'index_before':index if index_raw is not None else None,'index_after':next_index,
                      'remove':list(remove.values()),'writes':[wanted[n] for n in sorted(payload)]}
-        def read(n,limit): return payload[n] if n in payload else io.read(root,n,limit)
-        checked=Checked(job,read)
         # Local resume mirrors the exact remote record before editing. For a
         # retry, the journal above supplies the original predecessor.
         check_transition(old, job)
@@ -1014,28 +1038,36 @@ def compact(job):
 @io.bounded
 def prepare(root, record_path, output, *, entry=None):
     """Derive the sole RI-ONE input from the chosen current result and real decisions."""
-    result = prepare_input(root, record_path, output, entry=entry)
+    from tools import production_git_workspace as workspace
+    root = io.external(root)
+    managed = (root / '.git').is_file() and workspace.read_binding(root) is not None
+    result = prepare_input(root, record_path, output, entry=entry, bind_worktree=managed)
     if isinstance(result, dict):
         return result
     return {'status': 'exported', 'id': result.entry['id'], 'output': str(result.root)}
 
 
 @io.bounded
-def prepare_input(root, record_path, output, *, entry=None):
+def prepare_input(root, record_path, output, *, entry=None, bind_worktree=False):
     root=io.external(root); output=io.external(output)
     raw=io.read(root,record_path,LIMIT); job=io.json_bytes(raw,LIMIT)
     ap.require(record_path==path(job['puzzle_id']) and job['state'] in ('editorially_approved','registered'), 'Final approved current job required')
     from tools import production_git_workspace as workspace
-    with workspace.qualification(root, job['puzzle_id']):
-        return _prepare_input(root, record_path, output, raw, job, entry)
+    with workspace.qualification(root, job['puzzle_id'], verify_parent=bind_worktree):
+        qualification._published(job)
+        return _prepare_input(root, record_path, output, raw, job, entry, bind_worktree)
 
 
-def _prepare_input(root, record_path, output, raw, job, entry):
+def _prepare_input(root, record_path, output, raw, job, entry, bind_worktree):
     from . import integration_input
+    bound = bind_worktree and job['format'] in findings.FORMATS and job['operation'] == 'production'
+    source = worktree_source(root, job, raw) if bound else None
     checked=Checked(job,lambda n,limit:io.read(root,n,limit))
     if job['operation']=='background':
         return prepare_background_change(job,checked,output)
     manifest, files = delivery_files(job, checked, entry)
+    if source:
+        files[integration_input.PW_SOURCE] = encoded(source)
     ap.require(not output.exists(), 'Integration output already exists')
     output.parent.mkdir(parents=True, exist_ok=True)
     with tempfile.TemporaryDirectory(prefix='.current-export-', dir=output.parent) as temporary:
@@ -1051,6 +1083,45 @@ def _prepare_input(root, record_path, output, raw, job, entry):
         rename(stage, output, replace=False)
     incoming.root = output
     return incoming
+
+
+def worktree_source(root, job, raw):
+    from tools import production_git_workspace as workspace
+    owner = workspace.read_binding(root)
+    ap.require(owner and owner['role'] == 'job' and owner['job'] == job['puzzle_id'],
+               'Expected the owned PW job worktree')
+    workspace.check_work(root, job['puzzle_id'])
+    inventory = qualification.inventory(job)
+    ap.require(job.get('qualification') and all(qualification.lookup(key) for key in inventory),
+               'Complete current candidate qualification required before delivery')
+    return {'job': job['puzzle_id'], 'record_sha256': io.checksum(raw),
+            'work_commit': workspace.git(root, 'rev-parse', 'HEAD')}
+
+
+def open_worktree_input(directory, root, job_id):
+    """Reconstruct the selected input from the actor's current PW worktree."""
+    from tools import production_git_workspace as workspace
+    from . import integration_input
+    root, directory = io.external(root), io.external(directory)
+    name = path(job_id)
+    raw = io.read(root, name, LIMIT)
+    job = validate(io.json_bytes(raw, LIMIT))
+    ap.require(job['puzzle_id'] == job_id and job['operation'] == 'production' and
+               job['state'] in ('editorially_approved', 'registered'), 'Expected approved PW source')
+    with workspace.qualification(root, job_id, verify_parent=True):
+        qualification._published(job)
+        source = encoded(worktree_source(root, job, raw))
+        ap.require(io.read(directory, integration_input.PW_SOURCE, 4096) == source, 'Stale PW delivery source')
+        checked = Checked(job, lambda n, limit: io.read(root, n, limit))
+        manifest, files = delivery_files(job, checked)
+        files[integration_input.PW_SOURCE] = source
+        incoming = integration_input.from_current(directory, manifest, files, checked)
+        def recheck_source():
+            ap.require(io.read(root, name, LIMIT) == raw, 'Current PW record changed during delivery')
+            checked.recheck()
+        incoming.recheck_source = recheck_source
+        incoming.recheck()
+        return incoming
 
 
 def delivery_files(job, checked, entry=None):
@@ -1155,6 +1226,7 @@ def complete(root, record_path, commit, *, current_input):
     ap.require(record_path==path(job['puzzle_id']) and job['state'] in ('editorially_approved','registered'), 'Current final approval required')
     from tools import production_git_workspace as workspace
     with workspace.qualification(root, job['puzzle_id']):
+        qualification._published(job)
         return _complete(root, record_path, commit, current_input, raw, job, source)
 
 

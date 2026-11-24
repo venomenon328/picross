@@ -2,6 +2,8 @@
 
 Ein eigenständig übergebenes Verzeichnis benötigt die vollständige fachliche Eingangsprüfung. Im gebundenen PW-Auftrag erzeugt der Fachkern Manifest und Dateien unmittelbar aus dem geprüften Record. Die Quell-, Befugnis-, Ziel- und Transaktionsprüfungen gelten für beide Eingänge.
 
+Die lokale PW-Übergabe enthält zusätzlich `pw-source.json` mit Job, Arbeitscommit und Recordhash. Plan und Register erhalten den verwalteten Jobworktree über `--pw-worktree`. Sie gleichen die tatsächlichen Lieferbytes mit dessen ausgewählter Projektion ab. Die Befehle für diese Übergabe stehen in [Authoring Schritt 5](authoring/PUZZLE_AUTHORING_STEP_5.md#8-abgenommenes-ergebnis-ins-spiel-integrieren). Die folgenden Standalone-Befehle gelten für externe Eingänge.
+
 ## Geltung und Quellen
 
 - **Status:** aktiver Vertrag für das geschlossene aktuelle Integrationsmanifest, seine Prüfung und die CLI.

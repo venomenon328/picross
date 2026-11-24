@@ -2,7 +2,7 @@
 
 Finale Produktcommits werden mit `python -m tools.publish_git BRANCH --expected SHA` veröffentlicht. Für neue Branches gilt `--expected new`. Arbeitsassets und Wiederaufnahme folgen dem [PW-B-Vertrag](../tools/PW_B_CONTRACT.md).
 
-Eine aus dem qualifizierten PW-Record abgeleitete Lieferung und ein eigenständig eingelesener Eingang benutzen denselben Registrierungswriter. Im gebundenen Auftrag können Plan und Register die einmal erzeugten Profilbytes gemeinsam verwenden. Register liest das Ziel frisch und prüft die Quellbytes erneut.
+Eine aus dem qualifizierten PW-Record abgeleitete Lieferung und ein eigenständig eingelesener Eingang benutzen denselben Registrierungswriter. Der lokale gebundene Plan prüft die vorgesehenen Profilpfade. Bei der Erstregistrierung rendert der Writer die beiden Profilbytesätze einmal. Der Remote-Worker teilt die Profilbytes innerhalb seines Plan-/Registeraufrufs. Register liest das Ziel frisch und prüft die Quellbytes erneut.
 
 ## Geltung und Quellen
 

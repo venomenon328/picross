@@ -6,6 +6,8 @@ den [Publisher](PW_B_CONTRACT.md) und genau einen auf Main gebundenen
 übersetzt den kurzen Auftrag und die tatsächlichen Wahlen in den geschlossenen
 Aufruf. Das Ergebnis nennt den gesicherten Arbeitsstand und den nächsten Schritt.
 
+Der Worker hält den qualifizierten Eingang und die Katalogprofile für Plan und Registrierung in einem Aufruf. Bei getrennter lokaler Ausführung bindet der Adapter dieselbe Auswahl über den [Jobworktree](PRODUCTION_GIT_WORKSPACE.md#einstieg-und-wiederaufnahme).
+
 ## Originale in ChatGPT sichten
 
 Fehlen dem aufrufenden Chat die geprüften Bildbytes, stellt er selbst einen

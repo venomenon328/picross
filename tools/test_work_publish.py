@@ -22,6 +22,88 @@ from tests.puzzle_production import test_current_authoring as fixtures
 
 
 class WorkPublicationTests(unittest.TestCase):
+    def test_qualified_local_delivery_across_publish_cli_and_batch_resume(self):
+        from tools.puzzle_production import authoring_builder, catalog_profiles, current_rating, verifier, target_adapter
+        from tools.puzzle_production import integration_batch_runner as batch, integration_input
+        from tests.puzzle_production.test_current_integration import registration_batch
+        _, open_job = self.managed()
+        f = self.fixture
+        f.job = current.upgrade(f.job)
+        counts = {}
+        for module, fn in ((current, 'image_facts'), (current.Checked, 'raster'), (verifier, 'verify'),
+                           (current_rating, 'validate'), (catalog_profiles, 'render_profiles')):
+            original = getattr(module, fn)
+            def count(*args, _fn=fn, _original=original, **kwargs):
+                counts[_fn] = counts.get(_fn, 0) + 1
+                return _original(*args, **kwargs)
+            self.enterContext(patch.object(module, fn, count))
+        f.approved()
+        self.assertEqual(counts, {'image_facts':4, 'raster':1, 'verify':1, 'validate':1})
+        counts.clear()
+        head = pub.push_job(self.root, 'pz-current', None)
+        pub.resume(self.root, 'pz-current', head)
+        name = current.path('pz-current')
+        output = self.area / 'delivery'
+        repo = Path(__file__).resolve().parents[1]
+        product = Path(open_job(head, integration='content/synthetic-product')['integration'])
+        self.assertEqual(authoring_builder.main(['prepare-integration', '--repository', str(self.root),
+            '--record', name, '--output-dir', str(output)]), 0)
+        args = ['--input', str(output), '--checkout', str(product), '--pw-worktree', str(self.root)]
+        # Restart the documented CLI with only the fixture Git endpoint and
+        # release metadata. The hydrated originals are already on disk.
+        program = """
+import sys
+from tools import publish_git
+from tools.puzzle_production import current_authoring as c, current_rating, catalog_profiles, verifier
+from tools.puzzle_production import target_adapter, work_assets
+publish_git.REMOTE = sys.argv[1]
+release = sys.stdin.buffer.read()
+work_assets.get = lambda *args, **kwargs: release
+functions = {f.__code__ for f in (c.image_facts, c.Checked.raster, c.prepared_facts, c.render_background,
+             c.Checked.crop_diagnosis, current_rating.validate, catalog_profiles.render_profiles, verifier.verify)}
+calls = []
+def observe(frame, event, arg):
+    if event == 'call' and frame.f_code in functions:
+        calls.append(frame.f_code.co_name)
+sys.setprofile(observe)
+code = target_adapter.main(sys.argv[2:])
+sys.setprofile(None)
+assert code == 0 and not calls, (code, calls)
+"""
+        subprocess.run([sys.executable, '-B', '-c', program, self.remote, 'plan', *args],
+                       cwd=repo, input=json.dumps(self.release).encode(), check=True)
+        self.assertFalse(fixtures.git(product, 'status', '--porcelain'))
+        self.assertEqual(counts, {})
+        self.assertEqual(target_adapter.main(['register', *args]), 0)
+        self.assertEqual(target_adapter.main(['register', *args]), 0)
+        self.assertEqual(counts, {'render_profiles':1})
+
+        record = self.root / name
+        plan = registration_batch(self.area, output, repo, record=record)
+        path = f.work / 'plan.json'
+        path.write_bytes(current.encoded(plan))
+        target = fixtures.checkout(f.work / 'batch-target')
+        batch_args = (path, self.area, repo, target, f.work / 'batch-work')
+        self.assertEqual(batch.run(*batch_args)['status'], 'completed')
+        self.assertEqual(batch.resume(*batch_args)['status'], 'completed')
+        self.assertEqual(counts, {'render_profiles':2})
+
+        proof = output / 'proof.json'
+        original = proof.read_bytes()
+        proof.write_bytes(original[:-1] + b'X')
+        with self.assertRaisesRegex(ValueError, 'Input changed'):
+            integration_input.open_input(output, pw_root=self.root)
+        proof.write_bytes(original)
+        fixtures.git(product, 'add', '--sparse', '--', 'content', 'game')
+        fixtures.git(product, 'commit', '-qm', 'synthetic delivery')
+        product_commit = fixtures.git(product, 'rev-parse', 'HEAD')
+        current.complete(self.root, name, product_commit, current_input=output)
+        self.assertEqual(counts, {'render_profiles':2})
+        with self.assertRaisesRegex(ValueError, 'Stale PW delivery'):
+            integration_input.open_input(output, pw_root=self.root)
+        with self.assertRaisesRegex(ValueError, 'PW worktree'):
+            integration_input.open_input(output)
+
     def setUp(self):
         fixture = fixtures.CurrentAuthoringTests()
         fixture.setUp()

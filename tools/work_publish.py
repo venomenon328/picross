@@ -362,6 +362,7 @@ def _publish_draft(root, job, expected, repository, auth, *, managed=False, remo
     require(not work_refs.FIXTURE or draft['test_only'] is True, 'Isolated fixture requires test-only data')
     if expected:
         current.qualification._published(bound_record(remote_record(expected, job), job))
+    current.qualification._published(draft)
     checked = current.Checked(draft, lambda n, limit: io.read(root, n, limit))
     transport.git(root, 'fetch', '--no-tags', '--', transport.REMOTE, main)
     transport.git(root, 'merge-base', '--is-ancestor', transport.CLEAN_MAIN, main)
@@ -682,7 +683,6 @@ def _resume(root, job, expected, repository, auth):
 
 def local_record(record):
     draft = deepcopy(record)
-    draft.pop('qualification', None)
     draft['format'] = current.findings.LOCAL if record['format'] == current.findings.PUBLISHED else current.FORMAT
     del draft['work_release']
     for ref in current.references(draft):
@@ -700,7 +700,8 @@ def hydrate(root, job, expected):
     draft = local_record(record)
     assets = [ref for ref in current.references(record) if 'asset' in ref]
     local = io.read(root, name, MIB)
-    require(local in (raw, current.encoded(draft)), 'Local record changed')
+    previous_draft = {k: v for k, v in draft.items() if k != 'qualification'}
+    require(local in (raw, current.encoded(draft), current.encoded(previous_draft)), 'Local record changed')
     for ref in assets:
         data = io.read(root, ref['file'], ref['bytes'], missing=True)
         require(data in (None, checked.raw[ref['file']]), 'Local original changed')

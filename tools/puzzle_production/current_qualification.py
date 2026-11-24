@@ -103,13 +103,18 @@ def operation():
 
 
 def _published(record):
-    # Called by the publisher after its independent work-ref, commit, release and
-    # scope checks. A record supplied to Checked/build is never a seed.
+    # Published callers check the ref/release. Local callers read the current
+    # builder record under its job identity. Never seed from a build request.
     value = record.get('qualification')
     if value is not None and _current.get() is not None:
         rows = validate(value)['facts']
         require(inventory(record) == {k: v['kind'] for k, v in rows.items()}, 'Different published qualification inventory')
         _current.get().update({key: deepcopy(row) for key, row in rows.items() if documented(row)})
+        # A structured builder also read the image header of every reference-
+        # only input. Its dimensions are never used for an offer or delivery.
+        for asset in record['assets']:
+            if asset['role'] == 'input':
+                remember(key(record, asset, 'input', asset['file']), True)
         for raster in record['rasters']:
             row = rows[raster_key(record, raster)]
             if documented(row):

@@ -76,9 +76,9 @@ def read_binding(root):
 
 
 @contextmanager
-def qualification(root, job):
+def qualification(root, job, *, verify_parent=False):
     """Reuse the published parent of a managed draft after checking the actual ref."""
-    if current.qualification.active():
+    if current.qualification.active() and not verify_parent:
         yield
         return
     with current.qualification.operation():
@@ -89,7 +89,8 @@ def qualification(root, job):
             raw = GitSource(root).read(head, current.path(job), current.LIMIT, missing=True)
             if raw:
                 record = current.validate(io.json_bytes(raw, current.LIMIT))
-                if record.get('qualification'):
+                if record.get('qualification') or verify_parent:
+                    require(record['format'] in current.PUBLISHED_FORMATS, 'Expected published PW parent')
                     require(transport.remote_head(root, 'refs/heads/content/pw/' + job) == head and
                             transport.remote_head(root, 'refs/tags/work-prod-' + job) == record['work_release']['anchor'],
                             'Published qualification source changed')
@@ -104,6 +105,8 @@ def qualification(root, job):
                         require(asset and asset['name'] == 'original-' + ref['sha256'] and asset['size'] == ref['bytes']
                                 and asset['state'] == 'uploaded', 'Different qualification original')
                     current.qualification._published(record)
+            elif verify_parent:
+                require(transport.remote_head(root, 'refs/heads/content/pw/' + job) is None, 'PW work ref advanced')
         yield
 
 
