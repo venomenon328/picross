@@ -5,9 +5,55 @@ from . import production_git_workspace as ws, publish_git
 from .puzzle_production import authoring_builder, catalog_io as io, content_registry, current_authoring as current
 from .puzzle_production import current_tools, target_adapter
 from .puzzle_production.authoring_package import require
+from .puzzle_production.contract import exact_keys
+
+
+def observations(draft, target, values):
+    require(isinstance(values, list) and len(values) <= 128, 'Invalid visual observations')
+    for value in values:
+        exact_keys(value, current.findings.OBSERVATION)
+        require(draft['format'] in current.findings.FORMATS, 'Structured observations require v3')
+        row = {**deepcopy(value), 'target': target, 'content': current.findings.identity(draft, target), 'decision': None}
+        existing = next((r for r in draft['findings'] if (r['target'], r['id']) == (target, row['id'])), None)
+        if existing is None:
+            draft['findings'].append(row)
+        else:
+            require({**existing, 'decision': None} == row, 'Existing finding changed during inspection')
+
+
+def editorial(job, options, root, scratch):
+    draft = deepcopy(job)
+    require(draft['operation'] == 'production' and draft['selected']['raster'] is None, 'Raster choice already closed')
+    if 'choice' in options:
+        change = options['choice']
+        candidate = change['candidate']
+        motif = next((a for a in draft['assets'] if a['role'] == 'motif' and a['id'] == candidate), None)
+        require(draft['state'] == 'motif_review' and draft['selected']['motif'] is None and motif and
+                motif['file']['sha256'] == change['motif_sha256'], 'Different current motif offer')
+        draft['selected']['motif'] = candidate
+        draft['parameters']['approved'] = deepcopy(change['approved'])
+        decision = {'scope': 'motif', **deepcopy(change['declaration'])}
+        draft['decisions'].append(decision)
+        decision['binding'] = current.binding(draft, 'motif')
+        draft['state'] = 'motif_approved'
+    else:
+        change = options['assessment']
+        candidate = change['candidate']
+        raster = next((r for r in draft['rasters'] if r['id'] == candidate), None)
+        require(draft['state'] in ('raster_review', 'raster_ready') and raster and
+                raster['definition']['sha256'] == change['definition_sha256'] and
+                raster['preview']['sha256'] == change['preview_sha256'], 'Different published raster')
+        raster['review'].update(deepcopy(change['review']))
+        observations(draft, candidate, change['observations'])
+        draft['state'] = 'raster_ready' if change['ready'] else 'raster_review'
+    current.build({'format': current.REQUEST, 'record': draft, 'expected': io.checksum(current.encoded(job)),
+                   'files': []}, scratch, root)
+    return {'candidate': candidate, 'state': draft['state']}
 
 
 def step3(req, job, root, scratch):
+    if 'design' not in req['input']:
+        return editorial(job, req['input'], root, scratch)
     from .puzzle_production import images
     require(job['operation'] == 'production' and job['state'] in ('motif_approved', 'raster_review', 'raster_ready')
             and job['selected']['raster'] is None, 'Expected approved motif and an open raster choice')
@@ -76,6 +122,7 @@ def selected_background(draft, options, root, scratch):
             all(r['timestamp_utc'] and r['result'] != 'nicht geprüft' for r in viewed['review'].values()),
             'Stale or incomplete prepared background review')
     asset['review'] = deepcopy(viewed['review'])
+    observations(draft, choice, viewed.get('observations', []))
     return files
 
 
@@ -95,6 +142,9 @@ def finalize(req, job, root, scratch):
         require(row is not None and row['decision'] is None, 'Expected an existing undecided finding')
         current.findings.declare(row, **{k: v for k, v in declaration.items() if k not in ('target', 'id')})
     for choice in req['input']['decisions']:
+        binding = current.binding(draft, choice['scope'])
+        require(choice.get('binding', binding) == binding, 'Stale decision: ' + choice['scope'])
+        choice = {**choice, 'binding': binding}
         existing = next((d for d in draft['decisions'] if d['scope'] == choice['scope']), None)
         require(existing in (None, choice), 'Changed prior decision')
         if existing is None:

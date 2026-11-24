@@ -7,8 +7,11 @@ on:
     branches: ['work-prod-control/remote/**']
 
 permissions: {}
+env:
+  PICROSS_PW_REMOTE_TEST: ${{ github.repository_id == '1470169013' && '1' || '0' }}
+  PYTHONDONTWRITEBYTECODE: '1'
 jobs:
-  worker:
+  request:
     if: >-
       (github.repository == 'venomenon328/picross' || (github.repository == 'venomenon328/picross-remote-test' && github.repository_id == '1470169013')) &&
       github.ref == 'refs/heads/main' && github.event.workflow_run.path == '.github/workflows/work-growth.yml' &&
@@ -16,13 +19,99 @@ jobs:
       github.event.workflow_run.event == 'push' && github.event.workflow_run.conclusion == 'success'
     runs-on: ubuntu-24.04
     permissions:
+      contents: read
+      actions: read
+      pull-requests: read
+    outputs:
+      route: ${{ steps.route.outputs.route }}
+      mode: ${{ steps.route.outputs.mode }}
+      artifact_id: ${{ steps.upload.outputs.artifact-id }}
+      artifact_digest: ${{ steps.upload.outputs.artifact-digest }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+          sparse-checkout: tools
+      - name: Verify request and current sources
+        id: route
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: python3 -B -m tools.production_remote route --root "$RUNNER_TEMP" --auth GH_TOKEN
+      - name: Load pinned drawing resources for cell and clue inspection
+        if: steps.route.outputs.cells == 'true' && github.repository == 'venomenon328/picross'
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /tools/
+            /game/ui/scribble.gd
+            /game/ui/clue_typography.gd
+            /game/ui/clue_font.tres
+            /game/ui/cell_atlas.gd
+            /game/ui/atlas_mask.gdshader
+            /game/book/paper.png*
+            /game/art/cells/fill-small.png*
+            /game/art/cells/fill-medium.png*
+            /game/art/book/PlexSans.ttf
+            /game/art/drawing/DelightCoffee-Regular.ttf
+      - name: Stage only requested originals and views
+        if: steps.route.outputs.artifact != ''
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          python3 -m venv "$RUNNER_TEMP/pw-read"
+          "$RUNNER_TEMP/pw-read/bin/pip" install --only-binary=:all: -r tools/puzzle_production/requirements-image.txt
+          "$RUNNER_TEMP/pw-read/bin/python" -B -m tools.production_remote inspect-stage --root "$RUNNER_TEMP" --auth GH_TOKEN
+      - name: Deliver review originals
+        if: steps.route.outputs.artifact != ''
+        id: upload
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: ${{ steps.route.outputs.artifact }}
+          path: ${{ runner.temp }}/pw-delivery/
+          if-no-files-found: error
+          retention-days: 1
+          compression-level: 0
+      - name: Read back the actual uploaded archive
+        if: steps.route.outputs.artifact != ''
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PW_ARTIFACT_ID: ${{ steps.upload.outputs.artifact-id }}
+          PW_ARTIFACT_DIGEST: ${{ steps.upload.outputs.artifact-digest }}
+        run: '"$RUNNER_TEMP/pw-read/bin/python" -B -m tools.production_remote inspect-verify --root "$RUNNER_TEMP" --auth GH_TOKEN'
+  acknowledge:
+    needs: request
+    if: needs.request.outputs.route == 'read'
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: write
+      actions: read
+      pull-requests: read
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+          sparse-checkout: tools
+      - name: Confirm current delivery and acknowledge only the request ref
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PW_ARTIFACT_ID: ${{ needs.request.outputs.artifact_id }}
+          PW_ARTIFACT_DIGEST: ${{ needs.request.outputs.artifact_digest }}
+        run: python3 -B -m tools.production_remote inspect-ack --root "$RUNNER_TEMP" --auth GH_TOKEN
+  worker:
+    needs: request
+    if: needs.request.outputs.route == 'write'
+    runs-on: ubuntu-24.04
+    permissions:
       contents: write
       pull-requests: write
       issues: read
       actions: read
     env:
-      PICROSS_PW_REMOTE_TEST: ${{ github.repository_id == '1470169013' && '1' || '0' }}
-      PYTHONDONTWRITEBYTECODE: '1'
       GIT_AUTHOR_NAME: Picross production
       GIT_AUTHOR_EMAIL: picross-production@users.noreply.github.com
       GIT_COMMITTER_NAME: Picross production

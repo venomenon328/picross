@@ -6,6 +6,72 @@ den [Publisher](PW_B_CONTRACT.md) und genau einen auf Main gebundenen
 übersetzt den kurzen Auftrag und die tatsächlichen Wahlen in den geschlossenen
 Aufruf. Das Ergebnis nennt den gesicherten Arbeitsstand und den nächsten Schritt.
 
+## Originale in ChatGPT sichten
+
+Fehlen dem aufrufenden Chat die geprüften Bildbytes, stellt er selbst einen
+gebundenen `inspect`-Request, bevor er weitere Binärdownloads versucht. Das
+gilt auch für einen frischen Chat. Der kurze Produktionsauftrag genügt.
+`input.items` enthält je benötigter Rolle genau einen Eintrag, etwa
+`{"role":"motif","candidate":"motif-a"}`. Kandidaten, Profil und Referenzen
+aus dem frisch gelesenen Record nehmen. Für das gewählte Hintergrundangebot
+die Rollen `background` und `prepared` mit derselben ID anfordern. Bei
+`prepared:null` rendert der lesende Worker genau diese Zeichnung mit HP-W2.
+Bei gesicherter Ableitung liefert er deren Originalbytes. Für `none` und
+`standard` entfällt dieser Abruf.
+
+Für Schritt 3 das benötigte `reveal` und `motif` öffnen. Nach dem Schritt-3-
+Publish den neuen Arbeitscommit und Record lesen. Für das konkrete Angebot
+`definition`, `preview`, `cells-clues`, `proof` und eine vorhandene
+`difficulty` anfordern. Bei einem Crop-Nachweis stehen auch `crop-before`,
+`crop-preview` und `crop-protection` zur Verfügung. Die Zell-/Hinweisansicht
+zeigt die vollständige Lösung und beide Hinweisachsen auf Spielpapier. Oben
+stehen die 24-Pixel-Zellen, unten 14 Pixel. Von links nach rechts werden
+normale, abgeschwächte und ausgekreuzte Hinweise mit der aktuellen
+Spielschrift und Kontur gezeichnet. Nur diese Rolle lädt den gebundenen
+Godot-Editor und die benötigten Zeichenressourcen. Zur Produktprüfung den
+vollständigen gebundenen PR-Diff lesen und benötigte Lieferoriginale mit
+`inspect-product`, `product`, `pr` und den Rollen `product-definition`,
+`product-reveal` oder `product-background` am bestätigten Integrationscommit abrufen.
+
+Der normale Requestref-Ablauf unten startet den Main-Worker. Sein Lesejob
+braucht keine Kataloglease. Er prüft den aktuellen Record, die konkrete
+Releasegeneration und die ausgewählten Originale und lädt ein Actions-Artefakt
+mit einem Tag Retention hoch. Erst nach dem erneuten Download, vollständiger
+Archivprüfung und erneuter Quellenprüfung quittiert ein eigener Job den Ref
+mit erwarteter SHA. Die Actions-Schrittlaufzeiten und die gemeldeten
+Originalzahlen, Bytezahlen und Aufbereitungszeiten sind getrennte Messungen.
+
+Der Akteur führt diese Schritte im selben Chat aus:
+
+1. Den erfolgreichen Push-Trigger für den vollständigen Requestref und dessen
+   Commit sowie den erfolgreichen Worker auf dem aktuellen Main lesen. Die
+   konkreten Run- und Attempt-IDs prüfen. Die Artefaktliste des Workerlaufs
+   lesen, das Artefakt mit Namen `pw-<operation>-<Requestdigest>-<Run>-<Attempt>`
+   eindeutig zuordnen. Die REST-Metadaten über die ID erneut lesen. Ist der
+   Einzelendpunkt im Connector gesperrt, dieselbe ID in der frisch gelesenen
+   Artefaktliste dieses Workerlaufs mitsamt `workflow_run` prüfen.
+2. Die ZIP-Datei **über den Artifact-Download des Connectors** im eigenen
+   Chat-Arbeitsbereich materialisieren. Den [eigenständigen Python-Reader](../../tools/production_remote_delivery.py)
+   als vertrauenswürdige Quelle am geprüften Werkzeugcommit lesen. Er benötigt
+   nur Python 3.11+. Seine CLI übernimmt mit `--request`, `--record` (exakte
+   Gitbytes), `--trigger`, `--worker`, `--artifact`, `--archive` und
+   `--output` die bereits vom Akteur gelesenen Dateien. Die beiden Run- und
+   die Artefaktdatei enthalten die ursprünglichen REST-Objekte. Der Reader
+   erzeugt erst nach vollständiger Prüfung ein neues Sichtungsverzeichnis.
+3. PNGs dort mit dem Bilddecoder öffnen, Original und Ableitung nach ihren
+   Bildnormen sichten. Die Hashes und tatsächlichen Urteile an die betrachteten
+   Dateien binden. Neue Befunde mit dem PW-FIND-Verfahren behandeln. Vor der
+   Folgeoperation Main, Arbeitsref, Record, Release/Assetbestand und ggf.
+   Produktref/PR erneut prüfen. Der Folgeauftrag bindet diesen Stand.
+4. Bei Antwortverlust zuerst die vorhandenen Runs/Attempts und das benannte
+   Artefakt nachlesen. Bei abgelaufenem oder fehlerhaftem Ergebnis auf frischer
+   Bindung einmal gezielt neu zustellen. Bei noch vorhandenem identischem Ref
+   den fehlgeschlagenen Worker nach erneuter Quellenprüfung wiederholen. Bleibt
+   der Fehler bestehen, konkreten Run, Status und nächsten Akteur melden.
+   Ein offener Publish-/Retirement-Vorgang verbleibt beim belegten Besitzer.
+   Download, Sichtung, Entscheidung, Publikation, PR/CI, Merge und Rückbau
+   mit ihrem tatsächlichen Stand ausweisen.
+
 ## Aufruf und Bindungen
 
 Der Akteur liest den veröffentlichten Record an der erwarteten Arbeits-SHA.
@@ -47,10 +113,24 @@ Eingänge erneut.
 
 | Operation | Zusatzfelder | Inhalt von `input` und Ergebnis |
 | --- | --- | --- |
+| `inspect`, `inspect-product` | bei Produktprüfung `product`, `pr` | Explizite `items` aus dem aktuellen Record gemäß Originalabruf oben. Liefert die Originale mit Herkunft und Ablauf. |
 | `step3` | – | `motif_sha256`, vollständiges bestehendes Bilddesign unter `design` mit einem benannten Kandidaten, dazu `profile=line\|paired` und `label`. Die gewählte Motivdatei durchläuft Bild-/Rasterhelfer, Proof und unabhängigen Verifier. Der Builder ergänzt Kandidat und Zähler, der Publisher sichert die Ergebnisse zur Sichtung. |
 | `step5` | `issue` (bestehendes Produktionsissue) | `background` enthält die tatsächlich gewählte ID, `none`, `standard` oder JSON-null zur Wiederverwendung. `decisions` enthält nur tatsächlich erklärte, noch benötigte PW-B-Entscheidungen für background/final/integration mit Scope, Inhaltsbindung, Akteur, UTC-Zeit und Erklärung. Bereits abgenommener Record: `{"background":null,"decisions":[]}`. |
 | `status` | `product` (Commit), `pr` (Nummer) | Leeres Objekt. Aktueller Produkt-PR und tatsächlicher PR-Lauf mit Head, Basis, Testmerge, Run, Attempt und Checkzuständen. Fehlende, ausstehende oder genehmigungspflichtige Läufe verlangen einen späteren Statusabruf. |
 | `retire` | `product`, `pr` | Leeres Objekt. Separater Prozess mit der nach Completion veröffentlichten Arbeits-SHA und dem aktuellen Main. Er prüft den gemergten zugeordneten PR, die Integration seines Mergecommits und die gelieferte Generation vor dem Retirement. |
+
+Eine bereits erklärte, noch ungesicherte Motiv-/Parameterwahl kann `step3`
+vor dem Design mit `input.choice` fortschreiben. Es enthält `candidate`,
+`motif_sha256`, `approved` und die tatsächliche `declaration` (Akteur,
+UTC-Zeit, Erklärung, ggf. `crop_protection`). Zur Sichtungsfortsetzung
+nimmt `input.assessment` genau `candidate`, `definition_sha256`,
+`preview_sha256`, `review`, `observations` und `ready`. Der Builder prüft die
+Angebotsreife. Eine Sichtung verbraucht keinen weiteren Rasterversuch.
+Der Finalizer kann die Inhaltsbindung einer tatsächlich übermittelten
+Entscheidung aus den gebundenen Bytes, aktuellen Sichturteilen und akzeptierten
+Befunden selbst berechnen. Mitgelieferte Bindungen müssen übereinstimmen.
+`prepared_review.observations` nimmt aktuelle konkrete PW-FIND-Beobachtungen
+an der Ableitung auf. Unveränderte kombinierte Erklärungen bleiben maßgeblich.
 
 Für Schritt 5 laufen Finalizer, Vorbereitung/Export, lesender Plan, frische
 Registrierung und Prüfung des vollständigen gestagten Produktdiffs in dieser

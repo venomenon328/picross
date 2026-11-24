@@ -11,7 +11,7 @@ import sys
 import tempfile
 from time import monotonic
 
-from . import work_refs
+from . import work_refs, production_remote_delivery as delivery
 from . import production_git_workspace as ws, production_remote_pr as prs, publish_git as git, work_publish as pw
 from .production_workspace.sources import check_commit
 from .puzzle_production import catalog_io as io, current_authoring as current, github_rest
@@ -23,12 +23,30 @@ LIMIT = 60000
 TOOLS = Path(__file__).resolve().parents[1]
 
 
+def validate_editorial(data):
+    if 'choice' in data:
+        change = exact_keys(data['choice'], {'candidate', 'motif_sha256', 'approved', 'declaration'})
+        sha(change['motif_sha256'])
+        decision = change['declaration']
+        exact_keys(decision, {'actor', 'statement', 'timestamp_utc'} | ({'crop_protection'} & decision.keys()))
+        current.human(decision)
+        require(isinstance(change['approved'], list) and change['approved'], 'Actual approved parameters required')
+    else:
+        change = exact_keys(data['assessment'], {'candidate', 'definition_sha256', 'preview_sha256', 'review',
+                                                'observations', 'ready'})
+        for key in ('definition_sha256', 'preview_sha256'):
+            sha(change[key])
+        current.findings.check_summaries(change['review'], current.CRITERIA['raster'])
+        require(type(change['ready']) is bool and isinstance(change['observations'], list), 'Invalid raster inspection')
+    current.identifier(change['candidate'])
+
+
 def request(value):
     common = {'format', 'repository', 'job', 'operation', 'expected', 'record_sha256', 'tools', 'main', 'input'}
     require(isinstance(value, dict), 'Expected PW remote request')
     op = value.get('operation')
-    require(op in ('step3', 'step5', 'status', 'retire'), 'Unknown PW operation')
-    extra = {'step3': set(), 'step5': {'issue'}, 'status': {'product', 'pr'}, 'retire': {'product', 'pr'}}[op]
+    require(op in ('step3', 'step5', 'status', 'retire', *delivery.READS), 'Unknown PW operation')
+    extra = {'product', 'pr'} if op in ('inspect-product', 'status', 'retire') else {'issue'} if op == 'step5' else set()
     exact_keys(value, common | extra)
     require(value['format'] == 'pw-remote-v1' and value['repository'] == pw.REPO, 'Different format or repository')
     require(len(current.encoded(value)) <= LIMIT, 'Oversized remote request')
@@ -38,7 +56,14 @@ def request(value):
     require(value['tools'] == value['main'], 'Worker tools must be the bound main revision')
     sha(value['record_sha256'])
     data = value['input']
-    if op == 'step3':
+    if 'product' in extra:
+        check_commit(value['product'])
+        integer(value['pr'], 1, 2**53-1, 'product PR')
+    if op in delivery.READS:
+        delivery.selectors(value)
+    elif op == 'step3' and isinstance(data, dict) and set(data) in ({'choice'}, {'assessment'}):
+        validate_editorial(data)
+    elif op == 'step3':
         exact_keys(data, {'motif_sha256', 'design', 'profile', 'label'})
         sha(data['motif_sha256'])
         require(data['profile'] in ('line', 'paired'), 'Unknown proof profile')
@@ -52,7 +77,8 @@ def request(value):
         optional = {'prepared_review', 'finding_decisions'} & data.keys()
         exact_keys(data, {'background', 'decisions'} | optional)
         if 'prepared_review' in data:
-            viewed = exact_keys(data['prepared_review'], {'original_sha256', 'profile', 'sha256', 'review'})
+            viewed = data['prepared_review']
+            exact_keys(viewed, {'original_sha256', 'profile', 'sha256', 'review'} | ({'observations'} & viewed.keys()))
             sha(viewed['original_sha256'])
             sha(viewed['sha256'])
             current.findings.check_summaries(viewed['review'], current.CRITERIA['background'])
@@ -71,16 +97,15 @@ def request(value):
         require(isinstance(data['decisions'], list) and len(data['decisions']) <= 3, 'Invalid final decisions')
         scopes = set()
         for d in data['decisions']:
-            exact_keys(d, {'scope', 'binding', 'actor', 'timestamp_utc', 'statement'})
+            exact_keys(d, {'scope', 'actor', 'timestamp_utc', 'statement'} | ({'binding'} & d.keys()))
             require(d['scope'] in ('background', 'final', 'integration') and d['scope'] not in scopes,
                     'Unexpected final decision scope')
             scopes.add(d['scope'])
-            sha(d['binding'])
+            if 'binding' in d:
+                sha(d['binding'])
             current.human(d)
     else:
         exact_keys(data, set())
-        check_commit(value['product'])
-        integer(value['pr'], 1, 2**53-1, 'product PR')
     return value
 
 
@@ -102,6 +127,10 @@ def owner(commit, *, parent=None):
 
 def preflight(root, req, auth):
     op, job, expected = req['operation'], req['job'], req['expected']
+    if op in delivery.READS:
+        from .production_remote_inspect import bound
+        bound(root, req)
+        return {'request': digest(req), 'work_head': expected, 'main': req['main'], 'operation': op}
     require(git.remote_head(root, 'refs/heads/main') == req['main'], 'Stale main or tool binding')
     operation = 'retire' if op == 'retire' else 'resume' if op == 'status' else 'publish'
     observed = pw.observe(root, operation, job, expected, pw.REPO, auth)
@@ -120,7 +149,7 @@ def preflight(root, req, auth):
     if op in ('step3', 'step5') and work != expected:
         require(work and owner(work, parent=expected) == request_id, 'Work changed outside this request')
         record = pw.bound_record(pw.remote_record(work, job), job)
-    if op == 'step3':
+    if op == 'step3' and 'design' in req['input']:
         data = req['input']
         motif = next((a for a in record['assets'] if a['id'] == record['selected']['motif']), None)
         require(motif and motif['file']['sha256'] == data['motif_sha256'], 'Selected motif bytes changed')
@@ -181,6 +210,7 @@ def run(root, req, auth, token, *, diagnose=False, check_invocation=lambda: None
             report = preflight(root, req, auth)
         if diagnose:
             return {**report, 'seconds': times}
+        require(req['operation'] not in delivery.READS, 'Submit a bound Actions request for binary delivery')
         job, expected, op = req['job'], req['expected'], req['operation']
         req_id = report['request']
         result = {'request': req_id, 'repository': pw.REPO, 'job': job, 'operation': op, 'expected': expected,
@@ -253,6 +283,10 @@ def run(root, req, auth, token, *, diagnose=False, check_invocation=lambda: None
         pw.verify_published_assets(root, job, expected, work, published)
         result.update(work=work, published_record_sha256=sha256(published).hexdigest(), status='published',
                       next='Inspect the published raster offer.')
+        if op == 'step3' and 'choice' in req['input']:
+            result['next'] = 'Read the approved motif and parameters for the raster design.'
+        if op == 'step3' and 'assessment' in req['input']:
+            result['next'] = 'Read the published assessments and present the current offers or inspection drafts.'
         if op == 'step5':
             require(git.remote_head(root, 'refs/heads/main') == req['main'] and
                     git.remote_head(root, 'refs/heads/' + prs.product_branch(job)) == product and
@@ -338,7 +372,8 @@ def event_request(root):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('action', choices=('preflight', 'execute', 'submit', 'worker', 'worker-preflight'))
+    parser.add_argument('action', choices=('preflight', 'execute', 'submit', 'worker', 'worker-preflight',
+                                          'route', 'inspect-stage', 'inspect-verify', 'inspect-ack'))
     parser.add_argument('--root', type=Path, default=Path.cwd(), help='Existing private work root for this actor')
     parser.add_argument('--auth', choices=pw.AUTH_SOURCES, default='env')
     parser.add_argument('--diagnose-only', action='store_true', help='Submit a read-only capability request')
@@ -350,12 +385,32 @@ def main():
         root = io.external(args.root)
         require(root.is_dir(), 'Existing private work root required')
         with pw.publisher_auth(args.auth, token):
-            if args.action in ('worker', 'worker-preflight'):
+            if args.action not in ('preflight', 'execute', 'submit'):
                 req, mode, ref, source = event_request(root)
                 diagnose = args.action == 'worker-preflight' or mode == 'preflight'
                 def check_invocation():
                     require(git.remote_head(root, ref) == source and git.remote_head(root, 'refs/heads/main') == req['main'],
                             'Invocation withdrawn or main advanced before publication')
+                if args.action == 'route' or args.action.startswith('inspect-'):
+                    from . import production_remote_inspect as inspect
+                    require(ws.git(TOOLS, 'rev-parse', 'HEAD') == req['tools'] and not ws.changes(TOOLS),
+                            'Clean pinned tool checkout required')
+                    if args.action == 'route':
+                        reading = req['operation'] in delivery.READS
+                        if reading:
+                            inspect.bound(root, req)
+                        result = {'route': 'read' if reading else 'write', 'mode': mode}
+                        if reading and mode == 'execute':
+                            result['artifact'] = delivery.artifact_name(inspect.github_context(req, source))
+                            result['cells'] = str(any(i['role'] == 'cells-clues' for i in req['input']['items'])).lower()
+                        with open(os.environ['GITHUB_OUTPUT'], 'a', encoding='utf-8') as out:
+                            for key, value in result.items():
+                                print(key + '=' + value, file=out)
+                    else:
+                        result = inspect.process(args.action, root, req, mode, ref, source, check_invocation)
+                    print(json.dumps(result, sort_keys=True))
+                    return
+                require(req['operation'] not in delivery.READS, 'Reader request sent to the product writer')
                 result = run(root, req, args.auth, token, diagnose=diagnose, check_invocation=check_invocation)
                 if args.action == 'worker-preflight':
                     if mode == 'execute' and req['operation'] != 'status':

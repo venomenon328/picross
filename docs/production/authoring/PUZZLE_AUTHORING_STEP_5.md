@@ -9,6 +9,8 @@ Abschlussausgabe folgen Kern §§6–7.
 
 ## 8. Abgenommenes Ergebnis ins Spiel integrieren
 
+Fehlen bei der Fortsetzung die gewählten Bildbytes, ruft ChatGPT die nötigen Originale und die profilgebundene Ableitung über den [Main-Worker](../../tools/PW_REMOTE.md#originale-in-chatgpt-sichten) ab. Die tatsächliche Sichtung und die bereits erklärte Schlussentscheidung gehen in denselben Finalizer ein.
+
 Vor Benutzung [RI](../PUZZLE_INTEGRATION.md), den aktuellen Eingang in [ZA-1](../ZA1_ADAPTER.md) und die passende CLI-Anleitung lesen. Schritt 5 setzt vollständige aktuelle Raster-/Hintergrundbereitschaft und tatsächliche Endfreigabe voraus. Bestehende gültige Entscheidungen verwenden, fehlende Entscheidungen niemals technisch erzeugen. Der Finalizer führt vorhandene tatsächliche Entscheidungen im einen aktuellen Record nach; Arbeitsmaterial ist keine Katalogautorität.
 
 Den aktuellen `picross-integration-input-v1` aus endgültiger Definition, Hinweisen/Palette, explizitem Mono-/Color-Modus, gewähltem Reveal, Hintergrund selected/none/standard, benötigten Notices/Rechten, Metadaten, geprüfter Difficulty, gültigem vollständigem Proof und wirklicher Inhalts-/Integrationsentscheidung zusammenstellen. Den vollständigen Linien- oder Paarlinien-Proof am finalen Raster unabhängig prüfen und die Endmatrix vergleichen. Kein zusätzlicher Suchsolverlauf zur Rekonstruktion alter Produktion. Keine Original-ZIP-, Producer-, Toolversions- oder historische Regelwerkszulassung.
