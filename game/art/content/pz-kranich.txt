@@ -1,0 +1,4 @@
+author: Codex mit OpenAI ImageGen
+changes: Unverändertes PNG-Original mit nativem Alphakanal.
+source: OpenAI ImageGen, generiert aus dem Motivtext des Auftrags.
+usage_basis: Im Nutzerauftrag neu generierter Output zur Verwendung im Picross-Projekt.
