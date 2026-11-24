@@ -9,13 +9,13 @@ class SheetLayer extends Node2D:
 	var pitch: int
 	var status: int
 	var fills: bool
+	var atlas: Texture2D
 	var origin: Vector2
 	var palette: Dictionary
 
 	func _draw() -> void:
 		if fills:
 			var lod := Atlas.level(pitch)
-			var atlas := load("res://art/cells/fill-" + lod + ".png") as Texture2D
 			for y: int in range(definition.height):
 				for x: int in range(definition.width):
 					var color_id := int(definition.solution[y][x])
@@ -94,6 +94,9 @@ func render() -> void:
 				layer.origin = Vector2(left,top)*pitch + Vector2(4,4)
 				if fills:
 					layer.material = mask
+					layer.atlas = load("res://art/cells/fill-" + Atlas.level(pitch) + ".png") as Texture2D
+					layer.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR
+					layer.texture_repeat = CanvasItem.TEXTURE_REPEAT_DISABLED
 				view.add_child(layer)
 			await process_frame
 			await RenderingServer.frame_post_draw

@@ -47,7 +47,9 @@ Der Akteur führt diese Schritte im selben Chat aus:
    Commit sowie den erfolgreichen Worker auf dem aktuellen Main lesen. Die
    konkreten Run- und Attempt-IDs prüfen. Die Artefaktliste des Workerlaufs
    lesen, das Artefakt mit Namen `pw-<operation>-<Requestdigest>-<Run>-<Attempt>`
-   eindeutig zuordnen und seine REST-Metadaten über die ID erneut lesen.
+   eindeutig zuordnen. Die REST-Metadaten über die ID erneut lesen. Ist der
+   Einzelendpunkt im Connector gesperrt, dieselbe ID in der frisch gelesenen
+   Artefaktliste dieses Workerlaufs mitsamt `workflow_run` prüfen.
 2. Die ZIP-Datei **über den Artifact-Download des Connectors** im eigenen
    Chat-Arbeitsbereich materialisieren. Den [eigenständigen Python-Reader](../../tools/production_remote_delivery.py)
    als vertrauenswürdige Quelle am geprüften Werkzeugcommit lesen. Er benötigt
