@@ -11,6 +11,10 @@ Sicherung, Wiederaufnahme und Abschlussausgabe: Kern §§6–7.
 
 ### 6.3 Hintergrundarbeit in Schritt 4
 
+Ein bestätigtes [Remote-`select`](../../tools/PW_REMOTE.md#schritt-3-am-veröffentlichten-kandidaten)
+sichert die konkrete Rasterwahl und eröffnet `background_review`. Mit diesem Record
+beginnt das Kontextbriefing. Die vorhandenen Raster- und Revealentscheidungen gelten weiter.
+
 Für jedes Angebot kann ChatGPT Original und gespeicherte HP-W2-Ableitung über den [Remote-Originalabruf](../../tools/PW_REMOTE.md#originale-in-chatgpt-sichten) öffnen und die fälligen Urteile an beide Dateien binden.
 
 1. Voraussetzung: tatsächliche Wahl eines vollständig qualifizierten Rasters.

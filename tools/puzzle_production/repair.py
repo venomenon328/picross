@@ -16,6 +16,7 @@ from .images import (file_hash, inspect_candidate, logic_from_matrix,
 from .solver import solve
 from .verifier import verify
 from . import certification
+from .raster_parameters import validate_search
 
 VERSION = "rp5-single-cell-1"
 PLAN_FORMAT = "picross-repair-plan-v1"
@@ -56,18 +57,7 @@ def validate_plan(raw, reference):
         for row in mask), "Protection mask must be an exact boolean grid")
     require(isinstance(p["rationale"], str) and 1 <= len(p["rationale"]) <= 4096,
             "Missing bounded mask/operator rationale")
-    c = exact_keys(p["config"], {"max_changes", "max_steps", "max_candidates", "search_seconds",
-                               "final_seconds", "search_lines", "final_lines", "seed", "order", "operators"})
-    for name, low, high in (("max_changes", 0, d["width"] * d["height"]),
-                            ("max_steps", 0, MAX_STEPS), ("max_candidates", 1, MAX_CANDIDATES),
-                            ("search_lines", 0, 1_000_000), ("final_lines", 0, 1_000_000),
-                            ("seed", 0, 2**32 - 1)):
-        integer(c[name], low, high, name)
-    for name, high in (("search_seconds", 600), ("final_seconds", 120)):
-        require(type(c[name]) in (int, float) and math.isfinite(c[name]) and 0 <= c[name] <= high,
-                f"{name} must be finite in 0..{high}")
-    require(c["order"] == "seeded-frontier-v1" and c["operators"] == ["single-cell"],
-            "Unsupported search order/operators")
+    validate_search(p["config"], d["width"], d["height"])
     return deepcopy(p)
 
 
@@ -191,35 +181,10 @@ def evaluate(matrix, design, directory, prefix, budget, config=None):
                    "line_evaluations": budget.lines-lines, "seconds": time.monotonic()-start}
 
 
-def search(reference_dir, plan, output, cancelled=None):
-    require(not output.exists(), "Use a fresh repair output directory")
-    start = time.monotonic()
-    # Validate the small plan before allocating the search data structures.
-    paired = isinstance(plan, dict) and plan.get("format") == "picross-repair-plan-v2"
-    exact_keys(plan, {"format", "tool", "reference", "mask", "config", "rationale"} |
-               ({"certification"} if paired else set()))
-    r = exact_keys(plan["reference"], {"candidate_id", "manifest_sha256", "variant"})
-    raw = load_json(reference_dir / f'{r["variant"]}-candidate.json') if isinstance(r["variant"], str) and \
-        r["variant"].isascii() and r["variant"].replace("-", "").replace("_", "").isalnum() else None
-    require(raw is not None, "Invalid reference variant path")
-    plan = validate_plan(plan, raw)
-    config = plan["config"]
-    cert_config = plan.get("certification")
-    budget = (certification.bounded_budget(config["search_seconds"], config["search_lines"], cert_config, cancelled)
-              if paired else Budget(config["search_seconds"], config["search_lines"], cancelled))
-    require(file_hash(reference_dir / "manifest.json") == r["manifest_sha256"], "Reference manifest changed")
-    reference, original_proof, reference_checked = inspect_candidate(reference_dir, r["variant"], budget)
-    require(paired or original_proof["format"] != "picross-proof-v3",
-            "Paired reference requires a versioned paired repair plan")
-    budget.check()
-    matrix, design = reference["matrix"], reference["design"]
+def explore(matrix, design, mask, domains, config, budget, stage, cert_config=None, *, admissible=None):
     colors = tuple(e["id"] for e in design["palette"])
-    stage = output.with_name(output.name + ".staging")
-    require(not stage.exists(), "Staging directory already exists")
-    stage.mkdir(parents=True)
-    write_json(stage / "plan.json", plan)
     history, attempts, seen = [], [], set()
-    frontier = Frontier(matrix, plan["mask"], config["seed"], original_proof["final_domains"])
+    frontier = Frontier(matrix, mask, config["seed"], domains)
     status, reason, selected = "budget_exhausted", "frontier_exhausted", None
 
     def add(state, parent, edit):
@@ -261,10 +226,13 @@ def search(reference_dir, plan, output, cancelled=None):
             if distance(trial, matrix) > config["max_changes"]:
                 attempt["outcome"] = "change_limit"
                 continue
+            if admissible is not None and not admissible(trial):
+                attempt["outcome"] = "outside_parameters"
+                continue
             if digest(trial) in seen:
                 attempt["outcome"] = "duplicate"
                 continue
-            trial = apply_edit(state, edit, matrix, plan["mask"], config["max_changes"])
+            trial = apply_edit(state, edit, matrix, mask, config["max_changes"])
             attempt["outcome"] = "evaluated"
             index, evaluation = add(trial, parent, edit)
             attempt["candidate"] = index
@@ -272,6 +240,37 @@ def search(reference_dir, plan, output, cancelled=None):
         status, reason = "aborted", str(exc) if isinstance(exc, Aborted) else type(exc).__name__
         if attempts and attempts[-1]["outcome"] == "evaluated" and attempts[-1]["candidate"] is None:
             attempts[-1]["outcome"] = "evaluation_aborted"
+    return status, reason, selected, frontier, history, attempts
+
+
+def search(reference_dir, plan, output, cancelled=None):
+    require(not output.exists(), "Use a fresh repair output directory")
+    start = time.monotonic()
+    # Validate the small plan before allocating the search data structures.
+    paired = isinstance(plan, dict) and plan.get("format") == "picross-repair-plan-v2"
+    exact_keys(plan, {"format", "tool", "reference", "mask", "config", "rationale"} |
+               ({"certification"} if paired else set()))
+    r = exact_keys(plan["reference"], {"candidate_id", "manifest_sha256", "variant"})
+    raw = load_json(reference_dir / f'{r["variant"]}-candidate.json') if isinstance(r["variant"], str) and \
+        r["variant"].isascii() and r["variant"].replace("-", "").replace("_", "").isalnum() else None
+    require(raw is not None, "Invalid reference variant path")
+    plan = validate_plan(plan, raw)
+    config = plan["config"]
+    cert_config = plan.get("certification")
+    budget = (certification.bounded_budget(config["search_seconds"], config["search_lines"], cert_config, cancelled)
+              if paired else Budget(config["search_seconds"], config["search_lines"], cancelled))
+    require(file_hash(reference_dir / "manifest.json") == r["manifest_sha256"], "Reference manifest changed")
+    reference, original_proof, reference_checked = inspect_candidate(reference_dir, r["variant"], budget)
+    require(paired or original_proof["format"] != "picross-proof-v3",
+            "Paired reference requires a versioned paired repair plan")
+    budget.check()
+    matrix, design = reference["matrix"], reference["design"]
+    stage = output.with_name(output.name + ".staging")
+    require(not stage.exists(), "Staging directory already exists")
+    stage.mkdir(parents=True)
+    write_json(stage / "plan.json", plan)
+    status, reason, selected, frontier, history, attempts = explore(
+        matrix, design, plan["mask"], original_proof["final_domains"], config, budget, stage, cert_config)
 
     search_seconds = time.monotonic()-start
     final = None

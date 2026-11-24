@@ -51,6 +51,14 @@ Regelbuch, Generator-/Codec-/Toolhasharchiv oder Inventar als neue Pflichtdatei.
 
 ### Rastervorschau und Bindung
 
+Eine ausgeführte RP-5-Runde darf am Quellraster unter `last_repair` ihren
+aktuellen Endgrund sichern. Das Objekt enthält genau `plan,definition_sha256,
+outcome,reason,candidates,proposals`. Der Planhash bindet Referenz, Profil,
+Maskenhash und Sucheinstellungen. Die Zähler des Jobs bleiben kumulativ.
+Bei einem kombinierten Zellfix und Beschnitt enthält `crop_diagnosis.edits`
+die konkreten Vorher-/Nachherwerte im Originalrechteck. Der Reader prüft sie
+gegen das ursprüngliche Raster und dieselbe Schutzmaske.
+
 - Aktuelle Darstellung und neue Vorschau-PNGs bilden jede Zelle ohne Glättung in
   12×12 Pixeln ab. EMPTY ist transparent. Bei mono sind belegte Zellen opak
   schwarz (#000000), bei color behalten sie ihre tatsächlichen RGB-Werte.

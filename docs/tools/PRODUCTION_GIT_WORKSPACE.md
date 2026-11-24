@@ -12,6 +12,11 @@ Für eine Wiederaufnahme den Arbeitsref und den erwarteten Commit lesen, Release
 
 ## Einstieg und Wiederaufnahme
 
+Für einen veröffentlichten Rasterentwurf kann ein neuer Chat die
+[gebundenen Schritt-3-Operationen](PW_REMOTE.md#schritt-3-am-veröffentlichten-kandidaten)
+am selben Job ausführen. Vor jeder Folgeoperation aktuellen Arbeitsref, Record
+und Originalbindungen zurücklesen. Der Worker benutzt den vorhandenen PW-LOCAL-Publisher.
+
 Der Akteur startet im vertrauenswürdigen Werkzeugcheckout und bindet die
 vollständigen Commit-SHAs. Der lesende Preflight aus [PW-B](PW_B_CONTRACT.md)
 prüft frühzeitig den für eine geplante Veröffentlichung gewählten Transport.

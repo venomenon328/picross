@@ -60,29 +60,10 @@ def validate_plan(value):
 def transform(p, design, matrix):
     """Pure replay against the untouched reference, including protected empties."""
     p = validate_plan(p)
-    w, h = design['width'], design['height']
-    mask = p['protected_mask']
-    crop = p['crop']
-    permissions = p['parameters']['derivation']
-    parameters.crop_rectangle(crop, w, h, mask, permissions['empty_edge_crop'], matrix, empty='empty')
-    l, t, r, b = crop
-    edits = p['edits']
-    ap.require(isinstance(edits, list) and len(edits) <= p['budgets']['max_changes'], 'Fixed change budget exceeded')
-    ap.require(not edits or permissions['cell_edits'], 'Cell edits not approved')
-    allowed = {'empty', *(v['id'] for v in design['palette'])}
-    seen, result = set(), deepcopy(matrix)
-    for edit in edits:
-        exact_keys(edit, {'x', 'y', 'before', 'after'})
-        x, y = integer(edit['x'], 0, w - 1, 'x'), integer(edit['y'], 0, h - 1, 'y')
-        ap.require((x, y) not in seen and l <= x < r and t <= y < b, 'Duplicate or cropped edit coordinate')
-        seen.add((x, y))
-        ap.require(not mask[y][x], 'Protected cell edit')
-        ap.require(edit['before'] == matrix[y][x] and edit['after'] in allowed and edit['after'] != edit['before'],
-                   'Wrong before, palette value or no-op edit')
-        result[y][x] = edit['after']
-    ap.require(edits or crop != [0, 0, w, h], 'Unchanged fixed plan is a no-op; retain the import')
-    result = [row[l:r] for row in result[t:b]]
-    derived = {**design, 'width': r - l, 'height': b - t}
+    result = parameters.edit_rectangle(matrix, p['protected_mask'], p['crop'], p['edits'], p['parameters']['derivation'],
+                            p['budgets']['max_changes'], {v['id'] for v in design['palette']}, empty='empty')
+    ap.require(result != matrix, 'Unchanged fixed plan is a no-op; retain the import')
+    derived = {**design, 'width': len(result[0]), 'height': len(result)}
     parameters.result(p['parameters'], derived, result)
     return derived, result
 

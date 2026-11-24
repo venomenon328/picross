@@ -63,6 +63,9 @@ def request(value):
         delivery.selectors(value)
     elif op == 'step3' and isinstance(data, dict) and set(data) in ({'choice'}, {'assessment'}):
         validate_editorial(data)
+    elif op == 'step3' and isinstance(data, dict) and len(data) == 1:
+        from .production_remote_raster import validate
+        validate(data)
     elif op == 'step3':
         exact_keys(data, {'motif_sha256', 'design', 'profile', 'label'})
         sha(data['motif_sha256'])
@@ -288,6 +291,10 @@ def run(root, req, auth, token, *, diagnose=False, check_invocation=lambda: None
                     result.update(steps.step4(req, original, data, Path(tmp)))
                 else:
                     product = steps.step5(req, req_id, original, data, Path(paths['integration']), Path(tmp))
+            if result.get('status') in ('no-op', 'diagnosed'):
+                check_invocation()
+                require(preflight(root, req, auth)['work_head'] == expected, 'Read-only raster source changed')
+                return {**result, 'work': expected}
             with measured(times, 'publication'):
                 check_invocation()
                 intent = {'id': req_id, 'main': req['main'], 'product': product if op == 'step5' else None}
@@ -303,6 +310,8 @@ def run(root, req, auth, token, *, diagnose=False, check_invocation=lambda: None
             result['next'] = 'Read the approved motif and parameters for the raster design.'
         if op == 'step3' and 'assessment' in req['input']:
             result['next'] = 'Read the published assessments and present the current offers or inspection drafts.'
+        if op == 'step3' and 'select' in req['input']:
+            result['next'] = 'Continue with background offers in step 4.'
         if op == 'step4':
             result['next'] = ('Inspect the bound original and prepared PNG of each candidate.'
                               if 'prepare' in req['input'] else 'Read the current background assessments.')

@@ -14,11 +14,13 @@ from .background_contract import BackgroundError
 
 
 @io.bounded
-def raster(definition, output, *, mode, profile='line', method='picross-difficulty-0.4'):
+def raster(definition, output, *, mode, profile='line', method='picross-difficulty-0.4',
+           solve_seconds=120, solve_lines=100000, verify_seconds=120, verify_lines=100000,
+           max_pair_work=20000000, max_pair_records=250000):
     """Certify a current definition without import, repair or producer history."""
     from . import catalog_rating, catalog_analysis, current_rating, solver
     from .editor_raster import check_end
-    raw=current.encoded(definition)
+    raw=definition if isinstance(definition, bytes) else current.encoded(definition)
     definition,puzzle,_,_=catalog_rating.definition(raw)
     used = used_foreground(definition['solution'])
     require_color_count(mode, len(used))
@@ -29,15 +31,19 @@ def raster(definition, output, *, mode, profile='line', method='picross-difficul
     with tempfile.TemporaryDirectory(prefix='.current-raster-',dir=output.parent) as temporary:
         work=Path(temporary);stage=work/'result';stage.mkdir()
         (stage/'definition.json').write_bytes(raw)
-        baseline=solver.solve(puzzle,Budget(120,100000))
-        proof=(solver.solve(puzzle,Budget(120,100000),profile='paired-lines-color') if profile=='paired' else baseline)
+        budget = Budget(solve_seconds, solve_lines, max_pair_work=max_pair_work, max_pair_records=max_pair_records)
+        baseline = solver.solve(puzzle, budget)
+        use_pair = profile == 'paired' and baseline['status'] == 'stalled'
+        proof = solver.solve(puzzle, budget, profile='paired-lines-color') if use_pair else baseline
         (stage/'proof.json').write_bytes(current.encoded(proof))
         # A fresh process consumes only logic/proof, never the known solution or image.
         (work/'logic.json').write_bytes(current.encoded(puzzle.to_wire()))
         process=subprocess.run([sys.executable,'-m','tools.puzzle_production','verify','--input',str(work/'logic.json'),
-                                '--proof',str(stage/'proof.json')], cwd=Path(__file__).resolve().parents[2],
-                               capture_output=True,timeout=150)
-        require(process.returncode==0,'Independent current proof process failed')
+                                '--proof',str(stage/'proof.json'), '--seconds', str(verify_seconds),
+                                '--max-lines', str(verify_lines), '--max-pair-work', str(max_pair_work),
+                                '--max-pair-records', str(max_pair_records)], cwd=Path(__file__).resolve().parents[2],
+                               capture_output=True,timeout=verify_seconds+30)
+        require(process.returncode in (0, 4),'Independent current proof process failed')
         require(len(process.stdout)<=1024*1024,'Oversized proof process result')
         checked=json.loads(process.stdout)
         current.encoded(checked)
@@ -47,7 +53,7 @@ def raster(definition, output, *, mode, profile='line', method='picross-difficul
         if checked.get('certified'):
             check_end(definition,proof)
             arguments={}
-            if profile=='paired':
+            if use_pair:
                 (work/'baseline.json').write_bytes(current.encoded(baseline))
                 arguments={'proof':stage/'proof.json','baseline':work/'baseline.json'}
             rating=catalog_analysis.analyze_single(stage/'definition.json',work/'analysis',production_mode=mode,method=method,**arguments)
@@ -63,7 +69,8 @@ def raster(definition, output, *, mode, profile='line', method='picross-difficul
 
 
 @io.bounded
-def image(source, design_path, output, *, puzzle_id, name, revision=1, profile='line', method='picross-difficulty-0.4'):
+def image(source, design_path, output, *, puzzle_id, name, revision=1, profile='line', method='picross-difficulty-0.4',
+          existing_candidate=None):
     """Use existing pixel algorithms without their old archival bundle writer."""
     from . import images, authoring_inspection
     source=io.external(source);design_path=io.external(design_path);output=io.external(output)
@@ -86,6 +93,10 @@ def image(source, design_path, output, *, puzzle_id, name, revision=1, profile='
             actual=deepcopy(design);actual['palette']=[p for p in actual['palette'] if p['id'] in used]
             logic=images.logic_from_matrix(matrix,actual)
             definition,_=authoring_inspection.definition({'puzzle_id':puzzle_id},actual,matrix,logic,name,revision,puzzle_id+'.png')
+            duplicate = existing_candidate(definition) if existing_candidate is not None else None
+            if duplicate is not None:
+                results.append({'id': identifier, 'duplicate': duplicate})
+                continue
             result=raster(definition,stage/identifier,mode=design['mode'],profile=profile,method=method)
             results.append({'id':identifier,**result})
         require(io.read(source.parent,source.name,32*current.LIMIT)==raw and

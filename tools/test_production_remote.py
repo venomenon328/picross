@@ -63,6 +63,66 @@ def background_offer(case):
             'finding_decisions': [{**declaration, 'expected': row['decision']['binding'], 'id': row['id'], 'target': 'sky'}]}
 
 
+def color_repair_fixture(job, directory):
+    """Two-colour clasp. The gap beside the upper bar can be joined; the left column is empty."""
+    from io import BytesIO
+    from PIL import Image
+    from tools.puzzle_production import current_tools, editor_raster
+
+    key = job['puzzle_id']
+    values = [[int(c) for c in line] for line in ('012100', '010001', '000021', '000110')]
+    defined = {'schema': 2, 'id': key, 'revision': 1, 'width': 6, 'height': 4,
+               'palette': [{'id': 1, 'color': 'a43821', 'symbol': 'A'}, {'id': 2, 'color': '214a80', 'symbol': 'B'}],
+               'solution': values, 'rows': [editor_raster.clues(r) for r in values],
+               'columns': [editor_raster.clues(r) for r in zip(*values)],
+               'reveal': {'definition_id': key, 'image': 'res://art/content/'+key+'.png', 'name': job['title'], 'version': 1}}
+    job.update(format=current.findings.LOCAL, findings=[], instructions={}, state='raster_review')
+    files = []
+
+    def attach(name, raw):
+        (directory / name).write_bytes(raw)
+        ref = current.content.ref('content/authoring/'+key+'/data/'+name, raw)
+        files.append({'path': ref['file'], 'source': name, 'bytes': len(raw), 'sha256': ref['sha256']})
+        return ref
+
+    motif = current.raster_image(defined, neutral=False)
+    # The source silhouette includes the missing tooth at original coordinate (4, 0).
+    motif.paste((164, 56, 33, 255), (48, 0, 60, 12))
+    for role, scale in [('reveal', 2), ('motif', 1)]:
+        buf = BytesIO()
+        motif.resize((motif.width*scale, motif.height*scale), Image.Resampling.NEAREST).save(buf, format='PNG')
+        job['assets'].append({'id': role+'-a', 'role': role, 'label': 'Synthetic two-colour clasp',
+            'file': attach(role+'.png', buf.getvalue()), 'rights': {'author': 'Synthetic test', 'source': 'Generated cells',
+            'changes': 'Synthetic test fixture', 'usage_basis': 'Own synthetic pixels'},
+            'review': fixtures.judgment(current.CRITERIA[role])})
+        job['selected'][role] = role+'-a'
+    opts = {'format': current.raster_parameters.FORMAT, 'constraints': {
+        'width': {'kind': 'approximate', 'target': 6, 'minimum': 6, 'maximum': 7},
+        'height': {'kind': 'exact', 'target': 4, 'minimum': 4, 'maximum': 4},
+        'foreground_colors': {'kind': 'exact', 'target': 2, 'minimum': 2, 'maximum': 2}},
+        'imports': [{'width': 6, 'height': 4, 'mode': 'color', 'foreground_colors': 2, 'method': 'area',
+                     'fit': 'exact', 'actual_crop': [0, 0, 72, 48]}],
+        'derivation': {'cell_edits': True, 'empty_edge_crop': ['left'], 'protected_features': ['Clasp contours and openings']}}
+    job['parameters'] = {'proposed': [opts], 'approved': [opts]}
+    result = current_tools.raster(defined, directory/'line', mode='color')
+    if result['status'] != 'stalled':
+        raise AssertionError('Fixture requires an independently checked stalled reference')
+    row = {'id': 'clasp', 'label': '6 × 4 · zweifarbige Schließe mit offener Lasche', 'review': {}, 'exceptions': []}
+    for k, ref in result['files'].items():
+        row[k] = ref and attach(ref['file'], (directory/'line'/ref['file']).read_bytes())
+    job['rasters'] = [row]
+    job['budgets']['used']['raster_candidates'] = 1
+    cells = [[x != 0 and (x, y) != (4, 0) for x in range(6)] for y in range(4)]
+    protected = {'before_sha256': row['definition']['sha256'], 'motif_sha256': job['assets'][-1]['file']['sha256'], 'cells': cells}
+    mask_hash = io.checksum(current.encoded(protected))
+    for scope in ('reveal', 'motif'):
+        fixtures.decide(job, scope)
+    decision = job['decisions'][-1]
+    decision['crop_protection'] = {row['definition']['sha256']: mask_hash}
+    decision['binding'] = current.binding(job, 'motif')
+    return files, defined, cells, mask_hash
+
+
 class RemoteTests(unittest.TestCase):
     def setUp(self):
         fixture = publication.WorkPublicationTests()
@@ -327,6 +387,89 @@ class RemoteTests(unittest.TestCase):
         self.assertIsNone(git.remote_head(self.repo, current_ref))
         self.assertIsNone(git.remote_head(self.repo, 'refs/tags/work-prod-' + self.job))
 
+
+    def test_current_color_operations_and_restart(self):
+        from tools import production_remote_raster as operations
+        f = self.f
+        files, definition, cells, mask = color_repair_fixture(f.job, f.sources)
+        current.build({'format': current.REQUEST, 'record': f.job, 'expected': None, 'files': files}, f.sources, f.root)
+        head = pw.push_job(f.root, self.job, None)
+
+        def record():
+            return pw.bound_record(self.read_record(head, self.job), self.job)
+
+        def source(candidate):
+            j = record()
+            r = current.findings.subjects(j)[candidate]
+            raw = self.fixture.assets[r['definition']['asset']['asset_id']]
+            return operations.source_binding(j, r, io.json_bytes(raw, current.LIMIT))
+
+        def apply(op, options):
+            nonlocal head
+            request = self.req('step3', head, {op: options})
+            response = self.execute(request)
+            head = response['work']
+            return response, request
+
+        start = source('clasp')
+        info, _ = apply('diagnosis', {'source': start, 'uniqueness': True, 'max_nodes': 1000})
+        self.assertEqual((len(info['open_domains']), info['uniqueness']['status']), (12, 'unique'))
+        common = dict(source=start, cells=cells, mask_sha256=mask, output='corrected',
+                      label='Zweifarbige Schließe mit geschlossener oberer Lasche', rationale='Obere Lasche schließen', profile='line')
+        full = [0, 0, 6, 4]
+        edit = dict(x=4, y=0, before=0, after=1)
+        fixed = {**common, 'crop': full, 'edits': [edit], 'max_changes': 2}
+        for bad in ({'edits': [edit, edit]}, {'edits': [{**edit, 'before': 1}]}, {'edits': [{**edit, 'after': 3}]},
+                    {'edits': [{**edit, 'x': 2}]}, {'edits': [{**edit, 'x': 5}]}, {'crop': [2, 0, 6, 4]},
+                    {'crop': [0, 1, 6, 4]}, {'mask_sha256': '0'*64}, {'source': {**start, 'revision': 2}}):
+            with self.subTest(bad=bad), self.assertRaises(ValueError):
+                apply('fixed', {**fixed, **bad})
+        original_head = head
+        self.assertEqual(apply('fixed', {**fixed, 'edits': []})[0]['status'], 'no-op')
+        self.assertEqual(original_head, head)
+        config = {'max_changes': 1, 'max_steps': 1, 'max_candidates': 1, 'search_seconds': 10, 'final_seconds': 15,
+                  'search_lines': 10000, 'final_lines': 10000, 'seed': 9, 'order': 'seeded-frontier-v1', 'operators': ['single-cell']}
+        plan = {**common, 'output': 'repaired', 'config': config, 'extra_changes_reason': None}
+        missed, request = apply('repair', plan)
+        self.assertEqual(missed['search']['reason'], 'candidate_limit')
+        self.assertEqual(head, self.execute(request)['work'])
+        self.assertEqual(record()['budgets']['used']['repair_rounds'], 1)
+        with self.assertRaisesRegex(ValueError, 'already run'):
+            apply('repair', plan)
+        repaired, _ = apply('repair', {**plan, 'config': {**config, 'max_candidates': 32, 'max_steps': 96}})
+        self.assertTrue(repaired['certified'])
+        self.assertEqual(record()['budgets']['used']['repair_rounds'], 2)
+        with self.assertRaisesRegex(ValueError, 'exhausted'):
+            apply('repair', plan)
+        paired, _ = apply('profile_check', {'source': start, 'profile': 'paired', 'rationale': 'Prüfe den offenen Linienstand'})
+        self.assertTrue(paired['certified'])
+        new = source('clasp')
+        self.assertEqual(start['matrix_sha256'], new['matrix_sha256'])
+        self.assertEqual(start['definition_sha256'], new['definition_sha256'])
+        self.assertNotEqual(start['proof_sha256'], new['proof_sha256'])
+        with self.assertRaisesRegex(ValueError, 'Stale raster'):
+            apply('fixed', fixed)
+        cropped, _ = apply('fixed', {**fixed, 'source': new, 'output': 'cropped', 'crop': [1, 0, 6, 4], 'edits': []})
+        self.assertIn('crop_diagnosis', current.findings.subjects(record())['cropped'])
+        changed = deepcopy(record()['parameters']['approved'])
+        changed[0]['constraints']['width']['minimum'] = 5
+        declaration = {k: record()['decisions'][-1][k] for k in operations.DECLARATION}
+        declaration['statement'] = 'Synthetisch: Breite fünf und denselben Motivschutz freigeben.'
+        apply('parameters', {'motif_sha256': new['motif_sha256'], 'previous': new['parameters_sha256'],
+                             'approved': changed, 'declaration': declaration})
+        final, _ = apply('fixed', {**fixed, 'source': source('clasp'), 'output': 'chosen', 'crop': [1, 0, 6, 4]})
+        self.assertTrue(final['certified'])
+        selected = source('chosen')
+        row = current.findings.subjects(record())['chosen']
+        with self.assertRaisesRegex(ValueError, 'blocked'):
+            apply('select', {'source': selected, 'finding_decisions': [], 'declaration': declaration})
+        apply('assessment', {'candidate': 'chosen', 'definition_sha256': selected['definition_sha256'],
+              'preview_sha256': row['preview']['sha256'], 'review': fixtures.judgment(current.CRITERIA['raster']),
+              'observations': [], 'ready': True})
+        with patch.object(current.Checked, 'raster', side_effect=AssertionError('unexpected replay')):
+            apply('select', {'source': selected, 'finding_decisions': [], 'declaration': declaration})
+        self.assertEqual((record()['state'], record()['selected']['raster'], len(record()['rasters'])),
+                         ('background_review', 'chosen', 1))
 
     def test_bound_crop_originals_round_trip(self):
         from zipfile import ZipFile
