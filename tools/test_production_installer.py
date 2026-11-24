@@ -22,6 +22,58 @@ NS = {'w': installer.NS}
 
 
 class InstallerContractTests(unittest.TestCase):
+    def test_pw_raster_fixture_keeps_committed_marker_and_both_methods(self):
+        from tools.production_workspace.smoke_windows import check_raster_data_tree, git, raster_fixture
+        from tools.puzzle_production.catalog_integration import TEST_CATALOG
+
+        with tempfile.TemporaryDirectory() as folder:
+            root = Path(folder)
+            repo = root / 'data'
+            commit_id, paths, entries = raster_fixture(repo, root)
+            marker, expected = TEST_CATALOG
+            self.assertIn(marker, paths)
+            self.assertEqual(git(repo, 'show', f'{commit_id}:{marker}'), expected)
+            methods = {}
+            for entry in entries:
+                raw = git(repo, 'show', f"{commit_id}:{entry['record']}")
+                record = json.loads(raw)
+                difficulty = record['rasters'][0]['difficulty']['file']
+                methods[entry['puzzle_id']] = json.loads(git(repo, 'show', f'{commit_id}:{difficulty}'))['method']
+            self.assertEqual(methods, {'pz-frozen-04': 'picross-difficulty-0.4',
+                                       'pz-frozen-03': 'picross-difficulty-0.3'})
+            previous = git(repo, 'rev-parse', 'HEAD^').decode('ascii').strip()
+            with self.assertRaisesRegex(RuntimeError, 'anderen Commit'):
+                check_raster_data_tree(repo, previous)
+
+    def test_pw_raster_fixture_rejects_invalid_marker_and_foreign_files(self):
+        from tests.puzzle_production import current_fixtures
+        from tools.production_workspace.smoke_windows import raster_fixture
+        from tools.puzzle_production.catalog_integration import TEST_CATALOG
+        from tools.puzzle_production.contract import InvalidInput
+
+        checkout = current_fixtures.checkout
+        marker = TEST_CATALOG[0]
+        marker_error = 'Test-only input cannot enter product catalog'
+        for name, raw, error, message in (
+            (marker, b'wrong marker\n', InvalidInput, marker_error),
+            (marker, None, InvalidInput, marker_error),
+            ('content/unexpected', b'foreign', RuntimeError, 'content/unexpected'),
+            ('game/data/unexpected.py', b'raise RuntimeError\n', RuntimeError, r'game/data/unexpected\.py'),
+        ):
+            with self.subTest(path=name, raw=raw), tempfile.TemporaryDirectory() as folder:
+                root = Path(folder)
+
+                def modified_checkout(repo):
+                    checkout(repo)
+                    if raw is None:
+                        (repo / name).unlink()
+                    else:
+                        current_fixtures.put(repo, name, raw)
+
+                with patch.object(current_fixtures, 'checkout', side_effect=modified_checkout):
+                    with self.assertRaisesRegex(error, message):
+                        raster_fixture(root / 'data', root)
+
     @unittest.skipUnless(os.name == 'nt', 'Actual Windows kernel mutex regression')
     def test_idle_versus_held_kernel_mutex_without_touching_real_msi(self):
         import ctypes
@@ -667,6 +719,26 @@ class AppReleaseTests(unittest.TestCase):
         self.assertTrue(payload.selected('tools/puzzle_production/editor_change.py', app=PE))
         self.assertFalse(set(build_windows.PE_WORKSPACE_EXCLUDES) &
                          {Path(name).stem for name in payload.PE_SHARED if name.endswith('.py')})
+
+    def test_production_writers_excluded_from_frozen_apps_not_fingerprinted(self):
+        from tools.app_products import PE, PG, PW
+        from tools.production_workspace import build_windows
+        expected = {
+            'tools.production_git_workspace', 'tools.production_worktree_publish',
+            'tools.publish_git', 'tools.work_publish', 'tools.production_remote',
+            'tools.production_remote_pr', 'tools.production_remote_steps',
+        }
+        self.assertEqual(set(build_windows.PRODUCTION_WRITER_EXCLUDES), expected)
+        for app in (PW, PE):
+            with self.subTest(app=app.key):
+                self.assertTrue(expected <= set(build_windows.frozen_excludes(app)))
+                self.assertTrue(payload.selected('tools/work_refs.py', app=app))
+                for name in expected:
+                    self.assertFalse(payload.selected(name.replace('.', '/') + '.py', app=app))
+                    with self.assertRaisesRegex(RuntimeError, 'Produktionswriter'):
+                        build_windows.verify_no_production_writers({name}, app)
+                build_windows.verify_no_production_writers({'tools.work_refs'}, app)
+        self.assertEqual(build_windows.frozen_excludes(PG), build_windows.FROZEN_EXCLUDES)
 
     def test_unknown_inputs_and_actual_collector_drift_are_errors(self):
         from tools.production_workspace import build_windows

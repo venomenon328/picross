@@ -27,6 +27,26 @@ PACKAGE = ROOT / 'tools/production_workspace'
 # Broad production-module collection must not freeze ZA-1's synthetic helpers.
 # Those helpers import tests.puzzle_production, which is not app source.
 FROZEN_EXCLUDES = ('tools.puzzle_production.za1_fixtures', 'tests')
+# current_authoring's producer-only build/complete functions are discovered by
+# PyInstaller even when the installed readers never call them. Keep the Git
+# worktree/remote publication chain outside both desktop applications.
+PRODUCTION_WRITER_EXCLUDES = (
+    'tools.production_git_workspace', 'tools.production_worktree_publish',
+    'tools.publish_git', 'tools.work_publish', 'tools.production_remote',
+    'tools.production_remote_pr', 'tools.production_remote_steps',
+)
+
+
+def frozen_excludes(app):
+    return FROZEN_EXCLUDES + (PRODUCTION_WRITER_EXCLUDES if app in (PW, PE) else ())
+
+
+def verify_no_production_writers(names, app):
+    if app in (PW, PE):
+        leaked = sorted(set(names) & set(PRODUCTION_WRITER_EXCLUDES))
+        if leaked:
+            raise RuntimeError('Frozen-Payload enthält Produktionswriter: ' + ', '.join(leaked))
+
 # current_authoring's PW-only projection code imports motifs for phase labels.
 # PE never runs that projection and must not freeze the PW job/history modules.
 PE_WORKSPACE_EXCLUDES = ('sources', 'current_view', 'presentation', 'projector', 'motifs')
@@ -168,7 +188,7 @@ def build(destination, *, version=None, app=PW):
                     '--distpath', str(destination / 'dist'),
                     '--workpath', str(work / 'pyinstaller'), '--specpath', str(work), '--paths', str(ROOT),
                     *(['--collect-submodules', 'tools.puzzle_production'] if app == PW else []),
-                    *(arg for name in FROZEN_EXCLUDES for arg in ('--exclude-module', name)),
+                    *(arg for name in frozen_excludes(app) for arg in ('--exclude-module', name)),
                     '--hidden-import', 'tools.production_workspace.update_verifier',
                     '--hidden-import', 'cryptography.hazmat.primitives.asymmetric.ed25519',
                     '--hidden-import', '_cffi_backend',
@@ -246,6 +266,7 @@ def verify_update_payload(image, pyz, audit, *, app=PW):
     """Check real frozen code and native crypto extensions, not just source pins."""
     from PyInstaller.archive.readers import ZlibArchiveReader
     names = set(ZlibArchiveReader(str(pyz)).toc)
+    verify_no_production_writers(names, app)
     required = {'tools.production_workspace.update_verifier', 'tools.production_workspace.release_manifest',
                 'tools.production_workspace.release', 'tools.app_products',
                 'cryptography.hazmat.primitives.asymmetric.ed25519'}
