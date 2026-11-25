@@ -288,6 +288,62 @@ class RemoteTests(unittest.TestCase):
         self.assertEqual(self.execute(retire, fresh)['status'], 'closed')
         self.assertEqual(self.execute(retire)['status'], 'no-op')
 
+    def test_prepare_delivers_only_explicit_backgrounds(self):
+        from io import BytesIO
+        from PIL import Image
+
+        f = self.f
+        f.job['test_only'] = False
+        f.input = fixtures.make(f.work / 'current-input', method='picross-difficulty-0.4')
+        f.incoming = io.json_bytes((f.input / 'manifest.json').read_bytes(), current.LIMIT)
+        f.publish()
+        f.raster_ready()
+        f.job = current.upgrade(f.job)
+        f.job['selected']['raster'] = f.job['rasters'][0]['id']
+        fixtures.decide(f.job, 'raster')
+        f.job['state'] = 'background_review'
+        candidates = ['cloud', 'sky', 'rain']
+        for pos, key in enumerate(candidates, 1):
+            pixels = Image.new('RGBA', (30, 10))
+            pixels.putpixel((pos, 5), (20, 30, 40, 255))
+            stream = BytesIO()
+            pixels.save(stream, format='PNG')
+            asset = f.asset(key, 'background')
+            asset.update(file=f.file(key+'.png', stream.getvalue()), profile='picross-background-png2304x768-v1', prepared=None)
+            f.job['assets'].append(asset)
+        f.publish()
+        work = pw.push_job(f.root, self.job, None)
+        items = [{'role': role, 'candidate': candidate} for candidate in candidates for role in ('background', 'prepared')]
+        req = self.req('step4', work, {'prepare': candidates}, format=delivery.WIRE_V2, delivery=items)
+        with self.assertRaisesRegex(ValueError, 'duplicate delivery role'):
+            remote.request({**req, 'delivery': items + [items[0]]})
+        with self.assertRaisesRegex(ValueError, 'requested background'):
+            remote.request({**req, 'delivery': [{'role': 'background', 'candidate': 'other'}]})
+        offered = pw.bound_record(self.read_record(work, self.job), self.job)
+        before_req = self.req('inspect', work, {'items': items}, format=delivery.WIRE_V2)
+        before = f.work / 'multi-background-as-offered'
+        before_ctx = delivery.context(before_req, 'a'*40, 41, 1, 40, 1)
+        read_original = lambda r: self.fixture.assets[r['asset']['asset_id']]
+        unprepared = inspect.stage(before_req, offered, before_ctx, before, read_original, lambda: None)
+        self.assertEqual(unprepared['original_count'], 3)
+        result = self.execute(req)
+        self.assertTrue(result['deliver'])
+        raw = self.read_record(result['work'], self.job)
+        record = pw.bound_record(raw, self.job)
+        read = self.req('inspect', result['work'], {'items': items}, format=delivery.WIRE_V2)
+        ctx = delivery.context(read, 'b'*40, 42, 2, 40, 1)
+        stage = f.work / 'multi-background'
+        inspect.stage(read, record, ctx, stage, read_original, lambda: None)
+        for candidate in candidates:
+            for role, size in (('background', (30, 10)), ('prepared', (2304, 768))):
+                path = f'{candidate}--{role}.png'
+                self.assertEqual((stage / path).read_bytes(), (before / path).read_bytes())
+                with Image.open(stage / path) as original:
+                    self.assertEqual(original.size, size)
+        record['selected']['background'] = candidates[0]
+        with self.assertRaisesRegex(ValueError, 'Different image role or choice'):
+            delivery.sources(read, record)
+
     def test_bound_raster_product_ci_recovery_and_retirement(self):
         f = self.f
         f.publish()
@@ -389,10 +445,17 @@ class RemoteTests(unittest.TestCase):
         self.assertIsNone(git.remote_head(self.repo, 'refs/tags/work-prod-' + self.job))
 
 
-    def color_session(self, *, paired_gap=False):
+    def color_session(self, *, paired_gap=False, unbound=False):
         from tools import production_remote_raster as operations
         f = self.f
         files, _, cells, mask = color_repair_fixture(f.job, f.sources, paired_gap=paired_gap)
+        if unbound:
+            approved = deepcopy(f.job['parameters']['approved'][0])
+            approved['constraints']['width']['minimum'] = 5
+            f.job['parameters'] = {'proposed': [approved], 'approved': [approved]}
+            motif = next(d for d in f.job['decisions'] if d['scope'] == 'motif')
+            del motif['crop_protection']
+            motif['binding'] = current.binding(f.job, 'motif')
         current.build({'format': current.REQUEST, 'record': f.job, 'expected': None, 'files': files}, f.sources, f.root)
         head = pw.push_job(f.root, self.job, None)
 
@@ -413,6 +476,158 @@ class RemoteTests(unittest.TestCase):
             return response, request
 
         return record, source, apply, cells, mask
+
+    def test_combined_fixed_publication_recovery_and_result_originals(self):
+        from zipfile import ZipFile
+        from tools import production_remote_raster as operations
+
+        f = self.f
+        f.job['test_only'] = False
+        record, source, _, cells, mask = self.color_session(unbound=True)
+        head = git.remote_head(self.repo, 'refs/heads/content/pw/' + self.job)
+        binding = source('clasp')
+        decision = next(d for d in record()['decisions'] if d['scope'] == 'motif')
+        explanation = {k: decision[k] for k in operations.DECLARATION}
+        explanation['statement'] = 'Nur die obere Lasche ist ungeschützt. Der linke Leerstreifen darf entfallen.'
+        fixed = dict(source=binding, cells=cells, mask_sha256=mask, output='corrected', profile='line',
+                     label='Schließe mit oberer Lasche', rationale='Die obere Lasche schließen',
+                     crop=[1, 0, 6, 4], max_changes=1, edits=[dict(x=4, y=0, before=0, after=1)],
+                     feature_cells=[{'feature': 'Clasp contours and openings',
+                                     'cells': [[x, y] for y, row in enumerate(cells) for x, v in enumerate(row) if v]}],
+                     protection=explanation)
+        roles = ('definition', 'preview', 'proof', 'difficulty', 'crop-before', 'crop-preview', 'crop-protection')
+        req = self.req('step3', head, {'fixed': fixed}, format=delivery.WIRE_V2,
+                       delivery=[{'role': role, 'candidate': 'corrected'} for role in roles] +
+                       [{'role': 'definition', 'candidate': 'clasp'}])
+        workref = 'refs/heads/content/pw/' + self.job
+        for bad in ({'mask_sha256': '0'*64}, {'edits': [dict(x=4, y=0, before=1, after=0)]},
+                    {'feature_cells': []}, {'protection': {**explanation, 'budget': 99}}):
+            with self.subTest(bad=bad), self.assertRaises(ValueError):
+                self.execute({**req, 'input': {'fixed': {**fixed, **bad}}})
+            self.assertEqual(git.remote_head(self.repo, workref), head)
+        noop = self.execute({**req, 'input': {'fixed': {**fixed, 'crop': [0, 0, 6, 4], 'edits': []}}})
+        self.assertEqual((noop['status'], git.remote_head(self.repo, workref)), ('no-op', head))
+        self.assertNotIn('crop_protection', decision)
+        published = self.execute(req)
+        after = published['work']
+        self.assertTrue(published['deliver'])
+        self.assertEqual(published['seconds']['computation'] is not None, True)
+        fresh = f.work / 'fresh-delivery-process'
+        fresh.mkdir()
+        with patch.object(remote.ws, 'prepare', side_effect=AssertionError('unexpected recomputation')):
+            replay = self.execute(req, fresh)
+        self.assertEqual((replay['work'], replay['deliver'], replay['seconds']['computation']), (after, True, None))
+        self.assertEqual(git.remote_head(self.repo, workref), after)
+        old_bytes, new_bytes = (self.read_record(oid, self.job) for oid in (head, after))
+        self.fixture.repository['id'] = delivery.REPOSITORIES[pw.REPO]
+        raw, successor, result = inspect.result_publication(self.repo, req)
+        old, new, _ = delivery.publication(req, result['input_commit'], result['commit'], old_bytes, new_bytes)
+        self.assertEqual(raw, old_bytes)
+        self.assertEqual(old['parameters'], new['parameters'])
+        self.assertEqual(new['budgets']['used']['raster_candidates'], old['budgets']['used']['raster_candidates'] + 1)
+        self.assertEqual(new['budgets']['used']['repair_rounds'], old['budgets']['used']['repair_rounds'])
+        self.assertEqual(next(d for d in new['decisions'] if d['scope'] == 'motif')['crop_protection'],
+                         {binding['definition_sha256']: mask})
+        ctx = delivery.context(req, 'b' * 40, 42, 2, 40, 1, successor)
+        _, _, release = inspect.bound(self.repo, req, publication=result)
+        staged = f.work / 'result-delivery'
+        def read(ref):
+            return inspect.work_assets.read(ref, 64 * current.LIMIT, releases={release['tag_name']: release})
+        inspect.stage(req, new, ctx, staged, read, lambda: inspect.result_publication(self.repo, req))
+        archive = f.work / 'result.zip'
+        with ZipFile(archive, 'w') as bundle:
+            for path in staged.iterdir():
+                bundle.write(path, path.name)
+        now = datetime.now(timezone.utc)
+        artifact = {'id': 11, 'name': delivery.artifact_name(ctx), 'expired': False,
+                    'workflow_run': {'id': 42, 'head_sha': req['main'], 'head_branch': 'main',
+                                     'repository_id': ctx['repository_id'], 'head_repository_id': ctx['repository_id']},
+                    'created_at': now.isoformat(), 'expires_at': (now + timedelta(days=1)).isoformat(),
+                    'size_in_bytes': archive.stat().st_size, 'digest': 'sha256:' + io.checksum(archive.read_bytes())}
+        def verify(bindings=result, **kwargs):
+            return delivery.verify_archive(archive, artifact, ctx, req, old_bytes, artifact_id=11,
+                                           result=bindings, **kwargs)
+        manifest = verify()
+        self.assertEqual(manifest['missing'], [])
+        self.assertEqual({x['file'] for x in manifest['files'] if x['role'] == 'definition'},
+                         {'clasp--definition.json', 'corrected--definition.json'})
+        for wrong in ({'record': old_bytes}, {'commit': {**result['commit'], 'parents': [{'sha': 'f'*40}]}},
+                      {'commit': {**result['commit'], 'message': 'Another request'}}):
+            with self.assertRaises(ValueError):
+                verify({**result, **wrong})
+        with self.assertRaisesRegex(ValueError, 'Foreign'):
+            delivery.verify_archive(archive, artifact, {**ctx, 'attempt': 3}, req, old_bytes, artifact_id=11,
+                                    result=result)
+        self.assertEqual(git.remote_head(self.repo, workref), after)
+
+    def test_delivery_recovery_after_ref_push_before_release_cleanup(self):
+        record, source, _, _, _ = self.color_session()
+        workref = 'refs/heads/content/pw/' + self.job
+        lockref = 'refs/heads/' + pw.release_catalog.LOCK_BRANCH
+        expected = git.remote_head(self.repo, workref)
+        before = record()
+        req = self.req('step3', expected, {'profile_check': {
+            'source': source('clasp'), 'profile': 'paired', 'rationale': 'Synthetische Profilprüfung'}},
+            format=delivery.WIRE_V2, delivery=[{'role': 'proof', 'candidate': 'clasp'}])
+        old_proof = current.findings.subjects(before)['clasp']['proof']['asset']['asset_id']
+
+        def interrupt_cleanup(path, method='GET', value=None):
+            if path == f'releases/assets/{old_proof}' and method == 'DELETE':
+                raise ValueError('interrupted after the ref push')
+            return self.api(path, method, value)
+
+        # Skip lease release as a hard process exit would, while keeping the real Git ref and local journal.
+        with patch.object(pw, 'api', side_effect=interrupt_cleanup), \
+                patch.object(pw, 'delete_ref', side_effect=ValueError('interrupted with own lease')):
+            with self.assertRaisesRegex(ValueError, 'interrupted with own lease'):
+                self.execute(req)
+        after = git.remote_head(self.repo, workref)
+        raw = self.read_record(after, self.job)
+        new = pw.bound_record(raw, self.job)
+        new_proof = current.findings.subjects(new)['clasp']['proof']['asset']['asset_id']
+        self.assertNotEqual(old_proof, new_proof)
+        self.assertEqual(new['budgets']['used'], before['budgets']['used'])
+        self.assertIn(old_proof, self.fixture.assets)
+        lease = git.remote_head(self.repo, lockref)
+        self.assertIsNotNone(lease)
+        fresh = self.f.work / 'fresh-publisher'
+        fresh.mkdir()
+
+        with patch.object(remote.ws, 'prepare', side_effect=AssertionError('unexpected computation')), \
+                patch.object(current, 'Checked', side_effect=AssertionError('unexpected recertification')):
+            with self.assertRaisesRegex(ValueError, 'Original private request directory'):
+                self.execute(req, fresh, recover_delivery=True)
+            with self.assertRaisesRegex(ValueError, 'Catalog lease occupied'):
+                self.execute(req, fresh)
+            self.assertEqual(git.remote_head(self.repo, lockref), lease)
+
+            # The original owner reaches cleanup while its lease is still present.
+            with patch.object(pw, 'api', side_effect=interrupt_cleanup):
+                with self.assertRaisesRegex(ValueError, 'interrupted after the ref push'):
+                    self.execute(req, recover_delivery=True)
+            self.assertIsNone(git.remote_head(self.repo, lockref))
+            with self.assertRaisesRegex(ValueError, f'Predecessor IDs \\[{old_proof}'):
+                self.execute(req, fresh)
+            self.assertIn(old_proof, self.fixture.assets)
+
+            # An unrelated asset with an otherwise plausible name and label is not owned by this request.
+            self.fixture.upload('work-prod-' + self.job, 'original-' + 'f' * 64, b'foreign')
+            foreign = self.fixture.next_id
+            with self.assertRaisesRegex(ValueError, f'unbound IDs \\[{foreign}'):
+                self.execute(req, recover_delivery=True)
+            self.assertNotIn(old_proof, self.fixture.assets)
+            self.assertIn(new_proof, self.fixture.assets)
+            self.assertEqual(self.fixture.assets[foreign], b'foreign')
+            self.assertIsNone(git.remote_head(self.repo, lockref))
+            with self.assertRaisesRegex(ValueError, 'pending publisher journal'):
+                self.execute(req, recover_delivery=True)
+
+            self.fixture.api(f'releases/assets/{foreign}', 'DELETE')
+            with patch.object(pw, 'push_job', side_effect=AssertionError('unexpected publication')):
+                replay = self.execute(req, fresh)
+        self.assertEqual((replay['work'], replay['deliver'], replay['seconds']['computation']), (after, True, None))
+        self.assertEqual(git.remote_head(self.repo, workref), after)
+        self.assertEqual(self.read_record(after, self.job), raw)
 
     def test_current_color_operations_and_restart(self):
         from tools import production_remote_raster as operations
@@ -785,6 +1000,38 @@ class RemoteTests(unittest.TestCase):
 
 
 class RequestRefTests(unittest.TestCase):
+    def test_exact_editor_cache_hit_miss_and_rejected_slot(self):
+        from dataclasses import replace
+        from io import BytesIO
+        from tempfile import TemporaryDirectory
+        from tools import production_remote_view as view
+        body = b'Pinned archive bytes'
+        host = 'Linux'
+        asset = replace(view.engine.EDITORS[host], sha256=io.checksum(body))
+        with TemporaryDirectory() as directory:
+            root = Path(directory)
+            slot = root / 'pw-editor.zip'
+            work = root / 'private'
+            work.mkdir()
+            with patch.dict(os.environ, RUNNER_TEMP=str(root), PW_EDITOR_CACHE=str(slot)), patch.dict(
+                    view.engine.EDITORS, {host: asset}), patch.object(view.platform, 'system', return_value=host), patch.object(
+                    view.platform, 'machine', return_value='x86_64'), patch.object(
+                    view.engine.urllib.request, 'urlopen', side_effect=lambda *a, **k: BytesIO(body)) as download:
+                key = view.cache_key(pw.REPO)
+                self.assertIn(asset.sha256, key)
+                self.assertNotEqual(key, view.cache_key('venomenon328/picross-remote-test'))
+                for expected in ('miss', 'hit', 'rejected'):
+                    if expected == 'rejected':
+                        slot.write_bytes(b'corrupt')
+                    metrics = {}
+                    self.assertEqual(view.editor_archive(work, host, metrics), slot)
+                    self.assertEqual(metrics['cache'], expected)
+                    self.assertEqual(slot.read_bytes(), body)
+                self.assertEqual(download.call_count, 2)
+                self.assertEqual((work / 'rejected-editor-cache').read_bytes(), b'corrupt')
+                with patch.dict(os.environ, PW_EDITOR_CACHE=str(root / 'foreign.zip')), self.assertRaises(ValueError):
+                    view.editor_archive(work, host, {})
+
     def test_fresh_archive_recovers_after_transient_missing_binary(self):
         from tempfile import TemporaryDirectory
         replies = [(1, b'HTTP 404', b'partial'), (0, b'', b'original')]

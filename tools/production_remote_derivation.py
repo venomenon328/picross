@@ -68,7 +68,7 @@ def protected(job, row, definition, change, option):
     params.crop_rectangle([0, 0, definition['width'], definition['height']], definition['width'], definition['height'],
                           mask['cells'], [], definition['solution'], empty=0)
     features = option['derivation']['protected_features']
-    if 'feature_cells' in change or pinned is None and features:
+    if 'feature_cells' in change or features and (pinned is None or 'protection' in change):
         mapping = change.get('feature_cells', [])
         require(sorted(item['feature'] for item in mapping) == sorted(features), 'Map every approved protected feature')
         for item in mapping:

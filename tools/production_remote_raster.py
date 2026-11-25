@@ -28,6 +28,8 @@ def validate(data):
     require(op in FIELDS, 'Unknown raster operation')
     value = data[op]
     extra = {'feature_cells'} & value.keys() if isinstance(value, dict) and op in ('fixed', 'repair') else set()
+    if isinstance(value, dict) and op == 'fixed' and 'protection' in value:
+        extra.add('protection')
     if isinstance(value, dict) and op == 'repair' and 'region' in value:
         extra.add('region')
     change = exact_keys(value, FIELDS[op] | extra)
@@ -71,6 +73,8 @@ def validate(data):
                     for n in point:
                         integer(n, 0, 49, 'feature coordinate')
     if op == 'fixed':
+        if 'protection' in change:
+            current.human(exact_keys(change['protection'], DECLARATION))
         integer(change['max_changes'], 0, 2500, 'max_changes')
         require(isinstance(change['edits'], list) and len(change['edits']) <= change['max_changes'], 'Invalid fixed edits')
         for edit in change['edits']:
@@ -242,6 +246,23 @@ def assess_findings(job, candidate, declarations):
         current.findings.declare(rows[key], **{k: v for k, v in declaration.items() if k != 'id'})
 
 
+def bind_fixed_protection(draft, change, root):
+    source = change['source']
+    motif = next(d for d in draft['decisions'] if d['scope'] == 'motif')
+    protection = motif.get('crop_protection', {})
+    before, mask = source['definition_sha256'], change['mask_sha256']
+    require(before not in protection, 'Combined fixed requires a new mask binding')
+    require(len(protection) < 20, 'Too many approved protection masks')
+    crops = {r['id']: deepcopy(r['crop_diagnosis']) for r in draft['rasters'] if r.get('crop_diagnosis')}
+    retired = revise_parameters(draft, {
+        'previous': source['parameters_sha256'], 'motif_sha256': source['motif_sha256'],
+        'approved': draft['parameters']['approved'],
+        'declaration': {**change['protection'], 'crop_protection': {**protection, before: mask}},
+    }, root)
+    require(not retired and crops == {r['id']: r['crop_diagnosis'] for r in draft['rasters'] if r.get('crop_diagnosis')},
+            'Combined fixed would change earlier crop approvals')
+
+
 def execute(options, job, root, scratch):
     validate(options)
     op, = options
@@ -291,8 +312,13 @@ def execute(options, job, root, scratch):
             row['exceptions'].append(exception)
         else:
             from .production_remote_derivation import produce
+            combined = 'protection' in change
+            if combined:
+                bind_fixed_protection(draft, change, root)
             start = monotonic()
-            result = produce(op, change, job, draft, row, raw, definition, root, scratch, files)
+            result = produce(op, change, draft if combined else job, draft, row, raw, definition, root, scratch, files)
+            if combined and result.get('outcome') == 'duplicate':
+                draft['decisions'] = deepcopy(job['decisions'])
             result['production_seconds'] = round(monotonic() - start, 6)
             if result['status'] not in ('diagnosed', 'no-op'):
                 start = monotonic()

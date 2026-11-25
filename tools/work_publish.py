@@ -339,6 +339,10 @@ def _publish_draft(root, job, expected, repository, auth, *, managed=False, remo
     main = report['main']
     if remote_request:
         require(main == remote_request['main'], 'Main changed before publication')
+    recover_pushed = remote_request and remote_request.get('recover_pushed')
+    if recover_pushed:
+        require(prior and expected and report['work_head'] != expected and prior['target'] == report['work_head'],
+                'Pushed successor does not match the owned publication journal')
     operation = None
     if prior and prior['confirmed'] and report['work_head'] != expected and not (workspace.gitdir(root) / JOURNAL).exists():
         actual = report['work_head']
@@ -354,6 +358,11 @@ def _publish_draft(root, job, expected, repository, auth, *, managed=False, remo
         operation = Publication(root, job, expected, main, report['work_head'])
         if operation.value['confirmed']:
             require(operation.target == report['work_head'], 'Confirmed remote commit changed')
+            return operation.finish(operation.target)
+        if recover_pushed:
+            owner = {'operation': 'publish', 'job': job, 'expected': expected, 'draft': operation.value['draft']}
+            with catalog_writer(root, main, owner=owner):
+                finish_pushed_request(root, job, expected, main, operation.target)
             return operation.finish(operation.target)
     name = current.path(job)
     raw = io.read(root, name, MIB)
@@ -499,13 +508,41 @@ def publish_locked(root, job, expected, main, checked, operation=None, remote_re
     require(actual and transport.remote_head(root, ref) == actual, 'Publication not confirmed')
     retained = {r['asset']['asset_id'] for r in current.references(result) if 'asset' in r}
     previous_ids = {r['asset']['asset_id'] for r in old.values() if r['asset']['release_id'] == release['id']}
-    obsolete = {asset['id'] for asset in attachments.values() if asset['id'] not in retained and
+    cleanup_obsolete(root, job, actual, release, result['work_release'], attachments.values(),
+                     retained, previous_ids, remote_request)
+    return actual
+
+
+def finish_pushed_request(root, job, parent, main, actual):
+    """Complete the transport of the exact successor already verified before push."""
+    ref = 'refs/heads/content/pw/' + job
+    tag_ref = 'refs/tags/work-prod-' + job
+    previous = bound_record(remote_record(parent, job), job)
+    result = bound_record(remote_record(actual, job), job)
+    binding = result['work_release']
+    require(binding == previous['work_release'], 'Changed release generation after publication')
+    rows, _ = catalog()
+    release = fresh_generation(rows, job, transport.remote_head(root, tag_ref), binding)
+    retained = {r['asset']['asset_id'] for r in current.references(result) if 'asset' in r}
+    previous_ids = {r['asset']['asset_id'] for r in current.references(previous)
+                    if 'asset' in r and r['asset']['release_id'] == binding['id']}
+    require(retained <= {a['id'] for a in release['assets']}, 'Missing bound assets after publication')
+    require(transport.remote_head(root, ref) == actual and transport.remote_head(root, 'refs/heads/main') == main,
+            'Work ref or Main changed during publication recovery')
+    cleanup_obsolete(root, job, actual, release, binding, release['assets'], retained, previous_ids, remote_request=True)
+
+
+def cleanup_obsolete(root, job, actual, release, binding, attachments, retained, previous_ids, remote_request):
+    tag = 'work-prod-' + job
+    ref = 'refs/heads/content/pw/' + job
+    tag_ref = 'refs/tags/' + tag
+    obsolete = {asset['id'] for asset in attachments if asset['id'] not in retained and
                 (asset['id'] in previous_ids or not remote_request and asset.get('label') == 'picross-original:' + tag and
                  re.fullmatch(r'original-[0-9a-f]{64}', asset['name']))}
     if obsolete:
         try:
             require(transport.remote_head(root, ref) == actual, 'Work ref changed before asset cleanup')
-            latest = fresh_generation([release], job, transport.remote_head(root, tag_ref), result['work_release'])
+            latest = fresh_generation([release], job, transport.remote_head(root, tag_ref), binding)
             for asset in latest['assets']:
                 if asset['id'] in obsolete:
                     require(asset['id'] in previous_ids or (asset.get('label') == 'picross-original:' + tag and
@@ -518,7 +555,6 @@ def publish_locked(root, job, expected, main, checked, operation=None, remote_re
             if isinstance(exc, github_rest.Failure):
                 raise github_rest.Failure(exc.kind, detail, exc.status) from None
             raise ValueError(detail) from None
-    return actual
 
 
 def verify_published_assets(root, job, parent, head, raw):
