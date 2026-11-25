@@ -153,7 +153,9 @@ input::file-selector-button { color: var(--accent); background: var(--soft); bor
 .gridSettings .removeGrid { display: flex; align-items: baseline; gap: 3px; font-weight: 400; font-size: .75rem; margin-top: 8px; }
 .paletteFields .removeGrid { flex-basis: 100%; margin-top: 0; }
 .gridSettings input:disabled { opacity: .65; }
-.orderActions { margin-top: 20px; padding-top: 15px; border-top: 1px solid var(--line); }
+.orderExecution { display: flex; flex-wrap: wrap; align-items: end; gap: 8px 16px; margin-top: 20px; padding-top: 15px; border-top: 1px solid var(--line); }
+.orderExecution > label { flex: 0 1 16rem; min-width: 0; }
+.orderActions { margin-top: 10px; }
 .primary { color: var(--on-primary); background: var(--primary); border-color: var(--primary); padding: 10px 17px; }
 .primary:not(:disabled):hover { color: var(--on-primary); box-shadow: 0 0 0 2px var(--panel),0 0 0 3px var(--accent); }
 .orderPreview { border: 0; margin-top: 10px; padding: 0; }

@@ -188,6 +188,19 @@ Der Regressionstest vergleicht die eingebetteten Bytes mit den Quellen.
 
 ## Bedienung und Quellenstatus
 
+Neben „Auftrag kopieren“ wählst du ChatGPT oder Codex. Die Werkstatt merkt
+sich die Wahl pro beauftragtem Schritt im aktuellen Browser. Ohne eigene Wahl
+beginnen Schritt 1, 2 und 4 mit Codex sowie Schritt 3 und 5 mit ChatGPT.
+Eine Anschlussabsicht in Schritt 4 ändert die Ausführungswahl eines
+Rasterdiagnoseauftrags in Schritt 3 nicht.
+
+Bei Codex kannst du hier eine Arbeitswurzel hinterlegen. Beim Wechsel zu
+ChatGPT verschwindet das Feld und der Pfad bleibt für Codex gespeichert.
+Sende den kopierten ChatGPT-Auftrag in einem neuen Chat. Setze nach einer
+Unterbrechung am zuletzt gesichert veröffentlichten Stand an. Offene
+Eingaben, Wahlen und der Umfang eines Schlussauftrags bleiben beim
+Ausführungswechsel erhalten.
+
 Bei v3-Ständen steht die Bereitschaft auf der Bildkarte. Die Erklärung eines Befunds lässt sich mit Enter öffnen. Annahme und Behandlung gelten erst mit dem gesendeten Auftrag. „Korrigieren“ an der Karte setzt die Arbeitsgrundlage und springt zum Änderungsfeld. Die Auswahl einer Motivvorlage umfasst auch die konkrete Parameteralternative.
 
 Das Hauptdropdown enthält genau eine offene Produktion pro Rätsel-ID mit Titel

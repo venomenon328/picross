@@ -3,13 +3,38 @@
 const PW = (()=>{
  const steps=['Abschlussbilder','Motivvorlage','Rasterangebote','Kontextzeichnungen','Integration'];
  const phase={brief_ready:1,reveal_review:1,motif_review:2,motif_approved:3,raster_review:3,raster_ready:3,background_review:4,content_ready:5,editorially_approved:5,registered:5};
+ const executors=['ChatGPT','Codex'];
+ const defaultExecutors={1:'Codex',2:'Codex',3:'ChatGPT',4:'Codex',5:'ChatGPT'};
  function step(value){return value?phase[value.facts.state]||null:1;}
  function orderStep(value){
   if(value?.facts.candidates&&value.facts.state==='raster_review'&&value.offers.some(o=>o.kind==='raster'))return 4;
   return ({reveal_review:2,motif_review:3,raster_ready:4,background_review:5})[value?.facts.state]||step(value);}
+ function promptStep(value,intent={}){
+  return (intent.action||'continue')==='continue'?orderStep(value):step(value);
+ }
  function options(saved){
   const v=saved&&typeof saved==='object'&&!Array.isArray(saved)?saved:{};
-  return {workroot:typeof v.workroot==='string'?v.workroot:'',merge:typeof v.merge==='boolean'?v.merge:true};
+  const selected=v.executors&&typeof v.executors==='object'&&!Array.isArray(v.executors)?v.executors:{};
+  const preferences={};
+  for(const [step,executor] of Object.entries(defaultExecutors)){
+   preferences[step]=executors.includes(selected[step])?selected[step]:executor;
+  }
+  return {workroot:typeof v.workroot==='string'?v.workroot:'',merge:typeof v.merge==='boolean'?v.merge:true,executors:preferences};
+ }
+ function executionOrder(n,action,opts){
+  if(opts.executors[n]==='Codex'){
+   const lines=['Ausführung mit Codex. Nutze den lokalen Produktionsweg nach docs/tools/PRODUCTION_GIT_WORKSPACE.md.'];
+   if(opts.workroot.trim())lines.push(`Lokale Codex-Arbeitswurzel: ${opts.workroot.trim()}.`);
+   return lines;
+  }
+  let entry='Nutze native Bildgenerierung, Originalsichtung und den sicheren Publisherweg nach den Pflichtquellen.';
+  if(action==='background_change')
+   entry='Nutze den gezielten Bestands- und Revisionsweg nach Authoring Schritt 5 §9 mit Bildgenerierung und Originalsichtung nach Bedarf.';
+  else if(n===4)
+   entry='Nutze docs/tools/PW_REMOTE.md für die fällige Rasterwahl, gebundene Aufbereitung und Originalsichtung. Kreative Bildarbeit und ihre Sicherung folgen den regulären Pflichtquellen.';
+  else if(n>=3)
+   entry='Nutze den gebundenen Einstieg in docs/tools/PW_REMOTE.md für die tatsächlich beauftragte Operation.';
+  return [`Ausführung mit ChatGPT. ${entry} Bei fehlendem Zugriff oder fehlenden Fähigkeiten den betroffenen Teil und den gesicherten Stand benennen.`];
  }
  function closing(value,intent={}){
   return (intent.action||'continue')==='continue'&&['background_review','content_ready','editorially_approved','registered'].includes(value?.facts.state);
@@ -191,8 +216,7 @@ const PW = (()=>{
  }
  function prompt(value,intent={},personal={}){
   const action=intent.action||'continue',order=orderStep(value),opts=options(personal);
-  const pickingRaster=value?.facts.candidates&&value.facts.state==='raster_review'&&value.offers.some(o=>o.kind==='raster');
-  const n=action==='continue'?(pickingRaster?4:order):step(value);
+  const n=promptStep(value,intent);
   if(!n)throw Error('Dieser Stand benötigt einen eigenen ausdrücklich beauftragten Folgeauftrag.');
   if(value&&value.facts.authoring_version!=='0.8.0')throw Error('Dieser historische Stand gehört nicht zum neuen 0.8-Produktionsweg.');
   const remote=value?.source_url?.match(/^https:\/\/github\.com\/([A-Za-z0-9_.-]+\/[A-Za-z0-9_.-]+)\/tree\/([a-f0-9]{40})$/);
@@ -235,13 +259,10 @@ const PW = (()=>{
     const base=intent.selection;
     if(!cards[base])throw Error('Bitte die Korrekturgrundlage wählen.');
     lines.push(`Korrekturgrundlage: ${base}. Geltende Behandlungen berücksichtigen. Korrigierte Bytes zur Wahl vorlegen.`);
-    for(const text of cards[base].instructions||[])lines.push('Geltende Behandlung: '+text);
     for(const row of cards[base].findings){
      const edit=intent.findings?.[row.binding];
      if(edit&&!edit.accepted&&edit.treatment.trim()&&row.decision?.action!=='accept')
       lines.push(JSON.stringify({Befund:row.id,Korrekturhinweis:edit.treatment}));
-     if(row.decision?.action==='accept'&&(!edit||edit.accepted&&edit.treatment===row.decision.treatment))
-      lines.push(JSON.stringify({Befund:row.id,Behandlung:row.decision.treatment}));
     }
    }else if(selected)lines.push(`Betroffenes Angebot: ${selected.kind}/${selected.id}.`);
   }else if(action==='resume'){
@@ -261,9 +282,9 @@ const PW = (()=>{
     const entry=proposed.length===1?'den einzigen vollständigen Vorschlag':'die ausdrücklich gewählte Alternative';
     lines.push(`Schritt 3: Ich gebe Motivvorlage ${selected.id} und ${entry} in parameters.proposed (Eintrag ${choice.index+1}, von 1 gezählt) unverändert frei. Lies und prüfe das vollständige Original im gebundenen Datensatz. Qualifizierte Rasterangebote vorlegen.`);
    }else lines.push('Schritt 3: Ich gebe die unveränderte Motivvorlage samt vorgeschlagenem Parameterkorridor im Datensatz frei. Qualifizierte Rasterangebote als raster_ready vorlegen.');
-  }else if(!pickingRaster&&['motif_approved','raster_review'].includes(value.facts.state)){
+  }else if(order===3){
    lines.push('Schritt 3: Die bereits freigegebene Rasterproduktion bis zu qualifizierten Rasterangeboten fortsetzen.');
-  }else if(pickingRaster||value.facts.state==='raster_ready'){
+  }else if(order===4){
    if(!selected||selected.kind!=='raster')throw Error('Bitte ein qualifiziertes Rasterangebot wählen.');
    lines.push(`Schritt 4: Ich wähle das qualifizierte Rasterangebot ${selected.id}. Jede Kontextzeichnung im vorgesehenen HG31-Profil vorbereiten, Original und fertige PNG-Datei sichten und die gebundenen Angebote als background_review vorlegen.`);
   }else{
@@ -285,7 +306,7 @@ const PW = (()=>{
   }
   if((order===2||(order===3&&action==='rework'))&&intent.parameters?.trim())lines.push(`Neue/zusätzliche Wünsche zur Motivvorlage: ${intent.parameters.trim()}`);
   if(order===4&&intent.context?.trim())lines.push(`Kontextwunsch: ${intent.context.trim()}`);
-  if(opts.workroot.trim())lines.push(`Lokale Codex-Arbeitswurzel: ${opts.workroot.trim()}.`);
+  lines.push(...executionOrder(n,action,opts));
   const isClosing=closing(value,intent);
   if(isClosing&&opts.merge){
    lines.push('Commit, Push und PR; bei erfüllten Pflichtgates nach Authoring Schritt 5 §8 per Squash-Merge nach main integrieren und den Produktionsabschluss nach §9 ausführen.');
@@ -293,6 +314,6 @@ const PW = (()=>{
   else lines.push('Commit, Push und Draft-PR im beauftragten Umfang; kein Merge.');
   return lines.join('\n\n');
  }
- return {steps,step,orderStep,prompt,choiceReady,publishedGrid,parameterOptions,options,closing,finalAssets,axes,cropChanges};
+ return {steps,step,orderStep,promptStep,executors,prompt,choiceReady,publishedGrid,parameterOptions,options,closing,finalAssets,axes,cropChanges};
 })();
 if(typeof module!=='undefined')module.exports=PW;

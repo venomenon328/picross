@@ -611,6 +611,10 @@ const value = {commit, source_url:'https://github.com/fixture/test/tree/'+commit
 const diagnosis = {target:'b',kind:'crop',sha,revision:2,parameters:params};
 const intent = {action:'raster_diagnosis',diagnosis};
 const combined = PW.prompt(value,intent);
+assert.equal(PW.promptStep(value,intent),3);
+assert.equal(PW.promptStep(value,{kind:'raster',selection:'a'}),4);
+assert.match(combined,/Authoring 0\.8\.0, Schritt 3.*PW_REMOTE\.md/s);
+assert.match(combined,/anschließende Fortsetzung in Schritt 4/);
 assert.match(combined,/Minimum 18 → 17/);
 assert.match(combined,/20 × 3 auf 17 × 3 Zellen/);
 assert.match(combined,/beabsichtige die Rasterwahl b/);
@@ -622,6 +626,16 @@ assert.throws(()=>PW.prompt(value,{kind:'raster',selection:'b'}),/qualifiziertes
 assert.throws(()=>PW.prompt(value,{...intent,diagnosis:{...diagnosis,sha:params}}),/aktuellen Rasterbefund/);
 assert.throws(()=>PW.prompt(value,{...intent,diagnosis:{...diagnosis,parameters:sha}}),/veraltet/);
 const frame = {...intent,diagnosis:{...diagnosis,kind:'frame'}};
+for(const order of [intent,{...frame,frameReason:'Waagerechter Abstand gewollt'}]){
+ const chat=PW.prompt(value,order,{workroot:'E:/Synthetic',executors:{3:'ChatGPT',4:'Codex'}});
+ const codex=PW.prompt(value,order,{workroot:'E:/Synthetic',executors:{3:'Codex',4:'ChatGPT'}});
+ assert.match(chat,/PW_REMOTE\.md/);
+ assert.doesNotMatch(chat,/E:\/Synthetic/);
+ assert.match(codex,/PRODUCTION_GIT_WORKSPACE\.md/);
+ assert.match(codex,/E:\/Synthetic/);
+ const decision=text=>text.split('\n\n').filter(line=>line.startsWith('Schritt 3')||line.startsWith('Ich beabsichtige'));
+ assert.deepEqual(decision(chat),decision(codex));
+}
 assert.throws(()=>PW.prompt(value,frame),/begründen/);
 assert.match(PW.prompt(value,{...frame,frameReason:'Waagerechter Abstand gewollt'}),
              /technische frame-Ausnahme.*Waagerechter Abstand gewollt/);

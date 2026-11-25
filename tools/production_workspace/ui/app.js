@@ -11,18 +11,18 @@ let remoteFresh=null;
 let assetLoads=new Map(),readyImages=new Set();
 try{drafts=JSON.parse(localStorage.getItem('pw-briefs')||'[]');if(!Array.isArray(drafts))drafts=[];drafts=drafts.filter(d=>d&&typeof d.id==='string'&&typeof d.brief==='string').slice(-20);}catch{}
 function saveDrafts(){try{localStorage.setItem('pw-briefs',JSON.stringify(drafts));}catch{}}
-function options(){return {workroot:$('workroot').value,merge:$('merge').checked};}
 let savedOptions={};
 try{savedOptions=JSON.parse(localStorage.getItem('pw-options')||'{}');}catch{}
-const initialOptions=PW.options(savedOptions);
-$('workroot').value=initialOptions.workroot;$('merge').checked=initialOptions.merge;
-for(const key of ['workroot','merge']){
- $(key).onchange=()=>{
-  try{localStorage.setItem('pw-options',JSON.stringify(options()));}catch{}
-  if($('finalMerge'))$('finalMerge').checked=$('merge').checked;
-  updatePrompt();
- };
+const personal=PW.options(savedOptions);
+function saveOptions(){
+ try{localStorage.setItem('pw-options',JSON.stringify(personal));}catch{}
 }
+$('merge').checked=personal.merge;
+$('merge').onchange=()=>{
+ personal.merge=$('merge').checked;saveOptions();
+ if($('finalMerge'))$('finalMerge').checked=personal.merge;
+ updatePrompt();
+};
 function refreshChoices(){
  if(!detail?.facts.candidates)return;
  document.querySelectorAll('[data-rework-shortcut]').forEach(button=>{button.hidden=intent.action==='rework';});
@@ -50,6 +50,13 @@ function updatePrompt(){
  refreshChoices();
  const box=$('orderText'),button=$('copyOrder'),status=$('orderStatus');
  if(!box||!button)return;
+ const executor=personal.executors[PW.promptStep(detail,intent)];
+ $('executor').value=executor||'';
+ $('executor').disabled=!executor;
+ $('workrootField').hidden=executor!=='Codex';
+ $('executorHint').textContent=executor==='ChatGPT'
+  ?'Auftrag in einem neuen ChatGPT-Chat senden. Bei Unterbrechung den zuletzt veröffentlichten Stand laden und wieder aufnehmen.'
+  :executor==='Codex'?'Auftrag in Codex senden.':'';
  const final=PW.closing(detail,intent);
  button.textContent=final?(detail.facts.state==='registered'?'Git-Abschluss: Auftrag kopieren':'Endabnahme & Integration: Auftrag kopieren'):'Auftrag kopieren';
  if($('finalScope'))$('finalScope').hidden=!final;
@@ -71,9 +78,9 @@ function updatePrompt(){
     throw Error('Die gebundenen Originalbilder zuerst vollständig laden.');
    }
   }
-  box.value=PW.prompt(detail,intent,options());
+  box.value=PW.prompt(detail,intent,personal);
   button.disabled=false;
-  status.textContent=final?(options().merge?'Auftrag bis main und Produktionsabschluss – nach erfüllten Pflichtgates.':'Auftrag bis Draft-PR – kein Merge.'):'Den kopierten Auftrag im Chat senden.';
+  status.textContent=final?(personal.merge?'Auftrag bis main und Produktionsabschluss – nach erfüllten Pflichtgates.':'Auftrag bis Draft-PR – kein Merge.'):'';
   status.className='hint';
  }catch(exc){
   box.value='';button.disabled=true;status.textContent=exc.message;status.className='validation';
@@ -216,7 +223,7 @@ function workflow(view,value){
  if(!value){
   const label=node('label','Referenzbild (optional)','reference'),input=node('input');input.type='file';input.accept='image/png,image/jpeg';
   input.onchange=()=>{intent.inputImage=input.files[0]?.name||'';updatePrompt();};
-  label.append(input);section.append(label,node('p','Die ausgewählte Datei beim Senden an den Chat anhängen.','hint'));
+  label.append(input);section.append(label,node('p','Die ausgewählte Datei beim Senden des Auftrags anhängen.','hint'));
  }
  let parameterChoice;
  if(value){
@@ -294,21 +301,35 @@ function workflow(view,value){
  if(n===5)section.append(node('p',value.facts.background_choice==='none'?'Bestätigt: bewusst kein Hintergrund.':value.facts.background_choice?'Bestätigte Hintergrundwahl: '+value.facts.background_choice:'Hintergrundentscheidung noch offen.','hint'));
  if(PW.closing(value)){
   const scope=node('div',undefined,'finalScope');scope.id='finalScope';
-  const label=node('label'),merge=node('input');merge.type='checkbox';merge.id='finalMerge';merge.checked=options().merge;
+  const label=node('label'),merge=node('input');merge.type='checkbox';merge.id='finalMerge';merge.checked=personal.merge;
   merge.onchange=()=>{$('merge').checked=merge.checked;$('merge').onchange();};
   label.append(merge,node('span',' Nach erfüllten Pflichtgates nach main mergen und Produktion abschließen'));
   scope.append(label,node('p','Erst der gesendete Auftrag erklärt die Endabnahme und den gewählten Umfang. Klicken, Kopieren und Aktualisieren bestätigen nichts.','hint'));section.append(scope);
  }
+ const execution=node('div',undefined,'orderExecution'),executorLabel=node('label','Auftrag ausführen mit:'),executor=node('select');
+ executor.id='executor';
+ for(const name of PW.executors){const option=node('option',name);option.value=name;executor.append(option);}
+ executor.onchange=()=>{
+  const phase=PW.promptStep(detail,intent);
+  if(!phase||!PW.executors.includes(executor.value))return;
+  personal.executors[phase]=executor.value;saveOptions();updatePrompt();
+ };
+ const workrootLabel=node('label','Codex-Arbeitswurzel'),workroot=node('input');
+ workrootLabel.id='workrootField';workroot.id='workroot';workroot.placeholder='Optionaler lokaler Pfad';
+ workroot.value=personal.workroot;
+ workroot.oninput=()=>{personal.workroot=workroot.value;saveOptions();updatePrompt();};
+ executorLabel.append(executor);workrootLabel.append(workroot);execution.append(executorLabel,workrootLabel);
+ const destination=node('p',undefined,'hint');destination.id='executorHint';destination.setAttribute('role','status');
  const actions=node('div',undefined,'orderActions'),copy=node('button','Auftrag kopieren','primary');copy.id='copyOrder';
  const status=node('p',undefined,'hint');status.id='orderStatus';status.setAttribute('role','status');
  const preview=node('details',undefined,'orderPreview');preview.append(node('summary','Auftrag ansehen'));
  const text=node('textarea');text.id='orderText';text.rows=10;text.readOnly=true;text.setAttribute('aria-label','Auftragstext');preview.append(text);
  copy.onclick=async()=>{
   updatePrompt();if(copy.disabled)return;
-  try{await navigator.clipboard.writeText(text.value);status.textContent='Kopiert. Erst im Chat senden, um den Auftrag zu erteilen.';}
+  try{await navigator.clipboard.writeText(text.value);status.textContent='Auftrag kopiert.';}
   catch{preview.open=true;text.focus();text.select();status.textContent='Bitte den markierten Auftrag manuell kopieren.';}
  };
- actions.append(copy,status);section.append(actions,preview);view.append(section);updatePrompt();
+ actions.append(copy,status);section.append(execution,destination,actions,preview);view.append(section);updatePrompt();
 }
 function choose(id,kind,button){
  if(intent.action==='raster_diagnosis'){

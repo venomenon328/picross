@@ -493,6 +493,29 @@ auf. Ein relativer Paketpfad allein beweist keinen Zugang. Cloudschritte dürfen
 keine localhost-Adresse oder bloß lokale Windowsdatei als erreichbare Quelle
 bekommen; ungesicherte neue Bilder erst passend veröffentlichen.
 
+Direkt bei Kopieraktion und Vorschau steht „Auftrag ausführen mit“ für alle fünf
+Schritte und Auftragsarten. Maßgeblich ist die Phase im Auftragskopf. Eine
+Rasterdiagnose mit anschließender Fortsetzung führt den Auftrag für Schritt 3
+und behält die Folgeabsicht für Schritt 4. `pw-options` merkt sich die
+Ausführungswahl pro Auftragsphase und Browserorigin. Ohne gültige Einstellung
+gilt Codex in 1, 2 und 4 sowie ChatGPT in 3 und 5. Ein Wechsel aktualisiert
+Vorschau und Kopieraktion und erhält ungesendete Absichten und den Mergeumfang.
+
+Codex-Aufträge verweisen auf [PW-LOCAL](PRODUCTION_GIT_WORKSPACE.md). Nur dabei
+ist die optionale Codex-Arbeitswurzel sichtbar und wird bei nichtleerem Wert
+mitgegeben. ChatGPT-Aufträge verwenden den gebundenen [Remote-Weg](PW_REMOTE.md)
+für Schritt 3, die passenden Wahl-, Aufbereitungs- und Sichtungsoperationen
+in Schritt 4 und Erstintegration/Git-Abschluss in Schritt 5. Kreative
+Bildarbeit in 1, 2 und 4 folgt der regulären Authoringroute, einschließlich
+Originalsichtung und sicherer Veröffentlichung. Spätere Hintergrundrevisionen
+verwenden den eigenen Bestandsweg nach Authoring Schritt 5 §9.
+
+ChatGPT-Aufträge sind für einen frischen Chat mit dem festen Record oder dem
+neuen Motivbriefing und der beigefügten Referenz bestimmt. Bei Unterbrechung
+am zuletzt bestätigt veröffentlichten Stand fortsetzen und fehlende Originale
+oder Fähigkeiten benennen. Ausführungswahl und Kopieren erteilen keine
+Befugnisse und starten keine Ausführung.
+
 Vorgefüllte Quellwerte sind keine neue Absicht oder Freigabe. Der Folgeauftrag
 trennt den veröffentlichten Kontext von Änderungen, ausdrücklich aufgehobenen
 Rasterwünschen und neuen/zusätzlichen Wünschen zur Motivvorlage. Bloßes Leeren
@@ -617,8 +640,9 @@ routinemäßiger Zweitreview-/Copilot-Anfragen und die tatsächlichen Mergegates
 [Authoring Schritt 5 §8](../production/authoring/PUZZLE_AUTHORING_STEP_5.md#8-abgenommenes-ergebnis-ins-spiel-integrieren).
 Diese dauerhaften Regeln werden über die Pflichtquellen gelesen. Die Oberfläche
 beschreibt denselben gewählten Umfang, ohne ein zusätzliches Reviewgate einzuführen.
-Unveränderte Quellenwerte und allgemeine Regeln werden nicht im Prompt wiederholt;
-Auftrag, feste Recordquelle, neue Absichten und persönliche Arbeitswurzel bleiben.
+Unveränderte Quellenwerte und allgemeine Regeln werden aus den Pflichtquellen
+gelesen. Der Auftrag enthält feste Recordquelle, neue Absichten und die
+Ausführungsreferenz mit optionaler Arbeitswurzel bei Codex.
 
 Die interne Detailantwort leitet Metadaten, aktuelle Recorddaten und die
 Komposition aus genau den ausgewählten aktuellen Dateien ab. Keine Kopien alter

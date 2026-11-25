@@ -33,6 +33,22 @@ assert.match(correction,/Korrekturgrundlage: B/);assert.doesNotMatch(correction,
 const assert=require('node:assert/strict');
 const P=require('./tools/production_workspace/ui/workflow.js');
 const opts={workroot:'E:/synthetic',cleanup:true,merge:false};
+function both(value,intent,phase,remote=phase>=3){
+ const [chat,codex]=['ChatGPT','Codex'].map(executor=>
+  P.prompt(value,intent,{...opts,executors:{[phase]:executor}}));
+ assert.equal(P.promptStep(value,intent),phase);
+ assert.match(chat,new RegExp('Authoring 0.8.0, Schritt '+phase));
+ assert.match(chat,/Ausführung mit ChatGPT/);
+ assert.doesNotMatch(chat,/Codex|E:\/synthetic|localhost|vorherige Unterhaltung|Requestref/);
+ assert.equal(chat.includes('docs/tools/PW_REMOTE.md'),remote);
+ assert.match(codex,/Ausführung mit Codex.*docs\/tools\/PRODUCTION_GIT_WORKSPACE\.md/);
+ assert.doesNotMatch(codex,/PW_REMOTE|ChatGPT|Requestref/);
+ assert.match(codex,/Lokale Codex-Arbeitswurzel: E:\/synthetic/);
+ const facts=text=>text.split('\n\n').filter(line=>!/^Ausführung mit |^Lokale Codex-Arbeitswurzel:/.test(line));
+ assert.deepEqual(facts(chat),facts(codex),'executor choice preserves the exact decisions and inputs');
+ assert.doesNotMatch(P.prompt(value,intent,{workroot:'  ',executors:{[phase]:'Codex'}}),/Lokale Codex-Arbeitswurzel/);
+ return chat;
+}
 const record={file:'content/authoring/pz-test/r01/record.json',sha256:'a'.repeat(64)};
 const v={puzzle_id:'pz-test',revision:'r01',commit:'b'.repeat(40),source_url:'https://github.com/venomenon328/picross/tree/'+'b'.repeat(40),
  record,facts:{state:'reveal_review',authoring_version:'0.8.0',composition:{raster:'r',reveal:'v'},background_choice:'none'},
@@ -44,11 +60,14 @@ assert.doesNotMatch(text,/Abschlussbereinigung|ausschließlich innerhalb dieser 
 assert.doesNotMatch(text,/Abschlussbereinigung eigener Arbeitsdaten nach WORKSPACE ausdrücklich beauftragt/);
 assert.equal(text,P.prompt(null,{brief:'Synthetischer Test, keine Produktion'},{...opts,cleanup:false}));
 assert.throws(()=>P.prompt(null,{},opts),/Motiv/);
+const fresh=both(null,{brief:'Erstes Motiv',inputImage:'reference.png',notes:'Kelch erhalten',grid:{width:'20'}},1);
+for(const part of ['Erstes Motiv','reference.png','Kelch erhalten','20 Zellen','native Bildgenerierung'])assert.ok(fresh.includes(part));
 for(const mode of ['mono','color'])for(const [state,n,current,kind] of [['brief_ready',1,1,null],['reveal_review',2,1,'reveal'],['motif_review',3,2,null],['motif_approved',3,3,null],
  ['raster_review',3,3,null],['raster_ready',4,3,'raster'],['background_review',5,4,'background'],['content_ready',5,5,null],['editorially_approved',5,5,null],['registered',5,5,null]]){
  v.facts.published={proposed:[{mode,foreground_colors:mode==='mono'?1:3}],approved:[]};
  v.facts.state=state;v.offers=kind?[{id:'A',kind,record,asset_ids:['bg']}]:[];
  const intent={selection:kind?'A':null,kind,parameters:'etwa 25 × 20',context:'Landschaft'};
+ both(v,intent,n);
  text=P.prompt(v,intent,opts);assert.match(text,new RegExp('Schritt '+n));
  assert.match(text,/kein Merge/);assert.ok(text.includes(record.file));assert.ok(text.includes('b'.repeat(40)));
  assert.match(text,new RegExp('AGENTS.md.*Authoring 0.8.0, Schritt '+n+'\\.'));
@@ -56,6 +75,7 @@ for(const mode of ['mono','color'])for(const [state,n,current,kind] of [['brief_
  if(n<4)assert.doesNotMatch(text,/Kontextwunsch|Kontextzeichnungen|Hintergrundkandidaten/);
  if(kind)assert.throws(()=>P.prompt(v,{},opts),/wählen/);
  for(const action of ['resume','rework']){
+  both(v,{action,feedback:'Linie korrigieren'},current);
   const changed=P.prompt(v,{action,feedback:'Linie korrigieren'},opts);
   assert.ok(changed.includes(record.file));
   assert.match(changed,new RegExp('Authoring 0.8.0, Schritt '+current+'\\.'));
@@ -70,6 +90,7 @@ for(const url of [null,'http://localhost:1234/job','https://github.com/venomenon
 }
 v.source_url='https://github.com/venomenon328/picross/tree/'+'b'.repeat(40);v.facts.state='registered';
 assert.doesNotMatch(P.prompt(v,{},opts),/Ich erteile/);
+assert.match(both(v,{action:'background_change',feedback:'Mehr Wald'},5,false),/Bestands- und Revisionsweg.*Schritt 5 §9/);
 const backgroundChange=P.prompt(v,{action:'background_change',feedback:'Mehr Wald'},opts);
 assert.match(backgroundChange,/Hintergrundrevision nach Authoring Schritt 5 §9: Mehr Wald/);
 assert.doesNotMatch(backgroundChange,/als aktuellen RI-ONE-Eingang vorbereiten/);
@@ -249,7 +270,11 @@ const v={puzzle_id:'pz-test',revision:'r02',commit:'b'.repeat(40),
 const selected={selection:'A',kind:'background'};
 for(const saved of [undefined,null,[],{}, {merge:null}, {merge:'false'}])assert.equal(P.options(saved).merge,true);
 for(const merge of [false,true])assert.equal(P.options({merge}).merge,merge);
-assert.deepEqual(P.options({workroot:'E:/Own',merge:false,cleanup:true}),{workroot:'E:/Own',merge:false});
+const defaults={1:'Codex',2:'Codex',3:'ChatGPT',4:'Codex',5:'ChatGPT'};
+assert.deepEqual(P.options({workroot:'E:/Own',merge:false,cleanup:true}),{workroot:'E:/Own',merge:false,executors:defaults});
+for(const executors of [undefined,null,[],false,'ChatGPT'])assert.deepEqual(P.options({executors}).executors,defaults);
+assert.deepEqual(P.options({workroot:42,merge:'false',executors:{2:'ChatGPT',3:'Codex',4:'other',5:false,6:'Codex'}}),
+ {workroot:'',merge:true,executors:{...defaults,2:'ChatGPT',3:'Codex'}});
 assert.equal(P.orderStep(v),5);assert.equal(P.step(v),4,'copy does not advance displayed Git phase');
 for(const intent of [selected,{selection:'none'}]){
  const before=JSON.stringify(v), text=P.prompt(v,intent,{});
