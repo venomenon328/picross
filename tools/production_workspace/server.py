@@ -409,7 +409,10 @@ class Handler(BaseHTTPRequestHandler):
                         ap.require(key not in value, 'Doppeltes JSON-Feld.')
                         value[key] = item
                     return value
-                body = json.loads(raw.decode('utf-8'), object_pairs_hook=unique)
+                try:
+                    body = json.loads(raw.decode('utf-8'), object_pairs_hook=unique)
+                except (UnicodeDecodeError, json.JSONDecodeError) as exc:
+                    raise InvalidInput('Gültiges UTF-8-JSON erforderlich.') from exc
                 ap.require(isinstance(body, dict) and all(isinstance(v, str) and 0 < len(v) <= 160 for v in body.values()),
                            'Nur kurze Textkennungen sind erlaubt.')
             else:

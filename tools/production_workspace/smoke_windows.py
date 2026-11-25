@@ -275,7 +275,8 @@ def raster_fixture(repo, root, *, authoring=False):
                       'size_constraint': 'exact', 'foreground_color_constraint': 'exact'}
         limits = {'raster_candidates': 6, 'repair_rounds': 2, 'image_corrections': 2}
         record = {'format': current.FORMAT, 'puzzle_id': identifier, 'revision': 'current',
-                  'source_commit': base, 'operation': 'production', 'target': None, 'title': identifier,
+                  'source_commit': base, 'operation': 'production', 'target': None,
+                  'title': definition['reveal']['name'] if rasters else identifier,
                   'category_id': 'test', 'state': phase, 'brief': 'Synthetischer Frozen-Smoke',
                   'parameters': {'proposed': [parameters] if phase_index >= 2 else [],
                                  'approved': [parameters] if phase_index >= 3 else []}, 'assets': assets,
