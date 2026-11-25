@@ -1,6 +1,6 @@
 # Picross: Produktionsregeln
 
-**Version 0.8.0 · Dokumentrevision 13 · 24.11.2026 · PW-LOCAL-A**
+**Version 0.8.0 · Dokumentrevision 14 · 26.11.2026 · PW-REMOTE-G**
 
 In den Schritten 1 bis 4 jedes zur Wahl gestellte Angebot an seinen tatsächlichen Dateien vollständig qualifizieren. Zulässige offene Mängel vor der Wahl mit ihren konkreten Folgen zeigen. Die Schlussentscheidung bindet die vorliegenden Befunde. Schritt 5 prüft Zuordnung, Befugnisse und Lieferung.
 
@@ -93,6 +93,30 @@ Produktionsplan mit Rätsel-ID, begründetem `modules=[]` und
 `evidence.mode=none`. Der Quellen-/Plankern läuft ohne Player auch nach main. Keine Fach-/
 Solver-/Proof-/native Volltests allein für neue Rätsel. Code, gemeinsame Spielassets
 und CI folgen Entwicklungsprüfplan, keine Inhaltsausnahme oder manuelles `all`.
+
+### Fällige Prüfungen und Wiederaufnahme
+
+In allen fünf Phasen ausschließlich die jetzt fälligen, ausdrücklich beauftragten
+oder durch einen konkreten Befund erforderlichen Prüfungen ausführen. Ein
+vollständiger, aktueller, gebundener Werkzeugnachweis erfüllt die technische
+Prüfung. Sichturteil, Proof, Difficulty und Freigabe aus dem Record übernehmen,
+sobald Kandidat, Revision und fachliche Bindung bestätigt sind. Ein Chatwechsel
+allein löst keine erneute Sichtung aus. Bei fehlendem Beleg oder materieller
+Änderung gezielt die betroffene Prüfung nachholen.
+
+Schritte 1 und 2 beurteilen die tatsächlichen Originale groß und klein,
+Motiv und Farbe. Schritt 3 verlangt Q-R/Q-H an den echten Raster-, Zell- und
+Hinweisansichten und den unabhängig verifizierten Proof. Schritt 4 beurteilt
+Original und fertige Ableitung jedes Angebots einschließlich H-07. Schritt 5
+prüft Lieferdiff, Byteidentität am Produktcommit und Abschlussgates nach §8–9.
+Ein technischer Nachweis kann kein fälliges Sichturteil liefern.
+
+Nach erfülltem Prüfumfang weiter zur Wahl oder zum nächsten beauftragten Schritt.
+Kein vorsorgliches Solver-, Import-, Normalisierungs-, Generator- oder
+Reparaturreplay, kein zusätzlicher Katalog-/Buchaufbau, Probespiel, Browser-,
+UI-/CI-Durchstich oder Zweitreview. Kreative Iteration im vereinbarten
+Budget bleibt möglich. Bereits vollständig gebundene Bytes nur bei tatsächlich
+offener Identität oder einem konkreten Befund erneut beschaffen und hashen.
 
 ## 3. Gesamtfolge
 
@@ -237,7 +261,7 @@ Folgearbeit, statt nur den Phasenstatus oder eine alte Blockerliste zu übernehm
 ## 7. Freigaben und Abschlussausgabe
 
 Jede Chatübergabe nennt erreichte Phase, feste Quelle, ausgeführte Prüfungen,
-offene Entscheidung/nächsten Schritt, echte Bild-/Dateilinks und stabile Angebots-IDs.
+tatsächliche Abweichungen, offene Entscheidungen/Befunde/Blocker und nächsten Schritt, echte Bild-/Dateilinks und stabile Angebots-IDs.
 Der Assistent liest veröffentlichte Originale; keine zweite Sheet-JSON-Sammlung
 oder Entwicklungs-HANDOFF-Ausgabe. Software prüft Aufzeichnungen/Bytes, authentifiziert keine Menschen.
 Arbeitswurzel/Merge sind ausdrückliche Auftragsoptionen, keine

@@ -90,9 +90,13 @@ class LogRedirect(github_rest.NoRedirect):
 
 def log_location(job_id):
     require(type(job_id) is int and job_id > 0, 'Expected an Actions job ID')
+    return signed_location(f'actions/jobs/{job_id}/logs')
+
+
+def signed_location(endpoint):
     token = github_rest.publisher_token()
-    require(token, 'Expected the read-only Actions credential')
-    url = f'{github_rest.API}/actions/jobs/{job_id}/logs'
+    require(token, 'Expected the Actions read credential')
+    url = f'{github_rest.API}/{endpoint}'
     with github_rest.open_api(url, {'Accept': 'application/vnd.github+json'}, timeout=30,
                               token=token, redirect=LogRedirect()) as response:
         locations = response.headers.get_all('Location', [])
@@ -110,6 +114,10 @@ def log_location(job_id):
     return location
 
 
+def signed_opener():
+    return build_opener(ProxyHandler({}), github_rest.NoRedirect())
+
+
 def original_log(job_id):
     limit = 8 * 1024**2
     for delay in (0, 2, 5, 10):
@@ -121,7 +129,7 @@ def original_log(job_id):
             stage = 'signed download'
             # This opener has no GitHub credentials, proxies or redirect handler
             # capable of forwarding a signed URL to another origin.
-            http = build_opener(ProxyHandler({}), github_rest.NoRedirect())
+            http = signed_opener()
             with github_rest.transport_errors():
                 with http.open(Request(location), timeout=30) as response:
                     require(response.status == 200, 'Expected HTTP 200 for the Actions log')
@@ -293,7 +301,7 @@ def verify_upload(root, context, tools_blob):
             'Upload and Actions artifact metadata differ')
     with tempfile.TemporaryDirectory(dir=root) as temp:
         archive = Path(temp) / 'continuation.zip'
-        download_uploaded(ident, archive)
+        download_uploaded(ident, archive, size=row['size_in_bytes'])
         run = collection_read(publisher.api, context['run'])
         result = reader.verify_continuation(archive, row, run, tools=context['tools'],
                                             reader_blob=tools_blob, staging=True)

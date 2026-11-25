@@ -1055,15 +1055,18 @@ class RequestRefTests(unittest.TestCase):
 
     def test_fresh_archive_recovers_after_transient_missing_binary(self):
         from tempfile import TemporaryDirectory
-        replies = [(1, b'HTTP 404', b'partial'), (0, b'', b'original')]
-        def get(command, *, stdout, **kwargs):
-            code, error, data = replies.pop(0)
-            stdout.write(data)
-            return subprocess.CompletedProcess(command, code, stderr=error)
-        with TemporaryDirectory() as tmp, patch.object(inspect.subprocess, 'run', side_effect=get), patch.object(inspect, 'sleep'):
+        from io import BytesIO
+        from tools import production_remote_continuation as collector
+        response = BytesIO(b'original')
+        response.status = 200
+        replies = [inspect.github_rest.Failure('access', 'not ready', 404), 'https://storage.invalid/']
+        with (TemporaryDirectory() as tmp, patch.object(collector, 'signed_location', side_effect=replies),
+              patch.object(collector, 'signed_opener') as opener, patch.object(inspect, 'sleep') as sleep):
+            opener.return_value.open.return_value = response
             archive = Path(tmp) / 'delivery.zip'
-            inspect.download_uploaded(27, archive)
+            inspect.download_uploaded(27, archive, size=8)
             self.assertEqual(archive.read_bytes(), b'original')
+            sleep.assert_called_once_with(2)
 
     def test_motif_choice_preflight_without_image_packages(self):
         import sys

@@ -52,14 +52,28 @@ Der Akteur führt diese Schritte im selben Chat aus:
    eindeutig zuordnen. Die REST-Metadaten über die ID erneut lesen. Ist der
    Einzelendpunkt im Connector gesperrt, dieselbe ID in der frisch gelesenen
    Artefaktliste dieses Workerlaufs mitsamt `workflow_run` prüfen.
-2. Die ZIP-Datei **über den Artifact-Download des Connectors** im eigenen
-   Chat-Arbeitsbereich materialisieren. Den [eigenständigen Python-Reader](../../tools/production_remote_delivery.py)
-   als vertrauenswürdige Quelle am geprüften Werkzeugcommit lesen. Er benötigt
-   nur Python 3.11+. Seine CLI übernimmt mit `--request`, `--record` (exakte
-   Gitbytes), `--trigger`, `--worker`, `--artifact`, `--archive` und
-   `--output` die bereits vom Akteur gelesenen Dateien. Die beiden Run- und
-   die Artefaktdatei enthalten die ursprünglichen REST-Objekte. Der Reader
-   erzeugt erst nach vollständiger Prüfung ein neues Sichtungsverzeichnis.
+2. Das ZIP einmal per Connector in die Python-Umgebung laden. Es enthält die
+   Rollenbytes, exakte Git-Recordbytes in den Contents-Originalen, den kanonischen
+   Requestcommit, die erforderlichen Commits, Run-/Attempt- und Releasebindungen
+   sowie beide Readerdateien. Die Gitblobs von `production_remote_delivery.py`
+   und `production_remote_reader.py` unabhängig unter `tools/` am bestätigten
+   Werkzeugcommit lesen. Den [gemeinsamen Bootstrap](#originale-und-reader-öffnen)
+   mit Modus `originals` verwenden. `--artifact` und `--collection` stammen aus
+   unabhängigen Readbacks nach Abschluss. `read-live` öffnet keine Dateien.
+   Die genannten `--fresh NAME WERT` aus aktuellen Connectorantworten übernehmen,
+   dann mit `--output NEUES_VERZEICHNIS` ausführen. Bei vollständigen aktuellen
+   Readbacks ist auch ein einziger Readeraufruf möglich.
+
+   `main`, `work`, `tag` und ggf. `product` sind die aktuellen Ref-SHAs,
+   `record` ist der Blob am Arbeitscommit. `request` ist der Trigger-Head,
+   `trigger` ist `id:run_attempt:head_sha:status:conclusion`, `repository` die
+   numerische Repo-ID und `ack=absent` das bestätigte Fehlen des Requestrefs.
+   Für `release` die Felder id, target_commitish, tag_name, body, draft, prerelease,
+   immutable verwenden. Für jedes angeforderte `asset-ID` die Felder id, name,
+   size, digest, label, state des Releaseassets lesen. Bei `inspect-product` den
+   zugehörigen PR mit number, state, body sowie je head/base ref, sha und
+   repo.{full_name,id} lesen. Diese drei Objektarten als kanonisches JSON
+   (sortierte Schlüssel, UTF-8, kompakte Trennzeichen) übergeben.
 3. PNGs dort mit dem Bilddecoder öffnen, Original und Ableitung nach ihren
    Bildnormen sichten. Die Hashes und tatsächlichen Urteile an die betrachteten
    Dateien binden. Neue Befunde mit dem PW-FIND-Verfahren behandeln. Vor der
@@ -68,9 +82,9 @@ Der Akteur führt diese Schritte im selben Chat aus:
 4. Bei Antwortverlust zuerst die vorhandenen Runs/Attempts und das benannte
    Artefakt nachlesen. Bei abgelaufenem oder fehlerhaftem Ergebnis auf frischer
    Bindung einmal gezielt neu zustellen. Bei noch vorhandenem identischem Ref
-   den fehlgeschlagenen Worker nach erneuter Quellenprüfung wiederholen. Bleibt
+   nur eine ausgefallene lesende Zustellung nach erneuter Quellenprüfung wiederholen. Für ein publiziertes Ergebnis den belegten Nachfolger mit einem lesenden Inspect abrufen. Kein erneuter Writerlauf oder Budgetverbrauch. Bleibt
    der Fehler bestehen, konkreten Run, Status und nächsten Akteur melden.
-   Ein offener Publish-/Retirement-Vorgang verbleibt beim belegten Besitzer.
+   Bei endgültigem Zugriffsmangel oder unverändert wiederholtem Fehler stoppen und den gesicherten Stand nennen. Keine weiteren Endpunktversuche ohne konkreten neuen Anhaltspunkt. Ein offener Publish-/Retirement-Vorgang verbleibt beim belegten Besitzer.
    Download, Sichtung, Entscheidung, Publikation, PR/CI, Merge und Rückbau
    mit ihrem tatsächlichen Stand ausweisen.
 
@@ -173,37 +187,51 @@ Die Produkt-PR-Anlage und der genehmigte Merge liegen beim aufrufenden Akteur.
    Python muss vor der Ausführung genau deren Gitblob-ID prüfen.
 3. Die folgende kurze Standardbibliothekssequenz im Python-Arbeitsbereich
    verwenden. `archive`, `digest` und `blob` kommen aus den getrennten Reads.
-   Den CLI-Aufruf mit den übrigen Argumenten im selben Arbeitsbereich ausführen.
+   Für Step 5 `mode=continuation` und leeres `delivery_blob` verwenden. Für Originalzustellungen gilt `mode=originals`. Die unabhängige Artefaktlänge ist `bytes`. Den CLI-Aufruf mit den übrigen Argumenten im selben Arbeitsbereich ausführen.
    Der Bootstrap entpackt keine Dateipfade und führt ausschließlich den
    Git-geprüften Reader aus.
 
 ```sh
-python -I - "$archive" "$digest" "$blob" --tools "$main" \
+python -I - "$archive" "$bytes" "$digest" "$common_blob" "$mode" "$delivery_blob" --tools "$main" \
   --artifact ID NAME BYTES DIGEST CREATED EXPIRES RUN HEAD REPO_ID HEAD_REPO_ID BRANCH EXPIRED \
   --collection RUN ATTEMPT HEAD BRANCH PATH REPO_ID STATUS CONCLUSION <<'PY'
 from hashlib import file_digest, sha1
 from pathlib import Path
-import sys
+import sys, types
 from zipfile import ZipFile
 
-path, digest, blob, *options = sys.argv[1:]
+path, size, digest, common, mode, delivery, *options = sys.argv[1:]
+if mode not in ("originals", "continuation"):
+    raise SystemExit("Unknown reader mode")
+pins = {"production_remote_reader": common}
+if mode == "originals":
+    pins["production_remote_delivery"] = delivery
 archive = Path(path)
-if not 0 < archive.stat().st_size <= 17 * 1024**2:
-    raise SystemExit("Unexpected ZIP length")
+if archive.stat().st_size != int(size) or int(size) <= 0:
+    raise SystemExit("Different ZIP length")
 with archive.open("rb") as stream:
     if "sha256:" + file_digest(stream, "sha256").hexdigest() != digest:
         raise SystemExit("Different artifact digest")
     stream.seek(0)
     with ZipFile(stream) as bundle:
-        rows = [row for row in bundle.infolist() if row.orig_filename == "production_remote_reader.py"]
-        if len(rows) != 1 or not 0 < rows[0].file_size <= 131072:
-            raise SystemExit("Expected one bounded Reader")
-        code = bundle.read(rows[0])
-if sha1(f"blob {len(code)}\0".encode() + code).hexdigest() != blob:
-    raise SystemExit("Different trusted Git blob")
-sys.argv[:] = ["production_remote_reader.py", "continuation",
-               "--archive", path, "--reader-blob", blob, *options]
-exec(compile(code, "production_remote_reader.py", "exec"), {"__name__": "__main__"})
+        code = {}
+        for name, blob in pins.items():
+            rows = [r for r in bundle.infolist() if r.orig_filename == name + ".py"]
+            if len(rows) != 1 or not 0 < rows[0].file_size <= 131072:
+                raise SystemExit("Expected one bounded reader")
+            raw = bundle.read(rows[0])
+            if sha1(f"blob {len(raw)}\0".encode() + raw).hexdigest() != blob:
+                raise SystemExit("Different trusted Git blob")
+            code[name] = compile(raw, name + ".py", "exec")
+for name, program in code.items():
+    module = types.ModuleType(name)
+    sys.modules[name] = module
+    exec(program, module.__dict__)
+args = ["--archive", path, *options]
+if mode == "originals":
+    module.originals_cli([*args, "--reader-blob", delivery, "--common-blob", common])
+else:
+    module.continuation([*args, "--reader-blob", common])
 PY
 ```
 
@@ -280,7 +308,7 @@ Testmerge-Eltern voraus. Fehlende, ausstehende, genehmigungspflichtige und
 rote Läufe behalten ihren Status. Vor einem autorisierten Merge Main,
 PR, Head, Basis, Testmerge, neuen Run oder Attempt, Konfliktfreiheit und
 Branchschutz direkt per Connector erneut bestätigen. Schutz am
-`branches/main`-Objekt und die für den Akteur erreichbaren Regeln prüfen.
+`branches/main`-Objekt und die für den Akteur erreichbaren Regeln nach [Schritt 5 §8](../production/authoring/PUZZLE_AUTHORING_STEP_5.md#8-abgenommenes-ergebnis-ins-spiel-integrieren) prüfen.
 `status` bleibt Diagnose für ältere gebundene Aufträge und liefert keine
 strengere CI-Freigabe. Historische v1-Aufträge behalten den direkten
 Original-CLI-Eingang `python production_remote_reader.py originals.json`.
