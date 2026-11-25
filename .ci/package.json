@@ -1,1 +1,34 @@
-{"core_change":null,"evidence":{"expires":null,"mode":"none","purpose":null},"format":"development-ci-plan/v1","issue":"https://github.com/venomenon328/picross/issues/893","modules":[],"omitted":"Reine Inhaltsintegration. Adapter und registrierte Lieferung im Produktionslauf geprüft.","package":"Integration-pz-eisvogel","purpose":"Gewählte finale Rätseldaten registrieren.","test_changes":[]}
+{
+  "format": "development-ci-plan/v1",
+  "issue": "https://github.com/venomenon328/picross/issues/859",
+  "package": "PW-REMOTE-E",
+  "modules": [
+    "tools",
+    "production.adapter"
+  ],
+  "purpose": "Akteursgeführter Remote-Abschluss und CI-Plan für reine Einzelrätsel-Erstintegration.",
+  "omitted": "Produktionsfachkerne, native Gruppen, Browser, Preflight, Delivery und Sync bleiben außerhalb des Pakets. Adapter und Werkzeugtests prüfen die gebundene Lieferung und Wiederaufnahme; der reguläre Windows-Playerbau folgt aus dem Code-Diff.",
+  "test_changes": [
+    {
+      "path": "tools/test_ci_modular.py",
+      "disposition": "core",
+      "reason": "Kleine Git- und Planregressionen für die enge Ausnahme."
+    },
+    {
+      "path": "tools/test_production_remote.py",
+      "disposition": "change-scoped",
+      "reason": "Synthetischer Step-5-, Wiederaufnahme- und Retirement-Durchstich."
+    },
+    {
+      "path": "tools/test_production_remote_reader.py",
+      "disposition": "change-scoped",
+      "reason": "Offline-Gegenproben für gepinnte Connector- und REST-Originale samt Worker-, PR- und CI-Bindung."
+    }
+  ],
+  "core_change": "Neue geschlossene Produktionsplanform und Prüfung der tatsächlichen einzelnen RI-Erstintegration im ursprünglichen PR-Diff.",
+  "evidence": {
+    "mode": "none",
+    "purpose": null,
+    "expires": null
+  }
+}

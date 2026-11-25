@@ -54,7 +54,12 @@ und als reguläre Dateien in diesem Commit und im Index gebunden sein.
 Nach Finalizer und Export den Adapter mit `--pw-worktree JOB --checkout INTEGRATION`
 planen und frisch registrieren lassen. Die einzeln geprüften Pfade aus
 `changes` über `git add --sparse -- PFAD ...` stagen, den vollständigen Diff
-prüfen und den Produktstand committen. Completion erhält im Jobworktree die
+prüfen. Für die reguläre Einzelrätsel-Erstintegration den Worktree auf
+`content/integrate-<id>` öffnen und darin
+`python <geprüfter-Toolcheckout>/tools/ci_production_plan.py <id>` ausführen.
+`.ci/package.json` zusammen mit den Lieferpfaden stagen und den Produktstand
+committen. Der Plan verwendet die Rätsel-ID. Ein ausdrücklich zugeordnetes
+Issue kann im Produkt-PR stehen. Completion erhält im Jobworktree die
 SHA dieses sauberen Integrationsworktrees und denselben geprüften Eingang.
 Produkt-PR, Mergefreigabe und Retirement folgen dem Auftrag für den Job.
 Der [Remote-Einstieg](PW_REMOTE.md) verwendet diese Arbeitsplätze für die gebundene Rasterproduktion und die Erstintegration. Seine Betriebsabnahme verlangt den isolierten Remote-Durchstich.

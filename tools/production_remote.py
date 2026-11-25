@@ -51,7 +51,7 @@ def request(value):
     if v2 and op in ('step3', 'step4') and 'delivery' in value:
         extra.add('delivery')
     exact_keys(value, common | extra)
-    require((value['format'] == 'pw-remote-v1' or v2 and op in ('inspect', 'step3', 'step4'))
+    require((value['format'] == 'pw-remote-v1' or v2 and op in ('inspect', 'step3', 'step4', 'step5'))
             and value['repository'] == pw.REPO, 'Different format or repository')
     require(len(current.encoded(value)) <= LIMIT, 'Oversized remote request')
     current.path(value['job'])
@@ -98,7 +98,8 @@ def request(value):
             current.findings.check_summaries(change['review'], current.CRITERIA['background'])
             require(isinstance(change['observations'], list), 'Invalid background observations')
     elif op == 'step5':
-        integer(value['issue'], 1, 2**53-1, 'product issue')
+        if not v2 or value['issue'] is not None:
+            integer(value['issue'], 1, 2**53-1, 'product issue')
         require(isinstance(data, dict), 'Expected finalization input')
         optional = {'finding_decisions'} & data.keys()
         exact_keys(data, {'background', 'decisions'} | optional)
@@ -184,8 +185,9 @@ def preflight(root, req, auth):
             require(qualification is not None and all(current.qualification.documented(row)
                     for row in qualification['facts'].values()),
                     'Bound candidate qualification missing. Complete the affected production phase first.')
-        issue = pw.api('issues/' + str(req['issue']))
-        require(issue['number'] == req['issue'] and 'pull_request' not in issue, 'Expected production issue')
+        if req['issue'] is not None:
+            issue = pw.api('issues/' + str(req['issue']))
+            require(issue['number'] == req['issue'] and 'pull_request' not in issue, 'Expected production issue')
         existing = prs.lookup(job)
         if work == expected:
             require(product is None and existing is None, 'Occupied product branch or PR')
@@ -271,6 +273,8 @@ def run(root, req, auth, token, *, diagnose=False, recover_delivery=False, check
             return {**result, 'status': status, 'next': 'Retirement verified against confirmed main.'}
         work, product = report['work_head'], report['product']
         replay_delivery = 'delivery' in req and work != expected
+        replay_step5 = op == 'step5' and req['format'] == delivery.WIRE_V2 and work != expected
+        replay = replay_delivery or replay_step5
         intent = None
         if io.safe(area, 'picross-production').exists():
             base, db = ws.store_for(area, pw.REPO)
@@ -281,8 +285,8 @@ def run(root, req, auth, token, *, diagnose=False, recover_delivery=False, check
                         'Foreign local operation directory')
                 state = ws.gitdir(data)
                 pending = (state / pw.JOURNAL).exists()
-                if not replay_delivery or pending:
-                    raw = io.read(state, 'pw-remote-intent.json', 4096, missing=not pending or not replay_delivery)
+                if not replay or pending:
+                    raw = io.read(state, 'pw-remote-intent.json', 4096, missing=not pending or not replay)
                     if raw:
                         intent = exact_keys(io.json_bytes(raw, 4096), {'id', 'main', 'product'})
                         require(intent['id'] == req_id and intent['main'] == req['main']
@@ -299,7 +303,7 @@ def run(root, req, auth, token, *, diagnose=False, recover_delivery=False, check
             with measured(times, 'publication'):
                 check_invocation()
                 work = pw.push_job(data, job, expected, auth=auth, token=token,
-                                   remote_request={**intent, 'recover_pushed': True} if replay_delivery else intent)
+                                   remote_request={**intent, 'recover_pushed': True} if replay else intent)
         elif work == expected:
             with measured(times, 'bootstrap'):
                 paths = ws.prepare(area, job, req['tools'], req['main'], expected,
@@ -345,11 +349,20 @@ def run(root, req, auth, token, *, diagnose=False, recover_delivery=False, check
             result['next'] = ('Inspect the bound original and prepared PNG of each candidate.'
                               if 'prepare' in req['input'] else 'Read the current background assessments.')
         if op == 'step5':
+            completed = pw.bound_record(published, job)
+            require(completed['state'] == 'registered' and completed['integration']['commit'] == product,
+                    'Published Completion does not bind the product commit')
             require(git.remote_head(root, 'refs/heads/main') == req['main'] and
                     git.remote_head(root, 'refs/heads/' + prs.product_branch(job)) == product and
                     owner(product, parent=req['main']) == req_id, 'Product publication not confirmed on bound basis')
             with measured(times, 'publication'):
                 check_invocation()
+                if req['format'] == delivery.WIRE_V2:
+                    metadata = prs.draft_metadata(req, req_id)
+                    pr = prs.product_pr(req, product, req_id, actor=True)
+                    return {**result, 'status': 'pr-bound' if pr else 'pr-ready', 'head': product,
+                            'pr': pr['number'] if pr else None, 'draft_pr': metadata,
+                            'next': 'Read the published generation and bind the product PR through the connector.'}
                 try:
                     pr = prs.product_pr(req, product, req_id, create=True)
                 except github_rest.Failure as exc:
@@ -479,7 +492,9 @@ def main():
                         require(result['catalog_lease'] == 'free',
                                 'Catalog lease occupied. Resume from the owning private journal before starting a new runner.')
                     images = (mode == 'execute' and req['operation'] != 'status'
-                              and not ('delivery' in req and result['work_head'] != req['expected']))
+                              and not (('delivery' in req or req['operation'] == 'step5'
+                                        and req['format'] == delivery.WIRE_V2)
+                                       and result['work_head'] != req['expected']))
                     outputs({'images': str(images).lower()})
                 else:
                     handoff = result.get('deliver', False)
