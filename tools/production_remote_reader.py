@@ -1,6 +1,7 @@
-"""Offline Step 5 continuation and Package CI reader for original GitHub REST JSON."""
+"""Offline Step 5 continuation and Package CI reader for GitHub originals."""
 import argparse
 from base64 import b64decode
+from datetime import datetime
 from hashlib import sha1, sha256
 import json
 import re
@@ -93,15 +94,29 @@ def ref(row, name):
     return row['object']['sha']
 
 
-def record_bytes(row, repository, commit, path):
-    require(row['type'] == 'file' and row['path'] == path and row['encoding'] == 'base64'
-            and row['url'] == f'https://api.github.com/repos/{repository}/contents/{path}?ref={commit}',
-            'Expected exact record contents')
-    raw = b64decode(''.join(row['content'].split()), validate=True)
-    require(len(raw) == row['size'] and sha1(f'blob {len(raw)}\0'.encode() + raw).hexdigest() == row['sha'],
+def record_bytes(row, repository, commit, path, *, directory=None):
+    require(SHA.fullmatch(commit), 'Expected a pinned record commit')
+    api = f'https://api.github.com/repos/{repository}'
+    if directory is None:
+        entry = row
+        require(row['encoding'] == 'base64', 'Expected original REST record contents')
+        raw = b64decode(''.join(row['content'].split()), validate=True)
+    else:
+        require(isinstance(directory, list), 'Expected original record directory listing')
+        matches = [entry for entry in directory if entry['path'] == path]
+        require(len(matches) == 1, 'Missing or ambiguous record path at pinned commit')
+        entry = matches[0]
+        require(row['encoding'] == 'utf-8' and row['sha'] == entry['sha']
+                and row['display_url'] == f'https://github.com/{repository}/blob/{commit}/{path}',
+                'Different connector record or pinned commit')
+        raw = row['content'].encode('utf-8')
+    require(entry['type'] == 'file' and entry['path'] == path
+            and entry['url'] == f'{api}/contents/{path}?ref={commit}',
+            'Expected exact record path at pinned commit')
+    require(type(entry['size']) is int and len(raw) == entry['size']
+            and sha1(f'blob {len(raw)}\0'.encode() + raw).hexdigest() == entry['sha'],
             'Record blob bytes differ')
     return raw
-
 
 def parse(raw):
     def unique(pairs):
@@ -135,8 +150,10 @@ def binding(data):
             'Different request tree')
     path = f'content/authoring/{job}/current/record.json'
     work = ref(data['work_ref'], 'heads/content/pw/' + job)
-    original = record_bytes(data['input_record'], repository, expected, path)
-    completed = record_bytes(data['completion_record'], repository, work, path)
+    original = record_bytes(data['input_record'], repository, expected, path,
+                            directory=data.get('input_record_directory'))
+    completed = record_bytes(data['completion_record'], repository, work, path,
+                             directory=data.get('completion_record_directory'))
     prior, record = parse(original), parse(completed)
     head = ref(data['product_ref'], 'heads/' + product_branch(job))
     require(owner(data['work_commit'], work, expected) == owner(data['product_commit'], head, main) == request_id
@@ -210,13 +227,81 @@ def pages(values, field):
     return rows
 
 
-def validate_run(req, head, workflow_id, run, *, repository_id=None):
-    require(run['workflow_id'] == workflow_id and run['event'] == 'pull_request' and run['path'] == WORKFLOW_PATH
-            and all(run[k]['full_name'] == req['repository'] and
+def run_source(run, repository, repository_id, *, event, branch, head):
+    return (run['event'] == event and run['head_sha'] == head and run['head_branch'] == branch
+            and all(run[k]['full_name'] == repository and
                     (repository_id is None or run[k]['id'] == repository_id) for k in ('repository', 'head_repository'))
-            and run['head_sha'] == head and run['head_branch'] == product_branch(req['job'])
-            and all(type(run[k]) is int and run[k] > 0 for k in ('id', 'run_attempt')), 'Foreign CI run or source')
+            and all(type(run[k]) is int and run[k] > 0 for k in ('id', 'run_attempt', 'workflow_id')))
 
+
+def validate_run(req, head, workflow_id, run, *, repository_id=None):
+    require(run['workflow_id'] == workflow_id and run['path'] == WORKFLOW_PATH
+            and run_source(run, req['repository'], repository_id, event='pull_request',
+                           branch=product_branch(req['job']), head=head), 'Foreign CI run or source')
+
+
+def matching_fields(row, expected):
+    return all(row.get(key) == value for key, value in expected.items())
+
+
+def worker_log_row(log, steps, name, field):
+    matches = [step for step in steps if step['name'] == name]
+    require(len(matches) == 1 and matches[0]['status'] == 'completed'
+            and matches[0]['conclusion'] == 'success', 'Missing successful Step 5 worker step: ' + name)
+    step = matches[0]
+    start, end = (datetime.fromisoformat(step[key]) for key in ('started_at', 'completed_at'))
+    require(isinstance(log, str), 'Expected the original Step 5 worker log text')
+    rows = []
+    for line in log.splitlines():
+        stamp, _, payload = line.partition(' ')
+        if payload.startswith('{'):
+            when = datetime.fromisoformat(stamp).replace(microsecond=0)
+            if start <= when <= end:
+                row = parse(payload)
+                if isinstance(row, dict) and field in row:
+                    rows.append(row)
+    require(len(rows) == 1, 'Missing or ambiguous Step 5 worker log row: ' + field)
+    return rows[0]
+
+
+def connector_workflow(req, result, request_sha, evidence, repository_id):
+    """Use the active workflow checked by the published generation's Step 5 worker."""
+    repository, main = req['repository'], req['main']
+    request_ref = result['request_ref']
+    trigger = evidence['trigger']
+    require(run_source(trigger, repository, repository_id, event='push', branch=request_ref, head=request_sha)
+            and trigger['path'] == '.github/workflows/work-growth.yml'
+            and trigger['status'] == 'completed' and trigger['conclusion'] == 'success',
+            'Different Step 5 request trigger')
+    run, attempt = evidence['run'], evidence['attempt']
+    for row in (run, attempt):
+        require(run_source(row, repository, repository_id, event='workflow_run', branch='main', head=main)
+                and row['path'] == '.github/workflows/pw-remote.yml'
+                and row['display_title'] == 'PW remote ' + request_ref
+                and row['status'] == 'completed' and row['conclusion'] == 'success',
+                'Different Step 5 worker run or request')
+    require(matching_fields(attempt, {key: run[key] for key in ('id', 'workflow_id', 'run_attempt')}),
+            'Different Step 5 worker attempt')
+    jobs = pages(evidence['jobs'], 'jobs')
+    require(all(matching_fields(job, {'run_id': run['id'], 'run_attempt': run['run_attempt'], 'head_sha': main})
+                for job in jobs), 'Different Step 5 worker jobs')
+    workers = [job for job in jobs if job['name'] == 'worker']
+    require(len(workers) == 1 and matching_fields(workers[0], {'id': evidence['job_id'],
+            'status': 'completed', 'conclusion': 'success'}), 'Different Step 5 worker log job')
+    steps, log = workers[0]['steps'], evidence['log']
+    checked = worker_log_row(log, steps, 'Read capabilities and trigger before image setup', 'package_ci')
+    published = worker_log_row(log, steps, 'Execute and acknowledge bound operation', 'published_record_sha256')
+    binding = {'request': result['request'], 'repository': repository, 'main': main, 'job': req['job'],
+               'expected': req['expected'], 'record_sha256': req['record_sha256']}
+    require(matching_fields(checked, {**binding, 'tool_commit': main, 'operation': 'publish',
+                                      'worker': run['workflow_id']})
+            and type(checked['package_ci']) is int and checked['package_ci'] > 0,
+            'Different active Package CI workflow or Step 5 preflight')
+    require(matching_fields(published, {**binding, 'tools': main, 'operation': 'step5',
+                'head': result['head'], 'work': result['work'],
+                'published_record_sha256': result['published_record_sha256']})
+            and published['status'] in ('pr-ready', 'pr-bound'), 'Different Step 5 publication result')
+    return checked['package_ci']
 
 def gate(req, pr, run=None, jobs=(), *, merge_commit=None, strict=False):
     head = pr['head']['sha']
@@ -260,14 +345,19 @@ def gate(req, pr, run=None, jobs=(), *, merge_commit=None, strict=False):
     return {**result, 'status': 'checks-passed', 'next': 'Review the complete product diff and actual merge authorization.'}
 
 
-def ci_status(req, pr, evidence, repository_id):
-    workflow = evidence['workflow']
-    require(workflow['state'] == 'active' and workflow['path'] == WORKFLOW_PATH
-            and type(workflow['id']) is int and workflow['id'] > 0, 'Different Package CI workflow')
+def ci_status(req, pr, evidence, repository_id, *, workflow_id=None):
     head = pr['head']['sha']
-    runs = pages(evidence['runs'], 'workflow_runs')
+    if workflow_id is None:
+        workflow = evidence['workflow']
+        require(workflow['state'] == 'active' and workflow['path'] == WORKFLOW_PATH
+                and type(workflow['id']) is int and workflow['id'] > 0, 'Different Package CI workflow')
+        workflow_id = workflow['id']
+        runs = pages(evidence['runs'], 'workflow_runs')
+    else:
+        runs = [run for run in pages(evidence['repository_runs'], 'workflow_runs')
+                if run['workflow_id'] == workflow_id or run['path'] == WORKFLOW_PATH]
     for run in runs:
-        validate_run(req, head, workflow['id'], run, repository_id=repository_id)
+        validate_run(req, head, workflow_id, run, repository_id=repository_id)
         require(type(run['run_number']) is int and run['run_number'] > 0, 'Invalid run number')
     require(len({r['run_number'] for r in runs}) == len(runs), 'Ambiguous current PR run')
     if not runs:
@@ -276,7 +366,7 @@ def ci_status(req, pr, evidence, repository_id):
     current, attempt = evidence['run'], evidence['attempt']
     keys = ('id', 'run_number', 'run_attempt', 'status', 'conclusion')
     for row in (current, attempt):
-        validate_run(req, head, workflow['id'], row, repository_id=repository_id)
+        validate_run(req, head, workflow_id, row, repository_id=repository_id)
         require(all(row[k] == selected[k] for k in keys), 'Changed CI run or attempt; refresh the original reads')
         require(all(p['number'] == pr['number'] for p in row['pull_requests']), 'Foreign PR in CI run')
     if attempt['status'] != 'completed' or attempt['conclusion'] == 'action_required':
@@ -286,15 +376,23 @@ def ci_status(req, pr, evidence, repository_id):
 
 def evaluate(data):
     req, pr, result = binding(data)
+    repository_id = REPOSITORIES[req['repository']]
+    workflow_id = None
+    if 'step5_worker' in data:
+        workflow_id = connector_workflow(req, result, data['request_sha'], data['step5_worker'], repository_id)
+        result['package_ci_workflow_id'] = workflow_id
+    else:
+        require('input_record_directory' not in data and 'completion_record_directory' not in data,
+                'Read the bound Step 5 worker for connector originals')
     if 'ci' in data:
         require(pr is not None, 'Read the bound PR before its CI')
-        result['ci'] = ci_status(req, pr, data['ci'], REPOSITORIES[req['repository']])
+        result['ci'] = ci_status(req, pr, data['ci'], repository_id, workflow_id=workflow_id)
     return result
 
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('input', type=argparse.FileType('rb'), help='JSON object of the original REST responses')
+    parser.add_argument('input', type=argparse.FileType('rb'), help='JSON object of the original connector or REST responses')
     parser.add_argument('--expect-draft', action='store_true', help='Require draft on readback of a newly opened PR')
     args = parser.parse_args()
     try:

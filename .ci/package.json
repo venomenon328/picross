@@ -22,7 +22,7 @@
     {
       "path": "tools/test_production_remote_reader.py",
       "disposition": "change-scoped",
-      "reason": "Offline-Gegenproben mit vollständigen PR-/CI-Originalantworten."
+      "reason": "Offline-Gegenproben für gepinnte Connector- und REST-Originale samt Worker-, PR- und CI-Bindung."
     }
   ],
   "core_change": "Neue geschlossene Produktionsplanform und Prüfung der tatsächlichen einzelnen RI-Erstintegration im ursprünglichen PR-Diff.",

@@ -159,27 +159,55 @@ liefert nach Doppelpush und vollständiger Publisherprüfung `pr-ready` oder
 Requestdigest und kanonische Draft-Metadaten aus.
 
 Den [Offline-Reader](../../tools/production_remote_reader.py) an der verbindlichen
-`tools`-SHA lesen und mit Python 3.11+ ausführen. Die JSON-Hülle enthält die
-ursprünglichen REST-Antworten unter den folgenden Schlüsseln. Alle GETs liegen
-unter `/repos/OWNER/REPO`; bei Connectorantworten
-`structuredContent.content` als JSON dekodieren. Der allgemeine Connector-Fetch kann
-Contents als Dateiinhalt ausgeben und die Workflow-Endpunkte sperren. In diesen
-Fällen vor Step 5 den direkten öffentlichen GitHub-REST-Lesezugang prüfen.
-Für die entsprechenden Originale dieselbe API-URL lesend abrufen, etwa mit
-`curl --fail --silent --show-error URL`. Die Contents-Antwort enthält
-`encoding`, `content` und Blob-SHA. Die Workflowantwort liefert Pfad, ID und
-Status. Request-SHA und Job stammen aus der bestätigten Einreichung bzw. der
-gebundenen Übergabe.
+`tools`-SHA lesen und mit Python 3.11+ ausführen. Die JSON-Hülle enthält
+die tatsächlichen Connector-Antworten unter den folgenden Schlüsseln. Alle
+REST-GETs liegen unter `/repos/OWNER/REPO`. Bei `github_fetch` die JSON-Nutzlast
+in `structuredContent.content` dekodieren. Für die Dateiantworten von
+`github_fetch_file` das vollständige `structuredContent` übernehmen, einschließlich
+der unveränderten Textbytes in `content`. Keine JSON-Neuserialisierung des
+Recordtexts, keine Auszüge, keine direkt nachgebauten REST-Hüllen.
 
 | Schlüssel | Original |
 | --- | --- |
 | `repository`, `main_ref`, `main_commit` | Repoobjekt, `git/ref/heads/main`, `git/commits/MAIN` |
-| `request_sha`, `request_commit` | Bestätigte Einreichungs-SHA, `git/commits/REQUEST_SHA` auch nach Entfernung des Requestrefs |
+| `request_sha`, `request_commit` | SHA aus dem tatsächlichen Push-Run, `git/commits/REQUEST_SHA` auch nach Entfernung des Requestrefs |
 | `work_ref`, `work_commit` | `git/ref/heads/content/pw/JOB`, `git/commits/WORK` |
-| `input_record`, `completion_record` | `contents/content/authoring/JOB/current/record.json?ref=SHA`, einmal für den Requesteingang, einmal für den publizierten Arbeitsref; Base64-Originale |
+| `input_record`, `completion_record` | `github_fetch_file` für `content/authoring/JOB/current/record.json`, einmal am `expected`-Commit des Requests, einmal am publizierten `WORK`-Commit |
+| `input_record_directory`, `completion_record_directory` | Separate Verzeichnislisten aus `contents/content/authoring/JOB/current?ref=SHA`, jeweils am selben exakten Commit wie die Datei |
+| `step5_worker` | Die unten beschriebene Actions-Bindung zur aktiven Package CI und bestätigten Completion |
 | `product_ref`, `product_commit`, `product_diff` | `git/ref/heads/content/integrate-JOB`, `git/commits/HEAD`, vollständiges `compare/MAIN...HEAD` |
 | `work_tag`, `release` | `git/ref/tags/work-prod-JOB`, `releases/ID` mit vollständigem Assetbestand, ID aus dem Record |
 | `pulls`, `pr` | `pulls?head=OWNER%3Acontent%2Fintegrate-JOB&state=all&per_page=2`; bei genau einem Treffer zusätzlich `pulls/NUMMER` |
+
+Bei verlorener Chat- oder Workerantwort zuerst Arbeits- und Produktref,
+ihre Commitobjekte und den dort übereinstimmenden `PW-Remote:`-Requestdigest
+lesen. Die gesicherte Übergabe mit Requestcommit sowie Push- und Worker-Run
+ist der kürzeste Einstieg. Fehlt sie, erfolgreiche Worker-Kandidaten über
+`actions/runs?event=workflow_run&branch=main&head_sha=MAIN&per_page=100&page=N`
+suchen. Der tatsächliche Run-Titel
+`PW remote work-prod-control/remote/JOB/ENVELOPE_DIGEST` liefert den
+Requestbranch. Dessen Push-Run über
+`actions/runs?event=push&branch=REQUESTBRANCH&per_page=100&page=N` lesen.
+Der Wert von `branch` wird URL-kodiert. Der Push-Run liefert die Head-SHA des
+ursprünglichen Requestcommits auch nach Quittierung des Refs. Job, Commit,
+kanonischen Request- und Envelope-Digest mit dem veröffentlichten Stand
+abgleichen. Bei mehreren Kandidaten nur den tatsächlich gebundenen
+Originalrequest verwenden. Ein vorhandener PR dient mit Marker und
+Head zusätzlich zum Auffinden und wird separat zurückgelesen.
+
+| Schlüssel in `step5_worker` | Original |
+| --- | --- |
+| `trigger` | `actions/runs/TRIGGER` des gebundenen Request-Pushs aus `work-growth.yml` |
+| `run`, `attempt` | `actions/runs/WORKER_RUN` und `actions/runs/WORKER_RUN/attempts/ATTEMPT` aus `pw-remote.yml` für denselben Request |
+| `jobs` | Alle Seiten von `actions/runs/WORKER_RUN/attempts/ATTEMPT/jobs?per_page=100&page=N` |
+| `job_id`, `log` | Numerische ID des Jobs `worker` und der unveränderte Logtext aus `github_fetch_workflow_job_logs` für genau diese ID (`structuredContent.content`) |
+
+Der Reader bestätigt Pfad, Commit, Größe und Git-Blob-SHA jeder Recorddatei
+gegen die getrennte Verzeichnisantwort. Den Eingangs-SHA-256 bindet er an
+den Request, den Completion-SHA-256 an die Publikationszeile des gebundenen
+Workers. Dessen erfolgreiches Preflight hat den Pfad
+`.github/workflows/ci-modular.yml` und den aktiven Status geprüft. Die ID
+aus genau diesem Preflight gibt der Reader als `package_ci_workflow_id` aus.
 
 ```text
 python production_remote_reader.py originals.json
@@ -203,8 +231,7 @@ CI mit demselben Reader auswerten. Dazu `ci` mit folgenden Originalen ergänzen:
 
 | Schlüssel in `ci` | Original |
 | --- | --- |
-| `workflow` | `actions/workflows/ci-modular.yml` mit aktivem Status und exakter ID |
-| `runs` | Seitenarray aus `actions/workflows/ID/runs?event=pull_request&branch=content%2Fintegrate-JOB&head_sha=HEAD&per_page=100&page=N`; alle Treffer lesen |
+| `repository_runs` | Alle Seiten aus `actions/runs?event=pull_request&branch=content%2Fintegrate-JOB&head_sha=HEAD&per_page=100&page=N`. Der Reader wählt nach Package-CI-Pfad und bestätigter Workflow-ID. |
 | `run`, `attempt` | `actions/runs/RUN` und `actions/runs/RUN/attempts/ATTEMPT` für den passenden höchsten `run_number` und dessen aktuellen Versuch |
 | `jobs` | Bei abgeschlossenem Run alle Seiten aus `actions/runs/RUN/attempts/ATTEMPT/jobs?per_page=100&page=N` |
 | `test_merge` | `git/commits/TESTMERGE` aus dem aktuellen offenen PR, Eltern in der Reihenfolge Basis und Head |
@@ -217,6 +244,16 @@ die aktuellen Antworten nach der tatsächlichen GitHub-Ausführung erneut lesen.
 `status` ist der bedarfsweise Ersatz, falls der Connector notwendige
 Originalmetadaten nicht liefern kann. Ein allgemeiner Workflow-Dispatch
 belegt keinen PR-Testmerge.
+
+Der Original-REST-Weg bleibt nutzbar, wenn die vollständigen Antworten verfügbar
+sind. Dabei die originalen Contents-Hüllen mit Base64-Bytes als
+`input_record` und `completion_record` verwenden. Die Verzeichnis- und
+Worker-Schlüssel entfallen. In `ci` `workflow` aus
+`actions/workflows/ci-modular.yml` sowie alle Seiten der Workflow-spezifischen
+Runliste als `runs` verwenden. Die übrigen Run-, Attempt-, Job- und Testmerge-
+Originale bleiben Teil der Prüfung. Dieser Weg gilt auch für vorhandene
+gebundene v1-Aufträge. Falls die nötigen Quellen fehlen, das fehlende Original
+benennen und die betroffene Freigabe offenhalten.
 
 Im Produkt-PR Eingang, Completion, Request, Produktcommit, Auswahl und
 Endabnahme kompakt belegen. Den vollständigen Diff, gebundene Lieferoriginale,
