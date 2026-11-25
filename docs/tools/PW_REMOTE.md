@@ -239,7 +239,8 @@ Abruf gilt für die Erstzustellung und für ältere gebundene Step-5-Läufe.
 Bei einem Transportfehler meldet der Sammler Job-ID, Abrufstufe und Fehlerklasse.
 Der Reader vergleicht die vollständigen Lieferpfade mit Completion. Er prüft
 ZIP-Länge, SHA-256, Mitgliedsnamen, Manifest, Ausführungsrevision, Attempt und
-Ablauf. Die Aufbewahrung beträgt einen Tag. Die entpackten Nutzdaten müssen
+Ablauf. Actions bewahrt das ZIP einen Tag auf. Die Manifestfrist endet mit
+einer Minute Reserve zur sekundengenauen Actions-Frist. Die Nutzdaten müssen
 keine Chatnachricht und keine händisch erstellte JSON-Hülle durchlaufen.
 
 #### Draft, CI und Wiederaufnahme

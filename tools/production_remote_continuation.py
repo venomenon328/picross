@@ -249,8 +249,11 @@ def collect(api, repository, main, job, run_id, attempt, *, source=None, control
 
 def stage(output, context, data, code, now):
     files = {reader.ORIGINALS_FILE: (reader.canonical(data) + '\n').encode(), reader.READER_FILE: code}
+    # Actions reports its retention deadline at second precision and can
+    # timestamp it just before the runner's staging clock.
+    expires = now.replace(microsecond=0) + timedelta(hours=23, minutes=59)
     manifest = dict(format=reader.FORMAT, purpose=reader.PURPOSE, context=context,
-                    expires=(now + timedelta(days=1)).isoformat(),
+                    expires=expires.isoformat(),
                     files={name: {'bytes': len(raw), 'sha256': reader.sha256(raw).hexdigest()}
                            for name, raw in files.items()})
     files['manifest.json'] = (reader.canonical(manifest) + '\n').encode()

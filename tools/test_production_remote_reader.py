@@ -335,6 +335,13 @@ class ContinuationTests(unittest.TestCase):
                 with self.assertRaisesRegex(ValueError, 'Fresh Connector observation differs: ' + key):
                     reader.confirm_fresh(checked, list(fresh.items()))
 
+    def test_manifest_expires_before_second_precision_actions_deadline(self):
+        self.now = self.now.replace(microsecond=761921)
+        archive, artifact = self.bundle()
+        expiry = self.now.replace(microsecond=0) + timedelta(days=1)
+        reviewed = self.verify(archive, artifact | {'expires_at': expiry.isoformat()})
+        self.assertEqual(reviewed['context'], self.context)
+
     def test_foreign_tampered_expired_or_unsafe_zip(self):
         archive, artifact = self.bundle()
         for patch_values in ({'id': 0}, {'name': 'other'}, {'expired': True},
