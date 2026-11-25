@@ -1,12 +1,14 @@
 {
   "format": "development-ci-plan/v1",
-  "issue": "https://github.com/venomenon328/picross/issues/859",
-  "package": "PW-REMOTE-D",
-  "purpose": "Kombinierte feste Ableitung, gebundene Ergebniszustellung, Mehrkandidatenabruf und geprüften Editorcache mit bestehenden Git-, Release-, Builder-, Integrations- und Bildpfaden prüfen.",
-  "modules": ["tools", "production.images", "production.adapter"],
-  "omitted": "Der reguläre Windows-Playerbau bleibt Teil des Kerns. Der unveränderte Fachkern wird über echte Proofs und Difficulty im Remote-Durchstich und Adapter geprüft. Unveränderte Katalogregistrierung und Integration bleiben in bestehenden Tests abgedeckt. Native Gruppen, Preflight, Server, Browser und Delivery werden nicht angefordert.",
+  "issue": "https://github.com/venomenon328/picross/issues/891",
+  "package": "PW-EXEC",
+  "purpose": "Ausführungswahl, phasengerechte Produktionsaufträge, Browseroptionen und unveränderte Befugnisse im Werkzeugmodul prüfen.",
+  "modules": ["tools"],
+  "omitted": "Regulärer Windows-x64-Playerbau im Kern. Die Fachkerne für Spiel, Produktion, Server und Auslieferung bleiben unverändert. Kein Chromiumlauf. Windows-/Firefox-Bedienprobe und PW-App-Payloaddiagnose liefern einmalige Nachweise außerhalb des Paketkerns.",
   "test_changes": [
-    {"path": "tools/test_production_remote.py", "disposition": "change-scoped", "reason": "Kombinierte Masken-/Fixed-Publikation über echten Builder und Git/Release-Fixture, Wiederaufnahme nach Ref-Push vor Assetbereinigung mit Besitz- und Fremdressourcengrenzen, geschlossene Originalrollen und geprüfte Editorarchive abdecken. Live-Vergleich und Fortsetzungsprobe bleiben einmalig."}
+    {"path": "tools/test_authoring_sheet.py", "disposition": "change-scoped", "reason": "Promptmatrix für beide Ausführungswege, fachlich identische Entscheidungen und sichere Optionsnormalisierung."},
+    {"path": "tools/test_production_workspace.py", "disposition": "change-scoped", "reason": "Gebundene Rasterdiagnose einschließlich Folgeabsicht für beide Ausführungswege und aktualisierter CMD-Payload."},
+    {"path": "tools/production_workspace/check_ui_loading.cjs", "disposition": "change-scoped", "reason": "Phasenwechsel, wieder geöffnete Seite, Kopieren und unveränderte Bild- und Quellguards im bestehenden DOM-Test."}
   ],
   "core_change": null,
   "evidence": {"mode": "none", "purpose": null, "expires": null}

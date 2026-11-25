@@ -19,6 +19,9 @@ class Element {
 }
 const elements = new Map();
 const stored = new Map();
+if(mode==='parameters')stored.set('pw-options',JSON.stringify({
+  workroot:'E:/Synthetic',merge:false,executors:{2:'malformed',3:'ChatGPT'}
+}));
 let copied;
 const document = {
   documentElement: new Element('html'),
@@ -97,6 +100,7 @@ const run = code => vm.runInContext(code, context);
     const chooseMotif=()=>fields().find(el=>el.dataset.choice==='motif-a');
     const ready=()=>until(()=>chooseMotif()?.disabled===false);
     const prompt=()=>get('orderText').value;
+    const executor=name=>{get('executor').value=name;get('executor').onchange();};
     const words=el=>descendants(el).map(child=>child.textContent||'').join('\n');
     async function search(){
       await get('refresh').onclick();
@@ -104,6 +108,14 @@ const run = code => vm.runInContext(code, context);
     }
     const adopt=()=>get('load').onclick();
     await ready();
+    assert.equal(get('executor').value,'ChatGPT');
+    assert.equal(get('workrootField').hidden,true);
+    assert.equal(get('merge').checked,false);
+    executor('Codex');
+    assert.equal(get('copyOrder').disabled,true,'executor cannot replace motif choice');
+    assert.equal(get('workrootField').hidden,false);
+    assert.equal(get('workroot').value,'E:/Synthetic');
+    executor('ChatGPT');
     assert.equal(selector(),undefined,'one option with two imports has no select');
     assert.match(get('orderStatus').textContent,/Motivvorlage wählen/);
     const record=run('JSON.stringify(detail.facts.originals.record)');
@@ -113,6 +125,15 @@ const run = code => vm.runInContext(code, context);
     assert.equal(copied,prompt());
     assert.match(copied,/blob\/[a-f0-9]{40}\/content\/authoring\/pz-current\/current\/record\.json/);
     assert.match(copied,/Motivvorlage motif-a und den einzigen vollständigen Vorschlag.*Eintrag 1/);
+    const chat=copied, beforeSwitch=run('JSON.stringify(intent)'), requestCount=fetched.length;
+    executor('Codex');
+    assert.match(prompt(),/Lokale Codex-Arbeitswurzel: E:\/Synthetic/);
+    await get('copyOrder').onclick();
+    assert.equal(copied,prompt());
+    executor('ChatGPT');
+    assert.equal(prompt(),chat);
+    assert.equal(run('JSON.stringify(intent)'),beforeSwitch);
+    assert.equal(fetched.length,requestCount);
     assert.doesNotMatch(copied,/actual_crop|protected_features|\bimports\b/);
     assert.equal(run('JSON.stringify(detail.facts.originals.record)'),record);
     const original=get('technicalDetails');
@@ -123,15 +144,21 @@ const run = code => vm.runInContext(code, context);
     assert.match(words(get('view')),/Erlaubte Beschnittseiten: links, rechts/);
     const mode=get('nextActionMode');
     mode.value='rework';mode.onchange();
+    assert.equal(get('executor').value,'Codex','correction uses displayed step 2');
     const correction=get('correctionBase');correction.value='motif-a';correction.onchange();
     const feedback=get('correctionFeedback');feedback.value='Kontur {A} ergänzen';feedback.oninput();
     assert.match(prompt(),/Kontur \{A\} ergänzen/);
+    executor('ChatGPT');
+    assert.match(prompt(),/native Bildgenerierung/);
+    assert.equal(feedback.value,'Kontur {A} ergänzen');
     assert.doesNotMatch(prompt(),/gebe Motivvorlage/);
     mode.value='resume';mode.onchange();
+    assert.equal(get('executor').value,'ChatGPT');
     assert.match(prompt(),/wieder aufnehmen/);
     assert.doesNotMatch(prompt(),/gebe Motivvorlage/);
     mode.value='continue';mode.onchange();
     assert.equal(get('copyOrder').disabled,true,'a correction basis is never a motif approval');
+    executor('Codex');
     chooseMotif().onclick();
     await search();
     assert.match(prompt(),/einzigen vollständigen Vorschlag/);
@@ -161,6 +188,11 @@ const run = code => vm.runInContext(code, context);
     assert.doesNotMatch(second,/Kontur A/);
     assert.match(prompt(),/ausdrücklich gewählte Alternative.*Eintrag 2/);
     const oldPrompt=prompt();
+    executor('ChatGPT');
+    assert.equal(run('intent.parameter'),1);
+    assert.match(prompt(),/ausdrücklich gewählte Alternative.*Eintrag 2/);
+    executor('Codex');
+    assert.equal(prompt(),oldPrompt);
     await search();
     assert.equal(prompt(),oldPrompt,'passive search keeps choice and fixed source');
     holdDetail=true;releaseDetail=null;
@@ -185,6 +217,17 @@ const run = code => vm.runInContext(code, context);
     const draftMode=get('nextActionMode');draftMode.value='rework';draftMode.onchange();
     assert(get('correctionBase').children.some(option=>option.value==='motif-a'),'draft remains available for correction');
     run('dispose()');
+    const reopened=vm.createContext({...context,bound:run('detail'),fetch:()=>new Promise(()=>{})});
+    const read=code=>vm.runInContext(code,reopened);
+    read(readFileSync(__dirname+'/ui/workflow.js','utf8'));
+    read(readFileSync(__dirname+'/ui/app.js','utf8'));
+    read('$("view").replaceChildren();workflow($("view"),bound)');
+    assert.equal(get('merge').checked,false);
+    assert.equal(get('executor').value,'Codex');
+    assert.equal(get('workroot').value,'E:/Synthetic');
+    get('nextActionMode').value='rework';get('nextActionMode').onchange();
+    assert.equal(get('executor').value,'ChatGPT');
+    assert.equal(get('workrootField').hidden,true);
     return;
   }
   if(mode==='removal'){
