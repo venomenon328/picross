@@ -1,0 +1,4 @@
+author: OpenAI ImageGen (KI-generierte Illustration)
+changes: Unverändertes PNG aus der Bildgenerierung.
+source: Native Bildgenerierung im beauftragten Schritt 4 für Gottesanbeterin, ohne referenziertes Fremdbild.
+usage_basis: Im beauftragten Produktionslauf eigens erzeugte Ausgabe zur Verwendung im Projekt Picross.
