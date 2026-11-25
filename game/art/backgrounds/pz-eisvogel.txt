@@ -1,0 +1,4 @@
+author: OpenAI ImageGen (generiert im Auftrag des Nutzers)
+changes: Bytegleiches Original. Separate HP-W2-Ableitung im HG31-Profil auf 2304 × 768 Pixel.
+source: Native ImageGen-Bildgenerierung aus dem Textbriefing für pz-eisvogel, Schritt 4.
+usage_basis: Für diesen Auftrag erzeugte Kontextzeichnung zur Sichtung und geplanten Picross-Nutzung. Keine fremden Eingabebilder.
