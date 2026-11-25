@@ -1,12 +1,12 @@
 {
   "format": "development-ci-plan/v1",
   "issue": "https://github.com/venomenon328/picross/issues/859",
-  "package": "PW-REMOTE-C",
-  "purpose": "Rasteroperationen an veröffentlichten Originalen, endliche Reparatur, Profilprüfung, Auswahl und Wiederaufnahme prüfen.",
-  "modules": ["tools", "production.images", "production.solver", "production.adapter"],
-  "omitted": "Der Umfang endet am Übergang zu Schritt 4. Regulärer Windows-Playerbau und bestehende Abschlussregression im Werkzeugmodul. Katalogwriter, native Gruppen, Preflight, Server, Browser und Delivery liegen außerhalb des Diffs.",
+  "package": "PW-REMOTE-D",
+  "purpose": "Kombinierte feste Ableitung, gebundene Ergebniszustellung, Mehrkandidatenabruf und geprüften Editorcache mit bestehenden Git-, Release-, Builder-, Integrations- und Bildpfaden prüfen.",
+  "modules": ["tools", "production.images", "production.adapter"],
+  "omitted": "Der reguläre Windows-Playerbau bleibt Teil des Kerns. Der unveränderte Fachkern wird über echte Proofs und Difficulty im Remote-Durchstich und Adapter geprüft. Unveränderte Katalogregistrierung und Integration bleiben in bestehenden Tests abgedeckt. Native Gruppen, Preflight, Server, Browser und Delivery werden nicht angefordert.",
   "test_changes": [
-    {"path": "tools/test_production_remote.py", "disposition": "change-scoped", "reason": "Aktuelle mehrfarbige Raster gebunden diagnostizieren, korrigieren und wählen. Negative Masken-, Budget-, Proof- und Wiederaufnahmefälle am echten Builder prüfen."}
+    {"path": "tools/test_production_remote.py", "disposition": "change-scoped", "reason": "Kombinierte Masken-/Fixed-Publikation über echten Builder und Git/Release-Fixture, erwarteten Nachfolger bei Wiederholung, geschlossene Originalrollen und geprüfte Editorarchive abdecken. Live-Vergleich und Fortsetzungsprobe bleiben einmalig."}
   ],
   "core_change": null,
   "evidence": {"mode": "none", "purpose": null, "expires": null}

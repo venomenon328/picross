@@ -57,14 +57,32 @@ jobs:
             /game/art/cells/fill-medium.png*
             /game/art/book/PlexSans.ttf
             /game/art/drawing/DelightCoffee-Regular.ttf
+      - name: Restore exactly the pinned editor archive
+        if: steps.route.outputs.editor_key != ''
+        id: editor
+        uses: actions/cache/restore@0057852bfaa89a56745cba8c7296529d2fc39830
+        with:
+          path: ${{ runner.temp }}/pw-editor.zip
+          key: ${{ steps.route.outputs.editor_key }}
       - name: Stage only requested originals and views
         if: steps.route.outputs.artifact != ''
         env:
           GH_TOKEN: ${{ github.token }}
+          PW_EDITOR_CACHE: ${{ steps.route.outputs.editor_key != '' && format('{0}/pw-editor.zip', runner.temp) || '' }}
         run: |
-          python3 -m venv "$RUNNER_TEMP/pw-read"
-          "$RUNNER_TEMP/pw-read/bin/pip" install --only-binary=:all: -r tools/puzzle_production/requirements-image.txt
-          "$RUNNER_TEMP/pw-read/bin/python" -B -m tools.production_remote inspect-stage --root "$RUNNER_TEMP" --auth GH_TOKEN
+          python=python3
+          if [ "${{ steps.route.outputs.images }}" = true ]; then
+            python3 -m venv "$RUNNER_TEMP/pw-read"
+            "$RUNNER_TEMP/pw-read/bin/pip" install --only-binary=:all: -r tools/puzzle_production/requirements-image.txt
+            python="$RUNNER_TEMP/pw-read/bin/python"
+          fi
+          "$python" -B -m tools.production_remote inspect-stage --root "$RUNNER_TEMP" --auth GH_TOKEN
+      - name: Save the verified editor archive
+        if: steps.route.outputs.editor_key != '' && steps.editor.outputs.cache-hit != 'true'
+        uses: actions/cache/save@0057852bfaa89a56745cba8c7296529d2fc39830
+        with:
+          path: ${{ runner.temp }}/pw-editor.zip
+          key: ${{ steps.route.outputs.editor_key }}
       - name: Deliver review originals
         if: steps.route.outputs.artifact != ''
         id: upload
@@ -81,10 +99,13 @@ jobs:
           GH_TOKEN: ${{ github.token }}
           PW_ARTIFACT_ID: ${{ steps.upload.outputs.artifact-id }}
           PW_ARTIFACT_DIGEST: ${{ steps.upload.outputs.artifact-digest }}
-        run: '"$RUNNER_TEMP/pw-read/bin/python" -B -m tools.production_remote inspect-verify --root "$RUNNER_TEMP" --auth GH_TOKEN'
+        run: python3 -B -m tools.production_remote inspect-verify --root "$RUNNER_TEMP" --auth GH_TOKEN
   acknowledge:
-    needs: request
-    if: needs.request.outputs.route == 'read'
+    needs: [request, result]
+    if: >-
+      always() && !cancelled() &&
+      ((needs.request.result == 'success' && needs.request.outputs.route == 'read') ||
+       needs.result.result == 'success')
     runs-on: ubuntu-24.04
     permissions:
       contents: write
@@ -99,12 +120,15 @@ jobs:
       - name: Confirm current delivery and acknowledge only the request ref
         env:
           GH_TOKEN: ${{ github.token }}
-          PW_ARTIFACT_ID: ${{ needs.request.outputs.artifact_id }}
-          PW_ARTIFACT_DIGEST: ${{ needs.request.outputs.artifact_digest }}
+          PW_ARTIFACT_ID: ${{ needs.result.outputs.artifact_id || needs.request.outputs.artifact_id }}
+          PW_ARTIFACT_DIGEST: ${{ needs.result.outputs.artifact_digest || needs.request.outputs.artifact_digest }}
         run: python3 -B -m tools.production_remote inspect-ack --root "$RUNNER_TEMP" --auth GH_TOKEN
   worker:
     needs: request
     if: needs.request.outputs.route == 'write'
+    outputs:
+      deliver: ${{ steps.work.outputs.deliver }}
+      editor_key: ${{ steps.work.outputs.editor_key }}
     runs-on: ubuntu-24.04
     permissions:
       contents: write
@@ -151,7 +175,85 @@ jobs:
           "$RUNNER_TEMP/pw-venv/bin/pip" install --only-binary=:all: -r tools/puzzle_production/requirements-image.txt
           echo "$RUNNER_TEMP/pw-venv/bin" >> "$GITHUB_PATH"
       - name: Execute and acknowledge bound operation
+        id: work
         env:
           GH_TOKEN: ${{ steps.installation.outputs.token || github.token }}
           PW_REMOTE_AUTH_KIND: ${{ steps.installation.outputs.token && 'installation' || 'workflow-token' }}
         run: python3 -B -m tools.production_remote worker --root "$RUNNER_TEMP" --auth GH_TOKEN
+  result:
+    needs: worker
+    if: needs.worker.outputs.deliver == 'true'
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+      actions: read
+      pull-requests: read
+    outputs:
+      artifact_id: ${{ steps.upload.outputs.artifact-id }}
+      artifact_digest: ${{ steps.upload.outputs.artifact-digest }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        if: needs.worker.outputs.editor_key == '' || github.repository == 'venomenon328/picross-remote-test'
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+          sparse-checkout: tools
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        if: needs.worker.outputs.editor_key != '' && github.repository == 'venomenon328/picross'
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /tools/
+            /game/ui/scribble.gd
+            /game/ui/clue_typography.gd
+            /game/ui/clue_font.tres
+            /game/ui/cell_atlas.gd
+            /game/ui/atlas_mask.gdshader
+            /game/book/paper.png*
+            /game/art/cells/fill-small.png*
+            /game/art/cells/fill-medium.png*
+            /game/art/book/PlexSans.ttf
+            /game/art/drawing/DelightCoffee-Regular.ttf
+      - name: Restore exactly the pinned editor archive
+        if: needs.worker.outputs.editor_key != ''
+        id: editor
+        uses: actions/cache/restore@0057852bfaa89a56745cba8c7296529d2fc39830
+        with:
+          path: ${{ runner.temp }}/pw-editor.zip
+          key: ${{ needs.worker.outputs.editor_key }}
+      - name: Stage explicitly requested results
+        id: stage
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PW_EDITOR_CACHE: ${{ needs.worker.outputs.editor_key != '' && format('{0}/pw-editor.zip', runner.temp) || '' }}
+        run: |
+          python=python3
+          if [ -n "$PW_EDITOR_CACHE" ]; then
+            python3 -m venv "$RUNNER_TEMP/pw-read"
+            "$RUNNER_TEMP/pw-read/bin/pip" install --only-binary=:all: -r tools/puzzle_production/requirements-image.txt
+            python="$RUNNER_TEMP/pw-read/bin/python"
+          fi
+          "$python" -B -m tools.production_remote inspect-stage --root "$RUNNER_TEMP" --auth GH_TOKEN
+      - name: Save the verified editor archive
+        if: needs.worker.outputs.editor_key != '' && steps.editor.outputs.cache-hit != 'true'
+        uses: actions/cache/save@0057852bfaa89a56745cba8c7296529d2fc39830
+        with:
+          path: ${{ runner.temp }}/pw-editor.zip
+          key: ${{ needs.worker.outputs.editor_key }}
+      - name: Deliver review originals
+        id: upload
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: ${{ steps.stage.outputs.artifact }}
+          path: ${{ runner.temp }}/pw-delivery/
+          if-no-files-found: error
+          retention-days: 1
+          compression-level: 0
+      - name: Read back the actual uploaded archive
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PW_ARTIFACT_ID: ${{ steps.upload.outputs.artifact-id }}
+          PW_ARTIFACT_DIGEST: ${{ steps.upload.outputs.artifact-digest }}
+        run: python3 -B -m tools.production_remote inspect-verify --root "$RUNNER_TEMP" --auth GH_TOKEN

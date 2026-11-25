@@ -198,7 +198,8 @@ Keine dieser Operationen verbraucht eine Bildkorrektur. Ungültige Eingänge
 scheitern vor der Fortschreibung. Die bestätigte Arbeits-SHA und der
 Requestdigest identifizieren die Wiederaufnahme nach Antwortverlust.
 
-Alle neuen Aufrufe verwenden den bestehenden Umschlag `pw-remote-v1`.
+`pw-remote-v1` deckt die Einzeloperationen ab. Die nachfolgenden
+[D-Erweiterungen](#pw-remote-d) verwenden `pw-remote-v2`.
 `input` enthält genau einen Operationsnamen mit einem Objekt. Dessen
 `source` enthält `candidate,revision,definition_sha256,matrix_sha256,proof_sha256,motif_sha256,parameters_sha256`.
 Dateihashes beziehen sich auf die unveränderten Bytes. Der Matrixhash bindet
@@ -236,8 +237,9 @@ die PW-B-Bindung der Schutzdatei in der tatsächlichen Motiventscheidung.
 Bei RP-5 ist die Suchregion durch die ungeschützten Zellen festgelegt.
 Mit `region:[[x,y],…]` lässt sie sich vor der Suche auf einzelne
 ungeschützte Originalkoordinaten einschränken, etwa auf eine offene Lasche.
-Eine kombinierte Korridor- und Rasterentscheidung kann der Akteur aus derselben
-Erklärung in zwei gebundenen Requests vollziehen. Vor der Wahl die neue
+Eine tatsächliche Korridoränderung und eine Rasterableitung erfordern zwei
+gebundene Requests. Bei unverändertem Korridor kann die neue Schutzbindung
+mit der festen Ableitung über v2 erfolgen. Vor der Wahl die neue
 Qualifikation und aktuelle Source am bestätigten Arbeitsref zurücklesen.
 
 Die Workerantwort nennt Requestdigest, Vorgänger, Arbeitscommit, Recordhash und
@@ -270,6 +272,72 @@ oder ihrer Kombination annehmen. Jeder Eintrag nennt `target`, Befund-`id`,
 den erwarteten PW-FIND-Bindungshash `expected`, `action=accept`, `treatment`,
 `actor`, `timestamp_utc` und `statement`. End- und Integrationsentscheidung
 binden den Stand einschließlich Befundannahmen, Sichturteilen und Ausgabehash.
+
+## PW-REMOTE-D
+
+Die bisherige Einzelzustellung mit `pw-remote-v1` und `inspect-product`
+bleibt verfügbar. `pw-remote-v2` gilt für `inspect`, `step3` und `step4`.
+Der Requestumschlag, der kanonische Digest und der erwartete Requestref
+bleiben dieselben. Alle Felder und Rollen sind geschlossen.
+
+- Ein `step3.input.fixed` darf zusätzlich `protection` mit den Feldern
+  `actor`, `timestamp_utc` und `statement` enthalten. Die tatsächliche
+  Erklärung gilt für die im selben Fixed-Plan gebundenen Zellen und den
+  dortigen `mask_sha256`. `feature_cells` ordnet alle genehmigten
+  Schutzmerkmale den geschützten Koordinaten zu. Der veröffentlichte
+  Parameterkorridor und die Budgetgrenzen gelten unverändert. Die Ergänzung
+  setzt eine neue Maskenbindung für genau diese Quelle voraus und
+  bewahrt bestehende Crop-Freigaben. Der Builder speichert die Bindung und
+  die abgeleitete Variante gemeinsam. Ein unveränderter Ausschnitt ohne
+  Zelledit bleibt ein No-op. Eine dann noch benötigte Maskenbindung erfordert
+  eine eigene Parameterentscheidung.
+- `inspect.input.items` in v2 nennt explizit jedes Paar aus `candidate`
+  und `role`. Zum Beispiel können drei angebotene Hintergründe mit
+  jeweils `background` und `prepared` in einem ZIP angefordert werden.
+  Jede Rolle wird aus demselben gepinnten Record und aus ihrer eigenen
+  Kandidatenrevision aufgelöst. Dateinamen haben die Form
+  `<candidate>--<role>.<suffix>`. Der Consumer prüft auch bei gleichnamigen
+  Rollen Pfad, Originalreferenz, Medienart, Länge und Digest je Paar.
+- Ein v2-Schreibrequest kann das Feld `delivery` mit derselben Liste von
+  Rollenpaaren enthalten. Für Fixed, Import und RP-5 muss mindestens
+  eine Rasterrolle die deklarierte Ergebnis-ID nennen. Bei Profilprüfung
+  ist die Ergebnis-ID der überprüfte Kandidat. Bei `step4.input.prepare`
+  stehen ausschließlich die benannten Hintergrund-IDs und die Rollen
+  `background` und `prepared` zur Verfügung. Der Zustelljob liest die
+  tatsächlich veröffentlichte unmittelbare Folgegeneration im selben Run.
+  Der v2-Manifestteil `missing` nennt angeforderte Proof-, Difficulty- oder
+  Crop-Rollen, für die der Record keinen Beleg enthält. Bricht die
+  Beschaffung eines gebundenen Originals ab, bleibt die Zustellung offen.
+  Duplikate, reine Nichtfunde und No-ops liefern keine erfundene Variante.
+  Bei Bedarf den existierenden Kandidaten anschließend gezielt sichten.
+
+Für ein v2-Ergebnis-ZIP zusätzlich zum bisherigen Consumer-Aufruf
+`--input-commit`, `--result-commit` und `--result-record` übergeben.
+Die beiden Git-Commitobjekte und die exakten Recordbytes an Eingang und
+Nachfolger unabhängig via Connector lesen. Den Nachfolger am aktuellen
+Jobref abgleichen. Der Consumer prüft den einzigen Parent, den
+`PW-Remote`-Requestdigest, beide Recordhashes, Job- und Releasegeneration
+sowie die ursprünglichen Trigger-, Worker-, Attempt- und Artefaktdaten.
+Für lokal fehlgeschlagene oder abgelaufene Abrufe zuerst den tatsächlichen
+Jobref, die Publikation und den erwarteten Requestref zurücklesen.
+Bei bestätigter Publikation und offener Zustellung denselben Workflow-Run
+vollständig neu starten oder einen gezielten Inspect am gebundenen
+Nachfolger einreichen. Beim identischen Request erkennt der Worker den
+eigenen Nachfolger und lässt Berechnung, Publikation und Verbrauch aus.
+Der ursprüngliche Requestref wird erst nach erfolgreichem Rückdownload
+und erneuter Bindungsprüfung der zuständigen Ack-Operation entfernt.
+Bei einem gezielten Inspect zuerst dessen eigenes Zustellergebnis prüfen.
+
+Zell-/Hinweisansichten verwenden den offiziellen Editorarchivpin aus
+`p1_preflight`. Der Actions-Schlüssel bindet Cacheformat, Repository-ID,
+System, Architektur, Release und Archiv-SHA-256. Jeder Lauf prüft die
+reguläre Datei und den Digest vor dem Entpacken. Bei beschädigtem
+Cacheinhalt wird der lokale Eintrag isoliert und der offizielle Download
+wiederholt. Editor und Import des isolierten Projekts bleiben pro Lauf
+gemeinsam für mehrere Ansichten. Definitionen und Ansichten liegen
+außerhalb des Importscans. Der Renderer erhält keine Schreibidentität.
+Cachezustand, Archivbytes und Zeiten für Prüfung, Download, Entpacken,
+Import und Ansichten erscheinen im Staging-Ergebnis.
 
 ## Antwortverlust und Wiederaufnahme
 

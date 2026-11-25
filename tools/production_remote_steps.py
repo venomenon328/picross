@@ -134,6 +134,8 @@ def step4(req, job, root, scratch):
             asset['prepared'] = {'original_sha256': original['sha256'], 'profile': asset['profile'], 'inspection': None,
                                  'file': {**rendered, 'file': path}}
             files.append({'path': path, 'source': rendered['file'], 'bytes': rendered['bytes'], 'sha256': rendered['sha256']})
+        if 'delivery' in req and not files:
+            return {'status': 'no-op', 'backgrounds': list(offers)}
     else:
         viewed = options['assessment']
         asset = offers.get(viewed['candidate'])

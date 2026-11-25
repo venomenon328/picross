@@ -46,9 +46,13 @@ def request(value):
     require(isinstance(value, dict), 'Expected PW remote request')
     op = value.get('operation')
     require(op in ('step3', 'step4', 'step5', 'status', 'retire', *delivery.READS), 'Unknown PW operation')
+    v2 = value.get('format') == delivery.WIRE_V2
     extra = {'product', 'pr'} if op in ('inspect-product', 'status', 'retire') else {'issue'} if op == 'step5' else set()
+    if v2 and op in ('step3', 'step4') and 'delivery' in value:
+        extra.add('delivery')
     exact_keys(value, common | extra)
-    require(value['format'] == 'pw-remote-v1' and value['repository'] == pw.REPO, 'Different format or repository')
+    require((value['format'] == 'pw-remote-v1' or v2 and op in ('inspect', 'step3', 'step4'))
+            and value['repository'] == pw.REPO, 'Different format or repository')
     require(len(current.encoded(value)) <= LIMIT, 'Oversized remote request')
     current.path(value['job'])
     for field in ('expected', 'tools', 'main'):
@@ -66,6 +70,7 @@ def request(value):
     elif op == 'step3' and isinstance(data, dict) and len(data) == 1:
         from .production_remote_raster import validate
         validate(data)
+        require(v2 or 'protection' not in data.get('fixed', {}), 'Combined protection requires pw-remote-v2')
     elif op == 'step3':
         exact_keys(data, {'motif_sha256', 'design', 'profile', 'label'})
         sha(data['motif_sha256'])
@@ -74,6 +79,9 @@ def request(value):
         design = data['design']
         require(isinstance(design, dict) and isinstance(design.get('variants'), list) and
                 len(design['variants']) == 1, 'One explicitly selected candidate per attempt')
+        if 'delivery' in value:
+            require(isinstance(design['variants'][0], dict), 'Expected an explicitly named import result')
+            current.identifier(design['variants'][0].get('id'))
     elif op == 'step4':
         require(isinstance(data, dict) and set(data) in ({'prepare'}, {'assessment'}), 'Expected background preparation or assessment')
         if 'prepare' in data:
@@ -118,6 +126,8 @@ def request(value):
             current.human(d)
     else:
         exact_keys(data, set())
+    if 'delivery' in value:
+        delivery.result_selection(value)
     return value
 
 
@@ -257,17 +267,19 @@ def run(root, req, auth, token, *, diagnose=False, check_invocation=lambda: None
                 status = retire(area, req, auth, token)
             return {**result, 'status': status, 'next': 'Retirement verified against confirmed main.'}
         work, product = report['work_head'], report['product']
-        base, db = ws.store_for(area, pw.REPO)
-        data = io.safe(base, 'job-' + job)
+        replay_delivery = 'delivery' in req and work != expected
         intent = None
-        if data.exists():
-            binding = ws.read_binding(data)
-            require(binding and binding['role'] == 'job' and binding['job'] == job and Path(binding['store']) == db,
-                    'Foreign local operation directory')
-            raw = io.read(ws.gitdir(data), 'pw-remote-intent.json', 4096, missing=True)
-            if raw:
-                intent = io.json_bytes(raw, 4096)
-                require(intent['id'] == req_id and intent['main'] == req['main'], 'Different private operation intent')
+        if not replay_delivery and io.safe(area, 'picross-production').exists():
+            base, db = ws.store_for(area, pw.REPO)
+            data = io.safe(base, 'job-' + job)
+            if data.exists():
+                binding = ws.read_binding(data)
+                require(binding and binding['role'] == 'job' and binding['job'] == job and Path(binding['store']) == db,
+                        'Foreign local operation directory')
+                raw = io.read(ws.gitdir(data), 'pw-remote-intent.json', 4096, missing=True)
+                if raw:
+                    intent = io.json_bytes(raw, 4096)
+                    require(intent['id'] == req_id and intent['main'] == req['main'], 'Different private operation intent')
         local_owner = intent and (ws.gitdir(data) / 'work-production-catalog-owner').is_file()
         require(report['catalog_lease'] == 'free' or local_owner,
                 'Catalog lease occupied. Owning operator must resume with the original private worktree and journal.')
@@ -309,6 +321,10 @@ def run(root, req, auth, token, *, diagnose=False, check_invocation=lambda: None
         pw.verify_published_assets(root, job, expected, work, published)
         result.update(work=work, published_record_sha256=sha256(published).hexdigest(), status='published',
                       next='Inspect the published raster offer.')
+        if 'delivery' in req:
+            prior = pw.bound_record(pw.remote_record(expected, job), job)
+            record = pw.bound_record(published, job)
+            result['deliver'] = delivery.result_available(req, prior, record)
         if op == 'step3' and 'choice' in req['input']:
             result['next'] = 'Read the approved motif and parameters for the raster design.'
         if op == 'step3' and 'assessment' in req['input']:
@@ -429,16 +445,21 @@ def main():
                     if args.action == 'route':
                         reading = req['operation'] in delivery.READS
                         if reading:
-                            inspect.bound(root, req)
+                            _, record, _ = inspect.bound(root, req)
                         result = {'route': 'read' if reading else 'write', 'mode': mode}
                         if reading and mode == 'execute':
                             result['artifact'] = delivery.artifact_name(inspect.github_context(req, source))
-                            result['cells'] = str(any(i['role'] == 'cells-clues' for i in req['input']['items'])).lower()
-                        with open(os.environ['GITHUB_OUTPUT'], 'a', encoding='utf-8') as out:
-                            for key, value in result.items():
-                                print(key + '=' + value, file=out)
+                            derived = {spec['derive'] for spec in delivery.sources(req, record)}
+                            result['images'] = str(bool(derived - {None})).lower()
+                            result['cells'] = str('cells-clues' in derived).lower()
+                            if result['cells'] == 'true':
+                                from .production_remote_view import cache_key
+                                result['editor_key'] = cache_key(req['repository'])
+                        outputs(result)
                     else:
                         result = inspect.process(args.action, root, req, mode, ref, source, check_invocation)
+                        if args.action == 'inspect-stage' and 'delivery' in req:
+                            outputs({'artifact': result['artifact']})
                     print(json.dumps(result, sort_keys=True))
                     return
                 require(req['operation'] not in delivery.READS, 'Reader request sent to the product writer')
@@ -447,24 +468,44 @@ def main():
                     if mode == 'execute' and req['operation'] != 'status':
                         require(result['catalog_lease'] == 'free',
                                 'Catalog lease occupied. Resume from the owning private journal before starting a new runner.')
-                    images = mode == 'execute' and req['operation'] != 'status'
-                    with open(os.environ['GITHUB_OUTPUT'], 'a', encoding='utf-8') as out:
-                        print('images=' + str(images).lower(), file=out)
+                    images = (mode == 'execute' and req['operation'] != 'status'
+                              and not ('delivery' in req and result['work_head'] != req['expected']))
+                    outputs({'images': str(images).lower()})
                 else:
-                    pw.delete_ref(TOOLS, ref, source)
-                    result['request_ref_removed'] = True
+                    handoff = result.get('deliver', False)
+                    if handoff:
+                        cells = any(i['role'] == 'cells-clues' for i in req['delivery'])
+                        values = {'deliver': 'true', 'cells': str(cells).lower()}
+                        if cells:
+                            from .production_remote_view import cache_key
+                            values['editor_key'] = cache_key(req['repository'])
+                        outputs(values)
+                        result['next'] = 'Publication confirmed. Verify delivery in this run or rerun the bound request.'
+                    else:
+                        check_invocation()
+                        pw.delete_ref(TOOLS, ref, source)
+                        result['request_ref_removed'] = True
+                        if 'delivery' in req and mode == 'execute':
+                            result['next'] = 'No requested result was published. Inspect an existing candidate separately.'
             else:
                 req = request(io.json_bytes(sys.stdin.buffer.read(LIMIT + 1), LIMIT))
                 if args.action == 'submit':
                     pw.repository_check(pw.REPO)
                     result = submit(TOOLS, req, 'preflight' if args.diagnose_only else 'execute')
                 else:
+                    require(args.action != 'execute' or 'delivery' not in req, 'Submit result delivery through Actions')
                     result = run(root, req, args.auth, token, diagnose=args.action == 'preflight')
         print(json.dumps(result, sort_keys=True))
     except (ValueError, OSError, KeyError, TypeError, subprocess.SubprocessError) as exc:
         message = str(exc) if isinstance(exc, ValueError) else type(exc).__name__
         parser.exit(1, f'PW remote blocked: {message}. Read back the bound work, product and PR. '
                        'For an interrupted lease resume only from its owning private journal.\n')
+
+
+def outputs(values):
+    with open(os.environ['GITHUB_OUTPUT'], 'a', encoding='utf-8') as out:
+        for key, value in values.items():
+            print(key + '=' + value, file=out)
 
 
 if __name__ == '__main__':
