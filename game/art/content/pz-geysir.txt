@@ -1,0 +1,4 @@
+author: OpenAI ImageGen
+changes: Originalbytes unverändert.
+source: Native Bildgenerierung für Geysir, Authoring 0.8.0, Schritt 1; Motivbriefing ohne Fremdreferenz.
+usage_basis: Für den beauftragten Picross-Produktionsstand neu generiert; Auftrag umfasst Veröffentlichung als Bildauswahl.
