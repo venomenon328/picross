@@ -424,11 +424,11 @@ class RemoteTests(unittest.TestCase):
              patch.object(pw, 'push_job', side_effect=AssertionError('Replayed mutation')):
             self.assertEqual(result['head'], self.execute(req, fresh)['head'])
         if v2:
-            self.assertNotIn(('issues/None', 'GET'), [(call.args[0], call.args[1] if len(call.args) > 1 else 'GET')
-                             for call in pw.api.call_args_list])
+            self.assertFalse(any(call.args[0].startswith('issues/') for call in pw.api.call_args_list))
             self.assertIsNone(result['pr'])
             self.assertNotIn('issue', result['draft_pr'])
-            product_plan = io.json_bytes(GitSource(self.repo).read(result['head'], '.ci/package.json'), current.LIMIT)
+            plan_raw = git.git(self.repo, 'show', result['head'] + ':.ci/package.json')
+            product_plan = io.json_bytes(plan_raw, current.LIMIT)
             from tools import ci_production_plan
             self.assertEqual(product_plan, ci_production_plan.package(self.job))
             with self.assertRaises(ConnectionError):
