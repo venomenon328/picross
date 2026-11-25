@@ -25,7 +25,7 @@ Im verwalteten PW-Arbeitscheckout bindet `prepare-integration` die Lieferung an 
 
 Publikation und Registrierungsrecovery haben getrennte 1800-s-Defaults und 300-s-Warnung. Fremde/unklare Bytes und offene Journale erhalten. Kontrollierter Abbruch, erfolgreiche Rückführung und offene Recovery getrennt berichten. Der Integrationsbatch benutzt denselben Kern nur für ausdrücklich vorbereitete und autorisierte Jobs; kein zusätzlicher Batchauftrag wird aus einer Einzelintegration abgeleitet.
 
-Im [Remote-Einstieg](../../tools/PW_REMOTE.md) übermittelt der Akteur die gebundenen Entscheidungen an den Main-Worker. Der Worker bestätigt Completion und Produktref. ChatGPT legt den Draft-PR per Connector an und liest dessen CI nach dem Remote-Vertrag. Nach bestätigtem Merge folgt der separate Retirement-Aufruf.
+Im [Remote-Einstieg](../../tools/PW_REMOTE.md) übermittelt der Akteur die gebundenen Entscheidungen an den Main-Worker. Der Worker bestätigt Completion und Produktref. ChatGPT öffnet das verifizierte Fortsetzungs-ZIP in seiner Python-Umgebung, legt den Draft-PR per Connector an und prüft dessen CI nach dem Remote-Vertrag. Bei Wiederaufnahme dient dieselbe Completion als Eingang für eine lesende Zustellung. Nach bestätigtem Merge folgt der separate Retirement-Aufruf.
 
 Für die reguläre Erstintegration den sauberen Branch `content/integrate-<id>` vom aktuellen Main verwenden und den [Produktionsplan](../../tools/PRODUCTION_GIT_WORKSPACE.md#einstieg-und-wiederaufnahme) lokal erzeugen. Beide Ausführungswege verwenden den [CI-Produktionsplan](../../ci/CI_WORKFLOW_V2.md#paketplan-und-verfügbare-module) ohne Pflichtissue. Nach Registrierung Diff und Lieferbytes prüfen, den Registrierungsstand committen und Completion an denselben aktuellen Eingang binden.
 

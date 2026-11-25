@@ -101,11 +101,12 @@ jobs:
           PW_ARTIFACT_DIGEST: ${{ steps.upload.outputs.artifact-digest }}
         run: python3 -B -m tools.production_remote inspect-verify --root "$RUNNER_TEMP" --auth GH_TOKEN
   acknowledge:
-    needs: [request, result]
+    needs: [request, result, continuation]
     if: >-
       always() && !cancelled() &&
       ((needs.request.result == 'success' && needs.request.outputs.route == 'read') ||
-       needs.result.result == 'success')
+       needs.result.result == 'success' ||
+       (needs.request.outputs.route == 'continue' && needs.continuation.result == 'success'))
     runs-on: ubuntu-24.04
     permissions:
       contents: write
@@ -118,16 +119,24 @@ jobs:
           persist-credentials: false
           sparse-checkout: tools
       - name: Confirm current delivery and acknowledge only the request ref
+        if: needs.request.outputs.route != 'continue'
         env:
           GH_TOKEN: ${{ github.token }}
           PW_ARTIFACT_ID: ${{ needs.result.outputs.artifact_id || needs.request.outputs.artifact_id }}
           PW_ARTIFACT_DIGEST: ${{ needs.result.outputs.artifact_digest || needs.request.outputs.artifact_digest }}
         run: python3 -B -m tools.production_remote inspect-ack --root "$RUNNER_TEMP" --auth GH_TOKEN
+      - name: Acknowledge only the verified read-only continuation request
+        if: needs.request.outputs.route == 'continue'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PW_COLLECTION_ROUTE: continue
+        run: python3 -B -m tools.production_remote_continuation ack --root "$RUNNER_TEMP"
   worker:
     needs: request
     if: needs.request.outputs.route == 'write'
     outputs:
       deliver: ${{ steps.work.outputs.deliver }}
+      continuation: ${{ steps.work.outputs.continuation }}
       editor_key: ${{ steps.work.outputs.editor_key }}
     runs-on: ubuntu-24.04
     permissions:
@@ -257,3 +266,46 @@ jobs:
           PW_ARTIFACT_ID: ${{ steps.upload.outputs.artifact-id }}
           PW_ARTIFACT_DIGEST: ${{ steps.upload.outputs.artifact-digest }}
         run: python3 -B -m tools.production_remote inspect-verify --root "$RUNNER_TEMP" --auth GH_TOKEN
+  continuation:
+    needs: [request, worker]
+    if: >-
+      always() && !cancelled() && needs.request.result == 'success' &&
+      (needs.request.outputs.route == 'continue' ||
+       (needs.worker.result == 'success' && needs.worker.outputs.continuation == 'true'))
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+      actions: read
+      pull-requests: read
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+          sparse-checkout: tools
+      - name: Collect bound PR and CI originals
+        id: stage
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PW_COLLECTION_ROUTE: ${{ needs.request.outputs.route }}
+        run: python3 -B -m tools.production_remote_continuation stage --root "$RUNNER_TEMP"
+      - name: Deliver the offline continuation
+        id: upload
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: ${{ steps.stage.outputs.artifact }}
+          path: ${{ runner.temp }}/pw-continuation/
+          if-no-files-found: error
+          retention-days: 1
+      - name: Download and verify the uploaded continuation
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PW_ARTIFACT_ID: ${{ steps.upload.outputs.artifact-id }}
+          PW_ARTIFACT_DIGEST: ${{ steps.upload.outputs.artifact-digest }}
+        run: python3 -B -m tools.production_remote_continuation verify --root "$RUNNER_TEMP"
+      - name: Remove staged continuation originals
+        if: always()
+        run: |
+          rm -f -- "$RUNNER_TEMP/pw-continuation/manifest.json" \
+            "$RUNNER_TEMP/pw-continuation/originals.json" "$RUNNER_TEMP/pw-continuation/production_remote_reader.py"
+          if [ -d "$RUNNER_TEMP/pw-continuation" ]; then rmdir "$RUNNER_TEMP/pw-continuation"; fi

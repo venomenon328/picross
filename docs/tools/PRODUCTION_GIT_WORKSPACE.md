@@ -218,6 +218,10 @@ keine pauschale Prune- oder Altordneraktion. Kleine eigene
 laufinterne Testdaten folgen weiterhin WORKSPACE. Gemeinsame Datenbank,
 aktive Worktrees und erforderlicher Recoveryzustand bleiben erhalten.
 
+Für einen bestätigten Step5-Doppelpush kann der Akteur die Originale zur
+PR-/CI-Fortsetzung [lesend neu zustellen](PW_REMOTE.md#draft-pr-und-package-ci-über-den-connector).
+Unterbrochene Publishertransaktionen verwenden weiterhin ihren gebundenen Besitznachweis.
+
 ## 6. Nachweis und Quellen
 
 PW-LOCAL-A belegt die gemeinsame Objektablage über den kanonischen

@@ -119,6 +119,7 @@ Eingänge erneut.
 | `step3` | – | `motif_sha256`, vollständiges bestehendes Bilddesign unter `design` mit einem benannten Kandidaten, dazu `profile=line\|paired` und `label`. Die gewählte Motivdatei durchläuft Bild-/Rasterhelfer, Proof und unabhängigen Verifier. Der Builder ergänzt Kandidat und Zähler, der Publisher sichert die Ergebnisse zur Sichtung. |
 | `step5` | `issue` (in v2 JSON-null oder tatsächlich zugeordnete positive Issue-ID, in v1 bestehende ID) | `background` enthält die tatsächlich gewählte ID, `none`, `standard` oder JSON-null zur Wiederverwendung. `decisions` enthält nur tatsächlich erklärte, noch benötigte PW-B-Entscheidungen für background/final/integration mit Scope, Inhaltsbindung, Akteur, UTC-Zeit und Erklärung. Bereits abgenommener Record: `{"background":null,"decisions":[]}`. |
 | `step4` | – | `prepare` listet die IDs aller vorgesehenen Hintergrundangebote. Der Worker sichert jede kanonische PNG-Ausgabe. Nach dem Originalabruf schreibt `assessment` die tatsächliche Sichtung je Kandidat fort. |
+| `continue` (v2) | – | Bindet `expected` und `record_sha256` an die Completion. `kind=publication\|ci`, `trigger` und `worker` (beide IDs oder beide null) liefern ein neues lesendes ZIP für dieselbe Generation. |
 | `status` | `product` (Commit), `pr` (Nummer) | Leeres Objekt. Aktueller Produkt-PR und tatsächlicher PR-Lauf mit Head, Basis, Testmerge, Run, Attempt und Checkzuständen. Fehlende, ausstehende oder genehmigungspflichtige Läufe verlangen einen späteren Statusabruf. |
 | `retire` | `product`, `pr` | Leeres Objekt. Separater Prozess mit der nach Completion veröffentlichten Arbeits-SHA und dem aktuellen Main. Er prüft den gemergten zugeordneten PR, die Integration seines Mergecommits und die gelieferte Generation vor dem Retirement. |
 
@@ -146,123 +147,145 @@ den Draft-PR und dessen PR-CI nach dem folgenden Ablauf.
 
 ### Draft-PR und Package CI über den Connector
 
-Vor Step 5 im aktuellen Repository die tatsächlichen Connector-Wege für
-PR-Neuanlage, Git-Refs/Commitobjekte, Contents/Blobs, Release/Assets,
-Commitvergleich, PRs und Actions prüfen. Repositoryname und numerische ID
-an `GET /repos/OWNER/REPO` binden. Lesezugriff und angebotene Schreiboperation
-belegen noch keine erfolgreiche Mutation. Fehlende notwendige Fähigkeiten
-konkret melden. Für die reguläre Erstintegration `format=pw-remote-v2`,
-`operation=step5` und `issue:null` verwenden. Ein ausdrücklich zugeordnetes
-tatsächliches Issue kann als positive Zahl mitgegeben werden. Der Worker
-liefert nach Doppelpush und vollständiger Publisherprüfung `pr-ready` oder
-`pr-bound`. Er gibt Arbeitscommit, Recordhash, Produkthead, Basis,
-Requestdigest und kanonische Draft-Metadaten aus.
+Der Normalweg für v2 verwendet das gebundene Actions-ZIP und den Offline-Reader
+im selben Chat. Vor Step 5 Repositoryname und numerische ID sowie die
+Fähigkeiten für Git Data, PR, Actions-Originaldownload und Python 3.11+
+prüfen. Der Download muss die ZIP-Bytes in derselben Python-Umgebung zugänglich
+machen. Fehlende Fähigkeiten und den letzten gesicherten Stand konkret
+melden. Reguläre Erstintegration verwendet `format=pw-remote-v2`, `operation=step5`
+und `issue:null`. Eine tatsächlich zugeordnete Issue-ID kann mitgegeben werden.
+Die Produkt-PR-Anlage und der genehmigte Merge liegen beim aufrufenden Akteur.
 
-Den [Offline-Reader](../../tools/production_remote_reader.py) an der verbindlichen
-`tools`-SHA lesen und mit Python 3.11+ ausführen. Die JSON-Hülle enthält
-die tatsächlichen Connector-Antworten unter den folgenden Schlüsseln. Alle
-REST-GETs liegen unter `/repos/OWNER/REPO`. Bei `github_fetch` die JSON-Nutzlast
-in `structuredContent.content` dekodieren. Für die Dateiantworten von
-`github_fetch_file` das vollständige `structuredContent` übernehmen, einschließlich
-der unveränderten Textbytes in `content`. Keine JSON-Neuserialisierung des
-Recordtexts, keine Auszüge, keine direkt nachgebauten REST-Hüllen.
+#### Originale und Reader öffnen
 
-| Schlüssel | Original |
-| --- | --- |
-| `repository`, `main_ref`, `main_commit` | Repoobjekt, `git/ref/heads/main`, `git/commits/MAIN` |
-| `request_sha`, `request_commit` | SHA aus dem tatsächlichen Push-Run, `git/commits/REQUEST_SHA` auch nach Entfernung des Requestrefs |
-| `work_ref`, `work_commit` | `git/ref/heads/content/pw/JOB`, `git/commits/WORK` |
-| `input_record`, `completion_record` | `github_fetch_file` für `content/authoring/JOB/current/record.json`, einmal am `expected`-Commit des Requests, einmal am publizierten `WORK`-Commit |
-| `input_record_directory`, `completion_record_directory` | Separate Verzeichnislisten aus `contents/content/authoring/JOB/current?ref=SHA`, jeweils am selben exakten Commit wie die Datei |
-| `step5_worker` | Die unten beschriebene Actions-Bindung zur aktiven Package CI und bestätigten Completion |
-| `product_ref`, `product_commit`, `product_diff` | `git/ref/heads/content/integrate-JOB`, `git/commits/HEAD`, vollständiges `compare/MAIN...HEAD` |
-| `work_tag`, `release` | `git/ref/tags/work-prod-JOB`, `releases/ID` mit vollständigem Assetbestand, ID aus dem Record |
-| `pulls`, `pr` | `pulls?head=OWNER%3Acontent%2Fintegrate-JOB&state=all&per_page=2`; bei genau einem Treffer zusätzlich `pulls/NUMMER` |
+1. Erfolgreichen Push und Main-Worker für den ursprünglichen Step5-Request
+   nachlesen. Nach bestätigtem Doppelpush liefert der lesende Job `continuation`
+   das Artefakt `pw-continue-JOB-REQUEST_SHA-RUN-ATTEMPT`. Im aktuellen
+   erfolgreichen Lauf muss genau dieser Name vorkommen. Artefakt-ID, Name,
+   Länge, Digest, Zeitpunkte und `workflow_run` getrennt über den Einzelabruf
+   oder die frisch gelesene Artefaktliste des Laufs bestätigen. Den tatsächlichen
+   Run erneut nach seinem Abschluss lesen. `REQUEST_SHA` ist die ursprüngliche
+   Step5-Requestcommit-SHA, auch bei neu zugestellter Fortsetzung.
+2. ZIP über den GitHub-Artifact-Download des Connectors direkt als Datei in
+   der Python-Umgebung öffnen. Per unabhängigem `github_fetch_file` den Gitblob
+   von `tools/production_remote_reader.py` an der aktuellen Werkzeug-SHA aus dem
+   geprüften Main lesen. Die zu prüfende ZIP-Mitgliedsdatei liefert der Lauf.
+   Python muss vor der Ausführung genau deren Gitblob-ID prüfen.
+3. Die folgende kurze Standardbibliothekssequenz im Python-Arbeitsbereich
+   verwenden. `archive`, `digest` und `blob` kommen aus den getrennten Reads.
+   Den CLI-Aufruf mit den übrigen Argumenten im selben Arbeitsbereich ausführen.
+   Der Bootstrap entpackt keine Dateipfade und führt ausschließlich den
+   Git-geprüften Reader aus.
 
-Bei verlorener Chat- oder Workerantwort zuerst Arbeits- und Produktref,
-ihre Commitobjekte und den dort übereinstimmenden `PW-Remote:`-Requestdigest
-lesen. Die gesicherte Übergabe mit Requestcommit sowie Push- und Worker-Run
-ist der kürzeste Einstieg. Fehlt sie, erfolgreiche Worker-Kandidaten über
-`actions/runs?event=workflow_run&branch=main&head_sha=MAIN&per_page=100&page=N`
-suchen. Der tatsächliche Run-Titel
-`PW remote work-prod-control/remote/JOB/ENVELOPE_DIGEST` liefert den
-Requestbranch. Dessen Push-Run über
-`actions/runs?event=push&branch=REQUESTBRANCH&per_page=100&page=N` lesen.
-Der Wert von `branch` wird URL-kodiert. Der Push-Run liefert die Head-SHA des
-ursprünglichen Requestcommits auch nach Quittierung des Refs. Job, Commit,
-kanonischen Request- und Envelope-Digest mit dem veröffentlichten Stand
-abgleichen. Bei mehreren Kandidaten nur den tatsächlich gebundenen
-Originalrequest verwenden. Ein vorhandener PR dient mit Marker und
-Head zusätzlich zum Auffinden und wird separat zurückgelesen.
+```sh
+python -I - "$archive" "$digest" "$blob" --tools "$main" \
+  --artifact ID NAME BYTES DIGEST CREATED EXPIRES RUN HEAD REPO_ID HEAD_REPO_ID BRANCH EXPIRED \
+  --collection RUN ATTEMPT HEAD BRANCH PATH REPO_ID STATUS CONCLUSION <<'PY'
+from hashlib import file_digest, sha1
+from pathlib import Path
+import sys
+from zipfile import ZipFile
 
-| Schlüssel in `step5_worker` | Original |
-| --- | --- |
-| `trigger` | `actions/runs/TRIGGER` des gebundenen Request-Pushs aus `work-growth.yml` |
-| `run`, `attempt` | `actions/runs/WORKER_RUN` und `actions/runs/WORKER_RUN/attempts/ATTEMPT` aus `pw-remote.yml` für denselben Request |
-| `jobs` | Alle Seiten von `actions/runs/WORKER_RUN/attempts/ATTEMPT/jobs?per_page=100&page=N` |
-| `job_id`, `log` | Numerische ID des Jobs `worker` und der unveränderte Logtext aus `github_fetch_workflow_job_logs` für genau diese ID (`structuredContent.content`) |
-
-Der Reader bestätigt Pfad, Commit, Größe und Git-Blob-SHA jeder Recorddatei
-gegen die getrennte Verzeichnisantwort. Den Eingangs-SHA-256 bindet er an
-den Request, den Completion-SHA-256 an die Publikationszeile des gebundenen
-Workers. Dessen erfolgreiches Preflight hat den Pfad
-`.github/workflows/ci-modular.yml` und den aktiven Status geprüft. Die ID
-aus genau diesem Preflight gibt der Reader als `package_ci_workflow_id` aus.
-
-```text
-python production_remote_reader.py originals.json
+path, digest, blob, *options = sys.argv[1:]
+archive = Path(path)
+if not 0 < archive.stat().st_size <= 17 * 1024**2:
+    raise SystemExit("Unexpected ZIP length")
+with archive.open("rb") as stream:
+    if "sha256:" + file_digest(stream, "sha256").hexdigest() != digest:
+        raise SystemExit("Different artifact digest")
+    stream.seek(0)
+    with ZipFile(stream) as bundle:
+        rows = [row for row in bundle.infolist() if row.orig_filename == "production_remote_reader.py"]
+        if len(rows) != 1 or not 0 < rows[0].file_size <= 131072:
+            raise SystemExit("Expected one bounded Reader")
+        code = bundle.read(rows[0])
+if sha1(f"blob {len(code)}\0".encode() + code).hexdigest() != blob:
+    raise SystemExit("Different trusted Git blob")
+sys.argv[:] = ["production_remote_reader.py", "continuation",
+               "--archive", path, "--reader-blob", blob, *options]
+exec(compile(code, "production_remote_reader.py", "exec"), {"__name__": "__main__"})
+PY
 ```
 
-Bei `pr-ready` die zurückgegebenen `draft_pr`-Felder verwenden und
-`content/integrate-JOB` → `main` direkt über den Connector als Draft eröffnen.
-Der Body enthält den vollständigen Marker
-`<!-- picross-production JOB REQUESTDIGEST -->`. Übergib die optionale
-Issue-Referenz im Body und lasse den API-Parameter `issue` weg.
-Anschließend die getrennten Ref- und PR-Reads am aktuellen Stand bestätigen
-und mit `--expect-draft` prüfen. Bei Antwortverlust oder gleichzeitigem
-Anlageversuch zuerst erneut alle Zustände über denselben Head suchen.
-Ein offener zugehöriger PR ergibt `pr-bound`. Ein geschlossener, fremder,
-veränderter oder mehrdeutiger Treffer blockiert die Anlage. Bei Abweichungen
-den konkreten Befund festhalten. Ein frischer Chat setzt so am bestätigten
-Completionstand fort. Bei bereits erfolgreicher Veröffentlichung sind
-Fachrechnung, Wahl und Budgetstand abgeschlossen.
+`--artifact` entspricht der originalen Artifact-ID, `name`, `size_in_bytes`,
+`digest`, `created_at`, `expires_at`, den Run-Feldern `id`, `head_sha`,
+`repository_id`, `head_repository_id`, `head_branch` und `expired`. Für
+`--collection` die unabhängig frisch gelesenen Run-Felder verwenden:
+`id`, `run_attempt`, `head_sha`, `head_branch`, `path`, `repository.id`,
+`status`, `conclusion`. `EXPIRED` ist `true` oder `false`.
+Die erste Ausführung gibt `read-live` mit den benötigten Quellen und IDs aus.
+Dann folgende Werte direkt über den Connector ermitteln und je einen
+`--fresh NAME WERT`-Parameter ergänzen. `null`, `true` und `false` kleinschreiben,
+Zahlen dezimal angeben. Gleichheit muss der Reader feststellen.
 
-CI mit demselben Reader auswerten. Dazu `ci` mit folgenden Originalen ergänzen:
-
-| Schlüssel in `ci` | Original |
+| Name | Frisch gelesener Wert |
 | --- | --- |
-| `repository_runs` | Alle Seiten aus `actions/runs?event=pull_request&branch=content%2Fintegrate-JOB&head_sha=HEAD&per_page=100&page=N`. Der Reader wählt nach Package-CI-Pfad und bestätigter Workflow-ID. |
-| `run`, `attempt` | `actions/runs/RUN` und `actions/runs/RUN/attempts/ATTEMPT` für den passenden höchsten `run_number` und dessen aktuellen Versuch |
-| `jobs` | Bei abgeschlossenem Run alle Seiten aus `actions/runs/RUN/attempts/ATTEMPT/jobs?per_page=100&page=N` |
-| `test_merge` | `git/commits/TESTMERGE` aus dem aktuellen offenen PR, Eltern in der Reihenfolge Basis und Head |
+| `repository` | Numerische ID aus dem Repositoryobjekt. |
+| `main`, `work`, `head` | SHAs der Refs `main`, `content/pw/JOB` und `content/integrate-JOB`. |
+| `request-commit`, `trigger`, `worker` | `head_sha` des ursprünglichen Pushs sowie je Run `id:run_attempt:status:conclusion` aus `actions/runs/ID`. |
+| `tag`, `release` | Commit des Tags `work-prod-JOB` sowie `id:target_commitish:draft:prerelease:immutable` aus `releases/ID`. |
+| `assets` | Alle Seiten von `releases/ID/assets`. Je Asset `id:name:size:label:state`, die vollständigen Zeichenketten lexikografisch sortieren und mit Komma verbinden. Ohne Assets `empty`. |
+| `workflow-file` | Blob-SHA der `.github/workflows/ci-modular.yml` am aktuellen Main. Der Sammler bindet den aktiven Workflow an das ursprüngliche Worker-Preflight. |
+| `slot`, `pr` | Über `pulls?head=OWNER%3Acontent%2Fintegrate-JOB&state=all&per_page=2` den leeren Slot als `empty` oder die eindeutige PR-Nummer lesen. Für einen gebundenen PR außerdem `number:state:draft:mergeable:mergeable_state:merge_commit_sha:base.sha:head.sha:REQUESTDIGEST` direkt aus dem einzelnen PR, einschließlich seines vollständigen Besitzmarkers und der erwarteten Head-/Basis-Repositories und Refs. |
+| `ci` | Nur für CI. Alle Seiten aus `actions/runs?event=pull_request&branch=content%2Fintegrate-JOB&head_sha=HEAD&per_page=100&page=N`. Nach `.github/workflows/ci-modular.yml` und gebundener Workflow-ID suchen. Den neuesten passenden `run_number` mit aktuell gelesenem Versuch als `workflow_id:id:run_attempt:status:conclusion` übergeben, ohne Treffer `missing`. |
 
-Nur `checks-passed` bestätigt erfolgreiche `docs`, `verify (source)` und
-`ci-required` samt übersprungenem `review-attachment` im tatsächlich
-gebundenen Versuch. Der erfolgreiche Checkout-Schritt in `docs` muss
-`PR N / HEAD / BASE / TESTMERGE` exakt enthalten. Bei ausstehendem Versuch
-die aktuellen Antworten nach der tatsächlichen GitHub-Ausführung erneut lesen.
-`status` ist der bedarfsweise Ersatz, falls der Connector notwendige
-Originalmetadaten nicht liefern kann. Ein allgemeiner Workflow-Dispatch
-belegt keinen PR-Testmerge.
+Das Archiv enthält ausschließlich `manifest.json`, `originals.json` und den
+Git-geprüften Reader. Der Sammler übernimmt vollständige erforderliche
+REST-Originale, alle gebundenen Job- und Assetseiten, die unveränderten
+Git-Recordbytes und genau zwei Originalzeilen aus dem gebundenen Workerjob.
+Der Reader vergleicht die vollständigen Lieferpfade mit Completion. Er prüft
+ZIP-Länge, SHA-256, Mitgliedsnamen, Manifest, Ausführungsrevision, Attempt und
+Ablauf. Die Aufbewahrung beträgt einen Tag. Die entpackten Nutzdaten müssen
+keine Chatnachricht und keine händisch erstellte JSON-Hülle durchlaufen.
 
-Der Original-REST-Weg bleibt nutzbar, wenn die vollständigen Antworten verfügbar
-sind. Dabei die originalen Contents-Hüllen mit Base64-Bytes als
-`input_record` und `completion_record` verwenden. Die Verzeichnis- und
-Worker-Schlüssel entfallen. In `ci` `workflow` aus
-`actions/workflows/ci-modular.yml` sowie alle Seiten der Workflow-spezifischen
-Runliste als `runs` verwenden. Die übrigen Run-, Attempt-, Job- und Testmerge-
-Originale bleiben Teil der Prüfung. Dieser Weg gilt auch für vorhandene
-gebundene v1-Aufträge. Falls die nötigen Quellen fehlen, das fehlende Original
-benennen und die betroffene Freigabe offenhalten.
+#### Draft, CI und Wiederaufnahme
 
-Im Produkt-PR Eingang, Completion, Request, Produktcommit, Auswahl und
-Endabnahme kompakt belegen. Den vollständigen Diff, gebundene Lieferoriginale,
-das eigene Selbstreview und den tatsächlichen CI-Lauf verlinken.
-Vor einem autorisierten Merge Main, Head, Basis, Testmerge und CI erneut
-prüfen sowie Konfliktfreiheit und Schutzstatus bestätigen. Nach bestätigtem
-Main die passende Generation mit `retire` abschließen. Bestätigten
-Main/Retirement und gegebenenfalls offene Reste im Produkt-PR kommentieren.
-Der normale Produktionsauftrag läuft ohne eigenständiges Produktionsissue.
+Bei `pr-ready` die `draft_pr`-Daten unverändert für den Draft
+`content/integrate-JOB → main` verwenden. `issue` als API-Parameter entfällt.
+Danach PR-Slot, PR-Head, Basis, Besitzer und Draftstatus separat frisch
+zurücklesen. Bei Antwortverlust zuerst denselben Slot zurücklesen. Ein
+offener zugehöriger PR ergibt `pr-bound`, mehrere, geschlossene oder fremde
+Treffer blockieren. Der vollständige Produktdiff, erforderliche
+Originalsichtungen und die gebundene Endabnahme bleiben Voraussetzungen.
+
+Sobald GitHub die PR-CI ausgeführt hat, die Originale einmal gezielt über
+`operation=continue` mit `input.kind=ci` zustellen. Die Aufrufform entspricht
+dem normalen Requestcommit mit unverändertem Main-Baum und dem erwarteten
+neuen Requestref. Vor dem Sammeln den zu prüfenden Draft-/Ready-Stand herstellen,
+sobald dessen zugehörige Freigaben vorliegen.
+Die Lesestrecke startet über den vorhandenen Push-Trigger, arbeitet ohne
+Kataloglease und quittiert ausschließlich ihren eigenen Requestref nach
+Rückdownload und Archivprüfung. Sie publiziert keine Arbeit/Produkte.
+`expected` und `record_sha256` binden hier die **Completion**. `main` und
+`tools` binden den frisch gelesenen Main. `input` enthält genau `kind`,
+`trigger` und `worker`. Für `trigger` und `worker` die ursprünglichen
+Step5-Run-IDs angeben, falls bekannt, sonst beide `null`. Die automatische
+Suche verwendet den gemeinsamen Besitzdigest aus den publizierten Commits.
+Bei mehrdeutigem Suchergebnis die unabhängig belegten IDs verwenden.
+Für eine verlorene oder abgelaufene Erstzustellung `kind=publication`
+verwenden. Auch ein passender publizierter E-Stand kann so fortgesetzt werden,
+wenn der ursprünglich gebundene Step5-Main weiterhin passt. Wenn Main
+weitergerückt ist und der Produktparent nicht mehr passt, den gebundenen
+Recoveryweg prüfen und die nötige Nacharbeit melden.
+
+`checks-passed` setzt erfolgreiche `docs`, `verify (source)` und
+`ci-required`, einen übersprungenen `review-attachment`, die exakte
+erfolgreiche `PR N / HEAD / BASE / TESTMERGE`-Zeile und die tatsächlichen
+Testmerge-Eltern voraus. Fehlende, ausstehende, genehmigungspflichtige und
+rote Läufe behalten ihren Status. Vor einem autorisierten Merge Main,
+PR, Head, Basis, Testmerge, neuen Run oder Attempt, Konfliktfreiheit und
+Branchschutz direkt per Connector erneut bestätigen. Schutz am
+`branches/main`-Objekt und die für den Akteur erreichbaren Regeln prüfen.
+`status` bleibt Diagnose für ältere gebundene Aufträge und liefert keine
+strengere CI-Freigabe. Historische v1-Aufträge behalten den direkten
+Original-CLI-Eingang `python production_remote_reader.py originals.json`.
+Vor einem Aufruf ohne bestätigte Completion gilt der bestehende
+[Recoveryweg](#antwortverlust-und-wiederaufnahme).
+
+Im Produkt-PR Auswahl, Endabnahme, Originale, vollständigen Diff, eigenes
+Selbstreview und den tatsächlichen CI-Lauf belegen. Nach bestätigtem Main
+die passende Generation mit `retire` abschließen und das Ergebnis im
+Produkt-PR dokumentieren.
 
 ## Aufrufzugang und Betrieb
 
