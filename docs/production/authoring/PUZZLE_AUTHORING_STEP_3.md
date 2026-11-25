@@ -160,6 +160,11 @@ Korrekturmöglichkeiten nach §4.5 vorlegen.
 
 ### 4.4 Reparaturen und Änderungen
 
+Im Remoteweg den Kandidaten am aktuellen Arbeitsref über `diagnosis`,
+`profile_check`, `fixed` oder `repair` adressieren. Für die erklärte
+Wahl nach der Sichtung `select` mit den konkreten Befundentscheidungen
+verwenden. Felder und Zählwirkung stehen im [Workervertrag](../../tools/PW_REMOTE.md#schritt-3-am-veröffentlichten-kandidaten).
+
 Konkrete kleine Kontur-/Flächenmängel und störende leere Außenlinien innerhalb
 des freigegebenen Korridors vor Rückgabe bearbeiten, auch bei solved. Gute
 Kandidaten nicht unnötig ändern. Reguläre feste Korrektur folgt

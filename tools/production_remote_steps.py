@@ -52,6 +52,9 @@ def editorial(job, options, root, scratch):
 
 
 def step3(req, job, root, scratch):
+    if not {'choice', 'assessment', 'design'}.intersection(req['input']):
+        from .production_remote_raster import execute
+        return execute(req['input'], job, root, scratch)
     if 'design' not in req['input']:
         return editorial(job, req['input'], root, scratch)
     from .puzzle_production import images
@@ -77,9 +80,17 @@ def step3(req, job, root, scratch):
     design_file = scratch / 'design.json'
     design_file.write_bytes(current.encoded(design))
     output = scratch / 'candidates'
+    from .production_remote_derivation import duplicate
     result = current_tools.image(io.safe(root, motif['file']['file']), design_file, output,
-                                 puzzle_id=req['job'], name=job['title'], profile=options['profile'])
+                                 puzzle_id=req['job'], name=job['title'], profile=options['profile'],
+                                 existing_candidate=lambda definition: duplicate(job, definition, root))
     candidate, = result['candidates']
+    if 'duplicate' in candidate:
+        draft = deepcopy(job)
+        draft['budgets']['used']['raster_candidates'] = max(used, len(job['rasters'])) + 1
+        current.build({'format': current.REQUEST, 'record': draft, 'expected': io.checksum(current.encoded(job)),
+                       'files': []}, scratch, root)
+        return {'raster': candidate['duplicate'], 'outcome': 'duplicate'}
     row = {'id': candidate['id'], 'label': options['label'], 'review': {}, 'exceptions': []}
     files = []
     for field, ref in candidate['files'].items():

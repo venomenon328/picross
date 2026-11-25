@@ -28,7 +28,7 @@ def key(job, item, kind, inputs):
 def raster_key(job, raster):
     assets = {a['id']: a for a in job['assets']}
     return key(job, raster, 'raster', [
-        {k: v for k, v in raster.items() if k not in ('label', 'review')}, job['parameters']['approved'],
+        {k: v for k, v in raster.items() if k not in ('label', 'review', 'last_repair')}, job['parameters']['approved'],
         [assets[k]['file'] for k in (job['selected']['reveal'], job['selected']['motif']) if k in assets],
         [d.get('crop_protection') for d in job['decisions'] if d['scope'] == 'motif'], job['title']])
 
@@ -124,9 +124,10 @@ def _published(record):
 def remember_raster_parts(raster, row):
     details = row['diagnostics']['qualification']
     definition = raster['definition']['sha256']
-    if raster['proof'] and details['certified']:
+    if raster['proof']:
         remember(('verified-proof', details['logic_hash'], raster['proof']['sha256']),
-                 {'proof_verified': True, 'certified': True})
+                 {'proof_verified': True, 'certified': details['certified']})
+    if raster['proof'] and details['certified']:
         remember(('end-matrix', definition, raster['proof']['sha256']), True)
     if raster['difficulty']:
         remember(('checked-rating', definition, raster['difficulty']['sha256']), True)

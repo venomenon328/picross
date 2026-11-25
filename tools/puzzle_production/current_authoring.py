@@ -196,9 +196,20 @@ def validate(job):
     raster_ids=set()
     for raster in job['rasters']:
         optional = {'crop_diagnosis'} if structured and 'crop_diagnosis' in raster else set()
-        exact_keys(raster, {'id','label','definition','proof','difficulty','preview','review','exceptions'} | optional)
+        repair_result = {'last_repair'} & raster.keys()
+        exact_keys(raster, {'id','label','definition','proof','difficulty','preview','review','exceptions'} | optional | repair_result)
+        if repair_result:
+            last = exact_keys(raster['last_repair'], {'plan', 'definition_sha256', 'outcome', 'reason', 'candidates', 'proposals'})
+            ap.sha(last['plan'])
+            ap.require(last['definition_sha256'] == raster['definition']['sha256'] and
+                       last['outcome'] in ('found', 'budget_exhausted', 'aborted'), 'Stale repair summary')
+            integer(last['candidates'], 0, 128, 'repair evaluations')
+            integer(last['proposals'], 0, 1024, 'repair proposals')
+            if last['reason'] is not None:
+                text(last['reason'], 'repair end reason')
         if optional:
-            crop = exact_keys(raster['crop_diagnosis'], {'format', 'parameters_sha256', 'rectangle', *CROP_REFS})
+            crop = raster['crop_diagnosis']
+            exact_keys(crop, {'format', 'parameters_sha256', 'rectangle', *CROP_REFS} | ({'edits'} & crop.keys()))
             ap.require(crop['format'] == CROP_DIAGNOSIS and PHASES.index(job['state']) >= 4,
                        'Invalid current crop diagnosis format or phase')
             ap.sha(crop['parameters_sha256'])
@@ -465,9 +476,7 @@ class Checked:
         ap.require(crop['parameters_sha256'] in options, 'Crop diagnosis belongs to stale parameters')
         index, option = options[crop['parameters_sha256']]
         colors = len(definition['palette'])
-        ap.require(any((v['width'], v['height'], v['mode'], v['foreground_colors']) ==
-                       (before['width'], before['height'], mode, colors) for v in option['imports']),
-                   'Before raster differs from the approved import dimensions, mode or color count')
+        raster_parameters.result(option, {**before, 'mode': mode}, before['solution'], empty=0)
         mask = io.json_bytes(self.bound(crop['protection'], LIMIT), LIMIT)
         exact_keys(mask, {'before_sha256', 'motif_sha256', 'cells'})
         motif = next(a for a in self.job['assets'] if a['id'] == self.job['selected']['motif'])
@@ -480,8 +489,11 @@ class Checked:
         removed = raster_parameters.crop_rectangle(crop['rectangle'], before['width'], before['height'], mask['cells'],
                     option['derivation']['empty_edge_crop'], before['solution'], empty=0)
         left, top, right, bottom = crop['rectangle']
+        edits = crop.get('edits', [])
+        expected = raster_parameters.edit_rectangle(before['solution'], mask['cells'], crop['rectangle'], edits,
+                    option['derivation'], 2500, {p['id'] for p in before['palette']}, empty=0)
         ap.require(any(removed.values()) and (right-left, bottom-top) == (definition['width'], definition['height']) and
-                   [row[left:right] for row in before['solution'][top:bottom]] == definition['solution'],
+                   expected == definition['solution'],
                    'End raster differs from the declared empty-edge crop')
         self.check_preview(crop['preview'], before, mode, allow_legacy=False)
         alternative = deepcopy(option)
@@ -490,7 +502,7 @@ class Checked:
             constraint = option['constraints'][axis]
             actual = definition[axis]
             if not raster_parameters.accepts(constraint, actual):
-                ap.require(constraint['kind'] == 'approximate' and constraint['minimum'] is not None and
+                ap.require(not edits and constraint['kind'] == 'approximate' and constraint['minimum'] is not None and
                            actual < constraint['minimum'], 'Crop violates a hard axis or is not below an approximate minimum')
                 changes[axis] = {'previous': constraint['minimum'], 'proposed': actual}
                 alternative['constraints'][axis]['minimum'] = actual
@@ -700,6 +712,7 @@ def check_transition(previous, job):
                 old_crop = prior['crop_diagnosis']
                 new_crop = raster.get('crop_diagnosis')
                 ap.require(new_crop and new_crop['rectangle'] == old_crop['rectangle'] and
+                           new_crop.get('edits') == old_crop.get('edits') and
                            all(work_assets.local_ref(new_crop[k]) == work_assets.local_ref(old_crop[k]) for k in CROP_REFS),
                            'Existing crop proof cannot be replaced for the same end raster')
     if job['format'] in findings.FORMATS and job['blockers']:

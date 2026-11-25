@@ -182,6 +182,79 @@ die Registrierung verlangt den committed synthetischen Katalogmarker. Die
 [Paketentscheidung](https://github.com/venomenon328/picross/issues/859#issuecomment-7131900027)
 trennt den isolierten Nachweis von der produktiven Betriebsfreigabe.
 
+### Schritt 3 am veröffentlichten Kandidaten
+
+| Vorgang | Vor C | Aufruf in `step3.input` | Verbrauch (Rasterversuche, Reparaturrunden) und neu fällige Prüfung |
+| --- | --- | --- | --- |
+| Motivwahl, Import, Originalabruf, Sichtung | A/B | `choice`, `design`, separate `inspect`-Operation, `assessment` | Import 1/0. Eigene Definition, Proof, Difficulty und Ansichten prüfen. Sichtung 0/0. |
+| Offene Domains, Kreuzlinien, bei Bedarf Lösungszeugen | Proof abrufbar | `diagnosis` | 0/0. Gelesene Definition und Proof binden. Suche nur bei ausdrücklicher Anforderung für einen offenen Fall. |
+| Profilprüfung | lokaler Rasterhelfer | `profile_check` | 0/0. Definition, Revision und gestalterische Urteile bleiben gebunden. Geänderten Proof, Difficulty und Q-H03 prüfen. |
+| Feste Korrektur, leerer Randbeschnitt | lokale feste Ableitung, Crop-Reader | `fixed` | 1/0 je tatsächlichem Ableitungsversuch. Voller unveränderter Ausschnitt ohne Edit 0/0. Nach Zell- oder Maßänderung neue Revision und Rasterprüfung. |
+| RP-5 | Suchkern mit Importbundle | `repair` | 1/1 für die tatsächlich ausgeführte Suche einschließlich Nichtfund oder Abbruch. Nur einen neuen Nutzstand bei Fund aufnehmen. |
+| Korridor, Motivschutz oder Budget anpassen | Builder | `parameters`, `budget` | 0/0. Tatsächliche Erklärung binden. Nur betroffene technische Fakten aktualisieren. |
+| Technische Ausnahme, Befundannahme, Wahl | PW-B und PW-FIND | `exception`, `findings`, `select` | 0/0. Konkrete Belege bzw. angenommene Befunde an den Kandidaten binden. Die erklärte Wahl führt direkt zu `background_review`. |
+
+Keine dieser Operationen verbraucht eine Bildkorrektur. Ungültige Eingänge
+scheitern vor der Fortschreibung. Die bestätigte Arbeits-SHA und der
+Requestdigest identifizieren die Wiederaufnahme nach Antwortverlust.
+
+Alle neuen Aufrufe verwenden den bestehenden Umschlag `pw-remote-v1`.
+`input` enthält genau einen Operationsnamen mit einem Objekt. Dessen
+`source` enthält `candidate,revision,definition_sha256,matrix_sha256,proof_sha256,motif_sha256,parameters_sha256`.
+Dateihashes beziehen sich auf die unveränderten Bytes. Der Matrixhash bindet
+das kanonische JSON der numerischen `solution`, der Parameterhash die vollständige
+Liste `parameters.approved` (SHA-256 ohne Abschluss-LF, wie `contract.digest`).
+Ein fehlender Proof hat den Wert null. Der äußere Recordhash bindet zusätzlich
+Releasegeneration, Asset-IDs, Befunde und Entscheidungen.
+
+| Objekt | Weitere Pflichtfelder neben `source` |
+| --- | --- |
+| `diagnosis` | `uniqueness` (bool), `max_nodes` (0–100000). Antwort enthält offene Domains mit Originalkoordinaten, Zeilen/Spalten, Profil und Endgrund. Bei angeforderter Suche kommen Ressourcen, geprüfte Zeugen und bei zwei Lösungen deren Differenzpositionen hinzu. |
+| `profile_check` | `profile` (line oder paired), `rationale`. Eine vollständige Zertifizierung wird wiederverwendet. Das aktuelle Runtimeformat verwendet auch für eine Vordergrundfarbe v2-Hinweise. Der konkrete Paarproof nennt sein passendes Wireprofil. |
+| `fixed` | `output,label,profile,rationale,cells,mask_sha256,edits,crop,max_changes`. Die Maske ist eine vollständige boolesche Matrix. Ihr Hash gilt für die kanonischen Dateibytes einschließlich LF von `{before_sha256,motif_sha256,cells}`. `edits` verwendet numerische IDs und 0 für leer, `crop` ist das halboffene Originalrechteck. Beispiel für einen einzelnen Edit ist `{"x":4,"y":0,"before":0,"after":1}`. |
+| `repair` | Dieselben Felder bis einschließlich `mask_sha256`, dazu `config,extra_changes_reason`. Das Config-Objekt enthält die [RP-5-Suchparameter](../../examples/rp5/README.md). Nur zulässige Regionen der Hypothese freilassen. Ein höheres Zellbudget in einer späteren Runde braucht eine konkrete Vorabbegründung, sonst ist `extra_changes_reason` null. |
+| `exception` | `criterion,evidence,declaration`. Für einen diagnostizierten Randbefund `frame` verwenden, für ein konkretes negatives Farbpaar z. B. `palette:1:2`. Der Worker speichert die erklärten Belegbytes und bindet die Definition. |
+| `findings`, `select` | `finding_decisions` enthält pro behandeltem Befund `id,expected,action,treatment,actor,timestamp_utc,statement`. `expected` ist dessen aktueller PW-FIND-Bindungshash. Die Wahl enthält zusätzlich `declaration`. Für eine bereits wirksame Annahme genügt die leere Liste. |
+
+`parameters` verwendet anstelle von `source` die Felder
+`previous,motif_sha256,approved,declaration`. `previous` bindet die alte
+Parameterliste. Die neue Erklärung bindet den tatsächlich genehmigten vollständigen
+Korridor und gegebenenfalls `crop_protection` (Definitionshash → Maskendateihash).
+Der Worker prüft frühere Beschnitte am neuen Korridor und Motivschutz. Kompatible
+Beschnitte behalten ihre Originalbelege. Inkompatible entfernt der Builder aus
+der aktuellen Auswahl, die Antwort nennt ihre IDs in `retired_crops`.
+Bereits verbrauchte Versuche zählen weiter.
+Für geänderte Grenzen bei `budget` gelten `previous,limits,declaration` mit
+dem Digest der alten Limits. Jede Erklärung enthält `actor,timestamp_utc,statement`.
+Für ein gespeichertes Raster ohne frühere Maskendatei können RP-5 und feste
+Zelledits die vorhandene Merkmalsfreigabe direkt nutzen. Dazu in
+`feature_cells` jeden genehmigten Merkmaltext als `feature` mit zugehörigen
+geschützten Originalkoordinaten `cells:[[x,y],…]` angeben und die tatsächlich
+richtige Maske anhand des Motivs prüfen. Eine bereits gebundene Maske muss
+bytegenau passen. Für einen Beschnitt an geschützten Motiven gilt zusätzlich
+die PW-B-Bindung der Schutzdatei in der tatsächlichen Motiventscheidung.
+Bei RP-5 ist die Suchregion durch die ungeschützten Zellen festgelegt.
+Mit `region:[[x,y],…]` lässt sie sich vor der Suche auf einzelne
+ungeschützte Originalkoordinaten einschränken, etwa auf eine offene Lasche.
+Eine kombinierte Korridor- und Rasterentscheidung kann der Akteur aus derselben
+Erklärung in zwei gebundenen Requests vollziehen. Vor der Wahl die neue
+Qualifikation und aktuelle Source am bestätigten Arbeitsref zurücklesen.
+
+Die Workerantwort nennt Requestdigest, Vorgänger, Arbeitscommit, Recordhash und
+gemessene Sekunden. Bei Festkorrektur, Profilprüfung oder RP-5 kommen Kandidat,
+Proofstatus und Zertifizierung bzw. bei Nichtfund Suchendgrund und Verbrauch
+hinzu. Die Zahl tatsächlich vorhandener Alternativen kann unter dem kumulativen
+Versuchszähler liegen. Nach Publikation die Ansichten über `inspect` öffnen.
+Bei RP-5 teilen sich die Solverläufe und die unabhängige Verifikation der
+Endproofs das reservierte Abschlussbudget. Auch die erneuten R4-Prüfungen
+für die aktuelle SD2-Bewertung verwenden dieselben verbleibenden Linien,
+dieselbe Paararbeit und dieselbe monotone Frist. Die eigenständige SD2-Analyse
+und deren Spurprüfung behalten ihre eigenen Budgets. Ein kontrollierter Abbruch
+speichert den konkreten Endgrund und den Verbrauch am bisherigen Entwurf.
+Der Worker verwendet
+bei fester Korrektur und Profilprüfung standardmäßig 120 Sekunden und 100000
+Linienauswertungen für den Solver sowie dieselben Grenzen für den Prüfer.
+
 ### Hintergrundwahl und Befundannahmen in Schritt 5
 
 Vor der Auswahl fordert der Akteur in Schritt 4 die Vorbereitung aller

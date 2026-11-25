@@ -63,6 +63,67 @@ def background_offer(case):
             'finding_decisions': [{**declaration, 'expected': row['decision']['binding'], 'id': row['id'], 'target': 'sky'}]}
 
 
+def color_repair_fixture(job, directory, *, paired_gap=False):
+    """Two-colour clasp. The gap beside the upper bar can be joined; the left column is empty."""
+    from io import BytesIO
+    from PIL import Image
+    from tools.puzzle_production import current_tools, editor_raster
+
+    key = job['puzzle_id']
+    upper = '012000' if paired_gap else '012100'
+    values = [[int(c) for c in line] for line in (upper, '010001', '000021', '000110')]
+    defined = {'schema': 2, 'id': key, 'revision': 1, 'width': 6, 'height': 4,
+               'palette': [{'id': 1, 'color': 'a43821', 'symbol': 'A'}, {'id': 2, 'color': '214a80', 'symbol': 'B'}],
+               'solution': values, 'rows': [editor_raster.clues(r) for r in values],
+               'columns': [editor_raster.clues(r) for r in zip(*values)],
+               'reveal': {'definition_id': key, 'image': 'res://art/content/'+key+'.png', 'name': job['title'], 'version': 1}}
+    job.update(format=current.findings.LOCAL, findings=[], instructions={}, state='raster_review')
+    files = []
+
+    def attach(name, raw):
+        (directory / name).write_bytes(raw)
+        ref = current.content.ref('content/authoring/'+key+'/data/'+name, raw)
+        files.append({'path': ref['file'], 'source': name, 'bytes': len(raw), 'sha256': ref['sha256']})
+        return ref
+
+    motif = current.raster_image(defined, neutral=False)
+    gap = 3 if paired_gap else 4
+    motif.paste((164, 56, 33, 255), (gap*12, 0, (gap+1)*12, 12))
+    for role, scale in [('reveal', 2), ('motif', 1)]:
+        buf = BytesIO()
+        motif.resize((motif.width*scale, motif.height*scale), Image.Resampling.NEAREST).save(buf, format='PNG')
+        job['assets'].append({'id': role+'-a', 'role': role, 'label': 'Synthetic two-colour clasp',
+            'file': attach(role+'.png', buf.getvalue()), 'rights': {'author': 'Synthetic test', 'source': 'Generated cells',
+            'changes': 'Synthetic test fixture', 'usage_basis': 'Own synthetic pixels'},
+            'review': fixtures.judgment(current.CRITERIA[role])})
+        job['selected'][role] = role+'-a'
+    opts = {'format': current.raster_parameters.FORMAT, 'constraints': {
+        'width': {'kind': 'approximate', 'target': 6, 'minimum': 6, 'maximum': 7},
+        'height': {'kind': 'exact', 'target': 4, 'minimum': 4, 'maximum': 4},
+        'foreground_colors': {'kind': 'exact', 'target': 2, 'minimum': 2, 'maximum': 2}},
+        'imports': [{'width': 6, 'height': 4, 'mode': 'color', 'foreground_colors': 2, 'method': 'area',
+                     'fit': 'exact', 'actual_crop': [0, 0, 72, 48]}],
+        'derivation': {'cell_edits': True, 'empty_edge_crop': ['left'], 'protected_features': ['Clasp contours and openings']}}
+    job['parameters'] = {'proposed': [opts], 'approved': [opts]}
+    result = current_tools.raster(defined, directory/'line', mode='color')
+    if result['status'] != 'stalled':
+        raise AssertionError('Fixture requires an independently checked stalled reference')
+    row = {'id': 'clasp', 'label': '6 × 4 · zweifarbige Schließe mit offener Lasche', 'review': {}, 'exceptions': []}
+    for k, ref in result['files'].items():
+        row[k] = ref and attach(ref['file'], (directory/'line'/ref['file']).read_bytes())
+    job['rasters'] = [row]
+    job['budgets']['used']['raster_candidates'] = 1
+    cells = [[x != 0 and (x, y) != (gap, 0) for x in range(6)] for y in range(4)]
+    protected = {'before_sha256': row['definition']['sha256'], 'motif_sha256': job['assets'][-1]['file']['sha256'], 'cells': cells}
+    mask_hash = io.checksum(current.encoded(protected))
+    for scope in ('reveal', 'motif'):
+        fixtures.decide(job, scope)
+    decision = job['decisions'][-1]
+    decision['crop_protection'] = {row['definition']['sha256']: mask_hash}
+    decision['binding'] = current.binding(job, 'motif')
+    return files, defined, cells, mask_hash
+
+
 class RemoteTests(unittest.TestCase):
     def setUp(self):
         fixture = publication.WorkPublicationTests()
@@ -327,6 +388,271 @@ class RemoteTests(unittest.TestCase):
         self.assertIsNone(git.remote_head(self.repo, current_ref))
         self.assertIsNone(git.remote_head(self.repo, 'refs/tags/work-prod-' + self.job))
 
+
+    def color_session(self, *, paired_gap=False):
+        from tools import production_remote_raster as operations
+        f = self.f
+        files, _, cells, mask = color_repair_fixture(f.job, f.sources, paired_gap=paired_gap)
+        current.build({'format': current.REQUEST, 'record': f.job, 'expected': None, 'files': files}, f.sources, f.root)
+        head = pw.push_job(f.root, self.job, None)
+
+        def record():
+            return pw.bound_record(self.read_record(head, self.job), self.job)
+
+        def source(candidate):
+            j = record()
+            r = current.findings.subjects(j)[candidate]
+            raw = self.fixture.assets[r['definition']['asset']['asset_id']]
+            return operations.source_binding(j, r, io.json_bytes(raw, current.LIMIT))
+
+        def apply(op, options):
+            nonlocal head
+            request = self.req('step3', head, {op: options})
+            response = self.execute(request)
+            head = response['work']
+            return response, request
+
+        return record, source, apply, cells, mask
+
+    def test_current_color_operations_and_restart(self):
+        from tools import production_remote_raster as operations
+        f = self.f
+        record, source, apply, cells, mask = self.color_session()
+        start = source('clasp')
+        info, _ = apply('diagnosis', {'source': start, 'uniqueness': True, 'max_nodes': 1000})
+        self.assertEqual((len(info['open_domains']), info['uniqueness']['status']), (12, 'unique'))
+        common = dict(source=start, cells=cells, mask_sha256=mask, output='corrected',
+                      label='Zweifarbige Schließe mit geschlossener oberer Lasche', rationale='Obere Lasche schließen', profile='line')
+        full = [0, 0, 6, 4]
+        edit = dict(x=4, y=0, before=0, after=1)
+        fixed = {**common, 'crop': full, 'edits': [edit], 'max_changes': 2}
+        local = io.json_bytes((f.root / current.path(self.job)).read_bytes(), current.LIMIT)
+        for bad in ({'edits': [edit, edit]}, {'edits': [{**edit, 'before': 1}]}, {'edits': [{**edit, 'after': 3}]},
+                    {'edits': [{**edit, 'x': 2}]}, {'edits': [{**edit, 'x': 5}]}, {'crop': [2, 0, 6, 4]},
+                    {'crop': [0, 1, 6, 4]}, {'mask_sha256': '0'*64}, {'source': {**start, 'revision': 2}}):
+            with self.subTest(bad=bad), self.assertRaises(ValueError):
+                operations.execute({'fixed': {**fixed, **bad}}, local, f.root, f.sources)
+        noop, request = apply('fixed', {**fixed, 'edits': []})
+        self.assertEqual((noop['status'], noop['work']), ('no-op', request['expected']))
+        config = {'max_changes': 1, 'max_steps': 1, 'max_candidates': 1, 'search_seconds': 10, 'final_seconds': 15,
+                  'search_lines': 10000, 'final_lines': 10000, 'seed': 9, 'order': 'seeded-frontier-v1', 'operators': ['single-cell']}
+        plan = {**common, 'output': 'repaired', 'config': config, 'extra_changes_reason': None}
+        for region in ([[5, 0]], [[6, 0]], [[4, 0], [4, 0]]):
+            with self.subTest(region=region), self.assertRaises(ValueError):
+                operations.execute({'repair': {**plan, 'region': region}}, local, f.root, f.sources)
+        missed, request = apply('repair', plan)
+        self.assertEqual(missed['search']['reason'], 'candidate_limit')
+        self.assertEqual(missed['work'], self.execute(request)['work'])
+        self.assertEqual(record()['budgets']['used']['repair_rounds'], 1)
+        with self.assertRaisesRegex(ValueError, 'already run'):
+            apply('repair', plan)
+        repaired, _ = apply('repair', {**plan, 'region': [[4, 0]], 'config': {**config, 'max_candidates': 32, 'max_steps': 96}})
+        self.assertTrue(repaired['certified'])
+        self.assertEqual(record()['budgets']['used']['repair_rounds'], 2)
+        with self.assertRaisesRegex(ValueError, 'exhausted'):
+            apply('repair', {**plan, 'output': 'another'})
+        paired, _ = apply('profile_check', {'source': start, 'profile': 'paired', 'rationale': 'Prüfe den offenen Linienstand'})
+        self.assertTrue(paired['certified'])
+        new = source('clasp')
+        self.assertEqual(start['matrix_sha256'], new['matrix_sha256'])
+        self.assertEqual(start['definition_sha256'], new['definition_sha256'])
+        self.assertNotEqual(start['proof_sha256'], new['proof_sha256'])
+        with self.assertRaisesRegex(ValueError, 'Stale raster'):
+            apply('fixed', fixed)
+        cropped, _ = apply('fixed', {**fixed, 'source': new, 'output': 'cropped', 'crop': [1, 0, 6, 4], 'edits': []})
+        self.assertIn('crop_diagnosis', current.findings.subjects(record())['cropped'])
+        changed = deepcopy(record()['parameters']['approved'])
+        changed[0]['constraints']['width']['minimum'] = 5
+        declaration = {k: record()['decisions'][-1][k] for k in operations.DECLARATION}
+        declaration['statement'] = 'Synthetisch: Breite fünf und denselben Motivschutz freigeben.'
+        apply('parameters', {'motif_sha256': new['motif_sha256'], 'previous': new['parameters_sha256'],
+                             'approved': changed, 'declaration': declaration})
+        final, _ = apply('fixed', {**fixed, 'source': source('clasp'), 'output': 'chosen', 'crop': [1, 0, 6, 4]})
+        self.assertTrue(final['certified'])
+        selected = source('chosen')
+        row = current.findings.subjects(record())['chosen']
+        with self.assertRaisesRegex(ValueError, 'blocked'):
+            apply('select', {'source': selected, 'finding_decisions': [], 'declaration': declaration})
+        review = fixtures.judgment(current.CRITERIA['raster'])
+        review['Q-H02']['result'] = 'Warnung'
+        observed = dict(id='hint', criterion='Q-H02', rule='hint-contrast', properties='Blauer Einer',
+                        context='Spaltenhinweis rechts', effect='Schwacher Kontrast', extent='Eine Ziffer',
+                        description='Der blaue Einer ist fein gezeichnet.', method='Synthetische Sichtung',
+                        actor='Fixture', timestamp_utc='2026-11-24T12:00:00Z', result='Warnung')
+        apply('assessment', {'candidate': 'chosen', 'definition_sha256': selected['definition_sha256'],
+              'preview_sha256': row['preview']['sha256'], 'review': review, 'observations': [observed], 'ready': False})
+        accepted = {**declaration, 'id': 'hint', 'action': 'accept', 'treatment': 'Hinweis im Test belassen.',
+                    'expected': current.findings.binding(next(r for r in record()['findings'] if r['id'] == 'hint'))}
+        with self.assertRaises(ValueError):
+            apply('select', {'source': selected, 'finding_decisions': [{**accepted, 'expected': '0'*64}],
+                             'declaration': declaration})
+        with patch.object(current.Checked, 'raster', side_effect=AssertionError('unexpected replay')):
+            apply('select', {'source': selected, 'finding_decisions': [accepted], 'declaration': declaration})
+        self.assertEqual((record()['state'], record()['selected']['raster'], len(record()['rasters'])),
+                         ('background_review', 'chosen', 1))
+
+    def test_revise_incompatible_published_crops(self):
+        record, source, apply, cells, mask = self.color_session()
+        original = record()['parameters']['approved']
+        declaration = dict(actor='Fixture', timestamp_utc='2026-11-24T12:00:00Z',
+                           statement='Den angegebenen Testkorridor und die unveränderte Schutzmaske freigeben.')
+
+        def approve(options):
+            binding = source('clasp')
+            return apply('parameters', dict(motif_sha256=binding['motif_sha256'], previous=binding['parameters_sha256'],
+                                            approved=options, declaration=declaration))[0]
+
+        for exact in (False, True):
+            with self.subTest(exact=exact):
+                fixed = dict(source=source('clasp'), output='cropped', label='Leere linke Spalte entfernen',
+                             profile='line', rationale='Synthetischer Beschnitt', cells=cells, mask_sha256=mask,
+                             edits=[], crop=[1, 0, 6, 4], max_changes=1)
+                apply('fixed', fixed)
+                prior = record()
+                crop = current.findings.subjects(prior)['cropped']['crop_diagnosis']
+                changed = deepcopy(original)
+                changed[0]['derivation']['empty_edge_crop'] = []
+                if exact:
+                    changed[0]['constraints']['width'] = dict(kind='exact', target=5, minimum=5, maximum=5)
+                    changed[0]['imports'][0]['width'] = 5
+                    changed[0]['imports'][0]['actual_crop'] = [12, 0, 72, 48]
+                self.assertEqual(approve(changed)['retired_crops'], ['cropped'])
+                saved = record()
+                self.assertEqual(saved['parameters']['approved'], changed)
+                self.assertEqual(saved['budgets'], prior['budgets'])
+                self.assertEqual([r['id'] for r in saved['rasters']], ['clasp'])
+                self.assertEqual(source('clasp')['definition_sha256'], crop['before']['sha256'])
+                self.assertEqual(current.findings.subjects(saved)['clasp']['proof']['sha256'],
+                                 current.findings.subjects(prior)['clasp']['proof']['sha256'])
+                self.assertEqual(next(d for d in saved['decisions'] if d['scope'] == 'motif')['crop_protection'],
+                                 {crop['before']['sha256']: mask})
+                result, _ = apply('diagnosis', dict(source=source('clasp'), uniqueness=False, max_nodes=0))
+                self.assertEqual(result['proof_status'], 'stalled')
+                if not exact:
+                    approve(original)
+        design = dict(format='picross-image-design-v1', source_id='motif', origin='Fixture', rights='Fixture',
+                      briefing='Synthetischer Neuimport der Schließe', working_mode='faithful', width=5, height=4,
+                      crop=[12, 0, 72, 48], fit='exact', background='#ffffff', alpha_below=1, mode='color',
+                      palette=[dict(id='red', rgb='#a43821'), dict(id='blue', rgb='#214a80')],
+                      variants=[dict(id='exact-five', method='area', threshold=128)])
+        request = self.req('step3', result['work'], dict(motif_sha256=source('clasp')['motif_sha256'],
+                           design=design, profile='line', label='Exakter 5 × 4 Import'))
+        response = self.execute(request)
+        imported = self.read_record(response['work'], self.job)
+        self.assertEqual(response['raster'], 'exact-five')
+        self.assertIn('exact-five', current.findings.subjects(pw.bound_record(imported, self.job)))
+
+    def test_repair_final_budget_abort_and_replay(self):
+        from tools import production_remote_derivation as derivation
+        from tools.puzzle_production import catalog_rating, current_tools, editor_raster, solver
+        from tools.puzzle_production.contract import Aborted, Budget
+
+        record, source, apply, cells, mask = self.color_session()
+        initial = record()['rasters'][0]
+        raw = self.fixture.assets[initial['definition']['asset']['asset_id']]
+        original = catalog_rating.definition(raw)[1]
+        pair_solver = Budget()
+        self.assertEqual(solver.solve(original, pair_solver)['status'], 'stalled')
+        self.assertEqual(solver.solve(original, pair_solver, profile='paired-lines-color')['status'], 'solved')
+        cap = Budget(max_pair_work=pair_solver.pair_work + 1)
+        with self.assertRaisesRegex(Aborted, 'verifier_pair_work_limit'):
+            current_tools.raster(raw, self.f.work/'pair-abort', mode='color', profile='paired', final_budget=cap)
+        self.assertFalse((self.f.work/'pair-abort').exists())
+        definition = io.json_bytes(raw, current.LIMIT)
+        matrix = deepcopy(definition['solution'])
+        matrix[0][4] = 2
+        repaired = editor_raster.definition(definition, matrix)
+        puzzle = catalog_rating.definition(current.encoded(repaired))[1]
+        solve_budget = Budget()
+        self.assertEqual(solver.solve(puzzle, solve_budget)['status'], 'solved')
+        for round_number, (lines, reason) in enumerate(((1, 'final_solver_work_limit'),
+                (solve_budget.lines + 1, 'final_verifier_work_limit')), 1):
+            with self.subTest(lines=lines):
+                config = dict(max_changes=1, max_steps=96, max_candidates=32, search_seconds=10, final_seconds=15,
+                              search_lines=10000, final_lines=lines, order='seeded-frontier-v1', seed=9,
+                              operators=['single-cell'])
+                result, request = apply('repair', dict(source=source('clasp'), cells=cells, mask_sha256=mask,
+                        output='repair', label='Lasche', rationale='Markierte Lasche schließen', profile='line',
+                        region=[[4, 0]], config=config, extra_changes_reason=None))
+                self.assertEqual((result['outcome'], result['search']['reason']), ('aborted', reason))
+                saved = record()
+                row, = saved['rasters']
+                self.assertEqual(row['last_repair']['reason'], reason)
+                self.assertEqual({k: v for k, v in row.items() if k != 'last_repair'}, initial)
+                self.assertEqual(saved['budgets']['used'], dict(raster_candidates=1+round_number,
+                                                               repair_rounds=round_number, image_corrections=0))
+                with patch.object(derivation, 'search', side_effect=AssertionError('Repeated repair search')):
+                    self.assertEqual(self.execute(request)['work'], result['work'])
+                self.assertEqual(record(), saved)
+
+    def test_paired_repair_shares_final_budget_with_rating_replays(self):
+        from tools import production_remote_derivation as derivation
+        from tools.puzzle_production import catalog_rating, current_tools, editor_raster, solver, verifier
+        from tools.puzzle_production.contract import Budget
+
+        record, source, apply, cells, mask = self.color_session(paired_gap=True)
+        initial, = record()['rasters']
+        raw = self.fixture.assets[initial['definition']['asset']['asset_id']]
+        original = catalog_rating.definition(raw)[1]
+        self.assertEqual(solver.solve(original, profile='paired-lines-color')['status'], 'stalled')
+        definition = io.json_bytes(raw, current.LIMIT)
+        matrix = deepcopy(definition['solution'])
+        matrix[0][3] = 1
+        repaired = editor_raster.definition(definition, matrix)
+        puzzle = catalog_rating.definition(current.encoded(repaired))[1]
+        first_pass = Budget()
+        baseline = solver.solve(puzzle, first_pass)
+        proof = solver.solve(puzzle, first_pass, profile='paired-lines-color')
+        self.assertEqual((baseline['status'], proof['status']), ('stalled', 'solved'))
+        first_solver_lines = first_pass.lines
+        first_solver_pair_work = first_pass.pair_work
+        self.assertTrue(verifier.verify(puzzle, baseline, first_pass)['proof_verified'])
+        self.assertTrue(verifier.verify(puzzle, proof, first_pass)['certified'])
+        replay_lines = first_pass.lines - first_solver_lines
+
+        config = dict(max_changes=1, max_steps=96, max_candidates=32, search_seconds=15,
+                      final_seconds=30, search_lines=10000, final_lines=first_pass.lines,
+                      order='seeded-frontier-v1', seed=1, operators=['single-cell'])
+        plan = dict(source=source('clasp'), cells=cells, mask_sha256=mask, output='paired-repair',
+                    label='Upper clasp', rationale='Close the marked gap', profile='paired',
+                    region=[[3, 0]], config=config, extra_changes_reason=None)
+        stopped, request = apply('repair', plan)
+        reason = 'final_r4_verifier_work_limit'
+        self.assertEqual((stopped['outcome'], stopped['search']['reason']), ('aborted', reason))
+        saved = record()
+        row, = saved['rasters']
+        self.assertEqual(row['last_repair']['reason'], reason)
+        self.assertEqual({k: v for k, v in row.items() if k != 'last_repair'}, initial)
+        self.assertIsNone(row['difficulty'])
+        self.assertEqual(saved['budgets']['used'], dict(raster_candidates=2, repair_rounds=1, image_corrections=0))
+        with patch.object(derivation, 'search', side_effect=AssertionError('Repeated repair search')):
+            self.assertEqual(self.execute(request)['work'], stopped['work'])
+        self.assertEqual(record(), saved)
+
+        full_lines = first_pass.lines + replay_lines
+        plan['config'] = dict(config, final_lines=full_lines)
+        with patch.object(verifier, 'verify', wraps=verifier.verify) as verify:
+            result, _ = apply('repair', plan)
+        self.assertEqual((result['proof_status'], result['certified']), ('solved', True))
+        bound_calls = [call.args for call in verify.call_args_list
+                       if len(call.args) == 3 and getattr(call.args[2], 'max_lines', None) == full_lines]
+        self.assertEqual([args[1]['status'] for args in bound_calls], ['stalled', 'solved'])
+        budget = bound_calls[0][2]
+        self.assertTrue(all(args[2] is budget for args in bound_calls))
+        self.assertEqual(budget.lines, full_lines)
+        self.assertEqual(budget.pair_work, 2*first_pass.pair_work - first_solver_pair_work)
+        final = record()
+        row = current.findings.subjects(final)['paired-repair']
+        raw_final = self.fixture.assets[row['definition']['asset']['asset_id']]
+        self.assertEqual(io.json_bytes(raw_final, current.LIMIT)['solution'], matrix)
+        rating = self.fixture.assets[row['difficulty']['asset']['asset_id']]
+        reference = self.f.work/'paired-rating-reference'
+        current_tools.raster(raw_final, reference, mode='color', profile='paired')
+        self.assertEqual(rating, (reference/'difficulty.json').read_bytes())
+        rating = io.json_bytes(rating, current.LIMIT)
+        self.assertTrue(rating['compact_analysis']['r4']['required'])
+        self.assertEqual(rating['rating']['result']['assessment']['level'], 5)
+        self.assertEqual(final['budgets']['used'], dict(raster_candidates=3, repair_rounds=2, image_corrections=0))
 
     def test_bound_crop_originals_round_trip(self):
         from zipfile import ZipFile

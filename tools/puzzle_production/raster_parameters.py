@@ -1,4 +1,6 @@
 """Closed approval corridor for regular fixed raster work (#596/C)."""
+import math
+from copy import deepcopy
 from .authoring_package import require, string
 from .contract import digest, exact_keys, integer
 
@@ -45,6 +47,28 @@ def crop_rectangle(crop, width, height, mask, permitted, matrix, *, empty):
             if not (left <= x < right and top <= y < bottom):
                 require(value == empty and not mask[y][x], 'Crop removes nonempty or protected reference cell')
     return removed
+
+
+def edit_rectangle(matrix, mask, crop, edits, permissions, max_changes, colors, *, empty):
+    """Apply the same original-coordinate checks to import and current definitions."""
+    w, h = len(matrix[0]), len(matrix)
+    crop_rectangle(crop, w, h, mask, permissions['empty_edge_crop'], matrix, empty=empty)
+    l, t, r, b = crop
+    require(isinstance(edits, list) and len(edits) <= max_changes, 'Fixed change budget exceeded')
+    require(not edits or permissions['cell_edits'], 'Cell edits not approved')
+    allowed = {empty, *colors}
+    seen, result = set(), deepcopy(matrix)
+    for edit in edits:
+        exact_keys(edit, {'x', 'y', 'before', 'after'})
+        x, y = integer(edit['x'], 0, w - 1, 'x'), integer(edit['y'], 0, h - 1, 'y')
+        require((x, y) not in seen and l <= x < r and t <= y < b, 'Duplicate or cropped edit coordinate')
+        seen.add((x, y))
+        require(not mask[y][x], 'Protected cell edit')
+        require(type(edit['before']) is type(empty) and type(edit['after']) is type(empty) and
+                   edit['before'] == matrix[y][x] and edit['after'] in allowed and edit['after'] != edit['before'],
+                   'Wrong before, palette value or no-op edit')
+        result[y][x] = edit['after']
+    return [row[l:r] for row in result[t:b]]
 
 
 def constraint(value):
@@ -128,3 +152,19 @@ def binding(approved, approval):
     p = validate(approved[0])
     require(digest(p) == digest(approval.get('parameters')), 'Motif approval corridor differs')
     return p
+
+
+def validate_search(config, width, height):
+    c = exact_keys(config, {"max_changes", "max_steps", "max_candidates", "search_seconds",
+                               "final_seconds", "search_lines", "final_lines", "seed", "order", "operators"})
+    for name, low, high in (("max_changes", 0, width * height),
+                            ("max_steps", 0, 1024), ("max_candidates", 1, 128),
+                            ("search_lines", 0, 1_000_000), ("final_lines", 0, 1_000_000),
+                            ("seed", 0, 2**32 - 1)):
+        integer(c[name], low, high, name)
+    for name, high in (("search_seconds", 600), ("final_seconds", 120)):
+        require(type(c[name]) in (int, float) and math.isfinite(c[name]) and 0 <= c[name] <= high,
+                f"{name} must be finite in 0..{high}")
+    require(c["order"] == "seeded-frontier-v1" and c["operators"] == ["single-cell"],
+            "Unsupported search order/operators")
+    return c

@@ -141,6 +141,11 @@ Definitionen, Bilder, Rasterrevisionen, Bewertungen oder Hinzugefügt-Daten.
 
 ## #596/C · Feste Rasterableitung
 
+Für aktuelle PW-Kandidaten verwendet der Chat [PW-REMOTE](../../docs/tools/PW_REMOTE.md#schritt-3-am-veröffentlichten-kandidaten).
+`fixed` prüft Originalkoordinaten, Vorwerte, Maske und erlaubte Außenseiten.
+`repair` verwendet den RP-5-Suchkern direkt am gebundenen Raster. Beide Wege
+übergeben die Enddefinition an den aktuellen Prüf- und Bewertungshelfer.
+
 Der vor Code festgelegte [Vertrag](../../docs/production/FIXED_RASTER.md) definiert die
 geschlossenen Parameter-/Plan-/Record-/Manifestformen und deren Grenzen.
 `python -m tools.puzzle_production.fixed_raster derive --root ROOT --plan PLAN --output OUT`
