@@ -465,6 +465,9 @@ mit künstlichem Prüfgrund ist eine Ansicht, kein neues Original.
 Index-/Jobliste zuerst günstig lesen; Pakete und Originalbilder bedarfsabhängig
 laden. Metadaten dürfen vor vollständiger Bildprüfung angezeigt werden, jedoch
 mit entsprechendem Status. Keine vorzeitige Meldung „vollständig geprüft“.
+Nachgewiesene fehlende Originale bleiben als Quellenfehler sichtbar.
+Interne Ladefehler bei Detail- oder Bildabruf erhalten eine feste Meldung zum
+Programmstand ohne interne Pfade, Zugangsdaten oder Tracebacks.
 Cacheeinträge an Gitblob, Paket-/Dateihash und Readerstand binden, begrenzen und
 bei Neustart/Änderung korrekt prüfen. Keine vollständige Bestandsentpackung,
 kein permanentes Kandidatenarchiv und kein Speichern sämtlicher Bilder im

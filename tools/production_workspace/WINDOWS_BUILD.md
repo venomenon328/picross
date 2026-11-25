@@ -72,8 +72,11 @@ der Datencheckout hat keine Codeautorität. PW bündelt sämtliche durch die
 unterstützten Methodenmanifeste gebundenen Python- und JSON-Originaldateien
 physisch unter `_internal/tools/puzzle_production/`. Der Bau prüft jede Datei
 gegen denselben committeten Inputbestand und bindet sie im ausgelieferten
-Datei- und Ressourceninventar. Methodenressourcen verwenden repo-relative Keys
-mit Wurzel `_internal/`. Die übrigen PW-Ressourcen verwenden weiter Keys relativ
+Datei- und Ressourceninventar. Dazu gehören auch die physischen Quellen der
+Bildnormalisierung, des Hintergrundrenderers und der von `background_assets`
+gelesenen Quellbindungen. Bau, MSI-Inspektion und Programmstart prüfen ihre
+Hashbindung. Diese Readerressourcen verwenden repo-relative Keys mit Wurzel
+`_internal/`. Die übrigen PW-Ressourcen verwenden weiter Keys relativ
 zu `_internal/tools/production_workspace/`. Importierbarkeit oder Bytecode
 allein bestätigen diese Vollständigkeit nicht. Die eingefrorenen Quellen und
 Methodenidentitäten bleiben unverändert. Synthetische Fixtureproduzenten und
@@ -180,14 +183,18 @@ defekte UI. Nachlauf prüft echte Prozess-/Portbeendigung und unveränderte Date
 Nur eigene synthetische Prozesse, keine P2-Löschung. Kein Browsernachweis.
 Eigene Smoke-/Builddaten anschließend gemäß Arbeitsablagevertrag bereinigen.
 
-Der bedarfsbezogene Methodennachweis startet die Frozen-EXE desselben
+Der bedarfsbezogene Readernachweis startet die Frozen-EXE desselben
 hashgebundenen Kandidaten wie die MSI-Inspektion. Über den tatsächlichen
 Detailreader öffnet er einen synthetischen aktuellen `raster_ready`-Record
-mit 0.4-Bewertung und einen begrenzten 0.3-Fall. Isolierte Kopien mit fehlenden
-oder manipulierten Methodenressourcen müssen vor Bereitschaft mit
-Programmpaketfehler scheitern. Dieser Readernachweis ergänzt die MSI-Dateiliste
-und den `reveal_review`-Smoke. Ein Entwickler-Pythonlauf belegt den Frozen-Reader
-nicht. Ausführung und befristete Zustellung bestimmt das jeweilige Issue/Paket.
+mit 0.4-Bewertung und einen begrenzten 0.3-Fall in der bisherigen v1-Form.
+Der Durchstich öffnet auch synthetische v3-Stände in den fälligen Auftragsphasen,
+mit und ohne Qualifikationsinventar, und prüft die tatsächlich abgerufenen
+Bildbytes. Unaufbereitete Hintergründe bleiben sichtbar und gesperrt.
+Vorbereitete und gesichtete Hintergründe stehen zur Wahl. Isolierte Kopien
+mit fehlenden oder veränderten Bild- und Methodenressourcen müssen vor
+Bereitschaft mit einem Programmpaketfehler scheitern. Der Nachweis bindet das
+Ergebnis an dieselbe MSI-Inspektion und dasselbe Dateiinventar.
+Ausführung und befristete Zustellung bestimmt das jeweilige Issue/Paket.
 Ein persönlicher Installations- oder Bediennachweis ist dafür nicht vorgesehen.
 
 P3-T03 bleibt separat: zulässiger interaktiver Windowsdesktop, tatsächlicher

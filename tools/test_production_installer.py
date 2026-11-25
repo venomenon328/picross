@@ -29,16 +29,17 @@ class InstallerContractTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as folder:
             root = Path(folder)
             repo = root / 'data'
-            commit_id, paths, entries = raster_fixture(repo, root)
+            commit_id, paths, cases = raster_fixture(repo, root)
             marker, expected = TEST_CATALOG
             self.assertIn(marker, paths)
             self.assertEqual(git(repo, 'show', f'{commit_id}:{marker}'), expected)
             methods = {}
-            for entry in entries:
-                raw = git(repo, 'show', f"{commit_id}:{entry['record']}")
+            for puzzle_id in cases:
+                path = f'content/authoring/{puzzle_id}/current/record.json'
+                raw = git(repo, 'show', f'{commit_id}:{path}')
                 record = json.loads(raw)
                 difficulty = record['rasters'][0]['difficulty']['file']
-                methods[entry['puzzle_id']] = json.loads(git(repo, 'show', f'{commit_id}:{difficulty}'))['method']
+                methods[puzzle_id] = json.loads(git(repo, 'show', f'{commit_id}:{difficulty}'))['method']
             self.assertEqual(methods, {'pz-frozen-04': 'picross-difficulty-0.4',
                                        'pz-frozen-03': 'picross-difficulty-0.3'})
             previous = git(repo, 'rev-parse', 'HEAD^').decode('ascii').strip()
@@ -683,13 +684,19 @@ class AppReleaseTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, 'Unsafe'):
             payload.fingerprint(root)
 
-    def test_pw_method_payload_matches_input_bytes_and_reader_paths(self):
+    def test_pw_payload_matches_input_bytes_and_reader_paths(self):
+        from tools.puzzle_production import background_assets, background_render, image_normalization
+
         source = Path(__file__).resolve().parents[1]
-        names = payload.pw_method_files(lambda name: (source / name).read_bytes())
-        self.assertEqual(sum(name.endswith('.py') for name in names), 27)
-        self.assertEqual(sum(name.endswith('.json') for name in names), 8)
+        methods = payload.pw_method_files(lambda name: (source / name).read_bytes())
+        images = set(background_assets._MODULES) | {
+            payload.PRODUCTION + Path(module.__file__).name for module in (background_render, image_normalization)
+        }
+        self.assertEqual(payload.PW_IMAGE_SOURCES, images)
+        self.assertEqual(sum(name.endswith('.py') for name in methods), 27)
+        self.assertEqual(sum(name.endswith('.json') for name in methods), 8)
         files, hashes, rows = {}, {}, []
-        for name in sorted(names):
+        for name in sorted(methods | images):
             raw = (source / name).read_bytes()
             file = self.root / '_internal' / name
             file.parent.mkdir(parents=True, exist_ok=True)
@@ -697,13 +704,24 @@ class AppReleaseTests(unittest.TestCase):
             files[name] = file
             hashes[name] = channel.digest(raw)
             rows.append({'file': name, 'bytes': len(raw), 'sha256': hashes[name]})
-        self.assertEqual(payload.verify_pw_method_resources({'files': rows}, hashes, files), hashes)
-        calibration = payload.PRODUCTION + 'difficulty_calibration_0_3.json'
-        with self.assertRaisesRegex(ValueError, 'Incomplete'):
-            payload.verify_pw_method_resources({'files': rows}, hashes, {name: file for name, file in files.items() if name != calibration})
-        files[calibration].write_bytes(files[calibration].read_bytes() + b'\n')
-        with self.assertRaisesRegex(ValueError, 'differs from committed input'):
-            payload.verify_pw_method_resources({'files': rows}, hashes, files)
+        self.assertEqual(payload.verify_pw_reader_resources({'files': rows}, hashes, files),
+                         {'method_resources': {name: hashes[name] for name in methods},
+                          'image_resources': {name: hashes[name] for name in images}})
+        for leaf in ('difficulty_calibration_0_3.json', 'image_normalization.py', 'background_render.py', 'background_io.py'):
+            name = payload.PRODUCTION + leaf
+            with self.subTest(resource=name):
+                with self.assertRaisesRegex(ValueError, 'Incomplete'):
+                    payload.verify_pw_reader_resources({'files': rows}, hashes,
+                                                       {k: file for k, file in files.items() if k != name})
+                with self.assertRaisesRegex(ValueError, 'Incomplete'):
+                    payload.verify_pw_reader_resources({'files': rows}, {k: h for k, h in hashes.items() if k != name}, files)
+                with self.assertRaisesRegex(ValueError, 'Unbound'):
+                    payload.verify_pw_reader_resources({'files': rows}, {**hashes, name: '0' * 64}, files)
+                original = files[name].read_bytes()
+                files[name].write_bytes(original + b'\n')
+                with self.assertRaisesRegex(ValueError, 'differs from committed input'):
+                    payload.verify_pw_reader_resources({'files': rows}, hashes, files)
+                files[name].write_bytes(original)
 
     def test_pe_frozen_excludes_pw_motifs_but_retains_strict_source_binding(self):
         # PROD-SLIM added a PW-only phase-label import to current_authoring.

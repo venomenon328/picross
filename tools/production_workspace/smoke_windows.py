@@ -201,58 +201,110 @@ def check_raster_data_tree(repo, commit_id):
     for name in paths:
         if name == TEST_CATALOG[0]:
             continue
-        if not name.startswith(('content/', 'game/data/')) or Path(name).suffix not in {'.json', '.png'}:
+        if not name.startswith(('content/', 'game/data/', 'game/art/content/pz-frozen-')) or Path(name).suffix not in {'.json', '.png'}:
             raise RuntimeError(f'Synthetischer Datencheckout enthält eine fremde Datei: {name!r}')
     return paths
 
 
-def raster_fixture(repo, root):
+def raster_fixture(repo, root, *, authoring=False):
+    from io import BytesIO
+    from PIL import Image
     from tests.puzzle_production.current_fixtures import checkout, make, put
     from tests.puzzle_production.test_current_authoring import decide, judgment
     from tools.puzzle_production import current_authoring as current
+    from tools.puzzle_production import current_qualification as qualification
     from tools.test_production_workspace import commit
 
     checkout(repo)
     git(repo, 'init', '-q', '-b', 'main')
     base = commit(repo)
     entries = []
-    for version in ('0.4', '0.3'):
-        identifier = 'pz-frozen-' + version.replace('.', '')
-        method = 'picross-difficulty-' + version
-        fixture = make(root / identifier, identifier=identifier, method=method)
-        incoming = json.loads((fixture / 'manifest.json').read_bytes())
+    cases = {}
+    phases = ('reveal_review', 'motif_review', 'raster_review', 'raster_ready',
+              'background_review', 'content_ready', 'editorially_approved')
+    variants = [('04', 'raster_ready', '0.4'), ('03', 'raster_ready', '0.3')]
+    if authoring:
+        variants.extend((phase.replace('_', '-'), phase, None) for phase in phases)
+        variants.extend((('qualified', 'reveal_review', None), ('unprepared', 'background_review', None)))
+    for suffix, phase, version in variants:
+        identifier = 'pz-frozen-' + suffix
+        phase_index = current.PHASES.index(phase)
+        structured = version is None
+        published = suffix in ('reveal-review', 'qualified')
         prefix = f'content/authoring/{identifier}/data/'
+        reveal = BytesIO()
+        Image.new('RGB', (32, 32), (20, 70, 100)).save(reveal, format='PNG')
+        if phase_index >= 5:
+            method = 'picross-difficulty-' + (version or '0.4')
+            fixture = make(root / identifier, identifier=identifier, method=method)
+            incoming = json.loads((fixture / 'manifest.json').read_bytes())
+            reveal = BytesIO((fixture / 'reveal.png').read_bytes())
+        rights = {'author': 'Synthetic test', 'usage_basis': 'Test only', 'source': 'Fixture', 'changes': 'None'}
         assets = [
             {'id': role + '-a', 'role': role, 'label': role,
-             'file': put(repo, prefix + role + '.png', (fixture / 'reveal.png').read_bytes()),
-             'rights': incoming['reveal']['rights'], 'review': judgment(current.CRITERIA[role])}
-            for role in ('reveal', 'motif')
+             'file': put(repo, f'game/art/content/{identifier}-{role}.png' if published else prefix + role + '.png',
+                         reveal.getvalue()),
+             'rights': rights, 'review': judgment(current.CRITERIA[role])}
+            for role in (('reveal', 'motif') if phase_index >= 2 else ('reveal',))
         ]
-        definition = json.loads((fixture / 'definition.json').read_bytes())
-        raster = {'id': 'raster-a', 'label': 'Synthetisches Raster',
-                  **{key: put(repo, prefix + key + '.json', (fixture / incoming[key]['file']).read_bytes())
-                     for key in ('definition', 'proof', 'difficulty')},
-                  'preview': put(repo, prefix + 'preview.png', current.raster_preview(definition, mode='mono')),
-                  'review': judgment(current.CRITERIA['raster']), 'exceptions': []}
+        rasters = []
+        if phase_index >= 5:
+            definition = json.loads((fixture / 'definition.json').read_bytes())
+            rasters.append({'id': 'raster-a', 'label': 'Synthetisches Raster',
+                            **{key: put(repo, prefix + key + '.json', (fixture / incoming[key]['file']).read_bytes())
+                               for key in ('definition', 'proof', 'difficulty')},
+                            'preview': put(repo, prefix + 'preview.png', current.raster_preview(definition, mode='mono')),
+                            'review': judgment(current.CRITERIA['raster']), 'exceptions': []})
+        if phase_index >= 6:
+            original = BytesIO()
+            image = Image.new('RGBA', (30, 10))
+            image.putpixel((2, 5), (20, 30, 40, 255))
+            image.save(original, format='PNG')
+            profile = 'picross-background-png2304x768-v1'
+            reference = put(repo, prefix + 'background.png', original.getvalue())
+            review = judgment(current.CRITERIA['background'])
+            prepared = None
+            if suffix != 'unprepared':
+                raw = current.render_background(original.getvalue(), profile)
+                rendered = put(repo, prefix + 'prepared.png', raw)
+                prepared = {'original_sha256': reference['sha256'], 'profile': profile, 'file': rendered,
+                            'inspection': {'sha256': rendered['sha256'], 'review': review}}
+            assets.append({'id': 'background-a', 'role': 'background', 'label': 'Synthetischer Hintergrund',
+                           'file': reference, 'rights': rights, 'review': review, 'profile': profile, 'prepared': prepared})
         parameters = {'width': 3, 'height': 3, 'mode': 'mono', 'foreground_colors': 1,
                       'size_constraint': 'exact', 'foreground_color_constraint': 'exact'}
         limits = {'raster_candidates': 6, 'repair_rounds': 2, 'image_corrections': 2}
         record = {'format': current.FORMAT, 'puzzle_id': identifier, 'revision': 'current',
-                  'source_commit': base, 'operation': 'production', 'target': None, 'title': identifier,
-                  'category_id': 'test', 'state': 'raster_ready', 'brief': 'Synthetischer Methoden-Smoke',
-                  'parameters': {'proposed': [parameters], 'approved': [parameters]}, 'assets': assets,
-                  'rasters': [raster], 'selected': {'reveal': 'reveal-a', 'motif': 'motif-a',
-                  'raster': None, 'background': None}, 'decisions': [], 'blockers': [], 'test_only': True,
+                  'source_commit': base, 'operation': 'production', 'target': None,
+                  'title': definition['reveal']['name'] if rasters else identifier,
+                  'category_id': 'test', 'state': phase, 'brief': 'Synthetischer Frozen-Smoke',
+                  'parameters': {'proposed': [parameters] if phase_index >= 2 else [],
+                                 'approved': [parameters] if phase_index >= 3 else []}, 'assets': assets,
+                  'rasters': rasters, 'selected': dict.fromkeys(('reveal', 'motif', 'raster', 'background')),
+                  'decisions': [], 'blockers': [], 'test_only': True,
                   'budgets': {'limits': limits, 'used': dict.fromkeys(limits, 0)}, 'integration': None}
-        for scope in ('reveal', 'motif'):
-            decide(record, scope)
+        if structured:
+            record.update(format=current.findings.LOCAL, findings=[], instructions={})
+        if published:
+            record.update(format=current.findings.PUBLISHED, work_release={'id': 1, 'anchor': base})
+        for scope, index in (('reveal', 2), ('motif', 3), ('raster', 6), ('background', 7)):
+            if phase_index >= index:
+                record['selected'][scope] = scope + '-a'
+                decide(record, scope)
+        if phase_index >= 8:
+            for scope in ('final', 'integration'):
+                decide(record, scope)
+        if suffix == 'qualified':
+            checked = current.Checked(record, lambda name, limit: (repo / name).read_bytes())
+            record['qualification'] = {'format': qualification.FORMAT, 'facts': checked.facts}
         current.validate(record)
         name = current.path(identifier)
         put(repo, name, current.encoded(record))
         entries.append({'puzzle_id': identifier, 'revision': 'current', 'record': name})
+        cases[identifier] = record
     put(repo, current.INDEX, current.encoded({'format': 'picross-authoring-index-v1', 'entries': entries}))
     commit_id = commit(repo)
-    return commit_id, check_raster_data_tree(repo, commit_id), entries
+    return commit_id, check_raster_data_tree(repo, commit_id), cases
 
 
 def start_frozen(app, state, work, *extra):
@@ -286,12 +338,13 @@ def frozen_reader(app, state, work, commit):
                 raise RuntimeError('Frozen-Instanz meldet einen fremden Buildcommit.')
             session = control(metadata, 'open')['browser_url'].split('#', 1)[1]
 
-            def request(path):
+            def request(path, *, binary=False):
                 connection = http.client.HTTPConnection('127.0.0.1', metadata['port'], timeout=30)
                 try:
                     connection.request('GET', path, headers={'X-Workspace-Session': session})
                     response = connection.getresponse()
-                    return response.status, json.loads(response.read())
+                    raw = response.read()
+                    return response.status, raw if binary and response.status == 200 else json.loads(raw)
                 finally:
                     connection.close()
 
@@ -320,11 +373,14 @@ def frozen_reader(app, state, work, commit):
 
 def verify_method_candidate(app, build, inspection):
     audit = json.loads((inspection / 'method-resources.json').read_bytes())
+    images = json.loads((inspection / 'image-resources.json').read_bytes())
     delivery = json.loads((build / 'delivery.json').read_bytes())
     result = json.loads((inspection / 'result.json').read_bytes())
     keys = ('commit', 'payload_fingerprint', 'msi_sha256')
     if not result['compared_to_build'] or any(audit[key] != result[key] or audit[key] != delivery[key] for key in keys):
         raise RuntimeError('Frozen-Smoke ohne zugeordnete MSI-Inspektion.')
+    if any(images[key] != audit[key] for key in (*keys, 'inventory_sha256')):
+        raise RuntimeError('Bildleser-Ressourcen stammen aus einer anderen MSI-Inspektion.')
     inventory_path = app / 'inventory.json'
     inventory_raw = inventory_path.read_bytes()
     inventory = json.loads(inventory_raw)
@@ -337,7 +393,12 @@ def verify_method_candidate(app, build, inspection):
         raw = (app / row['file']).read_bytes()
         if len(raw) != row['bytes'] or hashlib.sha256(raw).hexdigest() != row['sha256']:
             raise RuntimeError('Frozen-Datei weicht vom inspizierten MSI ab: ' + row['file'])
-    return audit
+    by_file = {row['file']: row['sha256'] for row in inventory['files']}
+    for report in (audit, images):
+        for name, expected in report['files'].items():
+            if by_file.get('_internal/' + name) != expected:
+                raise RuntimeError('Readerressource weicht vom inspizierten Inventar ab: ' + name)
+    return {**audit, 'image_resources': images['files']}
 
 
 def method_smoke(build, inspection, destination):
@@ -350,32 +411,63 @@ def method_smoke(build, inspection, destination):
     with tempfile.TemporaryDirectory(prefix='method-smoke-', dir=destination) as temporary:
         work = Path(temporary)
         repo, state = work / 'Daten ä', work / 'Zustand ü'
-        data_commit, data_paths, entries = raster_fixture(repo, work)
+        data_commit, data_paths, cases = raster_fixture(repo, work, authoring=True)
         configure(repo, state, refs=['main'])
         cwd = work / 'Fremder Startordner ö'; cwd.mkdir()
         (cwd / 'tools.py').write_text('raise RuntimeError("FOREIGN MODULE MUST NOT RUN")\n', encoding='utf-8')
         projections = {}
         with frozen_reader(app, state, cwd, commit) as (listing, request):
-            if listing['update']['state'] != 'done' or listing['errors'] or len(listing['jobs']) != len(entries):
-                raise RuntimeError('Frozen-Jobliste enthält nicht genau die synthetischen Rasterangebote.')
+            if (listing['update']['state'] != 'done' or listing['errors'] or
+                    {job['puzzle_id'] for job in listing['jobs']} != set(cases)):
+                raise RuntimeError('Frozen-Jobliste enthält nicht genau die synthetischen Arbeitsstände.')
             for job in listing['jobs']:
-                status, detail = request('/api/jobs/' + job['id'])
+                puzzle_id = job['puzzle_id']
+                record = cases[puzzle_id]
+                path = '/api/jobs/' + job['id']
+                status, detail = request(path)
                 if status != 200:
-                    raise RuntimeError('Frozen-Detailreader: ' + repr(detail))
+                    raise RuntimeError(f'Frozen-Detailreader {puzzle_id}: {status} {detail!r}')
                 facts = detail['facts']
-                method = {'pz-frozen-04': 'picross-difficulty-0.4', 'pz-frozen-03': 'picross-difficulty-0.3'}[job['puzzle_id']]
-                expected = {'width': 3, 'height': 3, 'mode': 'mono', 'used_colors': 1,
-                            'difficulty': {'method': method, 'level': 'L1', 'assessment_type': 'instrumented',
-                                           'confidence': 'medium', 'plausible_range': ['L1', 'L1'], 'r4_required': False}}
-                if (job['commit'] != data_commit or not facts['test_only'] or facts['state'] != 'raster_ready'
-                        or facts['metadata'] != expected or [(offer['kind'], offer['id']) for offer in detail['offers']]
-                        != [('raster', 'raster-a')]):
-                    raise RuntimeError('Unerwartete Frozen-Rasterprojektion: ' + repr(facts['metadata']))
-                projections[job['puzzle_id']] = facts['metadata']
+                if (job['commit'] != data_commit or not facts['test_only'] or facts['originals']['record'] != record or
+                        facts['state'] != record['state'] or not facts['next_step']):
+                    raise RuntimeError(f'Falsche Frozen-Quell- oder Phasenbindung: {puzzle_id}')
+                offers = [(offer['kind'], offer['id']) for offer in detail['offers']]
+                kind = {'reveal_review': 'reveal', 'motif_review': 'motif', 'raster_ready': 'raster',
+                        'background_review': 'background'}.get(record['state'])
+                expected_offers = [(kind, kind + '-a')] if kind and puzzle_id != 'pz-frozen-unprepared' else []
+                if offers != expected_offers:
+                    raise RuntimeError(f'Falsche Frozen-Angebote {puzzle_id}: {offers!r}')
+                if record['rasters']:
+                    method = 'picross-difficulty-' + ('0.3' if puzzle_id == 'pz-frozen-03' else '0.4')
+                    expected = {'width': 3, 'height': 3, 'mode': 'mono', 'used_colors': 1,
+                                'difficulty': {'method': method, 'level': 'L1', 'assessment_type': 'instrumented',
+                                               'confidence': 'medium', 'plausible_range': ['L1', 'L1'], 'r4_required': False}}
+                    if facts['metadata'] != expected:
+                        raise RuntimeError(f'Falsche Frozen-Rasterprojektion: {facts["metadata"]!r}')
+                if puzzle_id == 'pz-frozen-unprepared' and not facts['candidates']['background-a']['missing']:
+                    raise RuntimeError('Fehlende Vorbereitung sperrt den Hintergrund nicht.')
+                selected = record['selected']
+                composition = {name: selected[name] for name in ('raster', 'reveal', 'background')} if selected['raster'] else None
+                if facts['composition'] != composition or facts['published']['approved'] != record['parameters']['approved']:
+                    raise RuntimeError(f'Falsche Frozen-Auswahl oder Parameterbindung: {puzzle_id}')
+                images = {asset['id']: (asset.get('prepared') or asset)['file'] for asset in record['assets']}
+                images.update({raster['id']: raster['preview'] for raster in record['rasters']})
+                if {asset['id'] for asset in detail['assets']} != set(images):
+                    raise RuntimeError(f'Frozen-Bildmenge weicht ab: {puzzle_id}')
+                for name, ref in images.items():
+                    status, raw = request(f'{path}/assets/{name}', binary=True)
+                    if status != 200 or len(raw) != ref['bytes'] or hashlib.sha256(raw).hexdigest() != ref['sha256']:
+                        raise RuntimeError(f'Frozen-Bildantwort weicht ab: {puzzle_id}/{name}, HTTP {status}')
+                projections[puzzle_id] = {'phase': facts['state'], 'offers': offers, 'metadata': facts['metadata'],
+                                          'composition': composition, 'record_format': record['format'],
+                                          'qualification': 'qualification' in record,
+                                          'images': {name: ref['sha256'] for name, ref in images.items()}}
 
         negatives = []
-        for name in ('difficulty_method_0_3.json', 'sd2_rating_freeze.py'):
+        for name in ('difficulty_method_0_3.json', 'sd2_rating_freeze.py',
+                     'image_normalization.py', 'background_render.py', 'background_io.py'):
             relative = 'tools/puzzle_production/' + name
+            category = 'Bewertungsmethoden' if relative in audit['files'] else 'Bildprüfung'
             for mutation in ('missing', 'changed'):
                 with tempfile.TemporaryDirectory(prefix='broken-', dir=work) as broken:
                     root = Path(broken)
@@ -394,8 +486,8 @@ def method_smoke(build, inspection, destination):
                                 child.kill()
                                 child.wait(timeout=10)
                         error = raw.decode('utf-8').strip()
-                        if child.returncode != 2 or broken_state.exists() or not error.startswith(
-                                'Programmpaket unvollständig oder beschädigt. Interne Dateien der Bewertungsmethoden'):
+                        if (child.returncode != 2 or broken_state.exists() or not error.startswith(
+                                f'Programmpaket unvollständig oder beschädigt. Interne Dateien der {category}')):
                             raise RuntimeError(f'Frozen-Preflight akzeptierte {mutation} {name}: {child.returncode} {error!r}')
                         negatives.append({'file': relative, 'mutation': mutation, 'exit': child.returncode, 'error': error,
                                           'state_created': False})

@@ -1,31 +1,30 @@
 {
   "format": "development-ci-plan/v1",
-  "issue": "https://github.com/venomenon328/picross/issues/859",
-  "package": "PW-REMOTE-E",
+  "issue": "https://github.com/venomenon328/picross/issues/897",
+  "package": "PW-OPEN-FIX",
   "modules": [
-    "tools",
-    "production.adapter"
+    "tools"
   ],
-  "purpose": "Akteursgeführter Remote-Abschluss und CI-Plan für reine Einzelrätsel-Erstintegration.",
-  "omitted": "Produktionsfachkerne, native Gruppen, Browser, Preflight, Delivery und Sync bleiben außerhalb des Pakets. Adapter und Werkzeugtests prüfen die gebundene Lieferung und Wiederaufnahme; der reguläre Windows-Playerbau folgt aus dem Code-Diff.",
+  "purpose": "Öffnen regulärer Produktionsstände im Windows-PW. Werkzeuge prüfen Reader-, Paket- und HTTP-Fehlergrenzen; der bestehende nicht veröffentlichende Installerdispatch prüft echte MSI- und Frozen-Bytes separat.",
+  "omitted": "Fach-, Native-, Browser-, Preflight-, Delivery- und Sync-Module sind nicht angefordert. Fachkern, Spiel und Integrationswriter ändern sich nicht. Der Windows-Playerbau folgt aus dem Code-Diff, die Nutzerprobe bestehender Produktionen folgt dem regulären Rollout.",
   "test_changes": [
     {
-      "path": "tools/test_ci_modular.py",
-      "disposition": "core",
-      "reason": "Kleine Git- und Planregressionen für die enge Ausnahme."
+      "path": "tools/test_production_installer.py",
+      "disposition": "change-scoped",
+      "reason": "Geschlossene Bild- und Methodenquellen samt Hash-, Manifest- und Dateigegenproben."
     },
     {
-      "path": "tools/test_production_remote.py",
+      "path": "tools/test_production_workspace.py",
       "disposition": "change-scoped",
-      "reason": "Synthetischer Step-5-, Wiederaufnahme- und Retirement-Durchstich."
+      "reason": "Detail- und Bild-HTTP unterscheiden fehlende Originale und sichere interne Fehler."
     },
     {
-      "path": "tools/test_production_remote_reader.py",
+      "path": "tools/production_workspace/smoke_windows.py",
       "disposition": "change-scoped",
-      "reason": "Offline-Gegenproben für gepinnte Connector- und REST-Originale samt Worker-, PR- und CI-Bindung."
+      "reason": "V1-Methodenregression und repräsentative v3-Phasen am MSI-gebundenen Windows-PW mit Bildabrufen und defekten Paketressourcen im bestehenden Installerdiagnoseweg."
     }
   ],
-  "core_change": "Neue geschlossene Produktionsplanform und Prüfung der tatsächlichen einzelnen RI-Erstintegration im ursprünglichen PR-Diff.",
+  "core_change": null,
   "evidence": {
     "mode": "none",
     "purpose": null,

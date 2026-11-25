@@ -12,8 +12,8 @@ import sys
 from .instance import PROTOCOL, control, data
 
 ROOT = Path(__file__).parent
-METHOD_ROOT = ROOT.parent / 'puzzle_production'
-METHOD_RESOURCE_PREFIX = 'tools/puzzle_production/'
+READER_ROOT = ROOT.parent / 'puzzle_production'
+READER_RESOURCE_PREFIX = 'tools/puzzle_production/'
 
 
 def build_id():
@@ -36,6 +36,24 @@ def preflight(gui=False):
     except Exception as exc:
         raise ValueError('Programmpaket unvollständig oder beschädigt. Interne Dateien der Bewertungsmethoden '
                          'konnten nicht geprüft werden. Den gesamten App-Ordner neu entpacken.') from exc
+    manifest = ROOT / 'build.json'
+    resources = {}
+    if getattr(sys, 'frozen', False) or manifest.exists():
+        try:
+            from .payload import PW_IMAGE_SOURCES
+
+            resources = json.loads(manifest.read_text(encoding='utf-8'))['resources']
+            for name in PW_IMAGE_SOURCES:
+                expected = resources[name]
+                source = READER_ROOT / name.removeprefix(READER_RESOURCE_PREFIX)
+                if hashlib.sha256(source.read_bytes()).hexdigest() != expected:
+                    raise RuntimeError('Bildleser-Ressourcenbindung')
+            for name in ('editor_image_input', 'background_render', 'background_assets'):
+                importlib.import_module('tools.puzzle_production.' + name)
+            resources = {name: value for name, value in resources.items() if name not in PW_IMAGE_SOURCES}
+        except Exception as exc:
+            raise ValueError('Programmpaket unvollständig oder beschädigt. Interne Dateien der Bildprüfung '
+                             'konnten nicht geladen werden. App erneut installieren oder vollständig entpacken.') from exc
     try:
         for module in ('presentation', 'repository', 'server', 'current_view', 'motifs'):
             importlib.import_module('tools.production_workspace.' + module)
@@ -54,18 +72,16 @@ def preflight(gui=False):
         for name in ('index.html', 'app.js', 'workflow.js', 'style.css'):
             if not (ROOT / 'ui' / name).read_bytes():
                 raise RuntimeError('UI-Ressource')
-        manifest = ROOT / 'build.json'
-        if manifest.exists():
-            for name, expected in json.loads(manifest.read_text(encoding='utf-8'))['resources'].items():
-                relative = name.removeprefix(METHOD_RESOURCE_PREFIX)
-                if relative == name:
-                    resource = ROOT / name
-                else:
-                    if Path(relative).name != relative or not relative:
-                        raise RuntimeError('Ungültiger Methodenressourcenpfad')
-                    resource = METHOD_ROOT / relative
-                if hashlib.sha256(resource.read_bytes()).hexdigest() != expected:
-                    raise RuntimeError('Ressourcenbindung')
+        for name, expected in resources.items():
+            relative = name.removeprefix(READER_RESOURCE_PREFIX)
+            if relative == name:
+                resource = ROOT / name
+            else:
+                if Path(relative).name != relative or not relative:
+                    raise RuntimeError('Ungültiger Readerressourcenpfad')
+                resource = READER_ROOT / relative
+            if hashlib.sha256(resource.read_bytes()).hexdigest() != expected:
+                raise RuntimeError('Ressourcenbindung')
         if gui:
             import tkinter
             import tkinter.ttk
