@@ -194,6 +194,17 @@ def project(value):
         "plausible_range": [level, level], "r4_required": r["profile_scope"] == "line_prefix"}
 
 
+def compact_rating(result, result_hash, source, method_hash, rating_result):
+    """Project a verified SD2 result into its rating and compact analysis."""
+    compacted = {k: result[k] for k in ("analysis_hash", "trace_hash", "status", "reason", "line_analysis_complete", "line_fixpoint_confirmed", "deduction_complete", "r4")}
+    compacted.update(result_hash=result_hash, profiles_hash=digest(result["profiles"]),
+        structure=result["profiles"]["workload"]["structure"], wave_count=len(result["profiles"]["demand"]["trajectory"]),
+        new_singletons=result["profiles"]["workload"]["new_singletons"])
+    embedded = common.hashed({"format": RATING_FORMAT, "method": METHOD_ID, "method_hash": method_hash,
+        "analysis_result_hash": result_hash, "source": source, "result": rating_result}, "rating_hash")
+    return embedded, compacted
+
+
 def import_bundle(input_path, bundle, *, budget=None):
     from .catalog_analysis import safe_external
     from .sd2_rating_io import check_rating_bundle
@@ -211,13 +222,8 @@ def import_bundle(input_path, bundle, *, budget=None):
     common.check_hash(context, "context_hash"); common.mode(context["production_mode"])
     checked = check_rating_bundle(input_path, bundle / "rating", budget)
     report = common.bytes_json(common.read_file(bundle / "rating/analysis/report.json", 64 * 1024 * 1024), 64 * 1024 * 1024)
-    result = report["result"]
-    compacted = {k: result[k] for k in ("analysis_hash", "trace_hash", "status", "reason", "line_analysis_complete", "line_fixpoint_confirmed", "deduction_complete", "r4")}
-    compacted.update(result_hash=report["result_hash"], profiles_hash=digest(result["profiles"]),
-        structure=result["profiles"]["workload"]["structure"], wave_count=len(result["profiles"]["demand"]["trajectory"]),
-        new_singletons=result["profiles"]["workload"]["new_singletons"])
-    embedded = common.hashed({"format": RATING_FORMAT, "method": METHOD_ID, "method_hash": context["method_hash"],
-        "analysis_result_hash": report["result_hash"], "source": report["source"], "result": checked["result"]}, "rating_hash")
+    embedded, compacted = compact_rating(report["result"], report["result_hash"], report["source"],
+                                         context["method_hash"], checked["result"])
     value = common.hashed({"format": CHECKED, "production_mode": context["production_mode"], "current_source": source,
         "logic_binding": binding, "rating": embedded, "compact_analysis": compacted,
         "analysis_report_hash": digest({k: v for k, v in report.items() if k != "operation"}),

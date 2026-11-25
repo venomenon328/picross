@@ -47,7 +47,7 @@ def raster(definition, output, *, mode, profile='line', method='picross-difficul
            solve_seconds=120, solve_lines=100000, verify_seconds=120, verify_lines=100000,
            max_pair_work=20000000, max_pair_records=250000, final_budget=None):
     """Certify a current definition without import, repair or producer history."""
-    from . import catalog_rating, catalog_analysis, current_rating, solver
+    from . import catalog_analysis, catalog_method, catalog_rating, current_rating, solver
     from .editor_raster import check_end
     raw=definition if isinstance(definition, bytes) else current.encoded(definition)
     definition,puzzle,_,_=catalog_rating.definition(raw)
@@ -83,11 +83,16 @@ def raster(definition, output, *, mode, profile='line', method='picross-difficul
             check_end(definition,proof)
             if final_budget is not None:
                 final_budget.check()
-            arguments={}
-            if use_pair:
-                arguments={'proof':stage/'proof.json','baseline':work/'baseline.json'}
-            rating=catalog_analysis.analyze_single(stage/'definition.json',work/'analysis',production_mode=mode,method=method,**arguments)
-            (stage/'difficulty.json').write_bytes(current.encoded(current_rating.from_checked(rating)))
+            if use_pair and final_budget is not None:
+                require(method == catalog_method.NEW, 'Bounded paired certification requires SD2')
+                assessment = current_rating.from_paired_proofs(raw, (work/'baseline.json').read_bytes(),
+                    (stage/'proof.json').read_bytes(), mode, final_budget)
+            else:
+                arguments = {'proof': stage/'proof.json', 'baseline': work/'baseline.json'} if use_pair else {}
+                rating = catalog_analysis.analyze_single(stage/'definition.json', work/'analysis',
+                                                         production_mode=mode, method=method, **arguments)
+                assessment = current_rating.from_checked(rating)
+            (stage/'difficulty.json').write_bytes(current.encoded(assessment))
             rating_ref=content.ref('difficulty.json',(stage/'difficulty.json').read_bytes())
         (stage/'preview.png').write_bytes(current.raster_preview(definition, mode=mode))
         refs={k:content.ref(name,(stage/name).read_bytes()) for k,name in

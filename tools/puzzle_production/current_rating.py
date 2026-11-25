@@ -59,13 +59,53 @@ def validate(value, *, definition_bytes=None, production_mode=None, active=False
     return value
 
 
+def _assessment(value, method):
+    result = {"format": FORMAT, "method": method, "rating_revision": 1,
+              **{k: deepcopy(value[k]) for k in common.FIELDS | {"production_mode"}}}
+    result["record_hash"] = digest(result)
+    return validate(result)
+
+
 def from_checked(value):
     """Extract the current assessment produced by the existing analyzer."""
-    common.validate(value,active=False)
-    result={"format":FORMAT,"method":common.method(value),"rating_revision":1,
-            **{k:deepcopy(value[k]) for k in common.FIELDS|{"production_mode"}}}
-    result["record_hash"]=digest(result)
-    return validate(result)
+    common.validate(value, active=False)
+    return _assessment(value, common.method(value))
+
+
+def from_paired_proofs(definition_bytes, baseline_bytes, proof_bytes, production_mode, final_budget):
+    """Build a current SD2 rating with R4 verification on the repair budget."""
+    from .analysis_io import check_r4, check_target, source_binding
+    from .contract import Aborted
+    from .sd2_analysis import analyze
+    from .sd2_catalog_rating import compact_rating
+    from .sd2_contract import AnalysisBudget, result_data
+    from .sd2_io import _binding, _json
+    from .sd2_rating import _rating_result
+    from .sd2_verifier import verify_trace
+
+    method = catalog_method.NEW
+    method_hash = catalog_method.method_hash(method)
+    definition, puzzle, source, logic = common.definition(definition_bytes, method=method)
+    require_color_count(production_mode, len(used_foreground(definition["solution"])))
+
+    trace = analyze(puzzle)
+    analysis_verification = AnalysisBudget()
+    verify_trace(puzzle, trace, analysis_verification)
+    check_target(definition, "runtime", puzzle, trace)
+    try:
+        r4 = check_r4(puzzle, trace, _json(proof_bytes), _json(baseline_bytes),
+                      _binding(proof_bytes), _binding(baseline_bytes), final_budget)
+    except Aborted as exc:
+        raise Aborted(f"r4_verifier_{exc}") from exc
+
+    result = result_data(puzzle, trace, r4, analysis_verification)
+    analysis_verification.check()
+    result_hash = digest(result)
+    rating_source = source_binding(definition_bytes, definition, puzzle, "runtime")
+    rating, compact = compact_rating(result, result_hash, rating_source, method_hash,
+                                     _rating_result(result, result_hash, method_hash))
+    return _assessment({"current_source": source, "logic_binding": logic, "rating": rating,
+                        "compact_analysis": compact, "production_mode": production_mode}, method)
 
 
 def active(value,previous=None):

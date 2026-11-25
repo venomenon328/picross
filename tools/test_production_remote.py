@@ -63,14 +63,15 @@ def background_offer(case):
             'finding_decisions': [{**declaration, 'expected': row['decision']['binding'], 'id': row['id'], 'target': 'sky'}]}
 
 
-def color_repair_fixture(job, directory):
+def color_repair_fixture(job, directory, *, paired_gap=False):
     """Two-colour clasp. The gap beside the upper bar can be joined; the left column is empty."""
     from io import BytesIO
     from PIL import Image
     from tools.puzzle_production import current_tools, editor_raster
 
     key = job['puzzle_id']
-    values = [[int(c) for c in line] for line in ('012100', '010001', '000021', '000110')]
+    upper = '012000' if paired_gap else '012100'
+    values = [[int(c) for c in line] for line in (upper, '010001', '000021', '000110')]
     defined = {'schema': 2, 'id': key, 'revision': 1, 'width': 6, 'height': 4,
                'palette': [{'id': 1, 'color': 'a43821', 'symbol': 'A'}, {'id': 2, 'color': '214a80', 'symbol': 'B'}],
                'solution': values, 'rows': [editor_raster.clues(r) for r in values],
@@ -86,8 +87,8 @@ def color_repair_fixture(job, directory):
         return ref
 
     motif = current.raster_image(defined, neutral=False)
-    # The source silhouette includes the missing tooth at original coordinate (4, 0).
-    motif.paste((164, 56, 33, 255), (48, 0, 60, 12))
+    gap = 3 if paired_gap else 4
+    motif.paste((164, 56, 33, 255), (gap*12, 0, (gap+1)*12, 12))
     for role, scale in [('reveal', 2), ('motif', 1)]:
         buf = BytesIO()
         motif.resize((motif.width*scale, motif.height*scale), Image.Resampling.NEAREST).save(buf, format='PNG')
@@ -112,7 +113,7 @@ def color_repair_fixture(job, directory):
         row[k] = ref and attach(ref['file'], (directory/'line'/ref['file']).read_bytes())
     job['rasters'] = [row]
     job['budgets']['used']['raster_candidates'] = 1
-    cells = [[x != 0 and (x, y) != (4, 0) for x in range(6)] for y in range(4)]
+    cells = [[x != 0 and (x, y) != (gap, 0) for x in range(6)] for y in range(4)]
     protected = {'before_sha256': row['definition']['sha256'], 'motif_sha256': job['assets'][-1]['file']['sha256'], 'cells': cells}
     mask_hash = io.checksum(current.encoded(protected))
     for scope in ('reveal', 'motif'):
@@ -388,10 +389,10 @@ class RemoteTests(unittest.TestCase):
         self.assertIsNone(git.remote_head(self.repo, 'refs/tags/work-prod-' + self.job))
 
 
-    def color_session(self):
+    def color_session(self, *, paired_gap=False):
         from tools import production_remote_raster as operations
         f = self.f
-        files, _, cells, mask = color_repair_fixture(f.job, f.sources)
+        files, _, cells, mask = color_repair_fixture(f.job, f.sources, paired_gap=paired_gap)
         current.build({'format': current.REQUEST, 'record': f.job, 'expected': None, 'files': files}, f.sources, f.root)
         head = pw.push_job(f.root, self.job, None)
 
@@ -583,6 +584,75 @@ class RemoteTests(unittest.TestCase):
                 with patch.object(derivation, 'search', side_effect=AssertionError('Repeated repair search')):
                     self.assertEqual(self.execute(request)['work'], result['work'])
                 self.assertEqual(record(), saved)
+
+    def test_paired_repair_shares_final_budget_with_rating_replays(self):
+        from tools import production_remote_derivation as derivation
+        from tools.puzzle_production import catalog_rating, current_tools, editor_raster, solver, verifier
+        from tools.puzzle_production.contract import Budget
+
+        record, source, apply, cells, mask = self.color_session(paired_gap=True)
+        initial, = record()['rasters']
+        raw = self.fixture.assets[initial['definition']['asset']['asset_id']]
+        original = catalog_rating.definition(raw)[1]
+        self.assertEqual(solver.solve(original, profile='paired-lines-color')['status'], 'stalled')
+        definition = io.json_bytes(raw, current.LIMIT)
+        matrix = deepcopy(definition['solution'])
+        matrix[0][3] = 1
+        repaired = editor_raster.definition(definition, matrix)
+        puzzle = catalog_rating.definition(current.encoded(repaired))[1]
+        first_pass = Budget()
+        baseline = solver.solve(puzzle, first_pass)
+        proof = solver.solve(puzzle, first_pass, profile='paired-lines-color')
+        self.assertEqual((baseline['status'], proof['status']), ('stalled', 'solved'))
+        first_solver_lines = first_pass.lines
+        first_solver_pair_work = first_pass.pair_work
+        self.assertTrue(verifier.verify(puzzle, baseline, first_pass)['proof_verified'])
+        self.assertTrue(verifier.verify(puzzle, proof, first_pass)['certified'])
+        replay_lines = first_pass.lines - first_solver_lines
+
+        config = dict(max_changes=1, max_steps=96, max_candidates=32, search_seconds=15,
+                      final_seconds=30, search_lines=10000, final_lines=first_pass.lines,
+                      order='seeded-frontier-v1', seed=1, operators=['single-cell'])
+        plan = dict(source=source('clasp'), cells=cells, mask_sha256=mask, output='paired-repair',
+                    label='Upper clasp', rationale='Close the marked gap', profile='paired',
+                    region=[[3, 0]], config=config, extra_changes_reason=None)
+        stopped, request = apply('repair', plan)
+        reason = 'final_r4_verifier_work_limit'
+        self.assertEqual((stopped['outcome'], stopped['search']['reason']), ('aborted', reason))
+        saved = record()
+        row, = saved['rasters']
+        self.assertEqual(row['last_repair']['reason'], reason)
+        self.assertEqual({k: v for k, v in row.items() if k != 'last_repair'}, initial)
+        self.assertIsNone(row['difficulty'])
+        self.assertEqual(saved['budgets']['used'], dict(raster_candidates=2, repair_rounds=1, image_corrections=0))
+        with patch.object(derivation, 'search', side_effect=AssertionError('Repeated repair search')):
+            self.assertEqual(self.execute(request)['work'], stopped['work'])
+        self.assertEqual(record(), saved)
+
+        full_lines = first_pass.lines + replay_lines
+        plan['config'] = dict(config, final_lines=full_lines)
+        with patch.object(verifier, 'verify', wraps=verifier.verify) as verify:
+            result, _ = apply('repair', plan)
+        self.assertEqual((result['proof_status'], result['certified']), ('solved', True))
+        bound_calls = [call.args for call in verify.call_args_list
+                       if len(call.args) == 3 and getattr(call.args[2], 'max_lines', None) == full_lines]
+        self.assertEqual([args[1]['status'] for args in bound_calls], ['stalled', 'solved'])
+        budget = bound_calls[0][2]
+        self.assertTrue(all(args[2] is budget for args in bound_calls))
+        self.assertEqual(budget.lines, full_lines)
+        self.assertEqual(budget.pair_work, 2*first_pass.pair_work - first_solver_pair_work)
+        final = record()
+        row = current.findings.subjects(final)['paired-repair']
+        raw_final = self.fixture.assets[row['definition']['asset']['asset_id']]
+        self.assertEqual(io.json_bytes(raw_final, current.LIMIT)['solution'], matrix)
+        rating = self.fixture.assets[row['difficulty']['asset']['asset_id']]
+        reference = self.f.work/'paired-rating-reference'
+        current_tools.raster(raw_final, reference, mode='color', profile='paired')
+        self.assertEqual(rating, (reference/'difficulty.json').read_bytes())
+        rating = io.json_bytes(rating, current.LIMIT)
+        self.assertTrue(rating['compact_analysis']['r4']['required'])
+        self.assertEqual(rating['rating']['result']['assessment']['level'], 5)
+        self.assertEqual(final['budgets']['used'], dict(raster_candidates=3, repair_rounds=2, image_corrections=0))
 
     def test_bound_crop_originals_round_trip(self):
         from zipfile import ZipFile

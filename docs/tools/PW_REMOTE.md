@@ -246,8 +246,10 @@ Proofstatus und Zertifizierung bzw. bei Nichtfund Suchendgrund und Verbrauch
 hinzu. Die Zahl tatsächlich vorhandener Alternativen kann unter dem kumulativen
 Versuchszähler liegen. Nach Publikation die Ansichten über `inspect` öffnen.
 Bei RP-5 teilen sich die Solverläufe und die unabhängige Verifikation der
-Endproofs das reservierte Abschlussbudget. Der Prüfer erhält die verbleibenden
-Linien und Paararbeit sowie dieselbe monotone Frist. Ein kontrollierter Abbruch
+Endproofs das reservierte Abschlussbudget. Auch die erneuten R4-Prüfungen
+für die aktuelle SD2-Bewertung verwenden dieselben verbleibenden Linien,
+dieselbe Paararbeit und dieselbe monotone Frist. Die eigenständige SD2-Analyse
+und deren Spurprüfung behalten ihre eigenen Budgets. Ein kontrollierter Abbruch
 speichert den konkreten Endgrund und den Verbrauch am bisherigen Entwurf.
 Der Worker verwendet
 bei fester Korrektur und Profilprüfung standardmäßig 120 Sekunden und 100000
