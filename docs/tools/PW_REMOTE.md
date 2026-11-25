@@ -117,7 +117,7 @@ Eingänge erneut.
 | --- | --- | --- |
 | `inspect`, `inspect-product` | bei Produktprüfung `product`, `pr` | Explizite `items` aus dem aktuellen Record gemäß Originalabruf oben. Liefert die Originale mit Herkunft und Ablauf. |
 | `step3` | – | `motif_sha256`, vollständiges bestehendes Bilddesign unter `design` mit einem benannten Kandidaten, dazu `profile=line\|paired` und `label`. Die gewählte Motivdatei durchläuft Bild-/Rasterhelfer, Proof und unabhängigen Verifier. Der Builder ergänzt Kandidat und Zähler, der Publisher sichert die Ergebnisse zur Sichtung. |
-| `step5` | `issue` (bestehendes Produktionsissue) | `background` enthält die tatsächlich gewählte ID, `none`, `standard` oder JSON-null zur Wiederverwendung. `decisions` enthält nur tatsächlich erklärte, noch benötigte PW-B-Entscheidungen für background/final/integration mit Scope, Inhaltsbindung, Akteur, UTC-Zeit und Erklärung. Bereits abgenommener Record: `{"background":null,"decisions":[]}`. |
+| `step5` | `issue` (in v2 JSON-null oder tatsächlich zugeordnete positive Issue-ID, in v1 bestehende ID) | `background` enthält die tatsächlich gewählte ID, `none`, `standard` oder JSON-null zur Wiederverwendung. `decisions` enthält nur tatsächlich erklärte, noch benötigte PW-B-Entscheidungen für background/final/integration mit Scope, Inhaltsbindung, Akteur, UTC-Zeit und Erklärung. Bereits abgenommener Record: `{"background":null,"decisions":[]}`. |
 | `step4` | – | `prepare` listet die IDs aller vorgesehenen Hintergrundangebote. Der Worker sichert jede kanonische PNG-Ausgabe. Nach dem Originalabruf schreibt `assessment` die tatsächliche Sichtung je Kandidat fort. |
 | `status` | `product` (Commit), `pr` (Nummer) | Leeres Objekt. Aktueller Produkt-PR und tatsächlicher PR-Lauf mit Head, Basis, Testmerge, Run, Attempt und Checkzuständen. Fehlende, ausstehende oder genehmigungspflichtige Läufe verlangen einen späteren Statusabruf. |
 | `retire` | `product`, `pr` | Leeres Objekt. Separater Prozess mit der nach Completion veröffentlichten Arbeits-SHA und dem aktuellen Main. Er prüft den gemergten zugeordneten PR, die Integration seines Mergecommits und die gelieferte Generation vor dem Retirement. |
@@ -141,10 +141,85 @@ Reihenfolge. Der Produktcommit enthält die ausgewählte Lieferung und ihren
 buildfreien Paketplan. Completion vergleicht genau diesen Commit und denselben
 Eingang. Der Publisher überträgt den abgeschlossenen Arbeitsrecord und
 `content/integrate-<job>` in einem atomaren Push mit zwei erwarteten Refwerten.
-Erst nach dem Readback wird der zugehörige Draft-PR angelegt oder wiedergefunden.
-Ein belegter fremder Branch/PR blockiert. Die PR-Checks stammen aus dem
-tatsächlichen PR-Ereignis und seinem getesteten Mergecommit. Eine Mergeentscheidung
-verbleibt beim Akteur gemäß [Authoring §8](../production/authoring/PUZZLE_AUTHORING_STEP_5.md).
+Der v2-Worker bestätigt die publizierte Generation. Der Akteur übernimmt
+den Draft-PR und dessen PR-CI nach dem folgenden Ablauf.
+
+### Draft-PR und Package CI über den Connector
+
+Vor Step 5 im aktuellen Repository die tatsächlichen Connector-Wege für
+PR-Neuanlage, Git-Refs/Commitobjekte, Contents/Blobs, Release/Assets,
+Commitvergleich, PRs und Actions prüfen. Repositoryname und numerische ID
+an `GET /repos/OWNER/REPO` binden. Lesezugriff und angebotene Schreiboperation
+belegen noch keine erfolgreiche Mutation. Fehlende notwendige Fähigkeiten
+konkret melden. Für die reguläre Erstintegration `format=pw-remote-v2`,
+`operation=step5` und `issue:null` verwenden. Ein ausdrücklich zugeordnetes
+tatsächliches Issue kann als positive Zahl mitgegeben werden. Der Worker
+liefert nach Doppelpush und vollständiger Publisherprüfung `pr-ready` oder
+`pr-bound`. Er gibt Arbeitscommit, Recordhash, Produkthead, Basis,
+Requestdigest und kanonische Draft-Metadaten aus.
+
+Den [Offline-Reader](../../tools/production_remote_reader.py) an der verbindlichen
+`tools`-SHA lesen und mit Python 3.11+ ausführen. Die JSON-Hülle enthält die
+ursprünglichen REST-Antworten unter den folgenden Schlüsseln. Alle GETs liegen
+unter `/repos/OWNER/REPO`; bei Connectorantworten
+`structuredContent.content` als JSON dekodieren. Request-SHA und Job stammen
+aus der bestätigten Einreichung bzw. der gebundenen Übergabe.
+
+| Schlüssel | Original |
+| --- | --- |
+| `repository`, `main_ref`, `main_commit` | Repoobjekt, `git/ref/heads/main`, `git/commits/MAIN` |
+| `request_sha`, `request_commit` | Bestätigte Einreichungs-SHA, `git/commits/REQUEST_SHA` auch nach Entfernung des Requestrefs |
+| `work_ref`, `work_commit` | `git/ref/heads/content/pw/JOB`, `git/commits/WORK` |
+| `input_record`, `completion_record` | `contents/content/authoring/JOB/current/record.json?ref=SHA`, einmal für den Requesteingang, einmal für den publizierten Arbeitsref; Base64-Originale |
+| `product_ref`, `product_commit`, `product_diff` | `git/ref/heads/content/integrate-JOB`, `git/commits/HEAD`, vollständiges `compare/MAIN...HEAD` |
+| `work_tag`, `release` | `git/ref/tags/work-prod-JOB`, `releases/ID` mit vollständigem Assetbestand, ID aus dem Record |
+| `pulls`, `pr` | `pulls?head=OWNER%3Acontent%2Fintegrate-JOB&state=all&per_page=2`; bei genau einem Treffer zusätzlich `pulls/NUMMER` |
+
+```text
+python production_remote_reader.py originals.json
+```
+
+Bei `pr-ready` die zurückgegebenen `draft_pr`-Felder verwenden und
+`content/integrate-JOB` → `main` direkt über den Connector als Draft eröffnen.
+Der Body enthält den vollständigen Marker
+`<!-- picross-production JOB REQUESTDIGEST -->`. Übergib die optionale
+Issue-Referenz im Body und lasse den API-Parameter `issue` weg.
+Anschließend die getrennten Ref- und PR-Reads am aktuellen Stand bestätigen
+und mit `--expect-draft` prüfen. Bei Antwortverlust oder gleichzeitigem
+Anlageversuch zuerst erneut alle Zustände über denselben Head suchen.
+Ein offener zugehöriger PR ergibt `pr-bound`. Ein geschlossener, fremder,
+veränderter oder mehrdeutiger Treffer blockiert die Anlage. Bei Abweichungen
+den konkreten Befund festhalten. Ein frischer Chat setzt so am bestätigten
+Completionstand fort. Bei bereits erfolgreicher Veröffentlichung sind
+Fachrechnung, Wahl und Budgetstand abgeschlossen.
+
+CI mit demselben Reader auswerten. Dazu `ci` mit folgenden Originalen ergänzen:
+
+| Schlüssel in `ci` | Original |
+| --- | --- |
+| `workflow` | `actions/workflows/ci-modular.yml` mit aktivem Status und exakter ID |
+| `runs` | Seitenarray aus `actions/workflows/ID/runs?event=pull_request&branch=content%2Fintegrate-JOB&head_sha=HEAD&per_page=100&page=N`; alle Treffer lesen |
+| `run`, `attempt` | `actions/runs/RUN` und `actions/runs/RUN/attempts/ATTEMPT` für den passenden höchsten `run_number` und dessen aktuellen Versuch |
+| `jobs` | Bei abgeschlossenem Run alle Seiten aus `actions/runs/RUN/attempts/ATTEMPT/jobs?per_page=100&page=N` |
+| `test_merge` | `git/commits/TESTMERGE` aus dem aktuellen offenen PR, Eltern in der Reihenfolge Basis und Head |
+
+Nur `checks-passed` bestätigt erfolgreiche `docs`, `verify (source)` und
+`ci-required` samt übersprungenem `review-attachment` im tatsächlich
+gebundenen Versuch. Der erfolgreiche Checkout-Schritt in `docs` muss
+`PR N / HEAD / BASE / TESTMERGE` exakt enthalten. Bei ausstehendem Versuch
+die aktuellen Antworten nach der tatsächlichen GitHub-Ausführung erneut lesen.
+`status` ist der bedarfsweise Ersatz, falls der Connector notwendige
+Originalmetadaten nicht liefern kann. Ein allgemeiner Workflow-Dispatch
+belegt keinen PR-Testmerge.
+
+Im Produkt-PR Eingang, Completion, Request, Produktcommit, Auswahl und
+Endabnahme kompakt belegen. Den vollständigen Diff, gebundene Lieferoriginale,
+das eigene Selbstreview und den tatsächlichen CI-Lauf verlinken.
+Vor einem autorisierten Merge Main, Head, Basis, Testmerge und CI erneut
+prüfen sowie Konfliktfreiheit und Schutzstatus bestätigen. Nach bestätigtem
+Main die passende Generation mit `retire` abschließen. Bestätigten
+Main/Retirement und gegebenenfalls offene Reste im Produkt-PR kommentieren.
+Der normale Produktionsauftrag läuft ohne eigenständiges Produktionsissue.
 
 ## Aufrufzugang und Betrieb
 
@@ -157,23 +232,13 @@ Laufkontext. Ein konfigurierter App-Zugang verwendet die Repositoryinstallation
 das kurzlebige Installationstoken auf das aktuelle Repository und die benannten
 Operationen. Die Bereitstellung gehört zum Betreiberauftrag.
 
-Ohne konfigurierte App verwendet Actions sein Repositorytoken. Ein damit
-erzeugtes PR-Ereignis kann auf Genehmigung warten. Der Akteur liest den
-tatsächlichen Laufstatus. Für den Regelbetrieb ist der ereignisauslösende
-App-Zugang im isolierten Kontext zu erproben. Meldet der Worker nach geprüftem
-Doppelpush `pr-access-required`, kann der aufrufende Akteur den gebundenen
-Request im eigenen autorisierten Kontext fortsetzen. Bei Nutzung des Connectors
-zuerst Basis, Produkthead und vorhandene PRs lesen. Für die bedingte Neuanlage
-die Daten aus `production_remote_pr.product_pr` einschließlich der vollständigen
-Markierung übernehmen. Den zugehörigen PR und die Checks mit `status` bestätigen.
+Für bestehende v1-Aufträge bleibt Worker-PR-Anlage samt
+`pr-access-required` nach bestätigtem Doppelpush verfügbar. Ohne App nutzt
+Actions sein Repositorytoken. Ein v1-PR-Ereignis kann eine Genehmigung
+erfordern. Der Akteur kann aus der gebundenen Completion mit der
+Connector-Route fortsetzen und den tatsächlichen PR-Lauf lesen.
 [GitHub-Tokenverhalten](https://docs.github.com/en/actions/concepts/security/github_token)
 und [Triggerregeln](https://docs.github.com/en/actions/how-tos/write-workflows/choose-when-workflows-run/trigger-a-workflow).
-
-Der Connector bietet die bedingte Neuanlage und das Lesen von Commits und
-Actions-Läufen. Der Push-Trigger ist an einer früheren Connector-Publikation
-belegt. Die Wirkung des vollständigen Produktionswegs aus einem tatsächlichen
-ChatGPT-Auftrag sowie sein produktiver Authkontext sind gesondert abzunehmen.
-[Referenzlauf](https://github.com/venomenon328/picross/actions/runs/45095575946).
 
 Der isolierte Testmodus `PICROSS_PW_REMOTE_TEST=1` bindet ausschließlich
 `venomenon328/picross-remote-test`, dessen numerische Repository-ID, ursprünglichen
@@ -276,7 +341,7 @@ binden den Stand einschließlich Befundannahmen, Sichturteilen und Ausgabehash.
 ## PW-REMOTE-D
 
 Die bisherige Einzelzustellung mit `pw-remote-v1` und `inspect-product`
-bleibt verfügbar. `pw-remote-v2` gilt für `inspect`, `step3` und `step4`.
+bleibt verfügbar. `pw-remote-v2` gilt für `inspect`, `step3`, `step4` und `step5`.
 Der Requestumschlag, der kanonische Digest und der erwartete Requestref
 bleiben dieselben. Alle Felder und Rollen sind geschlossen.
 
@@ -359,7 +424,9 @@ mit derselben privaten Wurzel fortsetzen. Für einen bereits gepushten
 v2-Nachfolger mit ausstehendem Publisherabschluss den unveränderten Request
 auf stdin an `python -B -m tools.production_remote recover --auth gh --root PRIVAT`
 übergeben. Dafür die ursprünglich gebundene saubere Werkzeugrevision und die
-ursprüngliche private Wurzel verwenden. Der Einstieg verlangt das passende
+ursprüngliche private Wurzel verwenden. Für Step5-v2 stattdessen denselben
+unveränderten Request mit `execute` im eigenen privaten Ordner fortsetzen.
+Der jeweilige Einstieg verlangt das passende
 Journal. Eine noch belegte Lease erfordert den dazugehörigen lokalen Besitzbeleg.
 Die Wiederaufnahme bestätigt den vorhandenen Arbeitscommit, bereinigt seine
 gebundenen Vorgängerreste und führt das Journal nach. Fachrechnung, Zähler und

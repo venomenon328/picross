@@ -347,6 +347,96 @@ class PackageContract(unittest.TestCase):
 
 
 class GitBinding(unittest.TestCase):
+    def test_issue_free_plan_is_bound_to_one_new_puzzle_in_real_git(self):
+        production = ci.production_plan
+        job = 'pz-synthetic'
+        branch = production.product_branch(job)
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            def git(*args):
+                return subprocess.check_output(['git', *args], cwd=root, stderr=subprocess.PIPE).decode().strip()
+
+            def put(path, value):
+                file = root / path
+                file.parent.mkdir(parents=True, exist_ok=True)
+                file.write_text(json.dumps(value), encoding='utf-8')
+
+            def commit(message, *, stage=True):
+                if stage:
+                    git('add', '.')
+                git('commit', '-qm', message)
+                return git('rev-parse', 'HEAD')
+
+            git('init', '-q')
+            git('config', 'user.name', 'Synthetic')
+            git('config', 'user.email', 'synthetic@example.invalid')
+            other = {'id': 'pz-older', 'name': 'Older'}
+            content = dict(format='picross-content-registry-v5', entries=[other], metadata=[other], backgrounds=[other])
+            runtime = dict(format='picross-runtime-registry-v9', categories=[], entries=[other])
+            put(production.CONTENT, content)
+            put(production.RUNTIME, runtime)
+            put('game/data/content/pz-older.json', other)
+            put(ci.PLAN_PATH, package())
+            base = commit('base')
+            paths = (f'content/added/{job}.json', f'content/difficulty/{job}/rating.json',
+                     f'content/reveals/{job}.json', f'game/data/content/{job}.json',
+                     f'game/art/content/{job}.png', f'game/art/content/{job}.txt',
+                     f'game/art/catalog/{job}-ui100.png', f'game/art/catalog/{job}-ui125.png')
+            background = f'content/backgrounds/{job}.json'
+            row = {'id': job, 'key': job, 'save_slot': job, 'definition': f'data/content/{job}.json',
+                   'reveal': f'art/content/{job}.png', 'category_id': 'fixture'}
+            plan = production.package(job)
+            put(ci.PLAN_PATH, plan)
+            for path in paths:
+                put(path, {'id': job})
+            content['entries'].append(row)
+            content['metadata'].append({'id': job, 'name': 'Synthetic', 'category_id': 'fixture'})
+            content['backgrounds'].append({'id': job, 'source': {'file': background}})
+            put(production.CONTENT, content)
+            for status in ('none', 'standard', 'selected'):
+                asset = {'file': f'art/backgrounds/{job}.png'} if status == 'selected' else None
+                runtime['entries'] = [other, {**row, 'name': 'Synthetic', 'background': {'status': status, 'asset': asset}}]
+                put(production.RUNTIME, runtime)
+                put(background, {'id': job, 'current': {'status': status, 'asset': {'file': 'game/' + asset['file']} if asset else None}})
+                if asset:
+                    put('game/' + asset['file'], {})
+                    put(f'game/art/backgrounds/{job}.txt', {})
+                head = commit('valid integration: ' + status)
+                for event in ('pull_request', 'push'):
+                    result = ci.load_plan(base, head, event, branch=branch, root=root)
+                    self.assertEqual(result['modules'], [])
+                    self.assertFalse(result['player']['required'])
+            put(ci.PLAN_PATH, {'format': 'invalid in the worktree'})
+            self.assertEqual(ci.load_plan(base, head, 'pull_request', branch=branch, root=root)['package'], plan)
+            with self.assertRaisesRegex(ValueError, 'integration branch'):
+                ci.load_plan(base, head, 'pull_request', branch='content/integrate-pz-other', root=root)
+
+            def reject(message, mutate, *, stage=True):
+                with self.subTest(message=message):
+                    git('reset', '--hard', head)
+                    mutate()
+                    bad = commit(message, stage=stage)
+                    with self.assertRaises(ValueError):
+                        ci.load_plan(base, bad, 'pull_request', branch=branch, root=root)
+
+            reject('extra issue', lambda: put(ci.PLAN_PATH, dict(plan, issue=package()['issue'])))
+            reject('missing ID', lambda: put(ci.PLAN_PATH, {k: v for k, v in plan.items() if k != 'puzzle_id'}))
+            reject('different ID', lambda: put(ci.PLAN_PATH, dict(plan, puzzle_id='pz-other')))
+            reject('extra module', lambda: put(ci.PLAN_PATH, dict(plan, modules=['tools'])))
+            reject('code mixed into delivery', lambda: put('game/main.gd', {}))
+            reject('second product ID', lambda: put('game/data/content/pz-second.json', {}))
+            reject('foreign row change', lambda: put(production.CONTENT,
+                   dict(content, metadata=[dict(other, name='Modified'), content['metadata'][1]])))
+            reject('foreign file replaced', lambda: put('game/data/content/pz-older.json', {}))
+            reject('deleted old file', lambda: (root/'game/data/content/pz-older.json').unlink())
+            reject('renamed old file', lambda: git('mv', 'game/data/content/pz-older.json', 'game/data/content/renamed.json'))
+            reject('executable mode', lambda: git('update-index', '--chmod=+x', paths[3]), stage=False)
+            git('reset', '--hard', head)
+            put('README.md', {})
+            inherited = commit('inherited production package')
+            with self.assertRaisesRegex(ValueError, 'Inherited package plan'):
+                ci.load_plan(head, inherited, 'pull_request', branch=branch, root=root)
+
     def test_current_view_production_diff_is_build_free_for_pr_and_main_push(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
@@ -430,7 +520,7 @@ class GitBinding(unittest.TestCase):
                 (root/new).parent.mkdir(parents=True, exist_ok=True)
                 (root/old).rename(root/new)
                 base = head; head = commit('rename ' + old + ' to ' + new)
-                paths, _ = ci.changed_metadata(base, head, root=root)
+                paths = ci.changed_metadata(base, head, root=root)
                 self.assertTrue({old, new}.issubset(paths))
                 assert_player(base, head, required)
             for path in (BACKGROUND_PATHS[0], renamed, BACKGROUND_PATHS[2]):

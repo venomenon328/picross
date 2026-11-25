@@ -88,8 +88,9 @@ Lösbarkeit/Eindeutigkeit, unabhängigen aktuellen Proof, Nutzungsgrundlage, Ges
 Zielintegration revisionsgebunden tatsächlich prüfen; unveränderte passende Belege
 wiederverwenden (Schritt 3 §4.4). Keine rätselspezifischen Unit-Tests/Snapshots/
 CI-Falllisten/Dauerreplays; Auftragsskripte temporär außerhalb Discovery, nur aktuell benötigte Ergebnisse im Arbeitsstand. Vor Inhalts-/Ablage-/Cleanup-PR [CI v2](../../ci/CI_WORKFLOW_V2.md) Paketplan/
-buildfreie Klassen lesen: aktueller `.ci/package.json`, begründet `modules=[]`,
-`evidence.mode=none`, Quellen-/Plankern ohne Player auch nach main. Keine Fach-/
+buildfreie Klassen lesen. Die reguläre Erstintegration verwendet den
+Produktionsplan mit Rätsel-ID, begründetem `modules=[]` und
+`evidence.mode=none`. Der Quellen-/Plankern läuft ohne Player auch nach main. Keine Fach-/
 Solver-/Proof-/native Volltests allein für neue Rätsel. Code, gemeinsame Spielassets
 und CI folgen Entwicklungsprüfplan, keine Inhaltsausnahme oder manuelles `all`.
 

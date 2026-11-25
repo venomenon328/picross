@@ -198,6 +198,9 @@ def finalize(req, job, root, scratch):
 
 
 def package(req):
+    if req['format'] == 'pw-remote-v2':
+        from .ci_production_plan import package as production_package
+        return production_package(req['job'])
     return {'format': 'development-ci-plan/v1', 'issue': f'https://github.com/{req["repository"]}/issues/{req["issue"]}',
             'package': 'Integration-' + req['job'], 'modules': [], 'purpose': 'Gewählte finale Rätseldaten registrieren.',
             'omitted': 'Reine Inhaltsintegration. Adapter und registrierte Lieferung im Produktionslauf geprüft.',

@@ -345,7 +345,14 @@ class RemoteTests(unittest.TestCase):
             delivery.sources(read, record)
 
     def test_bound_raster_product_ci_recovery_and_retirement(self):
+        self.exercise_step5('pw-remote-v1')
+
+    def test_issue_free_actor_pr_recovery_and_retirement(self):
+        self.exercise_step5(delivery.WIRE_V2)
+
+    def exercise_step5(self, wire):
         f = self.f
+        v2 = wire == delivery.WIRE_V2
         f.publish()
         f.raster_ready()
         first = pw.push_job(f.root, self.job, None)
@@ -396,7 +403,8 @@ class RemoteTests(unittest.TestCase):
         for scope in ('background', 'final', 'integration'):
             fixtures.decide(f.job, scope)
         decisions = [d for d in f.job['decisions'] if d['scope'] in ('background', 'final', 'integration')]
-        req = self.req('step5', approved, {'background': 'none', 'decisions': decisions}, issue=1)
+        req = dict(self.req('step5', approved, {'background': 'none', 'decisions': decisions},
+                            issue=None if v2 else 1), format=wire)
         with self.assertRaisesRegex(ValueError, 'Actual final'):
             self.execute({**req, 'input': {'background': 'none', 'decisions': []}})
         original_push = git.publish_completion
@@ -410,9 +418,22 @@ class RemoteTests(unittest.TestCase):
         fresh = f.work / 'fresh'
         fresh.mkdir()
         result = self.execute(req, fresh)
-        self.assertEqual(result['status'], 'checks-passed')
-        self.assertEqual(self.post_count, 1)
-        self.assertEqual(result['head'], self.execute(req)['head'])
+        self.assertEqual(result['status'], 'pr-ready' if v2 else 'checks-passed')
+        self.assertEqual(self.post_count, int(not v2))
+        with patch('tools.production_remote_steps.step5', side_effect=AssertionError('Replayed computation')), \
+             patch.object(pw, 'push_job', side_effect=AssertionError('Replayed mutation')):
+            self.assertEqual(result['head'], self.execute(req, fresh)['head'])
+        if v2:
+            self.assertNotIn(('issues/None', 'GET'), [(call.args[0], call.args[1] if len(call.args) > 1 else 'GET')
+                             for call in pw.api.call_args_list])
+            self.assertIsNone(result['pr'])
+            self.assertNotIn('issue', result['draft_pr'])
+            product_plan = io.json_bytes(GitSource(self.repo).read(result['head'], '.ci/package.json'), current.LIMIT)
+            from tools import ci_production_plan
+            self.assertEqual(product_plan, ci_production_plan.package(self.job))
+            with self.assertRaises(ConnectionError):
+                pw.api('pulls', 'POST', result['draft_pr'])
+            self.assertEqual(self.execute(req, fresh)['status'], 'pr-bound')
         self.assertEqual(self.post_count, 1)
         completed, product = result['work'], result['head']
         self.assertEqual(git.remote_head(self.repo, current_ref), completed)

@@ -627,6 +627,7 @@ primäre Schlussauftrag erklärt diese konkrete Wahl, Endabnahme und Integration
 zusammen. Er nennt den gewählten Umfang: Commit, Push und Draft-PR ohne Merge
 oder PR samt bedingtem Squash-Merge und anschließendem Produktionsabschluss.
 Für Bedingungen und Verfahren verweist er auf Authoring Schritt 5 §§8–9.
+Der reguläre Auftragsweg verwendet die Rätsel-ID im Produktionsplan.
 `content_ready`, echte äußere Endfreigabe, Finalizer, Export/Plan/Register und
 bestätigtes main bleiben getrennte technische Tatsachen; kein UI-Writer entsteht.
 

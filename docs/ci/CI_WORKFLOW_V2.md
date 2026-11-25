@@ -67,6 +67,31 @@ klassifizierbaren Diff wird die Ausnahme nicht angenommen.
 | `production.solver`, `production.images`, `production.adapter`, `production.catalog` | Bestehende synthetische Fachgruppen und zugeordnete Integrationen |
 | `delivery` | Regulärer Webbuild und isolierte lokale SSH-/HTTP-Referenz; kein Live-Deployment |
 
+Für eine reine erstmalige RI-Lieferung genau einer regulären `pz-<id>`
+auf `content/integrate-<id>` gilt der geschlossene Plan
+`production-ci-plan/v1`. Er ersetzt das Feld `issue` durch
+`puzzle_id`, nennt `package=Integration-<id>`, begründet
+Zweck und ausgelassene Abdeckung und setzt `modules=[]`,
+`test_changes=[]`, `core_change=null` sowie
+`evidence={mode:none,purpose:null,expires:null}`.
+Record und Produkt-PR tragen die tatsächliche Produktionsentscheidung.
+Die [gemeinsame Planerzeugung](../../tools/ci_production_plan.py) gilt für
+Codex lokal und den ChatGPT-Worker v2.
+
+CI liest den neuen Plan aus dem Original-PR-Head. Der vollständige
+Git-Diff muss genau den regulären Satz neuer Lieferdateien für die gebundene
+ID, den Paketplan und die beiden bestehenden Registrydateien enthalten.
+Die beiden Seiten einer Umbenennung und die Git-Dateimodi gehen in die
+Prüfung ein. Pro Registrytabelle kommt ausschließlich der Eintrag dieser
+ID hinzu. Definition, Added, Rating, Reveal- und Hintergrundquelle, Reveal
+mit Notice und beide UI-Profile werden neu angelegt. Bei `selected`
+kommen Hintergrund-PNG und Notice hinzu. `none` und `standard`
+verwenden allein die Hintergrundquelle. Gemischte Diffs, weitere IDs,
+Bestandsrevisionen und Cleanup benötigen ihren bisherigen Plan.
+`development-ci-plan/v1` behält die eigene Issue-URL und den bisherigen
+Test-/Kernvertrag. In beiden Fällen folgt die Buildpflicht aus dem tatsächlichen
+Diff.
+
 Das Modul `tools` enthält die Offline-Regressionen zum
 [Git-Publikationsvertrag](../tools/GIT_PUBLICATION.md). Der Metadatencheck im
 Kern läuft nach Veröffentlichung. Die Objektprüfung vor dem ersten Upload

@@ -17,16 +17,18 @@ import time
 import zipfile
 
 from ci_paths import content_path
+import ci_production_plan as production_plan
 
 ROOT = Path(__file__).resolve().parents[1]
-PLAN_PATH = '.ci/package.json'
+PLAN_PATH = production_plan.PLAN_PATH
 FORMAT = 'development-ci-plan/v1'
 NATIVE = ('core', 'history', 'catalog', 'completion', 'adapters', 'graphics', 'export')
 PRODUCTION = ('solver', 'images', 'adapter', 'catalog')
 MODULES = ('tools', 'preflight', 'delivery', 'sync.server', *(f'native.{g}' for g in NATIVE),
            *(f'production.{g}' for g in PRODUCTION))
 CORE_PATHS = {Path(__file__).resolve().relative_to(ROOT).as_posix(), 'tools/test_ci_modular.py',
-              '.github/workflows/ci-modular.yml', 'tools/build_main_player.py', 'tools/ci_paths.py'}
+              '.github/workflows/ci-modular.yml', 'tools/build_main_player.py', 'tools/ci_paths.py',
+              'tools/ci_production_plan.py'}
 SOFT_SECONDS = 600
 
 
@@ -143,23 +145,22 @@ def changed_metadata(base, head, *, root):
         fields.pop()
     if len(fields) % 2:
         raise ValueError('Invalid changed-file metadata')
-    paths, nonregular = [], []
+    changes = {}
     for metadata, path in zip(fields[::2], fields[1::2]):
-        old_mode, new_mode, *_ = metadata.lstrip(':').split()
-        paths.append(path)
-        if old_mode not in {'000000', '100644'} or new_mode not in {'000000', '100644'}:
-            nonregular.append(path)
-    return paths, nonregular
+        old_mode, new_mode, _, _, status = metadata.lstrip(':').split()
+        changes[path] = (old_mode, new_mode, status)
+    return changes
 
 
-def load_plan(base, head, event, *, modules='', repository='venomenon328/picross', root=ROOT):
+def load_plan(base, head, event, *, modules='', repository='venomenon328/picross', branch=None, root=ROOT):
     for sha in (base, head):
         if not re.fullmatch('[0-9a-f]{40}', sha):
             raise ValueError('A full base/head SHA is required')
     if event not in {'pull_request', 'push', 'workflow_dispatch'}:
         raise ValueError('Unsupported CI event')
     checkout = git('rev-parse', 'HEAD', root=root)
-    changed, nonregular = changed_metadata(base, head, root=root)
+    changed = changed_metadata(base, head, root=root)
+    nonregular = [p for p, modes in changed.items() if set(modes[:2]) - {'000000', '100644'}]
     if event == 'pull_request':
         # Read the PR head, never a working file or an inherited plan on main.
         raw = git('show', f'{head}:{PLAN_PATH}', root=root)
@@ -167,7 +168,15 @@ def load_plan(base, head, event, *, modules='', repository='venomenon328/picross
                                   capture_output=True, text=True)
         if previous.returncode == 0 and raw == previous.stdout.strip():
             raise ValueError('Inherited package plan: update .ci/package.json for this PR')
-        package = validate_package(strict_json(raw), changed, repository=repository)
+        candidate = strict_json(raw)
+        if isinstance(candidate, dict) and candidate.get('format') == production_plan.FORMAT:
+            def read(path, *, old=False):
+                sha = base if old else head
+                return strict_json(git('show', f'{sha}:{path}', root=root))
+
+            package = production_plan.validate(candidate, changed, branch, read)
+        else:
+            package = validate_package(candidate, changed, repository=repository)
         selected = selected_modules(package['modules'])
         if modules:
             raise ValueError('PR modules come exclusively from its package plan')
@@ -191,7 +200,9 @@ def original_plan():
     event = os.environ.get('GITHUB_EVENT_NAME', '')
     payload = strict_json(Path(os.environ['GITHUB_EVENT_PATH']).read_text())
     repository = text(payload.get('repository', {}).get('full_name'), 'repository identity')
+    branch = None
     if event == 'pull_request':
+        branch = payload['pull_request']['head'].get('ref')
         base, head = payload['pull_request']['base']['sha'], payload['pull_request']['head']['sha']
         modules = ''
     else:
@@ -212,7 +223,7 @@ def original_plan():
         if present.returncode:
             # Multi-commit pushes may put the original before-SHA outside depth=2.
             git('fetch', '--no-tags', '--depth=1', 'origin', base)
-    return load_plan(base, head, event, modules=modules, repository=repository)
+    return load_plan(base, head, event, modules=modules, repository=repository, branch=branch)
 
 
 def summary(message):
