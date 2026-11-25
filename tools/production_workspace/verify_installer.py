@@ -12,7 +12,7 @@ import zipfile
 
 from .build_windows import ROOT, sha
 from .release import release
-from .payload import PRODUCTION, canonical, fingerprint, verify_pw_method_resources
+from .payload import PRODUCTION, canonical, fingerprint, verify_pw_reader_resources
 from .update_verifier import production_trust
 from tools.msi_database import msi_properties
 from tools.app_products import PG, PW, PE
@@ -158,10 +158,11 @@ def verify(build, output, expected_commit, wix_archive=None, compare_build=False
             prefix = '_internal/'
             files = {name.removeprefix(prefix): file for name, file in payload.items() if name.startswith(prefix + PRODUCTION)}
             inventory_sha256 = sha(inventory_file)
-            method_resources = verify_pw_method_resources(inputs, components['resources'], files)
+            reader_resources = verify_pw_reader_resources(inputs, components['resources'], files)
             if compare_build:
-                require(method_resources == audit.get('method_resources') and set(method_resources) <= set(audit['repository_inputs']),
-                        'MSI methods differ from frozen input audit')
+                for key, resources in reader_resources.items():
+                    require(resources == audit.get(key) and set(resources) <= set(audit['repository_inputs']),
+                            'MSI reader resources differ from frozen input audit: ' + key)
         if app == PG:
             from tools.game_app.inspect import verify_payload
             verify_payload(build, root, payload, components, report, compare_build)
@@ -222,10 +223,12 @@ def verify(build, output, expected_commit, wix_archive=None, compare_build=False
               'limits': ('Actual MSI database and all unpacked bytes verified. No MSI installation; GAME-APP-R01 is separate.' if app == PG else
                          'Actual MSI database and all unpacked bytes verified. No installation; T02 requires a non-elevated Windows client.')}
     if app == PW:
-        methods = {'commit': expected_commit, 'payload_fingerprint': report['payload_fingerprint'],
-                   'msi_sha256': report['msi_sha256'], 'inventory_sha256': inventory_sha256,
-                   'files': method_resources}
-        (output / 'method-resources.json').write_text(json.dumps(methods, indent=2) + '\n', encoding='utf-8')
+        for key, resources in reader_resources.items():
+            report_data = {'commit': expected_commit, 'payload_fingerprint': report['payload_fingerprint'],
+                           'msi_sha256': report['msi_sha256'], 'inventory_sha256': inventory_sha256,
+                           'files': resources}
+            (output / (key.replace('_', '-') + '.json')).write_text(
+                json.dumps(report_data, indent=2) + '\n', encoding='utf-8')
     (output / 'result.json').write_text(json.dumps(result, indent=2) + '\n', encoding='utf-8')
     print(json.dumps(result))
     return result

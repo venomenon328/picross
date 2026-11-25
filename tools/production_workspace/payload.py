@@ -27,6 +27,13 @@ IGNORED = {
 }
 METHOD_04 = PRODUCTION + 'sd2_method_0_4.json'
 METHOD_03 = PRODUCTION + 'difficulty_method_0_3.json'
+# Physical originals read by the normalizer, the renderer and
+# background_assets' source identity. Keep the producer modules byte-identical.
+PW_IMAGE_SOURCES = frozenset(PRODUCTION + name + '.py' for name in (
+    '__init__', 'authoring_package', 'background_assets', 'background_contract',
+    'background_io', 'background_render', 'catalog_io', 'contract',
+    'image_normalization', 'operation_diagnostics',
+))
 # Synthetic ZA-1 support is deliberately excluded from the Windows executable.
 PRODUCTION_TEST_ONLY = {'za1_fixtures.py'}
 
@@ -171,16 +178,18 @@ def bound_input(path, row):
     return row['sha256']
 
 
-def verify_pw_method_resources(inputs, resources, files):
+def verify_pw_reader_resources(inputs, resources, files):
     """Bind the physical PW reader paths and bytes to the input inventory."""
     methods = pw_method_files(lambda name: files[name].read_bytes())
-    if methods != {name for name in resources if name.startswith(PRODUCTION)} or methods != set(files):
-        raise ValueError('Incomplete or extra PW method resources')
+    required = methods | PW_IMAGE_SOURCES
+    if required != {name for name in resources if name.startswith(PRODUCTION)} or required != set(files):
+        raise ValueError('Incomplete or extra PW reader resources')
     expected = {row['file']: row for row in inputs['files']}
-    for name in sorted(methods):
+    for name in sorted(required):
         if name not in expected or bound_input(files[name], expected[name]) != resources[name]:
-            raise ValueError('Unbound PW method resource: ' + name)
-    return {name: resources[name] for name in sorted(methods)}
+            raise ValueError('Unbound PW reader resource: ' + name)
+    return {'method_resources': {name: resources[name] for name in sorted(methods)},
+            'image_resources': {name: resources[name] for name in sorted(PW_IMAGE_SOURCES)}}
 
 
 def audit_analysis(root, toc, inventory, generated, *, app=PW):

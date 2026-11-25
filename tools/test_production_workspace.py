@@ -1193,6 +1193,39 @@ assert.doesNotMatch(resume,/gebe Motivvorlage|parameters\.proposed/);
         service.update_thread.join(10)
         self.assertFalse(service.update_thread.is_alive())
 
+    def test_http_distinguishes_missing_sources_from_internal_loader_errors(self):
+        from tools.puzzle_production import github_rest
+
+        self.publish()
+        configure(self.repo, self.root / 'state')
+        service = Service(Repository(self.root / 'state'))
+        job = service.listing()['jobs'][0]['id']
+        server = Server(service)
+        thread = threading.Thread(target=server.serve_forever, daemon=True)
+        thread.start()
+        self.addCleanup(lambda: (server.shutdown(), server.server_close(), thread.join()))
+        secret = 'fake-token C:/private/reader.py Traceback'
+        cases = (
+            (FileNotFoundError(secret), 500, 'internal'),
+            (ImportError(secret), 500, 'internal'),
+            (ValueError(secret), 500, 'internal'),
+            (github_rest.Failure('source', 'Die gebundene GitHub-Quelle fehlt.', 404), 404, 'source'),
+        )
+        for endpoint, method in ((f'/api/jobs/{job}', 'detail'), (f'/api/jobs/{job}/assets/reveal-A', 'picture')):
+            for failure, status, code in cases:
+                with self.subTest(method=method, code=code, failure=type(failure).__name__):
+                    with patch.object(service, method, side_effect=failure):
+                        connection = http.client.HTTPConnection('127.0.0.1', server.server_port, timeout=10)
+                        try:
+                            connection.request('GET', endpoint, headers={'X-Workspace-Session': service.secret})
+                            response = connection.getresponse()
+                            raw = response.read()
+                            self.assertEqual((response.status, p.parse(raw)['code']), (status, code))
+                            for value in ('fake-token', 'C:/private', 'Traceback'):
+                                self.assertNotIn(value.encode(), raw)
+                        finally:
+                            connection.close()
+
     def test_zip_guards_cover_aliases_links_sizes_and_actual_crc(self):
         for entries in ([('../escape', b'x')], [('C:/escape', b'x')], [('a.png', b'x'), ('A.png', b'x')],
                         [('dir/a', b'x'), ('Dir/b', b'x')], [('a', b'x'), ('a/b', b'x')]):

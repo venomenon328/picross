@@ -15,8 +15,8 @@ import zlib
 import pyexpat
 import decimal
 from .release import release, version_tuple
-from .payload import (PRODUCTION, audit_analysis, bound_input, fingerprint, git as git_bytes,
-                      pw_method_files, verify_pw_method_resources)
+from .payload import (PRODUCTION, PW_IMAGE_SOURCES, audit_analysis, bound_input, fingerprint, git as git_bytes,
+                      pw_method_files, verify_pw_reader_resources)
 from .update_verifier import production_trust
 
 from tools.app_products import PG, PW, PE
@@ -127,9 +127,9 @@ def build(destination, *, version=None, app=PW):
     if app in (PW, PE):
         extra_args += ["--collect-all", "resvg_py"]
     if app == PW:
-        methods = pw_method_files(lambda name: git_bytes(ROOT, 'show', f'{commit}:{name}'))
+        reader_sources = PW_IMAGE_SOURCES | pw_method_files(lambda name: git_bytes(ROOT, 'show', f'{commit}:{name}'))
         expected = {row['file']: row for row in inputs['files']}
-        for name in sorted(methods):
+        for name in sorted(reader_sources):
             resources[name] = bound_input(ROOT / name, expected[name])
             extra_args += ['--add-data', str(ROOT / name) + ':' + PRODUCTION.rstrip('/')]
     if app == PE:
@@ -205,11 +205,11 @@ def build(destination, *, version=None, app=PW):
     image = destination / 'dist' / app.executable
     verify_update_payload(image, work / 'pyinstaller' / app.executable / 'PYZ-00.pyz', audit, app=app)
     if app == PW:
-        if not methods <= set(audit['repository_inputs']):
-            raise RuntimeError('PW method sources missing in actual PyInstaller Analysis')
+        if not reader_sources <= set(audit['repository_inputs']):
+            raise RuntimeError('PW reader sources missing in actual PyInstaller Analysis')
         files = {PRODUCTION + member.name: member
                  for member in (image / '_internal' / PRODUCTION).iterdir() if member.is_file()}
-        audit['method_resources'] = verify_pw_method_resources(inputs, resources, files)
+        audit.update(verify_pw_reader_resources(inputs, resources, files))
     audit_name = 'frozen-audit.json' if app == PG else 'input-audit.json'
     (destination / audit_name).write_text(json.dumps(audit, indent=2) + '\n', encoding='utf-8')
     instructions = {PW: PACKAGE / 'START-WINDOWS.txt', PE: package / 'README.md', PG: package / 'START.txt'}

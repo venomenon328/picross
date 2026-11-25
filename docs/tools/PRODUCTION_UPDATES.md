@@ -77,8 +77,10 @@ UI, MSI-/Build-/Prüfcode, Pins, Guard, Lizenztexte, Icon und START sind Eingabe
 Zum PW-Payload gehören auch die unveränderten Pythonoriginale und JSON-Dateien,
 die die unterstützten eingefrorenen Bewertungsmethoden tatsächlich lesen. Dazu
 zählen deren gebundene Methoden-, Referenz-, Kalibrierungs-, Vergleichs- und
-Validierungsdateien. Sie werden aus demselben Buildcommit inventarisiert und
-physisch ausgeliefert. PYZ-Bytecode ersetzt ihre Originalbytes nicht.
+Validierungsdateien. Der PW-Bau inventarisiert aus demselben Commit außerdem die
+physischen Quellbytes des Bild- und Hintergrundreaders nach dem
+[Windows-Bauvertrag](../../tools/production_workspace/WINDOWS_BUILD.md) und
+liefert sie zusammen mit den Methodenressourcen aus.
 Maßgeblich sind die unveränderten Methodenmanifeste und die
 [Readergrenze in SD2-INTEGRATION](../difficulty/SD2_INTEGRATION.md#c-v01-01--methoden-und-tatsächliche-readergrenze).
 Ausgenommen bleiben tatsächlich nicht verwendete Dokument-/Schemadateien und

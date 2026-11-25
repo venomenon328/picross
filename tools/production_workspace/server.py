@@ -14,6 +14,7 @@ import socket
 
 from tools.puzzle_production import authoring_package as ap, catalog_io as io
 from tools.puzzle_production import github_rest
+from tools.puzzle_production.contract import InvalidInput, InvalidProof
 from . import presentation as p
 from .sources import LRU
 from .repository import ProductionRemoval
@@ -446,10 +447,13 @@ class Handler(BaseHTTPRequestHandler):
             # 503 is reserved for the browser's local worker-slot retry loop.
             status = {'rate_limit': 429, 'source': 404}.get(exc.kind, 502)
             return self.reply(status, p.data({'error': str(exc), 'code': exc.kind}), 'application/json; charset=utf-8')
-        except (ValueError, OSError, RuntimeError, KeyError, TypeError) as exc:
-            # All errors are data; never include source URLs or a Python traceback.
-            message = str(exc) if isinstance(exc, ValueError) else 'Quelle konnte nicht vollständig gelesen werden. Veröffentlichung prüfen und neu laden.'
-            return self.reply(400, p.data({'error': message}), 'application/json; charset=utf-8')
+        except (InvalidInput, InvalidProof) as exc:
+            return self.reply(400, p.data({'error': str(exc)}), 'application/json; charset=utf-8')
+        except (ImportError, OSError, RuntimeError, KeyError, TypeError, ValueError, SyntaxError):
+            # Unexpected loader errors can include installation paths or credentials.
+            return self.reply(500, p.data({'code': 'internal',
+                'error': 'Interner Ladefehler im Produktionsassistenten. App neu starten und Programmpaket prüfen.'}),
+                'application/json; charset=utf-8')
         finally:
             if acquired:
                 service.workers.release()
