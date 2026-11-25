@@ -355,7 +355,19 @@ sind offen; die Dauer eines API-Abrufs misst nur diesen Abruf.
 
 Der eigene private Operationsordner enthält die Publish-Absicht und gegebenenfalls
 das PW-LOCAL-Journal sowie den Besitzbeleg für die Kataloglease. Dieselbe Operation
-mit derselben privaten Wurzel fortsetzen. Nach Verlust eines Runners kann ein
+mit derselben privaten Wurzel fortsetzen. Für einen bereits gepushten
+v2-Nachfolger mit ausstehendem Publisherabschluss den unveränderten Request
+auf stdin an `python -B -m tools.production_remote recover --auth gh --root PRIVAT`
+übergeben. Dafür die ursprünglich gebundene saubere Werkzeugrevision und die
+ursprüngliche private Wurzel verwenden. Der Einstieg verlangt das passende
+Journal. Eine noch belegte Lease erfordert den dazugehörigen lokalen Besitzbeleg.
+Die Wiederaufnahme bestätigt den vorhandenen Arbeitscommit, bereinigt seine
+gebundenen Vorgängerreste und führt das Journal nach. Fachrechnung, Zähler und
+Arbeitscommit bleiben dabei erhalten. Für die Zustellung anschließend denselben
+gebundenen Actions-Request erneut ausführen. Der Worker bestätigt den
+Nachfolger und stellt die angeforderten Originale zu.
+
+Nach Verlust eines Runners kann ein
 neuer Prozess bestätigte Ergebnisse aus Git und gebundenen Originalen wiederfinden.
 Eine noch belegte Lease ohne den ursprünglichen privaten Besitzbeleg blockiert.
 Der ursprüngliche Akteur muss die geschützte Arbeitswurzel wiederherstellen

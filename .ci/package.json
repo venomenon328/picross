@@ -6,7 +6,7 @@
   "modules": ["tools", "production.images", "production.adapter"],
   "omitted": "Der reguläre Windows-Playerbau bleibt Teil des Kerns. Der unveränderte Fachkern wird über echte Proofs und Difficulty im Remote-Durchstich und Adapter geprüft. Unveränderte Katalogregistrierung und Integration bleiben in bestehenden Tests abgedeckt. Native Gruppen, Preflight, Server, Browser und Delivery werden nicht angefordert.",
   "test_changes": [
-    {"path": "tools/test_production_remote.py", "disposition": "change-scoped", "reason": "Kombinierte Masken-/Fixed-Publikation über echten Builder und Git/Release-Fixture, erwarteten Nachfolger bei Wiederholung, geschlossene Originalrollen und geprüfte Editorarchive abdecken. Live-Vergleich und Fortsetzungsprobe bleiben einmalig."}
+    {"path": "tools/test_production_remote.py", "disposition": "change-scoped", "reason": "Kombinierte Masken-/Fixed-Publikation über echten Builder und Git/Release-Fixture, Wiederaufnahme nach Ref-Push vor Assetbereinigung mit Besitz- und Fremdressourcengrenzen, geschlossene Originalrollen und geprüfte Editorarchive abdecken. Live-Vergleich und Fortsetzungsprobe bleiben einmalig."}
   ],
   "core_change": null,
   "evidence": {"mode": "none", "purpose": null, "expires": null}

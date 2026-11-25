@@ -560,6 +560,75 @@ class RemoteTests(unittest.TestCase):
                                     result=result)
         self.assertEqual(git.remote_head(self.repo, workref), after)
 
+    def test_delivery_recovery_after_ref_push_before_release_cleanup(self):
+        record, source, _, _, _ = self.color_session()
+        workref = 'refs/heads/content/pw/' + self.job
+        lockref = 'refs/heads/' + pw.release_catalog.LOCK_BRANCH
+        expected = git.remote_head(self.repo, workref)
+        before = record()
+        req = self.req('step3', expected, {'profile_check': {
+            'source': source('clasp'), 'profile': 'paired', 'rationale': 'Synthetische Profilprüfung'}},
+            format=delivery.WIRE_V2, delivery=[{'role': 'proof', 'candidate': 'clasp'}])
+        old_proof = current.findings.subjects(before)['clasp']['proof']['asset']['asset_id']
+
+        def interrupt_cleanup(path, method='GET', value=None):
+            if path == f'releases/assets/{old_proof}' and method == 'DELETE':
+                raise ValueError('interrupted after the ref push')
+            return self.api(path, method, value)
+
+        # Skip lease release as a hard process exit would, while keeping the real Git ref and local journal.
+        with patch.object(pw, 'api', side_effect=interrupt_cleanup), \
+                patch.object(pw, 'delete_ref', side_effect=ValueError('interrupted with own lease')):
+            with self.assertRaisesRegex(ValueError, 'interrupted with own lease'):
+                self.execute(req)
+        after = git.remote_head(self.repo, workref)
+        raw = self.read_record(after, self.job)
+        new = pw.bound_record(raw, self.job)
+        new_proof = current.findings.subjects(new)['clasp']['proof']['asset']['asset_id']
+        self.assertNotEqual(old_proof, new_proof)
+        self.assertEqual(new['budgets']['used'], before['budgets']['used'])
+        self.assertIn(old_proof, self.fixture.assets)
+        lease = git.remote_head(self.repo, lockref)
+        self.assertIsNotNone(lease)
+        fresh = self.f.work / 'fresh-publisher'
+        fresh.mkdir()
+
+        with patch.object(remote.ws, 'prepare', side_effect=AssertionError('unexpected computation')), \
+                patch.object(current, 'Checked', side_effect=AssertionError('unexpected recertification')):
+            with self.assertRaisesRegex(ValueError, 'Original private request directory'):
+                self.execute(req, fresh, recover_delivery=True)
+            with self.assertRaisesRegex(ValueError, 'Catalog lease occupied'):
+                self.execute(req, fresh)
+            self.assertEqual(git.remote_head(self.repo, lockref), lease)
+
+            # The original owner reaches cleanup while its lease is still present.
+            with patch.object(pw, 'api', side_effect=interrupt_cleanup):
+                with self.assertRaisesRegex(ValueError, 'interrupted after the ref push'):
+                    self.execute(req, recover_delivery=True)
+            self.assertIsNone(git.remote_head(self.repo, lockref))
+            with self.assertRaisesRegex(ValueError, f'Predecessor IDs \\[{old_proof}'):
+                self.execute(req, fresh)
+            self.assertIn(old_proof, self.fixture.assets)
+
+            # An unrelated asset with an otherwise plausible name and label is not owned by this request.
+            self.fixture.upload('work-prod-' + self.job, 'original-' + 'f' * 64, b'foreign')
+            foreign = self.fixture.next_id
+            with self.assertRaisesRegex(ValueError, f'unbound IDs \\[{foreign}'):
+                self.execute(req, recover_delivery=True)
+            self.assertNotIn(old_proof, self.fixture.assets)
+            self.assertIn(new_proof, self.fixture.assets)
+            self.assertEqual(self.fixture.assets[foreign], b'foreign')
+            self.assertIsNone(git.remote_head(self.repo, lockref))
+            with self.assertRaisesRegex(ValueError, 'pending publisher journal'):
+                self.execute(req, recover_delivery=True)
+
+            self.fixture.api(f'releases/assets/{foreign}', 'DELETE')
+            with patch.object(pw, 'push_job', side_effect=AssertionError('unexpected publication')):
+                replay = self.execute(req, fresh)
+        self.assertEqual((replay['work'], replay['deliver'], replay['seconds']['computation']), (after, True, None))
+        self.assertEqual(git.remote_head(self.repo, workref), after)
+        self.assertEqual(self.read_record(after, self.job), raw)
+
     def test_current_color_operations_and_restart(self):
         from tools import production_remote_raster as operations
         f = self.f
