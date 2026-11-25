@@ -223,7 +223,7 @@ Zahlen dezimal angeben. Gleichheit muss der Reader feststellen.
 | `repository` | Numerische ID aus dem Repositoryobjekt. |
 | `main`, `work`, `head` | SHAs der Refs `main`, `content/pw/JOB` und `content/integrate-JOB`. |
 | `request-commit`, `trigger`, `worker` | `head_sha` des ursprünglichen Pushs sowie je Run `id:run_attempt:status:conclusion` aus `actions/runs/ID`. |
-| `tag`, `release` | Commit des Tags `work-prod-JOB` sowie `id:target_commitish:draft:prerelease:immutable` aus `releases/ID`. |
+| `tag`, `release` | Commit des Tags `work-prod-JOB` sowie `id:target_commitish:draft:prerelease:immutable:tag_name:body` aus `releases/ID`. |
 | `assets` | Alle Seiten von `releases/ID/assets`. Je Asset `id:name:size:label:state`, die vollständigen Zeichenketten lexikografisch sortieren und mit Komma verbinden. Ohne Assets `empty`. |
 | `workflow-file` | Blob-SHA der `.github/workflows/ci-modular.yml` am aktuellen Main. Der Sammler bindet den aktiven Workflow an das ursprüngliche Worker-Preflight. |
 | `slot`, `pr` | Über `pulls?head=OWNER%3Acontent%2Fintegrate-JOB&state=all&per_page=2` den leeren Slot als `empty` oder die eindeutige PR-Nummer lesen. Für einen gebundenen PR außerdem `number:state:draft:mergeable:mergeable_state:merge_commit_sha:base.sha:head.sha:REQUESTDIGEST` direkt aus dem einzelnen PR, einschließlich seines vollständigen Besitzmarkers und der erwarteten Head-/Basis-Repositories und Refs. |

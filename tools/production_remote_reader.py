@@ -529,7 +529,7 @@ def fresh_values(data, result):
              'tag': ref(data['work_tag'], 'tags/' + release['tag_name']),
              'release': ':'.join(str(x) for x in (release['id'], release['target_commitish'],
                                                  atom(release['draft']), atom(release['prerelease']),
-                                                 atom(release['immutable']))),
+                                                 atom(release['immutable']), release['tag_name'], release['body'])),
              'assets': ','.join(sorted(assets)) or 'empty',
              'workflow-file': data['workflow_file']['sha'],
              'slot': 'empty' if pr is None else str(pr['number'])}
@@ -624,7 +624,7 @@ def continuation(argv):
         confirm_fresh(result, args.fresh)
         del result['expected_fresh']
         require(not args.expect_draft or result['result']['draft'] is True, 'Expected associated draft PR')
-        print(json.dumps(result, ensure_ascii=False, sort_keys=True))
+        print(json.dumps(result, sort_keys=True))
     except (BadZipFile, KeyError, ValueError, TypeError, OSError) as exc:
         parser.exit(1, f'Continuation blocked: {exc}\n')
 

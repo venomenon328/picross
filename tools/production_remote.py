@@ -389,9 +389,10 @@ TITLE = 'PW remote request v1'
 
 
 def envelope(req, mode):
-    require(mode in ('preflight', 'execute') and (req.get('operation') != 'continue' or mode == 'execute'),
+    req = request(req)
+    require(mode in ('preflight', 'execute') and (req['operation'] != 'continue' or mode == 'execute'),
             'Invalid request mode')
-    value = {'mode': mode, 'request': request(req)}
+    value = {'mode': mode, 'request': req}
     name = PREFIX + req['job'] + '/' + digest(value)
     message = TITLE + '\n\n' + current.encoded(value).decode().rstrip('\n')
     return name, message
