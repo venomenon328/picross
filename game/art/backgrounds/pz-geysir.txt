@@ -1,0 +1,4 @@
+author: OpenAI ImageGen
+changes: Unveränderte PNG-Originalbytes.
+source: Originäre Bildgenerierung aus dem Kontextbriefing für pz-geysir in Authoring 0.8.0 Schritt 4.
+usage_basis: Im beauftragten Picross-Produktionsschritt neu erstellt und zur Veröffentlichung als Kontextauswahl bestimmt.
