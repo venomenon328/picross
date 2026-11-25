@@ -1,0 +1,4 @@
+author: OpenAI ImageGen (generiert im Auftrag des Nutzers)
+changes: Bytegleiches PNG der nativen Generierung.
+source: Native ImageGen-Bildgenerierung für pz-eisvogel, Schritt 1, aus dem Textbriefing.
+usage_basis: Für diesen Auftrag erzeugte Originalillustration zur Sichtung und geplanten Picross-Nutzung; keine fremden Eingabebilder.
