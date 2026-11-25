@@ -278,10 +278,10 @@ Bei `pr-ready` die `draft_pr`-Daten unverändert für den Draft
 Danach PR-Slot, PR-Head, Basis, Besitzer und Draftstatus separat frisch
 zurücklesen. Bei Antwortverlust zuerst denselben Slot zurücklesen. Ein
 offener zugehöriger PR ergibt `pr-bound`, mehrere, geschlossene oder fremde
-Treffer blockieren. Der vollständige Produktdiff, erforderliche
+Treffer blockieren. Ein bestätigter Slot und ein gültiger aktueller Reader benötigen keinen weiteren Produkt-PR oder Statusworker. Der vollständige Produktdiff, erforderliche
 Originalsichtungen und die gebundene Endabnahme bleiben Voraussetzungen.
 
-Sobald GitHub die PR-CI ausgeführt hat, die Originale einmal gezielt über
+Sobald GitHub die PR-CI ausgeführt hat, die noch benötigten Originale einmal gezielt über
 `operation=continue` mit `input.kind=ci` zustellen. Die Aufrufform entspricht
 dem normalen Requestcommit mit unverändertem Main-Baum und dem erwarteten
 neuen Requestref. Vor dem Sammeln den zu prüfenden Draft-/Ready-Stand herstellen,
@@ -475,11 +475,10 @@ bleiben dieselben. Alle Felder und Rollen sind geschlossen.
   Duplikate, reine Nichtfunde und No-ops liefern keine erfundene Variante.
   Bei Bedarf den existierenden Kandidaten anschließend gezielt sichten.
 
-Für ein v2-Ergebnis-ZIP zusätzlich zum bisherigen Consumer-Aufruf
-`--input-commit`, `--result-commit` und `--result-record` übergeben.
-Die beiden Git-Commitobjekte und die exakten Recordbytes an Eingang und
-Nachfolger unabhängig via Connector lesen. Den Nachfolger am aktuellen
-Jobref abgleichen. Der Consumer prüft den einzigen Parent, den
+Das v2-Ergebnis-ZIP liefert beide Git-Commitobjekte und die exakten
+Recordbytes an Eingang und Nachfolger maschinell im selben Archiv.
+Für den [Originalabruf](#originale-in-chatgpt-sichten) den Nachfolger
+und Recordblob unabhängig am aktuellen Jobref bestätigen. Der Consumer prüft den einzigen Parent, den
 `PW-Remote`-Requestdigest, beide Recordhashes, Job- und Releasegeneration
 sowie die ursprünglichen Trigger-, Worker-, Attempt- und Artefaktdaten.
 Für lokal fehlgeschlagene oder abgelaufene Abrufe zuerst den tatsächlichen
