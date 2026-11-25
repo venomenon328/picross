@@ -389,7 +389,8 @@ TITLE = 'PW remote request v1'
 
 
 def envelope(req, mode):
-    require(mode in ('preflight', 'execute'), 'Invalid request mode')
+    require(mode in ('preflight', 'execute') and (req.get('operation') != 'continue' or mode == 'execute'),
+            'Invalid request mode')
     value = {'mode': mode, 'request': request(req)}
     name = PREFIX + req['job'] + '/' + digest(value)
     message = TITLE + '\n\n' + current.encoded(value).decode().rstrip('\n')
@@ -524,8 +525,8 @@ def main():
                         check_invocation()
                         pw.delete_ref(TOOLS, ref, source)
                         result['request_ref_removed'] = True
-                        if (req['operation'] == 'step5' and req['format'] == delivery.WIRE_V2
-                                and result['status'] in ('pr-ready', 'pr-bound')):
+                        if (mode == 'execute' and req['operation'] == 'step5' and req['format'] == delivery.WIRE_V2
+                                and result.get('status') in ('pr-ready', 'pr-bound')):
                             outputs({'continuation': 'true'})
                         if 'delivery' in req and mode == 'execute':
                             result['next'] = 'No requested result was published. Inspect an existing candidate separately.'

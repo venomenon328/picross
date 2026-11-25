@@ -288,13 +288,14 @@ def connector_workflow(req, result, request_sha, evidence, repository_id, *, col
     # A failed downstream read job cannot undo the confirmed double push.
     # Recovery needs the actual successful worker and only this read failure.
     read_failure = (len(failures) == 1 and failures[0]['name'] == 'continuation'
-                    and failures[0]['status'] == 'completed' and failures[0]['conclusion'] == 'failure')
+                    and failures[0]['status'] == 'completed'
+                    and failures[0]['conclusion'] in ('failure', 'cancelled', 'timed_out'))
     for row in (run, attempt):
         require(run_source(row, repository, repository_id, event='workflow_run', branch='main', head=main)
                 and row['path'] == '.github/workflows/pw-remote.yml'
                 and row['display_title'] == 'PW remote ' + request_ref
                 and (row['status'] == 'completed' and (row['conclusion'] == 'success'
-                                                      or read_failure and row['conclusion'] == 'failure')
+                                                      or read_failure and row['conclusion'] in ('failure', 'cancelled', 'timed_out'))
                      or collection == (row['id'], row['run_attempt'])
                      and row['status'] == 'in_progress' and row['conclusion'] is None),
                 'Different Step 5 worker run or request')
