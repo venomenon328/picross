@@ -4,10 +4,12 @@ from datetime import datetime, timedelta, timezone
 import json
 import os
 from pathlib import Path
+import re
 import subprocess
 import tempfile
 from time import sleep
-from urllib.parse import urlencode
+from urllib.parse import urlencode, urlsplit
+from urllib.request import ProxyHandler, Request, build_opener
 
 from . import production_remote as remote, production_remote_reader as reader, work_publish as publisher
 from .production_remote_inspect import download_uploaded
@@ -79,19 +81,64 @@ def locate(api, main, job, owner, explicit):
     return matches[0]
 
 
+class LogRedirect(github_rest.NoRedirect):
+    """Return GitHub's redirect so its download can use a separate client."""
+
+    def http_error_302(self, request, response, code, message, headers):
+        return response
+
+
+def log_location(job_id):
+    require(type(job_id) is int and job_id > 0, 'Expected an Actions job ID')
+    token = github_rest.publisher_token()
+    require(token, 'Expected the read-only Actions credential')
+    url = f'{github_rest.API}/actions/jobs/{job_id}/logs'
+    with github_rest.open_api(url, {'Accept': 'application/vnd.github+json'}, timeout=30,
+                              token=token, redirect=LogRedirect()) as response:
+        locations = response.headers.get_all('Location', [])
+        require(response.status == 302 and len(locations) == 1, 'Expected one HTTP 302 download location')
+        location, = locations
+    # The signed URL is an ephemeral credential. Accept only the dedicated
+    # HTTPS log storage host; never include the URL in errors or follow it again.
+    try:
+        target = urlsplit(location)
+    except ValueError:
+        raise ValueError('Invalid Actions log download location') from None
+    require(target.scheme == 'https' and re.fullmatch(r'[a-z0-9]{3,24}\.blob\.core\.windows\.net', target.netloc)
+            and target.path.startswith('/') and target.query and not target.fragment
+            and not re.search(r'[\s\x00-\x1f\x7f\\]', location), 'Invalid Actions log download location')
+    return location
+
+
 def original_log(job_id):
-    endpoint = f'repos/{publisher.REPO}/actions/jobs/{job_id}/logs'
-    env = {**os.environ, 'GH_TOKEN': github_rest.publisher_token()}
+    limit = 8 * 1024**2
     for delay in (0, 2, 5, 10):
         if delay:
             sleep(delay)
-        result = subprocess.run(['gh', 'api', endpoint], stdout=subprocess.PIPE, stderr=subprocess.PIPE,
-                                env=env, timeout=30)
-        if result.returncode == 0:
-            require(len(result.stdout) <= 8 * 1024**2, 'Step 5 job log exceeds collection limit')
-            return result.stdout.decode('utf-8')
-        transient = any(f'HTTP {status}'.encode() in result.stderr for status in (404, 502, 503, 504))
-        require(transient and delay < 10, f'Cannot read original Step 5 worker job log {job_id}')
+        stage = 'GitHub API'
+        try:
+            location = log_location(job_id)
+            stage = 'signed download'
+            # This opener has no GitHub credentials, proxies or redirect handler
+            # capable of forwarding a signed URL to another origin.
+            http = build_opener(ProxyHandler({}), github_rest.NoRedirect())
+            with github_rest.transport_errors():
+                with http.open(Request(location), timeout=30) as response:
+                    require(response.status == 200, 'Expected HTTP 200 for the Actions log')
+                    raw = response.read(limit + 1)
+            require(0 < len(raw) <= limit, 'Missing or oversized Actions log')
+            return raw.decode('utf-8')
+        except github_rest.Failure as exc:
+            if delay < 10 and (exc.status in (404, 502, 503, 504)
+                               or stage == 'signed download' and exc.status == 403
+                               or exc.kind == 'network' and exc.status is None):
+                continue
+            detail = f'HTTP {exc.status}' if exc.status is not None else exc.kind
+        except UnicodeError:
+            detail = 'invalid UTF-8'
+        except ValueError:
+            detail = 'invalid response'
+        raise ValueError(f'Cannot read original Step 5 worker job log {job_id} ({stage}: {detail})') from None
 
 
 def worker_originals(api, trigger_id, worker_id, read_log):
@@ -151,7 +198,7 @@ def collect(api, repository, main, job, run_id, attempt, *, source=None, control
     work_commit, product_commit = (api('git/commits/' + oid) for oid in (work, product))
     owner = reader.owner(product_commit, product, main)
     if control is None:
-        trigger, worker = source, run_id
+        trigger, worker = source
         kind = 'publication'
     else:
         require(work == control['expected'], 'Continuation work ref changed')
@@ -293,8 +340,10 @@ def main():
                     publisher.delete_ref(remote.TOOLS, ref, source)
                     return
                 job = control['job']
-            ctx, data = collect(publisher.api, publisher.REPO, main, job, int(os.environ['GITHUB_RUN_ID']),
-                                int(os.environ['GITHUB_RUN_ATTEMPT']), source=trigger['id'], control=control)
+            run_id = int(os.environ['GITHUB_RUN_ID'])
+            attempt = int(os.environ['GITHUB_RUN_ATTEMPT'])
+            ctx, data = collect(publisher.api, publisher.REPO, main, job, run_id, attempt,
+                                source=(trigger['id'], run_id), control=control)
             # Use the exact committed bytes, even when a checkout uses CRLF.
             code = remote.git.git(remote.TOOLS, 'show', 'HEAD:tools/' + reader.READER_FILE)
             stage(directory, ctx, data, code, datetime.now(timezone.utc))

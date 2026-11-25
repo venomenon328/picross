@@ -5,13 +5,13 @@
   "modules": [
     "tools"
   ],
-  "purpose": "Gebundene Zustellung der Step5-/CI-Originale und Wiederaufnahme. Werkzeuge prüfen Sammler, Archiv, Reader und aktuelle PR-/CI-Bindung. F-T02 belegt den Transport einmalig im unabhängigen Zielprojekt.",
+  "purpose": "Gebundene Zustellung der Step5-/CI-Originale und Wiederaufnahme. Werkzeuge prüfen Sammler, Archiv, Reader und aktuelle PR-/CI-Bindung. Eine lesende isolierte Actions-Probe belegt den korrigierten Logtransport. F-T02 prüft den unabhängigen Zielkontext.",
   "omitted": "Fach-, Native-, Browser-, Preflight-, Delivery- und Sync-Module sind nicht angefordert. Integrationsfachkern und Spiel werden nicht verändert. Der Windows-Playerbau folgt aus dem Werkzeug- und Workflowdiff.",
   "test_changes": [
     {
       "path": "tools/test_production_remote_reader.py",
       "disposition": "change-scoped",
-      "reason": "Synthetische ZIP-, Sammler-, Originallisten-, Wiederaufnahme- und Freshness-Gegenproben mit bestehendem Step5-/CI-Leser."
+      "reason": "Gezielte Regression für den zweistufigen Logtransport mit begrenztem Redirect, dazu bestehende ZIP-, Sammler-, Wiederaufnahme- und Freshness-Gegenproben."
     }
   ],
   "core_change": null,

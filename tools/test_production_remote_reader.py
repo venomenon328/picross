@@ -1,12 +1,17 @@
 """Offline originals for precise PR, Git, release and CI binding."""
 from base64 import b64decode, b64encode
+from contextlib import nullcontext
 from copy import deepcopy
 from datetime import datetime, timedelta, timezone
+from email.message import Message
 from hashlib import sha1, sha256
+from io import BytesIO
 from pathlib import Path
 from tempfile import TemporaryDirectory
+from types import SimpleNamespace
 import unittest
 from unittest.mock import patch
+from urllib.error import HTTPError
 from zipfile import ZipFile, ZipInfo
 
 from tools import production_remote_continuation as collect, production_remote_reader as reader
@@ -396,6 +401,69 @@ class ContinuationTests(unittest.TestCase):
         self.assertEqual(len(reader.pages(collect.paged(api, 'jobs', 'jobs'), 'jobs')), 102)
         with self.assertRaisesRegex(ValueError, 'Incomplete paged jobs'):
             collect.paged(lambda endpoint: {'total_count': 2, 'jobs': [{'id': 1}]}, 'jobs', 'jobs')
+
+    def test_worker_log_redirect_downloads_without_forwarding_github_token(self):
+        location = 'https://logstore.blob.core.windows.net/log?sig=private'
+        headers = Message()
+        headers['Location'] = location
+        redirect = SimpleNamespace(status=302, headers=headers)
+        log = BytesIO(b'actual job log\n')
+        log.status = 200
+
+        with (patch.object(collect.github_rest, 'publisher_token', return_value='private-token'),
+              patch.object(collect.github_rest, 'open_api', return_value=nullcontext(redirect)) as api,
+              patch.object(collect, 'build_opener') as opener):
+            opener.return_value.open.return_value = log
+            self.assertEqual(collect.original_log(94), 'actual job log\n')
+
+        self.assertTrue(api.call_args.args[0].endswith('/actions/jobs/94/logs'))
+        self.assertEqual(api.call_args.kwargs['token'], 'private-token')
+        self.assertIs(api.call_args.kwargs['redirect'].http_error_302(None, redirect, 302, '', headers), redirect)
+        request = opener.return_value.open.call_args.args[0]
+        self.assertEqual(request.full_url, location)
+        self.assertFalse(request.header_items())
+        self.assertIsInstance(opener.call_args.args[1], collect.github_rest.NoRedirect)
+
+    def test_worker_log_download_retries_with_a_new_location(self):
+        first = 'https://logstore.blob.core.windows.net/log?sig=first'
+        second = 'https://logstore.blob.core.windows.net/log?sig=second'
+        log = BytesIO(b'actual job log')
+        log.status = 200
+
+        with (patch.object(collect, 'log_location', side_effect=[first, second]) as locations,
+              patch.object(collect, 'build_opener') as opener,
+              patch.object(collect, 'sleep') as sleep):
+            download = opener.return_value.open
+            download.side_effect = [HTTPError(first, 403, 'expired', {}, None), log]
+            self.assertEqual(collect.original_log(94), 'actual job log')
+
+        self.assertEqual([call.args[0] for call in locations.call_args_list], [94, 94])
+        self.assertEqual([call.args[0].full_url for call in download.call_args_list], [first, second])
+        sleep.assert_called_once_with(2)
+
+    def test_worker_log_transport_errors_are_safe_and_fail_closed(self):
+        signed = 'https://logstore.blob.core.windows.net.example.org/log?sig=private'
+        headers = Message()
+        headers['Location'] = signed
+        redirect = SimpleNamespace(status=302, headers=headers)
+        error = 'Cannot read original Step 5 worker job log 94'
+
+        with (patch.object(collect.github_rest, 'publisher_token', return_value='private-token'),
+              patch.object(collect.github_rest, 'open_api', return_value=nullcontext(redirect)),
+              patch.object(collect, 'build_opener') as opener):
+            with self.assertRaises(ValueError) as exc:
+                collect.original_log(94)
+            self.assertEqual(str(exc.exception), f'{error} (GitHub API: invalid response)')
+            opener.assert_not_called()
+
+        failure = collect.github_rest.Failure('access', 'ignored private-token', 403)
+        with (patch.object(collect, 'log_location', side_effect=failure) as location,
+              patch.object(collect, 'sleep') as sleep):
+            with self.assertRaises(ValueError) as exc:
+                collect.original_log(94)
+            self.assertEqual(str(exc.exception), f'{error} (GitHub API: HTTP 403)')
+            location.assert_called_once_with(94)
+            sleep.assert_not_called()
 
     def test_collector_rejects_main_change_before_collection(self):
         api = {'': self.data['repository'], 'git/ref/heads/main': {

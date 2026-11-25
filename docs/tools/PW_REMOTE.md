@@ -233,6 +233,10 @@ Das Archiv enthält ausschließlich `manifest.json`, `originals.json` und den
 Git-geprüften Reader. Der Sammler übernimmt vollständige erforderliche
 REST-Originale, alle gebundenen Job- und Assetseiten, die unveränderten
 Git-Recordbytes und genau zwei Originalzeilen aus dem gebundenen Workerjob.
+Der Sammler fordert den zeitgebundenen Logdownload mit dem lesenden Actions-Token
+an und lädt die Bytes separat ohne Token vom GitHub-Logspeicher. Derselbe
+Abruf gilt für die Erstzustellung und für ältere gebundene Step-5-Läufe.
+Bei einem Transportfehler meldet der Sammler Job-ID, Abrufstufe und Fehlerklasse.
 Der Reader vergleicht die vollständigen Lieferpfade mit Completion. Er prüft
 ZIP-Länge, SHA-256, Mitgliedsnamen, Manifest, Ausführungsrevision, Attempt und
 Ablauf. Die Aufbewahrung beträgt einen Tag. Die entpackten Nutzdaten müssen
