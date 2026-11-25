@@ -45,13 +45,14 @@ def request(value):
     common = {'format', 'repository', 'job', 'operation', 'expected', 'record_sha256', 'tools', 'main', 'input'}
     require(isinstance(value, dict), 'Expected PW remote request')
     op = value.get('operation')
-    require(op in ('step3', 'step4', 'step5', 'status', 'retire', *delivery.READS), 'Unknown PW operation')
+    require(op in ('step3', 'step4', 'step5', 'status', 'retire', 'continue', *delivery.READS), 'Unknown PW operation')
     v2 = value.get('format') == delivery.WIRE_V2
     extra = {'product', 'pr'} if op in ('inspect-product', 'status', 'retire') else {'issue'} if op == 'step5' else set()
     if v2 and op in ('step3', 'step4') and 'delivery' in value:
         extra.add('delivery')
     exact_keys(value, common | extra)
-    require((value['format'] == 'pw-remote-v1' or v2 and op in ('inspect', 'step3', 'step4', 'step5'))
+    require((value['format'] == 'pw-remote-v1' and op != 'continue'
+             or v2 and op in ('inspect', 'step3', 'step4', 'step5', 'continue'))
             and value['repository'] == pw.REPO, 'Different format or repository')
     require(len(current.encoded(value)) <= LIMIT, 'Oversized remote request')
     current.path(value['job'])
@@ -97,6 +98,13 @@ def request(value):
             sha(change['sha256'])
             current.findings.check_summaries(change['review'], current.CRITERIA['background'])
             require(isinstance(change['observations'], list), 'Invalid background observations')
+    elif op == 'continue':
+        exact_keys(data, {'kind', 'trigger', 'worker'})
+        require(data['kind'] in ('publication', 'ci') and
+                (data['trigger'] is None) == (data['worker'] is None), 'Invalid continuation source')
+        if data['worker'] is not None:
+            for key in ('trigger', 'worker'):
+                integer(data[key], 1, 2**53-1, key + ' run')
     elif op == 'step5':
         if not v2 or value['issue'] is not None:
             integer(value['issue'], 1, 2**53-1, 'product issue')
@@ -234,6 +242,7 @@ def retire(root, req, auth, token):
 
 def run(root, req, auth, token, *, diagnose=False, recover_delivery=False, check_invocation=lambda: None):
     request(req)
+    require(req['operation'] != 'continue', 'Send the continuation to the Actions reader')
     require(not recover_delivery or 'delivery' in req, 'Recovery requires the original v2 request with delivery')
     require(ws.git(TOOLS, 'rev-parse', 'HEAD') == req['tools'] and not ws.changes(TOOLS),
             'Execute from the clean, explicitly pinned trusted tool checkout')
@@ -380,8 +389,10 @@ TITLE = 'PW remote request v1'
 
 
 def envelope(req, mode):
-    require(mode in ('preflight', 'execute'), 'Invalid request mode')
-    value = {'mode': mode, 'request': request(req)}
+    req = request(req)
+    require(mode in ('preflight', 'execute') and (req['operation'] != 'continue' or mode == 'execute'),
+            'Invalid request mode')
+    value = {'mode': mode, 'request': req}
     name = PREFIX + req['job'] + '/' + digest(value)
     message = TITLE + '\n\n' + current.encoded(value).decode().rstrip('\n')
     return name, message
@@ -466,6 +477,11 @@ def main():
                     require(ws.git(TOOLS, 'rev-parse', 'HEAD') == req['tools'] and not ws.changes(TOOLS),
                             'Clean pinned tool checkout required')
                     if args.action == 'route':
+                        if req['operation'] == 'continue':
+                            require(mode == 'execute', 'Continuation is already read-only')
+                            outputs({'route': 'continue'})
+                            print(json.dumps({'route': 'continue'}, sort_keys=True))
+                            return
                         reading = req['operation'] in delivery.READS
                         if reading:
                             _, record, _ = inspect.bound(root, req)
@@ -485,7 +501,7 @@ def main():
                             outputs({'artifact': result['artifact']})
                     print(json.dumps(result, sort_keys=True))
                     return
-                require(req['operation'] not in delivery.READS, 'Reader request sent to the product writer')
+                require(req['operation'] not in (*delivery.READS, 'continue'), 'Reader request sent to the product writer')
                 result = run(root, req, args.auth, token, diagnose=diagnose, check_invocation=check_invocation)
                 if args.action == 'worker-preflight':
                     if mode == 'execute' and req['operation'] != 'status':
@@ -510,6 +526,9 @@ def main():
                         check_invocation()
                         pw.delete_ref(TOOLS, ref, source)
                         result['request_ref_removed'] = True
+                        if (mode == 'execute' and req['operation'] == 'step5' and req['format'] == delivery.WIRE_V2
+                                and result.get('status') in ('pr-ready', 'pr-bound')):
+                            outputs({'continuation': 'true'})
                         if 'delivery' in req and mode == 'execute':
                             result['next'] = 'No requested result was published. Inspect an existing candidate separately.'
             else:
@@ -518,7 +537,8 @@ def main():
                     pw.repository_check(pw.REPO)
                     result = submit(TOOLS, req, 'preflight' if args.diagnose_only else 'execute')
                 else:
-                    require(args.action != 'execute' or 'delivery' not in req, 'Submit result delivery through Actions')
+                    require(req['operation'] != 'continue' and (args.action != 'execute' or 'delivery' not in req),
+                            'Submit result delivery through Actions')
                     result = run(root, req, args.auth, token, diagnose=args.action == 'preflight',
                                  recover_delivery=args.action == 'recover')
         print(json.dumps(result, sort_keys=True))

@@ -566,6 +566,10 @@ Mainintegration führt der Akteur den gebundenen Produktionsabschluss in
 Authoring Schritt 5 §9 direkt aus. Der nächste übernommene Listenstand blendet
 die integrierte ID aus.
 
+Der kurze Schritt-5-Auftrag gilt auch im frischen Chat. Die technische
+Originalzustellung, PR-/CI-Fortsetzung und Wiederaufnahme folgen dem
+[Remote-Vertrag](PW_REMOTE.md#draft-pr-und-package-ci-über-den-connector).
+
 ## PW-FIND · Befunde am Kandidaten
 
 Bei v3-Produktionen zeigt die Werkstatt die Wählbarkeit direkt am Bild.

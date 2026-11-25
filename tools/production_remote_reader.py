@@ -1,15 +1,20 @@
 """Offline Step 5 continuation and Package CI reader for GitHub originals."""
 import argparse
 from base64 import b64decode
-from datetime import datetime
-from hashlib import sha1, sha256
+from datetime import datetime, timedelta, timezone
+from hashlib import file_digest, sha1, sha256
 import json
+from pathlib import Path
 import re
+import stat
 from urllib.parse import urlencode
+from zipfile import BadZipFile, ZipFile
 
 REPOSITORIES = {'venomenon328/picross': 1381196633, 'venomenon328/picross-remote-test': 1470169013}
 WORKFLOW = 'ci-modular.yml'
 WORKFLOW_PATH = '.github/workflows/' + WORKFLOW
+PREFLIGHT_STEP = 'Read capabilities and trigger before image setup'
+PUBLISH_STEP = 'Execute and acknowledge bound operation'
 SHA = re.compile('[0-9a-f]{40}')
 DIGEST = re.compile('[0-9a-f]{64}')
 JOB = re.compile(r'pz-[a-z0-9][a-z0-9-]{0,59}')
@@ -179,11 +184,15 @@ def binding(data):
                 asset = value['asset']
                 require(asset['repository'] == repository and asset['job'] == job
                         and asset['release_id'] == release['id'], 'Foreign original asset')
-                assets[asset['asset_id']] = ('original-' + value['sha256'], value['bytes'])
+                expected = ('original-' + value['sha256'], value['bytes'])
+                require(assets.setdefault(asset['asset_id'], expected) == expected, 'Conflicting original asset ID')
             for child in value.values():
                 collect(child)
     collect(record)
     rows = release['assets']
+    if 'release_asset_pages' in data:
+        rows = [asset for page in data['release_asset_pages'] for asset in page]
+        require(all(asset in rows for asset in release['assets']), 'Release and paged assets changed')
     require(len(rows) == len(assets) and {row['id']: (row['name'], row['size']) for row in rows} == assets
             and all(row['label'] == 'picross-original:' + tag and row['state'] == 'uploaded' for row in rows),
             'Incomplete or changed work release assets')
@@ -244,7 +253,7 @@ def matching_fields(row, expected):
     return all(row.get(key) == value for key, value in expected.items())
 
 
-def worker_log_row(log, steps, name, field):
+def worker_log_row(log, steps, name, field, *, original=False):
     matches = [step for step in steps if step['name'] == name]
     require(len(matches) == 1 and matches[0]['status'] == 'completed'
             and matches[0]['conclusion'] == 'success', 'Missing successful Step 5 worker step: ' + name)
@@ -259,12 +268,12 @@ def worker_log_row(log, steps, name, field):
             if start <= when <= end:
                 row = parse(payload)
                 if isinstance(row, dict) and field in row:
-                    rows.append(row)
+                    rows.append(line if original else row)
     require(len(rows) == 1, 'Missing or ambiguous Step 5 worker log row: ' + field)
     return rows[0]
 
 
-def connector_workflow(req, result, request_sha, evidence, repository_id):
+def connector_workflow(req, result, request_sha, evidence, repository_id, *, collection=None):
     """Use the active workflow checked by the published generation's Step 5 worker."""
     repository, main = req['repository'], req['main']
     request_ref = result['request_ref']
@@ -274,23 +283,32 @@ def connector_workflow(req, result, request_sha, evidence, repository_id):
             and trigger['status'] == 'completed' and trigger['conclusion'] == 'success',
             'Different Step 5 request trigger')
     run, attempt = evidence['run'], evidence['attempt']
+    jobs = pages(evidence['jobs'], 'jobs')
+    failures = [job for job in jobs if job['conclusion'] not in ('success', 'skipped')]
+    # A failed downstream read job cannot undo the confirmed double push.
+    # Recovery needs the actual successful worker and only this read failure.
+    read_failure = (len(failures) == 1 and failures[0]['name'] == 'continuation'
+                    and failures[0]['status'] == 'completed'
+                    and failures[0]['conclusion'] in ('failure', 'cancelled', 'timed_out'))
     for row in (run, attempt):
         require(run_source(row, repository, repository_id, event='workflow_run', branch='main', head=main)
                 and row['path'] == '.github/workflows/pw-remote.yml'
                 and row['display_title'] == 'PW remote ' + request_ref
-                and row['status'] == 'completed' and row['conclusion'] == 'success',
+                and (row['status'] == 'completed' and (row['conclusion'] == 'success'
+                                                      or read_failure and row['conclusion'] in ('failure', 'cancelled', 'timed_out'))
+                     or collection == (row['id'], row['run_attempt'])
+                     and row['status'] == 'in_progress' and row['conclusion'] is None),
                 'Different Step 5 worker run or request')
     require(matching_fields(attempt, {key: run[key] for key in ('id', 'workflow_id', 'run_attempt')}),
             'Different Step 5 worker attempt')
-    jobs = pages(evidence['jobs'], 'jobs')
     require(all(matching_fields(job, {'run_id': run['id'], 'run_attempt': run['run_attempt'], 'head_sha': main})
                 for job in jobs), 'Different Step 5 worker jobs')
     workers = [job for job in jobs if job['name'] == 'worker']
     require(len(workers) == 1 and matching_fields(workers[0], {'id': evidence['job_id'],
             'status': 'completed', 'conclusion': 'success'}), 'Different Step 5 worker log job')
     steps, log = workers[0]['steps'], evidence['log']
-    checked = worker_log_row(log, steps, 'Read capabilities and trigger before image setup', 'package_ci')
-    published = worker_log_row(log, steps, 'Execute and acknowledge bound operation', 'published_record_sha256')
+    checked = worker_log_row(log, steps, PREFLIGHT_STEP, 'package_ci')
+    published = worker_log_row(log, steps, PUBLISH_STEP, 'published_record_sha256')
     binding = {'request': result['request'], 'repository': repository, 'main': main, 'job': req['job'],
                'expected': req['expected'], 'record_sha256': req['record_sha256']}
     require(matching_fields(checked, {**binding, 'tool_commit': main, 'operation': 'publish',
@@ -374,23 +392,247 @@ def ci_status(req, pr, evidence, repository_id, *, workflow_id=None):
     return gate(req, pr, attempt, pages(evidence['jobs'], 'jobs'), merge_commit=evidence.get('test_merge'), strict=True)
 
 
-def evaluate(data):
+def evaluate(data, *, collection=None):
     req, pr, result = binding(data)
     repository_id = REPOSITORIES[req['repository']]
     workflow_id = None
     if 'step5_worker' in data:
-        workflow_id = connector_workflow(req, result, data['request_sha'], data['step5_worker'], repository_id)
+        workflow_id = connector_workflow(req, result, data['request_sha'], data['step5_worker'], repository_id,
+                                         collection=collection)
         result['package_ci_workflow_id'] = workflow_id
     else:
         require('input_record_directory' not in data and 'completion_record_directory' not in data,
                 'Read the bound Step 5 worker for connector originals')
+    if 'active_workflow' in data:
+        require(matching_fields(data['active_workflow'], {'path': WORKFLOW_PATH, 'state': 'active',
+                                                         'id': workflow_id}), 'Package CI workflow changed')
     if 'ci' in data:
         require(pr is not None, 'Read the bound PR before its CI')
         result['ci'] = ci_status(req, pr, data['ci'], repository_id, workflow_id=workflow_id)
     return result
 
 
+FORMAT = 'pw-remote-continuation-v1'
+PURPOSE = 'step5-pr-ci'
+READER_FILE = 'production_remote_reader.py'
+ORIGINALS_FILE = 'originals.json'
+MEMBER_LIMITS = {'manifest.json': 16_384, READER_FILE: 131_072, ORIGINALS_FILE: 16 * 1024**2}
+BASE_KEYS = {'repository', 'main_ref', 'main_commit', 'request_sha', 'request_commit', 'work_ref',
+             'work_commit', 'input_record', 'completion_record', 'step5_worker', 'product_ref',
+             'product_commit', 'product_diff', 'work_tag', 'release', 'release_asset_pages',
+             'pulls', 'active_workflow', 'workflow_file'}
+
+
+def artifact_name(context):
+    return f'pw-continue-{context["job"]}-{context["request_sha"]}-{context["run"]}-{context["attempt"]}'
+
+
+def blob_id(raw):
+    return sha1(f'blob {len(raw)}\0'.encode() + raw).hexdigest()
+
+
+def closed(row, keys, message):
+    require(isinstance(row, dict) and set(row) == keys, message)
+
+
+def archive_contents(archive, artifact):
+    limit = sum(MEMBER_LIMITS.values())
+    require(0 < archive.stat().st_size == artifact['size_in_bytes'] <= limit + 65536,
+            'Actions ZIP length differs or exceeds the continuation limit')
+    with archive.open('rb') as stream:
+        require('sha256:' + file_digest(stream, 'sha256').hexdigest() == artifact['digest'],
+                'Actions ZIP digest differs')
+        stream.seek(0)
+        with ZipFile(stream) as bundle:
+            entries = bundle.infolist()
+            require(len(entries) == len(MEMBER_LIMITS)
+                    and {row.orig_filename for row in entries} == MEMBER_LIMITS.keys()
+                    and all(row.orig_filename == row.filename and not row.is_dir() and not row.flag_bits & 1
+                            and stat.S_IFMT(row.external_attr >> 16) in (0, stat.S_IFREG)
+                            and not row.external_attr & 0x410
+                            and 0 < row.file_size <= MEMBER_LIMITS[row.filename] for row in entries),
+                    'Unsafe, oversized, missing or extra continuation ZIP member')
+            return {name: bundle.read(name) for name in MEMBER_LIMITS}
+
+
+def expiry(value):
+    result = datetime.fromisoformat(value)
+    require(result.tzinfo is not None, 'Expected an explicit UTC offset')
+    return result
+
+
+def delivery_metadata(context, artifact, collection, now):
+    run = artifact['workflow_run']
+    require(type(artifact['id']) is int and artifact['id'] > 0
+            and artifact['name'] == artifact_name(context) and artifact['expired'] is False
+            and run['id'] == context['run'] and run['head_sha'] == context['tools']
+            and run['head_branch'] == 'main'
+            and run['repository_id'] == run['head_repository_id'] == context['repository_id'],
+            'Different or expired Actions artifact')
+    require(matching_fields(collection, {'id': context['run'], 'run_attempt': context['attempt'],
+                                         'head_sha': context['tools'], 'head_branch': 'main',
+                                         'path': '.github/workflows/pw-remote.yml',
+                                         'status': 'completed', 'conclusion': 'success'})
+            and collection['repository_id'] == context['repository_id'],
+            'Read back the successful current collection run and attempt')
+    created, expires = (expiry(artifact[k]) for k in ('created_at', 'expires_at'))
+    require(created <= now < expires <= created + timedelta(days=1, minutes=5),
+            'Expired or unexpected continuation retention')
+    return expires
+
+
+def evaluate_originals(data, context):
+    optional = {'pr', 'ci'} & data.keys()
+    closed(data, BASE_KEYS | optional, 'Unexpected continuation originals')
+    evidence = data['step5_worker']
+    closed(evidence, {'trigger', 'run', 'attempt', 'jobs', 'job_id', 'log'},
+           'Unexpected Step 5 worker originals')
+    require(len(evidence['log'].splitlines()) == 2, 'Expected only the two original worker evidence lines')
+    req, pr, _ = binding(data)
+    require(req['format'] == 'pw-remote-v2' and req['job'] == context['job']
+            and req['main'] == context['tools'] and data['request_sha'] == context['request_sha']
+            and REPOSITORIES[req['repository']] == context['repository_id']
+            and ('ci' in data) == (context['kind'] == 'ci'), 'Different continuation scope')
+    record_bytes(data['workflow_file'], req['repository'], req['main'], WORKFLOW_PATH)
+    if 'ci' in data:
+        ci = data['ci']
+        fields = {'repository_runs'}
+        if ci['repository_runs'][0]['total_count']:
+            fields |= {'run', 'attempt'}
+            if ci['attempt']['status'] == 'completed' and ci['attempt']['conclusion'] != 'action_required':
+                fields.add('jobs')
+                if SHA.fullmatch(pr.get('merge_commit_sha') or ''):
+                    fields.add('test_merge')
+        closed(ci, fields, 'Unexpected Package CI originals')
+    return evaluate(data, collection=(context['run'], context['attempt']))
+
+
+def fresh_values(data, result):
+    """Fixed scalar projections of volatile GitHub reads. No record or log transfer."""
+    evidence = data['step5_worker']
+    release = data['release']
+    pr = data.get('pr')
+
+    def attempt(row):
+        return ':'.join(atom(row[k]) for k in ('id', 'run_attempt', 'status', 'conclusion'))
+
+    def atom(value):
+        return json.dumps(value) if value is None or isinstance(value, bool) else str(value)
+
+    asset_rows = [asset for page in data['release_asset_pages'] for asset in page]
+    assets = [':'.join(str(row[k]) for k in ('id', 'name', 'size', 'label', 'state')) for row in asset_rows]
+    state = {'main': result['main'], 'work': result['work'], 'head': result['head'],
+             'repository': str(data['repository']['id']), 'request-commit': data['request_sha'],
+             'trigger': attempt(evidence['trigger']), 'worker': attempt(evidence['run'])
+             if evidence['run']['status'] == 'completed' else
+             f'{evidence["run"]["id"]}:{evidence["run"]["run_attempt"]}:completed:success',
+             'tag': ref(data['work_tag'], 'tags/' + release['tag_name']),
+             'release': ':'.join(str(x) for x in (release['id'], release['target_commitish'],
+                                                 atom(release['draft']), atom(release['prerelease']),
+                                                 atom(release['immutable']), release['tag_name'], release['body'])),
+             'assets': ','.join(sorted(assets)) or 'empty',
+             'workflow-file': data['workflow_file']['sha'],
+             'slot': 'empty' if pr is None else str(pr['number'])}
+    if pr:
+        state['pr'] = ':'.join(atom(x) for x in (pr['number'], pr['state'], atom(pr['draft']),
+            atom(pr['mergeable']), pr.get('mergeable_state'), pr.get('merge_commit_sha'),
+            pr['base']['sha'], pr['head']['sha'], result['request']))
+    if 'ci' in data:
+        ci = data['ci']
+        state['ci'] = (str(ci['run']['workflow_id']) + ':' + attempt(ci['run'])) if 'run' in ci else 'missing'
+    return state
+
+
+def verify_continuation(archive, artifact, collection, *, tools, reader_blob, now=None, staging=False):
+    now = now or datetime.now(timezone.utc)
+    raw = archive_contents(archive, artifact)
+    manifest = parse(raw['manifest.json'])
+    closed(manifest, {'format', 'purpose', 'context', 'expires', 'files'}, 'Invalid continuation manifest')
+    context = manifest['context']
+    closed(context, {'repository_id', 'tools', 'job', 'request_sha', 'kind', 'run', 'attempt'},
+           'Unexpected continuation context')
+    require(manifest['format'] == FORMAT and manifest['purpose'] == PURPOSE
+            and context['tools'] == tools and SHA.fullmatch(tools)
+            and SHA.fullmatch(context['request_sha']) and JOB.fullmatch(context['job'])
+            and context['kind'] in ('publication', 'ci')
+            and all(type(context[k]) is int and context[k] > 0 for k in ('repository_id', 'run', 'attempt'))
+            and blob_id(raw[READER_FILE]) == reader_blob,
+            'Different continuation purpose, scope or trusted Reader Git blob')
+    # The collector can verify the upload before its own run completes. Only the
+    # actor can supply the successful independent run read for a continuation.
+    metadata = collection
+    if staging:
+        metadata = {**collection, 'status': 'completed', 'conclusion': 'success'}
+    expires = delivery_metadata(context, artifact, metadata, now)
+    require(now < expiry(manifest['expires']) <= expires, 'Expired or different continuation manifest')
+    expected_files = {name: {'bytes': len(raw[name]), 'sha256': sha256(raw[name]).hexdigest()}
+                      for name in (ORIGINALS_FILE, READER_FILE)}
+    require(manifest['files'] == expected_files, 'Different continuation member bytes')
+    data = parse(raw[ORIGINALS_FILE])
+    result = evaluate_originals(data, context)
+    return {'context': context, 'artifact': artifact['id'], 'digest': artifact['digest'],
+            'result': result, 'expected_fresh': fresh_values(data, result)}
+
+
+def arguments(parser):
+    parser.add_argument('--archive', type=Path, required=True)
+    parser.add_argument('--tools', required=True)
+    parser.add_argument('--reader-blob', required=True)
+    parser.add_argument('--artifact', nargs=12, required=True,
+                        metavar=('ID', 'NAME', 'BYTES', 'SHA256', 'CREATED', 'EXPIRES',
+                                 'RUN', 'HEAD', 'REPO', 'HEAD_REPO', 'BRANCH', 'EXPIRED'))
+    parser.add_argument('--collection', nargs=8, required=True,
+                        metavar=('RUN', 'ATTEMPT', 'HEAD', 'BRANCH', 'PATH', 'REPO', 'STATUS', 'CONCLUSION'))
+    parser.add_argument('--fresh', nargs=2, action='append', default=[], metavar=('SOURCE', 'VALUE'))
+    parser.add_argument('--expect-draft', action='store_true')
+
+
+def confirm_fresh(result, values):
+    fresh = dict(values)
+    expected = result['expected_fresh']
+    for key in sorted(set(expected) | set(fresh)):
+        require(key in expected and fresh.get(key) == expected[key], 'Fresh Connector observation differs: ' + key)
+    require(len(fresh) == len(values), 'Duplicate fresh observation')
+
+
+def continuation(argv):
+    parser = argparse.ArgumentParser(description='Verify an Actions continuation ZIP. Use fresh Connector reads.')
+    arguments(parser)
+    args = parser.parse_args(argv)
+    try:
+        ident, name, size, checksum, created, expires, run, head, repo, origin, branch, expired = args.artifact
+        artifact = dict(id=int(ident), name=name, size_in_bytes=int(size), digest=checksum, created_at=created,
+                        expires_at=expires, expired={'true': True, 'false': False}[expired],
+                        workflow_run=dict(id=int(run), head_sha=head, head_branch=branch,
+                                          repository_id=int(repo), head_repository_id=int(origin)))
+        run, attempt, head, branch, path, repo, status, conclusion = args.collection
+        collection = dict(id=int(run), run_attempt=int(attempt), head_sha=head, head_branch=branch,
+                          path=path, repository_id=int(repo), status=status, conclusion=conclusion)
+        result = verify_continuation(args.archive, artifact, collection, tools=args.tools, reader_blob=args.reader_blob)
+        fresh = dict(args.fresh)
+        if not fresh:
+            # The first call identifies the required observations. It grants no
+            # continuation and omits the draft mutation and CI gate output.
+            print(json.dumps({'status': 'read-live', 'context': result['context'],
+                              'sources': sorted(result['expected_fresh']),
+                              'request': result['result']['request'], 'pr': result['result']['pr'],
+                              'release': result['expected_fresh']['release'].split(':', 1)[0],
+                              'trigger_run': result['expected_fresh']['trigger'].split(':', 1)[0],
+                              'worker_run': result['expected_fresh']['worker'].split(':', 1)[0],
+                              'package_ci_workflow_id': result['result']['package_ci_workflow_id']}, sort_keys=True))
+            return
+        confirm_fresh(result, args.fresh)
+        del result['expected_fresh']
+        require(not args.expect_draft or result['result']['draft'] is True, 'Expected associated draft PR')
+        print(json.dumps(result, sort_keys=True))
+    except (BadZipFile, KeyError, ValueError, TypeError, OSError) as exc:
+        parser.exit(1, f'Continuation blocked: {exc}\n')
+
+
 def main():
+    import sys
+    if len(sys.argv) > 1 and sys.argv[1] == 'continuation':
+        return continuation(sys.argv[2:])
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('input', type=argparse.FileType('rb'), help='JSON object of the original connector or REST responses')
     parser.add_argument('--expect-draft', action='store_true', help='Require draft on readback of a newly opened PR')

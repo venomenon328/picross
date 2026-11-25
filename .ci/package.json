@@ -1,27 +1,17 @@
 {
   "format": "development-ci-plan/v1",
-  "issue": "https://github.com/venomenon328/picross/issues/897",
-  "package": "PW-OPEN-FIX",
+  "issue": "https://github.com/venomenon328/picross/issues/859",
+  "package": "PW-REMOTE-F",
   "modules": [
     "tools"
   ],
-  "purpose": "Öffnen regulärer Produktionsstände im Windows-PW. Werkzeuge prüfen Reader-, Paket- und HTTP-Fehlergrenzen; der bestehende nicht veröffentlichende Installerdispatch prüft echte MSI- und Frozen-Bytes separat.",
-  "omitted": "Fach-, Native-, Browser-, Preflight-, Delivery- und Sync-Module sind nicht angefordert. Fachkern, Spiel und Integrationswriter ändern sich nicht. Der Windows-Playerbau folgt aus dem Code-Diff, die Nutzerprobe bestehender Produktionen folgt dem regulären Rollout.",
+  "purpose": "Gebundene Zustellung der Step5-/CI-Originale und Wiederaufnahme. Werkzeuge prüfen Sammler, Archiv, Reader und aktuelle PR-/CI-Bindung. Eine lesende isolierte Actions-Probe belegt den korrigierten Logtransport. F-T02 prüft den unabhängigen Zielkontext.",
+  "omitted": "Fach-, Native-, Browser-, Preflight-, Delivery- und Sync-Module sind nicht angefordert. Integrationsfachkern und Spiel werden nicht verändert. Der Windows-Playerbau folgt aus dem Werkzeug- und Workflowdiff.",
   "test_changes": [
     {
-      "path": "tools/test_production_installer.py",
+      "path": "tools/test_production_remote_reader.py",
       "disposition": "change-scoped",
-      "reason": "Geschlossene Bild- und Methodenquellen samt Hash-, Manifest- und Dateigegenproben."
-    },
-    {
-      "path": "tools/test_production_workspace.py",
-      "disposition": "change-scoped",
-      "reason": "Detail- und Bild-HTTP unterscheiden fehlende Originale und sichere interne Fehler."
-    },
-    {
-      "path": "tools/production_workspace/smoke_windows.py",
-      "disposition": "change-scoped",
-      "reason": "V1-Methodenregression und repräsentative v3-Phasen am MSI-gebundenen Windows-PW mit Bildabrufen und defekten Paketressourcen im bestehenden Installerdiagnoseweg."
+      "reason": "Gezielte Regression für den zweistufigen Logtransport mit begrenztem Redirect, dazu bestehende ZIP-, Sammler-, Wiederaufnahme- und Freshness-Gegenproben."
     }
   ],
   "core_change": null,
