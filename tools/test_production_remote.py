@@ -319,6 +319,13 @@ class RemoteTests(unittest.TestCase):
             remote.request({**req, 'delivery': items + [items[0]]})
         with self.assertRaisesRegex(ValueError, 'requested background'):
             remote.request({**req, 'delivery': [{'role': 'background', 'candidate': 'other'}]})
+        offered = pw.bound_record(self.read_record(work, self.job), self.job)
+        before_req = self.req('inspect', work, {'items': items}, format=delivery.WIRE_V2)
+        before = f.work / 'multi-background-as-offered'
+        before_ctx = delivery.context(before_req, 'a'*40, 41, 1, 40, 1)
+        read_original = lambda r: self.fixture.assets[r['asset']['asset_id']]
+        unprepared = inspect.stage(before_req, offered, before_ctx, before, read_original, lambda: None)
+        self.assertEqual(unprepared['original_count'], 3)
         result = self.execute(req)
         self.assertTrue(result['deliver'])
         raw = self.read_record(result['work'], self.job)
@@ -326,10 +333,12 @@ class RemoteTests(unittest.TestCase):
         read = self.req('inspect', result['work'], {'items': items}, format=delivery.WIRE_V2)
         ctx = delivery.context(read, 'b'*40, 42, 2, 40, 1)
         stage = f.work / 'multi-background'
-        inspect.stage(read, record, ctx, stage, lambda r: self.fixture.assets[r['asset']['asset_id']], lambda: None)
+        inspect.stage(read, record, ctx, stage, read_original, lambda: None)
         for candidate in candidates:
             for role, size in (('background', (30, 10)), ('prepared', (2304, 768))):
-                with Image.open(stage / f'{candidate}--{role}.png') as original:
+                path = f'{candidate}--{role}.png'
+                self.assertEqual((stage / path).read_bytes(), (before / path).read_bytes())
+                with Image.open(stage / path) as original:
                     self.assertEqual(original.size, size)
         record['selected']['background'] = candidates[0]
         with self.assertRaisesRegex(ValueError, 'Different image role or choice'):

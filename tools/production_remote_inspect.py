@@ -105,10 +105,11 @@ def stage(req, record, ctx, output, read, recheck):
             data = cache[key]
             start = monotonic()
             if spec['derive'] == 'prepare-background':
-                original, prepared = private / 'original', private / 'prepared.png'
-                original.write_bytes(data)
-                current.prepare_background(original, prepared, profile_id=spec['profile'])
-                data = prepared.read_bytes()
+                with tempfile.TemporaryDirectory(dir=private, prefix='background-') as scratch:
+                    original, prepared = Path(scratch) / 'original', Path(scratch) / 'prepared.png'
+                    original.write_bytes(data)
+                    current.prepare_background(original, prepared, profile_id=spec['profile'])
+                    data = prepared.read_bytes()
             elif spec['derive'] == 'cells-clues':
                 if renderer is None:
                     from .production_remote_view import open_renderer

@@ -106,7 +106,7 @@ Ein eigener autorisierter Rechner kann denselben Kern aus sauberem Main mit
 `python -B -m tools.production_remote execute --auth gh --root PRIVAT` ausführen.
 Die Wurzel ist ein vorhandenes privates Verzeichnis für diesen Akteur.
 
-Jeder Request hat genau die Felder `format=pw-remote-v1`,
+Ein v1-Request hat genau die Felder `format=pw-remote-v1`,
 `repository=venomenon328/picross`, `operation`, `job`, `expected` (volle
 Arbeitscommit-SHA), `record_sha256`, `tools`, `main` und `input` sowie die
 unten angegebenen Zusatzfelder. `tools` und `main` bezeichnen den beim Start
