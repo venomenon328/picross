@@ -162,8 +162,14 @@ Den [Offline-Reader](../../tools/production_remote_reader.py) an der verbindlich
 `tools`-SHA lesen und mit Python 3.11+ ausführen. Die JSON-Hülle enthält die
 ursprünglichen REST-Antworten unter den folgenden Schlüsseln. Alle GETs liegen
 unter `/repos/OWNER/REPO`; bei Connectorantworten
-`structuredContent.content` als JSON dekodieren. Request-SHA und Job stammen
-aus der bestätigten Einreichung bzw. der gebundenen Übergabe.
+`structuredContent.content` als JSON dekodieren. Der allgemeine Connector-Fetch kann
+Contents als Dateiinhalt ausgeben und die Workflow-Endpunkte sperren. In diesen
+Fällen vor Step 5 den direkten öffentlichen GitHub-REST-Lesezugang prüfen.
+Für die entsprechenden Originale dieselbe API-URL lesend abrufen, etwa mit
+`curl --fail --silent --show-error URL`. Die Contents-Antwort enthält
+`encoding`, `content` und Blob-SHA. Die Workflowantwort liefert Pfad, ID und
+Status. Request-SHA und Job stammen aus der bestätigten Einreichung bzw. der
+gebundenen Übergabe.
 
 | Schlüssel | Original |
 | --- | --- |
