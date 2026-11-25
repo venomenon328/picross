@@ -18,7 +18,7 @@ gilt auch für einen frischen Chat. Der kurze Produktionsauftrag genügt.
 aus dem frisch gelesenen Record nehmen. Vor der Wahl für jedes Hintergrundangebot
 die Rollen `background` und `prepared` mit derselben ID anfordern. Bei
 `prepared:null` rendert der lesende Worker genau diese Zeichnung mit HP-W2.
-Für die reguläre Vorlage zuerst mit `step4` vorbereiten. Der Abruf liefert dann die gespeicherten Ausgabebytes. Für `none` und
+Für die reguläre Vorlage zuerst mit `step4` vorbereiten und die gespeicherten Ausgabebytes direkt in der Ergebniszustellung öffnen. Für `none` und
 `standard` entfällt dieser Abruf.
 
 Für Schritt 3 das benötigte `reveal` und `motif` öffnen. Nach dem Schritt-3-
@@ -207,7 +207,7 @@ pins = {"production_remote_reader": common}
 if mode == "originals":
     pins["production_remote_delivery"] = delivery
 archive = Path(path)
-if archive.stat().st_size != int(size) or int(size) <= 0:
+if archive.stat().st_size != int(size) or int(size) <= 0 or (mode == "continuation" and int(size) > 17 * 1024**2):
     raise SystemExit("Different ZIP length")
 with archive.open("rb") as stream:
     if "sha256:" + file_digest(stream, "sha256").hexdigest() != digest:
@@ -425,7 +425,7 @@ Linienauswertungen für den Solver sowie dieselben Grenzen für den Prüfer.
 
 Vor der Auswahl fordert der Akteur in Schritt 4 die Vorbereitung aller
 angebotenen IDs an. Danach öffnet er die gespeicherten Originale und Ausgaben
-über `inspect`. Je Kandidat enthält `input.assessment` die Felder `candidate`,
+in der Ergebniszustellung. Ein lesendes `inspect` ist bei fehlender gültiger Zustellung erforderlich. Je Kandidat enthält `input.assessment` die Felder `candidate`,
 `original_sha256`, `profile`, `sha256` der Ausgabe, die vollständigen Urteile
 in `review` und die konkreten `observations`. Nach der Veröffentlichung genügt
 in Schritt 5 die gebundene Wahl mit den tatsächlichen Schlusserklärungen.
@@ -484,10 +484,12 @@ Jobref abgleichen. Der Consumer prüft den einzigen Parent, den
 sowie die ursprünglichen Trigger-, Worker-, Attempt- und Artefaktdaten.
 Für lokal fehlgeschlagene oder abgelaufene Abrufe zuerst den tatsächlichen
 Jobref, die Publikation und den erwarteten Requestref zurücklesen.
-Bei bestätigter Publikation und offener Zustellung denselben Workflow-Run
-vollständig neu starten oder einen gezielten Inspect am gebundenen
-Nachfolger einreichen. Beim identischen Request erkennt der Worker den
-eigenen Nachfolger und lässt Berechnung, Publikation und Verbrauch aus.
+Bei bestätigter Publikation den einzelnen Parent und den PW-Remote-Besitzdigest
+am Nachfolger mit dem ursprünglichen Request vergleichen. Zuerst das gültige
+Artefakt des bestehenden Attempts verwenden. Nur bei notwendiger Neuzustellung
+ein lesendes Inspect für dieselben Rollen am bestätigten Nachfolger einreichen.
+Bei einem noch offenen identischen Request bleibt dessen gebundene Recovery
+dem Besitzer vorbehalten. Kein automatischer Writer-Neustart.
 Der ursprüngliche Requestref wird erst nach erfolgreichem Rückdownload
 und erneuter Bindungsprüfung der zuständigen Ack-Operation entfernt.
 Bei einem gezielten Inspect zuerst dessen eigenes Zustellergebnis prüfen.
@@ -529,9 +531,8 @@ Der jeweilige Einstieg verlangt das passende
 Journal. Eine noch belegte Lease erfordert den dazugehörigen lokalen Besitzbeleg.
 Die Wiederaufnahme bestätigt den vorhandenen Arbeitscommit, bereinigt seine
 gebundenen Vorgängerreste und führt das Journal nach. Fachrechnung, Zähler und
-Arbeitscommit bleiben dabei erhalten. Für die Zustellung anschließend denselben
-gebundenen Actions-Request erneut ausführen. Der Worker bestätigt den
-Nachfolger und stellt die angeforderten Originale zu.
+Arbeitscommit bleiben dabei erhalten. Für eine noch fehlende Zustellung den bestätigten Nachfolger nach dem
+[Originalabruf](#originale-in-chatgpt-sichten) lesen.
 
 Nach Verlust eines Runners kann ein
 neuer Prozess bestätigte Ergebnisse aus Git und gebundenen Originalen wiederfinden.
