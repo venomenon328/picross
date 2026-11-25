@@ -1,0 +1,4 @@
+author: ChatGPT ImageGen (OpenAI), KI-generiert im Auftrag von venomenon328
+changes: Unveränderte PNG-Originalbytes. Die Datei wurde für das Angebot umbenannt.
+source: Native ChatGPT-Bildgenerierung aus dem textlichen Fuji-Briefing, ohne externes Bildmaterial.
+usage_basis: Im Auftrag für dieses Repository erzeugter Output, mit beauftragter Veröffentlichung zur Auswahl. Rechte am Output im Verhältnis zu OpenAI nach den anwendbaren OpenAI-Bedingungen und im gesetzlich zulässigen Umfang (https://openai.com/policies/eu-terms-of-use/).
