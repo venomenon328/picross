@@ -104,13 +104,13 @@ const run = code => vm.runInContext(code, context);
   if(mode==='inbox-resume'){
     const get=id=>document.getElementById(id);
     await until(()=>run('inboxState?.folder&&readyImages.has("one")&&detail')&&get('copyOrder').onclick);
-    const modeSelect=get('nextActionMode');
-    if(action==='resume-close'){
-      const closeReceipt=descendants(get('inboxOrders')).find(el=>el.textContent==='Quittung schließen');
-      assert(closeReceipt);
-      await closeReceipt.onclick();
-      assert.equal(run('currentOrder()'),undefined);
+    if(action==='copy-bound'){
+      const original=run('currentOrder().prompt');
+      await get('copyOrder').onclick();assert.equal(copied,original);
+      console.log(JSON.stringify(copied));return;
     }
+    await until(()=>run('!currentOrder()'));
+    const modeSelect=get('nextActionMode');
     if(run('detail.facts.state')==='reveal_review'){
       const choice=descendants(get('view')).find(el=>el.dataset.choice==='one');
       assert.equal(choice.disabled,false);
@@ -125,12 +125,12 @@ const run = code => vm.runInContext(code, context);
     await get('copyOrder').onclick();
     assert.equal(get('orderStatus').textContent,'Auftrag kopiert.');
     assert.match(copied,/Drive: Suche unter Root-ID fixture/);
-    if(run('detail.facts.state')==='reveal_review')assert.equal(run('intent.selection'),'one');
+    assert.equal(get('copyOrder').textContent,'Auftrag kopieren');
     console.log(JSON.stringify(copied));return;
   }
   if(mode==='inbox'){
     await until(()=>run('inboxState?.folder'));
-    run("listing={snapshot:'snapshot',jobs:[]};newDraft();remember('brief','Fuchs');personal.executors[1]='ChatGPT';updatePrompt()");
+    run("listing={snapshot:'snapshot',jobs:[],motifs:[],errors:[]};newDraft();remember('brief','Fuchs');personal.executors[1]='ChatGPT';updatePrompt()");
     const get=id=>document.getElementById(id);
     assert.equal(starts,0);
     assert.equal(get('orderText').value,'');
@@ -145,6 +145,25 @@ const run = code => vm.runInContext(code, context);
     context.navigator.clipboard.writeText=async text=>{copied=text;};
     await get('copyOrder').onclick();
     assert.equal(copied,saved);
+    assert.equal(starts,2,'re-copy uses persisted bytes without activating again');
+    assert.equal(get('jobs').value,'pz-fuchs');
+    const first=run('currentOrder().puzzle_id');
+    const originalId=run('currentOrder().request_id');
+    const reloaded=vm.createContext({...context,document,fetch:()=>new Promise(()=>{}),localStorage:{getItem(){},setItem(){}}});
+    const reload=code=>vm.runInContext(code,reloaded);
+    for(const file of ['workflow.js','app.js'])reload(readFileSync(__dirname+'/ui/'+file,'utf8'));
+    reloaded.state=JSON.parse(run('JSON.stringify(inboxState)'));
+    reload("listing={snapshot:'snapshot',jobs:[],motifs:[],errors:[]};showInbox(state)");
+    assert.equal(reload('selectedId()'),first);
+    assert.equal(reload('currentOrder().request_id'),originalId);
+    assert.equal(get('orderText').value,saved);
+    const other={...reloaded.state.orders[0],puzzle_id:'pz-zweiter',request_id:'other',inputs:{brief:'Zweiter'}};
+    reloaded.state={...reloaded.state,orders:[other,...reloaded.state.orders]};
+    const panel=get('orderText');reload('showInbox(state)');
+    assert.equal(get('orderText'),panel);
+    reload("chooseMotif('pz-zweiter')");assert.equal(reload('selectedId()'),'pz-zweiter');
+    reload("chooseMotif('pz-fuchs')");assert.equal(get('orderText').value,saved);
+    assert.equal(descendants(get('view')).filter(e=>e.id==='copyOrder').length,1);
     console.log(JSON.stringify(copied));return;
   }
   await until(()=>run('listing!==null'));

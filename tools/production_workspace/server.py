@@ -396,7 +396,7 @@ class Handler(BaseHTTPRequestHandler):
             ap.require(not self.headers.get('Transfer-Encoding'), 'Transfer-Encoding ist nicht erlaubt.')
             removal = method == 'POST' and self.path in ('/api/removal/preview', '/api/removal/confirm')
             inbox_action = path.path.removeprefix('/api/inbox/') if path.path.startswith('/api/inbox/') else None
-            inbox_write = method == 'POST' and inbox_action in ('configure', 'start', 'cancel', 'retry')
+            inbox_write = method == 'POST' and inbox_action in ('configure', 'start', 'cancel', 'retry', 'acknowledge')
             body = None
             if removal or inbox_write:
                 ap.require(origin == self.server.origin, 'Entfernung benötigt den eigenen Browserursprung.')

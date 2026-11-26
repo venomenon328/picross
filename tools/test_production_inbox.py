@@ -202,6 +202,7 @@ class InboxTests(unittest.TestCase):
                         contract.delta(order, request, previous)
 
                 if role == 'reveal':
+                    self.inbox.action('cancel', {k: order[k] for k in ('request_id', 'puzzle_id')})
                     copied = self.loopback_probe('inbox-resume', 'continue')
                     followup = Inbox(self.service).data['orders'][job]
                     self.assertEqual(copied, followup['prompt'])
@@ -209,7 +210,7 @@ class InboxTests(unittest.TestCase):
                     self.assertEqual(followup['choice']['id'], 'one')
                     self.assertEqual(followup['choice']['decision']['scope'], 'reveal')
                     self.assertIn('Kontur für die Motivvorlage erhalten', followup['brief'])
-                    self.assertEqual(self.loopback_probe('inbox-resume', 'resume'), copied)
+                    self.assertEqual(self.loopback_probe('inbox-resume', 'copy-bound'), copied)
                     self.assertEqual(Inbox(self.service).data['orders'][job], followup)
 
     def test_root_change_draft_identity_and_legacy_operation(self):
@@ -493,7 +494,14 @@ class InboxTests(unittest.TestCase):
         self.assertEqual(order['step'], 'done')
         with self.assertRaises(ValueError):
             restarted.action('retry', binding)
-        restarted.action('cancel', binding)
+        with self.assertRaises(ValueError):
+            restarted.action('cancel', binding)
+        self.service.status = Mock(return_value={'remote_confirmed': True, 'jobs': []})
+        with self.assertRaisesRegex(ValueError, 'Gitquellen'):
+            restarted.action('acknowledge', binding)
+        self.service.status.return_value['jobs'].append(
+            {'puzzle_id': order['puzzle_id'], 'commit': confirmed['head'], 'source': 'remote'})
+        restarted.action('acknowledge', binding)
         self.deliver()
         with self.assertRaises(ValueError):
             restarted.action('retry', binding)

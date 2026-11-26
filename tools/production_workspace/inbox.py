@@ -41,7 +41,9 @@ class Inbox:
         with self.view_lock:
             self.view = {'folder': self.data['folder'], 'drafts': dict(self.data['drafts']),
                          'generations': dict(self.data['generations']), 'orders': [
-                {k: order.get(k) for k in ('puzzle_id', 'request_id', 'draft_id', 'phase', 'step', 'status', 'paused', 'result', 'prompt')}
+                {**{k: order.get(k) for k in ('puzzle_id', 'request_id', 'draft_id', 'phase', 'step', 'status',
+                                              'paused', 'result', 'prompt', 'brief', 'inputs', 'intent')},
+                 'work_head': order['source']['work_head']}
                 for order in self.data['orders'].values()]}
 
     def save(self):
@@ -97,10 +99,21 @@ class Inbox:
                 exact_keys(body, {'puzzle_id', 'request_id'})
                 order = self.data['orders'].get(body['puzzle_id'])
                 require(order and order['request_id'] == body['request_id'], 'Empfangsauftrag ist abgelaufen.')
-                if action == 'cancel':
-                    require(order['step'] in ('scan', 'stage', 'blocked', 'stale', 'done'), 'Begonnene Veröffentlichung zuerst fortsetzen.')
+                if action in ('cancel', 'acknowledge'):
+                    allowed = ('done',) if action == 'acknowledge' else ('scan', 'stage', 'blocked', 'stale')
+                    require(order['step'] in allowed, 'Begonnene Veröffentlichung zuerst fortsetzen.')
+                    if action == 'acknowledge':
+                        source = self.service.status()
+                        completed = source.get('completion', {})
+                        require(source.get('remote_confirmed') and (
+                            any(j['puzzle_id'] == order['puzzle_id'] and j['source'] == 'remote'
+                                and j['commit'] == order['result']['head'] for j in source.get('jobs', []))
+                            or completed.get('confirmed') and order['puzzle_id'] in completed.get('completed_ids', [])),
+                            'Bestätigten Arbeitsstand zuerst aus den Gitquellen laden.')
                     if order['step'] != 'stale':
                         self.discard_stage(order)
+                    if action == 'cancel' and not order['source']['work_head'] and order['puzzle_id'] not in self.data['drafts'].values():
+                        self.data['drafts'][str(uuid4())] = order['puzzle_id']
                     self.data['generations'][order['puzzle_id']] = str(uuid4())
                     del self.data['orders'][order['puzzle_id']]
                 elif action == 'retry':

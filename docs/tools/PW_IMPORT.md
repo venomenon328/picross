@@ -109,7 +109,16 @@ Befugniserweiterungen behaupten.
 Pro Job gibt es höchstens einen aktiven Empfangsauftrag; andere Jobs dürfen
 unabhängig warten. Abbrechen oder Ersetzen eines Empfangs macht die alte
 Auftragskennung unwirksam, erhält aber ungesicherte Dateien. Neustart erhält
-den aktiven gebundenen Empfang. Änderungen an der zugehörigen Produktionsbasis
+den aktiven gebundenen Empfang. In der Produktionsauswahl stehen der aktuelle
+Gitstand und sein Empfang gemeinsam. Der Hauptbereich enthält Vorschau, Kopie
+und bei Bedarf die sichere Fortsetzung. „Automatische Übernahme abbrechen“
+invalidiert die Bindung nach Bestätigung. Externe Chats, Originale, Gitstände
+und Motivtexte bleiben erhalten. Vor einem Wechsel zu Codex sind Originale,
+Korrekturverbrauch und aktuelle Quelle zu klären. Eine bestätigte Veröffentlichung
+lädt den passenden Remote-Stand bei unveränderter Auswahl. Bei offenen Eingaben
+erfolgt der Wechsel ausdrücklich. Eine abgeschlossene Quittung entfällt nach
+der Zuordnung. Ein Bereinigungsrest bleibt separat fortsetzbar.
+Änderungen an der zugehörigen Produktionsbasis
 werden vor Veröffentlichung neu geprüft.
 
 Ein Empfangsauftrag übernimmt höchstens eine wirksame Lieferung. Danach ist
