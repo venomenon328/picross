@@ -99,6 +99,7 @@ class Service:
     def listing(self, refresh=False):
         from .motifs import group
         value = self.repository.refresh() if refresh else self.repository.listing()
+        successors = self.inbox.confirmed_successors(value) if self.inbox else {}
         snapshot = secrets.token_hex(16)
         ids, public = [], []
         with self.lock:
@@ -119,7 +120,11 @@ class Service:
                 jid = secrets.token_hex(16)
                 ids.append(jid)
                 self.jobs[jid] = job
-                public.append({**{k: v for k, v in job.items() if not k.startswith('_')}, 'id': jid})
+                row = {k: v for k, v in job.items() if not k.startswith('_')}
+                ancestor = successors.get((job['puzzle_id'], job['commit']))
+                if ancestor and job['source'] == 'remote' and job['ref'] == 'content/pw/' + job['puzzle_id']:
+                    row['receipt_ancestor'] = ancestor
+                public.append({**row, 'id': jid})
             self.snapshots[snapshot] = ids
             while len(self.snapshots) > 8:
                 _, expired = self.snapshots.popitem(last=False)
@@ -396,7 +401,7 @@ class Handler(BaseHTTPRequestHandler):
             ap.require(not self.headers.get('Transfer-Encoding'), 'Transfer-Encoding ist nicht erlaubt.')
             removal = method == 'POST' and self.path in ('/api/removal/preview', '/api/removal/confirm')
             inbox_action = path.path.removeprefix('/api/inbox/') if path.path.startswith('/api/inbox/') else None
-            inbox_write = method == 'POST' and inbox_action in ('configure', 'start', 'cancel', 'retry')
+            inbox_write = method == 'POST' and inbox_action in ('configure', 'start', 'cancel', 'retry', 'acknowledge')
             body = None
             if removal or inbox_write:
                 ap.require(origin == self.server.origin, 'Entfernung benötigt den eigenen Browserursprung.')

@@ -7,7 +7,15 @@ history.replaceState(null,'',location.pathname);
 let listing=null,pending=null,generation=0,controller=null,urls=[],active=null;
 let detail=null,intent={},draft=null,drafts=[];
 let inboxState=null, folderDirty=false, starting=false;
-let boundPreview=null;
+let localSelection=null, inboxEpoch=0, viewEdited=0, navSignature=null;
+let lastSelection='';
+try{lastSelection=sessionStorage.getItem('pw-selection')||'';}catch{}
+function rememberSelection(id){
+ lastSelection=id;
+ try{sessionStorage.setItem('pw-selection',id);}catch{}
+}
+function selectedId(){return active?.puzzle_id||localSelection;}
+function setText(element,text){if(element.textContent!==text)element.textContent=text;}
 let remoteExplicit=false;
 let remoteFresh=null;
 let assetLoads=new Map(),readyImages=new Set();
@@ -52,6 +60,14 @@ function updatePrompt(){
  refreshChoices();
  const box=$('orderText'),button=$('copyOrder'),status=$('orderStatus');
  if(!box||!button)return;
+ const order=currentOrder();
+ $('orderFields').hidden=Boolean(order);
+ $('orderExecution').hidden=Boolean(order);
+ $('receiptInfo').hidden=!order;
+ if(order){showOrder(order);return;}
+ $('orderSecondary').hidden=true;
+ $('orderPreview').hidden=false;
+ button.hidden=false;
  const executor=personal.executors[PW.promptStep(detail,intent)];
  $('executor').value=executor||'';
  $('executor').disabled=!executor;
@@ -82,17 +98,17 @@ function updatePrompt(){
    }
   }
   if(imageOrder){
-   const body=startBody();
-   const same=boundPreview?.key===intentKey(body);
-   box.value=same?boundPreview.prompt:'';
-   button.textContent=same?'Gebundenen Auftrag erneut kopieren':'Auftrag starten und kopieren';
-   const open=currentOrder();
-   const resume=body.action==='resume';
-   const binding=resume?'Die Wiederaufnahme setzt den gebundenen Auftrag oder das aktuelle Bildangebot fort.':
-    'Beim Start werden die angezeigte Wahl und die Befunderklärungen gebunden.';
-   const effect=!resume&&open&&!open.result?' Eine geänderte Vorgabe ersetzt den noch wartenden Auftrag.':'';
-   $('executorHint').textContent=binding+' PW prüft passende Drive-Ergebnisse und veröffentlicht den Arbeitsstand automatisch.'+effect;
-  }else box.value=PW.prompt(detail,intent,personal);
+   startBody();box.value='';
+   $('orderPreview').hidden=true;
+   $('executorHint').textContent='Der genaue Auftrag entsteht beim Start. PW bindet deine Vorgaben, prüft die eingehenden Originale und veröffentlicht den passenden Arbeitsstand.';
+  }else{
+   box.value=PW.prompt(detail,intent,personal);
+   const prior=active?.puzzle_id||inboxState?.drafts?.[draft?.id];
+   if(prior&&inboxState?.generations?.[prior]){
+    const guard='Vor der Fortsetzung von '+prior+' den bestätigten Gitstand, vorhandene externe Originale und den tatsächlichen Korrekturverbrauch klären. Bestehende Entscheidungen und Budgets berücksichtigen.';
+    box.value+='\n\n'+guard;$('executorHint').textContent=guard;
+   }
+  }
   button.disabled=starting;
   status.textContent=final?(personal.merge?'Auftrag bis main und Produktionsabschluss – nach erfüllten Pflichtgates.':'Auftrag bis Draft-PR – kein Merge.'):'';
   status.className='hint';
@@ -101,6 +117,7 @@ function updatePrompt(){
  }
 }
 function remember(key,value){
+ viewEdited++;
  intent[key]=value;
  if(draft){draft[key]=value;saveDrafts();}
  updatePrompt();
@@ -228,11 +245,12 @@ function metadata(view,value){
 }
 function workflow(view,value){
  detail=value;
- const n=PW.step(value),order=PW.orderStep(value),section=node('section',undefined,'nextAction');
+ const n=PW.step(value),order=PW.orderStep(value),panel=node('section',undefined,'nextAction');
+ const section=node('div');section.id='orderFields';panel.append(section);
  const motifReview=value?.facts.candidates&&value.facts.state==='motif_review';
  const selectionHint='Die gewünschte Variante auf der Bildkarte wählen.';
  section.append(node('h3',PW.closing(value,intent)?(value.facts.state==='registered'?'Git-Abschluss fortsetzen':'Schlussauswahl abnehmen & integrieren'):value?.facts.next_step||'Motiv beschreiben'));
- if(!value)field(section,'Was soll dein Rätsel zeigen?','brief','Zum Beispiel eine reife Erdbeere');
+ if(!value)field(section,'Was soll dein Rätsel zeigen?','brief','Zum Beispiel eine reife Erdbeere').id='motifBrief';
  if(order===1)field(section,'Zusätzliche Motivhinweise (optional)','notes','Welche Details, Perspektive oder Stimmung sind dir wichtig?');
  if(!value){
   const label=node('label','Referenzbild (optional)','reference'),input=node('input');input.type='file';input.accept='image/png,image/jpeg';
@@ -344,8 +362,18 @@ function workflow(view,value){
   label.append(merge,node('span',' Nach erfüllten Pflichtgates nach main mergen und Produktion abschließen'));
   scope.append(label,node('p','Erst der gesendete Auftrag erklärt die Endabnahme und den gewählten Umfang. Klicken, Kopieren und Aktualisieren bestätigen nichts.','hint'));section.append(scope);
  }
+ orderControls(view,panel);
+}
+function orderControls(view,panel){
+ const receipt=node('div');receipt.id='receiptInfo';
+ const heading=node('h3');heading.id='receiptHeading';
+ const state=node('p',undefined,'receiptState');state.id='receiptState';state.setAttribute('role','status');
+ const info=node('details');info.id='receiptDetails';
+ const reason=node('p');reason.id='receiptReason';
+ info.append(node('summary','Details zur Übernahme'),reason);receipt.append(heading,state,info);
+ const review=node('a');review.id='receiptSource';review.target='_blank';review.rel='noopener noreferrer';receipt.append(review);
  const execution=node('div',undefined,'orderExecution'),executorLabel=node('label','Auftrag ausführen mit:'),executor=node('select');
- executor.id='executor';
+ execution.id='orderExecution';executor.id='executor';
  for(const name of PW.executors){const option=node('option',name);option.value=name;executor.append(option);}
  executor.onchange=()=>{
   const phase=PW.promptStep(detail,intent);
@@ -360,33 +388,53 @@ function workflow(view,value){
  const destination=node('p',undefined,'hint');destination.id='executorHint';destination.setAttribute('role','status');
  const actions=node('div',undefined,'orderActions'),copy=node('button','Auftrag kopieren','primary');copy.id='copyOrder';
  const status=node('p',undefined,'hint');status.id='orderStatus';status.setAttribute('role','status');
- const preview=node('details',undefined,'orderPreview');preview.append(node('summary','Auftrag ansehen'));
+ const preview=node('details',undefined,'orderPreview');preview.id='orderPreview';preview.append(node('summary','Auftrag ansehen'));
  const text=node('textarea');text.id='orderText';text.rows=10;text.readOnly=true;text.setAttribute('aria-label','Auftragstext');preview.append(text);
  copy.onclick=async()=>{
-  updatePrompt();if(copy.disabled)return;
-  if(starting)return;
-  if(usesInbox()){
+  updatePrompt();if(copy.disabled||starting)return;
+  let order=currentOrder();
+  if(order?.result){await loadResult(order,true);return;}
+  if(!order&&usesInbox()){
    if(!inboxState?.folder){
     $('inbox').open=true;$('inboxFolder').focus();
     status.textContent='Zuerst den privaten Drive-Stammordner speichern. Deine Eingaben bleiben hier erhalten.';return;
    }
-   const body=startBody(),key=intentKey(body),epoch=generation;
+   const body=startBody(),epoch=generation;
+   const view=$('view');view.inert=true;
    starting=true;copy.disabled=true;
    try{
-    const value=await inboxAction('start',body);
-    if(epoch!==generation||key!==intentKey(startBody()))return;
-    const order=value.orders.find(o=>o.puzzle_id===value.started);
-    if(order.result)throw Error('Bereits veröffentlicht. Den bestätigten Arbeitsstand öffnen.');
-    boundPreview={key,prompt:order.prompt};text.value=order.prompt;
-   }catch(exc){status.textContent=exc.message;return;}
-   finally{starting=false;copy.disabled=false;}
+    const value=await inboxAction('start',body,false);
+    if(epoch!==generation)return;
+    order=value.orders.find(o=>o.puzzle_id===value.started);
+    if(!order||order.result)throw Error('Auftragsstatus hat sich geändert. Bitte den aktuellen Stand prüfen.');
+    if(draft)chooseMotif(order.puzzle_id);
+    else{viewEdited=0;updatePrompt();}
+   }catch(exc){if(epoch===generation)status.textContent=exc.message;return;}
+   finally{
+    starting=false;view.inert=false;copy.disabled=false;
+    if(epoch!==generation||currentOrder())updatePrompt();
+   }
+   $('copyOrder').focus();
   }
-  try{await navigator.clipboard.writeText(text.value);status.textContent='Auftrag kopiert.';}
-  catch{preview.open=true;text.focus();text.select();status.textContent='Kopieren fehlgeschlagen. Den markierten Auftrag manuell oder erneut kopieren.';}
+  const target=$('orderText'),message=$('orderStatus'),shown=$('orderPreview'),epoch=generation;
+  const stillSelected=()=>epoch===generation&&order?.request_id===currentOrder()?.request_id;
+  try{
+   await navigator.clipboard.writeText(order?order.prompt:target.value);
+   if(stillSelected())message.textContent='Auftrag kopiert.';
+  }catch{
+   if(!stillSelected())return;
+   shown.open=true;target.focus();target.select();message.textContent='Kopieren fehlgeschlagen. Den markierten Auftrag manuell oder erneut kopieren.';
+  }
  };
- actions.append(copy,status);section.append(execution,destination,actions,preview);view.append(section);updatePrompt();
+ const secondary=node('div',undefined,'receiptActions');secondary.id='orderSecondary';
+ const retry=node('button');retry.id='receiptRetry';retry.onclick=()=>changeReceipt('retry');
+ const cancel=node('button','Automatische Übernahme abbrechen');cancel.id='receiptCancel';cancel.onclick=()=>changeReceipt('cancel');
+ const explanation=node('p',undefined,'hint');explanation.id='cancelHint';
+ secondary.append(retry,cancel,explanation);
+ actions.append(copy,status);panel.append(receipt,execution,destination,actions,preview,secondary);view.append(panel);updatePrompt();
 }
 function choose(id,kind,button){
+ viewEdited++;
  if(intent.action==='raster_diagnosis'){
   const mode=$('nextActionMode');mode.value='continue';mode.onchange();
  }
@@ -398,23 +446,25 @@ function choose(id,kind,button){
  refreshFinalPreview();const alternatives=$('backgroundOptions');if(alternatives)alternatives.open=false;updatePrompt();
 }
 function newDraft(id){
- dispose();active=null;detail=null;$('versions').hidden=true;$('motifStatus').textContent='Lokaler Entwurf';
+ const mapped=id&&inboxState?.drafts?.[id];
+ rememberSelection('');dispose();active=null;detail=null;$('versions').hidden=true;$('motifStatus').textContent='Lokaler Entwurf';
  draft=drafts.find(d=>d.id===id)||{id:crypto.randomUUID(),brief:''};
+ if(mapped&&orderById(mapped))draft={...draft,id:crypto.randomUUID()};
  if(!drafts.includes(draft)){drafts.push(draft);drafts=drafts.slice(-20);saveDrafts();}
  intent={brief:draft.brief,notes:draft.notes||'',grid:{...draft.grid},inputImage:draft.inputImage,reference:draft.reference};
  $('view').replaceChildren(node('h2','Neues Motiv'));progress($('view'),null);workflow($('view'),null);renderDrafts();
- if(listing?.jobs.length)$('jobs').selectedIndex=-1;
+ $('jobs').selectedIndex=-1;
 }
 function renderDrafts(){
  const list=$('draftList');list.replaceChildren();if(!drafts.length)return;
- const label=node('label','Gespeicherten Motivtext öffnen'),select=node('select');
+ const label=node('label','Gespeicherten Motivtext als Entwurf öffnen'),select=node('select');
  const empty=node('option','Motivtext wählen …');empty.value='';select.append(empty);
  for(const d of drafts){const option=node('option',(d.brief.trim()||'Unbenannter Motivtext').slice(0,60));option.value=d.id;select.append(option);}
  select.value=draft?.id||'';select.onchange=()=>{if(select.value)newDraft(select.value);};label.append(select);list.append(label);
  if(draft){
   const remove=node('button','Entwurf verwerfen','discard');remove.onclick=()=>{
    drafts=drafts.filter(d=>d.id!==draft.id);draft=null;saveDrafts();renderDrafts();
-   if(listing?.motifs.length)chooseMotif(listing.motifs[0].puzzle_id);else $('view').replaceChildren(node('p','Über „Neues Motiv“ beginnen oder einen gespeicherten Motivtext ausdrücklich öffnen.'));
+   if(navigationRows().length)chooseMotif(navigationRows()[0].id);else $('view').replaceChildren(node('p','Über „Neues Motiv“ beginnen oder einen gespeicherten Motivtext ausdrücklich öffnen.'));
   };list.append(remove);
  }
 }
@@ -449,13 +499,13 @@ function drainImages(){
  }
 }
 function imageRequest(path,signal){return new Promise((resolve,reject)=>{imageQueue.push({path,signal,resolve,reject});drainImages();});}
-function dispose(){closeRemoval();generation++;controller?.abort();controller=new AbortController();for(const url of urls)URL.revokeObjectURL(url);urls=[];assetLoads=new Map();readyImages=new Set();$('large').close();}
+function dispose(){$('view').inert=false;localSelection=null;viewEdited=0;closeRemoval();generation++;controller?.abort();controller=new AbortController();for(const url of urls)URL.revokeObjectURL(url);urls=[];assetLoads=new Map();readyImages=new Set();$('large').close();}
 function sourceStatus(value){
  const age=value.synced_at?new Date(value.synced_at).toLocaleString('de-DE'):'unbekannt';
  const source=value.mode==='local'?'Nur lokale Gitstände · Remote-Sicherung nicht bestätigt':!value.remote_confirmed?['Remote nicht aktuell bestätigt','letzter Cache: '+age,value.sync_error].filter(Boolean).join(' · '):'Remote zuletzt geladen: '+age;
  return [source,value.completion?.note].filter(Boolean).join(' · ');
 }
-function currentMotif(){return listing?.motifs.find(m=>m.puzzle_id===$('jobs').value);}
+function currentMotif(){return listing?.motifs.find(m=>m.puzzle_id===selectedId());}
 function versionControls(motif,id){
  $('versions').hidden=false;$('version').replaceChildren();
  const empty=node('option','Version bewusst wählen');empty.value='';$('version').append(empty);
@@ -465,30 +515,76 @@ function versionControls(motif,id){
  const bound=listing.jobs.find(j=>j.id===id),placeholder=node('option',bound?`Aktiv: ${bound.source==='local'?'Lokal':'Remote'} · ${bound.commit.slice(0,8)} · Quelle wählen`:'Quelle wählen');placeholder.value='';$('jobSource').append(placeholder);
  const version=motif.versions[index];$('versionOrigin').textContent=version?.source_label||'';
  if(version)for(const jid of version.sources){const job=listing.jobs.find(j=>j.id===jid),option=node('option',`${job.source==='local'?'Lokal':'Remote'} · ${job.ref==='main'?'main':'Produktionsbranch'} · ${job.commit.slice(0,8)}`);option.value=jid;$('jobSource').append(option);}
- $('jobSource').value=remoteExplicit?id||'':'';$('jobSource').disabled=!version;$('motifStatus').textContent=motif.status;$('versionNotes').textContent=motif.notes.join(' ');
+ $('jobSource').value=remoteExplicit?id||'':'';$('jobSource').disabled=!version;setText($('motifStatus'),currentOrder()?orderStatus(currentOrder()):motif.status);$('versionNotes').textContent=motif.notes.join(' ');
 }
 function chooseMotif(puzzleId){
- const motif=listing.motifs.find(m=>m.puzzle_id===puzzleId);if(!motif)return;$('jobs').value=puzzleId;
- if(motif.current_job){open(motif.current_job);return;}
- dispose();active=null;draft=null;detail=null;intent={};remoteExplicit=false;renderDrafts();versionControls(motif,null);
- $('view').replaceChildren(node('h2',motif.title),node('p','Aktuelle Übergabe nicht eindeutig. Bitte eine Version wählen.','validation'),node('p',motif.notes.join(' '),'hint'));
+ const motif=listing?.motifs?.find(m=>m.puzzle_id===puzzleId),order=orderById(puzzleId);
+ if(!motif&&!order)return;
+ rememberSelection(puzzleId);$('jobs').value=puzzleId;
+ $('jobs').title=$('jobs').selectedOptions?.[0]?.title||motif?.label||orderTitle(order);
+ if(motif?.current_job)return open(motif.current_job);
+ dispose();active=null;localSelection=puzzleId;draft=null;detail=null;intent={};remoteExplicit=false;renderDrafts();
+ const view=$('view');view.replaceChildren(node('h2',motif?.title||orderTitle(order)));
+ if(motif){
+  versionControls(motif,null);
+  view.append(node('p','Aktuelle Übergabe nicht eindeutig. Bitte eine Version wählen.','validation'),node('p',motif.notes.join(' '),'hint'));
+ }else{
+  $('versions').hidden=true;setText($('motifStatus'),orderStatus(order));
+  const completed=completedIn(listing,puzzleId);
+  if(!completed&&order.phase==='reveal'&&!order.work_head)progress(view,null);
+  const origin=completed?'In main abgeschlossen · lokale Nachbereitung':order.result?'Veröffentlichung bestätigt':
+   order.work_head?'Der gebundene Gitstand ist hier noch nicht geladen.':'Erster Bildauftrag · noch nicht veröffentlicht';
+  view.append(node('p',origin,'sourceRole'));
+  if(order.brief)view.append(node('h3','Gebundenes Motivbriefing'),node('p',order.brief,'briefText'));
+ }
+ if(order)receiptPanel(view);
 }
-function adopt(value){
- const keepDraft=draft?.id,keepId=active?.puzzle_id||$('jobs').value;
+function receiptPanel(view){
+ const panel=node('section',undefined,'nextAction'),fields=node('div');
+ fields.id='orderFields';panel.append(fields);orderControls(view,panel);
+}
+function completedIn(source,id){return source?.completion?.confirmed&&source.completion.completed_ids.includes(id);}
+function navigationRows(){
+ const rows=new Map((listing?.motifs||[]).map(m=>[m.puzzle_id,{id:m.puzzle_id,label:m.label||m.title||m.puzzle_id}]));
+ for(const order of inboxState?.orders||[]){
+  const id=order.puzzle_id,motif=listing?.motifs?.find(m=>m.puzzle_id===id);
+  const remainder=completedIn(listing,id);
+  const title=motif?.title||orderTitle(order),status=orderStatus(order);
+  const short=title.length>40?title.slice(0,39)+'…':title;
+  rows.set(id,{id,label:short+' – '+(remainder?'Abschlussrest':status),title:title+' – '+status,remainder});
+ }
+ return [...rows.values()];
+}
+function renderNavigation(){
+ const rows=navigationRows(),signature=JSON.stringify(rows),select=$('jobs');
+ if(signature!==navSignature){
+  navSignature=signature;select.replaceChildren();
+  const rest=node('optgroup');rest.label='Abschlussnachbereitung';
+  for(const row of rows){
+   const option=node('option',row.label);option.value=row.id;option.title=row.title||row.label;
+   (row.remainder?rest:select).append(option);
+  }
+  if(rows.some(row=>row.remainder))select.append(rest);
+  if(!rows.length){const empty=node('option','Keine offenen Produktionen');empty.value='';select.append(empty);select.value='';}
+ }
+ const selected=rows.find(row=>row.id===selectedId());select.title=selected?.title||selected?.label||'Offene Produktionen';
+ if(selected)select.value=selected.id;else if(draft)select.selectedIndex=-1;
+ return rows;
+}
+function adopt(value,loadedJob=null){
+ const keepDraft=draft?.id,keepId=selectedId()||lastSelection;
  const completed=!keepDraft&&value.completion?.confirmed&&value.completion.completed_ids.includes(keepId);
- const retained=value.motifs.find(m=>m.puzzle_id===keepId);
- const notice=completed?`Die bisherige Produktion (${keepId}) ist in main registriert. ${value.motifs.length?'Die nächste offene Produktion ist ausgewählt.':'Die aktive Liste enthält keine offenen Produktionen. Gespeicherte Motivtexte bleiben erhalten.'}`:'';
- if(!keepDraft)dispose();
- listing=value;pending=null;$('load').hidden=true;$('sourceStatus').textContent=[sourceStatus(value),notice].filter(Boolean).join(' · ');error(value.errors.join('\n'));$('jobs').replaceChildren();
- for(const motif of value.motifs){const option=node('option',motif.label);option.value=motif.puzzle_id;$('jobs').append(option);}
- if(!value.motifs.length){const empty=node('option','Keine offenen Produktionen');empty.value='';$('jobs').append(empty);$('jobs').value='';}
- if(keepDraft){if(value.jobs.length)$('jobs').selectedIndex=-1;return;}
- if(!value.motifs.length){
-  active=null;detail=null;intent={};remoteExplicit=false;
+ const notice=completed?'Die bisherige Produktion ('+keepId+') ist in main registriert. '+(value.motifs.length?'Die nächste offene Produktion ist ausgewählt.':'Die aktive Liste enthält keine offenen Produktionen. Gespeicherte Motivtexte bleiben erhalten.') : '';
+ listing=value;pending=null;$('load').hidden=true;$('sourceStatus').textContent=[sourceStatus(value),notice].filter(Boolean).join(' · ');error(value.errors.join('\n'));
+ const rows=renderNavigation();
+ if(keepDraft)return;
+ if(!rows.length){
+  dispose();active=null;detail=null;intent={};remoteExplicit=false;
   $('versions').hidden=true;$('motifStatus').textContent='';$('view').replaceChildren(node('h2','Keine offenen Produktionen'),node('p',drafts.length?'Über „Neues Motiv“ beginnen oder einen gespeicherten Motivtext ausdrücklich öffnen.':'Über „Neues Motiv“ beginnen.'));
   return;
  }
- chooseMotif(retained?.puzzle_id||value.motifs[0].puzzle_id);
+ if(loadedJob)return open(loadedJob.id,false,loadedJob.detail);
+ return chooseMotif(rows.find(r=>r.id===keepId)?.id||rows.find(r=>!r.remainder)?.id||rows[0].id);
 }
 function assetURL(id,asset,current,signal){
  if(!assetLoads.has(asset.id)){
@@ -660,12 +756,12 @@ function technicalDetails(view,value){
  copy.onclick=async()=>{try{await navigator.clipboard.writeText(text.value);status.textContent='Übergabedaten kopiert.';}catch{text.focus();text.select();status.textContent='Bitte die markierten Übergabedaten manuell kopieren.';}};
  panel.append(copy,status,text);view.append(panel);
 }
-async function open(id,explicit=false){
+async function open(id,explicit=false,loadedDetail=null){
  dispose();draft=null;detail=null;intent={};remoteExplicit=explicit;renderDrafts();
  const current=generation,signal=controller.signal;active=listing.jobs.find(j=>j.id===id);$('jobs').value=active.puzzle_id;versionControls(currentMotif(),id);
  $('view').replaceChildren(node('p','Originalbindungen und Bilder werden geprüft …'));
  try{
-  const value=await(await request('/api/jobs/'+id,{signal})).json();if(current!==generation)return;
+  const value=loadedDetail||await(await request('/api/jobs/'+id,{signal})).json();if(current!==generation)return;
   detail=value;
   const view=$('view');view.replaceChildren(node('h2',value.title));
   view.append(node('span',({brief_ready:'Briefing bereit',reveal_review:'Abschlussbilder zur Wahl',motif_review:'Motivvorlage zur Freigabe',motif_approved:'Rasterproduktion beauftragt',raster_review:'Rasterprüfung offen',raster_ready:'Geprüfte Raster zur Wahl',background_review:'Kontextzeichnungen zur Wahl',content_ready:'Bereit zur Endabnahme',editorially_approved:'Endabnahme liegt vor',registered:'Lokal registriert'})[value.facts.state]||value.facts.state,'badge'));
@@ -707,7 +803,13 @@ async function open(id,explicit=false){
    const cards=node('div',undefined,'cards');gallery.append(cards);for(const asset of assets)cards.append(assetCard(value,id,asset));
   }
   workflow(view,value);technicalDetails(view,value);removalAction(view,value);
- }catch(exc){if(current===generation&&exc.name!=='AbortError')$('view').replaceChildren(node('h2','Arbeitsstand kann nicht geöffnet werden'),node('p',exc.message,'error'));}
+  reconcileResult();
+ }catch(exc){
+  if(current!==generation||exc.name==='AbortError')return;
+  detail=null;
+  const view=$('view');view.replaceChildren(node('h2',currentMotif()?.title||'Arbeitsstand kann nicht geöffnet werden'),node('p',exc.message,'error'));
+  if(currentOrder())receiptPanel(view);
+ }
 }
 function zoom(){const img=$('largeImage'),value=$('zoom').value;img.classList.toggle('zoomed',value!=='fit');if(value==='fit')img.removeAttribute('width');else img.width=img.naturalWidth*Number(value);}
 $('largeImage').onload=zoom;$('zoom').onchange=zoom;$('close').onclick=()=>$('large').close();$('jobs').onchange=()=>chooseMotif($('jobs').value);
@@ -809,12 +911,12 @@ $('refresh').onclick=async()=>{const epoch=++sourceRequest,button=$('refresh');c
 $('load').onclick=()=>{if(pending)adopt(pending);};
 function theme(value){document.documentElement.dataset.theme=value;try{localStorage.setItem('pw-theme',value);}catch{}}
 $('theme').onchange=()=>theme($('theme').value);try{$('theme').value=localStorage.getItem('pw-theme')||'system';}catch{}theme($('theme').value);
-pollSources();
+$('view').oninput=$('view').onchange=()=>{viewEdited++;};
 
 function currentOrder(){
- const job=active?.puzzle_id||inboxState?.drafts?.[draft?.id];
- return inboxState?.orders.find(order=>order.puzzle_id===job);
+ return orderById(selectedId());
 }
+function orderById(id){return inboxState?.orders.find(order=>order.puzzle_id===id);}
 function usesInbox(){
  if(personal.executors[PW.promptStep(detail,intent)]!=='ChatGPT')return false;
  if(!detail)return true;
@@ -841,48 +943,169 @@ function startBody(){
  return {snapshot:listing.snapshot,jid:active?.id||'',draft_id:draft?.id||'',candidate,action,inputs,
   findings:JSON.stringify(resume?{}:(intent.findings||{})),expected:currentOrder()?.request_id||inboxState?.generations?.[job]||''};
 }
-function intentKey(body){
- const {expected,...intent}=body;
- return JSON.stringify(intent);
+function orderTitle(order){
+ return order?.inputs?.brief?.trim().split('\n')[0]||order?.brief?.trim().split('\n')[0]||order?.puzzle_id||'';
 }
-async function inboxAction(action,body){
- const response=await request('/api/inbox/'+action,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
- const value=await response.json();showInbox(value);return value;
+function orderStatus(order){
+ if(order.step==='cleanup')return order.paused?'Veröffentlicht · Bereinigung offen':'Veröffentlicht · Eingang wird bereinigt';
+ if(order.result)return 'Veröffentlichung bestätigt';
+ if(order.step==='blocked')return 'Lieferung gesperrt';
+ if(order.step==='stale')return 'Produktionsstand geändert';
+ if(order.paused)return 'Übernahme unterbrochen';
+ return ({scan:'Wartet auf Bilder',stage:'Dateien werden geprüft',build:'Übernahme läuft',publish:'Veröffentlichung läuft'})[order.step]||'Empfang prüfen';
 }
-function showInbox(value){
+function showOrder(order){
+ const phase={reveal:'Abschlussbilder',motif:'Motivvorlage',background:'Kontextzeichnungen'}[order.phase]||'Bildauftrag';
+ const action={offer:'Angebot',assessment:'Neubewertung',correction:'Korrektur'}[order.intent]||'Auftrag';
+ setText($('receiptHeading'),phase+' · '+action);
+ setText($('receiptState'),orderStatus(order));setText($('motifStatus'),orderStatus(order));
+ $('receiptDetails').hidden=!order.status;setText($('receiptReason'),order.status||'');
+ const cancel=['scan','stage','stale','blocked'].includes(order.step);
+ const retry=order.paused&&['scan','stage','build','publish','cleanup'].includes(order.step);
+ const source=pending||listing,match=order.result&&resultJob(source,order);
+ const loaded=detail&&match&&active?.id===match.id;
+ const review=$('receiptSource');
+ review.hidden=!order.result||Boolean(match)||completedIn(source,order.puzzle_id);
+ if(!review.hidden){
+  const tip=source?.sources?.find(s=>s.source==='remote'&&s.ref==='content/pw/'+order.puzzle_id)?.commit;
+  const compare=source?.remote_confirmed&&tip&&tip!==order.result.head;
+  review.href='https://github.com/venomenon328/picross/'+(compare?'compare/'+order.result.head+'...'+tip:'commit/'+order.result.head);
+  setText(review,compare?'Import und aktuellen Arbeitsstand auf GitHub vergleichen':'Bestätigten Import auf GitHub ansehen');
+ }
+ const copy=$('copyOrder');copy.hidden=Boolean(order.result&&loaded);
+ copy.disabled=starting||busyReceipt===order.request_id;
+ setText(copy,order.result?'Veröffentlichten Arbeitsstand laden':'Auftrag kopieren');
+ const preview=$('orderPreview');preview.hidden=Boolean(order.result);
+ if($('orderText').value!==order.prompt)$('orderText').value=order.prompt||'';
+ setText($('executorHint'),order.result?(loaded?'Der bestätigte Gitstand ist geöffnet.':'Quellen aktualisieren. Bleibt die Zuordnung offen, den bestätigten Import prüfen und den Produktionsbranch mit der zuständigen Person klären.'):
+  order.paused?(['build','publish'].includes(order.step)?'Die Veröffentlichung ist bereits begonnen. Prüfe die Quelle und setze dieselbe Übernahme fort.':'Prüfe die Details zur Übernahme.'):'Der Auftrag ist für ChatGPT gespeichert. Du kannst ihn erneut kopieren.');
+ $('orderSecondary').hidden=!cancel&&!retry;
+ const recovery=$('receiptRetry');recovery.hidden=!retry;recovery.disabled=copy.disabled;
+ setText(recovery,order.result?'Bereinigung fortsetzen':'Übernahme fortsetzen');
+ recovery.className=copy.hidden?'primary':'';
+ const stop=$('receiptCancel');stop.hidden=!cancel;stop.disabled=copy.disabled;
+ $('cancelHint').hidden=!cancel;
+ setText($('cancelHint'),'Ein Abbruch beendet den Empfang in PW. Chat, Originale und Gitstand bleiben erhalten. Anschließend kannst du Vorgaben ändern oder zu Codex wechseln.');
+}
+let busyReceipt=null;
+function receiptBinding(order){return {request_id:order.request_id,puzzle_id:order.puzzle_id};}
+async function changeReceipt(action){
+ const order=currentOrder();if(!order||busyReceipt)return;
+ const name=currentMotif()?.title||orderTitle(order);
+ if(action==='cancel'&&!confirm('Automatische Übernahme für „'+name+'“ abbrechen? Der bisherige Auftrag wird nicht mehr angenommen. Ein laufender Chat läuft weiter. Originale und veröffentlichte Stände bleiben erhalten.'))return;
+ if(action==='cancel'&&!order.work_head&&order.draft_id)saveReceiptDraft(order,order.draft_id);
+ const epoch=generation;
+ busyReceipt=order.request_id;showOrder(order);
+ try{
+  await inboxAction(action,receiptBinding(order));
+  if(epoch===generation&&action==='retry')setText($('orderStatus'),'Fortsetzung angefordert.');
+  if(epoch===generation&&action==='cancel'&&detail)$('executor').focus();
+ }catch(exc){if(epoch===generation)setText($('orderStatus'),exc.message);}
+ finally{busyReceipt=null;if(currentOrder()&&$('copyOrder'))showOrder(currentOrder());}
+}
+function saveReceiptDraft(order,id){
+ if(drafts.some(d=>d.id===id))return;
+ const input=order.inputs||{},grid={},notes=[input.notes];
+ for(const line of input.grid||[]){
+  const axis=line.match(/^(Breite|Höhe): (exakt|ungefähr) (\d+) Zellen\.$/);
+  const colors=line.match(/^Farbzahl: (exakt|ungefähr) (eine|\d+) Vordergrundfarben?\.$/);
+  if(axis){
+   grid[axis[1]==='Breite'?'width':'height']=axis[3];grid.sizeAccuracy=axis[2]==='exakt'?'exact':'approx';
+  }else if(colors){
+   grid.colors=colors[2]==='eine'?'1':colors[2];grid.colorAccuracy=colors[1]==='exakt'?'exact':'approx';
+  }else if(line==='Rastermodus: monochrom.'||line==='Rastermodus: farbig.')grid.mode=line.includes('monochrom')?'mono':'color';
+  else notes.push(line);
+ }
+ drafts.push({id,brief:input.brief||order.brief||'',notes:notes.filter(Boolean).join('\n'),grid,inputImage:input.reference?.name||''});
+ drafts=drafts.slice(-20);saveDrafts();
+}
+function recoverDraft(order){
+ const id=order.draft_id||Object.keys(inboxState.drafts||{}).find(key=>inboxState.drafts[key]===order.puzzle_id);
+ if(!id)return false;
+ saveReceiptDraft(order,id);
+ newDraft(id);$('motifBrief').focus();
+ setText($('orderStatus'),'Übernahme beendet. Vor einem neuen Auftrag vorhandene Originale und verbrauchte Korrekturen prüfen.');
+ return true;
+}
+async function inboxAction(action,body,navigate=true){
+ if(inboxEpoch%2)throw Error('Die aktuelle Empfangsaktion wird noch abgeschlossen.');
+ ++inboxEpoch;
+ try{
+  const response=await request('/api/inbox/'+action,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
+  const value=await response.json();showInbox(value,navigate);return value;
+ }finally{++inboxEpoch;}
+}
+function showInbox(value,navigate=true){
+ const previous=currentOrder();
  if(!folderDirty){
   $('inboxFolder').value=value.folder?.id||'';
   $('inboxDirectory').value=value.folder?.directory||'';
  }
  inboxState=value;
- const area=$('inboxOrders');area.replaceChildren();
- for(const order of value.orders){
-  const article=node('section');
-  article.append(node('strong',order.puzzle_id),node('p',order.status));
-  function button(label,action){
-   const control=node('button',label);article.append(control);
-   control.onclick=async()=>{control.disabled=true;try{await action();}catch(exc){article.append(node('p',exc.message,'error'));}finally{control.disabled=false;}};
+ const rows=renderNavigation(),order=currentOrder();
+ if(!navigate)return;
+ if(draft&&orderById(value.drafts?.[draft.id])&&!starting){chooseMotif(value.drafts[draft.id]);}
+ else if(!selectedId()&&!draft&&rows.length&&listing)chooseMotif(rows.find(r=>r.id===lastSelection)?.id||rows[0].id);
+ else if(previous&&!order&&localSelection){
+  if(currentMotif())chooseMotif(localSelection);
+  else if(previous.result||!recoverDraft(previous))adopt(listing);
+ }else if(JSON.stringify(previous)!==JSON.stringify(order)){
+  if(order&&localSelection&&!currentMotif()&&previous?.request_id!==order.request_id){
+   chooseMotif(localSelection);return;
   }
-  if(order.result){
-   button('Veröffentlichten Arbeitsstand öffnen',async()=>{
-    const source=await (await request('/api/jobs')).json();
-    const job=source.jobs.find(j=>j.commit===order.result.head&&j.puzzle_id===order.puzzle_id&&j.source==='remote');
-    if(!job){await $('refresh').onclick();throw Error('Quellen werden aktualisiert. Danach den Stand öffnen.');}
-    draft=null;adopt(source);await open(job.id);
-   });
-  }else{
-   const saved=node('details');saved.append(node('summary','Gespeicherten Auftrag ansehen'));
-   const prompt=node('textarea');prompt.readOnly=true;prompt.value=order.prompt;saved.append(prompt);article.append(saved);
-   button('Auftrag erneut kopieren',async()=>{try{await navigator.clipboard.writeText(order.prompt);}
-    catch{saved.open=true;prompt.focus();prompt.select();throw Error('Bitte den markierten Auftrag kopieren.');}});
-  }
-  const binding={request_id:order.request_id,puzzle_id:order.puzzle_id};
-  if(order.paused&&['build','publish','cleanup','scan','stage'].includes(order.step))
-   button('Übernahme fortsetzen',()=>inboxAction('retry',binding));
-  if(['scan','stage','blocked','stale','done'].includes(order.step))
-   button(order.step==='done'?'Quittung schließen':'Auftrag widerrufen',()=>inboxAction('cancel',binding));
-  area.append(article);
+  if($('copyOrder'))updatePrompt();
+  if(!order&&currentMotif())setText($('motifStatus'),currentMotif().status);
  }
+ reconcileResult();
+}
+let loadingResult=null;
+function resultJob(source,order){
+ if(!source?.remote_confirmed||source.update?.state==='error')return null;
+ const motif=source.motifs.find(m=>m.puzzle_id===order.puzzle_id);
+ return source.jobs.find(j=>j.id===motif?.current_job&&j.source==='remote'&&j.ref==='content/pw/'+order.puzzle_id&&j.puzzle_id===order.puzzle_id&&
+  (j.commit===order.result.head||j.receipt_ancestor===order.result.head));
+}
+function reconcileResult(){
+ const order=currentOrder();
+ const background=inboxState?.orders.find(other=>other!==order&&other.step==='done'&&
+  (completedIn(listing,other.puzzle_id)||resultJob(listing,other)));
+ if(background&&!(inboxEpoch%2)){
+  inboxAction('acknowledge',receiptBinding(background)).catch(exc=>setText($('inboxMessage'),exc.message));
+ }
+ if(!order?.result||draft)return;
+ const loaded=detail&&active?.id===resultJob(pending||listing,order)?.id;
+ if(loaded?order.step==='done':!viewEdited&&!remoteExplicit&&(!active||detail))loadResult(order,false);
+}
+async function loadResult(order,explicit){
+ if(loadingResult===order.request_id)return;
+ const epoch=generation,edits=viewEdited;
+ const stillHere=()=>currentOrder()?.request_id===order.request_id&&generation===epoch&&viewEdited===edits;
+ loadingResult=order.request_id;
+ try{
+  if(explicit&&viewEdited&&!confirm('Den veröffentlichten Stand laden und die ungesendeten Eingaben dieser Ansicht verwerfen?'))return;
+  const source=await(await request('/api/jobs')).json();if(!stillHere())return;
+  const job=resultJob(source,order);
+  if(job){
+   if(!detail||active?.id!==job.id||active?.commit!==job.commit){
+    const loaded=await(await request('/api/jobs/'+job.id)).json();
+    if(!stillHere())return;
+    if(loaded.puzzle_id!==order.puzzle_id||loaded.commit!==job.commit)throw Error('Quellenstand inzwischen geändert. Arbeitsstand erneut laden.');
+    await adopt(source,{id:job.id,detail:loaded});
+   }
+   if(!detail||currentOrder()?.request_id!==order.request_id||active?.id!==job.id)return;
+  }else if(!completedIn(source,order.puzzle_id)){
+   if(explicit)await $('refresh').onclick();
+   if(stillHere())setText($('orderStatus'),'Der passende Remote-Stand ist noch nicht verfügbar. Arbeitsstand erneut laden.');
+   return;
+  }
+  if(order.step==='done'){
+   if(!job){
+    await inboxAction('acknowledge',receiptBinding(order),false);
+    if(generation===epoch&&selectedId()===order.puzzle_id)adopt(source);
+   }else await inboxAction('acknowledge',receiptBinding(order));
+  }
+ }catch(exc){if(currentOrder()?.request_id===order.request_id&&$('orderStatus'))setText($('orderStatus'),exc.message);}
+ finally{if(loadingResult===order.request_id)loadingResult=null;}
 }
 $('inboxFolder').oninput=$('inboxDirectory').oninput=()=>{folderDirty=true;};
 $('inboxSetup').onclick=async()=>{
@@ -893,10 +1116,13 @@ $('inboxSetup').onclick=async()=>{
 };
 async function pollInbox(){
  try{
-  const value=await (await request('/api/inbox/status')).json();
-  if(JSON.stringify(value.orders)!==JSON.stringify(inboxState?.orders)||JSON.stringify(value.folder)!==JSON.stringify(inboxState?.folder))showInbox(value);
+  const epoch=inboxEpoch,value=await (await request('/api/inbox/status')).json();
+  if(epoch===inboxEpoch&&epoch%2===0){
+   if(JSON.stringify(value)!==JSON.stringify(inboxState))showInbox(value);
+   else reconcileResult();
+  }
  }catch(exc){$('inboxMessage').textContent=exc.message;}
  const timer=setTimeout(pollInbox,3000);
  timer.unref?.();
 }
-pollInbox();
+pollInbox().finally(pollSources);

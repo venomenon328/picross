@@ -99,11 +99,17 @@ input::placeholder,textarea::placeholder { color: var(--muted); opacity: .85; }
 textarea { resize: vertical; }
 input[type=checkbox] { accent-color: var(--accent); vertical-align: middle; }
 select { cursor: pointer; }
-.workspace { display: grid; grid-template-columns: 226px minmax(0,1fr); gap: clamp(20px,3vw,44px); align-items: start; margin-top: 24px; }
+.workspace { display: grid; grid-template-columns: clamp(242px,22vw,295px) minmax(0,1fr); gap: clamp(20px,3vw,44px); align-items: start; margin-top: 24px; }
 aside,.nextAction,.card {
   background: var(--panel); border: 1px solid var(--line); border-radius: 12px; box-shadow: var(--shadow);
 }
-aside { padding: 18px; }
+aside { min-width: 0; padding: 18px; }
+#jobs { text-overflow: ellipsis; }
+.receiptState { margin: .75rem 0; font-weight: 650; color: var(--accent); }
+.receiptActions { margin-top: 1rem; padding-top: .85rem; border-top: 1px solid var(--line); }
+.receiptActions button { margin: .25rem .4rem .25rem 0; }
+.receiptActions .hint { margin-top: .4rem; max-width: 72ch; }
+#receiptReason,.briefText { overflow-wrap: anywhere; }
 aside h2 { font-size: 1.23rem; line-height: 1.25; }
 #newJob { width: 100%; margin: 13px 0 0; color: var(--accent); background: var(--soft); border-color: color-mix(in srgb,var(--accent) 45%,var(--line)); }
 #newJob span { font-size: 1rem; }
@@ -130,8 +136,8 @@ aside details label { margin-top: 12px; font-size: .81rem; }
 .steps [aria-current=step] .stepNumber { color: var(--on-primary); background: var(--primary); border-color: var(--primary); }
 .steps .past .stepNumber { color: var(--accent); background: var(--soft); }
 .nextAction { padding: clamp(18px,2.2vw,28px); }
-.nextAction > h3 { font-size: 1.4rem; font-weight: 550; padding-bottom: 12px; border-bottom: 1px solid var(--line); }
-.nextAction > label,.nextAction > div > label { margin-top: 14px; }
+.nextAction h3 { font-size: 1.4rem; font-weight: 550; padding-bottom: 12px; border-bottom: 1px solid var(--line); }
+#orderFields > label,#orderFields > div > label,.nextAction > div > label { margin-top: 14px; }
 .nextAction > .hint { margin-top: 5px; }
 input[type=file] { padding: 5px; font-size: .82rem; }
 input::file-selector-button { color: var(--accent); background: var(--soft); border: 0; border-radius: 4px; padding: 7px 11px; margin-right: 10px; cursor: pointer; font: inherit; }
@@ -188,7 +194,7 @@ dialog::backdrop { background: #07120fc4; }
 .largeCanvas img.zoomed { max-height: none; max-width: none; image-rendering: pixelated; }
 @media (max-width: 1100px) {
   .steps li { flex-direction: column; align-items: flex-start; gap: 5px; }
-  .workspace { grid-template-columns: 200px minmax(0,1fr); gap: 20px; }
+  .workspace { grid-template-columns: 218px minmax(0,1fr); gap: 20px; }
 }
 @media (max-width: 800px) {
   .headerInner,main { width: min(100% - 32px, 680px); }

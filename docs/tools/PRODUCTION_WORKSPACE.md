@@ -525,6 +525,12 @@ neuen Motivbriefing und der beigefügten Referenz bestimmt. Bei Unterbrechung
 am zuletzt bestätigt veröffentlichten Stand fortsetzen und fehlende Originale
 oder Fähigkeiten benennen. „Auftrag starten und kopieren“ bindet die angezeigten
 Entscheidungen und aktiviert den begrenzten Empfang im Rätselunterordner.
+Er erscheint sofort unter „Offene Produktionen“. Der Hauptbereich zeigt je
+Produktions-ID das gebundene Briefing oder den gewählten Gitstand und genau
+einen aktuellen Auftragsbereich. Dort kopiert „Auftrag kopieren“ den bereits
+gebundenen Text auch nach einem Neustart. Ein gespeicherter Motivtext allein
+bleibt ein Entwurf. Übernahmestatus und fachliche Gitphase sind getrennt sichtbar.
+Nach abgeschlossener Bereinigung lädt PW auch einen nachgewiesenen Nachfolger des Imports auf demselben Produktionsbranch. Bei ungeklärter Abstammung bleibt die Quittung sichtbar. Der Hauptbereich verlinkt den bestätigten Import oder den Vergleich mit dem aktuellen Arbeitsstand auf GitHub.
 Passives Ansehen und erneutes Kopieren erteilen keine zusätzliche Befugnis.
 
 Vorgefüllte Quellwerte sind keine neue Absicht oder Freigabe. Der Folgeauftrag

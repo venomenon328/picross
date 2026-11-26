@@ -41,8 +41,28 @@ class Inbox:
         with self.view_lock:
             self.view = {'folder': self.data['folder'], 'drafts': dict(self.data['drafts']),
                          'generations': dict(self.data['generations']), 'orders': [
-                {k: order.get(k) for k in ('puzzle_id', 'request_id', 'draft_id', 'phase', 'step', 'status', 'paused', 'result', 'prompt')}
+                {**{k: order.get(k) for k in ('puzzle_id', 'request_id', 'draft_id', 'phase', 'step', 'status',
+                                              'paused', 'result', 'prompt', 'brief', 'inputs', 'intent')},
+                 'work_head': order['source']['work_head']}
                 for order in self.data['orders'].values()]}
+
+    def confirmed_successors(self, listing):
+        """Bind descendants during source refresh. Polling only reads the resulting snapshot."""
+        from .motifs import Relations
+        if not listing.get('remote_confirmed') or not github_identity(self.service.repository.remote):
+            return {}
+        with self.view_lock:
+            heads = {o['puzzle_id']: o['result']['head'] for o in self.view['orders']
+                     if o.get('result') and o['step'] in ('cleanup', 'done')}
+        history = Relations(self.service.repository)
+        successors = {}
+        for row in listing['jobs']:
+            job, tip = row['puzzle_id'], row['commit']
+            head = heads.get(job)
+            if (head and tip != head and row['source'] == 'remote' and row['ref'] == 'content/pw/' + job
+                    and row.get('current_view') and history.compare(tip, head) == 'ahead'):
+                successors[job, tip] = head
+        return successors
 
     def save(self):
         current._atomic(self.root, STATE, current.encoded(self.data))
@@ -97,10 +117,25 @@ class Inbox:
                 exact_keys(body, {'puzzle_id', 'request_id'})
                 order = self.data['orders'].get(body['puzzle_id'])
                 require(order and order['request_id'] == body['request_id'], 'Empfangsauftrag ist abgelaufen.')
-                if action == 'cancel':
-                    require(order['step'] in ('scan', 'stage', 'blocked', 'stale', 'done'), 'Begonnene Veröffentlichung zuerst fortsetzen.')
+                if action in ('cancel', 'acknowledge'):
+                    allowed = ('done',) if action == 'acknowledge' else ('scan', 'stage', 'blocked', 'stale')
+                    require(order['step'] in allowed, 'Begonnene Veröffentlichung zuerst fortsetzen.')
+                    if action == 'acknowledge':
+                        source = self.service.status()
+                        completed = source.get('completion', {})
+                        job = order['puzzle_id']
+                        jid = next((m['current_job'] for m in source.get('motifs', []) if m['puzzle_id'] == job), None)
+                        row = next((j for j in source.get('jobs', []) if jid and j['id'] == jid), None)
+                        matched = (row and row['source'] == 'remote' and row['ref'] == 'content/pw/' + job
+                                   and row['puzzle_id'] == job and order['result']['head'] in
+                                   (row['commit'], row.get('receipt_ancestor')))
+                        registered = completed.get('confirmed') and job in completed.get('completed_ids', [])
+                        require(source.get('remote_confirmed') and (matched or registered),
+                                'Bestätigten Arbeitsstand zuerst aus den Gitquellen laden.')
                     if order['step'] != 'stale':
                         self.discard_stage(order)
+                    if action == 'cancel' and not order['source']['work_head'] and order['puzzle_id'] not in self.data['drafts'].values():
+                        self.data['drafts'][str(uuid4())] = order['puzzle_id']
                     self.data['generations'][order['puzzle_id']] = str(uuid4())
                     del self.data['orders'][order['puzzle_id']]
                 elif action == 'retry':
@@ -155,7 +190,7 @@ class Inbox:
             return job
         require(body['expected'] == generation, 'Auftrag inzwischen geändert. Aktuellen Auftrag prüfen.')
         require(not prior or prior['step'] in ('scan', 'stage', 'blocked', 'done'), 'Begonnene Veröffentlichung zuerst fortsetzen.')
-        require(not prior or prior['step'] != 'done' or record and head != prior['source']['work_head'],
+        require(not prior or prior['step'] != 'done',
                 'Auftrag bereits veröffentlicht. Aktuellen Stand öffnen.')
         role, intent, selection, target = 'reveal', 'offer', '', ''
         if record:

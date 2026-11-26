@@ -104,13 +104,13 @@ const run = code => vm.runInContext(code, context);
   if(mode==='inbox-resume'){
     const get=id=>document.getElementById(id);
     await until(()=>run('inboxState?.folder&&readyImages.has("one")&&detail')&&get('copyOrder').onclick);
-    const modeSelect=get('nextActionMode');
-    if(action==='resume-close'){
-      const closeReceipt=descendants(get('inboxOrders')).find(el=>el.textContent==='Quittung schließen');
-      assert(closeReceipt);
-      await closeReceipt.onclick();
-      assert.equal(run('currentOrder()'),undefined);
+    if(action==='copy-bound'){
+      const original=run('currentOrder().prompt');
+      await get('copyOrder').onclick();assert.equal(copied,original);
+      console.log(JSON.stringify(copied));return;
     }
+    await until(()=>run('!currentOrder()'));
+    const modeSelect=get('nextActionMode');
     if(run('detail.facts.state')==='reveal_review'){
       const choice=descendants(get('view')).find(el=>el.dataset.choice==='one');
       assert.equal(choice.disabled,false);
@@ -125,12 +125,12 @@ const run = code => vm.runInContext(code, context);
     await get('copyOrder').onclick();
     assert.equal(get('orderStatus').textContent,'Auftrag kopiert.');
     assert.match(copied,/Drive: Suche unter Root-ID fixture/);
-    if(run('detail.facts.state')==='reveal_review')assert.equal(run('intent.selection'),'one');
+    assert.equal(get('copyOrder').textContent,'Auftrag kopieren');
     console.log(JSON.stringify(copied));return;
   }
   if(mode==='inbox'){
     await until(()=>run('inboxState?.folder'));
-    run("listing={snapshot:'snapshot',jobs:[]};newDraft();remember('brief','Fuchs');personal.executors[1]='ChatGPT';updatePrompt()");
+    run("listing={snapshot:'snapshot',jobs:[],motifs:[],errors:[]};newDraft();remember('brief','Fuchs');personal.executors[1]='ChatGPT';updatePrompt()");
     const get=id=>document.getElementById(id);
     assert.equal(starts,0);
     assert.equal(get('orderText').value,'');
@@ -145,6 +145,68 @@ const run = code => vm.runInContext(code, context);
     context.navigator.clipboard.writeText=async text=>{copied=text;};
     await get('copyOrder').onclick();
     assert.equal(copied,saved);
+    assert.equal(starts,2,'re-copy uses persisted bytes without activating again');
+    assert.equal(get('jobs').value,'pz-fuchs');
+    const first=run('currentOrder().puzzle_id');
+    const originalId=run('currentOrder().request_id');
+    const reloaded=vm.createContext({...context,document,fetch:()=>new Promise(()=>{}),localStorage:{getItem(){},setItem(){}}});
+    const reload=code=>vm.runInContext(code,reloaded);
+    for(const file of ['workflow.js','app.js'])reload(readFileSync(__dirname+'/ui/'+file,'utf8'));
+    reloaded.state=JSON.parse(run('JSON.stringify(inboxState)'));
+    reload("listing={snapshot:'snapshot',jobs:[],motifs:[],errors:[]};showInbox(state)");
+    assert.equal(reload('selectedId()'),first);
+    assert.equal(reload('currentOrder().request_id'),originalId);
+    assert.equal(get('orderText').value,saved);
+    const other={...reloaded.state.orders[0],puzzle_id:'pz-zweiter',request_id:'other',inputs:{brief:'Zweiter'}};
+    reloaded.state={...reloaded.state,orders:[other,...reloaded.state.orders]};
+    const panel=get('orderText');reload('showInbox(state)');
+    assert.equal(get('orderText'),panel);
+    reload("chooseMotif('pz-zweiter')");assert.equal(reload('selectedId()'),'pz-zweiter');
+    reload("chooseMotif('pz-fuchs')");assert.equal(get('orderText').value,saved);
+    assert.equal(descendants(get('view')).filter(e=>e.id==='copyOrder').length,1);
+    let releasePoll;
+    reloaded.fetch=()=>new Promise(resolve=>{releasePoll=resolve;});
+    const late=reload('pollInbox()');
+    reloaded.fetch=context.fetch;reloaded.confirm=()=>true;
+    await get('receiptCancel').onclick();
+    assert.equal(reload('draft.brief'),'Fuchs','restore the editable briefing without browser storage');
+    releasePoll(new Response(JSON.stringify(reloaded.state)));
+    await late;
+    assert.equal(reload('currentOrder()'),undefined,'a pre-cancel status response cannot restore the receipt');
+    get('executor').value='Codex';get('executor').onchange();
+    assert.match(get('orderText').value,/tatsächlichen Korrekturverbrauch klären/);
+    assert.equal(starts,2);
+    get('executor').value='ChatGPT';get('executor').onchange();
+    await get('copyOrder').onclick();
+    assert.equal(reload('selectedId()'),first);
+    assert.notEqual(reload('currentOrder().request_id'),originalId);
+    assert.equal(copied,get('orderText').value);
+    const expired=await fetch(origin+'/api/inbox/cancel',{method:'POST',headers:{
+      Origin:origin,'X-Workspace-Session':token,'Content-Type':'application/json'
+    },body:JSON.stringify({puzzle_id:first,request_id:originalId})});
+    assert(!expired.ok,'the old binding cannot cancel the new receipt');
+    const live=reload('currentOrder()');
+    reloaded.done={...live,result:{head:'b'.repeat(40)},step:'done'};
+    reloaded.remote={remote_confirmed:true,jobs:[{id:'row',source:'remote',ref:'content/pw/'+first,puzzle_id:first,commit:'b'.repeat(40)}],
+      motifs:[{puzzle_id:first,current_job:'row'}]};
+    assert.equal(reload('resultJob(remote,done).id'),'row');
+    assert.equal(reload("resultJob(remote,{...done,puzzle_id:'pz-fremd'})"),undefined);
+    assert.equal(reload("resultJob(remote,{...done,result:{head:'c'.repeat(40)}})"),undefined);
+    assert.equal(reload('resultJob({...remote,remote_confirmed:false},done)'),null);
+    reloaded.remote.jobs[0].commit='c'.repeat(40);
+    assert.equal(reload('resultJob(remote,done)'),undefined);
+    reloaded.remote.jobs[0].receipt_ancestor=reloaded.done.result.head;
+    assert.equal(reload('resultJob(remote,done).commit'),'c'.repeat(40));
+    reloaded.fetch=()=>new Promise(resolve=>{releasePoll=resolve;});
+    reload('showInbox({...inboxState,orders:[done]})');
+    reload("newDraft();remember('brief','Ungesendeter Motivtext')");
+    const kept=reload('generation');
+    releasePoll(new Response(JSON.stringify(reloaded.remote)));
+    await delay(20);
+    assert.equal(reload('generation'),kept);
+    assert.equal(reload('intent.brief'),'Ungesendeter Motivtext');
+    reload("listing.completion={confirmed:true,completed_ids:[done.puzzle_id]}");
+    assert.equal(reload('navigationRows()[0].remainder'),true);
     console.log(JSON.stringify(copied));return;
   }
   await until(()=>run('listing!==null'));
