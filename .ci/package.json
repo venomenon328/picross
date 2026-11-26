@@ -16,17 +16,17 @@
     {
       "path": "tools/test_authoring_sheet.py",
       "disposition": "change-scoped",
-      "reason": "Kleine dauerhafte Regressionen für Zielphase, Executor, offene Assessmentziele und vollständige neue Erklärungen ohne zusätzliche Befugnisse; vorhandene Quellen-/Wahl-/Teilachsen-/Mergefälle weiterverwenden."
+      "reason": "Kleine dauerhafte Regressionen für Zielphase, Executor, offene Assessmentziele ohne kreative Vormerkungen und vollständige neue Befunderklärungen ohne zusätzliche Befugnisse. Vorhandene Quellen-/Wahl-/Teilachsen-/Mergefälle weiterverwenden."
     },
     {
       "path": "tools/test_production_inbox.py",
       "disposition": "change-scoped",
-      "reason": "Bestehende Loopbackmatrix um reine Reveal-/Motivbewertung erweitern; echte Startbindung, unveränderte Originale/Budgets, keine Wahl oder neue Befunderklärung."
+      "reason": "Bestehende Loopbackmatrix um reine Reveal-/Motivbewertung erweitern. Echte Startbindung, kreative Vormerkungen aus dem Assessment ausschließen und unveränderte Briefing-, Original-, Budget- und Auswahlbindung prüfen."
     },
     {
       "path": "tools/production_workspace/check_ui_loading.cjs",
       "disposition": "change-scoped",
-      "reason": "Bestehender UI-Zustandsharness: Ziel-/Executorwechsel, Rückkorrektur, offene Assessmentziele, Vorschau/Kopie, aktivierter unveränderter Auftrag und Rekopie."
+      "reason": "Der UI-Zustandsharness prüft Ziel- und Executorwechsel, Rückkorrektur und offene Assessmentziele. Er prüft außerdem den Erhalt kreativer Vormerkungen bei Aktionswechsel und Empfangsstart sowie Vorschau, Kopie und Rekopie."
     }
   ],
   "core_change": null,

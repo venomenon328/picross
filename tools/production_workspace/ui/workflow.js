@@ -219,7 +219,12 @@ const PW = (()=>{
   }
   return result;
  }
+ function orderIntent(intent,action=intent.action){
+  if(action!=='assessment')return intent;
+  return {action,selection:intent.selection,kind:intent.kind,findings:intent.findings};
+ }
  function inboxInputs(value,intent,action){
+  intent=orderIntent(intent,action);
   if(action!=='correction'&&['rework','background_change'].includes(intent.action)&&intent.feedback?.trim())
    throw Error('Für den eingegebenen Änderungswunsch den Empfangsauftrag „Gewählte Variante korrigieren“ wählen.');
   const grid=value?gridChanges(value,intent):gridRequest(intent.grid);
@@ -312,6 +317,7 @@ const PW = (()=>{
   ];
  }
  function prompt(value,intent={},personal={}){
+  intent=orderIntent(intent);
   const action=intent.action||'continue',order=orderStep(value),opts=options(personal),route=orderTarget(value,intent);
   const n=route.step;
   if(route.error)throw Error(route.error);

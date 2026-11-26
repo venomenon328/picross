@@ -121,13 +121,52 @@ const run = code => vm.runInContext(code, context);
     modeSelect.value=['continue','assessment'].includes(action)?action:'resume';modeSelect.onchange();
     if(action==='assessment'){
       await until(()=>run('readyImages.has("existing")'));
+      const reveal=run('detail.facts.state')==='reveal_review';
+      const setAction=value=>{modeSelect.value=value;modeSelect.onchange();};
+      const setExecutor=value=>{get('executor').value=value;get('executor').onchange();};
+      const field=label=>descendants(get('view')).find(el=>el.tag==='label'&&el.textContent===label)?.children[0];
       const target=get('correctionBase');
-      assert(target.children.some(option=>option.value==='existing'));
-      if(run('detail.facts.state')==='motif_review')assert(!target.children.some(option=>option.value==='one'));
-      target.value='existing';target.onchange();
+      const feedback=get('correctionFeedback');
+      const width=field('Breite').children[0];
+      const removeHeight=descendants(get('view')).find(el=>el.children.some(child=>
+        child.textContent===' Höhe ausdrücklich aufheben')).children[0];
+      setAction('rework');
+      feedback.value='Ungesendeter Korrekturwunsch';feedback.oninput();
+      if(reveal)setAction('continue');
+      const wishes=field('Neue/zusätzliche Wünsche zur Motivvorlage (optional)');
+      if(reveal){wishes.value='Kelch erhalten';wishes.oninput();}
+      width.value='20';width.oninput();
+      removeHeight.checked=true;removeHeight.onchange();
+
+      function selectAssessment(){
+        setAction('assessment');
+        assert(target.children.some(option=>option.value==='existing'));
+        if(!reveal)assert(!target.children.some(option=>option.value==='one'));
+        target.value='existing';target.onchange();
+      }
+      selectAssessment();
+      const draft=run('JSON.stringify(intent)');
+      setExecutor('Codex');
+      const prompt=get('orderText').value;
+      assert.match(prompt,new RegExp('unveränderte Angebot '+(reveal?'reveal':'motif')+'/existing'));
+      assert.match(prompt,/Ausführung mit Codex/);
+      assert.doesNotMatch(prompt,/Kelch erhalten|Ungesendeter Korrekturwunsch|Breite:|Höhe:|Ich wähle|Ich gebe|Endabnahme|Squash-Merge/);
+      assert.equal(get('assessmentDraftNotice').hidden,false);
+      await get('copyOrder').onclick();
+      assert.equal(copied,prompt);
+      setExecutor('ChatGPT');
+      assert.equal(run('JSON.stringify(intent)'),draft);
+      setAction('rework');
+      assert.equal(feedback.value,'Ungesendeter Korrekturwunsch');
+      if(reveal)assert.equal(wishes.value,'Kelch erhalten');
+      assert.equal(width.value,'20');
+      assert.equal(removeHeight.checked,true);
+      assert.equal(get('assessmentDraftNotice').hidden,true);
+      selectAssessment();
       assert.equal(run('startBody().candidate'),'existing');
       assert.equal(run('startBody().action'),'assessment');
-      assert.equal(run('startBody().inputs.feedback'),'');
+      assert.deepEqual(JSON.parse(run('JSON.stringify(startBody().inputs)')),
+        {brief:'',notes:'',parameters:'',context:'',feedback:'',reference:'',grid:[]});
     }
     assert.equal(get('executor').value,'ChatGPT');
     assert.equal(get('copyOrder').textContent,'Auftrag starten und kopieren');
@@ -135,6 +174,13 @@ const run = code => vm.runInContext(code, context);
     assert.equal(get('copyOrder').disabled,false,get('orderStatus').textContent);
     await get('copyOrder').onclick();
     assert.equal(get('orderStatus').textContent,'Auftrag kopiert.');
+    if(action==='assessment'){
+      assert.doesNotMatch(copied,/Kelch erhalten|Ungesendeter Korrekturwunsch|Breite:|Höhe:/);
+      assert.equal(get('assessmentDraftNotice').hidden,false);
+      assert(run('viewEdited>0'),'unsent drafts still prevent automatic replacement with the assessment successor');
+      assert.equal(run('intent.grid.width'),'20');
+      assert.equal(run('intent.removeGrid.height'),true);
+    }
     assert.match(copied,/Drive: Suche unter Root-ID fixture/);
     assert.equal(get('copyOrder').textContent,'Auftrag kopieren');
     assert.equal(copied,get('orderText').value,'bound preview and copy are identical');

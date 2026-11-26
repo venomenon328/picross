@@ -530,8 +530,12 @@ zusätzlich im aktivierten Bildauftrag.
 oder Motivangebot der aktuellen Phase. Die Auswahl bietet nur diese Ziele an;
 bereits gewählte frühere Bilder sind keine neuen Bewertungsziele. Codex sichtet
 die vorhandenen unveränderten Bytes lokal und sichert die Bewertung, ChatGPT
-verwendet das bestehende Empfangs-Assessment. Daraus entstehen weder neue
-Bildbytes noch eine Auswahl, Endabnahme oder Integrationsbefugnis.
+verwendet das bestehende Empfangs-Assessment. Beide Aufträge binden das
+gewählte Bild und die zulässigen neuen Befundentscheidungen an diesem Bild.
+Vorgemerkte kreative Wünsche bleiben mit sichtbarem Hinweis in der Ansicht
+erhalten. Bei offenen Eingaben erfolgt der Wechsel auf den veröffentlichten
+Nachfolger ausdrücklich. Die Neubewertung erzeugt weder neue Bildbytes noch
+eine Auswahl, Endabnahme oder Integrationsbefugnis.
 
 Reguläre Frühphasenaufträge enden bei der veröffentlichten Auswahlvorlage nach
 Authoring; sie verlangen keinen Produkt-PR. Diagnoseaufträge transportieren die

@@ -58,11 +58,18 @@ function refreshChoices(){
   button.setAttribute('aria-pressed',String(intent.selection===target));
  });
 }
+function hasUnsentCreativeInputs(){
+ return ['brief','notes','parameters','context','feedback','inputImage'].some(key=>intent[key]?.trim())||
+  Boolean(intent.reference)||Object.values(intent.grid||{}).some(Boolean)||
+  Object.values(intent.removeGrid||{}).some(Boolean);
+}
 function updatePrompt(){
  refreshChoices();
  const box=$('orderText'),button=$('copyOrder'),status=$('orderStatus');
  if(!box||!button)return;
  const order=currentOrder();
+ const assessing=order?order.intent==='assessment':intent.action==='assessment';
+ $('assessmentDraftNotice').hidden=!assessing||!hasUnsentCreativeInputs();
  $('orderFields').hidden=Boolean(order);
  $('orderExecution').hidden=Boolean(order);
  $('receiptInfo').hidden=!order;
@@ -415,7 +422,10 @@ function orderControls(view,panel){
     order=value.orders.find(o=>o.puzzle_id===value.started);
     if(!order||order.result)throw Error('Auftragsstatus hat sich geändert. Bitte den aktuellen Stand prüfen.');
     if(draft)chooseMotif(order.puzzle_id);
-    else{viewEdited=0;updatePrompt();}
+    else{
+     if(body.action!=='assessment'||!hasUnsentCreativeInputs())viewEdited=0;
+     updatePrompt();
+    }
    }catch(exc){if(epoch===generation)status.textContent=exc.message;return;}
    finally{
     starting=false;view.inert=false;copy.disabled=false;
@@ -438,7 +448,9 @@ function orderControls(view,panel){
  const cancel=node('button','Automatische Übernahme abbrechen');cancel.id='receiptCancel';cancel.onclick=()=>changeReceipt('cancel');
  const explanation=node('p',undefined,'hint');explanation.id='cancelHint';
  secondary.append(retry,cancel,explanation);
- actions.append(copy,status);panel.append(receipt,execution,destination,actions,preview,secondary);view.append(panel);updatePrompt();
+ const retained=node('p','Vorgemerkte Wünsche bleiben in dieser Ansicht erhalten. Die Neubewertung betrifft nur das gewählte Bild und seine gebundenen Befundentscheidungen.','hint');
+ retained.id='assessmentDraftNotice';retained.setAttribute('role','status');
+ actions.append(copy,status);panel.append(receipt,execution,destination,retained,actions,preview,secondary);view.append(panel);updatePrompt();
 }
 function choose(id,kind,button){
  viewEdited++;
@@ -940,7 +952,7 @@ function startBody(){
   throw Error('Bitte die gewünschte Variante wählen. Ein ausstehendes Angebot über „Arbeit wieder aufnehmen“ fortsetzen.');
  if(candidate&&!readyImages.has(candidate))throw Error('Die gewählte Variante zuerst vollständig laden.');
  if(detail&&action==='continue'&&candidate&&!PW.choiceReady(detail,candidate,intent))throw Error('Offene Voraussetzungen für '+candidate+'.');
- if(intent.inputImage&&!intent.reference)throw Error(intent.referenceError||'Die Referenzdatei für die Byteprüfung auswählen.');
+ if(action!=='assessment'&&intent.inputImage&&!intent.reference)throw Error(intent.referenceError||'Die Referenzdatei für die Byteprüfung auswählen.');
  const job=active?.puzzle_id||inboxState?.drafts?.[draft?.id];
  const inputs=PW.inboxInputs(detail,intent,action==='rework'?'correction':action);
  if(resume&&detail?.facts.state==='reveal_review')inputs.parameters='';

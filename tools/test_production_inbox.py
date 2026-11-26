@@ -180,6 +180,8 @@ class InboxTests(unittest.TestCase):
             with self.subTest(role=role, action=action):
                 previous = deepcopy(base)
                 previous['test_only'] = False
+                if action == 'assessment':
+                    previous['budgets']['used']['image_corrections'] = 1
                 state = previous['state'] = contract.PHASES[role]
                 if role == 'motif':
                     previous['selected']['reveal'] = 'one'
@@ -198,6 +200,7 @@ class InboxTests(unittest.TestCase):
                     'revision': 'current', 'source_url': 'https://github.com/venomenon328/picross/tree/' + head,
                     'record': {'file': f'content/authoring/{job}/current/record.json'},
                     'facts': {'state': state, 'authoring_version': '0.8.0', 'originals': {'record': record},
+                              'published': {**previous['parameters'], 'brief': {'text': previous['brief']}},
                               'blockers': [], 'candidates': {
                         a['id']: {'missing': ['Prüfung offen'] if role == 'motif' and a['role'] == 'motif' else [],
                                   'findings': []} for a in assets}},
@@ -222,11 +225,24 @@ class InboxTests(unittest.TestCase):
                 self.assertEqual(order['brief'], '')
                 if action == 'assessment':
                     self.assertEqual(order['target'], 'existing')
+                    self.assertEqual(order['inputs'], {'brief': '', 'notes': '', 'parameters': '', 'context': '',
+                                                       'feedback': '', 'reference': '', 'grid': []})
                     request = {'format': current.REQUEST, 'record': deepcopy(previous),
                                'expected': record_hash, 'files': []}
                     contract.delta(order, request, previous)
-                    self.assertEqual(request['record']['assets'], previous['assets'])
-                    self.assertEqual(request['record']['budgets'], previous['budgets'])
+                    for field in ('brief', 'assets', 'budgets', 'selected', 'decisions'):
+                        self.assertEqual(request['record'][field], previous[field])
+                    for change in ('brief', 'budgets', 'assets'):
+                        with self.subTest(unauthorized=change):
+                            altered = deepcopy(request)
+                            if change == 'brief':
+                                altered['record']['brief'] += '\nUngesendeter Wunsch'
+                            elif change == 'budgets':
+                                altered['record']['budgets']['used']['image_corrections'] += 1
+                            else:
+                                altered['record']['assets'][-1]['file']['sha256'] = 'c' * 64
+                            with self.assertRaisesRegex(ValueError, 'Recorddelta|Bewertung ändert Original'):
+                                contract.delta(order, altered, previous)
                     continue
                 delivery = deepcopy(previous)
                 new = asset('addition', role, 'purple')

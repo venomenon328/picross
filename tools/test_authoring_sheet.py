@@ -53,11 +53,17 @@ assert.throws(()=>P.prompt(v,{...correction,kind:'motif'},personal),/Rolle/);
 assert.deepEqual(P.actionTargets(v,'assessment').map(a=>a.id),['m']);
 for(const executor of P.executors){
  const opts={...personal,executors:{2:executor}};
- const assessment={action:'assessment',selection:'m',kind:'motif',feedback:'NICHT SENDEN'};
+ const assessment={action:'assessment',selection:'m',kind:'motif',brief:'NICHT SENDEN',notes:'NICHT SENDEN',
+  feedback:'NICHT SENDEN',parameters:'NICHT SENDEN',context:'NICHT SENDEN',inputImage:'NICHT SENDEN.png',
+  reference:{name:'NICHT SENDEN.png'},grid:{width:'unfertig'},removeGrid:{height:true}};
+ const draft=JSON.stringify(assessment);
+ assert.deepEqual(P.inboxInputs(v,assessment,'assessment'),
+  {brief:'',notes:'',parameters:'',context:'',feedback:'',reference:'',grid:[]});
  text=P.prompt(v,assessment,opts);
  assert.equal(P.promptStep(v,assessment),2);assert.match(text,/unveränderte Angebot motif\/m neu sichten und bewerten/);
  assert.ok(text.includes('Ausführung mit '+executor));
- assert.doesNotMatch(text,/NICHT SENDEN|Ich wähle|Ich gebe|Ich erteile|Draft-PR|Squash-Merge|Korrekturgrundlage/);
+ assert.doesNotMatch(text,/NICHT SENDEN|Breite:|Höhe:|Ich wähle|Ich gebe|Ich erteile|Draft-PR|Squash-Merge|Korrekturgrundlage/);
+ assert.equal(JSON.stringify(assessment),draft);
  assert.throws(()=>P.prompt(v,{...assessment,selection:'v',kind:'reveal'},opts),/offenes Reveal- oder Motivangebot/);
  const accepted=P.prompt(v,{...assessment,findings:{[hash]:{accepted:true,treatment:'Rand erhalten'}}},opts);
  assert.match(accepted,/"Entscheidung":"Annahme"/);assert.match(accepted,/Rand erhalten/);
