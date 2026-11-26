@@ -481,24 +481,29 @@ class InboxTests(unittest.TestCase):
         with patch.object(writer.publisher, 'publisher_auth', return_value=nullcontext()), \
              patch.object(writer.ws, 'store_for', return_value=(None, self.root)), \
              patch.object(writer.ws, 'prepare', return_value={'job': self.root}), \
-             patch.object(writer.git, 'remote_head', side_effect=[main, None] * 3), \
+             patch.object(writer.git, 'remote_head', side_effect=[main, None] * 4), \
              patch.object(writer.git, 'git') as git, patch.object(writer, 'GitSource') as git_source, \
              patch.object(writer.deliveries, 'registered_ids', return_value=set()), \
              patch.object(current, 'build', side_effect=ValueError('builder reached')) as build:
             git_source.return_value.read.return_value = None
-            for rules in (writer.BUDGET_CONTRACT_DIFF.replace('100644 100644', '100644 100755'),
-                          writer.BUDGET_CONTRACT_DIFF + '\nM\tdocs/production/authoring/PUZZLE_AUTHORING.md'):
+            clarified = (b':100644 100644 4573b0d872443737f771261ec2305bef2ef00fcc '
+                         b'8fe7dd048b1dc5b318c41bc3714852f26ac3e158 M\0docs/tools/PW_IMPORT.md\0')
+            for rules in (clarified.replace(b'100644 100644', b'100644 100755'),
+                          clarified + clarified.replace(b'docs/tools/PW_IMPORT.md', b'AGENTS.md')):
                 with self.subTest(rules=rules):
                     git.return_value = rules
                     with self.assertRaisesRegex(ValueError, 'Auftragsgrundlage auf main verändert'):
                         self.inbox.writer.publish(self.order, received, self.inbox.stage(self.order), self.inbox.save)
                     build.assert_not_called()
-            git.return_value = writer.BUDGET_CONTRACT_DIFF
-            with self.assertRaisesRegex(ValueError, 'builder reached'):
-                self.inbox.writer.publish(self.order, received, self.inbox.stage(self.order), self.inbox.save)
-            self.assertEqual(git.call_args.args[1:8],
-                             ('diff', '--raw', '--no-abbrev', '--no-renames', source['main_commit'], main, '--'))
-            build.assert_called_once_with(received, self.inbox.stage(self.order), self.root)
+            with patch.object(self.inbox.writer, 'bound_work', return_value=self.root):
+                for rules in (clarified, b''):
+                    git.return_value = rules
+                    with self.assertRaisesRegex(ValueError, 'builder reached'):
+                        self.inbox.writer.publish(self.order, received, self.inbox.stage(self.order), self.inbox.save)
+                    self.assertEqual(git.call_args.args[1:9],
+                                     ('diff', '--raw', '-z', '--no-abbrev', '--no-renames', source['main_commit'], main, '--'))
+            self.assertEqual(build.call_count, 2)
+            build.assert_called_with(received, self.inbox.stage(self.order), self.root)
         self.assertEqual(self.order['source'], source)
         self.assertEqual((self.inbox.stage(self.order) / self.filename).read_bytes(), self.png)
 
