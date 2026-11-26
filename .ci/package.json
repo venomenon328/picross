@@ -98,6 +98,11 @@
       "reason": "Aktuelle synthetische Eingänge und Verbraucherbindung für production_remote_reader."
     },
     {
+      "path": "tools/test_production_workspace.py",
+      "disposition": "change-scoped",
+      "reason": "Aktuelle synthetische Eingänge und Verbraucherbindung für production_workspace."
+    },
+    {
       "path": "tools/test_puzzle_editor.py",
       "disposition": "change-scoped",
       "reason": "Aktuelle synthetische Eingänge und Verbraucherbindung für puzzle_editor."
