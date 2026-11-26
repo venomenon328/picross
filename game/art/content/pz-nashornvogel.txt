@@ -1,0 +1,4 @@
+author: KI-generiert mit OpenAI ImageGen
+changes: Unveränderte PNG-Ausgabe.
+source: Native Bildgenerierung in diesem Codex-Auftrag, ohne Fremdbildvorlage.
+usage_basis: Für diesen Picross-Auftrag aus Motivtext erzeugt und zur Veröffentlichung im Arbeitsstand beauftragt. Nutzungsgrundlage für den Output gemäß https://openai.com/policies/services-agreement/.

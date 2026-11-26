@@ -1,0 +1,4 @@
+author: KI-generiert mit OpenAI ImageGen
+changes: Unveränderte PNG-Ausgabe.
+source: Native Generierung für diesen Auftrag aus einer textlichen Beschreibung, ohne Fremdbildvorlage.
+usage_basis: Für diese Picross-Produktion erzeugt und zur Veröffentlichung in der Arbeitsquelle beauftragt. Nutzungsgrundlage gemäß https://openai.com/policies/services-agreement/.
