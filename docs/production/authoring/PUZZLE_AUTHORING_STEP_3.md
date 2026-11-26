@@ -1,6 +1,6 @@
 # Schritt 3: Rasterangebote
 
-**Version 0.8.0 · Dokumentrevision 12 · 23.11.2026 · KORRIDOR-NORM-A**
+**Version 0.8.0 · Dokumentrevision 13 · 26.11.2026 · PW-REMOTE-G**
 
 Pflicht: [Kern und Phasenroute](PUZZLE_AUTHORING.md#11-pflichtquellen-nach-phase),
 danach diese Phase und die dort zugeordnete Bildnorm. Zusätzlich:
@@ -8,7 +8,7 @@ danach diese Phase und die dort zugeordnete Bildnorm. Zusätzlich:
 Sichtung, §6 bei konkreter Ausnahme. Farbe: operative §§8.4–8.5;
 §§8.1–8.3.1 nur bei einer konkreten historischen Referenzfrage.
 
-Vor dem Rasterangebot je endgültiger Revision Proof, Endmatrix, Difficulty, benutzte Farbpaare, Rand und gegebenenfalls Crop prüfen. Q-R01–04 und Q-H01–03 an den tatsächlichen Ansichten beurteilen. Die Mindestgröße des Revealbilds ergibt sich aus seinen gebundenen Maßen und dem neuen Raster.
+Vor dem Rasterangebot je endgültiger Revision Proof, Endmatrix, Difficulty, benutzte Farbpaare, Rand und gegebenenfalls Crop prüfen. Q-R01–04 und Q-H01–03 an den tatsächlichen Ansichten beurteilen. Die Mindestgröße des Revealbilds ergibt sich aus seinen gebundenen Maßen und dem neuen Raster. Gültige unabhängige Proof- und Difficulty-Nachweise für dieselbe Definition übernehmen. Ein fehlendes Zell-/Hinweisurteil erfordert die echte Ansicht dieser Revision.
 
 ## 4. Rasterproduktion und technische Pflichtprüfung
 

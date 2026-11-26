@@ -1,6 +1,6 @@
 # Schritt 4: Kontextzeichnungen
 
-**Version 0.8.0 · Dokumentrevision 10 · 17.11.2026 · PROD-SLIM**
+**Version 0.8.0 · Dokumentrevision 11 · 26.11.2026 · PW-REMOTE-G**
 
 Pflicht: [Kern und Phasenroute](PUZZLE_AUTHORING.md#11-pflichtquellen-nach-phase),
 danach diese Phase und die dort zugeordnete Bildnorm. Zusätzlich:
@@ -15,7 +15,7 @@ Ein bestätigtes [Remote-`select`](../../tools/PW_REMOTE.md#schritt-3-am-veröff
 sichert die konkrete Rasterwahl und eröffnet `background_review`. Mit diesem Record
 beginnt das Kontextbriefing. Die vorhandenen Raster- und Revealentscheidungen gelten weiter.
 
-Für jedes Angebot kann ChatGPT Original und gespeicherte HP-W2-Ableitung über den [Remote-Originalabruf](../../tools/PW_REMOTE.md#originale-in-chatgpt-sichten) öffnen und die fälligen Urteile an beide Dateien binden.
+Für jedes Angebot die fälligen Urteile einschließlich H-07 an Original und fertige HP-W2-Ableitung binden. Die [Remote-Ergebniszustellung](../../tools/PW_REMOTE.md#originale-in-chatgpt-sichten) liefert beide Ansichten. Liegen für dasselbe Original, Profil und dieselben Ausgabebytes bereits gültige Sichturteile vor, mit der Auswahl fortfahren.
 
 1. Voraussetzung: tatsächliche Wahl eines vollständig qualifizierten Rasters.
    Danach Kontextbriefing und drei inhaltlich unterschiedliche echte
