@@ -12,6 +12,16 @@ class Waiting(Exception):
     """The sync provider has not made the complete bytes readable yet."""
 
 
+def destination(binding, child):
+    from pathlib import Path
+    root = io.external(Path(binding['directory']))
+    folder = io.safe(root, child) if child else root
+    if not folder.exists():
+        raise Waiting('Wartet auf den synchronisierten Rätselordner.' if child else 'Wartet auf den synchronisierten Eingang.')
+    require(folder.is_dir(), 'Das gebundene Ziel ist kein Verzeichnis.')
+    return folder
+
+
 def identity(info):
     return [str(info.st_dev), str(info.st_ino), info.st_size, str(info.st_mtime_ns)]
 

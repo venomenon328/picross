@@ -6,6 +6,8 @@ try{if(token)sessionStorage.setItem('pw-session',token);else token=sessionStorag
 history.replaceState(null,'',location.pathname);
 let listing=null,pending=null,generation=0,controller=null,urls=[],active=null;
 let detail=null,intent={},draft=null,drafts=[];
+let inboxState=null, folderDirty=false, starting=false;
+let boundPreview=null;
 let remoteExplicit=false;
 let remoteFresh=null;
 let assetLoads=new Map(),readyImages=new Set();
@@ -57,8 +59,9 @@ function updatePrompt(){
  $('executorHint').textContent=executor==='ChatGPT'
   ?'Auftrag in einem neuen ChatGPT-Chat senden. Bei Unterbrechung den zuletzt veröffentlichten Stand laden und wieder aufnehmen.'
   :executor==='Codex'?'Auftrag in Codex senden.':'';
- const final=PW.closing(detail,intent);
+ const imageOrder=usesInbox(),final=PW.closing(detail,intent)&&!imageOrder;
  button.textContent=final?(detail.facts.state==='registered'?'Git-Abschluss: Auftrag kopieren':'Endabnahme & Integration: Auftrag kopieren'):'Auftrag kopieren';
+ if(imageOrder)button.textContent='Auftrag starten und kopieren';
  if($('finalScope'))$('finalScope').hidden=!final;
  try{
   if(detail&&remoteFresh===false)throw Error('Remote nicht aktuell bestätigt. Vor einem Cloudfolgeauftrag die Quellen erfolgreich aktualisieren.');
@@ -78,8 +81,14 @@ function updatePrompt(){
     throw Error('Die gebundenen Originalbilder zuerst vollständig laden.');
    }
   }
-  box.value=PW.prompt(detail,intent,personal);
-  button.disabled=false;
+  if(imageOrder){
+   const body=startBody();
+   const same=boundPreview?.key===intentKey(body);
+   box.value=same?boundPreview.prompt:'';
+   button.textContent=same?'Gebundenen Auftrag erneut kopieren':'Auftrag starten und kopieren';
+   $('executorHint').textContent='Beim Start werden die angezeigte Wahl und die Befunderklärungen gebunden. PW prüft passende Drive-Ergebnisse und veröffentlicht den Arbeitsstand automatisch.';
+  }else box.value=PW.prompt(detail,intent,personal);
+  button.disabled=starting;
   status.textContent=final?(personal.merge?'Auftrag bis main und Produktionsabschluss – nach erfüllten Pflichtgates.':'Auftrag bis Draft-PR – kein Merge.'):'';
   status.className='hint';
  }catch(exc){
@@ -222,7 +231,18 @@ function workflow(view,value){
  if(order===1)field(section,'Zusätzliche Motivhinweise (optional)','notes','Welche Details, Perspektive oder Stimmung sind dir wichtig?');
  if(!value){
   const label=node('label','Referenzbild (optional)','reference'),input=node('input');input.type='file';input.accept='image/png,image/jpeg';
-  input.onchange=()=>{intent.inputImage=input.files[0]?.name||'';updatePrompt();};
+  input.onchange=async()=>{
+   const file=input.files[0],owner=draft;
+   delete intent.referenceError;
+   remember('reference',null);remember('inputImage',file?.name||'');
+   if(!file)return;
+   try{
+    if(file.size>32*1024*1024||!file.size)throw Error('Referenzbild muss zwischen 1 Byte und 32 MiB groß sein.');
+    const digest=await crypto.subtle.digest('SHA-256',await file.arrayBuffer());
+    if(draft===owner&&input.files[0]===file)remember('reference',{name:file.name,bytes:file.size,
+     sha256:Array.from(new Uint8Array(digest),b=>b.toString(16).padStart(2,'0')).join('')});
+   }catch(exc){if(draft===owner&&input.files[0]===file){intent.referenceError=exc.message;updatePrompt();}}
+  };
   label.append(input);section.append(label,node('p','Die ausgewählte Datei beim Senden des Auftrags anhängen.','hint'));
  }
  let parameterChoice;
@@ -232,10 +252,15 @@ function workflow(view,value){
   const canDecide=diagnosticStage&&Object.values(value.facts.candidates||{}).some(({diagnostics:d})=>
    d&&(d.frame&&!d.frame.exception||d.crop&&PW.cropChanges(d.crop).length));
   const actions=[['continue','Fortsetzen / Entscheidung senden'],['rework','Gezielt korrigieren'],['resume','Arbeit wieder aufnehmen']];
+  if(value.facts.candidates&&['reveal_review','motif_review'].includes(value.facts.state))
+   actions.push(['assessment','Bild neu bewerten']);
   if(canDecide)actions.push(['raster_diagnosis','Technische Rasterentscheidung']);
   if(value.facts.state==='registered')actions.push(['background_change','Separater Hintergrundfolgeauftrag']);
   for(const [id,text] of actions){
    const opt=node('option',text);opt.value=id;select.append(opt);
+  }
+  if(PW.pendingBackground(value)&&!value.offers.some(o=>o.kind==='background')&&!intent.action){
+   intent.action='resume';select.value='resume';
   }
   label.append(select);section.append(label);
   const correction=node('div');correction.hidden=true;field(correction,'Was soll geändert werden?','feedback').id='correctionFeedback';section.append(correction);
@@ -261,7 +286,8 @@ function workflow(view,value){
    intent.action=select.value;
    if(parameterChoice)parameterChoice.hidden=select.value!=='continue';
    if($('correctionBase'))$('correctionBase').value=intent.selection||'';
-   correction.hidden=!['rework','background_change'].includes(select.value);
+   correction.hidden=!['rework','background_change','assessment'].includes(select.value);
+   $('correctionFeedback').hidden=select.value==='assessment';
    diagnosis.hidden=select.value!=='raster_diagnosis';
    if(diagnosis.hidden){delete intent.diagnosis;delete intent.frameReason;reasonInput.value='';}
    diagnosisTarget.textContent=intent.diagnosis?`Auftrag für ${intent.diagnosis.target} · Endrevision ${intent.diagnosis.revision}`:'Bitte den Beschnitt oder den Randbefund auf der Bildkarte wählen.';
@@ -269,6 +295,7 @@ function workflow(view,value){
    updatePrompt();
   };
  }
+
  if(order===1||order===2){gridFields(section,order===2);if(order===2)field(section,'Neue/zusätzliche Wünsche zur Motivvorlage (optional)','parameters','Zum Beispiel Merkmale, die bei der Vereinfachung erhalten bleiben sollen');}
  if(order===4){const d=node('details');d.append(node('summary','Optionaler Kontextwunsch'));field(d,'Kontextwunsch','context');section.append(d);}
  if(motifReview){
@@ -326,8 +353,25 @@ function workflow(view,value){
  const text=node('textarea');text.id='orderText';text.rows=10;text.readOnly=true;text.setAttribute('aria-label','Auftragstext');preview.append(text);
  copy.onclick=async()=>{
   updatePrompt();if(copy.disabled)return;
+  if(starting)return;
+  if(usesInbox()){
+   if(!inboxState?.folder){
+    $('inbox').open=true;$('inboxFolder').focus();
+    status.textContent='Zuerst den privaten Drive-Stammordner speichern. Deine Eingaben bleiben hier erhalten.';return;
+   }
+   const body=startBody(),key=intentKey(body),epoch=generation;
+   starting=true;copy.disabled=true;
+   try{
+    const value=await inboxAction('start',body);
+    if(epoch!==generation||key!==intentKey(startBody()))return;
+    const order=value.orders.find(o=>o.puzzle_id===value.started);
+    if(order.result)throw Error('Bereits veröffentlicht. Den bestätigten Arbeitsstand öffnen.');
+    boundPreview={key,prompt:order.prompt};text.value=order.prompt;
+   }catch(exc){status.textContent=exc.message;return;}
+   finally{starting=false;copy.disabled=false;}
+  }
   try{await navigator.clipboard.writeText(text.value);status.textContent='Auftrag kopiert.';}
-  catch{preview.open=true;text.focus();text.select();status.textContent='Bitte den markierten Auftrag manuell kopieren.';}
+  catch{preview.open=true;text.focus();text.select();status.textContent='Kopieren fehlgeschlagen. Den markierten Auftrag manuell oder erneut kopieren.';}
  };
  actions.append(copy,status);section.append(execution,destination,actions,preview);view.append(section);updatePrompt();
 }
@@ -346,7 +390,7 @@ function newDraft(id){
  dispose();active=null;detail=null;$('versions').hidden=true;$('motifStatus').textContent='Lokaler Entwurf';
  draft=drafts.find(d=>d.id===id)||{id:crypto.randomUUID(),brief:''};
  if(!drafts.includes(draft)){drafts.push(draft);drafts=drafts.slice(-20);saveDrafts();}
- intent={brief:draft.brief,notes:draft.notes||'',grid:{...draft.grid}};
+ intent={brief:draft.brief,notes:draft.notes||'',grid:{...draft.grid},inputImage:draft.inputImage,reference:draft.reference};
  $('view').replaceChildren(node('h2','Neues Motiv'));progress($('view'),null);workflow($('view'),null);renderDrafts();
  if(listing?.jobs.length)$('jobs').selectedIndex=-1;
 }
@@ -756,69 +800,90 @@ function theme(value){document.documentElement.dataset.theme=value;try{localStor
 $('theme').onchange=()=>theme($('theme').value);try{$('theme').value=localStorage.getItem('pw-theme')||'system';}catch{}theme($('theme').value);
 pollSources();
 
-async function inboxAction(action, body) {
- const response = await request('/api/inbox/' + action, {
-  method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(body)
- });
- showInbox(await response.json());
+function currentOrder(){
+ const job=active?.puzzle_id||inboxState?.drafts?.[draft?.id];
+ return inboxState?.orders.find(order=>order.puzzle_id===job);
 }
-function inboxClick(button, operation) {
- button.onclick = async () => {
-  button.disabled = true;
-  try { await operation(); $('inboxMessage').textContent = ''; }
-  catch (exc) { $('inboxMessage').textContent = exc.message; }
-  finally { button.disabled = false; }
- };
+function usesInbox(){
+ if(personal.executors[PW.promptStep(detail,intent)]!=='ChatGPT')return false;
+ if(!detail)return true;
+ if(!detail.facts.candidates)return false;
+ if(intent.action==='resume')return Boolean(currentOrder()&&!currentOrder().result)||
+  ['brief_ready','reveal_review'].includes(detail.facts.state);
+ if(['rework','assessment'].includes(intent.action))
+  return ['reveal','motif','background'].includes(detail.assets.find(a=>a.id===intent.selection)?.role);
+ return (!intent.action||intent.action==='continue')&&[1,2,4].includes(PW.orderStep(detail));
 }
-function showInbox(value) {
- const orders = $('inboxOrders');
- orders.replaceChildren();
- for (const order of value.orders) {
-  const article = node('section');
-  article.append(node('strong', order.puzzle_id), node('p', order.status));
-  if (order.result) {
-   const link = node('a', 'Veröffentlichten Arbeitsstand öffnen');
-   link.href = 'https://github.com/venomenon328/picross/commit/' + order.result.head;
-   article.append(link);
-   if (!listing?.jobs.some(job => job.commit === order.result.head)) pollSources();
-  } else {
-   const prompt = node('textarea'); prompt.readOnly = true; prompt.value = order.prompt;
-   prompt.setAttribute('aria-label', 'Gebundener ChatGPT-Auftrag');
-   const copy = node('button', 'Gebundenen ChatGPT-Auftrag kopieren');
-   inboxClick(copy, async () => { await navigator.clipboard.writeText(prompt.value); });
-   article.append(prompt, copy);
+function startBody(){
+ if(!listing||pending)throw Error('Zuerst den aktuellen Quellenstand laden.');
+ const action=intent.action||'continue',candidate=intent.selection||'';
+ if(!detail&&!intent.brief?.trim())throw Error('Bitte zuerst dein Motiv beschreiben.');
+ if(detail&&action==='continue'&&['reveal_review','raster_review','raster_ready'].includes(detail.facts.state)&&!candidate)
+  throw Error('Bitte die gewünschte Variante wählen. Ein ausstehendes Angebot über „Arbeit wieder aufnehmen“ fortsetzen.');
+ if(candidate&&!readyImages.has(candidate))throw Error('Die gewählte Variante zuerst vollständig laden.');
+ if(detail&&action==='continue'&&candidate&&!PW.choiceReady(detail,candidate,intent))throw Error('Offene Voraussetzungen für '+candidate+'.');
+ if(intent.inputImage&&!intent.reference)throw Error(intent.referenceError||'Die Referenzdatei für die Byteprüfung auswählen.');
+ const job=active?.puzzle_id||inboxState?.drafts?.[draft?.id];
+ return {snapshot:listing.snapshot,jid:active?.id||'',draft_id:draft?.id||'',candidate,action,
+  inputs:PW.inboxInputs(detail,intent,action==='rework'?'correction':action),
+  findings:JSON.stringify(intent.findings||{}),expected:currentOrder()?.request_id||inboxState?.generations?.[job]||''};
+}
+function intentKey(body){
+ const {expected,...intent}=body;
+ return JSON.stringify(intent);
+}
+async function inboxAction(action,body){
+ const response=await request('/api/inbox/'+action,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
+ const value=await response.json();showInbox(value);return value;
+}
+function showInbox(value){
+ if(!folderDirty){
+  $('inboxFolder').value=value.folder?.id||'';
+  $('inboxDirectory').value=value.folder?.directory||'';
+ }
+ inboxState=value;
+ const area=$('inboxOrders');area.replaceChildren();
+ for(const order of value.orders){
+  const article=node('section');
+  article.append(node('strong',order.puzzle_id),node('p',order.status));
+  function button(label,action){
+   const control=node('button',label);article.append(control);
+   control.onclick=async()=>{control.disabled=true;try{await action();}catch(exc){article.append(node('p',exc.message,'error'));}finally{control.disabled=false;}};
   }
-  const canCancel = ['scan','stage','blocked','stale','done'].includes(order.step);
-  const action = canCancel ? 'cancel' : 'retry';
-  const button = node('button', order.step === 'done' ? 'Quittung schließen' :
-   canCancel ? 'Auftrag widerrufen' : 'Identischen Vorgang fortsetzen');
-  inboxClick(button, () => inboxAction(action, {request_id:order.request_id, puzzle_id:order.puzzle_id}));
-  article.append(button); orders.append(article);
+  if(order.result){
+   button('Veröffentlichten Arbeitsstand öffnen',async()=>{
+    const source=await (await request('/api/jobs')).json();
+    const job=source.jobs.find(j=>j.commit===order.result.head&&j.puzzle_id===order.puzzle_id&&j.source==='remote');
+    if(!job){await $('refresh').onclick();throw Error('Quellen werden aktualisiert. Danach den Stand öffnen.');}
+    draft=null;adopt(source);await open(job.id);
+   });
+  }else{
+   const saved=node('details');saved.append(node('summary','Gespeicherten Auftrag ansehen'));
+   const prompt=node('textarea');prompt.readOnly=true;prompt.value=order.prompt;saved.append(prompt);article.append(saved);
+   button('Auftrag erneut kopieren',async()=>{try{await navigator.clipboard.writeText(order.prompt);}
+    catch{saved.open=true;prompt.focus();prompt.select();throw Error('Bitte den markierten Auftrag kopieren.');}});
+  }
+  const binding={request_id:order.request_id,puzzle_id:order.puzzle_id};
+  if(order.paused&&['build','publish','cleanup','scan','stage'].includes(order.step))
+   button('Übernahme fortsetzen',()=>inboxAction('retry',binding));
+  if(['scan','stage','blocked','stale','done'].includes(order.step))
+   button(order.step==='done'?'Quittung schließen':'Auftrag widerrufen',()=>inboxAction('cancel',binding));
+  area.append(article);
  }
 }
-inboxClick($('inboxSetup'), () => inboxAction('configure', {
- folder_id: $('inboxFolder').value.trim(), directory: $('inboxDirectory').value.trim()
-}));
-inboxClick($('inboxStart'), async () => {
- if (!listing || pending) throw Error('Zuerst den aktuellen Quellenstand laden.');
- const phase = $('inboxPhase').value, action = $('inboxIntent').value;
- const selected = intent.selection || '';
- const needsPrior = (phase === 'motif' && intent.kind === 'reveal') ||
-                    (phase === 'background' && intent.kind === 'raster');
- if ((needsPrior || action !== 'offer') && !readyImages.has(selected))
-  throw Error('Die gebundene Bildvariante zuerst öffnen und auswählen.');
- await inboxAction('activate', {snapshot:listing.snapshot, jid:active?.id || '',
-  puzzle_id:active?.puzzle_id || $('inboxJob').value.trim(), phase, intent:action,
-  selection:needsPrior ? selected : '', target:action === 'offer' ? '' : selected,
-  inputs:PW.inboxInputs(detail,intent,action),
-  findings:JSON.stringify(intent.findings || {})});
-});
-let inboxTimer;
-async function pollInbox() {
- clearTimeout(inboxTimer);
- if (!$('inbox').open) return;
- try { showInbox(await (await request('/api/inbox/status')).json()); }
- catch (exc) { $('inboxMessage').textContent = exc.message; }
- if ($('inbox').open) inboxTimer = setTimeout(pollInbox, 3000);
+$('inboxFolder').oninput=$('inboxDirectory').oninput=()=>{folderDirty=true;};
+$('inboxSetup').onclick=async()=>{
+ try{
+  await inboxAction('configure',{folder_id:$('inboxFolder').value.trim(),directory:$('inboxDirectory').value.trim()});
+  folderDirty=false;showInbox(inboxState);$('inboxMessage').textContent='Drive-Stammordner gespeichert.';
+ }catch(exc){$('inboxMessage').textContent=exc.message;}
+};
+async function pollInbox(){
+ try{
+  const value=await (await request('/api/inbox/status')).json();
+  if(JSON.stringify(value.orders)!==JSON.stringify(inboxState?.orders)||JSON.stringify(value.folder)!==JSON.stringify(inboxState?.folder))showInbox(value);
+ }catch(exc){$('inboxMessage').textContent=exc.message;}
+ const timer=setTimeout(pollInbox,3000);
+ timer.unref?.();
 }
-$('inbox').ontoggle = pollInbox;
+pollInbox();

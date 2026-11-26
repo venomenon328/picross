@@ -190,6 +190,9 @@ Je Job genau `content/authoring/<puzzle_id>/current/record.json` und die aktuell
 benötigten Nutzdateien nach [PW-B](../../tools/PW_B_CONTRACT.md) führen. Der
 Arbeitsindex enthält nur Verweise. Ansichten und Folgeaufträge werden direkt
 daraus abgeleitet, keine zusätzliche Handoff-/Inventar-/workspace-/Pointerdatei.
+Beim normalen [PW-Bildauftrag](../../tools/PW_IMPORT.md) die automatisch gebundene ID verwenden.
+Eine ausgewählte native Referenzanlage vor der Generierung öffnen, Dateiname, Länge
+und SHA-256 prüfen und bei der ersten Reveal-Lieferung als ein input-Asset sichern.
 Vorhandene aktive Referenzbilder sicher referenzieren, nicht je Job kopieren.
 
 Der Akteur übergibt `picross-authoring-current-request-v1` an den bestehenden

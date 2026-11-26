@@ -1,10 +1,12 @@
 """One durable, explicit receipt per job. All mutations share the PW operation lock."""
+from copy import deepcopy
 from datetime import datetime, timezone
 import json
 from pathlib import Path
 import re
 import subprocess
 import threading
+import unicodedata
 from uuid import uuid4
 
 from tools.puzzle_production import catalog_io as io, current_authoring as current
@@ -24,6 +26,11 @@ class Inbox:
         self.root = service.repository.state
         raw = io.read(self.root, STATE, 8 * current.LIMIT, missing=True)
         self.data = io.json_bytes(raw, 8 * current.LIMIT) if raw else {'folder': None, 'orders': {}}
+        self.data.setdefault('drafts', {})
+        self.data.setdefault('generations', {})
+        # Existing receipts used the flat configured folder. Freeze it before any edit.
+        for order in self.data['orders'].values():
+            order.setdefault('folder', self.data['folder'])
         self.writer = Writer(self.root)
         self.stop = threading.Event()
         self.thread = None
@@ -32,8 +39,9 @@ class Inbox:
 
     def update_view(self):
         with self.view_lock:
-            self.view = {'folder': self.data['folder'], 'orders': [
-                {k: order.get(k) for k in ('puzzle_id', 'request_id', 'phase', 'step', 'status', 'result', 'prompt')}
+            self.view = {'folder': self.data['folder'], 'drafts': dict(self.data['drafts']),
+                         'generations': dict(self.data['generations']), 'orders': [
+                {k: order.get(k) for k in ('puzzle_id', 'request_id', 'draft_id', 'phase', 'step', 'status', 'paused', 'result', 'prompt')}
                 for order in self.data['orders'].values()]}
 
     def save(self):
@@ -66,6 +74,7 @@ class Inbox:
 
     def action(self, action, body):
         self.service.acquire_operation()
+        before = deepcopy(self.data)
         try:
             if action == 'configure':
                 exact_keys(body, {'folder_id', 'directory'})
@@ -76,10 +85,14 @@ class Inbox:
                 require(folder.is_dir() and folder != Path(folder.anchor), 'Eigenen privaten Eingangsordner wählen.')
                 for own in (self.root, self.service.repository.local.root):
                     require(not folder.is_relative_to(own) and not own.is_relative_to(folder), 'Git- und Eingangsordner müssen getrennt sein.')
-                require(not self.data['orders'], 'Vor einer neuen Ordnerbindung laufende Aufträge beenden.')
+                # Legacy flat operations keep their original root across reconfiguration.
+                for order in self.data['orders'].values():
+                    order.setdefault('folder', self.data['folder'])
                 self.data['folder'] = {'id': body['folder_id'], 'directory': str(folder)}
-            elif action == 'activate':
-                self.activate(body)
+            elif action == 'start':
+                job = self.start_order(body)
+                self.save()
+                return {**self.view, 'started': job}
             else:
                 exact_keys(body, {'puzzle_id', 'request_id'})
                 order = self.data['orders'].get(body['puzzle_id'])
@@ -88,6 +101,7 @@ class Inbox:
                     require(order['step'] in ('scan', 'stage', 'blocked', 'stale', 'done'), 'Begonnene Veröffentlichung zuerst fortsetzen.')
                     if order['step'] != 'stale':
                         self.discard_stage(order)
+                    self.data['generations'][order['puzzle_id']] = str(uuid4())
                     del self.data['orders'][order['puzzle_id']]
                 elif action == 'retry':
                     require(order['step'] in ACTIVE, 'Auftrag kann nicht fortgesetzt werden.')
@@ -96,20 +110,100 @@ class Inbox:
                     raise ValueError('Unbekannte Empfangsaktion.')
             self.save()
             return self.view
+        except Exception:
+            self.data = before
+            raise
         finally:
             self.service.operation.release()
+
+    def start_order(self, body):
+        exact_keys(body, {'snapshot', 'jid', 'draft_id', 'action', 'candidate', 'inputs', 'findings', 'expected'})
+        status = self.service.status()
+        require(status.get('remote_confirmed') and status['snapshot'] == body['snapshot'], 'Aktuelle Remotequellen laden.')
+        require(self.data['folder'], 'Privaten Drive-Stammordner in den Einstellungen speichern.')
+        require(github_identity(self.service.repository.remote), 'Produktionsremote einrichten.')
+        require(isinstance(body['inputs'].get('brief'), str), 'Motivbriefing erforderlich.')
+        draft = body['draft_id']
+        candidate = body['candidate']
+        action = body['action']
+        require(action in ('continue', 'rework', 'assessment', 'resume'), 'Unbekannte Bildhandlung.')
+        if body['jid']:
+            require(not draft, 'Ein veröffentlichter Auftrag hat keinen lokalen Entwurf.')
+            row = self.service.selected(body['jid'], body['snapshot'])
+            require(row.get('_record') and row['_record']['format'] == current.findings.PUBLISHED,
+                    'Aktuelle veröffentlichte v3-Quelle erforderlich.')
+            job, record = row['puzzle_id'], row['_record']
+            head = row['commit']
+        else:
+            contract.uuid4_text(draft)
+            require(action in ('continue', 'resume') and not candidate, 'Neuer Entwurf beginnt mit dem Abschlussbild.')
+            job = self.data['drafts'].get(draft)
+            if not job:
+                job = self.free_id(body['inputs']['brief'], status)
+            record = None
+            head = None
+        prior = self.data['orders'].get(job)
+        generation = prior['request_id'] if prior else self.data['generations'].get(job, '')
+        signature = io.checksum(current.encoded([head, action, candidate, body['inputs'], body['findings']]))
+        if prior and (signature == prior.get('signature') or action == 'resume' and prior['source']['work_head'] == head):
+            require(prior['step'] != 'done' or action != 'resume', 'Veröffentlichten Stand für die Fortsetzung öffnen.')
+            return job
+        require(body['expected'] == generation, 'Auftrag inzwischen geändert. Aktuellen Auftrag prüfen.')
+        require(not prior or prior['step'] in ('scan', 'stage', 'blocked', 'done'), 'Begonnene Veröffentlichung zuerst fortsetzen.')
+        require(not prior or prior['step'] != 'done' or record and head != prior['source']['work_head'],
+                'Auftrag bereits veröffentlicht. Aktuellen Stand öffnen.')
+        role, intent, selection, target = 'reveal', 'offer', '', ''
+        if record:
+            assets = {a['id']: a['role'] for a in record['assets']}
+            require(action != 'continue' or not record['blockers'], 'Auftragsweite Voraussetzung zuerst klären.')
+            if action in ('rework', 'assessment'):
+                role = assets.get(candidate)
+                require(role in contract.PHASES, 'Konkretes Bild für diese Handlung wählen.')
+                require(action != 'assessment' or role != 'background', 'Hintergrund am veröffentlichten Stand über PW-REMOTE bewerten.')
+                target = candidate
+                intent = 'correction' if action == 'rework' else 'assessment'
+            elif record['state'] == 'reveal_review' and candidate:
+                require(assets.get(candidate) == 'reveal', 'Abschlussbild wählen.')
+                role, selection = 'motif', candidate
+            elif record['state'] in ('raster_review', 'raster_ready'):
+                require(candidate in {r['id'] for r in record['rasters']}, 'Qualifiziertes Raster wählen.')
+                role, selection = 'background', candidate
+            else:
+                require(record['state'] in ('brief_ready', 'reveal_review') and not candidate,
+                        'Diese Handlung verwendet den regulären Folgeauftrag.')
+        self.writer.check_access()
+        self.activate({'snapshot': body['snapshot'], 'jid': body['jid'], 'puzzle_id': job,
+                       'phase': role, 'intent': intent, 'selection': selection, 'target': target,
+                       'inputs': body['inputs'], 'findings': body['findings']})
+        order = self.data['orders'][job]
+        order.update(signature=signature, draft_id=draft or None)
+        if draft:
+            self.data['drafts'][draft] = job
+        return job
+
+    def free_id(self, brief, status):
+        title = unicodedata.normalize('NFKD', brief).encode('ascii', 'ignore').decode().lower()
+        stem = re.sub('[^a-z0-9]+', '-', title).strip('-')[:48].rstrip('-') or 'motiv'
+        used = set(self.data['orders']) | set(self.data['drafts'].values())
+        used.update(row['puzzle_id'] for row in status.get('jobs', []))
+        repo = self.service.removal
+        job = 'pz-' + stem
+        while True:
+            if job not in used:
+                main = repo.main_state(job)
+                if not main['registered'] and not main['revisions'] and not repo.remote_head('refs/heads/content/pw/' + job):
+                    return job
+            job = 'pz-' + stem + '-' + uuid4().hex[:8]
 
     def activate(self, body):
         exact_keys(body, {'snapshot', 'jid', 'puzzle_id', 'phase', 'intent', 'target', 'inputs', 'selection', 'findings'})
         folder = self.data['folder']
-        require(folder and github_identity(self.service.repository.remote), 'Privaten Eingang und Produktionsremote einrichten.')
         status = self.service.status()
         require(status.get('remote_confirmed') and status['snapshot'] == body['snapshot'], 'Aktuelle Remotequellen laden.')
         job, phase, intent = body['puzzle_id'], body['phase'], body['intent']
         current.path(job)
         require(phase in contract.PHASES and intent in ('offer', 'assessment', 'correction'), 'Ungültiger Auftragsumfang.')
-        prior = self.data['orders'].get(job)
-        require(not prior or prior['step'] == 'done', 'Bestehenden Auftrag zuerst abschließen oder abbrechen.')
+        # Replacement authority was checked against the observed request ID.
         repo = self.service.removal
         main = repo.main_state(job)
         require(not main['registered'] and not main['revisions'], 'ID bereits auf main. Registrierte IDs im Bestandseditor pflegen.')
@@ -153,7 +247,8 @@ class Inbox:
                 choice = {'id': key, 'decision': {'scope': scope, 'actor': 'PW-Nutzer', 'timestamp_utc': now,
                           'statement': 'Ausdrückliche Auswahl von ' + key + ' für diesen Folgeauftrag.'}}
             else:
-                require(not body['selection'], 'Keine weitere Vorauswahl vorgesehen.')
+                require(not body['selection'] or phase in contract.PRIOR and
+                        record['selected'][contract.PRIOR[phase]] == body['selection'], 'Andere Vorauswahl ist bereits gebunden.')
             if intent != 'offer':
                 require(target in {a['id'] for a in record['assets'] if a['role'] == phase}, 'Konkrete Korrektur-/Bewertungsgrundlage erforderlich.')
             reopening = intent == 'correction' and target == record['selected'][phase]
@@ -174,14 +269,10 @@ class Inbox:
                  'choice': choice, 'declarations': declarations, 'limits': limits, 'brief': brief, 'inputs': body['inputs'], 'test_only': False, 'step': 'scan',
                  'status': 'Wartet auf die Lieferung.', 'files': {}, 'paused': False}
         binding = {k: order[k] for k in ('request_id', 'puzzle_id', 'phase', 'intent', 'target', 'source', 'brief', 'choice', 'declarations', 'limits')}
-        order['prompt'] = ('Arbeite gemäß AGENTS.md, Authoring und docs/tools/PW_IMPORT.md in ' + contract.REPOSITORY +
-            '. Stelle die nativen Einzeloriginale byteidentisch in meinem privaten Drive-Ordner ' + folder['id'] +
-            ' bereit. Lade das Manifest zuletzt. Verwende folgende bestätigte Bindung: ' +
-            json.dumps(binding, ensure_ascii=False) + '. Bei Neuanlage brief unverändert als Recordbriefing übernehmen. '
-            'Bei einem Folgeauftrag das bestehende Briefing erhalten und nur ein nichtleeres brief mit zwei Zeilenumbrüchen anhängen. '
-            'Rasterwünsche sind keine Parameterfreigabe. Erfolg erst nach GitHub-Readback. ' +
-            ('Danach den beauftragten Schritt 4 mit prepare, Zustellung, tatsächlicher Sichtung und Assessment am veröffentlichten Stand fortsetzen.'
-             if phase == 'background' else ''))
+        # The prompt contains only the remote folder binding.
+        order['folder'] = dict(folder)
+        order['child'] = job
+        order['prompt'] = contract.producer_prompt(folder['id'], binding, body['inputs']['reference'])
         self.data['orders'][job] = order
 
     def stage(self, order):
@@ -267,9 +358,12 @@ class Inbox:
     def advance(self, order):
         if order.get('paused'):
             return False
-        folder = Path(self.data['folder']['directory'])
+        binding = order.get('folder', self.data['folder'])
         published = False
         try:
+            folder = None
+            if order['step'] in ('scan', 'stage', 'cleanup'):
+                folder = files.destination(binding, order.get('child'))
             if order['step'] != 'cleanup':
                 if order['step'] in ('scan', 'stage'):
                     value = self.receive(order, folder)
@@ -282,6 +376,7 @@ class Inbox:
                              status='GitHub-Veröffentlichung bestätigt. Eingangsbereinigung läuft.')
                 self.save()
                 published = True
+            folder = files.destination(binding, order.get('child'))
             for name in order['remaining'][:]:
                 files.retire(folder, name, order['files'][name])
                 order['remaining'].remove(name)
@@ -293,8 +388,8 @@ class Inbox:
         except StaleBuild as exc:
             order.update(step='stale', paused=True)
             self.message(order, str(exc))
-        except files.Waiting:
-            self.message(order, 'Wartet auf vollständige Dateien.')
+        except files.Waiting as exc:
+            self.message(order, str(exc) or 'Wartet auf vollständige Dateien.')
         except (OSError, ValueError, RuntimeError, KeyError, TypeError, subprocess.SubprocessError) as exc:
             if order['step'] == 'cleanup':
                 message = 'Veröffentlicht. Bereinigungsrest: ' + ', '.join(order['remaining'])

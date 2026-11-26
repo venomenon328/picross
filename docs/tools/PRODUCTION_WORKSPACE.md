@@ -12,8 +12,8 @@ In der Auswahl zeigt der Assistent die gebundenen Angebote. Bei Hintergrundangeb
 - **Installer und Updatekanal:** [PRODUCTION_UPDATES](PRODUCTION_UPDATES.md); tatsächlicher Betriebsstatus im zuständigen Issue/Release.
 - **Bildgestaltung und Profile:** [Bildnormen](../production/images/README.md) beziehungsweise [Hintergrundtechnik](../production/PUZZLE_BACKGROUNDS.md).
 
-Unter „Originale über Google Drive empfangen“ bindet der Benutzer Ordner-ID und
-synchronisierten Windows-Pfad. Der ausdrücklich gestartete [Empfangsauftrag](PW_IMPORT.md)
+Unter „Einstellungen für Google Drive“ speichert der Benutzer Stammordner-ID und
+synchronisierten Windows-Pfad. Der normale [Empfangsauftrag](PW_IMPORT.md)
 verwendet die ausgewählte Produktion, den v3-Builder, einen eigenen PW-LOCAL-Store
 und die lokale gh-Anmeldung. Die veröffentlichte Ansicht bleibt lesend. Der
 [Schritt-5-Writer PW-FINAL](https://github.com/venomenon328/picross/issues/907)
@@ -523,8 +523,9 @@ verwenden den eigenen Bestandsweg nach Authoring Schritt 5 §9.
 ChatGPT-Aufträge sind für einen frischen Chat mit dem festen Record oder dem
 neuen Motivbriefing und der beigefügten Referenz bestimmt. Bei Unterbrechung
 am zuletzt bestätigt veröffentlichten Stand fortsetzen und fehlende Originale
-oder Fähigkeiten benennen. Ausführungswahl und Kopieren erteilen keine
-Befugnisse und starten keine Ausführung.
+oder Fähigkeiten benennen. „Auftrag starten und kopieren“ bindet die angezeigten
+Entscheidungen und aktiviert den begrenzten Empfang im Rätselunterordner.
+Passives Ansehen und erneutes Kopieren erteilen keine zusätzliche Befugnis.
 
 Vorgefüllte Quellwerte sind keine neue Absicht oder Freigabe. Der Folgeauftrag
 trennt den veröffentlichten Kontext von Änderungen, ausdrücklich aufgehobenen

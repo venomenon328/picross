@@ -36,6 +36,10 @@ const PW = (()=>{
    entry='Nutze den gebundenen Einstieg in docs/tools/PW_REMOTE.md für die tatsächlich beauftragte Operation.';
   return [`Ausführung mit ChatGPT. ${entry} Bei fehlendem Zugriff oder fehlenden Fähigkeiten den betroffenen Teil und den gesicherten Stand benennen.`];
  }
+ function pendingBackground(value){
+  return value?.facts.state==='background_review'&&value.facts.originals?.record?.assets?.some(
+   asset=>asset.role==='background'&&(!asset.prepared||!asset.prepared.inspection));
+ }
  function closing(value,intent={}){
   return (intent.action||'continue')==='continue'&&['background_review','content_ready','editorially_approved','registered'].includes(value?.facts.state);
  }
@@ -144,7 +148,7 @@ const PW = (()=>{
    brief:value?'':(intent.brief||'').trim(), notes:(intent.notes||'').trim(),
    parameters:(intent.parameters||'').trim(), context:(intent.context||'').trim(),
    feedback:action==='correction'?(intent.feedback||'').trim():'',
-   reference:intent.inputImage||'', grid
+   reference:intent.reference||'', grid
   };
  }
  function choiceReady(value,target,intent){
@@ -278,6 +282,7 @@ const PW = (()=>{
    }else if(selected)lines.push(`Betroffenes Angebot: ${selected.kind}/${selected.id}.`);
   }else if(action==='resume'){
    lines.push(`Schritt ${n} am gebundenen Datensatz wieder aufnehmen.`);
+   if(pendingBackground(value))lines.push('Über docs/tools/PW_REMOTE.md am veröffentlichten Hintergrund prepare, Originalzustellung, tatsächliche Sichtung und assessment ausführen. Keine neue Inbox-Lieferung.');
   }else if(!value||value.facts.state==='brief_ready'){
    lines.push('Schritt 1: Abschlussbilder als reveal_review zur Auswahl vorlegen.');
   }else if(value.facts.state==='reveal_review'){
@@ -325,6 +330,6 @@ const PW = (()=>{
   else lines.push('Commit, Push und Draft-PR im beauftragten Umfang; kein Merge.');
   return lines.join('\n\n');
  }
- return {steps,step,orderStep,promptStep,executors,prompt,inboxInputs,choiceReady,publishedGrid,parameterOptions,options,closing,finalAssets,axes,cropChanges};
+ return {steps,step,orderStep,promptStep,executors,prompt,inboxInputs,choiceReady,publishedGrid,parameterOptions,options,closing,pendingBackground,finalAssets,axes,cropChanges};
 })();
 if(typeof module!=='undefined')module.exports=PW;

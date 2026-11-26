@@ -78,54 +78,30 @@ class InboxTests(unittest.TestCase):
             files.retire(self.folder, self.filename, order['files'][self.filename])
         self.assertTrue((self.folder / self.filename).exists())
 
-    def test_ui_activate_prompt_and_bound_delta(self):
-        # Execute the real click handler, capturing only its outbound HTTP body.
-        probe = r"""
-const fs=require('node:fs'),vm=require('node:vm');
-const elements=new Map(),messages=[];
-const document={documentElement:{dataset:{}},getElementById(id){
- if(!elements.has(id))elements.set(id,{replaceChildren(){}});
- return elements.get(id);
-}};
-const ctx=vm.createContext({document,location:{hash:'',pathname:'/'},history:{replaceState(){}},
- sessionStorage:{getItem(){}},localStorage:{getItem(){}},AbortController,setTimeout,clearTimeout,
- PW:require('./tools/production_workspace/ui/workflow.js'),fetch:(url,opts)=>{
-  if(url!=='/api/inbox/activate')return new Promise(()=>{});
-  messages.push(JSON.parse(opts.body));return {ok:true,json:async()=>({orders:[]})};
- }});
-vm.runInContext(fs.readFileSync('tools/production_workspace/ui/app.js','utf8'),ctx);
-const previous={facts:{published:{proposed:[{width:20,height:18,size_constraint:'exact'}]}}};
-const cases=[
- ['reveal','offer',null,{brief:'Fuchs',notes:'Im Profil',grid:{width:'17',sizeAccuracy:'exact'}}],
- ['motif','offer',previous,{parameters:'Ohren erhalten',removeGrid:{width:true}}],
- ['reveal','correction',previous,{action:'rework',selection:'one',kind:'reveal',feedback:'Ohr abrunden'}],
- ['background','offer',previous,{context:'Waldrand bei Nacht'}],
- ['reveal','offer',null,{brief:'Fuchs',inputImage:'vorlage.png'}]
-];
-(async()=>{
- for(const [role,action,value,inputs] of cases){
-  ctx.value=value;ctx.inputs=inputs;
-  vm.runInContext("listing={snapshot:'snapshot'};detail=value;active=value?{id:'row',puzzle_id:'pz-current'}:null;intent=inputs;readyImages.add('one')",ctx);
-  for(const [key,v] of Object.entries({inboxPhase:role,inboxIntent:action,inboxJob:'pz-current'}))
-   document.getElementById(key).value=v;
-  await document.getElementById('inboxStart').onclick();
-  if(document.getElementById('inboxMessage').textContent)throw Error(document.getElementById('inboxMessage').textContent);
- }
- console.log(JSON.stringify(messages));
-})().catch(e=>{console.error(e);process.exitCode=1});
-"""
-        bodies = json.loads(subprocess.check_output(['node', '-e', probe], cwd=Path(__file__).resolve().parents[1]))
-        main, head = 'a' * 40, 'b' * 40
+    def prepare_service(self):
         self.service.repository.remote = 'https://github.com/venomenon328/picross.git'
-        self.service.status = Mock(return_value={'snapshot': 'snapshot', 'remote_confirmed': True,
-                                                'completion': {'main_commit': main}})
-        repo = self.service.removal = Mock()
-        repo.main_state.return_value = {'commit': main, 'registered': False, 'revisions': []}
-        repo.availability.return_value = None
+        self.service.repository.local = SimpleNamespace(root=self.root / 'git')
         self.service.operation = threading.Lock()
         self.service.acquire_operation = self.service.operation.acquire
-        from http.client import HTTPConnection
+        self.service.status = Mock(return_value={'snapshot': 'snapshot', 'remote_confirmed': True,
+                                                'completion': {'main_commit': 'a' * 40}})
+        repo = self.service.removal = Mock()
+        repo.main_state.return_value = {'commit': 'a' * 40, 'registered': False, 'revisions': []}
+        repo.remote_head.return_value = None
+        repo.availability.return_value = None
+        self.inbox.writer.check_access = Mock()
+
+    def new_start(self):
+        return {'snapshot': 'snapshot', 'jid': '', 'draft_id': str(uuid4()), 'action': 'continue',
+                'candidate': '', 'expected': '', 'findings': '{}',
+                'inputs': {'brief': 'Fuchs', 'notes': 'Im Profil', 'parameters': '', 'context': '',
+                           'feedback': '', 'reference': '', 'grid': ['Breite: exakt 17 Zellen.']}}
+
+    def test_normal_copy_handshake_through_loopback(self):
         from tools.production_workspace.server import Server
+        self.prepare_service()
+        self.inbox.data['orders'].clear()
+        self.inbox.save()
         self.service.stopping = False
         self.service.secret = 'test-session'
         self.service.workers = threading.BoundedSemaphore(4)
@@ -136,65 +112,95 @@ const cases=[
         thread.start()
         self.addCleanup(thread.join)
         self.addCleanup(server.shutdown)
-        def activate(body):
-            connection = HTTPConnection(*server.server_address, timeout=5)
-            try:
-                connection.request('POST', '/api/inbox/activate', body=json.dumps(body).encode(),
-                    headers={'Content-Type': 'application/json', 'Origin': server.origin,
-                             'X-Workspace-Session': self.service.secret})
-                response = connection.getresponse()
-                return response.status, json.loads(response.read())
-            finally:
-                connection.close()
+        probe = Path(__file__).parent / 'production_workspace/check_ui_loading.cjs'
+        result = subprocess.check_output(['node', str(probe), server.origin, self.service.secret, '[]', 'inbox'],
+                                         cwd=probe.parents[2], timeout=25).decode()
+        order, = Inbox(self.service).data['orders'].values()
+        self.assertEqual(json.loads(result.strip()), order['prompt'])
+        self.assertEqual(order['puzzle_id'], 'pz-fuchs')
+        self.assertNotIn(str(self.folder), order['prompt'])
 
-        expected = [('Fuchs', 'Zusätzliche Motivhinweise: Im Profil', 'Breite: exakt 17 Zellen.'),
-                    ('Ohren erhalten', 'Breite: bisherigen Wunsch ausdrücklich aufheben.'),
-                    ('Ohr abrunden',), ('Waldrand bei Nacht',)]
-        for body, phrases in zip(bodies[:4], expected, strict=True):
-            with self.subTest(role=body['phase'], action=body['intent']):
-                self.inbox.data['orders'].clear()
-                old = deepcopy(self.value['request']['record']) if body['jid'] else None
-                repo.remote_head.return_value = head if old else None
-                if old:
-                    old['test_only'] = False
-                    if body['phase'] in contract.PRIOR:
-                        old['selected'][contract.PRIOR[body['phase']]] = 'one' if body['phase'] == 'motif' else 'raster'
-                    self.service.selected = Mock(return_value={'puzzle_id': 'pz-current', 'commit': head,
-                        '_record': {**old, 'format': current.findings.PUBLISHED},
-                        '_projection': {'record': {'sha256': 'c' * 64}}})
-                status, result = activate(body)
-                self.assertEqual(status, 200, result)
-                order = Inbox(self.service).data['orders']['pz-current']
-                for phrase in phrases:
-                    self.assertIn(phrase, order['brief'])
-                    self.assertIn(phrase, order['prompt'])
-                self.assertNotIn('Höhe:', order['brief'])
-                request = deepcopy(self.value['request'])
-                job = request['record']
-                job['test_only'] = False
-                job['brief'] = (old['brief'] + '\n\n' if old else '') + order['brief']
-                job['state'] = contract.PHASES[body['phase']]
-                if old:
-                    job['selected'] = deepcopy(old['selected'])
-                    candidate = job['assets'].pop()
-                    job['assets'] = deepcopy(old['assets']) if body['intent'] == 'offer' else []
-                    candidate.update(id='new', role=body['phase'], file=content.ref(
-                        'content/authoring/pz-current/data/new.png', b'new'))
-                    if body['phase'] == 'background':
-                        candidate.update(prepared=None, profile='picross-background-png2304x768-v1')
-                    if body['intent'] == 'correction':
-                        job['budgets']['used']['image_corrections'] += 1
-                    job['assets'].append(candidate)
-                    request['files'] = [{'path': candidate['file']['file']}]
-                contract.delta(order, request, old)
-                job['brief'] = old['brief'] if old else 'Fuchs'
-                with self.assertRaises(ValueError):
-                    contract.delta(order, request, old)
+    def test_root_change_draft_identity_and_legacy_operation(self):
+        self.prepare_service()
+        body = self.new_start()
+        self.inbox.action('start', body)
+        job = 'pz-fuchs'
+        order = self.inbox.data['orders'][job]
+        self.assertFalse(self.inbox.advance(order))
+        self.assertIn('synchronisierten Rätselordner', order['status'])
+        self.assertFalse((self.folder / job).exists())
+        other = self.root / 'other'
+        other.mkdir()
+        self.inbox.action('configure', {'directory': str(other), 'folder_id': 'other'})
+        resumed = Inbox(self.service)
+        resumed.writer.check_access = Mock()
+        resumed.action('start', body)
+        self.assertEqual(resumed.data['orders'][job]['request_id'], order['request_id'])
+        self.assertEqual(resumed.data['orders']['pz-current']['folder']['directory'], str(self.folder))
+        self.assertEqual(resumed.data['orders'][job]['folder']['directory'], str(self.folder))
+        body['inputs']['brief'] = 'Neuer Titel'
+        with self.assertRaisesRegex(ValueError, 'inzwischen geändert'):
+            resumed.action('start', body)
+        body['expected'] = order['request_id']
+        resumed.action('start', body)
+        replacement = resumed.data['orders'][job]
+        self.assertNotEqual(replacement['request_id'], order['request_id'])
+        self.assertEqual(replacement['folder']['directory'], str(other))
+        second = resumed.action('start', self.new_start())['started']
+        self.assertNotEqual(second, job)
+        (other / second).write_text('kein Ordner')
+        with self.assertRaisesRegex(ValueError, 'kein Verzeichnis'):
+            files.destination(replacement['folder'], second)
+
+    def test_bound_route_uses_the_actual_candidate_and_state(self):
+        self.prepare_service()
         self.inbox.data['orders'].clear()
-        status, result = activate(bodies[-1])
-        self.assertEqual(status, 400)
-        self.assertRegex(result['error'], 'Referenzbild.*nicht erreichbar')
-        self.assertFalse(self.inbox.data['orders'])
+        record = deepcopy(self.value['request']['record'])
+        record.update(format=current.findings.PUBLISHED, test_only=False)
+        body = self.new_start()
+        body.update(jid='row', draft_id='', candidate='one')
+        body['inputs'].update(brief='', notes='', grid=[])
+        self.service.removal.remote_head.return_value = 'b' * 40
+        self.service.selected = Mock(return_value={'puzzle_id': 'pz-current', 'commit': 'b' * 40,
+            '_record': record, '_projection': {'record': {'sha256': 'c' * 64}}})
+        self.service.detail = Mock(return_value={'facts': {'candidates': {
+            'one': {'missing': [], 'findings': []}, 'grid': {'missing': [], 'findings': []}}}})
+        for state, action, target, role in [('reveal_review', 'assessment', 'one', 'reveal'),
+                ('reveal_review', 'continue', 'one', 'motif'), ('raster_review', 'continue', 'grid', 'background'),
+                ('background_review', 'rework', 'one', 'reveal')]:
+            record['state'] = state
+            record['rasters'] = [{'id': 'grid'}]
+            record['selected']['reveal'] = 'one' if state in ('raster_review', 'background_review') else None
+            body.update(action=action, candidate=target)
+            body['inputs']['feedback'] = 'Kontur ändern' if action == 'rework' else ''
+            self.inbox.action('start', body)
+            order = self.inbox.data['orders']['pz-current']
+            self.assertEqual(order['phase'], role)
+            self.assertEqual(order['child'], 'pz-current')
+            self.assertEqual(order['choice']['id'] if order['choice'] else order['target'], target)
+            body['expected'] = order['request_id']
+
+    def test_only_exact_native_attachment_can_enter_first_reveal(self):
+        request = self.value['request']
+        source = deepcopy(request['record']['assets'][0])
+        source.update(id='ref', role='input', label='Vorlage')
+        source['file'] = content.ref('content/authoring/pz-current/data/reference.png', self.png)
+        request['record']['assets'].append(source)
+        reference = {'name': 'Vorlage.png', 'bytes': len(self.png), 'sha256': source['file']['sha256']}
+        self.order['inputs'] = {'reference': reference}
+        request['files'].append({'path': source['file']['file'], 'source': self.value['delivery_id'] + '--2.png',
+                                 'bytes': reference['bytes'], 'sha256': reference['sha256']})
+        contract.reference_binding(reference)
+        contract.envelope(current.encoded(self.value), self.manifest, self.order)
+        contract.delta(self.order, request, None)
+        reference['sha256'] = 'f' * 64
+        with self.assertRaises(ValueError):
+            contract.envelope(current.encoded(self.value), self.manifest, self.order)
+        with self.assertRaises(ValueError):
+            contract.delta(self.order, request, None)
+        self.order['inputs']['reference'] = ''
+        with self.assertRaises(ValueError):
+            contract.envelope(current.encoded(self.value), self.manifest, self.order)
 
     def test_persisted_build_can_rebind_but_unknown_publish_cannot(self):
         from contextlib import nullcontext
@@ -283,8 +289,10 @@ const cases=[
             self.service.selected = Mock(return_value={'puzzle_id': job, 'commit': successor, '_record': record,
                 '_projection': {'record': {'sha256': io.checksum(path.read_bytes())}}})
             inputs = dict.fromkeys(('notes', 'parameters', 'context', 'brief', 'feedback', 'reference'), '')
-            resumed.action('activate', {'snapshot': 'fresh', 'jid': 'row', 'puzzle_id': job, 'phase': 'reveal',
-                            'intent': 'offer', 'target': '', 'selection': '', 'findings': '{}', 'inputs': {**inputs, 'grid': []}})
+            resumed.writer.check_access = Mock()
+            resumed.action('start', {'snapshot': 'fresh', 'jid': 'row', 'draft_id': '', 'action': 'resume',
+                            'candidate': '', 'expected': resumed.data['generations'][job],
+                            'findings': '{}', 'inputs': {**inputs, 'grid': []}})
             replacement = resumed.data['orders'][job]
             self.assertNotEqual(replacement['request_id'], order['request_id'])
             self.assertEqual(replacement['source']['work_head'], successor)
