@@ -538,8 +538,10 @@ erneuten Entscheidung. Die bewusst angeforderte reguläre Freigabe in Schritt 3
 bleibt erhalten.
 
 Die Auswahl im Assistenten ist zunächst Bedienabsicht. Beim gebundenen Bildempfang
-bestätigt „Auftrag starten und kopieren“ die angezeigte Auswahl. Auf dem übrigen
-Auftragsweg erklärt das Absenden die Freigabe oder beauftragt die Integration.
+bestätigt „Auftrag starten und kopieren“ unter „Fortsetzen / Entscheidung senden“
+die angezeigte Auswahl. „Arbeit wieder aufnehmen“ bindet bei ChatGPT den offenen
+Empfang oder das aktuelle Reveal- oder Motivangebot nach [PW-IMPORT](PW_IMPORT.md).
+Auf dem übrigen Auftragsweg erklärt das Absenden die Freigabe oder beauftragt die Integration.
 Ein neuer Quellstand oder geänderte relevante Bildbytes entwerten
 stale Auswahlabsichten gezielt. Kein automatischer Modellaufruf, keine Modell-API,
 kein Freigabewriter im Hilfsdienst und keine automatische Serienfreigabe.

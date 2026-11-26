@@ -87,8 +87,11 @@ function updatePrompt(){
    box.value=same?boundPreview.prompt:'';
    button.textContent=same?'Gebundenen Auftrag erneut kopieren':'Auftrag starten und kopieren';
    const open=currentOrder();
-   const effect=open&&!open.result?' Eine geänderte Vorgabe ersetzt den noch wartenden Auftrag.':'';
-   $('executorHint').textContent='Beim Start werden die angezeigte Wahl und die Befunderklärungen gebunden. PW prüft passende Drive-Ergebnisse und veröffentlicht den Arbeitsstand automatisch.'+effect;
+   const resume=body.action==='resume';
+   const binding=resume?'Die Wiederaufnahme setzt den gebundenen Auftrag oder das aktuelle Bildangebot fort.':
+    'Beim Start werden die angezeigte Wahl und die Befunderklärungen gebunden.';
+   const effect=!resume&&open&&!open.result?' Eine geänderte Vorgabe ersetzt den noch wartenden Auftrag.':'';
+   $('executorHint').textContent=binding+' PW prüft passende Drive-Ergebnisse und veröffentlicht den Arbeitsstand automatisch.'+effect;
   }else box.value=PW.prompt(detail,intent,personal);
   button.disabled=starting;
   status.textContent=final?(personal.merge?'Auftrag bis main und Produktionsabschluss – nach erfüllten Pflichtgates.':'Auftrag bis Draft-PR – kein Merge.'):'';
@@ -817,7 +820,7 @@ function usesInbox(){
  if(!detail)return true;
  if(!detail.facts.candidates)return false;
  if(intent.action==='resume')return Boolean(currentOrder()&&!currentOrder().result)||
-  ['brief_ready','reveal_review'].includes(detail.facts.state);
+  ['brief_ready','reveal_review','motif_review'].includes(detail.facts.state);
  if(['rework','assessment'].includes(intent.action))
   return ['reveal','motif','background'].includes(detail.assets.find(a=>a.id===intent.selection)?.role);
  return (!intent.action||intent.action==='continue')&&[1,2,4].includes(PW.orderStep(detail));
@@ -825,7 +828,7 @@ function usesInbox(){
 function startBody(){
  if(!listing||pending)throw Error('Zuerst den aktuellen Quellenstand laden.');
  if(detail&&intent.action==='rework'&&!intent.feedback?.trim())throw Error('Bitte die gewünschte Korrektur beschreiben.');
- const action=intent.action||'continue',candidate=intent.selection||'';
+ const action=intent.action||'continue',resume=action==='resume',candidate=resume?'':(intent.selection||'');
  if(!detail&&!intent.brief?.trim())throw Error('Bitte zuerst dein Motiv beschreiben.');
  if(detail&&action==='continue'&&['reveal_review','raster_review','raster_ready'].includes(detail.facts.state)&&!candidate)
   throw Error('Bitte die gewünschte Variante wählen. Ein ausstehendes Angebot über „Arbeit wieder aufnehmen“ fortsetzen.');
@@ -833,9 +836,10 @@ function startBody(){
  if(detail&&action==='continue'&&candidate&&!PW.choiceReady(detail,candidate,intent))throw Error('Offene Voraussetzungen für '+candidate+'.');
  if(intent.inputImage&&!intent.reference)throw Error(intent.referenceError||'Die Referenzdatei für die Byteprüfung auswählen.');
  const job=active?.puzzle_id||inboxState?.drafts?.[draft?.id];
- return {snapshot:listing.snapshot,jid:active?.id||'',draft_id:draft?.id||'',candidate,action,
-  inputs:PW.inboxInputs(detail,intent,action==='rework'?'correction':action),
-  findings:JSON.stringify(intent.findings||{}),expected:currentOrder()?.request_id||inboxState?.generations?.[job]||''};
+ const inputs=PW.inboxInputs(detail,intent,action==='rework'?'correction':action);
+ if(resume&&detail?.facts.state==='reveal_review')inputs.parameters='';
+ return {snapshot:listing.snapshot,jid:active?.id||'',draft_id:draft?.id||'',candidate,action,inputs,
+  findings:JSON.stringify(resume?{}:(intent.findings||{})),expected:currentOrder()?.request_id||inboxState?.generations?.[job]||''};
 }
 function intentKey(body){
  const {expected,...intent}=body;

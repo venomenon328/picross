@@ -12,12 +12,12 @@
     {
       "path": "tools/test_production_inbox.py",
       "disposition": "change-scoped",
-      "reason": "Prüft Start, Rollen, gebundene Referenz, Ziel und Wiederaufnahme."
+      "reason": "Prüft Start, Rollen, gebundene Referenz, Ziel und den erlaubten Angebotsdelta bei Wiederaufnahme."
     },
     {
       "path": "tools/production_workspace/check_ui_loading.cjs",
       "disposition": "change-scoped",
-      "reason": "Übt den normalen Kopierknopf gegen den Loopback-Dienst mit Antwortverlust und Clipboardfehler aus."
+      "reason": "Übt den normalen Kopierknopf gegen den Loopback-Dienst bei Antwortverlust, Clipboardfehler und Wiederaufnahme offener Reveal- und Motivangebote aus."
     }
   ],
   "core_change": null,

@@ -124,9 +124,11 @@ class Inbox:
         require(github_identity(self.service.repository.remote), 'Produktionsremote einrichten.')
         require(isinstance(body['inputs'].get('brief'), str), 'Motivbriefing erforderlich.')
         draft = body['draft_id']
-        candidate = body['candidate']
         action = body['action']
         require(action in ('continue', 'rework', 'assessment', 'resume'), 'Unbekannte Bildhandlung.')
+        # Resuming an offer never declares a candidate choice or a new finding decision.
+        candidate = '' if action == 'resume' else body['candidate']
+        findings = '{}' if action == 'resume' else body['findings']
         if body['jid']:
             require(not draft, 'Ein veröffentlichter Auftrag hat keinen lokalen Entwurf.')
             row = self.service.selected(body['jid'], body['snapshot'])
@@ -144,7 +146,7 @@ class Inbox:
             head = None
         prior = self.data['orders'].get(job)
         generation = prior['request_id'] if prior else self.data['generations'].get(job, '')
-        signature = io.checksum(current.encoded([head, action, candidate, body['inputs'], body['findings']]))
+        signature = io.checksum(current.encoded([head, action, candidate, body['inputs'], findings]))
         if prior and action == 'resume' and prior['step'] != 'done':
             require(prior['source']['work_head'] == head, 'Quelle des offenen Auftrags hat sich geändert. Gebundenen Auftrag prüfen.')
             return job
@@ -157,6 +159,7 @@ class Inbox:
                 'Auftrag bereits veröffentlicht. Aktuellen Stand öffnen.')
         role, intent, selection, target = 'reveal', 'offer', '', ''
         if record:
+            state = record['state']
             assets = {a['id']: a['role'] for a in record['assets']}
             require(action != 'continue' or not record['blockers'], 'Auftragsweite Voraussetzung zuerst klären.')
             if action in ('rework', 'assessment'):
@@ -165,19 +168,24 @@ class Inbox:
                 require(action != 'assessment' or role != 'background', 'Hintergrund am veröffentlichten Stand über PW-REMOTE bewerten.')
                 target = candidate
                 intent = 'correction' if action == 'rework' else 'assessment'
-            elif record['state'] == 'reveal_review' and candidate:
+            elif action == 'resume':
+                require(state in ('brief_ready', 'reveal_review', 'motif_review'),
+                        'Diese Handlung verwendet den regulären Folgeauftrag.')
+                if state == 'motif_review':
+                    role = 'motif'
+            elif state == 'reveal_review' and candidate:
                 require(assets.get(candidate) == 'reveal', 'Abschlussbild wählen.')
                 role, selection = 'motif', candidate
-            elif record['state'] in ('raster_review', 'raster_ready'):
+            elif state in ('raster_review', 'raster_ready'):
                 require(candidate in {r['id'] for r in record['rasters']}, 'Qualifiziertes Raster wählen.')
                 role, selection = 'background', candidate
             else:
-                require(record['state'] in ('brief_ready', 'reveal_review') and not candidate,
+                require(state in ('brief_ready', 'reveal_review') and not candidate,
                         'Diese Handlung verwendet den regulären Folgeauftrag.')
         self.writer.check_access()
         self.activate({'snapshot': body['snapshot'], 'jid': body['jid'], 'puzzle_id': job,
                        'phase': role, 'intent': intent, 'selection': selection, 'target': target,
-                       'inputs': body['inputs'], 'findings': body['findings']})
+                       'inputs': body['inputs'], 'findings': findings})
         order = self.data['orders'][job]
         order.update(signature=signature, draft_id=draft or None)
         if draft:

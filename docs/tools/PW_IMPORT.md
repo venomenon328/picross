@@ -97,8 +97,14 @@ nicht hinter einem unverändert beschrifteten Kopierbutton verstecken.
 Die tatsächliche Startaktion kann eine bereits gewählte und angezeigte
 Kandidatenentscheidung zugleich erklären. Sie erteilt keine Auswahl künftig
 gelieferter Bytes und keine Endabnahme, Integration, Merge- oder Retirementbefugnis.
-Bestehende gültige Erklärungen werden übernommen. Der Lieferant darf keine
-zusätzlichen Erklärungen oder Befugniserweiterungen behaupten.
+„Arbeit wieder aufnehmen“ verwendet den offenen gebundenen Auftrag. Ohne
+offenen Auftrag bindet PW ein weiterhin offenes Reveal- oder Motivangebot am
+aktuellen Record im selben Rätselordner. Bestehende gültige
+Erklärungen bleiben wirksam. Eine neue Vorauswahl für die Folgephase erfordert
+„Fortsetzen / Entscheidung senden“ mit einer dafür qualifizierten Variante.
+Vorgemerkte Auswahlen und Befundänderungen bleiben bei der Wiederaufnahme in der
+Oberfläche. Der Lieferant darf keine zusätzlichen Erklärungen oder
+Befugniserweiterungen behaupten.
 
 Pro Job gibt es höchstens einen aktiven Empfangsauftrag; andere Jobs dürfen
 unabhängig warten. Abbrechen oder Ersetzen eines Empfangs macht die alte

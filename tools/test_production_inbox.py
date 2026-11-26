@@ -97,28 +97,120 @@ class InboxTests(unittest.TestCase):
                 'inputs': {'brief': 'Fuchs', 'notes': 'Im Profil', 'parameters': '', 'context': '',
                            'feedback': '', 'reference': '', 'grid': ['Breite: exakt 17 Zellen.']}}
 
-    def test_normal_copy_handshake_through_loopback(self):
+    def loopback_probe(self, mode, *args):
         from tools.production_workspace.server import Server
-        self.prepare_service()
-        self.inbox.data['orders'].clear()
-        self.inbox.save()
         self.service.stopping = False
         self.service.secret = 'test-session'
         self.service.workers = threading.BoundedSemaphore(4)
+        self.service.image_workers = threading.BoundedSemaphore(2)
         self.service.inbox = self.inbox
         server = Server(self.service)
-        self.addCleanup(server.server_close)
         thread = threading.Thread(target=server.serve_forever, kwargs={'poll_interval': 0.02})
         thread.start()
-        self.addCleanup(thread.join)
-        self.addCleanup(server.shutdown)
-        probe = Path(__file__).parent / 'production_workspace/check_ui_loading.cjs'
-        result = subprocess.check_output(['node', str(probe), server.origin, self.service.secret, '[]', 'inbox'],
-                                         cwd=probe.parents[2], timeout=25).decode()
+        try:
+            probe = Path(__file__).parent / 'production_workspace/check_ui_loading.cjs'
+            result = subprocess.run(['node', str(probe), server.origin, self.service.secret, '[]', mode, *args],
+                                    cwd=probe.parents[2], timeout=25, capture_output=True, encoding='utf-8')
+            self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+            return json.loads(result.stdout.strip())
+        finally:
+            server.shutdown()
+            server.server_close()
+            thread.join()
+
+    def test_normal_copy_handshake_through_loopback(self):
+        self.prepare_service()
+        self.inbox.data['orders'].clear()
+        self.inbox.save()
+        copied = self.loopback_probe('inbox')
         order, = Inbox(self.service).data['orders'].values()
-        self.assertEqual(json.loads(result.strip()), order['prompt'])
+        self.assertEqual(copied, order['prompt'])
         self.assertEqual(order['puzzle_id'], 'pz-fuchs')
         self.assertNotIn(str(self.folder), order['prompt'])
+
+    def test_resume_current_image_offer_through_loopback(self):
+        from tests.puzzle_production.test_current_authoring import decide
+
+        self.prepare_service()
+        job, head = 'pz-current', 'b' * 40
+        base = deepcopy(self.value['request']['record'])
+
+        def asset(ident, role, color):
+            stream = BytesIO()
+            Image.new('RGBA', (10, 10), color).save(stream, format='PNG')
+            ref = content.ref(f'content/authoring/{job}/data/{ident}.png', stream.getvalue())
+            return {'id': ident, 'role': role, 'label': ident, 'file': ref, 'review': {}, 'rights': None}
+
+        for role, action in [('reveal', 'resume-close'), ('motif', 'resume'), ('motif', 'resume-close')]:
+            with self.subTest(role=role, action=action):
+                previous = deepcopy(base)
+                previous['test_only'] = False
+                state = previous['state'] = contract.PHASES[role]
+                if role == 'motif':
+                    previous['selected']['reveal'] = 'one'
+                    decide(previous, 'reveal')
+                previous['assets'].append(asset('existing', role, 'teal'))
+                record = {**previous, 'format': current.findings.PUBLISHED}
+                record_hash = contract.io.checksum(current.encoded(record))
+                source = {'id': 'row', 'puzzle_id': job, 'commit': head, 'source': 'remote'}
+                self.service.status.return_value.update(mode='remote', jobs=[source], errors=[], motifs=[
+                    {'puzzle_id': job, 'current_job': 'row', 'notes': [], 'versions': [{'sources': ['row']}]}])
+                self.service.selected = Mock(return_value={**source, '_record': record,
+                    '_projection': {'record': {'sha256': record_hash}}})
+                self.service.removal.remote_head.return_value = head
+                assets = [{'id': a['id'], 'role': a['role'], 'caption': a['label']} for a in previous['assets']]
+                self.service.detail = Mock(return_value={**source, 'title': 'Fuchs', 'assets': assets,
+                    'facts': {'state': state, 'blockers': [], 'candidates': {
+                        a['id']: {'missing': ['Prüfung offen'] if role == 'motif' and a['role'] == 'motif' else [],
+                                  'findings': []} for a in assets}},
+                    'offers': [{'id': a['id'], 'kind': role, 'asset_ids': [a['id']], 'label': a['caption']}
+                               for a in assets if a['role'] == role]})
+                self.service.picture = Mock(return_value=(self.png, 'image/png'))
+                receipt = {**self.order, 'phase': role, 'step': 'done', 'result': {'head': head},
+                           'source': {**self.order['source'], 'work_head': 'd' * 40}, 'child': job}
+                self.inbox.data['orders'][job] = receipt
+                self.inbox.save()
+
+                copied = self.loopback_probe('inbox-resume', action)
+                order = Inbox(self.service).data['orders'][job]
+                self.assertEqual(copied, order['prompt'])
+                self.assertNotEqual(order['request_id'], receipt['request_id'])
+                self.assertEqual(order['source'], {'main_commit': 'a' * 40, 'work_head': head, 'record_sha256': record_hash})
+                self.assertEqual((order['intent'], order['phase'], order['child']), ('offer', role, job))
+                self.assertEqual(order['folder']['id'], 'fixture')
+                self.assertIsNone(order['choice'])
+                self.assertEqual(order['declarations'], {})
+                self.assertEqual(order['brief'], '')
+                delivery = deepcopy(previous)
+                new = asset('addition', role, 'purple')
+                delivery['assets'].append(new)
+                delivery_id = str(uuid4())
+                ref = new['file']
+                request = {'format': current.REQUEST, 'record': delivery, 'expected': record_hash,
+                           'files': [{'path': ref['file'], 'source': delivery_id + '--1.png',
+                                      'sha256': ref['sha256'], 'bytes': ref['bytes']}]}
+                manifest = {'format': contract.FORMAT, 'repository': contract.REPOSITORY,
+                            'delivery_id': delivery_id, 'request': request,
+                            **{key: order[key] for key in ('request_id', 'puzzle_id', 'phase', 'source')}}
+                accepted = contract.envelope(current.encoded(manifest), delivery_id + '.json', order)
+                contract.delta(order, accepted['request'], previous)
+                with patch.dict(delivery, {'assets': [a for a in delivery['assets'] if a['id'] != 'existing']}):
+                    with self.assertRaisesRegex(ValueError, 'bestehende Variante entfernen'):
+                        contract.delta(order, request, previous)
+                with patch.dict(delivery, {'decisions': [] if role == 'motif' else [{'scope': 'reveal'}]}):
+                    with self.assertRaisesRegex(ValueError, 'Recorddelta'):
+                        contract.delta(order, request, previous)
+
+                if role == 'reveal':
+                    copied = self.loopback_probe('inbox-resume', 'continue')
+                    followup = Inbox(self.service).data['orders'][job]
+                    self.assertEqual(copied, followup['prompt'])
+                    self.assertEqual(followup['phase'], 'motif')
+                    self.assertEqual(followup['choice']['id'], 'one')
+                    self.assertEqual(followup['choice']['decision']['scope'], 'reveal')
+                    self.assertIn('Kontur für die Motivvorlage erhalten', followup['brief'])
+                    self.assertEqual(self.loopback_probe('inbox-resume', 'resume'), copied)
+                    self.assertEqual(Inbox(self.service).data['orders'][job], followup)
 
     def test_root_change_draft_identity_and_legacy_operation(self):
         self.prepare_service()
@@ -165,19 +257,21 @@ class InboxTests(unittest.TestCase):
             '_record': record, '_projection': {'record': {'sha256': 'c' * 64}}})
         self.service.detail = Mock(return_value={'facts': {'candidates': {
             'one': {'missing': [], 'findings': []}, 'grid': {'missing': [], 'findings': []}}}})
-        for state, action, target, role in [('reveal_review', 'assessment', 'one', 'reveal'),
+        for state, action, target, role in [('reveal_review', 'resume', 'one', 'reveal'),
+                ('reveal_review', 'assessment', 'one', 'reveal'),
                 ('reveal_review', 'continue', 'one', 'motif'), ('raster_review', 'continue', 'grid', 'background'),
                 ('background_review', 'rework', 'one', 'reveal')]:
             record['state'] = state
             record['rasters'] = [{'id': 'grid'}]
             record['selected']['reveal'] = 'one' if state in ('raster_review', 'background_review') else None
-            body.update(action=action, candidate=target)
+            body.update(action=action, candidate=target, findings='{"local-draft": {}}' if action == 'resume' else '{}')
             body['inputs']['feedback'] = 'Kontur ändern' if action == 'rework' else ''
             self.inbox.action('start', body)
             order = self.inbox.data['orders']['pz-current']
             self.assertEqual(order['phase'], role)
             self.assertEqual(order['child'], 'pz-current')
-            self.assertEqual(order['choice']['id'] if order['choice'] else order['target'], target)
+            self.assertEqual(order['choice']['id'] if order['choice'] else order['target'],
+                             '' if action == 'resume' else target)
             body['expected'] = order['request_id']
 
     def test_only_exact_native_attachment_can_enter_first_reveal(self):
