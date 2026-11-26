@@ -311,9 +311,10 @@ Farbzahl oder Spielstand; fehlende Informationen werden nicht erfunden.
 
 ## SD · Aktuelle Quelle der Schwierigkeit
 
-Quelle, Priorität historischer Schätzung und aktueller Rating-Sidecars,
-Methodenversionen und Aussagegrenzen stehen in SD_CATALOG und SD2_INTEGRATION;
-die exakte Projektion steht in RI-ONE. Fehlende zulässige Werte sind von ungültigen
+Die aktive Bewertung im Rätselrecord, die Rolle historischer Schätzungen,
+Methodenversionen und Aussagegrenzen stehen in [SD-Catalog](../difficulty/SD_CATALOG.md)
+und [SD2-Integration](../difficulty/SD2_INTEGRATION.md). Die exakte Projektion
+steht in RI-ONE. Fehlende zulässige Werte sind von ungültigen
 vorhandenen Metadaten zu unterscheiden. Die Oberfläche liest validierte Stufen;
 sie berechnet keine Schwierigkeit aus Größe, Farbe oder Spielstand und startet
 keinen Solver. Ein Methodenwechsel oder neues Rätsel bewertet Altwerte nicht
@@ -438,11 +439,12 @@ Accessibility-Umbau, keine Änderung der bestehenden Fokus-/Öffnungsbedienung.
 
 ## KE-D06 · Minimaler Metadatenvertrag
 
-Writer, Loader und Validator teilen die exakten Registry-/Runtimeverträge aus
+Writer, Loader und Validator folgen dem Einzelrecord- und Runtimevertrag aus
 [RI-ONE](../production/PUZZLE_INTEGRATION_SINGLE_PATH.md). Die Runtime
 enthält nur die dort zugelassenen typisierten Katalogmetadaten. Produktions-
 objekte, Freitexte, Motiverklärungen, Quellen, Proofs oder Pakete gelangen nicht
-in den Spieler. Hinzugefügt-Sidecar und Sortierung gehören zu CATALOG_SORTING.
+in den Spieler. Das Feld `added` im Einzelrecord und die Sortierung beschreibt
+[CATALOG_SORTING](CATALOG_SORTING.md).
 
 Ältere Runtimeformate behalten ausschließlich die reine
 [Spieler-Lesekompatibilität](../production/PUZZLE_INTEGRATION_SINGLE_PATH.md#22-spieler-lesekompatibilität).

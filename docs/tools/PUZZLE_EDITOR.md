@@ -473,8 +473,9 @@ Token und sitzungseigenen bereits geprüften Uploadschlüsseln.
 | `category_delete` | `op,id` und optional `reassign_to`; eine belegte Kategorie verlangt die vollständige Neuzuordnung auf eine andere vorhandene Kategorie. Ohne Belegung darf `reassign_to` fehlen oder null sein. |
 
 Namen, IDs, Zuordnungen und Reihenfolge werden nach jeder einzelnen Operation
-gegen den [Kategorienvertrag](../game/CATEGORIES.md) und den aktuellen Inhaltsindex
-geprüft. Die CLI akzeptiert bei `id=null` eine Liste mit höchstens 10.000
+gegen den [Kategorienvertrag](../game/CATEGORIES.md) und den Bestandszustand des
+Plans geprüft. Der Plan bindet die Runtime v9 und die betroffenen Einzelrecords.
+Die CLI akzeptiert bei `id=null` eine Liste mit höchstens 10.000
 Operationen; die Metadaten-Fach-API nimmt dieselbe Operationsliste direkt an.
 Eine leere Liste ist ein No-op. Die HTTP-Route
 beschränkt denselben Fall auf genau eine `category_*`-Operation. Bei `id=null`

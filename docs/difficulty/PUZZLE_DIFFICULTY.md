@@ -190,7 +190,7 @@ Motivbegründungen, Proofs oder Produktionsunterlagen.
 
 Unbekannte Methoden dürfen nicht als bekannte interpretiert werden. `null` in
 einer dafür zugelassenen Projektion bedeutet „Nicht eingestuft“, niemals 0 oder 5.
-Das ist kein Fallback für eine fehlende oder defekte heute erforderliche Ratingdatei.
+Ein fehlendes oder ungültiges Pflichtfeld `difficulty` im Rätselrecord ist ein Fehler.
 Reine Neubewertung verändert keine Definition, ID, Slot, Rätselrevision, Bilder,
 Kategorie, Added-Daten, historischen Freigaben oder Saves.
 

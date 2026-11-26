@@ -3,7 +3,7 @@
 ## Geltung und Zuständigkeit
 
 Dieser Vertrag besitzt Sortiersemantik, die unabhängige Sortierpräferenz sowie
-Bedeutung, Herkunft und Sidecar-/Planformate von „Hinzugefügt“. Er bewertet keine
+Bedeutung, Herkunft und Record-/Planformate von „Hinzugefügt“. Er bewertet keine
 Rätsel neu und verändert keine Definitionen oder bestehenden Rätselsaves.
 Die Regeln im aktuellen Git-Stand sind vom Liefer- und Abnahmestand im Issue/PR
 zu unterscheiden.
@@ -193,15 +193,15 @@ nicht eine erfundene lückenlose Datumsreihe.
 
 ## KU-B-D06 · Gemeinsame Versionierung und Transaktionen
 
-Hinzugefügt-Daten erhalten eine eigene autoritative, ID-gebundene Katalogquelle
-außerhalb der historischen Produktions-/Integrationsbindungen. Aktuelle Werte
-werden direkt gelesen; ihre historischen Herkunftsangaben verpflichten nicht
-zum erneuten Öffnen früherer Produktionspakete oder Nachtragsberichte.
+Der Einzelrecord führt die autoritativen Hinzugefügt-Daten je registrierter ID
+im Feld `added`. Der aktuelle Zugriff liest die Werte und ihre historische
+Herkunft unmittelbar aus dem Record. Frühere Produktionspakete und
+Nachtragsberichte sind dabei keine Pflichtquellen.
 Die Runtime erhält nur die minimale spoilerfreie Datumsprojektion neben den
 bestehenden Katalogangaben. Schwierigkeiten und deren Quellenpriorität bleiben
 inhaltlich unverändert; keine neuen Bewertungsfelder oder Methoden.
 
-Konkrete Sidecar-/Plan-/Präferenzformate stehen unter KU-B-P01.
+Konkrete Record-/Plan-/Präferenzformate stehen unter KU-B-P01.
 Aktuelle Runtimeprojektion und reine Spieler-Lesekompatibilität stehen in
 [RI-ONE](../production/PUZZLE_INTEGRATION_SINGLE_PATH.md), aktuelle Metadatenjournale in
 [SD-Catalog](../difficulty/SD_CATALOG.md#aktuelle-katalogjournale).
@@ -228,7 +228,7 @@ Produktionscleanup entfernt keine noch maßgeblichen Datumsbelege.
 ## KU-B-P01 · Verbindliche Implementierungsverträge
 
 Die folgenden exakten Formate konkretisieren D03–D06. Sie sind die
-Fachautorität für Hinzugefügt-Sidecars, Nachtragspläne und Sortierpräferenz.
+Fachautorität für Hinzugefügt-Daten im Einzelrecord, Nachtragspläne und Sortierpräferenz.
 
 ### Autoritative Hinzugefügt-Daten und Herkunft
 

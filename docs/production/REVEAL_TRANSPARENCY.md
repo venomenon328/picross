@@ -57,12 +57,12 @@ und deaktivierten Systemfonts. Pillow schreibt RGBA8 ohne Metadaten, mit
 Kompressionsstufe 9 und ohne Encoderoptimierung. Die Obergrenze je Datei
 beträgt 256 KiB. Änderungen an diesem Verfahren benötigen eine neue Generatorversion.
 
-Die Reveal-Source v6 führt das technische Feld
-`catalog={generator,source_sha256,source_width,source_height,profiles}`.
+Im Einzelrecord enthält `reveal.catalog` genau
+`generator,source_width,source_height,profiles`.
 Die zwei geordneten Einträge binden jeweils `profile,asset,width,height`.
-Der Hash gehört zum Original in `current.asset`, der Assetref zu den
-tatsächlichen PNG-Bytes. Runtime v9 projiziert die Maße, den Quellhash und
-dieselben Profile mit spielrelativen Pfaden nach `catalog_reveal`.
+Die Assetrefs der Profile binden die PNG-Bytes. Runtime v9 projiziert die Maße,
+den Hash aus `reveal.asset.sha256` und dieselben Profile mit spielrelativen
+Pfaden nach `catalog_reveal`.
 
 ## 3. Reine Bildrevision: Identität und historische Bindungen
 
@@ -98,7 +98,7 @@ Raster-, Reveal-, Hintergrund- und Metadatenpflege bleiben getrennte Operationen
 
 Zulässige vorbereitete PNGs und begrenzte lokale SVGs werden bytegleich importiert;
 variable Maße und Seitenverhältnisse sind erlaubt. PNG↔SVG wechselt den
-verwalteten technischen Pfad samt Source/Notice/Runtime und entfernt nur die
+verwalteten Pfad in Einzelrecord, Notice und Runtime und entfernt nur die
 eigene verdrängte Live-Datei im gemeinsamen Journal. Bestehende ursprüngliche
 Produktions-/Definitionsbelege dürfen keine neue Aufbewahrungspflicht begründen;
 der aktuelle Stand folgt [PW-B](../tools/PW_B_CONTRACT.md).

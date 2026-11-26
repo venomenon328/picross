@@ -25,14 +25,12 @@ Lesesemantik; sie sind kein zusätzlicher aktueller Produktionsweg. Frühere
 Offline-Sheet-Sitzungen und UI-Aufträge sind nur historische Herkunft nach §7.3.
 Geschlossene Felder und Prüfgrenzen nicht zwischen Generationen übertragen.
 
-Der isolierte Spielerimport konsumiert auch kompakte Hintergrund-v6-Quellen
-ohne `notice` oder `authority` im `current`. Vorhandene historische TXT-Dateien
-am festen Hintergrundstamm bleiben unverändert und werden im Importinventar
-mit echten Bytes/Hashes gebunden. Ohne vorhandene TXT-Datei ist `notice=null`;
-Import und Mainvergleich erzeugen weder Ersatztext noch Herkunftspflichten.
-Eine fehlende PE-EDIT2-Hintergrund-TXT ist auch beim Produktionsabschluss kein
-Fehler. Vorhandene Bytes und tatsächliche Abwesenheit bytegenau gegen Main
-vergleichen. Ältere Quellen behalten ihre verpflichtenden Notice-Refs.
+Der isolierte Spielerimport gleicht `background` aus den Einzelrecords mit
+der Runtime v9 ab. Bei `selected` bindet er das PNG und eine gegebenenfalls
+vorhandene TXT-Datei am festen Hintergrundstamm mit ihren tatsächlichen Bytes
+und Hashes im Importinventar. Fehlt die TXT-Datei, enthält das Inventar
+`notice=null`. Der Produktionsabschluss prüft vorhandene Bytes und tatsächliche
+Abwesenheit gegen den bestätigten Mainstand.
 
 ## Aktuelle Ergebnisform
 
@@ -123,12 +121,13 @@ Fertigimport ergänzt `picross-prepared-background-png2304x768-v1`: exakt
 die zulässigen PNG-Farbtypen `0|2|3|4|6` mit höchstens 8 Bit je Kanal,
 einschließlich erlaubtem tRNS und Interlacing. Exakt validierte
 PNG-Geometrie bestimmt eindeutig die Fertigimport-ID. Bytes bleiben unverändert.
-RI-Eingang/aktive Quellen/Registry/Runtime und Editorrequest behalten ihre
-Feldformen; kein Profilfeld in Assetrefs, keine Save-/Bildrevisionsmigration.
+Die Profilwahl erfordert kein zusätzliches Profilfeld in Assetrefs. Aktuelle
+Bestandsfelder und Runtimeprojektion definiert [RI-ONE](PUZZLE_INTEGRATION_SINGLE_PATH.md).
 
 Capability v2 enthält exakt `format,runtime_format,profile_ids,enabled`:
 `format=picross-runtime-background-capability-v2`,
-`runtime_format=picross-runtime-registry-v8`, boolesches enabled und exakt
+`runtime_format=picross-runtime-registry-v8` als Kennung des Capability-Vertrags,
+boolesches enabled und exakt
 `profile_ids=[picross-background-png2304-v1,picross-background-png2304x768-v1]`
 in dieser Reihenfolge. V1 bleibt ausschließlich die 4:1-Zusage aus dem alten
 Vertrag. 2304×768 zusammen mit v1 scheitert an Writer-, Import- und Runtimegrenzen.

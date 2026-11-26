@@ -128,7 +128,7 @@ Gitpfade über die dafür vorgesehenen Gitbefehle auflösen.
 Das Profil stellt die tatsächlichen Abhängigkeiten bereit:
 
 - aktuelle Pflichtquellen und benötigte Werkzeug-/Methodenressourcen;
-- Arbeitsindex, Kategorien, maßgebliche Registry und aktuelle Jobdateien;
+- Arbeitsindex, Kategorien, Runtimeprojektion und aktuelle Jobdateien;
 - die konkret gebundenen aktiven Repositoryreferenzen;
 - für Integration zusätzlich gemeinsame Registrierungs-/Runtime-Metadaten,
   Capabilitydaten und die tatsächlich betroffenen Produktziele.

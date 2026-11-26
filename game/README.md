@@ -175,10 +175,11 @@ Im Browser muss der Schreibvorgang bestätigt sein, bevor der Tab geschlossen wi
 
 Karten zeigen „Neu“, „Begonnen“ (auch mit ausschließlich Redohistorie) oder „Gelöst“. Begonnene Vorschauen zeigen nur eigene Füllungen, ohne Korrekturen; Name und Motivbild erscheinen erst nach gültigem Abschluss. Ein leerer automatisch angelegter Save bleibt „Neu“. Reset und Backupaktionen gehören zur jeweiligen Karte und verlangen weiterhin Bestätigung. Ein gültiger leerer Bestand und ein Katalogladefehler haben unterschiedliche Anzeigen. Kategorienänderungen verändern keine Rätseldefinition, Revision oder Spielstände.
 
-Der reguläre Spielbestand folgt `content/registry.json` und enthält ausschließlich
-freigegebene Workflow-Inhalte, aktuell elf Rätsel. Weitere Inhalte werden über den
-[ZA-1-Adapter](../docs/production/ZA1_ADAPTER.md) registriert. Historische Prototypen F-01 bis
-F-09 sind seit #114 nicht mehr Bestandteil des Spielerangebots oder Exports.
+Das Spiel liest den regulären Bestand aus der erzeugten v9-Projektion
+`game/data/registry.json`. Für jedes registrierte Rätsel ist
+`content/puzzles/<id>.json` der führende Datensatz. Neue Rätsel werden über den
+[ZA-1-Adapter](../docs/production/ZA1_ADAPTER.md) registriert. Historische Prototypen
+F-01 bis F-09 sind seit #114 nicht mehr Bestandteil des Spielerangebots oder Exports.
 
 Das reguläre Projekt liegt unter `game/`. Sidebar, Vollsicht, Stift-/Atlasdarstellung
 und Save/Recovery sind integriert. Dies ist eine unsignierte Entwicklungsfassung,

@@ -153,7 +153,9 @@ UTC-Zeit `YYYY-MM-DDTHH:MM:SSZ`.
 | v1 | `selection,source_commit,method_hash,snapshot,entries,distribution` | keine / kein `sources` |
 | v2 | v1 + `sources` | `previous_rating_revision` / 70003 |
 | v3 | v2 | `previous_rating_revision` / 80003 |
-| v4–v6 | v2 + `method` | `previous_rating_revision,assessment` / 80004 |
+| v4 und v5 (historisch) | v2 + `method` | `previous_rating_revision,assessment` / 80004 |
+| v7 (historisch) | v2 + `method` | `previous_rating_revision,assessment` / 110005 |
+| `picross-puzzle-difficulty-report-v1` | v2 + `method` | `previous_rating_revision,assessment,other_fields_sha256` / 110005 |
 
 Im aktuellen Bericht bindet `snapshot` die Kategorien und die Runtime. `sources` enthält zusätzlich die gewählten Records, ihre Definitionen und die aktive Methode. `previous_record_hash` bindet die vollständigen kanonischen Vorgängerbytes. Die Zeile enthält auch den Hash der übrigen Recordfelder, damit eine Wiederholung zwischen übernommener Bewertung und späterer fremder Pflege unterscheiden kann.
 
@@ -173,17 +175,20 @@ Dateinamen auf SHA-256 oder erwartete Abwesenheit null ab. Die aktuelle
 Quellenmenge ist in SD-Catalog definiert; frühere Quelleninventare werden nicht
 stillschweigend vervollständigt.
 
-Pro Bericht gilt genau eine Zielmethode. V1–v3 bedeuten 0.3; v4–v6 führen sie
-explizit. `old` darf alle vier unterstützten Projektionsmethoden oder null
-enthalten; `proposed` ausschließlich die Zielmethode. `assessment` ist bei
+Pro Bericht gilt genau eine Zielmethode. Historische Katalogberichte v1–v3
+verwenden 0.3. Historische Katalogberichte v4, v5 und v7 sowie das aktuelle
+Format führen die Methode explizit. `old` darf alle vier unterstützten
+Projektionsmethoden oder null enthalten. `proposed` verwendet die Zielmethode.
+`assessment` ist bei
 rated 0.4 exakt das B-Assessment, sonst null. Übernahme bindet es zusätzlich
 an das Checked-Ergebnis. Markdown nennt Alt-/Neumethode und Teilwerte.
 `distribution` enthält ausschließlich gezählte Alt-/Vorschlagswerte
 `L1,L2,L3,L4,L5,unrated`, keine Kalibrierung.
 
-`validate_report` und Markdown lesen v1–v6. Aktuelle Vorschau schreibt v6;
-aktuelle Adoption verlangt v6 und einen frisch passenden aktuellen Quellenstand.
-Lesbarkeit historischer Berichte ist keine heutige Übernahmeberechtigung.
+`validate_report` und Markdown lesen das aktuelle Format und die unterstützten
+historischen Katalogberichte v1–v5 und v7. Vorschau und Adoption verwenden
+`picross-puzzle-difficulty-report-v1`. Adoption verlangt einen frisch passenden
+Quellenstand.
 
 ### Difficultyprojektion
 
@@ -192,11 +197,10 @@ plausible_range,r4_required`. 0.3/0.4 verlangen `instrumented`, `medium`,
 L1…L5, `[level,level]` und bei notwendigem R4 L5. Keine Scores, Profile oder
 Freitexte gelangen in die Runtime. `null` bedeutet „Nicht eingestuft“.
 
-Der Godot-Reader liest Runtime v2–v8 unter den jeweiligen geschlossenen
-Feldmengen: v2 ohne Difficulty, v3/v4 mit Methoden bis 0.3, v5–v8 zusätzlich
-0.4. Der **aktuelle Writer** projiziert ausschließlich Runtime v8; seine
-übrigen Inhalts-/Bildfelder gehören zu RI/P1. Historische Runtime-lesbarkeit
-reaktiviert keine alten Writer oder Journale.
+Der Godot-Reader liest Runtime v2–v9 unter den jeweiligen geschlossenen
+Feldmengen. V2 enthält keine Difficulty, v3/v4 unterstützen Methoden bis 0.3,
+v5–v9 zusätzlich 0.4. Der aktuelle Writer projiziert ausschließlich Runtime v9.
+Die übrigen Inhalts- und Bildfelder definiert [RI-ONE](../production/PUZZLE_INTEGRATION_SINGLE_PATH.md).
 
 ## C-V01-04 · Explizite Aktivierung
 

@@ -24,7 +24,7 @@ erfüllt das Ziel nicht.
 Der freigegebene Umfang umfasst gemeinsam:
 
 - den aktuellen Eingang und Export/Übernahme;
-- den Inhaltsindex und die direkt benötigten aktuellen Quellen;
+- den führenden Einzelrecord und die direkt benötigten aktuellen Quellen;
 - Erstregistrierung, Wiederholung, aktuelle Recovery und Abschluss;
 - die einmalige Überführung integrierter Bestandsdaten und ihre direkten Leser;
 - die zugehörigen Produktionsaufträge, Normtexte und gezielten Tests.
@@ -90,7 +90,7 @@ Produktionsfreitexte, Freigaben oder zusätzlichen Herkunftsfelder.
 | Hintergrundasset | Nur bei `selected` ein Ref `file,bytes,sha256`, mit `file=art/backgrounds/<id>.png`; bei `none` und `standard` null. Bildgrenzen und Capability gehören ausschließlich zum [Hintergrundvertrag](PUZZLE_BACKGROUNDS.md#hg31--zwei-geschlossene-bildprofile). |
 | Grenzen | Höchstens 256 Kategorien, 10.000 Einträge und 16 MiB Dateibytes; doppelte Schlüssel, Identitäten und ungültige Referenzen sind Fehler. |
 
-`mode` bleibt ausdrücklich in Inhaltsindex und Integrationsinput und ist kein
+`mode` bleibt ausdrücklich im Einzelrecord und im Integrationsinput und ist kein
 zusätzliches Runtimefeld. Der Loader unterscheidet einen ungültigen Katalog von
 einem gültigen leeren Katalog; unbekannte Zuordnungen entfernen keine Rätsel still.
 
