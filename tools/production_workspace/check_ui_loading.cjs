@@ -164,6 +164,45 @@ const run = code => vm.runInContext(code, context);
     reload("chooseMotif('pz-zweiter')");assert.equal(reload('selectedId()'),'pz-zweiter');
     reload("chooseMotif('pz-fuchs')");assert.equal(get('orderText').value,saved);
     assert.equal(descendants(get('view')).filter(e=>e.id==='copyOrder').length,1);
+    let releasePoll;
+    reloaded.fetch=()=>new Promise(resolve=>{releasePoll=resolve;});
+    const late=reload('pollInbox()');
+    reloaded.fetch=context.fetch;reloaded.confirm=()=>true;
+    await get('receiptCancel').onclick();
+    assert.equal(reload('draft.brief'),'Fuchs','restore the editable briefing without browser storage');
+    releasePoll(new Response(JSON.stringify(reloaded.state)));
+    await late;
+    assert.equal(reload('currentOrder()'),undefined,'a pre-cancel status response cannot restore the receipt');
+    get('executor').value='Codex';get('executor').onchange();
+    assert.match(get('orderText').value,/tatsächlichen Korrekturverbrauch klären/);
+    assert.equal(starts,2);
+    get('executor').value='ChatGPT';get('executor').onchange();
+    await get('copyOrder').onclick();
+    assert.equal(reload('selectedId()'),first);
+    assert.notEqual(reload('currentOrder().request_id'),originalId);
+    assert.equal(copied,get('orderText').value);
+    const expired=await fetch(origin+'/api/inbox/cancel',{method:'POST',headers:{
+      Origin:origin,'X-Workspace-Session':token,'Content-Type':'application/json'
+    },body:JSON.stringify({puzzle_id:first,request_id:originalId})});
+    assert(!expired.ok,'the old binding cannot cancel the new receipt');
+    const live=reload('currentOrder()');
+    reloaded.done={...live,result:{head:'b'.repeat(40)},step:'done'};
+    reloaded.remote={remote_confirmed:true,jobs:[{id:'row',source:'remote',puzzle_id:first,commit:'b'.repeat(40)}],
+      motifs:[{puzzle_id:first,current_job:'row'}]};
+    assert.equal(reload('resultJob(remote,done).id'),'row');
+    assert.equal(reload("resultJob(remote,{...done,puzzle_id:'pz-fremd'})"),undefined);
+    assert.equal(reload("resultJob(remote,{...done,result:{head:'c'.repeat(40)}})"),undefined);
+    assert.equal(reload('resultJob({...remote,remote_confirmed:false},done)'),null);
+    reloaded.fetch=()=>new Promise(resolve=>{releasePoll=resolve;});
+    reload('showInbox({...inboxState,orders:[done]})');
+    reload("newDraft();remember('brief','Ungesendeter Motivtext')");
+    const kept=reload('generation');
+    releasePoll(new Response(JSON.stringify(reloaded.remote)));
+    await delay(20);
+    assert.equal(reload('generation'),kept);
+    assert.equal(reload('intent.brief'),'Ungesendeter Motivtext');
+    reload("listing.completion={confirmed:true,completed_ids:[done.puzzle_id]}");
+    assert.equal(reload('navigationRows()[0].remainder'),true);
     console.log(JSON.stringify(copied));return;
   }
   await until(()=>run('listing!==null'));

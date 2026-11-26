@@ -7,7 +7,7 @@ history.replaceState(null,'',location.pathname);
 let listing=null,pending=null,generation=0,controller=null,urls=[],active=null;
 let detail=null,intent={},draft=null,drafts=[];
 let inboxState=null, folderDirty=false, starting=false;
-let localSelection=null, inboxEpoch=0, viewEdited=false, navSignature=null;
+let localSelection=null, inboxEpoch=0, viewEdited=0, navSignature=null;
 let lastSelection='';
 try{lastSelection=sessionStorage.getItem('pw-selection')||'';}catch{}
 function rememberSelection(id){
@@ -117,7 +117,7 @@ function updatePrompt(){
  }
 }
 function remember(key,value){
- viewEdited=true;
+ viewEdited++;
  intent[key]=value;
  if(draft){draft[key]=value;saveDrafts();}
  updatePrompt();
@@ -250,7 +250,7 @@ function workflow(view,value){
  const motifReview=value?.facts.candidates&&value.facts.state==='motif_review';
  const selectionHint='Die gewünschte Variante auf der Bildkarte wählen.';
  section.append(node('h3',PW.closing(value,intent)?(value.facts.state==='registered'?'Git-Abschluss fortsetzen':'Schlussauswahl abnehmen & integrieren'):value?.facts.next_step||'Motiv beschreiben'));
- if(!value)field(section,'Was soll dein Rätsel zeigen?','brief','Zum Beispiel eine reife Erdbeere');
+ if(!value)field(section,'Was soll dein Rätsel zeigen?','brief','Zum Beispiel eine reife Erdbeere').id='motifBrief';
  if(order===1)field(section,'Zusätzliche Motivhinweise (optional)','notes','Welche Details, Perspektive oder Stimmung sind dir wichtig?');
  if(!value){
   const label=node('label','Referenzbild (optional)','reference'),input=node('input');input.type='file';input.accept='image/png,image/jpeg';
@@ -407,7 +407,7 @@ function orderControls(view,panel){
     order=value.orders.find(o=>o.puzzle_id===value.started);
     if(!order||order.result)throw Error('Auftragsstatus hat sich geändert. Bitte den aktuellen Stand prüfen.');
     if(draft)chooseMotif(order.puzzle_id);
-    else{viewEdited=false;updatePrompt();}
+    else{viewEdited=0;updatePrompt();}
     $('copyOrder').focus();
    }catch(exc){if(epoch===generation)status.textContent=exc.message;return;}
    finally{starting=false;form.inert=false;copy.disabled=false;if(currentOrder()&&$('copyOrder'))updatePrompt();}
@@ -424,7 +424,7 @@ function orderControls(view,panel){
  actions.append(copy,status);panel.append(receipt,execution,destination,actions,preview,secondary);view.append(panel);updatePrompt();
 }
 function choose(id,kind,button){
- viewEdited=true;
+ viewEdited++;
  if(intent.action==='raster_diagnosis'){
   const mode=$('nextActionMode');mode.value='continue';mode.onchange();
  }
@@ -437,9 +437,9 @@ function choose(id,kind,button){
 }
 function newDraft(id){
  const mapped=id&&inboxState?.drafts?.[id];
- if(mapped&&orderById(mapped)){chooseMotif(mapped);return;}
  rememberSelection('');dispose();active=null;detail=null;$('versions').hidden=true;$('motifStatus').textContent='Lokaler Entwurf';
  draft=drafts.find(d=>d.id===id)||{id:crypto.randomUUID(),brief:''};
+ if(mapped&&orderById(mapped))draft={...draft,id:crypto.randomUUID()};
  if(!drafts.includes(draft)){drafts.push(draft);drafts=drafts.slice(-20);saveDrafts();}
  intent={brief:draft.brief,notes:draft.notes||'',grid:{...draft.grid},inputImage:draft.inputImage,reference:draft.reference};
  $('view').replaceChildren(node('h2','Neues Motiv'));progress($('view'),null);workflow($('view'),null);renderDrafts();
@@ -447,7 +447,7 @@ function newDraft(id){
 }
 function renderDrafts(){
  const list=$('draftList');list.replaceChildren();if(!drafts.length)return;
- const label=node('label','Gespeicherten Motivtext öffnen'),select=node('select');
+ const label=node('label','Gespeicherten Motivtext als Entwurf öffnen'),select=node('select');
  const empty=node('option','Motivtext wählen …');empty.value='';select.append(empty);
  for(const d of drafts){const option=node('option',(d.brief.trim()||'Unbenannter Motivtext').slice(0,60));option.value=d.id;select.append(option);}
  select.value=draft?.id||'';select.onchange=()=>{if(select.value)newDraft(select.value);};label.append(select);list.append(label);
@@ -489,7 +489,7 @@ function drainImages(){
  }
 }
 function imageRequest(path,signal){return new Promise((resolve,reject)=>{imageQueue.push({path,signal,resolve,reject});drainImages();});}
-function dispose(){localSelection=null;viewEdited=false;closeRemoval();generation++;controller?.abort();controller=new AbortController();for(const url of urls)URL.revokeObjectURL(url);urls=[];assetLoads=new Map();readyImages=new Set();$('large').close();}
+function dispose(){localSelection=null;viewEdited=0;closeRemoval();generation++;controller?.abort();controller=new AbortController();for(const url of urls)URL.revokeObjectURL(url);urls=[];assetLoads=new Map();readyImages=new Set();$('large').close();}
 function sourceStatus(value){
  const age=value.synced_at?new Date(value.synced_at).toLocaleString('de-DE'):'unbekannt';
  const source=value.mode==='local'?'Nur lokale Gitstände · Remote-Sicherung nicht bestätigt':!value.remote_confirmed?['Remote nicht aktuell bestätigt','letzter Cache: '+age,value.sync_error].filter(Boolean).join(' · '):'Remote zuletzt geladen: '+age;
@@ -511,6 +511,7 @@ function chooseMotif(puzzleId){
  const motif=listing?.motifs?.find(m=>m.puzzle_id===puzzleId),order=orderById(puzzleId);
  if(!motif&&!order)return;
  rememberSelection(puzzleId);$('jobs').value=puzzleId;
+ $('jobs').title=$('jobs').selectedOptions?.[0]?.title||motif?.label||orderTitle(order);
  if(motif?.current_job)return open(motif.current_job);
  dispose();active=null;localSelection=puzzleId;draft=null;detail=null;intent={};remoteExplicit=false;renderDrafts();
  const view=$('view');view.replaceChildren(node('h2',motif?.title||orderTitle(order)));
@@ -519,22 +520,28 @@ function chooseMotif(puzzleId){
   view.append(node('p','Aktuelle Übergabe nicht eindeutig. Bitte eine Version wählen.','validation'),node('p',motif.notes.join(' '),'hint'));
  }else{
   $('versions').hidden=true;setText($('motifStatus'),orderStatus(order));
-  if(order.phase==='reveal'&&!order.work_head)progress(view,null);
-  view.append(node('p',order.work_head?'Der gebundene Gitstand ist hier noch nicht geladen.':'Lokaler Empfang · kein Gitstand geladen','sourceRole'));
+  const completed=completedIn(listing,puzzleId);
+  if(!completed&&order.phase==='reveal'&&!order.work_head)progress(view,null);
+  const origin=completed?'In main abgeschlossen · lokale Nachbereitung':order.result?'Veröffentlichung bestätigt':
+   order.work_head?'Der gebundene Gitstand ist hier noch nicht geladen.':'Erster Bildauftrag · noch nicht veröffentlicht';
+  view.append(node('p',origin,'sourceRole'));
   if(order.brief)view.append(node('h3','Gebundenes Motivbriefing'),node('p',order.brief,'briefText'));
  }
- if(order){
-  const panel=node('section',undefined,'nextAction'),fields=node('div');fields.id='orderFields';panel.append(fields);orderControls(view,panel);
- }
+ if(order)receiptPanel(view);
 }
+function receiptPanel(view){
+ const panel=node('section',undefined,'nextAction'),fields=node('div');
+ fields.id='orderFields';panel.append(fields);orderControls(view,panel);
+}
+function completedIn(source,id){return source?.completion?.confirmed&&source.completion.completed_ids.includes(id);}
 function navigationRows(){
  const rows=new Map((listing?.motifs||[]).map(m=>[m.puzzle_id,{id:m.puzzle_id,label:m.label||m.title||m.puzzle_id}]));
  for(const order of inboxState?.orders||[]){
   const id=order.puzzle_id,motif=listing?.motifs?.find(m=>m.puzzle_id===id);
-  const remainder=listing?.completion?.confirmed&&listing.completion.completed_ids.includes(id);
+  const remainder=completedIn(listing,id);
   const title=motif?.title||orderTitle(order),status=orderStatus(order);
   const short=title.length>40?title.slice(0,39)+'…':title;
-  rows.set(id,{id,label:short+' – '+status,title:title+' – '+status,remainder});
+  rows.set(id,{id,label:short+' – '+(remainder?'Abschlussrest':status),title:title+' – '+status,remainder});
  }
  return [...rows.values()];
 }
@@ -554,7 +561,7 @@ function renderNavigation(){
  if(selected)select.value=selected.id;else if(draft)select.selectedIndex=-1;
  return rows;
 }
-function adopt(value){
+function adopt(value,loadedJob=null){
  const keepDraft=draft?.id,keepId=selectedId()||lastSelection;
  const completed=!keepDraft&&value.completion?.confirmed&&value.completion.completed_ids.includes(keepId);
  const notice=completed?'Die bisherige Produktion ('+keepId+') ist in main registriert. '+(value.motifs.length?'Die nächste offene Produktion ist ausgewählt.':'Die aktive Liste enthält keine offenen Produktionen. Gespeicherte Motivtexte bleiben erhalten.') : '';
@@ -566,6 +573,7 @@ function adopt(value){
   $('versions').hidden=true;$('motifStatus').textContent='';$('view').replaceChildren(node('h2','Keine offenen Produktionen'),node('p',drafts.length?'Über „Neues Motiv“ beginnen oder einen gespeicherten Motivtext ausdrücklich öffnen.':'Über „Neues Motiv“ beginnen.'));
   return;
  }
+ if(loadedJob)return open(loadedJob.id,false,loadedJob.detail);
  return chooseMotif(rows.find(r=>r.id===keepId)?.id||rows.find(r=>!r.remainder)?.id||rows[0].id);
 }
 function assetURL(id,asset,current,signal){
@@ -738,12 +746,12 @@ function technicalDetails(view,value){
  copy.onclick=async()=>{try{await navigator.clipboard.writeText(text.value);status.textContent='Übergabedaten kopiert.';}catch{text.focus();text.select();status.textContent='Bitte die markierten Übergabedaten manuell kopieren.';}};
  panel.append(copy,status,text);view.append(panel);
 }
-async function open(id,explicit=false){
+async function open(id,explicit=false,loadedDetail=null){
  dispose();draft=null;detail=null;intent={};remoteExplicit=explicit;renderDrafts();
  const current=generation,signal=controller.signal;active=listing.jobs.find(j=>j.id===id);$('jobs').value=active.puzzle_id;versionControls(currentMotif(),id);
  $('view').replaceChildren(node('p','Originalbindungen und Bilder werden geprüft …'));
  try{
-  const value=await(await request('/api/jobs/'+id,{signal})).json();if(current!==generation)return;
+  const value=loadedDetail||await(await request('/api/jobs/'+id,{signal})).json();if(current!==generation)return;
   detail=value;
   const view=$('view');view.replaceChildren(node('h2',value.title));
   view.append(node('span',({brief_ready:'Briefing bereit',reveal_review:'Abschlussbilder zur Wahl',motif_review:'Motivvorlage zur Freigabe',motif_approved:'Rasterproduktion beauftragt',raster_review:'Rasterprüfung offen',raster_ready:'Geprüfte Raster zur Wahl',background_review:'Kontextzeichnungen zur Wahl',content_ready:'Bereit zur Endabnahme',editorially_approved:'Endabnahme liegt vor',registered:'Lokal registriert'})[value.facts.state]||value.facts.state,'badge'));
@@ -786,7 +794,12 @@ async function open(id,explicit=false){
   }
   workflow(view,value);technicalDetails(view,value);removalAction(view,value);
   reconcileResult();
- }catch(exc){if(current===generation&&exc.name!=='AbortError')$('view').replaceChildren(node('h2','Arbeitsstand kann nicht geöffnet werden'),node('p',exc.message,'error'));}
+ }catch(exc){
+  if(current!==generation||exc.name==='AbortError')return;
+  detail=null;
+  const view=$('view');view.replaceChildren(node('h2',currentMotif()?.title||'Arbeitsstand kann nicht geöffnet werden'),node('p',exc.message,'error'));
+  if(currentOrder())receiptPanel(view);
+ }
 }
 function zoom(){const img=$('largeImage'),value=$('zoom').value;img.classList.toggle('zoomed',value!=='fit');if(value==='fit')img.removeAttribute('width');else img.width=img.naturalWidth*Number(value);}
 $('largeImage').onload=zoom;$('zoom').onchange=zoom;$('close').onclick=()=>$('large').close();$('jobs').onchange=()=>chooseMotif($('jobs').value);
@@ -888,7 +901,7 @@ $('refresh').onclick=async()=>{const epoch=++sourceRequest,button=$('refresh');c
 $('load').onclick=()=>{if(pending)adopt(pending);};
 function theme(value){document.documentElement.dataset.theme=value;try{localStorage.setItem('pw-theme',value);}catch{}}
 $('theme').onchange=()=>theme($('theme').value);try{$('theme').value=localStorage.getItem('pw-theme')||'system';}catch{}theme($('theme').value);
-$('view').oninput=$('view').onchange=()=>{viewEdited=true;};
+$('view').oninput=$('view').onchange=()=>{viewEdited++;};
 
 function currentOrder(){
  return orderById(selectedId());
@@ -921,7 +934,7 @@ function startBody(){
   findings:JSON.stringify(resume?{}:(intent.findings||{})),expected:currentOrder()?.request_id||inboxState?.generations?.[job]||''};
 }
 function orderTitle(order){
- return order.inputs?.brief?.trim().split('\n')[0]||order.brief?.trim().split('\n')[0]||order.puzzle_id;
+ return order?.inputs?.brief?.trim().split('\n')[0]||order?.brief?.trim().split('\n')[0]||order?.puzzle_id||'';
 }
 function orderStatus(order){
  if(order.step==='cleanup')return order.paused?'Veröffentlicht · Bereinigung offen':'Veröffentlicht · Eingang wird bereinigt';
@@ -946,13 +959,14 @@ function showOrder(order){
  const preview=$('orderPreview');preview.hidden=Boolean(order.result);
  if($('orderText').value!==order.prompt)$('orderText').value=order.prompt||'';
  setText($('executorHint'),order.result?(loaded?'Der bestätigte Gitstand ist geöffnet.':'Der bestätigte Arbeitsstand wird aus den Gitquellen geladen.'):
-  order.paused?'Prüfe die Details zur Übernahme.':'Dieser ChatGPT-Auftrag ist gebunden. Beim Kopieren erhältst du denselben Auftrag.');
+  order.paused?(['build','publish'].includes(order.step)?'Die Veröffentlichung ist bereits begonnen. Prüfe die Quelle und setze dieselbe Übernahme fort.':'Prüfe die Details zur Übernahme.'):'Der Auftrag ist für ChatGPT gespeichert. Du kannst ihn erneut kopieren.');
  $('orderSecondary').hidden=!cancel&&!retry;
  const recovery=$('receiptRetry');recovery.hidden=!retry;recovery.disabled=copy.disabled;
  setText(recovery,order.result?'Bereinigung fortsetzen':'Übernahme fortsetzen');
+ recovery.className=copy.hidden?'primary':'';
  const stop=$('receiptCancel');stop.hidden=!cancel;stop.disabled=copy.disabled;
  $('cancelHint').hidden=!cancel;
- setText($('cancelHint'),'Für geänderte Vorgaben oder einen Wechsel zu Codex zuerst die automatische Übernahme abbrechen. Vor der Fortsetzung Gitstand, externe Originale und bereits verbrauchte Korrekturen prüfen.');
+ setText($('cancelHint'),'Ein Abbruch beendet den Empfang in PW. Chat, Originale und Gitstand bleiben erhalten. Anschließend kannst du Vorgaben ändern oder zu Codex wechseln.');
 }
 let busyReceipt=null;
 function receiptBinding(order){return {request_id:order.request_id,puzzle_id:order.puzzle_id};}
@@ -960,32 +974,47 @@ async function changeReceipt(action){
  const order=currentOrder();if(!order||busyReceipt)return;
  const name=currentMotif()?.title||orderTitle(order);
  if(action==='cancel'&&!confirm('Automatische Übernahme für „'+name+'“ abbrechen? Der bisherige Auftrag wird nicht mehr angenommen. Ein laufender Chat läuft weiter. Originale und veröffentlichte Stände bleiben erhalten.'))return;
+ if(action==='cancel'&&!order.work_head&&order.draft_id)saveReceiptDraft(order,order.draft_id);
  const epoch=generation;
  busyReceipt=order.request_id;showOrder(order);
  try{
   await inboxAction(action,receiptBinding(order));
   if(epoch===generation&&action==='retry')setText($('orderStatus'),'Fortsetzung angefordert.');
+  if(epoch===generation&&action==='cancel'&&detail)$('executor').focus();
  }catch(exc){if(epoch===generation)setText($('orderStatus'),exc.message);}
  finally{busyReceipt=null;if(currentOrder()&&$('copyOrder'))showOrder(currentOrder());}
+}
+function saveReceiptDraft(order,id){
+ if(drafts.some(d=>d.id===id))return;
+ const input=order.inputs||{},grid={},notes=[input.notes];
+ for(const line of input.grid||[]){
+  const axis=line.match(/^(Breite|Höhe): (exakt|ungefähr) (\d+) Zellen\.$/);
+  const colors=line.match(/^Farbzahl: (exakt|ungefähr) (eine|\d+) Vordergrundfarben?\.$/);
+  if(axis){
+   grid[axis[1]==='Breite'?'width':'height']=axis[3];grid.sizeAccuracy=axis[2]==='exakt'?'exact':'approx';
+  }else if(colors){
+   grid.colors=colors[2]==='eine'?'1':colors[2];grid.colorAccuracy=colors[1]==='exakt'?'exact':'approx';
+  }else if(line==='Rastermodus: monochrom.'||line==='Rastermodus: farbig.')grid.mode=line.includes('monochrom')?'mono':'color';
+  else notes.push(line);
+ }
+ drafts.push({id,brief:input.brief||order.brief||'',notes:notes.filter(Boolean).join('\n'),grid,inputImage:input.reference?.name||''});
+ drafts=drafts.slice(-20);saveDrafts();
 }
 function recoverDraft(order){
  const id=order.draft_id||Object.keys(inboxState.drafts||{}).find(key=>inboxState.drafts[key]===order.puzzle_id);
  if(!id)return false;
- let saved=drafts.find(d=>d.id===id);
- if(!saved){
-  const input=order.inputs||{};
-  saved={id,brief:input.brief||order.brief||'',notes:[input.notes,...(input.grid||[])].filter(Boolean).join('\n'),
-   inputImage:input.reference?.name||''};
-  drafts.push(saved);drafts=drafts.slice(-20);saveDrafts();
- }
- newDraft(id);
+ saveReceiptDraft(order,id);
+ newDraft(id);$('motifBrief').focus();
  setText($('orderStatus'),'Übernahme beendet. Vor einem neuen Auftrag vorhandene Originale und verbrauchte Korrekturen prüfen.');
  return true;
 }
 async function inboxAction(action,body,navigate=true){
+ if(inboxEpoch%2)throw Error('Die aktuelle Empfangsaktion wird noch abgeschlossen.');
  ++inboxEpoch;
- const response=await request('/api/inbox/'+action,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
- const value=await response.json();++inboxEpoch;showInbox(value,navigate);return value;
+ try{
+  const response=await request('/api/inbox/'+action,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
+  const value=await response.json();showInbox(value,navigate);return value;
+ }finally{++inboxEpoch;}
 }
 function showInbox(value,navigate=true){
  const previous=currentOrder();
@@ -998,8 +1027,9 @@ function showInbox(value,navigate=true){
  if(!navigate)return;
  if(draft&&orderById(value.drafts?.[draft.id])&&!starting){chooseMotif(value.drafts[draft.id]);}
  else if(!selectedId()&&!draft&&rows.length&&listing)chooseMotif(rows.find(r=>r.id===lastSelection)?.id||rows[0].id);
- else if(previous&&!order&&localSelection&&!currentMotif()){
-  if(previous.result||!recoverDraft(previous))adopt(listing);
+ else if(previous&&!order&&localSelection){
+  if(currentMotif())chooseMotif(localSelection);
+  else if(previous.result||!recoverDraft(previous))adopt(listing);
  }else if(JSON.stringify(previous)!==JSON.stringify(order)){
   if($('copyOrder'))updatePrompt();
   if(!order&&currentMotif())setText($('motifStatus'),currentMotif().status);
@@ -1014,11 +1044,19 @@ function resultJob(source,order){
 }
 function reconcileResult(){
  const order=currentOrder();
- if(order?.result&&!viewEdited&&!remoteExplicit&&!draft&&(!active||detail))loadResult(order,false);
+ const background=inboxState?.orders.find(other=>other!==order&&other.step==='done'&&
+  (completedIn(listing,other.puzzle_id)||resultJob(listing,other)));
+ if(background&&!(inboxEpoch%2)){
+  inboxAction('acknowledge',receiptBinding(background)).catch(exc=>setText($('inboxMessage'),exc.message));
+ }
+ if(!order?.result||draft)return;
+ const loaded=detail&&active?.source==='remote'&&active.commit===order.result.head;
+ if(loaded?order.step==='done':!viewEdited&&!remoteExplicit&&(!active||detail))loadResult(order,false);
 }
 async function loadResult(order,explicit){
  if(loadingResult===order.request_id)return;
- const epoch=generation,stillHere=()=>currentOrder()?.request_id===order.request_id&&generation===epoch&&(explicit||!viewEdited);
+ const epoch=generation,edits=viewEdited;
+ const stillHere=()=>currentOrder()?.request_id===order.request_id&&generation===epoch&&viewEdited===edits;
  loadingResult=order.request_id;
  try{
   if(explicit&&viewEdited&&!confirm('Den veröffentlichten Stand laden und die ungesendeten Eingaben dieser Ansicht verwerfen?'))return;
@@ -1026,17 +1064,23 @@ async function loadResult(order,explicit){
   const job=resultJob(source,order);
   if(job){
    if(!detail||active?.id!==job.id||active?.commit!==job.commit){
-    listing=source;pending=null;$('load').hidden=true;$('sourceStatus').textContent=sourceStatus(source);
-    renderNavigation();await open(job.id);
+    const loaded=await(await request('/api/jobs/'+job.id)).json();
+    if(!stillHere())return;
+    if(loaded.puzzle_id!==order.puzzle_id||loaded.commit!==order.result.head)throw Error('Quellenstand inzwischen geändert. Arbeitsstand erneut laden.');
+    await adopt(source,{id:job.id,detail:loaded});
    }
    if(!detail||currentOrder()?.request_id!==order.request_id||active?.id!==job.id)return;
-  }else if(!(source.completion?.confirmed&&source.completion.completed_ids.includes(order.puzzle_id))){
+  }else if(!completedIn(source,order.puzzle_id)){
    if(explicit)await $('refresh').onclick();
    if(stillHere())setText($('orderStatus'),'Der passende Remote-Stand ist noch nicht verfügbar. Arbeitsstand erneut laden.');
    return;
   }
-  if(order.step==='done')await inboxAction('acknowledge',receiptBinding(order));
-  if(!job&&selectedId()===order.puzzle_id&&order.step==='done')adopt(source);
+  if(order.step==='done'){
+   if(!job){
+    await inboxAction('acknowledge',receiptBinding(order),false);
+    if(generation===epoch&&selectedId()===order.puzzle_id)adopt(source);
+   }else await inboxAction('acknowledge',receiptBinding(order));
+  }
  }catch(exc){if(currentOrder()?.request_id===order.request_id&&$('orderStatus'))setText($('orderStatus'),exc.message);}
  finally{if(loadingResult===order.request_id)loadingResult=null;}
 }
@@ -1050,7 +1094,7 @@ $('inboxSetup').onclick=async()=>{
 async function pollInbox(){
  try{
   const epoch=inboxEpoch,value=await (await request('/api/inbox/status')).json();
-  if(epoch===inboxEpoch){
+  if(epoch===inboxEpoch&&epoch%2===0){
    if(JSON.stringify(value)!==JSON.stringify(inboxState))showInbox(value);
    else reconcileResult();
   }

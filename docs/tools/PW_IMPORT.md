@@ -272,9 +272,26 @@ und den zugehörigen [Bildtypnormen](../production/images/README.md).
 und die gemeinsame Bildkorrektur regeln die erforderliche weitere Korrektur:
 Ein Dreierangebot wird nicht mit mangelhaften Kandidaten aufgefüllt.
 Der Import setzt diese Regeln um, ohne eine zweite Qualitätstabelle einzuführen.
-Rastervorschauen werden nicht an Revealstilregeln gemessen. Bestehende tatsächlich
-verbrauchte Budgets und nötige Budgeterklärungen werden ehrlich fortgeschrieben;
-kein heimliches Zurücksetzen und keine erfundene Erhöhung.
+Rastervorschauen werden nicht an Revealstilregeln gemessen.
+
+Bei `offer` meldet der Produzent den tatsächlichen kumulierten Verbrauch in
+`budgets.used.image_corrections`. Der zulässige Bereich reicht vom veröffentlichten
+Vorgängerwert (bei Neuanlage null) bis zum gebundenen Limit einschließlich.
+Das gilt für Reveal-, Motiv- und Hintergrundangebote sowie ihre Ergänzungen.
+Bei `correction` steigt derselbe Zähler um mindestens eine Runde bis höchstens
+zum Limit. Die Korrektur ersetzt weiterhin genau die gebundene Variante durch
+neue Originalbytes. Die Zahl der Runden ist unabhängig von der Zahl der Dateien.
+`assessment` lässt Bytes und Verbrauch unverändert. Sämtliche Limits, andere
+Zähler und Budgetentscheidungen bleiben in allen drei Absichten unverändert.
+Der Empfänger prüft den Wertebereich. Der Produzent meldet den tatsächlichen
+Verbrauch einschließlich erfolgloser interner Runden.
+
+Ein nach Phasenvertrag sicherbares Angebot mit einem gültigen Original bleibt
+auch bei ausgeschöpftem Budget eine offene Auswahl. Weitere Korrekturen brauchen
+bei ausgeschöpftem Budget eine zusätzliche gültige Befugnis. Fehlt nach einer
+erfolglosen Runde jedes lieferbare neue Original, meldet der Produzent den Stand
+als offen oder blockiert. Ein Empfang setzt weiterhin beauftragte Originale
+voraus, soweit die Absicht neue Bytes erfordert.
 
 Unqualifizierte Zwischenstände dürfen nach dem aktuellen Phasenvertrag
 gesichert und als solche sichtbar bleiben. Sie zählen nicht als fertige

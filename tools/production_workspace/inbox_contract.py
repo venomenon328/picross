@@ -218,11 +218,18 @@ def delta(order, request, previous):
                 old.keys() - new.keys() == {target}, 'Genau eine gebundene Korrektur erforderlich.')
         editable = new.keys() - old.keys()
         require(new[next(iter(editable))]['file']['sha256'] != old[target]['file']['sha256'], 'Korrektur benötigt neue Originalbytes.')
-        prior['budgets']['used']['image_corrections'] += 1
     else:
         require(intent == 'offer' and old.keys() <= new.keys(), 'Angebot darf keine bestehende Variante entfernen.')
         editable = new.keys() - old.keys()
         require(editable, 'Angebot enthält keine neue Variante.')
+    if intent in ('offer', 'correction'):
+        used = job['budgets']['used']['image_corrections']
+        previous_used = prior['budgets']['used']['image_corrections']
+        minimum = previous_used + 1 if intent == 'correction' else previous_used
+        limit = prior['budgets']['limits']['image_corrections']
+        require(type(used) is int and minimum <= used <= limit,
+                'Verbrauchte Bildkorrekturrunden liegen außerhalb des gebundenen Bereichs.')
+        prior['budgets']['used']['image_corrections'] = used
     for key in new.keys() & old.keys():
         if key in editable:
             require({k: v for k, v in new[key].items() if k != 'review'} ==
