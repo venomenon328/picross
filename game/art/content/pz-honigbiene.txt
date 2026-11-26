@@ -1,0 +1,4 @@
+author: OpenAI ImageGen (KI-generierte Illustration)
+changes: Unverändertes PNG-Original.
+source: Native Bilderzeugung in ChatGPT für Honigbiene, Schritt 1, reveal-b.
+usage_basis: Im beauftragten Produktionsschritt für picross erzeugt; keine übernommenen Fremdassets.
