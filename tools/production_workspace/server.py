@@ -42,10 +42,13 @@ class Service:
         self.plans, self.receipts = {}, {}
         self.stopping = False
         self.removal_result = None
+        self.inbox = None
 
     def begin_stop(self):
         with self.lock:
             self.stopping = True
+            if self.inbox:
+                self.inbox.stop.set()
             self.plans.clear()
 
     def acquire_operation(self):
@@ -234,7 +237,7 @@ class Service:
         ]
         offers = [offer for offer in projection['offers']
                   if not cards.get(offer['id'], {}).get('missing') and all(
-                      row['eligible'] or row.get('decision', {}) and row['decision']['action'] == 'accept'
+                      row['eligible']
                       for row in cards.get(offer['id'], {}).get('findings', []))]
         return {**projection, 'assets': assets, 'offers': offers, 'facts': facts,
                 'source': job['source'], 'commit': job['commit'],
@@ -392,15 +395,20 @@ class Handler(BaseHTTPRequestHandler):
             ap.require(hmac.compare_digest(token.encode(), service.secret.encode()), 'Sitzung fehlt oder ist ungültig. Starter erneut öffnen.')
             ap.require(not self.headers.get('Transfer-Encoding'), 'Transfer-Encoding ist nicht erlaubt.')
             removal = method == 'POST' and self.path in ('/api/removal/preview', '/api/removal/confirm')
+            inbox_action = path.path.removeprefix('/api/inbox/') if path.path.startswith('/api/inbox/') else None
+            inbox_write = method == 'POST' and inbox_action in ('configure', 'activate', 'cancel', 'retry')
             body = None
-            if removal:
+            if removal or inbox_write:
                 ap.require(origin == self.server.origin, 'Entfernung benötigt den eigenen Browserursprung.')
                 ap.require(self.headers.get_all('Content-Type') == ['application/json'] and
                            len(self.headers.get_all('Content-Length', [])) == 1,
                            'Genau ein JSON-Content-Type und Content-Length erforderlich.')
                 length = self.headers.get('Content-Length', '')
-                ap.require(length.isascii() and length.isdecimal() and 0 < int(length) <= 2048,
-                           'JSON-Anfrage muss 1–2048 Bytes enthalten.')
+                maximum = 32 * 1024 if inbox_write else 2048
+                if inbox_write and inbox_action == 'activate':
+                    maximum = 96 * 1024  # UTF-8 creative brief, grid changes and bound findings.
+                ap.require(length.isascii() and length.isdecimal() and 0 < int(length) <= maximum,
+                           'Ungültige JSON-Anfragegröße.')
                 raw = self.rfile.read(int(length))
                 ap.require(len(raw) == int(length), 'Unvollständiger Anfrageinhalt.')
                 def unique(pairs):
@@ -413,7 +421,10 @@ class Handler(BaseHTTPRequestHandler):
                     body = json.loads(raw.decode('utf-8'), object_pairs_hook=unique)
                 except (UnicodeDecodeError, json.JSONDecodeError) as exc:
                     raise InvalidInput('Gültiges UTF-8-JSON erforderlich.') from exc
-                ap.require(isinstance(body, dict) and all(isinstance(v, str) and 0 < len(v) <= 160 for v in body.values()),
+                ap.require(isinstance(body, dict) and all(
+                    isinstance(value, dict) if inbox_write and inbox_action == 'activate' and key == 'inputs'
+                    else isinstance(value, str) and (len(value) <= 4096 if inbox_write else 0 < len(value) <= 160)
+                    for key, value in body.items()),
                            'Nur kurze Textkennungen sind erlaubt.')
             else:
                 ap.require(self.headers.get('Content-Length', '0') == '0', 'Anfrageinhalt ist nicht erlaubt.')
@@ -433,6 +444,11 @@ class Handler(BaseHTTPRequestHandler):
             elif method == 'POST' and self.path == '/api/refresh':
                 service.start_refresh()
                 value = service.status()
+            elif service.inbox and inbox_write:
+                value = service.inbox.action(inbox_action, body)
+            elif service.inbox and method == 'GET' and self.path == '/api/inbox/status':
+                with service.inbox.view_lock:
+                    value = service.inbox.view
             elif removal:
                 value = service.removal_preview(body) if self.path.endswith('/preview') else service.removal_confirm(body)
             else:

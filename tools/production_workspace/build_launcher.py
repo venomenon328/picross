@@ -8,6 +8,7 @@ import zipfile
 ROOT = Path(__file__).parent
 FILES = ['__init__.py', '__main__.py', 'desktop.py', 'instance.py', 'runtime.py', 'processes.py', 'install_interlock.py',
          'presentation.py', 'repository.py', 'server.py', 'sources.py', 'current_view.py', 'motifs.py', 'deliveries.py',
+         'inbox.py', 'inbox_contract.py', 'inbox_files.py', 'inbox_writer.py',
          'ui/index.html', 'ui/workflow.js', 'ui/app.js', 'ui/style.css', 'assets/launcher.ico']
 
 

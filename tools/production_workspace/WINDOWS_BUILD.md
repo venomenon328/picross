@@ -80,10 +80,9 @@ Hashbindung. Diese Readerressourcen verwenden repo-relative Keys mit Wurzel
 zu `_internal/tools/production_workspace/`. Importierbarkeit oder Bytecode
 allein bestätigen diese Vollständigkeit nicht. Die eingefrorenen Quellen und
 Methodenidentitäten bleiben unverändert. Synthetische Fixtureproduzenten und
-Diagnoseadapter gehören nicht in den App-Payload. Die ausschließlich für den
-Produktionsakteur bestimmten Git-Worktree-, Publish- und Remote-Writer werden
-für PW und PE explizit aus der Frozen-Analyse ausgeschlossen und im PYZ-Audit
-zurückgewiesen. Die gemeinsamen Reader verwenden weiterhin `tools/work_refs.py`;
+Diagnoseadapter gehören nicht in den App-Payload. PW bindet den Git-Worktree- und Publishwriter für den Originaleingang in
+Fingerprint, PyInstaller-Analyse und PYZ-Prüfung ein. Der Remote-Controller
+bleibt außerhalb des PW-Payloads. PE schließt die Produktionswriter aus. Die gemeinsamen Reader verwenden weiterhin `tools/work_refs.py`;
 diese Quelle ist für beide Produkte im committeten Fingerprint gebunden.
 `components.json` bindet Commit,
 Fingerprint, Architektur, Komponenten und Ressourcenhashes, `inventory.json`

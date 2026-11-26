@@ -14,6 +14,12 @@ verwendete Operation abschnittsbezogen gelesen, nicht pauschal vollständig.
 Die [ursprüngliche PW-B-Paketentscheidung](https://github.com/venomenon328/picross/issues/578#issuecomment-6799208194)
 ist eine Entwicklungs-/Herkunftsquelle, keine zusätzliche Routinelektüre.
 
+Unter „Originale über Google Drive empfangen“ den privaten Ordner bestätigen,
+das neue Motiv oder die aktuelle Remoteversion öffnen und den Empfang für die
+gewählte Bildrolle starten. Der angezeigte ChatGPT-Auftrag enthält Kennung und
+Quelle. Nach der GitHub-Bestätigung den neueren Stand laden. Einen angezeigten
+Bereinigungsrest am selben Vorgang prüfen und fortsetzen.
+
 PW2-B stellt Bilder, fällige Entscheidungen und relevante Parameter vor die
 technischen Originaldetails. Bei der Hintergrundwahl zeigt die Schlussübersicht
 gewähltes Raster, Reveal und Hintergrund/none. „Endabnahme & Integration: Auftrag

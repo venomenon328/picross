@@ -16,7 +16,7 @@ DEFAULT = 'Unverändert beibehalten'
 # Only these editorial subrules have a discretionary path. Technical frame
 # and colour-pair failures still go through the independent exception checks.
 EDITORIAL = {
-    'Q-B01': ('secondary-detail',), 'Q-B02': ('illustration',), 'Q-B03': ('edge-quality',),
+    'Q-B01': ('secondary-detail',), 'Q-B02': ('illustration-detail',), 'Q-B03': ('edge-quality',),
     'Q-M01': ('secondary-detail',), 'Q-M02': ('area-use',), 'Q-M03': ('colour-role',),
     'Q-R01': ('secondary-detail',), 'Q-R02': ('shape-detail',), 'Q-R03': ('area-use',),
     'Q-R04': ('visual-distinction',), 'Q-H01': ('cell-contrast',),
@@ -109,7 +109,7 @@ def eligible(row):
 
 
 def effective(row):
-    return row['decision'] is not None and row['decision']['action'] == 'accept'
+    return eligible(row) and row['decision'] is not None and row['decision']['action'] == 'accept'
 
 
 def check_row(row, target, content, criteria):
@@ -127,7 +127,10 @@ def check_row(row, target, content, criteria):
     if d is None:
         return
     exact_keys(d, {'binding', 'action', 'treatment', 'actor', 'timestamp_utc', 'statement', 'source'})
-    require(eligible(row) and d['binding'] == binding(row) and d['action'] in ('accept', 'revoke'),
+    # Keep earlier records readable. A formerly accepted undifferentiated
+    # illustration finding stays visible and can no longer qualify a candidate.
+    historical = row['criterion'] == 'Q-B02' and row['rule'] == 'illustration'
+    require((eligible(row) or historical) and d['binding'] == binding(row) and d['action'] in ('accept', 'revoke'),
             'Unavailable or stale finding decision')
     for key in ('actor', 'statement', 'treatment'):
         string(d[key], key, 4096)

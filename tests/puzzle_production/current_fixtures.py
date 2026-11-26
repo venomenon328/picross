@@ -56,7 +56,10 @@ def make(root,*,identifier="pz-current",mode="mono",background="standard",method
     # Analyzer is a fixture producer, never called by the integration consumer.
     checked=catalog_analysis.analyze_single(root/"definition.json",root/"analysis",production_mode=mode,method=method)
     difficulty=json_file(root,"difficulty.json",current_rating.from_checked(checked))
-    stream=BytesIO();Image.new("RGBA",(width*4,height*4),(30,30,30,255)).save(stream,format="PNG")
+    image = Image.new("RGBA", (width*4,height*4), (30,30,30,255))
+    image.putpixel((0, 0), (0,0,0,0))
+    stream = BytesIO()
+    image.save(stream, format="PNG")
     asset=put(root,"reveal.png",stream.getvalue())
     notice=put(root,"notice.txt",b"Author: synthetic test. Usage basis: repository test pixels.\n")
     rights={"author":"synthetic test","usage_basis":"repository test pixels","source":"synthetic test","changes":"synthetic test"}

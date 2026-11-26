@@ -327,6 +327,16 @@ class Checked:
                 self.save_fact(binding, fact)
                 self.image_sizes[asset['id']] = (fact['width'], fact['height'])
                 missing = list(fact['missing'])
+                if asset['role'] == 'reveal' and fact['mime'] == 'image/png':
+                    from io import BytesIO
+                    from PIL import Image
+                    # The shape fact in older records predates the alpha check.
+                    # Inspect the verified original even when that fact was reused.
+                    with Image.open(BytesIO(raw)) as original:
+                        low, high = original.convert('RGBA').getchannel('A').getextrema()
+                    opaque_allowed = 'Bildgrund: ausdrücklich deckend' in j['brief'].splitlines()
+                    if high == 0 or low != 0 and not opaque_allowed:
+                        missing.append('Geforderte freie oder sichtbare Motivbereiche fehlen')
                 if not asset['rights']:
                     missing.append('Nutzungsrechte fehlen')
                 if asset['role'] == 'motif' and not (j['parameters']['proposed'] or j['parameters']['approved']):

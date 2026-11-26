@@ -25,6 +25,8 @@ IGNORED = {
     'update_diagnostic.py',  # Isolated synthetic signing adapter; never frozen.
     'helper_diagnostic.py', 'packaging/HelperDiagnostic.cs',  # Explicit, non-installing T02 adapter.
 }
+PW_WRITER_MODULES = frozenset({'tools.production_git_workspace', 'tools.production_worktree_publish',
+                               'tools.work_publish', 'tools.publish_git', 'tools.ci_growth'})
 METHOD_04 = PRODUCTION + 'sd2_method_0_4.json'
 METHOD_03 = PRODUCTION + 'difficulty_method_0_3.json'
 # Physical originals read by the normalizer, the renderer and
@@ -112,6 +114,8 @@ def selected(path, *, app=PW, method_files=None):
         raise ValueError('Unknown application identity')
     if path in {'tools/__init__.py', 'tools/app_products.py', 'tools/msi_database.py',
                 'tools/work_refs.py', '.github/workflows/pw-installer.yml'}:
+        return True
+    if path.endswith('.py') and path[:-3].replace('/', '.') in PW_WRITER_MODULES:
         return True
     for scope in (WORKSPACE, PRODUCTION):
         if path.startswith(scope):

@@ -253,7 +253,29 @@ def open_tree(base, db, leaf, commit, job, role, branch=None):
     return path
 
 
-def prepare(root, job, tools_commit, main, expected, *, integration=None, integration_head=None, originals=False, repository=REPO):
+def inbox_job_leaf(base, db, job, parent):
+    # Keep superseded drafts intact. Reuse the current detached worktree across
+    # later successful imports, even after an earlier conflict needed a new one.
+    from .production_worktree_publish import JOURNAL
+    canonical = io.safe(base, 'job-' + job)
+    if not canonical.exists():
+        return canonical.name
+    prefix = 'inbox-' + job + '.'
+    for path in (canonical, *sorted(base.glob(prefix + '*'))):
+        if path != canonical:
+            check_commit(path.name[len(prefix):])
+        path = io.safe(base, path.name)
+        owner = read_binding(path)
+        require(owner and owner['store'] == str(db) and owner['job'] == job and owner['role'] == 'job',
+                'Fremder Import-Arbeitsbaum. Vorhandene Dateien prüfen.')
+        require(not (gitdir(path) / JOURNAL).exists(), 'Offene Publikation zuerst im eigenen Arbeitsbaum klären.')
+        if git(path, 'rev-parse', 'HEAD') == parent:
+            return path.name
+    return prefix + parent
+
+
+def prepare(root, job, tools_commit, main, expected, *, integration=None, integration_head=None,
+            originals=False, repository=REPO, inbox=False):
     current.path(job)
     for oid in (tools_commit, main, expected, integration_head):
         if oid is not None:
@@ -285,7 +307,8 @@ def prepare(root, job, tools_commit, main, expected, *, integration=None, integr
         if integration_head:
             git(db, 'merge-base', '--is-ancestor', main, integration_head)
         toolbox = open_tree(base, db, 'tools-' + tools_commit, tools_commit, job, 'tools')
-        data = open_tree(base, db, 'job-' + job, expected or main, job, 'job')
+        leaf = inbox_job_leaf(base, db, job, expected or main) if inbox else 'job-' + job
+        data = open_tree(base, db, leaf, expected or main, job, 'job')
         if originals:
             from .work_publish import hydrate, bound_record
             from .production_worktree_publish import JOURNAL

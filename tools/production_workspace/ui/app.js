@@ -755,3 +755,70 @@ $('load').onclick=()=>{if(pending)adopt(pending);};
 function theme(value){document.documentElement.dataset.theme=value;try{localStorage.setItem('pw-theme',value);}catch{}}
 $('theme').onchange=()=>theme($('theme').value);try{$('theme').value=localStorage.getItem('pw-theme')||'system';}catch{}theme($('theme').value);
 pollSources();
+
+async function inboxAction(action, body) {
+ const response = await request('/api/inbox/' + action, {
+  method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(body)
+ });
+ showInbox(await response.json());
+}
+function inboxClick(button, operation) {
+ button.onclick = async () => {
+  button.disabled = true;
+  try { await operation(); $('inboxMessage').textContent = ''; }
+  catch (exc) { $('inboxMessage').textContent = exc.message; }
+  finally { button.disabled = false; }
+ };
+}
+function showInbox(value) {
+ const orders = $('inboxOrders');
+ orders.replaceChildren();
+ for (const order of value.orders) {
+  const article = node('section');
+  article.append(node('strong', order.puzzle_id), node('p', order.status));
+  if (order.result) {
+   const link = node('a', 'Veröffentlichten Arbeitsstand öffnen');
+   link.href = 'https://github.com/venomenon328/picross/commit/' + order.result.head;
+   article.append(link);
+   if (!listing?.jobs.some(job => job.commit === order.result.head)) pollSources();
+  } else {
+   const prompt = node('textarea'); prompt.readOnly = true; prompt.value = order.prompt;
+   prompt.setAttribute('aria-label', 'Gebundener ChatGPT-Auftrag');
+   const copy = node('button', 'Gebundenen ChatGPT-Auftrag kopieren');
+   inboxClick(copy, async () => { await navigator.clipboard.writeText(prompt.value); });
+   article.append(prompt, copy);
+  }
+  const canCancel = ['scan','stage','blocked','stale','done'].includes(order.step);
+  const action = canCancel ? 'cancel' : 'retry';
+  const button = node('button', order.step === 'done' ? 'Quittung schließen' :
+   canCancel ? 'Auftrag widerrufen' : 'Identischen Vorgang fortsetzen');
+  inboxClick(button, () => inboxAction(action, {request_id:order.request_id, puzzle_id:order.puzzle_id}));
+  article.append(button); orders.append(article);
+ }
+}
+inboxClick($('inboxSetup'), () => inboxAction('configure', {
+ folder_id: $('inboxFolder').value.trim(), directory: $('inboxDirectory').value.trim()
+}));
+inboxClick($('inboxStart'), async () => {
+ if (!listing || pending) throw Error('Zuerst den aktuellen Quellenstand laden.');
+ const phase = $('inboxPhase').value, action = $('inboxIntent').value;
+ const selected = intent.selection || '';
+ const needsPrior = (phase === 'motif' && intent.kind === 'reveal') ||
+                    (phase === 'background' && intent.kind === 'raster');
+ if ((needsPrior || action !== 'offer') && !readyImages.has(selected))
+  throw Error('Die gebundene Bildvariante zuerst öffnen und auswählen.');
+ await inboxAction('activate', {snapshot:listing.snapshot, jid:active?.id || '',
+  puzzle_id:active?.puzzle_id || $('inboxJob').value.trim(), phase, intent:action,
+  selection:needsPrior ? selected : '', target:action === 'offer' ? '' : selected,
+  inputs:PW.inboxInputs(detail,intent,action),
+  findings:JSON.stringify(intent.findings || {})});
+});
+let inboxTimer;
+async function pollInbox() {
+ clearTimeout(inboxTimer);
+ if (!$('inbox').open) return;
+ try { showInbox(await (await request('/api/inbox/status')).json()); }
+ catch (exc) { $('inboxMessage').textContent = exc.message; }
+ if ($('inbox').open) inboxTimer = setTimeout(pollInbox, 3000);
+}
+$('inbox').ontoggle = pollInbox;

@@ -105,7 +105,7 @@ const PW = (()=>{
     changes.push(colorRequest(next.colors,next.colorAccuracy,next.mode));
    }
   }
-  return changes.join(' ');
+  return changes;
  }
  function integer(value,min,max,label){
   if(!/^\d+$/.test(value)||Number(value)<min||Number(value)>max)throw Error(`Bitte für ${label} eine ganze Zahl von ${min} bis ${max} eingeben.`);
@@ -134,7 +134,18 @@ const PW = (()=>{
   for(const axis of ['width','height'])if(grid[axis])parts.push(axisRequest(axis,grid[axis],grid.sizeAccuracy));
   if(grid.mode)parts.push(modeRequest(grid.mode));
   if(grid.mode!=='mono'&&grid.colors)parts.push(colorRequest(grid.colors,grid.colorAccuracy,grid.mode));
-  return parts.join(' ');
+  return parts;
+ }
+ function inboxInputs(value,intent,action){
+  if(action!=='correction'&&['rework','background_change'].includes(intent.action)&&intent.feedback?.trim())
+   throw Error('Für den eingegebenen Änderungswunsch den Empfangsauftrag „Gewählte Variante korrigieren“ wählen.');
+  const grid=value?gridChanges(value,intent):gridRequest(intent.grid);
+  return {
+   brief:value?'':(intent.brief||'').trim(), notes:(intent.notes||'').trim(),
+   parameters:(intent.parameters||'').trim(), context:(intent.context||'').trim(),
+   feedback:action==='correction'?(intent.feedback||'').trim():'',
+   reference:intent.inputImage||'', grid
+  };
  }
  function choiceReady(value,target,intent){
   const card=value?.facts.candidates?.[target];
@@ -301,7 +312,7 @@ const PW = (()=>{
   // Input controls belong to the displayed view; corrections route their actual phase.
   if(order===1&&intent.notes?.trim())lines.push(`Neue/zusätzliche Motivhinweise:\n${intent.notes.trim()}`);
   if(order<=2||(order===3&&action==='rework')){
-   const grid=value?gridChanges(value,intent):gridRequest(intent.grid);
+   const grid=(value?gridChanges(value,intent):gridRequest(intent.grid)).join(' ');
    if(grid)lines.push(`${published?'Neue Absicht gegenüber den veröffentlichten Vorgaben':'Vorgaben für das spätere Lösungsraster'}: ${grid}`);
   }
   if((order===2||(order===3&&action==='rework'))&&intent.parameters?.trim())lines.push(`Neue/zusätzliche Wünsche zur Motivvorlage: ${intent.parameters.trim()}`);
@@ -314,6 +325,6 @@ const PW = (()=>{
   else lines.push('Commit, Push und Draft-PR im beauftragten Umfang; kein Merge.');
   return lines.join('\n\n');
  }
- return {steps,step,orderStep,promptStep,executors,prompt,choiceReady,publishedGrid,parameterOptions,options,closing,finalAssets,axes,cropChanges};
+ return {steps,step,orderStep,promptStep,executors,prompt,inboxInputs,choiceReady,publishedGrid,parameterOptions,options,closing,finalAssets,axes,cropChanges};
 })();
 if(typeof module!=='undefined')module.exports=PW;

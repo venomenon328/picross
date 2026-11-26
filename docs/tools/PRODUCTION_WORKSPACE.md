@@ -12,6 +12,13 @@ In der Auswahl zeigt der Assistent die gebundenen Angebote. Bei Hintergrundangeb
 - **Installer und Updatekanal:** [PRODUCTION_UPDATES](PRODUCTION_UPDATES.md); tatsächlicher Betriebsstatus im zuständigen Issue/Release.
 - **Bildgestaltung und Profile:** [Bildnormen](../production/images/README.md) beziehungsweise [Hintergrundtechnik](../production/PUZZLE_BACKGROUNDS.md).
 
+Unter „Originale über Google Drive empfangen“ bindet der Benutzer Ordner-ID und
+synchronisierten Windows-Pfad. Der ausdrücklich gestartete [Empfangsauftrag](PW_IMPORT.md)
+verwendet die ausgewählte Produktion, den v3-Builder, einen eigenen PW-LOCAL-Store
+und die lokale gh-Anmeldung. Die veröffentlichte Ansicht bleibt lesend. Der
+[Schritt-5-Writer PW-FINAL](https://github.com/venomenon328/picross/issues/907)
+bleibt ein eigener anschließender Umfang.
+
 ## 1. Auftrag, Vorrang und Grenzen
 
 Der Eigentümer bestätigt einen lokalen, per Launcher/Skript gestarteten

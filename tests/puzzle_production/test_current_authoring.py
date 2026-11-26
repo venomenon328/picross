@@ -202,7 +202,9 @@ class CurrentAuthoringTests(unittest.TestCase):
 
     def diagnostic_job(self):
         from PIL import Image
-        Image.new('RGBA', (80, 24), (30, 30, 30, 255)).save(self.input/'reveal.png')
+        image = Image.new('RGBA', (80, 24), (30, 30, 30, 255))
+        image.putpixel((0, 0), (0, 0, 0, 0))
+        image.save(self.input/'reveal.png')
         self.raster_ready()
         self.job = current.upgrade(self.job)
         self.job['state'] = 'raster_review'
@@ -386,12 +388,32 @@ class CurrentAuthoringTests(unittest.TestCase):
         with self.assertRaisesRegex(InvalidInput, 'Foreign or stale frame exception'):
             integration_input.Input(output)
 
+    def test_core_reveal_findings_cannot_be_accepted(self):
+        from io import BytesIO
+        from PIL import Image
+        self.job = current.upgrade(self.job)
+        self.job['state'] = 'reveal_review'
+        asset = self.asset('one', 'reveal')
+        self.job['assets'] = [asset]
+        core = self.finding('one', 'style', 'Q-B02', 'illustration')
+        with self.assertRaises(InvalidInput):
+            self.accept(core)
+        opaque = BytesIO()
+        Image.new('RGB', (8, 8)).save(opaque, format='PNG')
+        asset['file'] = self.file('opaque.png', opaque.getvalue())
+        self.job['findings'] = []
+        asset['review'] = judgment(current.CRITERIA['reveal'])
+        checked = current.Checked(self.job, lambda n, limit: opaque.getvalue())
+        self.assertFalse(checked.qualified('one'))
+        self.job['brief'] += '\nBildgrund: ausdrücklich deckend'
+        self.assertTrue(current.Checked(self.job, lambda n, limit: opaque.getvalue()).qualified('one'))
+
     def test_selected_background_profile_and_all_phase_treatments_reach_export(self):
         from io import BytesIO
         from PIL import Image
         self.raster_ready()
         self.job = current.upgrade(self.job)
-        for target,key,rule in [('reveal-b','Q-B02','illustration'),('motif-a','Q-M02','area-use')]:
+        for target,key,rule in [('reveal-b','Q-B02','illustration-detail'),('motif-a','Q-M02','area-use')]:
             self.accept(self.finding(target, 'detail', key, rule), target+' beibehalten')
         self.job['selected']['raster'] = 'raster-a'
         decide(self.job, 'raster')
