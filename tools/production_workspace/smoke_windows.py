@@ -233,7 +233,9 @@ def raster_fixture(repo, root, *, authoring=False):
         published = suffix in ('reveal-review', 'qualified')
         prefix = f'content/authoring/{identifier}/data/'
         reveal = BytesIO()
-        Image.new('RGB', (32, 32), (20, 70, 100)).save(reveal, format='PNG')
+        sample = Image.new('RGBA', (32, 32), (20, 70, 100, 255))
+        sample.putpixel((0, 0), (0, 0, 0, 0))
+        sample.save(reveal, format='PNG')
         if phase_index >= 5:
             method = 'picross-difficulty-' + (version or '0.4')
             fixture = make(root / identifier, identifier=identifier, method=method)
@@ -401,6 +403,34 @@ def verify_method_candidate(app, build, inspection):
     return {**audit, 'image_resources': images['files']}
 
 
+def stage_writer_probe(state, directory, main):
+    from uuid import uuid4
+    from tests.puzzle_production.current_fixtures import brief_job
+    from tools.puzzle_production import current_authoring as current
+    from . import inbox_contract as contract
+
+    # The candidate's isolated PATH contains only Git and Windows. A real
+    # receiver enters its installed writer and stops at the gh identity boundary.
+    directory.mkdir()
+    job = 'pz-frozen-import'
+    record = current.upgrade(brief_job(job, main))
+    request_id, delivery = str(uuid4()), str(uuid4())
+    source = {'main_commit': main, 'work_head': 'f' * 40, 'record_sha256': 'f' * 64}
+    order = {'puzzle_id': job, 'request_id': request_id, 'phase': 'reveal', 'intent': 'assessment',
+             'source': source, 'step': 'build', 'status': '', 'files': {}, 'paused': False}
+    name = delivery + '.json'
+    raw = current.encoded({'format': contract.FORMAT, 'repository': contract.REPOSITORY,
+                           'delivery_id': delivery, **{k: order[k] for k in ('request_id', 'puzzle_id', 'phase', 'source')},
+                           'request': {'format': current.REQUEST, 'record': record,
+                                       'expected': source['record_sha256'], 'files': []}})
+    stage = state / 'inbox-stage' / request_id
+    stage.mkdir(parents=True)
+    (stage / name).write_bytes(raw)
+    order.update(manifest=name, manifest_hash=hashlib.sha256(raw).hexdigest())
+    (state / 'inbox-v1.json').write_bytes(current.encoded({
+        'orders': {job: order}, 'folder': {'id': 'fixture', 'directory': str(directory)}}))
+
+
 def method_smoke(build, inspection, destination):
     if os.name != 'nt':
         raise RuntimeError('PW-SD2-A benötigt Windows.')
@@ -416,7 +446,17 @@ def method_smoke(build, inspection, destination):
         cwd = work / 'Fremder Startordner ö'; cwd.mkdir()
         (cwd / 'tools.py').write_text('raise RuntimeError("FOREIGN MODULE MUST NOT RUN")\n', encoding='utf-8')
         projections = {}
+        stage_writer_probe(state, work / 'Eingang', data_commit)
         with frozen_reader(app, state, cwd, commit) as (listing, request):
+            def writer_stopped_at_identity():
+                status, value = request('/api/inbox/status')
+                if status != 200:
+                    raise RuntimeError('Frozen-Empfangsstatus nicht lesbar.')
+                order, = value['orders']
+                if order['step'] == 'blocked':
+                    raise RuntimeError(order['status'])
+                return order if (state / 'import-writer').is_dir() and order['status'].startswith('Writer unterbrochen.') else None
+            writer_probe = wait_for(writer_stopped_at_identity)
             if (listing['update']['state'] != 'done' or listing['errors'] or
                     {job['puzzle_id'] for job in listing['jobs']} != set(cases)):
                 raise RuntimeError('Frozen-Jobliste enthält nicht genau die synthetischen Arbeitsstände.')
@@ -495,7 +535,8 @@ def method_smoke(build, inspection, destination):
             raise RuntimeError('Der synthetische Datencheckout wurde verändert.')
     result = {**audit, 'format': 'picross-pw-method-smoke-v1', 'exe_sha256': hashlib.sha256(
               (app / 'Picross-Start.exe').read_bytes()).hexdigest(), 'data_commit': data_commit,
-              'data_tree_files': data_paths, 'projections': projections, 'preflight_rejections': negatives}
+              'data_tree_files': data_paths, 'projections': projections, 'preflight_rejections': negatives,
+              'installed_import_writer': writer_probe}
     output = json.dumps(result, ensure_ascii=False, indent=2) + '\n'
     (destination / 'frozen-methods.json').write_text(output, encoding='utf-8')
     print(output)
