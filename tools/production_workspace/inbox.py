@@ -11,7 +11,7 @@ from tools.puzzle_production import catalog_io as io, current_authoring as curre
 from tools.puzzle_production.authoring_package import require
 from tools.puzzle_production.contract import exact_keys
 from . import inbox_contract as contract, inbox_files as files
-from .inbox_writer import Writer
+from .inbox_writer import StaleBuild, Writer
 from .repository import github_identity
 
 STATE = 'inbox-v1.json'
@@ -85,8 +85,9 @@ class Inbox:
                 order = self.data['orders'].get(body['puzzle_id'])
                 require(order and order['request_id'] == body['request_id'], 'Empfangsauftrag ist abgelaufen.')
                 if action == 'cancel':
-                    require(order['step'] in ('scan', 'stage', 'blocked', 'done'), 'Begonnene Veröffentlichung zuerst fortsetzen.')
-                    self.discard_stage(order)
+                    require(order['step'] in ('scan', 'stage', 'blocked', 'stale', 'done'), 'Begonnene Veröffentlichung zuerst fortsetzen.')
+                    if order['step'] != 'stale':
+                        self.discard_stage(order)
                     del self.data['orders'][order['puzzle_id']]
                 elif action == 'retry':
                     require(order['step'] in ACTIVE, 'Auftrag kann nicht fortgesetzt werden.')
@@ -99,7 +100,7 @@ class Inbox:
             self.service.operation.release()
 
     def activate(self, body):
-        exact_keys(body, {'snapshot', 'jid', 'puzzle_id', 'phase', 'intent', 'target', 'brief', 'selection', 'findings'})
+        exact_keys(body, {'snapshot', 'jid', 'puzzle_id', 'phase', 'intent', 'target', 'inputs', 'selection', 'findings'})
         folder = self.data['folder']
         require(folder and github_identity(self.service.repository.remote), 'Privaten Eingang und Produktionsremote einrichten.')
         status = self.service.status()
@@ -120,8 +121,7 @@ class Inbox:
         edits = io.json_bytes(body['findings'].encode('utf-8'), 16384)
         require(isinstance(edits, dict), 'Ungültige Befunderklärungen.')
         target = body['target']
-        brief = body['brief']
-        require(isinstance(brief, str) and 0 < len(brief.strip()) <= 4096, 'Auftragsbeschreibung erforderlich.')
+        brief = contract.creative_brief(body['inputs'], phase, intent, new=not body['jid'])
         if body['jid']:
             row = self.service.selected(body['jid'], body['snapshot'])
             require(not repo.availability(row) and row['puzzle_id'] == job and row['commit'] == head and
@@ -163,17 +163,23 @@ class Inbox:
             require(head is None and phase == 'reveal' and intent == 'offer' and not body['selection'], 'Neue unbenutzte Produktions-ID erforderlich.')
             source_hash = None
             limits = {'raster_candidates': 6, 'repair_rounds': 2, 'image_corrections': 2}
+        brief_length = len(brief)
+        if body['jid']:
+            brief_length += len(record['brief']) + (2 if brief else 0)
+        require(brief_length <= 16384, 'Gesamtes Motivbriefing zu lang. Neue Eingaben kürzen.')
         require(not edits, 'Befund ist veraltet oder gehört nicht zu dieser Auswahl.')
         require(intent != 'offer' or not target, 'Angebot enthält eine unerwartete Zielvariante.')
         order = {'request_id': str(uuid4()), 'puzzle_id': job, 'phase': phase, 'intent': intent, 'target': target,
                  'source': {'main_commit': main['commit'], 'work_head': head, 'record_sha256': source_hash},
-                 'choice': choice, 'declarations': declarations, 'limits': limits, 'brief': brief, 'test_only': False, 'step': 'scan',
+                 'choice': choice, 'declarations': declarations, 'limits': limits, 'brief': brief, 'inputs': body['inputs'], 'test_only': False, 'step': 'scan',
                  'status': 'Wartet auf die Lieferung.', 'files': {}, 'paused': False}
         binding = {k: order[k] for k in ('request_id', 'puzzle_id', 'phase', 'intent', 'target', 'source', 'brief', 'choice', 'declarations', 'limits')}
         order['prompt'] = ('Arbeite gemäß AGENTS.md, Authoring und docs/tools/PW_IMPORT.md in ' + contract.REPOSITORY +
             '. Stelle die nativen Einzeloriginale byteidentisch in meinem privaten Drive-Ordner ' + folder['id'] +
             ' bereit. Lade das Manifest zuletzt. Verwende folgende bestätigte Bindung: ' +
-            json.dumps(binding, ensure_ascii=False) + '. Erfolg erst nach GitHub-Readback. ' +
+            json.dumps(binding, ensure_ascii=False) + '. Bei Neuanlage brief unverändert als Recordbriefing übernehmen. '
+            'Bei einem Folgeauftrag das bestehende Briefing erhalten und nur ein nichtleeres brief mit zwei Zeilenumbrüchen anhängen. '
+            'Rasterwünsche sind keine Parameterfreigabe. Erfolg erst nach GitHub-Readback. ' +
             ('Danach den beauftragten Schritt 4 mit prepare, Zustellung, tatsächlicher Sichtung und Assessment am veröffentlichten Stand fortsetzen.'
              if phase == 'background' else ''))
         self.data['orders'][job] = order
@@ -284,6 +290,9 @@ class Inbox:
             order.update(step='done', status='Veröffentlicht. Lokaler Eingang bereinigt. Drive synchronisiert separat.')
             order.pop('files')
             self.save()
+        except StaleBuild as exc:
+            order.update(step='stale', paused=True)
+            self.message(order, str(exc))
         except files.Waiting:
             self.message(order, 'Wartet auf vollständige Dateien.')
         except (OSError, ValueError, RuntimeError, KeyError, TypeError, subprocess.SubprocessError) as exc:

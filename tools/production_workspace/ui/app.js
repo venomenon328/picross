@@ -788,7 +788,7 @@ function showInbox(value) {
    inboxClick(copy, async () => { await navigator.clipboard.writeText(prompt.value); });
    article.append(prompt, copy);
   }
-  const canCancel = ['scan','stage','blocked','done'].includes(order.step);
+  const canCancel = ['scan','stage','blocked','stale','done'].includes(order.step);
   const action = canCancel ? 'cancel' : 'retry';
   const button = node('button', order.step === 'done' ? 'Quittung schließen' :
    canCancel ? 'Auftrag widerrufen' : 'Identischen Vorgang fortsetzen');
@@ -810,7 +810,7 @@ inboxClick($('inboxStart'), async () => {
  await inboxAction('activate', {snapshot:listing.snapshot, jid:active?.id || '',
   puzzle_id:active?.puzzle_id || $('inboxJob').value.trim(), phase, intent:action,
   selection:needsPrior ? selected : '', target:action === 'offer' ? '' : selected,
-  brief:(active ? intent.notes || detail?.facts.next_step : intent.brief) || '',
+  inputs:PW.inboxInputs(detail,intent,action),
   findings:JSON.stringify(intent.findings || {})});
 });
 let inboxTimer;

@@ -1,6 +1,8 @@
 """Bounded regressions for the activated Drive receiver."""
 from copy import deepcopy
 from io import BytesIO
+import json
+import subprocess
 import os
 from pathlib import Path
 from tempfile import TemporaryDirectory
@@ -75,6 +77,200 @@ class InboxTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             files.retire(self.folder, self.filename, order['files'][self.filename])
         self.assertTrue((self.folder / self.filename).exists())
+
+    def test_ui_activate_prompt_and_bound_delta(self):
+        # Execute the real click handler, capturing only its outbound HTTP body.
+        probe = r"""
+const fs=require('node:fs'),vm=require('node:vm');
+const elements=new Map(),messages=[];
+const document={documentElement:{dataset:{}},getElementById(id){
+ if(!elements.has(id))elements.set(id,{replaceChildren(){}});
+ return elements.get(id);
+}};
+const ctx=vm.createContext({document,location:{hash:'',pathname:'/'},history:{replaceState(){}},
+ sessionStorage:{getItem(){}},localStorage:{getItem(){}},AbortController,setTimeout,clearTimeout,
+ PW:require('./tools/production_workspace/ui/workflow.js'),fetch:(url,opts)=>{
+  if(url!=='/api/inbox/activate')return new Promise(()=>{});
+  messages.push(JSON.parse(opts.body));return {ok:true,json:async()=>({orders:[]})};
+ }});
+vm.runInContext(fs.readFileSync('tools/production_workspace/ui/app.js','utf8'),ctx);
+const previous={facts:{published:{proposed:[{width:20,height:18,size_constraint:'exact'}]}}};
+const cases=[
+ ['reveal','offer',null,{brief:'Fuchs',notes:'Im Profil',grid:{width:'17',sizeAccuracy:'exact'}}],
+ ['motif','offer',previous,{parameters:'Ohren erhalten',removeGrid:{width:true}}],
+ ['reveal','correction',previous,{action:'rework',selection:'one',kind:'reveal',feedback:'Ohr abrunden'}],
+ ['background','offer',previous,{context:'Waldrand bei Nacht'}],
+ ['reveal','offer',null,{brief:'Fuchs',inputImage:'vorlage.png'}]
+];
+(async()=>{
+ for(const [role,action,value,inputs] of cases){
+  ctx.value=value;ctx.inputs=inputs;
+  vm.runInContext("listing={snapshot:'snapshot'};detail=value;active=value?{id:'row',puzzle_id:'pz-current'}:null;intent=inputs;readyImages.add('one')",ctx);
+  for(const [key,v] of Object.entries({inboxPhase:role,inboxIntent:action,inboxJob:'pz-current'}))
+   document.getElementById(key).value=v;
+  await document.getElementById('inboxStart').onclick();
+  if(document.getElementById('inboxMessage').textContent)throw Error(document.getElementById('inboxMessage').textContent);
+ }
+ console.log(JSON.stringify(messages));
+})().catch(e=>{console.error(e);process.exitCode=1});
+"""
+        bodies = json.loads(subprocess.check_output(['node', '-e', probe], cwd=Path(__file__).resolve().parents[1]))
+        main, head = 'a' * 40, 'b' * 40
+        self.service.repository.remote = 'https://github.com/venomenon328/picross.git'
+        self.service.status = Mock(return_value={'snapshot': 'snapshot', 'remote_confirmed': True,
+                                                'completion': {'main_commit': main}})
+        repo = self.service.removal = Mock()
+        repo.main_state.return_value = {'commit': main, 'registered': False, 'revisions': []}
+        repo.availability.return_value = None
+        self.service.operation = threading.Lock()
+        self.service.acquire_operation = self.service.operation.acquire
+        expected = [('Fuchs', 'Zusätzliche Motivhinweise: Im Profil', 'Breite: exakt 17 Zellen.'),
+                    ('Ohren erhalten', 'Breite: bisherigen Wunsch ausdrücklich aufheben.'),
+                    ('Ohr abrunden',), ('Waldrand bei Nacht',)]
+        for body, phrases in zip(bodies[:4], expected, strict=True):
+            with self.subTest(role=body['phase'], action=body['intent']):
+                self.inbox.data['orders'].clear()
+                old = deepcopy(self.value['request']['record']) if body['jid'] else None
+                repo.remote_head.return_value = head if old else None
+                if old:
+                    old['test_only'] = False
+                    if body['phase'] in contract.PRIOR:
+                        old['selected'][contract.PRIOR[body['phase']]] = 'one' if body['phase'] == 'motif' else 'raster'
+                    self.service.selected = Mock(return_value={'puzzle_id': 'pz-current', 'commit': head,
+                        '_record': {**old, 'format': current.findings.PUBLISHED},
+                        '_projection': {'record': {'sha256': 'c' * 64}}})
+                self.inbox.action('activate', body)
+                order = Inbox(self.service).data['orders']['pz-current']
+                for phrase in phrases:
+                    self.assertIn(phrase, order['brief'])
+                    self.assertIn(phrase, order['prompt'])
+                self.assertNotIn('Höhe:', order['brief'])
+                request = deepcopy(self.value['request'])
+                job = request['record']
+                job['test_only'] = False
+                job['brief'] = (old['brief'] + '\n\n' if old else '') + order['brief']
+                job['state'] = contract.PHASES[body['phase']]
+                if old:
+                    job['selected'] = deepcopy(old['selected'])
+                    candidate = job['assets'].pop()
+                    job['assets'] = deepcopy(old['assets']) if body['intent'] == 'offer' else []
+                    candidate.update(id='new', role=body['phase'], file=content.ref(
+                        'content/authoring/pz-current/data/new.png', b'new'))
+                    if body['phase'] == 'background':
+                        candidate.update(prepared=None, profile='picross-background-png2304x768-v1')
+                    if body['intent'] == 'correction':
+                        job['budgets']['used']['image_corrections'] += 1
+                    job['assets'].append(candidate)
+                    request['files'] = [{'path': candidate['file']['file']}]
+                contract.delta(order, request, old)
+                job['brief'] = old['brief'] if old else 'Fuchs'
+                with self.assertRaises(ValueError):
+                    contract.delta(order, request, old)
+        self.inbox.data['orders'].clear()
+        with self.assertRaisesRegex(ValueError, 'Referenzbild.*nicht erreichbar'):
+            self.inbox.action('activate', bodies[-1])
+        self.assertFalse(self.inbox.data['orders'])
+
+    def test_persisted_build_can_rebind_but_unknown_publish_cannot(self):
+        from contextlib import nullcontext
+        from tests.puzzle_production.current_fixtures import checkout
+        from tools import production_git_workspace as ws, publish_git as git, work_publish as publisher
+        from tools.production_worktree_publish import JOURNAL
+        from tools.puzzle_production import catalog_io as io
+
+        remote = checkout(self.root / 'remote')
+        def commit(message):
+            ws.git(remote, 'add', '.')
+            ws.git(remote, '-c', 'user.email=fixture@example.invalid', '-c', 'user.name=Fixture', 'commit', '-qm', message)
+            return ws.git(remote, 'rev-parse', 'HEAD')
+
+        ws.git(remote, 'init', '-q', '-b', 'main')
+        ws.git(remote, 'config', 'core.autocrlf', 'false')
+        main = commit('main')
+        job = self.order['puzzle_id']
+        ws.git(remote, 'switch', '-qc', 'content/pw/' + job)
+        path = remote / current.path(job)
+        path.parent.mkdir(parents=True)
+        record = current.upgrade(brief_job(job, main))
+        record.update(format=current.findings.PUBLISHED, work_release={'id': 1, 'anchor': main})
+        path.write_bytes(current.encoded(record))
+        expected = commit('prior work')
+        self.order['source'].update(main_commit=main, work_head=expected, record_sha256=io.checksum(path.read_bytes()))
+        self.value['request']['expected'] = self.order['source']['record_sha256']
+        self.deliver()
+        (self.folder / self.filename).write_bytes(self.png)
+        self.inbox.receive(self.order, self.folder)
+        # Only the transport endpoints are substituted. Refs, commits, ownership
+        # bindings, locks, local drafts, staged originals and receipts use disk.
+        original_git = git.git
+        def local_git(root, *args, **kwargs):
+            if 'fetch' in args or 'ls-remote' in args:
+                args = tuple(str(remote) if arg == git.REMOTE else arg for arg in args)
+            return original_git(root, *args, **kwargs)
+        def read_record(head, puzzle_id):
+            return original_git(remote, 'show', head + ':' + current.path(puzzle_id))
+        self.inbox.writer.root.mkdir()
+        self.service.operation = threading.Lock()
+        self.service.acquire_operation = self.service.operation.acquire
+        binding = {k: self.order[k] for k in ('puzzle_id', 'request_id')}
+        with patch.object(git, 'git', side_effect=local_git), patch.object(publisher, 'publisher_auth', return_value=nullcontext()), \
+             patch.object(publisher, 'remote_record', side_effect=read_record), patch.object(publisher, 'push_job') as push:
+            paths = ws.prepare(self.inbox.writer.root, job, main, main, expected, inbox=True)
+            work = Path(paths['job'])
+            foreign = work / 'unsaved.txt'
+            foreign.write_text('local changes')
+            record.update(brief=record['brief'] + ' changed elsewhere', test_only=False)
+            path.write_bytes(current.encoded(record))
+            successor = commit('competing work')
+            # A publish receipt with an uncertain response stays resumable only.
+            self.order.update(step='publish', draft_sha256='a' * 64)
+            self.inbox.save()
+            resumed = Inbox(self.service)
+            order = resumed.data['orders'][job]
+            resumed.advance(order)
+            self.assertEqual((order['step'], order['paused']), ('publish', True))
+            with self.assertRaises(ValueError):
+                resumed.action('cancel', binding)
+            # Even a saved build must respect a publication journal.
+            order.update(step='build', paused=False)
+            journal = ws.gitdir(work) / JOURNAL
+            journal.write_bytes(current.encoded({'job': job, 'path': str(work), 'expected': expected}))
+            resumed.save()
+            resumed = Inbox(self.service)
+            order = resumed.data['orders'][job]
+            resumed.advance(order)
+            self.assertEqual((order['step'], order['paused']), ('build', True))
+            journal.unlink()
+            resumed.action('retry', binding)
+            resumed.advance(order)
+            self.assertEqual(order['step'], 'stale')
+            self.assertIn(successor, order['status'])
+            resumed = Inbox(self.service)
+            resumed.action('cancel', binding)
+            self.assertNotIn(job, resumed.data['orders'])
+            self.service.repository.remote = 'https://github.com/venomenon328/picross.git'
+            self.service.status = Mock(return_value={'snapshot': 'fresh', 'remote_confirmed': True,
+                                                    'completion': {'main_commit': main}})
+            repo = self.service.removal = Mock()
+            repo.main_state.return_value = {'commit': main, 'registered': False, 'revisions': []}
+            repo.remote_head.return_value = successor
+            repo.availability.return_value = None
+            self.service.selected = Mock(return_value={'puzzle_id': job, 'commit': successor, '_record': record,
+                '_projection': {'record': {'sha256': io.checksum(path.read_bytes())}}})
+            inputs = dict.fromkeys(('notes', 'parameters', 'context', 'brief', 'feedback', 'reference'), '')
+            resumed.action('activate', {'snapshot': 'fresh', 'jid': 'row', 'puzzle_id': job, 'phase': 'reveal',
+                            'intent': 'offer', 'target': '', 'selection': '', 'findings': '{}', 'inputs': {**inputs, 'grid': []}})
+            replacement = resumed.data['orders'][job]
+            self.assertNotEqual(replacement['request_id'], order['request_id'])
+            self.assertEqual(replacement['source']['work_head'], successor)
+            next_paths = ws.prepare(resumed.writer.root, job, main, main, replacement['source']['work_head'], inbox=True)
+            new_work = Path(next_paths['job'])
+            self.assertNotEqual(work, new_work)
+            self.assertEqual(ws.git(new_work, 'rev-parse', 'HEAD'), successor)
+            self.assertEqual(foreign.read_text(), 'local changes')
+            self.assertEqual((resumed.stage(order) / self.filename).read_bytes(), self.png)
+            self.assertEqual((self.folder / self.filename).read_bytes(), self.png)
+            push.assert_not_called()
 
     def test_duplicate_delivery_and_manifest_mutation(self):
         self.deliver()

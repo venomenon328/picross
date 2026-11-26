@@ -108,6 +108,14 @@ Erwartungs-/Wiederaufnahmevertrag.
 Der kopierte ChatGPT-Auftrag enthält die feste Quellenreferenz beziehungsweise
 das neue Motivbriefing, neue Absicht, zulässigen Umfang, Zielordner-ID und
 Auftragskennung sowie einen kurzen Verweis auf diesen Vertrag und Authoring.
+
+Der Empfänger bindet neue Motivhinweise, Rasterwünsche je Achse, ausdrücklich
+aufgehobene Vorgaben, Motivvorlagenwünsche, Korrekturtext und Kontextwunsch an
+die gewählte Bildrolle und Handlung. Bei der Neuanlage wird das gebundene
+Briefing übernommen. Bei bestehenden Jobs bleibt das bisherige Briefing erhalten;
+neue Absichten werden als exakt gebundener Zusatz fortgeschrieben. Der normale
+Auftragsweg mit Dateianhang ist für ein lokal ausgewähltes Referenzbild verfügbar.
+Der Empfangsauftrag sperrt den Start, solange diese Referenz nur lokal vorliegt.
 Keine Wiederholung des vollständigen Regelwerks, keine vom Benutzer zu
 pflegenden Hashfelder. Bei einem Referenzbild muss der Akteur dessen Original
 tatsächlich erreichen können; ein lokaler Windows-Pfad ersetzt die Zustellung
@@ -263,6 +271,13 @@ gebundene Eingänge, Publikationsabsicht sowie erwartete/beobachtete Ref- und
 Assetbindungen. Keine zweite Produktionshistorie. Nach Antwortverlust zunächst
 gezielt nachlesen; bestätigte eigene Veröffentlichung übernehmen, niemals blind
 erneut hochladen oder einen weiteren Job erzeugen.
+
+Erkennt der Empfänger bei einem gespeicherten Build einen fremden Nachfolgecommit,
+prüft er lokalen Worktree, Publikationsjournal und den Remote-Record. Bei bestätigtem
+unveröffentlichtem Build lässt sich der Auftrag widerrufen und am frischen Stand
+neu binden. Der frühere Arbeitsbaum und die gebundenen Eingangskopien bleiben
+erhalten. Bei unklarem Publikationsausgang bleibt die Wiederaufnahme mit Readback
+erforderlich.
 
 Identische Wiederholung derselben Lieferung bewirkt höchstens die Fortsetzung
 ihres offenen Schritts. Abweichende Bytes bei gleicher Lieferkennung sind ein

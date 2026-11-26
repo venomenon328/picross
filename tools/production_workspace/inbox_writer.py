@@ -7,7 +7,11 @@ from tools.puzzle_production import catalog_io as io, current_authoring as curre
 from tools.puzzle_production.authoring_package import require
 from . import deliveries
 from .inbox_contract import REPOSITORY, delta
-from .sources import GitSource
+from .sources import GitSource, check_commit
+
+
+class StaleBuild(ValueError):
+    """A verified foreign successor while the owned draft is still unpublished."""
 
 
 class Writer:
@@ -15,6 +19,40 @@ class Writer:
 
     def __init__(self, state):
         self.root = Path(state) / 'import-writer'
+
+    def bound_work(self, db, order):
+        job = order['puzzle_id']
+        leaf = order.get('work_leaf', 'job-' + job)
+        if leaf != 'job-' + job:
+            prefix = 'inbox-' + job + '.'
+            require(leaf.startswith(prefix), 'Abweichender Arbeitsbaum.')
+            check_commit(leaf[len(prefix):])
+        work = io.safe(self.root, 'picross-production/' + leaf)
+        owner = ws.read_binding(work)
+        require(owner and owner['job'] == job and owner['role'] == 'job' and owner['store'] == str(db),
+                'Eigener Writer-Arbeitsstand fehlt.')
+        return work
+
+    def check_build_successor(self, db, order, actual):
+        from tools.puzzle_production.authoring_builder import writer
+        job = order['puzzle_id']
+        expected = order['source']['work_head']
+        parent = order.get('build_parent', expected or order['source']['main_commit'])
+        with writer(db / 'authoring-builder.lock'):
+            work = self.bound_work(db, order)
+            require(ws.git(work, 'rev-parse', 'HEAD') == parent and not previous_operation(work, job, expected),
+                    'Publikationsausgang zuerst anhand des lokalen Journals klären.')
+            git.git(db, 'fetch', '--no-tags', '--', git.REMOTE, actual)
+            git.git(db, 'merge-base', '--is-ancestor', parent, actual)
+            raw = publisher.remote_record(actual, job)
+            publisher.bound_record(raw, job)
+            require(raw == GitSource(db).read(actual, current.path(job), current.LIMIT),
+                    'Nachfolgerrecord nicht unabhängig bestätigt.')
+            require(git.remote_head(db, 'refs/heads/content/pw/' + job) == actual, 'Arbeitsstand erneut prüfen.')
+        raise StaleBuild(f'Konflikt: Ein anderer Arbeitsstand ({actual}) ist veröffentlicht. '
+                         f'Der eigene Build ist unveröffentlicht. Arbeitsbaum {work.name} und '
+                         f'Eingangskopie inbox-stage/{order["request_id"]} bleiben erhalten. '
+                         'Auftrag widerrufen, Quellen aktualisieren und neu binden.')
 
     def publish(self, order, request, stage, save):
         require(publisher.REPO == self.repository and git.REMOTE == 'https://github.com/' + self.repository + '.git',
@@ -43,16 +81,15 @@ class Writer:
                     'Der Job hat bereits einen Arbeitsrecord auf main.')
             name = current.path(job)
             if order['step'] == 'publish':
-                work = io.safe(self.root, 'picross-production/job-' + job)
-                owner = ws.read_binding(work)
-                require(owner and owner['job'] == job and owner['role'] == 'job' and owner['store'] == str(db),
-                        'Eigener Writer-Arbeitsstand fehlt.')
+                work = self.bound_work(db, order)
                 op = previous_operation(work, job, expected)
                 require(not op or op['draft'] == order['draft_sha256'], 'Publikationsjournal gehört zu einem anderen Draft.')
                 require(actual == expected or op and op['target'] == actual, 'Ein anderer Arbeitsstand wurde veröffentlicht.')
                 if actual == expected:
                     require(io.file_hash(work, name, current.LIMIT) == order['draft_sha256'], 'Lokaler Draft verändert.')
             else:
+                if order['step'] == 'build' and actual and actual != expected:
+                    self.check_build_successor(db, order, actual)
                 require(actual == expected, 'Arbeitsbranch ist fortgeschritten. Auftrag erneut binden.')
                 previous = None
                 raw = publisher.remote_record(expected, job) if expected else None
@@ -61,13 +98,13 @@ class Writer:
                     previous = publisher.local_record(publisher.bound_record(raw, job))
                 delta(order, request, previous)
                 if order['step'] == 'build':
-                    work = io.safe(self.root, 'picross-production/job-' + job)
+                    work = self.bound_work(db, order)
                 else:
-                    paths = ws.prepare(self.root, job, main, main, expected)
+                    paths = ws.prepare(self.root, job, main, main, expected, inbox=True)
                     work = Path(paths['job'])
                     if expected:
                         publisher.resume(work, job, expected, auth='gh')
-                    order['step'] = 'build'
+                    order.update(step='build', work_leaf=work.name, build_parent=expected or main)
                     save()
                 # Hydration strips release locators. Translate the verified remote
                 # hash to the canonical local predecessor before the builder CAS.

@@ -1,5 +1,6 @@
 """Validate a single Drive delivery against the locally activated production order."""
 from copy import deepcopy
+import re
 from pathlib import PurePosixPath
 from uuid import UUID
 
@@ -56,6 +57,52 @@ def envelope(raw, filename, order):
     return value
 
 
+def creative_brief(inputs, role, action, *, new):
+    """Only explicit creative intent may update the brief. Decisions have their own binding."""
+    exact_keys(inputs, {'brief', 'notes', 'feedback', 'parameters', 'context', 'reference', 'grid'})
+    for key in ('brief', 'notes', 'feedback', 'parameters', 'context', 'reference'):
+        value = inputs[key]
+        require(isinstance(value, str) and len(value) <= 4096 and '\x00' not in value, 'Ungültiger Auftragstext.')
+    require(not inputs['reference'], 'Das ausgewählte Referenzbild ist im Empfangsauftrag nicht erreichbar. '
+            'Den normalen Auftrag mit angehängter Originaldatei senden oder die Dateiauswahl bewusst zurücknehmen.')
+    require(bool(inputs['brief'].strip()) == new, 'Ein neuer Auftrag benötigt das Motivbriefing. Bestehendes Briefing aus der Quelle verwenden.')
+    require(bool(inputs['feedback'].strip()) == (action == 'correction'),
+            'Für eine Korrektur unter „Nächste Aktion“ die gewünschte Änderung beschreiben.')
+    require(not inputs['notes'] or role == 'reveal', 'Die Motivhinweise gehören zu einem Abschlussbildauftrag.')
+    require(not inputs['parameters'] or role == 'motif', 'Die Motivwünsche gehören zu einem Motivvorlagenauftrag.')
+    require(not inputs['context'] or role == 'background', 'Der Kontextwunsch gehört zu einem Hintergrundauftrag.')
+    grid = inputs['grid']
+    require(isinstance(grid, list) and len(grid) <= 4 and (not grid or role in ('reveal', 'motif')),
+            'Rasterwünsche gehören zu einem Abschlussbild- oder Motivauftrag.')
+    seen = set()
+    for line in grid:
+        require(isinstance(line, str) and len(line) <= 80, 'Ungültiger Rasterwunsch.')
+        field, sep, value = line.partition(': ')
+        require(sep and field in ('Breite', 'Höhe', 'Rastermodus', 'Farbzahl') and field not in seen, 'Ungültige Rasterachse.')
+        seen.add(field)
+        if value == 'bisherigen Wunsch ausdrücklich aufheben.':
+            require(not new, 'Aufhebung benötigt einen gebundenen Vorgänger.')
+        elif field in ('Breite', 'Höhe'):
+            require(re.fullmatch(r'(exakt|ungefähr) ([1-9]|[1-4][0-9]|50) Zellen\.', value), 'Rasterachse außerhalb 1–50.')
+        elif field == 'Rastermodus':
+            require(value in ('monochrom.', 'farbig.'), 'Unbekannter Rastermodus.')
+        else:
+            require(value == 'exakt eine Vordergrundfarbe.' or
+                    re.fullmatch(r'(exakt|ungefähr) [2-8] Vordergrundfarben\.', value), 'Ungültige Farbzahl.')
+    counts = [line for line in grid if line.startswith('Farbzahl:') and 'aufheben' not in line]
+    require(not counts or 'Rastermodus: monochrom.' not in grid and
+            not ('Rastermodus: farbig.' in grid and 'Farbzahl: exakt eine Vordergrundfarbe.' in counts),
+            'Rastermodus und Farbzahl widersprechen sich.')
+    parts = [inputs['brief'].strip()] if new else []
+    for key, label in [('notes', 'Zusätzliche Motivhinweise'), ('parameters', 'Wünsche zur Motivvorlage'),
+                       ('feedback', 'Gewünschte Korrektur'), ('context', 'Kontextwunsch')]:
+        if inputs[key].strip():
+            parts.append(label + ': ' + inputs[key].strip())
+    if grid:
+        parts.append('Rasterwünsche: ' + ' '.join(grid))
+    return '\n\n'.join(parts)
+
+
 def delta(order, request, previous):
     """Accept creative changes only on the declared role and selected correction base."""
     job = request['record']
@@ -70,6 +117,8 @@ def delta(order, request, previous):
         'instructions': {}, 'findings': [], 'blockers': [], 'test_only': order['test_only'], 'integration': None,
         'budgets': {'limits': order['limits'], 'used': dict.fromkeys(order['limits'], 0)}}
     prior.pop('qualification', None)
+    if previous and order.get('inputs') and order['brief']:
+        prior['brief'] += '\n\n' + order['brief']
     require(previous or role == 'reveal' and intent == 'offer', 'Neuanlage beginnt mit einem Revealangebot.')
     for row in prior['findings']:
         binding = current.findings.binding(row)
