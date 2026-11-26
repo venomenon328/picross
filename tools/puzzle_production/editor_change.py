@@ -413,11 +413,11 @@ def validate(value, *, journal=False):
 
 
 @catalog_method.bound_validation
-def validate_targets(root, value, sides, actual):
+def validate_targets(root, value, sides, actual, *, journal_temps=()):
     """Closed technical deltas, using already read bytes; no plan rebuilding."""
     target = {**actual, **{name: pair[1] for name, pair in sides.items()}}
     old_runtime,runtime = (io.json_bytes(data[registry.RUNTIME],current_content.RUNTIME_LIMIT) for data in (actual,target))
-    ids = puzzle_record.inventory(root)
+    ids = puzzle_record.inventory(root,journal_temps=journal_temps)
     old_cats,cats = (categories.validate(io.json_bytes(data[categories.PATH],categories.MAX_BYTES)) for data in (actual,target))
     puzzle_catalog.validate_runtime(old_runtime,old_cats,ids)
     puzzle_catalog.validate_runtime(runtime,cats,ids)
@@ -611,7 +611,7 @@ def recover(root):
         if target not in sides:
             old_inputs[target] = io.read(root, target, FILE_LIMIT, missing=True)
             require(checksum(old_inputs[target]) == expected, "Recovery dependency changed: "+target)
-    validate_targets(root, journal, sides, old_inputs)
+    validate_targets(root, journal, sides, old_inputs, journal_temps=temps)
     for temporary, temp in temps.items():
         require(io.read(root, temporary, FILE_LIMIT) == temp, "Recovery temporary changed")
         io.safe(root, temporary).unlink(); publication.sync_directory(io.safe(root, temporary).parent)

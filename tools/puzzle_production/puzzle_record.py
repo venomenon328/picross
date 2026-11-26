@@ -110,7 +110,7 @@ def runtime_row(record):
         "difficulty": catalog_rating.project_rating(diff["rating"])}
 
 
-def inventory(root, tracked=None):
+def inventory(root, tracked=None, *, journal_temps=()):
     """Check the flat namespace; sparse-hidden names come from the bound Git tree."""
     directory = io.safe(root, DIRECTORY)
     identifiers = set()
@@ -122,6 +122,8 @@ def inventory(root, tracked=None):
             name = f"{DIRECTORY}/{file.name}"
             require(stat.S_ISREG(info.st_mode) and info.st_nlink == 1 and
                     not getattr(info,"st_file_attributes",0) & 1024, "Invalid puzzle namespace member: " + name)
+            if name in journal_temps:
+                continue
             require(len(names) < 10000, "Too many puzzle records")
             names.add(name)
     if tracked is not None and tracked.names is not None:

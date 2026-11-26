@@ -93,12 +93,12 @@ def record_journal(texts, changes, *, operation):
             "retained":{n:io.checksum(raw) for n,raw in texts.items() if n not in sides}}
 
 
-def validate_metadata_journal(root,journal):
+def validate_metadata_journal(root,journal,*,journal_temps=()):
     exact_keys(journal,{"format","operation","old","new","retained"})
     require(journal["format"] == FORMAT and journal["operation"] == "metadata" and
             len(content.encoded(journal)) <= LIMIT, "Invalid metadata journal")
     require(set(journal["old"]) == set(journal["new"]), "Different metadata sides")
-    ids = puzzle_record.inventory(root)
+    ids = puzzle_record.inventory(root,journal_temps=journal_temps)
     selected = {Path(n).stem for n in journal["old"] if n.startswith(puzzle_record.DIRECTORY+"/")}
     require(selected <= ids and set(journal["old"]) == {RUNTIME,categories.PATH,*map(puzzle_record.path,selected)},
             "Foreign metadata targets")
@@ -129,9 +129,9 @@ def validate_metadata_journal(root,journal):
     return sides
 
 
-def validate_journal(root,journal,*,before_write=False):
+def validate_journal(root,journal,*,journal_temps=()):
     if journal.get("operation") == "metadata":
-        return validate_metadata_journal(root,journal)
+        return validate_metadata_journal(root,journal,journal_temps=journal_temps)
     exact_keys(journal,{"format","operation","old","new","retained"})
     require(journal["format"] == FORMAT and len(content.encoded(journal)) <= LIMIT, "Invalid catalog journal")
     op = journal["operation"]
@@ -141,7 +141,7 @@ def validate_journal(root,journal,*,before_write=False):
     old,new = sides["old"],sides["new"]
     cats = categories.validate(io.json_bytes(old[categories.PATH],categories.MAX_BYTES))
     require(new[categories.PATH] == old[categories.PATH],"Foreign category change")
-    ids = puzzle_record.inventory(root)
+    ids = puzzle_record.inventory(root,journal_temps=journal_temps)
     if op == "added-adoption":
         from . import catalog_added_history
         return catalog_added_history.validate_journal(root,journal,sides,ids,cats)
@@ -221,7 +221,7 @@ def guard(root,journal,*,old_only=False,**unused):
 def execute(root,journal,additions=None,*,fail_step=None,**unused):
     root=io.external(root)
     require(not registration.pending(root),"Publication pending")
-    sides=validate_journal(root,journal,before_write=True)
+    sides=validate_journal(root,journal)
     guard(root,journal,old_only=True)
     raw=content.encoded(journal)
     def rollback():
@@ -252,8 +252,11 @@ def recover(root):
     raw=read(root,name)
     if raw is None:return {"status":"no-op"}
     journal=io.json_bytes(raw,LIMIT)
-    sides=validate_journal(root,journal)
     require(content.encoded(journal)==raw,"Noncanonical journal")
+    require(isinstance(journal.get("old"),dict),"Missing journal targets")
+    journal_hash = io.checksum(raw)
+    journal_temps = {registration.temporary(n,journal_hash) for n in journal["old"]}
+    sides=validate_journal(root,journal,journal_temps=journal_temps)
     guard(root,journal)
     temps={}
     for target in sides["old"]:

@@ -79,3 +79,12 @@ def make(root,*,identifier="pz-current",mode="mono",background="standard",method
 
 def fingerprints(root):
     return {p.relative_to(root).as_posix():(p.read_bytes(),p.stat().st_mtime_ns) for p in root.rglob("*") if p.is_file()}
+
+
+def brief_job(identifier,base):
+    from tools.puzzle_production import current_authoring
+    return {'format':current_authoring.FORMAT,'puzzle_id':identifier,'revision':'current','source_commit':base,
+                  'operation':'production','target':None,'title':'Synthetic','category_id':'test','state':'brief_ready','brief':'Synthetic current brief',
+                  'parameters':{'approved':[],'proposed':[]},'assets':[],'rasters':[],
+                  'selected':dict.fromkeys(('reveal','motif','raster','background')),
+                  'decisions':[],'budgets':{'limits':{'raster_candidates':6,'repair_rounds':2,'image_corrections':2},'used':{'raster_candidates':0,'repair_rounds':0,'image_corrections':0}},'blockers':[],'test_only':True,'integration':None}

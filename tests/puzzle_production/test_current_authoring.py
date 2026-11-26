@@ -43,11 +43,8 @@ class CurrentAuthoringTests(unittest.TestCase):
         self.input=make(self.work/'input')
         self.incoming=json.loads((self.input/'manifest.json').read_bytes())
         self.payload={};self.sources=self.work/'sources';self.sources.mkdir()
-        self.job={'format':current.FORMAT,'puzzle_id':'pz-current','revision':'current','source_commit':self.base,
-                  'operation':'production','target':None,'title':'Synthetic','category_id':'test','state':'brief_ready','brief':'Synthetic current brief',
-                  'parameters':{'approved':[],'proposed':[]},'assets':[],'rasters':[],
-                  'selected':dict.fromkeys(('reveal','motif','raster','background')),
-                  'decisions':[],'budgets':{'limits':{'raster_candidates':6,'repair_rounds':2,'image_corrections':2},'used':{'raster_candidates':0,'repair_rounds':0,'image_corrections':0}},'blockers':[],'test_only':True,'integration':None}
+        from tests.puzzle_production.current_fixtures import brief_job
+        self.job=brief_job('pz-current',self.base)
 
     def file(self,name,raw):
         self.payload[name]=raw
