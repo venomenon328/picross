@@ -1,6 +1,6 @@
 # Picross: Produktionsregeln
 
-**Version 0.8.0 · Dokumentrevision 14 · 26.11.2026 · PW-REMOTE-G**
+**Version 0.8.0 · Dokumentrevision 15 · 26.11.2026 · PW-IMPORT-A**
 
 In den Schritten 1 bis 4 jedes zur Wahl gestellte Angebot an seinen tatsächlichen Dateien vollständig qualifizieren. Zulässige offene Mängel vor der Wahl mit ihren konkreten Folgen zeigen. Die Schlussentscheidung bindet die vorliegenden Befunde. Schritt 5 prüft Zuordnung, Befugnisse und Lieferung.
 
@@ -148,7 +148,16 @@ Vordergrundfarbe.
 
 ## Gemeinsame Bildkorrektur
 
-Nur gewählte Darstellung korrigieren; ausgenommen ist die eigenständige
+Zur Qualifikation vor der ersten vollständigen Auswahlvorlage gehören gezielte
+Korrektur oder Neugenerierung mangelhafter Einzelkandidaten. Sie sind Teil des
+Bildauftrags und erfordern keine vorgezogene Wahl ungeeigneter Bytes. Die
+Bildtypnorm und insbesondere die Abschlussbild-Kernanforderungen nach
+[Qualität §3.1](../PUZZLE_QUALITY.md#31-abschlussbildphase) bleiben verbindlich.
+Dies ist die fachlich freigegebene Korrekturregel; ihre vollständige maschinelle
+Durchsetzung im [PW-IMPORT-Weg](../../tools/PW_IMPORT.md) ist noch nicht implementiert.
+
+Nach vollständiger Vorlage nur die gewählte Darstellung korrigieren;
+ausgenommen ist die eigenständige
 [Format- und dadurch nötige Kompositionskorrektur laufender Hintergrundkandidaten](PUZZLE_AUTHORING_STEP_4.md#631-formatkorrektur-vor-der-bildwahl),
 die bereits vor der Bildwahl zum Produktionsauftrag gehört, einschließlich
 gezielter zeichnerischer Erweiterung oder passender Neugenerierung im bestehenden
@@ -157,6 +166,10 @@ zuständige Bildtypnorm mit den zugehörigen Qualitätskriterien.
 Schutzmerkmale und aktuellen korrigierten Kandidaten sichern; ersetzte Fassungen
 nach Ende ihrer aktuellen Nutzung entfernen. Nach zwei erfolglosen Bildkorrekturrunden
 Ursache/geänderten Plan vorlegen.
+Bereits verbrauchte Budgets fortführen. Die vorgesehene Kandidatenzahl ist kein
+Grund, nach einer erfolglosen Runde unqualifizierte Bilder als fertiges Angebot
+auszugeben; eine weitere Runde folgt dem geänderten Plan und den tatsächlich
+geltenden Budgetbefugnissen.
 Ungeeignete Abstraktion: Vereinfachung/Größe/Palette überdenken; anderes Reveal neu
 freigeben. Die Grenzen einer Revealänderung stehen in
 [RV-02](../images/REVEAL.md#rv-02-illustration).

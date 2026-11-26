@@ -1,6 +1,6 @@
 # Schritt 1: Abschlussbilder
 
-**Version 0.8.0 · Dokumentrevision 11 · 26.11.2026 · PW-REMOTE-G**
+**Version 0.8.0 · Dokumentrevision 12 · 26.11.2026 · PW-IMPORT-A**
 
 Pflicht: [Kern und Phasenroute](PUZZLE_AUTHORING.md#11-pflichtquellen-nach-phase),
 danach diese Phase und die dort zugeordnete Bildnorm. Zusätzlich:
@@ -43,6 +43,14 @@ keine automatisch freigegebene Abschlussbilddatei.
    folgt [RV-02](../images/REVEAL.md#rv-02-illustration).
    Bindende Referenz (`faithful`) und freie Interpretation (`free`) unterscheiden.
    Nur eine ausdrückliche Vorgabe reduziert die Variantenanzahl.
+   Geforderte Transparenz und gezeichneter Illustrationscharakter bleiben nach
+   [Qualität §3.1](../PUZZLE_QUALITY.md#31-abschlussbildphase) blockierend.
+   Kandidaten mit diesen Kernmängeln zählen nicht als fertige Varianten. Die
+   betroffenen Einzelbilder vor der vollständigen Vorlage gezielt korrigieren
+   oder neu erzeugen; eine weitere Korrekturrunde ist einer vollzähligen unqualifizierten
+   Auswahl vorzuziehen. Die gemeinsame Korrekturregel und die tatsächlichen
+   Budgetbefugnisse aus dem Kern gelten; ein noch unvollständiges Angebot als
+   solches benennen.
 2. Native Bildgenerierung verwenden; jede Variante tatsächlich als Einzeldatei
    speichern und zeigen. Eine Kontaktübersicht ist nur Auswahlhilfe. Fehlende
    Bildfunktion blockiert den Bildschritt; Konzepte ersetzen keine Originale.

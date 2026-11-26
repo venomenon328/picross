@@ -12,6 +12,13 @@ In der Auswahl zeigt der Assistent die gebundenen Angebote. Bei Hintergrundangeb
 - **Installer und Updatekanal:** [PRODUCTION_UPDATES](PRODUCTION_UPDATES.md); tatsächlicher Betriebsstatus im zuständigen Issue/Release.
 - **Bildgestaltung und Profile:** [Bildnormen](../production/images/README.md) beziehungsweise [Hintergrundtechnik](../production/PUZZLE_BACKGROUNDS.md).
 
+Für den künftigen gebundenen Dateieingang gilt [PW-IMPORT](PW_IMPORT.md) als
+freigegebene, noch nicht implementierte Erweiterung. Sie ergänzt den bestehenden
+Builder/Publisher um den lokalen Empfang kreativer Originale. Die nachstehenden
+Lesergrenzen beschreiben weiterhin den aktuellen ausführbaren Stand; der
+[Schritt-5-Writer PW-FINAL](https://github.com/venomenon328/picross/issues/907)
+bleibt ein eigener anschließender Umfang.
+
 ## 1. Auftrag, Vorrang und Grenzen
 
 Der Eigentümer bestätigt einen lokalen, per Launcher/Skript gestarteten

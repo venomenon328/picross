@@ -1,6 +1,6 @@
 # Redaktioneller Qualitätsvertrag für neue Rätsel
 
-**Vertrag 1.0 · Dokumentrevision 19 · 23.11.2026 · KORRIDOR-NORM-A / [#816](https://github.com/venomenon328/picross/issues/816)**
+**Vertrag 1.0 · Dokumentrevision 20 · 26.11.2026 · PW-IMPORT-A / [#910](https://github.com/venomenon328/picross/issues/910)**
 
 ## 1. Geltung und Zuständigkeit
 
@@ -9,7 +9,7 @@ Belegbindungen, Prüfzeitpunkte, harte Voraussetzungen, redaktionelle
 Einzelfallentscheidungen und die numerische Farbprüfung.
 
 - Gestalterische Normen: ausschließlich die [Bildtypverträge](images/README.md).
-- Ablauf, Kandidatenzahl, Budgets, Sicherung und tatsächliche Freigaben: [Authoring 0.8.0, Dokumentrevision 12](authoring/PUZZLE_AUTHORING.md).
+- Ablauf, Kandidatenzahl, Budgets, Sicherung und tatsächliche Freigaben: [Authoring 0.8.0, Dokumentrevision 15](authoring/PUZZLE_AUTHORING.md).
 - Datenformen: [PW-B](../tools/PW_B_CONTRACT.md), [ZA-1](ZA1_ADAPTER.md) und die tatsächlich benutzten technischen Einzelverträge.
 - §7 und §§8.1–8.3.1 sind historische Entscheidungs-/Referenzbeispiele; keine neuen Produktionsaufträge oder zusätzlichen Pflichtprüfungen. Operative Farbpflichtquelle ist ausschließlich §8.4–8.5.
 - Technische Prüfung erzeugt kein Sichturteil und keine menschliche Entscheidung. Historische Originale, Freigaben und Bewertungen werden nicht migriert.
@@ -67,7 +67,9 @@ Fehlt ein fälliges Urteil, die betroffene Ansicht nach §2.1 öffnen.
 
 ## 3. Redaktionelle Kriterien nach Darstellung und Prüfzeitpunkt
 
-Alle folgenden Kriterien sind **redaktionell abweichbar**. Herkunft und fällige
+Die folgenden Kriterien sind **redaktionell abweichbar**, soweit ihre konkreten
+Teilregeln keine unabdingbare Voraussetzung oder feste Auftragsgrenze betreffen.
+Für Abschlussbilder gelten die Kernanforderungen nach §3.1. Herkunft und fällige
 Prüfung stehen je Zeile. Die gemeinsame Identität und geschützte Merkmale aus
 einer tatsächlichen Freigabe werden zusätzlich unter H-04 geprüft; eine
 redaktionelle Abweichung autorisiert keine materielle Umgestaltung.
@@ -79,6 +81,24 @@ redaktionelle Abweichung autorisiert keine materielle Umgestaltung.
 | Q-B01 · Motividentität, Silhouette, Perspektive und Proportionen | [RV-01](images/REVEAL.md#rv-01-motividentität) | Vor Bildauswahl/-freigabe jedes gespeicherte Original mit Briefing/Referenz und geschützten Merkmalen vergleichen; konkrete Abweichungen einzeln ausweisen. |
 | Q-B02 · Ausgearbeitete Illustration und ruhige Flächensprache | [RV-02](images/REVEAL.md#rv-02-illustration) | Vor Bildfreigabe das tatsächliche Original in großer und kleiner Ansicht gegen alle zugeordneten Stilanforderungen beurteilen. Optionale Zeichentechniken nicht in Pflichten umdeuten. |
 | Q-B03 · Transparenter Bildgrund und saubere Kanten | [RV-03–RV-05](images/REVEAL.md#rv-03-transparenz-und-kanten) | Vor Bildfreigabe und nach jeder Bildrevision Original groß/klein ansehen; Außenfläche, Aussparungen, Alphakanten, helle Motivteile und Szenenumgebung tatsächlich prüfen. Bei Bedarf neutralen Grund/Schachbrett verwenden. |
+
+Für neue Abschlussbildangebote bleiben der tatsächlich transparente Bildgrund
+nach RV-03 und der ausgearbeitete gezeichnete Illustrationscharakter nach RV-02
+blockierende Kernanforderungen. Eine ausdrücklich anderslautende Vorgabe zur
+Transparenz muss vor der Qualifikation im gebundenen Briefing stehen. Ein
+Pixel-Art-Reveal, eine bloß vergrößerte Zellgrafik oder ein fotorealistischer
+Ersatz erfüllt die geforderte gezeichnete Illustration nicht. Ein deckender
+Bildgrund oder eingebackenes Schachbrett erfüllt keine geforderte Transparenz.
+Eine Befundannahme oder erreichte Kandidatenzahl hebt diese Sperren nicht auf.
+
+Begrenzte Stil- oder Kantenfeinheiten bleiben nach §6 am konkreten Befund
+redaktionell entscheidbar, wenn die genannten Kernanforderungen erfüllt sind.
+Die negative Bewertung und ihre tatsächliche Annahme bleiben getrennt sichtbar;
+nicht jedes Detail unter Q-B02/Q-B03 wird dadurch zur harten Voraussetzung.
+Die fachliche Präzisierung ist als Soll freigegeben. Ihre vollständige
+maschinelle Abbildung im Import-/Annahmeweg gehört zu
+[PW-IMPORT-A](../tools/PW_IMPORT.md#import-06--qualität-und-entscheidungen)
+und ist noch nicht implementiert; ein erfolgreicher Transport belegt sie nicht.
 
 ### 3.2 Motivvorlage
 
@@ -274,6 +294,8 @@ ungeklärte Rechte bleiben offen. Beim Hintergrund bleiben zusätzlich zu Q-HG01
 freier Räume und ausgeschlossene technische Kompositionsmanipulationen nach
 [Hintergrund §3.4](PUZZLE_BACKGROUNDS.md#34-effektiver-zustand-und-referenzgraph)
 unabdingbar; Q-HG03/Q-HG04 erlauben nur die dort zugelassenen Teilabweichungen.
+Die Abschlussbild-Kernanforderungen nach §3.1 sind ebenfalls keine redaktionell
+annehmbaren Detailabweichungen.
 Eine Annahme hebt keine feste Auftragsgrenze oder geschützte Invariante auf.
 
 Bereitschaft wird je Kandidat bestimmt: Alle fälligen Voraussetzungen müssen

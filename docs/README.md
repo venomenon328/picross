@@ -28,7 +28,7 @@ Pflichtquellen des aktuellen Aufgabenbereichs und die unmittelbar benötigte Nor
 | [production/authoring/](production/authoring/PUZZLE_AUTHORING.md) | Kern und fünf Phasen der Rätselproduktion: Ablauf, Auswahl und Übergaben. |
 | [production/images/](production/images/README.md) | Gestalterische Norm je Bildtyp; keine zweite Ablaufbeschreibung. |
 | [production/](production/PUZZLE_PRODUCTION.md) | Technische Produktion, Qualität, Bildprofile, Rasterableitung und Integration. |
-| [tools/](tools/PRODUCTION_WORKSPACE.md) | Produktionsworkspace, Batch, Bestandseditor, Anzeigeverträge und App-Updates. |
+| [tools/](tools/PRODUCTION_WORKSPACE.md) | Produktionsworkspace, Batch, Bestandseditor, Anzeigeverträge und App-Updates; [PW-IMPORT](tools/PW_IMPORT.md) als freigegebenes Soll für den gebundenen Originaleingang. |
 | [difficulty/](difficulty/PUZZLE_DIFFICULTY_V2.md) | Aktuelle und weiterhin lesbare Bewertungsmethoden, Analyzer und Kalibrierung. |
 | [ci/](ci/CI_WORKFLOW_V2.md) | Projektspezifische Modulauswahl, Toolchain und tatsächliche Prüfgruppen. |
 | [operations/](operations/WEB_HOSTING.md) | Webbuild, Persistenz, manuelles Deployment und [Windows-Spielinstaller](operations/WINDOWS_GAME_APP.md). |
