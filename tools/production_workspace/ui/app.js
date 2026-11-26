@@ -243,7 +243,13 @@ function workflow(view,value){
      sha256:Array.from(new Uint8Array(digest),b=>b.toString(16).padStart(2,'0')).join('')});
    }catch(exc){if(draft===owner&&input.files[0]===file){intent.referenceError=exc.message;updatePrompt();}}
   };
-  label.append(input);section.append(label,node('p','Die ausgewählte Datei beim Senden des Auftrags anhängen.','hint'));
+  const hint=node('p',intent.inputImage?'Beim Senden anhängen: '+intent.inputImage:'Die ausgewählte Datei beim Senden des Auftrags anhängen.','hint');
+  label.append(input);section.append(label,hint);
+  if(intent.inputImage){
+   const remove=node('button','Referenz aus dem Entwurf entfernen');
+   remove.onclick=()=>{input.value='';input.onchange();hint.textContent='Dateiauswahl aufgehoben.';remove.hidden=true;};
+   section.append(remove);
+  }
  }
  let parameterChoice;
  if(value){
@@ -816,6 +822,7 @@ function usesInbox(){
 }
 function startBody(){
  if(!listing||pending)throw Error('Zuerst den aktuellen Quellenstand laden.');
+ if(detail&&intent.action==='rework'&&!intent.feedback?.trim())throw Error('Bitte die gewünschte Korrektur beschreiben.');
  const action=intent.action||'continue',candidate=intent.selection||'';
  if(!detail&&!intent.brief?.trim())throw Error('Bitte zuerst dein Motiv beschreiben.');
  if(detail&&action==='continue'&&['reveal_review','raster_review','raster_ready'].includes(detail.facts.state)&&!candidate)

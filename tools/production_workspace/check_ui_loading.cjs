@@ -420,9 +420,13 @@ const run = code => vm.runInContext(code, context);
 
     run('newDraft()');input('Was soll dein Rätsel zeigen?').value='Keep this local brief';input('Was soll dein Rätsel zeigen?').oninput();
     input('Breite').value='33';input('Breite').oninput();
-    const keptDraft=run('draft.id'),keptDraftStorage=stored.get('pw-briefs');
+    const keptDraft=run('draft.id');
     const draftView=document.getElementById('view').children,draftGeneration=run('generation');
-    const reference=fields().find(el=>el.type==='file');reference.files=[{name:'local-reference.png'}];reference.onchange();
+    const reference=fields().find(el=>el.type==='file'),bytes=Uint8Array.of(1,2,3);
+    reference.files=[{name:'local-reference.png',size:bytes.length,arrayBuffer:async()=>bytes.buffer}];
+    await reference.onchange();
+    assert.equal(run('draft.reference.sha256'),createHash('sha256').update(bytes).digest('hex'));
+    const keptDraftStorage=stored.get('pw-briefs');
     const empty={...base,snapshot:'pw-done-empty',jobs:[],motifs:[],completion:{...completion,completed_ids:[done.puzzle_id]}};
     context.completionSnapshot=empty;await run('checkSources(completionSnapshot)');document.getElementById('load').onclick();
     assert.equal(run('draft.id'),keptDraft,'an active local draft survives explicit adoption');
