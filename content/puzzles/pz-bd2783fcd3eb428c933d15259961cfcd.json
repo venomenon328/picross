@@ -1,0 +1,221 @@
+{
+  "added": {
+    "added_at": "2026-10-22T21:40:14Z",
+    "provenance": {
+      "commit": null,
+      "evidence": null,
+      "kind": "registration",
+      "reason": "Successful first playable registration in the shared transaction.",
+      "reference_time": "2026-10-22T21:40:14Z"
+    }
+  },
+  "background": {
+    "asset": {
+      "bytes": 512786,
+      "file": "game/art/backgrounds/pz-bd2783fcd3eb428c933d15259961cfcd.png",
+      "sha256": "7c6e036e838b74f17f87785b57ca90a562f3d1520c698e3ef6122f481ce40b9d"
+    },
+    "image_revision": 2,
+    "status": "selected"
+  },
+  "category_id": "voegel",
+  "definition": {
+    "bytes": 6956,
+    "file": "game/data/content/silbermoewe_001.json",
+    "sha256": "d99ec3feb7a9facc8964531eed14523f84589a3ac1e22391e2f7cead8ccdb45f"
+  },
+  "difficulty": {
+    "compact_analysis": {
+      "analysis_hash": "5c8e38b442165226370a4c6876805cef3a922056561de45f4138bde9466b84b5",
+      "deduction_complete": true,
+      "line_analysis_complete": true,
+      "line_fixpoint_confirmed": true,
+      "new_singletons": 1344,
+      "profiles_hash": "84109994320b48e9ec37efb473fffc69534cb99d4d27f2239b58c98f7101f13c",
+      "r4": null,
+      "reason": null,
+      "result_hash": "cc06234392cda10f05a668d52e7b766cd9b252708c28f8ad8fe08c8ec443e9ab",
+      "status": "solved",
+      "structure": {
+        "adjacent_color_changes": 0,
+        "cells": 1344,
+        "clue_length_histogram": {
+          "1": 37,
+          "10": 2,
+          "11": 5,
+          "12": 3,
+          "13": 3,
+          "14": 2,
+          "15": 1,
+          "17": 2,
+          "19": 1,
+          "2": 35,
+          "20": 1,
+          "21": 2,
+          "22": 2,
+          "23": 1,
+          "24": 1,
+          "3": 23,
+          "4": 12,
+          "5": 9,
+          "6": 8,
+          "7": 5,
+          "8": 3,
+          "9": 3
+        },
+        "colors": 1,
+        "geometric_slack": 1795,
+        "height": 32,
+        "mandatory_gaps": 91,
+        "short_blocks": 72,
+        "total_clue_length": 802,
+        "total_clues": 161,
+        "width": 42
+      },
+      "trace_hash": "a896677293ec4f8cdd822b38f9e6a5c092ef34ff9a9fd2565568a95d295f4b77",
+      "wave_count": 67
+    },
+    "logic_binding": {
+      "matrix_hash": "b026456cc2a174c68764254ac8a19e486270a948141fa8750f41171a0a4bff1e"
+    },
+    "rating": {
+      "analysis_result_hash": "cc06234392cda10f05a668d52e7b766cd9b252708c28f8ad8fe08c8ec443e9ab",
+      "format": "picross-catalog-sd2-rating-v1",
+      "method": "picross-difficulty-0.4",
+      "method_hash": "5508f0742aa858a6adc31aa621433e68298b915fb0fd6b8d9e74e576ba87caaf",
+      "rating_hash": "43e9e3c4f378309b9a2f7cb81072b7c78b3803c75bae95325a0d65a454050c7d",
+      "result": {
+        "analysis_result_hash": "cc06234392cda10f05a668d52e7b766cd9b252708c28f8ad8fe08c8ec443e9ab",
+        "assessment": {
+          "boundaries": {
+            "distance_lower": [
+              3163769,
+              5444420
+            ],
+            "distance_upper": [
+              2280651,
+              5444420
+            ],
+            "lower": [
+              3,
+              1
+            ],
+            "nearest_distance": [
+              2280651,
+              5444420
+            ],
+            "upper": [
+              4,
+              1
+            ]
+          },
+          "contributions": {
+            "demand": [
+              713,
+              340
+            ],
+            "search": [
+              79043,
+              64052
+            ],
+            "workload": [
+              1,
+              4
+            ]
+          },
+          "level": 4,
+          "level_without_workload": 4,
+          "score": [
+            19497029,
+            5444420
+          ],
+          "signals": {
+            "context": [
+              33,
+              85
+            ],
+            "fluent": false,
+            "highest_family": "E2",
+            "longest_narrow_run": 4,
+            "narrow_waves": 32,
+            "peak_search": [
+              31515,
+              32026
+            ],
+            "raw_workload": [
+              1,
+              4
+            ],
+            "spans": 479,
+            "workload_ceiling": 4,
+            "workload_guard": "none"
+          },
+          "without_workload": [
+            4533981,
+            1361105
+          ]
+        },
+        "confidence": "medium",
+        "estimated_minutes": null,
+        "explanation": "Model estimate from synthetic references; no human calibration or time estimate. Demand, search and bounded workload use independently checked line profiles.",
+        "format": "picross-sd2-rating-v1",
+        "method": "picross-difficulty-0.4",
+        "method_hash": "5508f0742aa858a6adc31aa621433e68298b915fb0fd6b8d9e74e576ba87caaf",
+        "profile_scope": "complete_line",
+        "reason": "complete_line",
+        "status": "rated"
+      },
+      "source": {
+        "bytes": 6956,
+        "definition_id": "pz-bd2783fcd3eb428c933d15259961cfcd",
+        "engine_logic_hash": "f060ea9a5ef49e9f7d102ff19fc8bfcdb41680f455dee3302a5ffac93d81ac0a",
+        "kind": "runtime",
+        "production_mode": "unknown",
+        "runtime_revision": 1,
+        "sha256": "d99ec3feb7a9facc8964531eed14523f84589a3ac1e22391e2f7cead8ccdb45f"
+      }
+    },
+    "rating_revision": 2
+  },
+  "format": "picross-puzzle-record-v1",
+  "id": "pz-bd2783fcd3eb428c933d15259961cfcd",
+  "mode": "mono",
+  "name": "Silbermöwe",
+  "reveal": {
+    "asset": {
+      "bytes": 1829533,
+      "file": "game/art/content/silbermoewe_001.png",
+      "sha256": "03211f56cc6070575b4c9be740eb739a039891664f00ed711c74a2ffad6d68c0"
+    },
+    "catalog": {
+      "generator": "picross-catalog-reveal-1",
+      "profiles": [
+        {
+          "asset": {
+            "bytes": 18183,
+            "file": "game/art/catalog/pz-bd2783fcd3eb428c933d15259961cfcd-ui100.png",
+            "sha256": "d683ed5cfc1b32c562ce30df83ee11c308ad1eb884c5c98992ec1677f05cc71e"
+          },
+          "height": 112,
+          "profile": "catalog-ui100-v1",
+          "width": 168
+        },
+        {
+          "asset": {
+            "bytes": 26700,
+            "file": "game/art/catalog/pz-bd2783fcd3eb428c933d15259961cfcd-ui125.png",
+            "sha256": "93f201cf41c36968364d18ef4a62489265dfd5d741b42b40c0810ef8ca603622"
+          },
+          "height": 140,
+          "profile": "catalog-ui125-v1",
+          "width": 210
+        }
+      ],
+      "source_height": 1024,
+      "source_width": 1536
+    },
+    "image_revision": 1
+  },
+  "save_slot": "silbermoewe_001",
+  "visible": true
+}

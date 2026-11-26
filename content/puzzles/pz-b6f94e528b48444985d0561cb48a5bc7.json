@@ -1,0 +1,205 @@
+{
+  "added": {
+    "added_at": "2026-10-25T13:45:50Z",
+    "provenance": {
+      "commit": null,
+      "evidence": null,
+      "kind": "registration",
+      "reason": "Successful first playable registration in the shared transaction.",
+      "reference_time": "2026-10-25T13:45:50Z"
+    }
+  },
+  "background": {
+    "asset": {
+      "bytes": 939774,
+      "file": "game/art/backgrounds/pz-b6f94e528b48444985d0561cb48a5bc7.png",
+      "sha256": "11d43f7b4b04cfe0c92aebc3b565ae6be9886fda4968a2254e58bc719dd667d4"
+    },
+    "image_revision": 3,
+    "status": "selected"
+  },
+  "category_id": "mythen-fantasie",
+  "definition": {
+    "bytes": 1565,
+    "file": "game/data/content/ankh_001.json",
+    "sha256": "4313e75f67f9644c98986a2c2298b4400ab0ab27a9a7005a32254be99a2116fb"
+  },
+  "difficulty": {
+    "compact_analysis": {
+      "analysis_hash": "20e84f03802b75704f1488be56355d3f0b7b77070a3397b9899333bdbd217a2b",
+      "deduction_complete": true,
+      "line_analysis_complete": true,
+      "line_fixpoint_confirmed": true,
+      "new_singletons": 150,
+      "profiles_hash": "99039a6c7421e7eee591cd0ec414c53fcde1001126b95291d4879aa2a044e1bd",
+      "r4": null,
+      "reason": null,
+      "result_hash": "42c2dd14ef6591d2b8a51a2fcc5b9e9d73f5095fd56d82c1d21aa6acf0dddf38",
+      "status": "solved",
+      "structure": {
+        "adjacent_color_changes": 0,
+        "cells": 150,
+        "clue_length_histogram": {
+          "1": 18,
+          "10": 1,
+          "2": 9,
+          "3": 4,
+          "4": 4,
+          "9": 2
+        },
+        "colors": 1,
+        "geometric_slack": 194,
+        "height": 15,
+        "mandatory_gaps": 14,
+        "short_blocks": 27,
+        "total_clue_length": 92,
+        "total_clues": 38,
+        "width": 10
+      },
+      "trace_hash": "e7f045a45d72b1a99c29d2a8c86285baae00bb5c364e53d509d54607e30adf97",
+      "wave_count": 11
+    },
+    "logic_binding": {
+      "matrix_hash": "2531d817a94c93639fa52f52ad89a32b09ce20a1a76e1fbbff3ff86f8a83d4a9"
+    },
+    "rating": {
+      "analysis_result_hash": "42c2dd14ef6591d2b8a51a2fcc5b9e9d73f5095fd56d82c1d21aa6acf0dddf38",
+      "format": "picross-catalog-sd2-rating-v1",
+      "method": "picross-difficulty-0.4",
+      "method_hash": "5508f0742aa858a6adc31aa621433e68298b915fb0fd6b8d9e74e576ba87caaf",
+      "rating_hash": "bdd01107df3b2d334b3971494392df4d89aad8de8ab3fdb77d42bf1e2df0e2a3",
+      "result": {
+        "analysis_result_hash": "42c2dd14ef6591d2b8a51a2fcc5b9e9d73f5095fd56d82c1d21aa6acf0dddf38",
+        "assessment": {
+          "boundaries": {
+            "distance_lower": [
+              17951,
+              25536
+            ],
+            "distance_upper": [
+              7585,
+              25536
+            ],
+            "lower": [
+              2,
+              1
+            ],
+            "nearest_distance": [
+              7585,
+              25536
+            ],
+            "upper": [
+              3,
+              1
+            ]
+          },
+          "contributions": {
+            "demand": [
+              159,
+              76
+            ],
+            "search": [
+              25,
+              42
+            ],
+            "workload": [
+              1,
+              64
+            ]
+          },
+          "level": 3,
+          "level_without_workload": 3,
+          "score": [
+            69023,
+            25536
+          ],
+          "signals": {
+            "context": [
+              7,
+              19
+            ],
+            "fluent": false,
+            "highest_family": "E2",
+            "longest_narrow_run": 0,
+            "narrow_waves": 0,
+            "peak_search": [
+              25,
+              42
+            ],
+            "raw_workload": [
+              1,
+              64
+            ],
+            "spans": 50,
+            "workload_ceiling": 3,
+            "workload_guard": "none"
+          },
+          "without_workload": [
+            4289,
+            1596
+          ]
+        },
+        "confidence": "medium",
+        "estimated_minutes": null,
+        "explanation": "Model estimate from synthetic references; no human calibration or time estimate. Demand, search and bounded workload use independently checked line profiles.",
+        "format": "picross-sd2-rating-v1",
+        "method": "picross-difficulty-0.4",
+        "method_hash": "5508f0742aa858a6adc31aa621433e68298b915fb0fd6b8d9e74e576ba87caaf",
+        "profile_scope": "complete_line",
+        "reason": "complete_line",
+        "status": "rated"
+      },
+      "source": {
+        "bytes": 1565,
+        "definition_id": "pz-b6f94e528b48444985d0561cb48a5bc7",
+        "engine_logic_hash": "34db92df19a9c0724c54d41d6c62b6ff6baf1d28d0783e7fdb27bd94f721f1c2",
+        "kind": "runtime",
+        "production_mode": "unknown",
+        "runtime_revision": 1,
+        "sha256": "4313e75f67f9644c98986a2c2298b4400ab0ab27a9a7005a32254be99a2116fb"
+      }
+    },
+    "rating_revision": 2
+  },
+  "format": "picross-puzzle-record-v1",
+  "id": "pz-b6f94e528b48444985d0561cb48a5bc7",
+  "mode": "mono",
+  "name": "Ankh",
+  "reveal": {
+    "asset": {
+      "bytes": 1869133,
+      "file": "game/art/content/ankh_001.png",
+      "sha256": "ae6a6719f21111c623a32130bd2e31ed44a61343ab95c90bc73052d64c336360"
+    },
+    "catalog": {
+      "generator": "picross-catalog-reveal-1",
+      "profiles": [
+        {
+          "asset": {
+            "bytes": 9710,
+            "file": "game/art/catalog/pz-b6f94e528b48444985d0561cb48a5bc7-ui100.png",
+            "sha256": "633cc31c87919a10d745064700ab59be120bd2aabeda91561bc6d1e021bfa0cc"
+          },
+          "height": 112,
+          "profile": "catalog-ui100-v1",
+          "width": 75
+        },
+        {
+          "asset": {
+            "bytes": 13688,
+            "file": "game/art/catalog/pz-b6f94e528b48444985d0561cb48a5bc7-ui125.png",
+            "sha256": "9ba24312cafb75fde5f8d5b225b10f8d37d8c964c7cf49d625188761df8d93b7"
+          },
+          "height": 140,
+          "profile": "catalog-ui125-v1",
+          "width": 94
+        }
+      ],
+      "source_height": 1536,
+      "source_width": 1024
+    },
+    "image_revision": 1
+  },
+  "save_slot": "ankh_001",
+  "visible": true
+}

@@ -1,0 +1,213 @@
+{
+  "added": {
+    "added_at": "2026-10-16T17:58:13Z",
+    "provenance": {
+      "commit": "f8259e452caabbb44cea77e0ba5879beb9b82454",
+      "evidence": {
+        "path": "content/added/reports/ku-b-initial.json",
+        "sha256": "e6d7a01e740adbc40cdc90e64c733f95907c8924cfe1f0a4bb734bb7bc6b7884"
+      },
+      "kind": "git-snapshot",
+      "reason": "No direct UTC first-registration receipt found in reviewed sources; earliest verified visible integrated catalog snapshot including bound PR history. Commit UTC is a reconstructed reference, not tool execution time.",
+      "reference_time": "2026-10-16T17:58:13Z"
+    }
+  },
+  "background": {
+    "asset": {
+      "bytes": 1054751,
+      "file": "game/art/backgrounds/pz-72eb9b188896440c8a9a833e803835ec.png",
+      "sha256": "b0e847fc48cf773f7b955488bfc9a3ffa856c45904f6ed6b28880909e10389ed"
+    },
+    "image_revision": 2,
+    "status": "selected"
+  },
+  "category_id": "saeuger",
+  "definition": {
+    "bytes": 11316,
+    "file": "game/data/content/koboldmaki_001.json",
+    "sha256": "271b5a94009850972df72eaa81c0aefa26dbccd62c1389ea28413183c5159383"
+  },
+  "difficulty": {
+    "compact_analysis": {
+      "analysis_hash": "02842f889c4507320fb46b54f04ef7f908dc217c0b00888d965a2048dc4a43dd",
+      "deduction_complete": true,
+      "line_analysis_complete": true,
+      "line_fixpoint_confirmed": true,
+      "new_singletons": 988,
+      "profiles_hash": "8c97d47e6cf1acba7d0b312ec02ff67b08d22e13b40a733eab1e65d79aef6335",
+      "r4": null,
+      "reason": null,
+      "result_hash": "c376d3bb3178052ce9fe51ae95b8f278a0f27376920287c89c7e7b6c5d709b4e",
+      "status": "solved",
+      "structure": {
+        "adjacent_color_changes": 307,
+        "cells": 988,
+        "clue_length_histogram": {
+          "1": 241,
+          "11": 1,
+          "12": 1,
+          "2": 56,
+          "3": 40,
+          "4": 13,
+          "5": 11,
+          "6": 4,
+          "7": 6,
+          "8": 2,
+          "9": 3
+        },
+        "colors": 4,
+        "geometric_slack": 1255,
+        "height": 38,
+        "mandatory_gaps": 9,
+        "short_blocks": 297,
+        "total_clue_length": 712,
+        "total_clues": 378,
+        "width": 26
+      },
+      "trace_hash": "9c7f91144f59e8ab85fd4e07820fda11a5358b40e20b9a2427915629299fd2c5",
+      "wave_count": 51
+    },
+    "logic_binding": {
+      "matrix_hash": "3ce0255d920725b392b55e0717fb999f8a0d42549200050ccf5b53005e05a650"
+    },
+    "rating": {
+      "analysis_result_hash": "c376d3bb3178052ce9fe51ae95b8f278a0f27376920287c89c7e7b6c5d709b4e",
+      "format": "picross-catalog-sd2-rating-v1",
+      "method": "picross-difficulty-0.4",
+      "method_hash": "5508f0742aa858a6adc31aa621433e68298b915fb0fd6b8d9e74e576ba87caaf",
+      "rating_hash": "ca7c017eb9f8a3f9672766191fb3a832b4517cf2763da03df787e68118630a57",
+      "result": {
+        "analysis_result_hash": "c376d3bb3178052ce9fe51ae95b8f278a0f27376920287c89c7e7b6c5d709b4e",
+        "assessment": {
+          "boundaries": {
+            "distance_lower": [
+              4115,
+              6448
+            ],
+            "distance_upper": [
+              2333,
+              6448
+            ],
+            "lower": [
+              3,
+              1
+            ],
+            "nearest_distance": [
+              2333,
+              6448
+            ],
+            "upper": [
+              4,
+              1
+            ]
+          },
+          "contributions": {
+            "demand": [
+              181,
+              84
+            ],
+            "search": [
+              167015,
+              135408
+            ],
+            "workload": [
+              1,
+              4
+            ]
+          },
+          "level": 4,
+          "level_without_workload": 4,
+          "score": [
+            23459,
+            6448
+          ],
+          "signals": {
+            "context": [
+              13,
+              21
+            ],
+            "fluent": false,
+            "highest_family": "E2",
+            "longest_narrow_run": 6,
+            "narrow_waves": 20,
+            "peak_search": [
+              133163,
+              135408
+            ],
+            "raw_workload": [
+              1,
+              4
+            ],
+            "spans": 592,
+            "workload_ceiling": 4,
+            "workload_guard": "none"
+          },
+          "without_workload": [
+            21847,
+            6448
+          ]
+        },
+        "confidence": "medium",
+        "estimated_minutes": null,
+        "explanation": "Model estimate from synthetic references; no human calibration or time estimate. Demand, search and bounded workload use independently checked line profiles.",
+        "format": "picross-sd2-rating-v1",
+        "method": "picross-difficulty-0.4",
+        "method_hash": "5508f0742aa858a6adc31aa621433e68298b915fb0fd6b8d9e74e576ba87caaf",
+        "profile_scope": "complete_line",
+        "reason": "complete_line",
+        "status": "rated"
+      },
+      "source": {
+        "bytes": 11316,
+        "definition_id": "pz-72eb9b188896440c8a9a833e803835ec",
+        "engine_logic_hash": "7c1156b9f7990d2d7466eeb173a9cabf11927b0825f9b5c0adad17124b80029e",
+        "kind": "runtime",
+        "production_mode": "unknown",
+        "runtime_revision": 1,
+        "sha256": "271b5a94009850972df72eaa81c0aefa26dbccd62c1389ea28413183c5159383"
+      }
+    },
+    "rating_revision": 2
+  },
+  "format": "picross-puzzle-record-v1",
+  "id": "pz-72eb9b188896440c8a9a833e803835ec",
+  "mode": "color",
+  "name": "Koboldmaki",
+  "reveal": {
+    "asset": {
+      "bytes": 1971254,
+      "file": "game/art/content/koboldmaki_001.png",
+      "sha256": "47712f05e7a2e3e0bbc7255f35af9d2407f52d50d0432ea4915be2370a9417ae"
+    },
+    "catalog": {
+      "generator": "picross-catalog-reveal-1",
+      "profiles": [
+        {
+          "asset": {
+            "bytes": 11400,
+            "file": "game/art/catalog/pz-72eb9b188896440c8a9a833e803835ec-ui100.png",
+            "sha256": "79439e7d05e8a11801c6a5c3bf9adcbe67cde2f3a2faeb107798a21b9a30450c"
+          },
+          "height": 112,
+          "profile": "catalog-ui100-v1",
+          "width": 75
+        },
+        {
+          "asset": {
+            "bytes": 16685,
+            "file": "game/art/catalog/pz-72eb9b188896440c8a9a833e803835ec-ui125.png",
+            "sha256": "f989b4ccff5c45e568533c5a5dfcc1cbca511f960c7f109e64ca8634f1022528"
+          },
+          "height": 140,
+          "profile": "catalog-ui125-v1",
+          "width": 94
+        }
+      ],
+      "source_height": 1536,
+      "source_width": 1024
+    },
+    "image_revision": 1
+  },
+  "save_slot": "koboldmaki_001",
+  "visible": true
+}

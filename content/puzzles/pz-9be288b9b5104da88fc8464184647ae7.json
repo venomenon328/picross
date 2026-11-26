@@ -1,0 +1,206 @@
+{
+  "added": {
+    "added_at": "2026-10-21T23:22:37Z",
+    "provenance": {
+      "commit": null,
+      "evidence": null,
+      "kind": "registration",
+      "reason": "Successful first playable registration in the shared transaction.",
+      "reference_time": "2026-10-21T23:22:37Z"
+    }
+  },
+  "background": {
+    "asset": {
+      "bytes": 682046,
+      "file": "game/art/backgrounds/pz-9be288b9b5104da88fc8464184647ae7.png",
+      "sha256": "e32d2aafc6f22afc22758260146cfc815ef1f6c5b12d73ea8210e390b15e88f1"
+    },
+    "image_revision": 3,
+    "status": "selected"
+  },
+  "category_id": "technik-erfindungen",
+  "definition": {
+    "bytes": 8425,
+    "file": "game/data/content/game_boy_001.json",
+    "sha256": "fbb2bddb7034e7975242f7581815b4bdbef08db84022f61053b3303c87020162"
+  },
+  "difficulty": {
+    "compact_analysis": {
+      "analysis_hash": "d591d97f4d0ab3e249efe53cd6a8daeeb63377bcdc7029e96c40f02dbddfcf53",
+      "deduction_complete": true,
+      "line_analysis_complete": false,
+      "line_fixpoint_confirmed": true,
+      "new_singletons": 1019,
+      "profiles_hash": "044c19c09168087ad0350c2bab87eadbfb9dd1023ce4de2d47cfd83daa4db122",
+      "r4": {
+        "baseline": {
+          "bytes": 69360,
+          "sha256": "3119d3820623cfe184f9f1a2f7c43ac83121ad039f00ff8c2c9c9d4ee251ff4b"
+        },
+        "baseline_profile_hash": "f63ee6c88e6baa9f6a22f386ae532482d7ffb7b9a2237867f0d7cd9960ab608f",
+        "baseline_status": "stalled",
+        "baseline_verified": true,
+        "instrumentation": "separate_R4_evidence_not_synchronous_waves",
+        "label": "linienübergreifend / besonders hoher logischer Anspruch",
+        "necessity": "required",
+        "proof": {
+          "bytes": 82263,
+          "sha256": "07a350b41711d860ca62946d10e5cdb62138a3f492e0c57c46116fb034c7c5dc"
+        },
+        "proof_profile_hash": "9dfe08bdb9738dc64d778149490cc3dd43815aee68900291d2e84a3f9ef55727",
+        "proof_status": "solved",
+        "proof_verified": true,
+        "required": true
+      },
+      "reason": null,
+      "result_hash": "2183e0ff43126d7ebdd28a2d640ab4c16f4dd5c55164801f4d68871503420efe",
+      "status": "stalled",
+      "structure": {
+        "adjacent_color_changes": 0,
+        "cells": 1040,
+        "clue_length_histogram": {
+          "1": 11,
+          "17": 6,
+          "2": 125,
+          "20": 6,
+          "26": 4,
+          "3": 77,
+          "4": 1,
+          "40": 4,
+          "5": 12,
+          "7": 6
+        },
+        "colors": 1,
+        "geometric_slack": 810,
+        "height": 40,
+        "mandatory_gaps": 186,
+        "short_blocks": 136,
+        "total_clue_length": 1084,
+        "total_clues": 252,
+        "width": 26
+      },
+      "trace_hash": "598c587e2c55203594151052f4d1a0d6f1703e6f50872ed80baa60175daa03ef",
+      "wave_count": 29
+    },
+    "logic_binding": {
+      "matrix_hash": "cfb69d30f8413a18f56534e1a09f4f5e8821555d484cf6d5c6d48525b330e3d2"
+    },
+    "rating": {
+      "analysis_result_hash": "2183e0ff43126d7ebdd28a2d640ab4c16f4dd5c55164801f4d68871503420efe",
+      "format": "picross-catalog-sd2-rating-v1",
+      "method": "picross-difficulty-0.4",
+      "method_hash": "5508f0742aa858a6adc31aa621433e68298b915fb0fd6b8d9e74e576ba87caaf",
+      "rating_hash": "1f71b7b1628656d36b367ea4a252e7c870dcd75dfe706aef37d699bbe17efc1f",
+      "result": {
+        "analysis_result_hash": "2183e0ff43126d7ebdd28a2d640ab4c16f4dd5c55164801f4d68871503420efe",
+        "assessment": {
+          "boundaries": {
+            "distance_lower": [
+              1,
+              2
+            ],
+            "distance_upper": null,
+            "lower": [
+              4,
+              1
+            ],
+            "nearest_distance": [
+              1,
+              2
+            ],
+            "upper": null
+          },
+          "contributions": {
+            "demand": [
+              9,
+              2
+            ],
+            "search": [
+              0,
+              1
+            ],
+            "workload": [
+              0,
+              1
+            ]
+          },
+          "level": 5,
+          "level_without_workload": 5,
+          "score": [
+            9,
+            2
+          ],
+          "signals": {
+            "line_profiles_are_prefix": true,
+            "r4_required": true,
+            "search_and_workload": "fixed_anchor_not_full_pair_measurement"
+          },
+          "without_workload": [
+            9,
+            2
+          ]
+        },
+        "confidence": "medium",
+        "estimated_minutes": null,
+        "explanation": "Model estimate from synthetic references; no human calibration or time estimate. Required R4 uses a fixed anchor; line profiles are prefixes, not complete pair measurements.",
+        "format": "picross-sd2-rating-v1",
+        "method": "picross-difficulty-0.4",
+        "method_hash": "5508f0742aa858a6adc31aa621433e68298b915fb0fd6b8d9e74e576ba87caaf",
+        "profile_scope": "line_prefix",
+        "reason": "required_r4",
+        "status": "rated"
+      },
+      "source": {
+        "bytes": 8425,
+        "definition_id": "pz-9be288b9b5104da88fc8464184647ae7",
+        "engine_logic_hash": "a7aa16245535c37df77011b72e0948a8712f38f9e8adb9f98048f7b617a5c53a",
+        "kind": "runtime",
+        "production_mode": "unknown",
+        "runtime_revision": 1,
+        "sha256": "fbb2bddb7034e7975242f7581815b4bdbef08db84022f61053b3303c87020162"
+      }
+    },
+    "rating_revision": 2
+  },
+  "format": "picross-puzzle-record-v1",
+  "id": "pz-9be288b9b5104da88fc8464184647ae7",
+  "mode": "mono",
+  "name": "Game Boy",
+  "reveal": {
+    "asset": {
+      "bytes": 1980394,
+      "file": "game/art/content/game_boy_001.png",
+      "sha256": "8dd70cb680ca3ee6993d1ddc15be11965e94ccbb271157938de21d987b13352c"
+    },
+    "catalog": {
+      "generator": "picross-catalog-reveal-1",
+      "profiles": [
+        {
+          "asset": {
+            "bytes": 10979,
+            "file": "game/art/catalog/pz-9be288b9b5104da88fc8464184647ae7-ui100.png",
+            "sha256": "807b85269e9b7ed844b817a34c250741f41a68f730ef864c2e95fa3b508c5ccc"
+          },
+          "height": 112,
+          "profile": "catalog-ui100-v1",
+          "width": 75
+        },
+        {
+          "asset": {
+            "bytes": 15854,
+            "file": "game/art/catalog/pz-9be288b9b5104da88fc8464184647ae7-ui125.png",
+            "sha256": "29cb4cbd4b29c30fb7f3f5aef9931695e6744fe16e20221fb91abdeebce255dd"
+          },
+          "height": 140,
+          "profile": "catalog-ui125-v1",
+          "width": 94
+        }
+      ],
+      "source_height": 1536,
+      "source_width": 1024
+    },
+    "image_revision": 1
+  },
+  "save_slot": "game_boy_001",
+  "visible": true
+}

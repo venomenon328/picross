@@ -8,7 +8,6 @@ import subprocess
 FORMAT = 'production-ci-plan/v1'
 PLAN_PATH = '.ci/package.json'
 ID = re.compile(r'pz-[a-z0-9][a-z0-9-]{0,59}')
-CONTENT = 'content/registry.json'
 RUNTIME = 'game/data/registry.json'
 
 
@@ -60,42 +59,38 @@ def validate(plan, changes, branch, read):
         raise ValueError('Invalid production package plan')
     if branch != product_branch(job):
         raise ValueError('Production package must match the integration branch')
-    registry, metadata, bg_row = registry_additions(read(CONTENT, old=True), read(CONTENT), job,
-        'picross-content-registry-v5', ('entries', 'metadata', 'backgrounds'))
     runtime, = registry_additions(read(RUNTIME, old=True), read(RUNTIME), job,
         'picross-runtime-registry-v9', ('entries',))
+    record_path = f'content/puzzles/{job}.json'
+    record = read(record_path)
     definition = f'data/content/{job}.json'
-    reveal = registry.get('reveal')
-    if (reveal not in (f'art/content/{job}.png', f'art/content/{job}.svg')
-            or any(row.get('definition') != definition or row.get('reveal') != reveal or row.get('key') != job
-                   or row.get('save_slot') != job for row in (registry, runtime))
-            or any(row.get('category_id') != metadata.get('category_id') for row in (registry, runtime))
-            or runtime.get('name') != metadata.get('name')):
-        raise ValueError('Registry delivery does not match the new puzzle ID')
-    background = f'content/backgrounds/{job}.json'
-    if not isinstance(bg_row.get('source'), dict) or bg_row['source'].get('file') != background:
-        raise ValueError('Registry background source does not match the new puzzle ID')
-    additions = {f'game/{definition}', f'game/{reveal}', 'game/' + reveal.rsplit('.', 1)[0] + '.txt',
-                 f'content/added/{job}.json', f'content/difficulty/{job}/rating.json',
-                 f'content/reveals/{job}.json', background,
-                 *(f'game/art/catalog/{job}-ui{scale}.png' for scale in (100, 125))}
-    source = read(background)
-    preference = source.get('current') if isinstance(source, dict) else None
+    reveal = runtime.get('reveal')
+    if (not isinstance(record,dict) or record.get('format') != 'picross-puzzle-record-v1'
+            or record.get('id') != job or runtime.get('key') != job or runtime.get('save_slot') != job
+            or runtime.get('definition') != definition or record.get('definition',{}).get('file') != 'game/'+definition
+            or reveal not in (f'art/content/{job}.png', f'art/content/{job}.svg')
+            or record.get('reveal',{}).get('asset',{}).get('file') != 'game/'+reveal
+            or any(record.get(k) != runtime.get(k) for k in ('save_slot','name','category_id','visible'))):
+        raise ValueError('Record or runtime does not match the new puzzle')
+    additions = {record_path, 'game/'+definition, 'game/'+reveal, f'game/art/content/{job}.txt',
+                 *(f'game/art/catalog/{job}-ui{scale}.png' for scale in (100,125))}
+    preference = record.get('background')
     projected = runtime.get('background')
-    if (not isinstance(preference, dict) or preference.get('status') not in ('none', 'standard', 'selected')
-            or not isinstance(projected, dict) or preference['status'] != projected.get('status')
-            or source.get('id') != job):
-        raise ValueError('Unexpected background preference')
-    if preference['status'] == 'selected':
+    if not isinstance(preference,dict) or not isinstance(projected,dict):
+        raise ValueError('Missing background decision')
+    if preference.get('status') == 'selected':
         asset = f'art/backgrounds/{job}.png'
-        if (not isinstance(preference.get('asset'), dict) or preference['asset'].get('file') != 'game/' + asset
-                or not isinstance(projected.get('asset'), dict) or projected['asset'].get('file') != asset):
-            raise ValueError('Foreign selected background')
-        additions.update({f'game/{asset}', f'game/art/backgrounds/{job}.txt'})
-    elif preference.get('asset') is not None or projected.get('asset') is not None:
-        raise ValueError('Unexpected background asset')
+        ref = preference.get('asset')
+        if not isinstance(ref,dict) or ref.get('file') != 'game/'+asset:
+            raise ValueError('Foreign background asset')
+        preference = {**preference,'asset':{**ref,'file':asset}}
+        additions.update({'game/'+asset,f'game/art/backgrounds/{job}.txt'})
+    elif preference.get('status') not in ('standard','none') or preference.get('asset') is not None:
+        raise ValueError('Invalid background decision')
+    if preference != projected:
+        raise ValueError('Background projection differs')
     expected_changes = dict.fromkeys(additions, ('000000', '100644', 'A'))
-    expected_changes.update(dict.fromkeys((CONTENT, RUNTIME), ('100644', '100644', 'M')))
+    expected_changes[RUNTIME] = ('100644', '100644', 'M')
     expected_changes[PLAN_PATH] = ('100644', '100644', 'M') if changes.get(PLAN_PATH, ())[:1] == ('100644',) else (
         '000000', '100644', 'A')
     if changes != expected_changes:

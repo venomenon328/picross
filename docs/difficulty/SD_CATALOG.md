@@ -20,70 +20,17 @@ Erstintegration folgt [RI](../production/PUZZLE_INTEGRATION.md) und
 Die gemeinsamen Difficultyalgorithmen, Labels und Abnahmegrenzen bleiben dabei
 unverändert. Historische Produktions-/Export-/Recoverygenerationen sind abgelöst.
 
-## Aktive Hülle und geprüfter Arbeitsinput
+## Aktuelle Bewertung und geprüfter Eingang
 
-Neue Integration und Ratingadoption MÜSSEN `picross-current-difficulty-v1`
-verwenden. Die Hülle hat exakt:
+Die aktive Bewertung steht im Feld `difficulty` des [Rätselrecords](../production/PUZZLE_INTEGRATION_SINGLE_PATH.md#2-aktuelle-inhalte-als-einzige-bestandsautorität). Seine vier Felder sind `rating_revision,logic_binding,rating,compact_analysis`. Methode, vollständige innere Hashes und ursprünglicher Bewertungsinput bleiben Teil der eingebetteten Fachwerte. Die positive Ratingrevision reicht bis 1.000.000. Bei 0.3 enthält die Logikbindung Matrix- und Analysehash. Bei 0.4 stammt letzterer aus `compact_analysis.analysis_hash`. Der Reader prüft die aktuelle Definition einschließlich Geometrie, Matrix und erforderlicher R4-Profile. Die ursprüngliche Bewertungsquelle darf bei unveränderter Logik von der aktuellen Definition abweichen.
 
-| Feld | Bedeutung |
-| --- | --- |
-| `format` | `picross-current-difficulty-v1` |
-| `method` | `picross-difficulty-0.3` oder `picross-difficulty-0.4` |
-| `production_mode` | Ausdrücklich aktueller Modus `mono`/`color`; keine Herkunft oder Palettenableitung |
-| `current_source` | Bindung an die endgültige aktuelle Definition gemäß SD2-Integration |
-| `logic_binding` | Methodenspezifische Analyse-/Matrixbindung gemäß SD2-Integration |
-| `rating` | Geschlossene eingebettete Bewertung der angegebenen Methode |
-| `compact_analysis` | Geschlossener kompakter Befund derselben Methode |
-| `rating_revision` | Ganze Zahl 1…1000000 |
-| `record_hash` | Kanonischer SHA-256 aller übrigen Felder |
-
-Dateigrenze **96 KiB**, eingebettete Bewertung **64 KiB**. Die Unterformen sind
-in SD2-Integration definiert. Unbekannte Felder sind unzulässig. Die Hülle
-verlangt einen gültigen vollständigen Befund mit `status=rated`.
-
-`current_rating.validate` prüft Form, Werte, Hashes, Methodenkonsistenz,
-Definition/Modus, Geometrie, Hinweise und erforderliche R4-Profile. Neue
-Checked-Daten erfüllen die [Modusgrenze](../production/ZA1_ADAPTER.md#eingang-und-grenzen)
-anhand der belegten Zielmatrix. Registrierte Altstände werden mit ihrer
-gebundenen Bewertung gelesen.
-`current_rating.from_checked` übernimmt bereits tatsächlich geprüfte Werte
-in diese Hülle; es berechnet keine neue Stufe und erfindet keine Herkunft.
-Ein Analyzer-Checked-Bericht bleibt Arbeitsmaterial. Der aktuelle Integrator
-verlangt weder dessen historischen Producer noch frühere Werkzeugdateien,
-Quellenbilder oder Originalexport.
-
-Bestehende gültige Ratings bleiben in ihren tatsächlich unterstützten Formen
-lesbar; SD2-Integration führt die Readerliste. Bei der einmaligen RI-ONE-
-Bestandsumstellung blieben ihre Bytes, Methodenmischung und Revisionen erhalten.
-Neue Neuregistrierungen benötigen die aktive Defaultmethode. Eine spätere
-Defaultänderung bewertet identische bereits registrierte Ergebnisse nicht neu.
-
-## Quellenpriorität und Projektion
-
-Aktuelle Definition und ausdrücklich aktueller Entry-Modus sind die Eingänge
-einer beauftragten Neubewertung. `catalog_rating.load_sources` MUSS die aktiven
-Ratingdateien der gewählten Katalogautorität direkt an diesen Definitionen prüfen.
-Fehlende/ungültige erforderliche aktuelle Werte sind Fehler; `entry.production`
-ist keine alternative Quelle. Historische Berichte werden nicht nachgespielt.
-
-Neue Rasterlogik benötigt neue passende Analyse und vollständigen unabhängigen
-Proof. Name/Kategorie/Bilder allein ändern weder Rating noch Added-Datum oder
-Saves. Die Runtime v8 erhält ausschließlich die bestehende kleine Projektion
-aus SD2-Integration, keine Produktionsnotizen oder Werkzeughüllen.
-
-`catalog_added.load_sources` liest die aktuellen Datumsdateien. Dort gespeicherte
-historische Referenzen verpflichten nicht zum erneuten Lesen früherer Reports.
-Datumsrekonstruktion bleibt eine eigene beauftragte Operation mit aktuellem Plan
-und tatsächlich verfügbaren historischen Datumsbelegen; sie ist keine Registrierung
-oder Produktionswiederholung.
+Der aktuelle Integrationsinput transportiert die geprüfte Bewertung als `picross-current-difficulty-v1`. Bei Registrierung werden die Fachwerte einmal in den Rätselrecord übernommen. Name, Kategorie, Bilder und Datum lassen die Bewertung unverändert. Die Runtime v9 projiziert die sechs Spielerfelder. Eine Änderung der Defaultmethode wirkt auf künftige Bewertungen.
 
 ## Auswahlbericht und getrennte Übernahme
 
 `catalog_analysis.preview` MUSS die explizite ID-Auswahl und tatsächlich geprüfte
 Vorschauwerte liefern. `adopt` übernimmt ausschließlich unveränderte geprüfte
-Arbeitsdaten. Aktuelle Quellenbindungen umfassen Indizes, Definitionen,
-Bildsources und Livebilder, Ratings, Added-Dateien, aktive Methode sowie die
-benötigten aktuellen Capability-/Noticewerte und Abwesenheiten.
+Arbeitsdaten. Aktuelle Quellenbindungen umfassen Kategorien, Runtime, ausgewählte Records und Definitionen sowie die aktive Methode.
 
 Diese Katalogoperation bindet den aktuellen Katalogstand. Sie erteilt keine
 Pflicht zum Lesen alter Archive/Produzenten und erweitert nicht die gezielten
@@ -104,9 +51,8 @@ historische Lesbarkeit erlaubt keine Übernahme eines alten Plans.
 
 ## Aktuelle Katalogjournale
 
-`picross-current-catalog-journal-v2` hat exakt
-`format,operation,report_run,old,new,retained,additions,replacements`.
-`additions` und `replacements` sind leer. Grenze **24 MiB**; der Writer schreibt
+`picross-puzzle-catalog-journal-v1` hat exakt
+`format,operation,old,new,retained`. Grenze **24 MiB**; der Writer schreibt
 nur aktuelle Katalogtexte und projiziert die Runtime. Zulässige Operationen:
 
 | Operation | Autorisiertes fachliches Delta |

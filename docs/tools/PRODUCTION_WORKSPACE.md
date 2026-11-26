@@ -679,7 +679,7 @@ Browserprobe dienen nur PW2-B-T01/A01 im Liefer-PR, nicht einer Dauergalerie.
 
 [PW-DONE / #721](https://github.com/venomenon328/picross/issues/721) bindet den
 Listenfilter an die registrierten IDs aus dem gültigen aktuellen
-`content/registry.json` am Listen-Maincommit. Im Remotebetrieb entscheidet
+die Runtime v9 und das flache Inventar von `content/puzzles/` am Listen-Maincommit. Im Remotebetrieb entscheidet
 der gewählte Remote-main. PW ermittelt die IDs einmal pro gebundenem Stand.
 Bereits registrierte `content/pw/<id>`-Branches werden vor dem Scan übersprungen.
 In main überspringt PW entsprechende Indexeinträge vor dem Lesen ihrer Records.

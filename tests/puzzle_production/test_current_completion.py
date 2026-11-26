@@ -62,7 +62,7 @@ class CurrentCompletionTests(unittest.TestCase):
     def test_completion_no_archives_multiphase_retirement_and_noop(self):
         main=self.close()
         live=current_delivery.snapshot(lambda n,l,missing=False:catalog_io.read(self.root,n,l,missing=missing),'pz-current')
-        self.assertIn("content/reveals/pz-current.json", live["files"])
+        self.assertIn("content/puzzles/pz-current.json", live["files"])
         for profile in live["runtime"]["catalog_reveal"]["profiles"]:
             name = "game/" + profile["asset"]["file"]
             self.assertEqual(live["files"][name], {**profile["asset"], "file": name})
@@ -148,7 +148,7 @@ class CurrentCompletionTests(unittest.TestCase):
         self.assertEqual(value['jobs'], [])
         self.assertEqual(value['completion']['completed_ids'], ['pz-current'])
         self.assertIn("game/art/content/pz-current.png", baseline["files"])
-        with self.assertRaisesRegex(ValueError, "asset binding differs"):
+        with self.assertRaisesRegex(ValueError, "Reveal changed"):
             current_delivery.snapshot(lambda n, l, missing=False: source.read(later, n, l, missing), 'pz-current')
 
 

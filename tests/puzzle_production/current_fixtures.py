@@ -23,7 +23,6 @@ def checkout(root):
     put(root, *TEST_CATALOG)
     cats={"format":categories.FORMAT,"categories":[{"id":"test","name":"Test","order":1}]}
     json_file(root,categories.PATH,cats)
-    json_file(root,content.REGISTRY,{"format":content.FORMAT,"entries":[],"metadata":[],"backgrounds":[]})
     json_file(root,content.RUNTIME,{"format":content.RUNTIME_FORMAT,"categories":cats["categories"],"entries":[]})
     json_file(root,"game/data/background-capability.json",{"format":"picross-runtime-background-capability-v1",
               "runtime_format":"picross-runtime-registry-v6","profile_id":background_contract.PROFILE["id"],"enabled":True})

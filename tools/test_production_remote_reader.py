@@ -25,8 +25,8 @@ MAIN, INPUT, WORK, HEAD, MERGE, REQUEST, TAG = (c*40 for c in 'abcdef1')
 def observation():
     repo = dict(full_name=REPO, id=reader.REPOSITORIES[REPO], default_branch='main')
     plan = '.ci/package.json'
-    registries = {'content/registry.json', 'game/data/registry.json'}
-    background = f'content/backgrounds/{JOB}.json'
+    registries = {'game/data/registry.json'}
+    background = f'content/puzzles/{JOB}.json'
     definition = f'game/data/content/{JOB}.json'
     record_path = f'content/authoring/{JOB}/current/record.json'
     generation = {'id': 127, 'anchor': TAG}
@@ -43,7 +43,7 @@ def observation():
     prior = {'puzzle_id': JOB, 'state': 'editorially_approved', 'work_release': generation}
     input_record, checksum = record(prior, INPUT)
     complete, _ = record(dict(prior, state='registered', integration={'commit': HEAD,
-        'result': {'files': {definition: {'file': definition}}}}), WORK)
+        'result': {'files': {definition: {'file': definition}, background: {'file':background}}}}), WORK)
     req = dict(format='pw-remote-v2', repository=REPO, job=JOB, operation='step5', expected=INPUT,
                record_sha256=checksum, tools=MAIN, main=MAIN, issue=None, input={'background': None, 'decisions': []})
     request_id = reader.digest(req)

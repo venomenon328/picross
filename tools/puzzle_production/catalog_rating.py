@@ -75,10 +75,6 @@ def identity(value):
     return value
 
 
-def path(identifier):
-    return "content/difficulty/" + identity(identifier) + "/rating.json"
-
-
 def source(value):
     exact_keys(value, {"id", "runtime_revision", "definition_sha256"})
     identity(value["id"])
@@ -362,9 +358,20 @@ def validate(value, *, active=True, definition_bytes=None, production_mode=None)
 
 
 def project(value):
+    return project_rating(value["rating"])
+
+
+def embedded_method(rating):
+    method = rating["method"]
+    return method.get("id") if isinstance(method,dict) else method
+
+
+def project_rating(rating):
     from . import sd2_catalog_rating as sd2
-    if method(value) == "picross-difficulty-0.4": return sd2.project(value)
-    r = value["rating"]["result"]
+    if embedded_method(rating) == sd2.METHOD_ID:
+        return sd2.project({"rating": rating})
+    require(embedded_method(rating) == METHOD_ID, "Unsupported difficulty method")
+    r = rating["result"]
     require(r["status"] == "rated", "Cannot project incomplete rating")
     level = "L" + str(r["level"])
     return {"method": METHOD_ID, "level": level, "assessment_type": "instrumented", "confidence": "medium",
@@ -441,47 +448,3 @@ def checked_from_active(value):
     return validate(hashed({"format": sd2.CHECKED if value["format"] == sd2.FORMAT else CHECKED if value["format"] == FORMAT else LEGACY_CHECKED,
         **{k: deepcopy(value[k]) for k in fields(value)},
         **{k: deepcopy(value["adoption"][k]) for k in ("analysis_report_hash", "verification_hash", "tool")}}, "checked_hash"), active=False)
-
-
-def source_paths(root, *registries, temporary=()):
-    """Validate the whole active namespace, including unregistered/alias paths.
-
-    Reports are a distinct namespace, never an alternative active source.
-    Empty canonical directories may remain after an interrupted rollback.
-    """
-    from .content_update import path_in
-    from .catalog_analysis import run_id
-    allowed = {e["id"] for registry in registries for e in registry["entries"]}
-    base = path_in(root, "content/difficulty")
-    if not base.exists(): return set()
-    require(base.is_dir(), "Difficulty namespace must be a directory")
-    found = set()
-    for child in base.iterdir():
-        if child.relative_to(root).as_posix() in temporary: continue
-        directory = path_in(root, child.relative_to(root).as_posix())
-        require(directory.is_dir(), "Misplaced difficulty source: " + child.name)
-        if child.name == "reports":
-            for run in directory.iterdir():
-                run_id(run.name)
-                run = path_in(root, run.relative_to(root).as_posix())
-                require(run.is_dir(), "Difficulty report run must be a directory")
-                for report in run.iterdir():
-                    if report.relative_to(root).as_posix() in temporary: continue
-                    report = path_in(root, report.relative_to(root).as_posix())
-                    require(report.name in ("report.json", "report.md") and report.is_file(), "Misplaced difficulty report")
-            continue
-        identity(child.name)
-        for item in directory.iterdir():
-            if item.relative_to(root).as_posix() in temporary: continue
-            require(child.name in allowed, "Unregistered difficulty source: " + child.name)
-            item = path_in(root, item.relative_to(root).as_posix())
-            require(item.name == "rating.json" and item.is_file(), "Misplaced difficulty source / path collision: " + str(item))
-            found.add(item.relative_to(root).as_posix())
-    return found
-
-
-def load_sources(root, registry):
-    from . import catalog_io as io
-    return {e["id"]: validate(io.json_bytes(io.read(root,path(e["id"]),LIMIT),LIMIT),
-                             definition_bytes=io.read(root,"game/"+e["definition"],2*1024*1024),production_mode=e["mode"])
-            for e in registry["entries"]}

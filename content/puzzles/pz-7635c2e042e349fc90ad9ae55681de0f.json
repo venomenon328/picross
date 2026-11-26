@@ -1,0 +1,212 @@
+{
+  "added": {
+    "added_at": "2026-10-20T14:33:52Z",
+    "provenance": {
+      "commit": null,
+      "evidence": null,
+      "kind": "registration",
+      "reason": "Successful first playable registration in the shared transaction.",
+      "reference_time": "2026-10-20T14:33:52Z"
+    }
+  },
+  "background": {
+    "asset": {
+      "bytes": 495502,
+      "file": "game/art/backgrounds/pz-7635c2e042e349fc90ad9ae55681de0f.png",
+      "sha256": "31161ebe689557314fb9f5678672f1131ddc0bed06646fddc4d8379ea6167b9c"
+    },
+    "image_revision": 2,
+    "status": "selected"
+  },
+  "category_id": "wasserwelt",
+  "definition": {
+    "bytes": 2767,
+    "file": "game/data/content/seepferdchen_001.json",
+    "sha256": "5b082e81bb5f3da5f6d459eee804188fdefdb3c6c6878f76c93bf63c206047db"
+  },
+  "difficulty": {
+    "compact_analysis": {
+      "analysis_hash": "7cedb0088016293fe4fb6a5d987d1c1c9fd4d57ddc72a0a8be17ea211ac1edb1",
+      "deduction_complete": true,
+      "line_analysis_complete": true,
+      "line_fixpoint_confirmed": true,
+      "new_singletons": 378,
+      "profiles_hash": "e796883adf3f20e3988ce28cc44b03bc3efb83e1f5c19069ee2aa2bc3fd6b971",
+      "r4": null,
+      "reason": null,
+      "result_hash": "6bece462fdbec34bb1e15ee4c7c5ef0050ac9c043f08befaabc84e0817496d67",
+      "status": "solved",
+      "structure": {
+        "adjacent_color_changes": 0,
+        "cells": 378,
+        "clue_length_histogram": {
+          "1": 9,
+          "10": 4,
+          "11": 1,
+          "16": 1,
+          "18": 1,
+          "2": 8,
+          "24": 1,
+          "3": 13,
+          "4": 11,
+          "5": 5,
+          "6": 7,
+          "7": 5,
+          "9": 1
+        },
+        "colors": 1,
+        "geometric_slack": 401,
+        "height": 27,
+        "mandatory_gaps": 27,
+        "short_blocks": 17,
+        "total_clue_length": 328,
+        "total_clues": 67,
+        "width": 14
+      },
+      "trace_hash": "541f7ef15ae40449ab34e850f728732eae8d3f8eeaeb958e8d6d3ae206f37e6f",
+      "wave_count": 27
+    },
+    "logic_binding": {
+      "matrix_hash": "e445cdef89cf6c9d0dc3716833233153ab750039e78cb17bc3004f7549d6cf7d"
+    },
+    "rating": {
+      "analysis_result_hash": "6bece462fdbec34bb1e15ee4c7c5ef0050ac9c043f08befaabc84e0817496d67",
+      "format": "picross-catalog-sd2-rating-v1",
+      "method": "picross-difficulty-0.4",
+      "method_hash": "5508f0742aa858a6adc31aa621433e68298b915fb0fd6b8d9e74e576ba87caaf",
+      "rating_hash": "183bc21266de0424ce904c30bfeb6ac1d96d432fb7647839b0fb9bbfa1712389",
+      "result": {
+        "analysis_result_hash": "6bece462fdbec34bb1e15ee4c7c5ef0050ac9c043f08befaabc84e0817496d67",
+        "assessment": {
+          "boundaries": {
+            "distance_lower": [
+              12243,
+              61568
+            ],
+            "distance_upper": [
+              49325,
+              61568
+            ],
+            "lower": [
+              2,
+              1
+            ],
+            "nearest_distance": [
+              12243,
+              61568
+            ],
+            "upper": [
+              3,
+              1
+            ]
+          },
+          "contributions": {
+            "demand": [
+              1,
+              1
+            ],
+            "search": [
+              7603,
+              7696
+            ],
+            "workload": [
+              27,
+              128
+            ]
+          },
+          "level": 3,
+          "level_without_workload": 2,
+          "score": [
+            135379,
+            61568
+          ],
+          "signals": {
+            "context": [
+              0,
+              1
+            ],
+            "fluent": false,
+            "highest_family": "E1",
+            "longest_narrow_run": 2,
+            "narrow_waves": 5,
+            "peak_search": [
+              385,
+              481
+            ],
+            "raw_workload": [
+              27,
+              128
+            ],
+            "spans": 175,
+            "workload_ceiling": 3,
+            "workload_guard": "none"
+          },
+          "without_workload": [
+            15299,
+            7696
+          ]
+        },
+        "confidence": "medium",
+        "estimated_minutes": null,
+        "explanation": "Model estimate from synthetic references; no human calibration or time estimate. Demand, search and bounded workload use independently checked line profiles.",
+        "format": "picross-sd2-rating-v1",
+        "method": "picross-difficulty-0.4",
+        "method_hash": "5508f0742aa858a6adc31aa621433e68298b915fb0fd6b8d9e74e576ba87caaf",
+        "profile_scope": "complete_line",
+        "reason": "complete_line",
+        "status": "rated"
+      },
+      "source": {
+        "bytes": 2767,
+        "definition_id": "pz-7635c2e042e349fc90ad9ae55681de0f",
+        "engine_logic_hash": "edec993d03d358a05fc81dce03caa348db0e916eab84084b47cf86eaea92229e",
+        "kind": "runtime",
+        "production_mode": "unknown",
+        "runtime_revision": 1,
+        "sha256": "5b082e81bb5f3da5f6d459eee804188fdefdb3c6c6878f76c93bf63c206047db"
+      }
+    },
+    "rating_revision": 2
+  },
+  "format": "picross-puzzle-record-v1",
+  "id": "pz-7635c2e042e349fc90ad9ae55681de0f",
+  "mode": "mono",
+  "name": "Seepferdchen",
+  "reveal": {
+    "asset": {
+      "bytes": 2163481,
+      "file": "game/art/content/seepferdchen_001.png",
+      "sha256": "dac1d788f3f143d9dde976f7dc7b8fd02099eea872f759872b0ee58b1360937c"
+    },
+    "catalog": {
+      "generator": "picross-catalog-reveal-1",
+      "profiles": [
+        {
+          "asset": {
+            "bytes": 13251,
+            "file": "game/art/catalog/pz-7635c2e042e349fc90ad9ae55681de0f-ui100.png",
+            "sha256": "96b66e345552ad25c9c25fc73d49f6fe26a885fbe20ad6d2123e06fd0efd63de"
+          },
+          "height": 112,
+          "profile": "catalog-ui100-v1",
+          "width": 75
+        },
+        {
+          "asset": {
+            "bytes": 19457,
+            "file": "game/art/catalog/pz-7635c2e042e349fc90ad9ae55681de0f-ui125.png",
+            "sha256": "19d1daa9d51a82aeed83780f2133d047b6fd3492a8b5f969b85dadf9a410b2d2"
+          },
+          "height": 140,
+          "profile": "catalog-ui125-v1",
+          "width": 94
+        }
+      ],
+      "source_height": 1536,
+      "source_width": 1024
+    },
+    "image_revision": 1
+  },
+  "save_slot": "seepferdchen_001",
+  "visible": true
+}

@@ -33,11 +33,9 @@ def production_path(value):
 def read_path(value):
     """Narrow internal completion evidence; never an HTTP path parameter."""
     ap.relative(value)
-    if value in ('content/categories.json', 'content/registry.json', 'game/data/registry.json'):
+    if value in ('content/categories.json', 'game/data/registry.json'):
         return value
-    if re.fullmatch(r'content/(?:backgrounds|reveals|added)/pz-[a-z0-9][a-z0-9-]{0,59}\.json',value):
-        return value
-    if re.fullmatch(r'content/difficulty/pz-[a-z0-9][a-z0-9-]{0,59}/rating\.json',value):
+    if re.fullmatch(r'content/puzzles/pz-[a-z0-9][a-z0-9-]{0,59}\.json',value):
         return value
     if re.fullmatch(r'game/art/catalog/pz-[a-z0-9][a-z0-9-]{0,59}-ui(?:100|125)\.png', value):
         return value
@@ -150,6 +148,29 @@ class GitSource:
                 ap.require(mode in ('100644', '100755') and kind == 'blob', 'Nur reguläre Gitdateien sind lesbar.')
             parent = parent + '/' + part if parent else part
         return oid
+
+    def puzzle_ids(self, commit):
+        from tools.puzzle_production import puzzle_record
+        check_commit(commit)
+        listing = git(self.root,'ls-tree','-z',commit,'--',puzzle_record.DIRECTORY)
+        if not listing:
+            return set()
+        meta, path = listing.rstrip(b'\0').split(b'\t')
+        mode,kind,oid = meta.split()
+        ap.require(path == puzzle_record.DIRECTORY.encode() and (mode,kind) == (b'040000',b'tree'),
+                   'Ungültiger Katalogbaum.')
+        tree = oid.decode('ascii')
+        ap.require(int(git(self.root,'cat-file','-s',tree)) <= 1024*1024, 'Katalogbaum ist zu groß.')
+        ids = set()
+        for row in git(self.root,'ls-tree','-z',tree).split(b'\0')[:-1]:
+            meta, leaf = row.split(b'\t')
+            name = leaf.decode('utf8')
+            identifier = name.removesuffix('.json')
+            ap.require(meta.split()[:2] == [b'100644',b'blob'] and identifier not in ids and
+                       puzzle_record.path(identifier) == puzzle_record.DIRECTORY+'/'+name,'Ungültiger Rätselrecord.')
+            ids.add(identifier)
+        ap.require(len(ids) <= 10000, 'Zu viele Rätselrecords.')
+        return ids
 
     def read(self, commit, name, limit=JSON_LIMIT, missing=False):
         oid = self.blob(commit, name, missing)

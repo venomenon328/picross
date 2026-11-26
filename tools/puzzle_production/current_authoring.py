@@ -371,16 +371,12 @@ class Checked:
             ap.require(selected['raster'] is not None and 'raster' in decisions, 'Actual qualified raster choice required')
         if j['operation']=='background':
             from . import catalog_rating
-            registry=io.json_bytes(read(content.REGISTRY,8*LIMIT),8*LIMIT)
-            entries=[e for e in registry['entries'] if e['id']==j['puzzle_id']]
-            runtime=io.json_bytes(read(content.RUNTIME,8*LIMIT),8*LIMIT)
-            rows=[r for r in runtime['entries'] if r['id']==j['puzzle_id']]
-            ap.require(len(entries)==len(rows)==1 and entries[0]['mode']==j['target']['mode'] and
-                       'game/'+entries[0]['definition']==j['target']['definition']['file'] and
-                       'game/'+rows[0]['reveal']==j['target']['reveal']['file'], 'Background target is not current active content')
-            reveal_source=content.validate_source(io.json_bytes(read(content.source_path(j['puzzle_id'],'reveal'),LIMIT),LIMIT),entries[0])
-            ap.require(reveal_source['current']['asset']==j['target']['reveal'] and
-                       reveal_source['binding']['identity']['definition']==j['target']['definition'], 'Active target binding differs')
+            from . import current_delivery
+            result = current_delivery.snapshot(lambda n,limit,missing=False:read(n,limit),j['puzzle_id'])
+            ap.require(result['mode'] == j['target']['mode'] and
+                       result['files'].get('game/'+result['entry']['definition']) == j['target']['definition'] and
+                       result['files'].get('game/'+result['runtime']['reveal']) == j['target']['reveal'],
+                       'Background target differs from the registered record')
             definition,_,_,_=catalog_rating.definition(self.bound(j['target']['definition'],2*LIMIT))
             ap.require(definition['id']==j['puzzle_id'], 'Background target differs')
             ap.require(selected['reveal'] is not None and next(a for a in j['assets'] if a['id']==selected['reveal'])['file']==j['target']['reveal'], 'Active reveal reference differs')
@@ -1211,10 +1207,10 @@ def matches(job, result, *, rating=None):
         notice=('\n'.join(k+': '+rights[k] for k in sorted(rights))+'\n').encode('utf8')
         notice_path=content.notice_path(result['entry'])
         ap.require(same(content.ref(notice_path,notice),notice_path),'Completion reveal rights differ')
-        rating_path=catalog_rating.path(job['puzzle_id'])
-        rating_bytes=catalog_rating.encoded(catalog_rating.active_record(rating))
-        ap.require(same(content.ref(rating_path,rating_bytes),rating_path) and
-                   result['runtime']['difficulty']==catalog_rating.project(rating),'Completion assessment differs')
+        from .puzzle_catalog import difficulty_fields
+        active = catalog_rating.active_record(rating)
+        ap.require(result['difficulty_sha256'] == digest(difficulty_fields(active)) and
+                   result['runtime']['difficulty'] == catalog_rating.project(rating),'Completion assessment differs')
     else:mode=job['target']['mode']
     ap.require(result['mode']==mode, 'Completion mode differs')
     bg=selected['background']; actual=result['runtime']['background']
@@ -1267,8 +1263,10 @@ def _complete(root, record_path, commit, current_input, raw, job, source):
     result=current_delivery.snapshot(lambda n,limit,missing=False:source.read(commit,n,limit,missing),job['puzzle_id'])
     checked.matches(result)
     if incoming is not None:
-        registry=io.json_bytes(source.read(commit,content.REGISTRY,8*LIMIT),8*LIMIT)
-        actual=content.selected(None,registry,job['puzzle_id'],read=lambda n,limit,missing=False:source.read(commit,n,limit,missing))
+        from . import puzzle_catalog
+        read = lambda n,limit,missing=False:source.read(commit,n,limit,missing)
+        cats,runtime = puzzle_catalog.index(read,source.history.puzzle_ids(commit))
+        actual = puzzle_catalog.delivery(read,job['puzzle_id'],cats,result['runtime'])
         ap.require(catalog_integration.same(actual,incoming), 'Commit differs from selected current integration input')
     if job['integration'] is not None:
         ap.require(job['integration']=={'commit':commit,'result':result}, 'Conflicting current completion')

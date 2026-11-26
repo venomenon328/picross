@@ -1,0 +1,207 @@
+{
+  "added": {
+    "added_at": "2026-11-15T21:21:22Z",
+    "provenance": {
+      "commit": null,
+      "evidence": null,
+      "kind": "registration",
+      "reason": "Successful first playable registration in the shared transaction.",
+      "reference_time": "2026-11-15T21:21:22Z"
+    }
+  },
+  "background": {
+    "asset": {
+      "bytes": 973252,
+      "file": "game/art/backgrounds/pz-schluessel.png",
+      "sha256": "fcfd0549390c667a1480146206ecd6c9938f8b4d0a6b0fdb31b3b434b6ccb96a"
+    },
+    "image_revision": 2,
+    "status": "selected"
+  },
+  "category_id": "haushalt-alltag",
+  "definition": {
+    "bytes": 1749,
+    "file": "game/data/content/schluessel_001.json",
+    "sha256": "e1b86c98967ebe80842088f792f4e5c95d1d514887e984ec9a4e4bf4e35a2ec1"
+  },
+  "difficulty": {
+    "compact_analysis": {
+      "analysis_hash": "a3b35ef98ca12ead3f24d2407868d78cfda670074dbc423560cc8549d5428947",
+      "deduction_complete": true,
+      "line_analysis_complete": true,
+      "line_fixpoint_confirmed": true,
+      "new_singletons": 200,
+      "profiles_hash": "ae4b32be0bfeed5f99fc70cf1d556f82efe74f54aa539bcf82a46b0905302192",
+      "r4": null,
+      "reason": null,
+      "result_hash": "ff0b71f294669244083774b90508d57474d016f697930e4f248f52876960313c",
+      "status": "solved",
+      "structure": {
+        "adjacent_color_changes": 0,
+        "cells": 200,
+        "clue_length_histogram": {
+          "1": 7,
+          "14": 1,
+          "15": 1,
+          "2": 20,
+          "3": 5,
+          "4": 6,
+          "5": 2,
+          "7": 1
+        },
+        "colors": 1,
+        "geometric_slack": 254,
+        "height": 10,
+        "mandatory_gaps": 14,
+        "short_blocks": 27,
+        "total_clue_length": 132,
+        "total_clues": 43,
+        "width": 20
+      },
+      "trace_hash": "3551efa054c84b9397cb6b9a04806b066dd776f1b3116a379b818ab39e8639a9",
+      "wave_count": 28
+    },
+    "logic_binding": {
+      "matrix_hash": "6f5cdf9eb5d7fbddaf2b0bd718f2fed729bfb867e5baf18b268270ff20186ff1"
+    },
+    "rating": {
+      "analysis_result_hash": "ff0b71f294669244083774b90508d57474d016f697930e4f248f52876960313c",
+      "format": "picross-catalog-sd2-rating-v1",
+      "method": "picross-difficulty-0.4",
+      "method_hash": "5508f0742aa858a6adc31aa621433e68298b915fb0fd6b8d9e74e576ba87caaf",
+      "rating_hash": "a1d9a18205c6d5a04cc514ce1c2007b94b5540bf556c08963a150280feabbd46",
+      "result": {
+        "analysis_result_hash": "ff0b71f294669244083774b90508d57474d016f697930e4f248f52876960313c",
+        "assessment": {
+          "boundaries": {
+            "distance_lower": [
+              14281,
+              50880
+            ],
+            "distance_upper": [
+              36599,
+              50880
+            ],
+            "lower": [
+              3,
+              1
+            ],
+            "nearest_distance": [
+              14281,
+              50880
+            ],
+            "upper": [
+              4,
+              1
+            ]
+          },
+          "contributions": {
+            "demand": [
+              41,
+              20
+            ],
+            "search": [
+              737,
+              636
+            ],
+            "workload": [
+              23,
+              320
+            ]
+          },
+          "level": 4,
+          "level_without_workload": 4,
+          "score": [
+            166921,
+            50880
+          ],
+          "signals": {
+            "context": [
+              1,
+              5
+            ],
+            "fluent": false,
+            "highest_family": "E2",
+            "longest_narrow_run": 4,
+            "narrow_waves": 13,
+            "peak_search": [
+              289,
+              318
+            ],
+            "raw_workload": [
+              23,
+              320
+            ],
+            "spans": 86,
+            "workload_ceiling": 4,
+            "workload_guard": "none"
+          },
+          "without_workload": [
+            2551,
+            795
+          ]
+        },
+        "confidence": "medium",
+        "estimated_minutes": null,
+        "explanation": "Model estimate from synthetic references; no human calibration or time estimate. Demand, search and bounded workload use independently checked line profiles.",
+        "format": "picross-sd2-rating-v1",
+        "method": "picross-difficulty-0.4",
+        "method_hash": "5508f0742aa858a6adc31aa621433e68298b915fb0fd6b8d9e74e576ba87caaf",
+        "profile_scope": "complete_line",
+        "reason": "complete_line",
+        "status": "rated"
+      },
+      "source": {
+        "bytes": 1762,
+        "definition_id": "pz-schluessel",
+        "engine_logic_hash": "600cc34200fd56ab89345a4ef5568d94cad740f45a8be27a98b6e88f73e8797d",
+        "kind": "runtime",
+        "production_mode": "unknown",
+        "runtime_revision": 1,
+        "sha256": "cdb4fd20c9fa4726fd26e0557452027400622ede32d8d4d8e5b691a568ba65e4"
+      }
+    },
+    "rating_revision": 1
+  },
+  "format": "picross-puzzle-record-v1",
+  "id": "pz-schluessel",
+  "mode": "mono",
+  "name": "Schlüssel",
+  "reveal": {
+    "asset": {
+      "bytes": 1296425,
+      "file": "game/art/content/schluessel_001.png",
+      "sha256": "d7287673cd05a172c2deda3b1d93ebc993a8979ec828b945709f769f567344cf"
+    },
+    "catalog": {
+      "generator": "picross-catalog-reveal-1",
+      "profiles": [
+        {
+          "asset": {
+            "bytes": 21517,
+            "file": "game/art/catalog/pz-schluessel-ui100.png",
+            "sha256": "1c8bab66a67f13cd6454a3388c99e8ccede0ffaef4e57ad7d60210da5f85c142"
+          },
+          "height": 112,
+          "profile": "catalog-ui100-v1",
+          "width": 187
+        },
+        {
+          "asset": {
+            "bytes": 32018,
+            "file": "game/art/catalog/pz-schluessel-ui125.png",
+            "sha256": "8464ebc97ce0f7d4ccfa34c83c405c080afcd046ef6fd85d90c4047c617abb8f"
+          },
+          "height": 140,
+          "profile": "catalog-ui125-v1",
+          "width": 234
+        }
+      ],
+      "source_height": 971,
+      "source_width": 1619
+    },
+    "image_revision": 1
+  },
+  "save_slot": "schluessel_001",
+  "visible": true
+}

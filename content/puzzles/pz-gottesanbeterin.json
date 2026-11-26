@@ -1,0 +1,207 @@
+{
+  "added": {
+    "added_at": "2026-11-25T16:43:31Z",
+    "provenance": {
+      "commit": null,
+      "evidence": null,
+      "kind": "registration",
+      "reason": "Successful first playable registration in the shared transaction.",
+      "reference_time": "2026-11-25T16:43:31Z"
+    }
+  },
+  "background": {
+    "asset": {
+      "bytes": 408118,
+      "file": "game/art/backgrounds/pz-gottesanbeterin.png",
+      "sha256": "d5e73c56b8b1d957f1783d77c644aa0f1004313bf774455ebf05bad9301e5166"
+    },
+    "image_revision": 1,
+    "status": "selected"
+  },
+  "category_id": "insekten-kleine-tiere",
+  "definition": {
+    "bytes": 3530,
+    "file": "game/data/content/pz-gottesanbeterin.json",
+    "sha256": "cc354373eacca287e9ef62b42c25c0226c9e8a088030ca98650287ec2ffd588a"
+  },
+  "difficulty": {
+    "compact_analysis": {
+      "analysis_hash": "29c0ce11d6921d5942f0b20234802fda03a6695e4dbdc8c1c94f225f20a487de",
+      "deduction_complete": true,
+      "line_analysis_complete": false,
+      "line_fixpoint_confirmed": true,
+      "new_singletons": 178,
+      "profiles_hash": "11145b77e05a53b7d1f2d2613952c1feec3ec28691c0456cc16a49ec0e6c479c",
+      "r4": {
+        "baseline": {
+          "bytes": 17219,
+          "sha256": "23d038ae2dd6c89f9f75530e19b7578bfee86d7e75e951e201bbbeac00319c2b"
+        },
+        "baseline_profile_hash": "f63ee6c88e6baa9f6a22f386ae532482d7ffb7b9a2237867f0d7cd9960ab608f",
+        "baseline_status": "stalled",
+        "baseline_verified": true,
+        "instrumentation": "separate_R4_evidence_not_synchronous_waves",
+        "label": "linienübergreifend / besonders hoher logischer Anspruch",
+        "necessity": "required",
+        "proof": {
+          "bytes": 42312,
+          "sha256": "a8879e71611711895cbeba47454136aae0e77323f083d829917db99fc7608bda"
+        },
+        "proof_profile_hash": "9dfe08bdb9738dc64d778149490cc3dd43815aee68900291d2e84a3f9ef55727",
+        "proof_status": "solved",
+        "proof_verified": true,
+        "required": true
+      },
+      "reason": null,
+      "result_hash": "e82d3b7ffb2502ba840a1863d3eb0433cda4e72f25bcbc663fe104633b514f89",
+      "status": "stalled",
+      "structure": {
+        "adjacent_color_changes": 0,
+        "cells": 460,
+        "clue_length_histogram": {
+          "1": 27,
+          "14": 1,
+          "16": 1,
+          "17": 1,
+          "2": 37,
+          "3": 10,
+          "4": 6,
+          "5": 4,
+          "6": 4,
+          "7": 1,
+          "9": 3
+        },
+        "colors": 1,
+        "geometric_slack": 588,
+        "height": 20,
+        "mandatory_gaps": 52,
+        "short_blocks": 64,
+        "total_clue_length": 280,
+        "total_clues": 95,
+        "width": 23
+      },
+      "trace_hash": "63d37a2d9c879ce63caea74a467755e1940e131ccf99be328cb95982e94e4346",
+      "wave_count": 11
+    },
+    "logic_binding": {
+      "matrix_hash": "9f83f4cf35d134a28b50ad1d597babe64a9b24c4c28cc5159ce4e42b7d5f8f43"
+    },
+    "rating": {
+      "analysis_result_hash": "e82d3b7ffb2502ba840a1863d3eb0433cda4e72f25bcbc663fe104633b514f89",
+      "format": "picross-catalog-sd2-rating-v1",
+      "method": "picross-difficulty-0.4",
+      "method_hash": "5508f0742aa858a6adc31aa621433e68298b915fb0fd6b8d9e74e576ba87caaf",
+      "rating_hash": "36ced2dc6a254f66bc50248772e3e753334f685b97e0c4a582f03b4b3f60586c",
+      "result": {
+        "analysis_result_hash": "e82d3b7ffb2502ba840a1863d3eb0433cda4e72f25bcbc663fe104633b514f89",
+        "assessment": {
+          "boundaries": {
+            "distance_lower": [
+              1,
+              2
+            ],
+            "distance_upper": null,
+            "lower": [
+              4,
+              1
+            ],
+            "nearest_distance": [
+              1,
+              2
+            ],
+            "upper": null
+          },
+          "contributions": {
+            "demand": [
+              9,
+              2
+            ],
+            "search": [
+              0,
+              1
+            ],
+            "workload": [
+              0,
+              1
+            ]
+          },
+          "level": 5,
+          "level_without_workload": 5,
+          "score": [
+            9,
+            2
+          ],
+          "signals": {
+            "line_profiles_are_prefix": true,
+            "r4_required": true,
+            "search_and_workload": "fixed_anchor_not_full_pair_measurement"
+          },
+          "without_workload": [
+            9,
+            2
+          ]
+        },
+        "confidence": "medium",
+        "estimated_minutes": null,
+        "explanation": "Model estimate from synthetic references; no human calibration or time estimate. Required R4 uses a fixed anchor; line profiles are prefixes, not complete pair measurements.",
+        "format": "picross-sd2-rating-v1",
+        "method": "picross-difficulty-0.4",
+        "method_hash": "5508f0742aa858a6adc31aa621433e68298b915fb0fd6b8d9e74e576ba87caaf",
+        "profile_scope": "line_prefix",
+        "reason": "required_r4",
+        "status": "rated"
+      },
+      "source": {
+        "bytes": 3530,
+        "definition_id": "pz-gottesanbeterin",
+        "engine_logic_hash": "0053cc436d3438a81bb6edb23ee5b684d18fbc8698c14f5cd5f42f9df5183f65",
+        "kind": "runtime",
+        "production_mode": "unknown",
+        "runtime_revision": 2,
+        "sha256": "cc354373eacca287e9ef62b42c25c0226c9e8a088030ca98650287ec2ffd588a"
+      }
+    },
+    "rating_revision": 1
+  },
+  "format": "picross-puzzle-record-v1",
+  "id": "pz-gottesanbeterin",
+  "mode": "mono",
+  "name": "Gottesanbeterin",
+  "reveal": {
+    "asset": {
+      "bytes": 977780,
+      "file": "game/art/content/pz-gottesanbeterin.png",
+      "sha256": "8d26ffdb80243651dd67e65c90090f6a557f56270025ec01f08fe5470e132086"
+    },
+    "catalog": {
+      "generator": "picross-catalog-reveal-1",
+      "profiles": [
+        {
+          "asset": {
+            "bytes": 15700,
+            "file": "game/art/catalog/pz-gottesanbeterin-ui100.png",
+            "sha256": "c2df233366c4e824443d7d568074686820e986c41a05090937d1afc53571934a"
+          },
+          "height": 112,
+          "profile": "catalog-ui100-v1",
+          "width": 140
+        },
+        {
+          "asset": {
+            "bytes": 22463,
+            "file": "game/art/catalog/pz-gottesanbeterin-ui125.png",
+            "sha256": "e029b9b471870c82d392ff07b707e82ba532343b207daa0474977f22b32c330a"
+          },
+          "height": 140,
+          "profile": "catalog-ui125-v1",
+          "width": 175
+        }
+      ],
+      "source_height": 1122,
+      "source_width": 1402
+    },
+    "image_revision": 1
+  },
+  "save_slot": "pz-gottesanbeterin",
+  "visible": true
+}

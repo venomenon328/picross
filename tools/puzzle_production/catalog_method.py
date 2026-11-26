@@ -17,7 +17,7 @@ PATH = "content/difficulty-method.json"
 FORMAT = "picross-difficulty-default-v1"
 LEGACY_PLAN = "picross-difficulty-activation-plan-v1"
 PLAN = "picross-difficulty-activation-plan-v2"
-IMAGE_PLAN = "picross-difficulty-activation-plan-v4"
+IMAGE_PLAN = "picross-puzzle-method-plan-v1"
 LIMIT = 4096
 PLAN_LIMIT = 16 * 1024 * 1024
 _batch = ContextVar("catalog_method_read_batch", default=None)
@@ -144,7 +144,7 @@ def source_hashes(snapshot, plan_format=None):
 def validate_plan(value):
     from .catalog_rating import check_hash
     exact_keys(value, {"format", "expected", "target", "sources", "result_hash"})
-    require(value["format"] in (IMAGE_PLAN, PLAN, LEGACY_PLAN) and len(canonical_bytes(value)) + 1 <= PLAN_LIMIT, "Invalid activation plan format/size")
+    require(value["format"] == IMAGE_PLAN and len(canonical_bytes(value)) + 1 <= PLAN_LIMIT, "Invalid activation plan format/size")
     exact_keys(value["expected"], {"method", "method_hash", "record_hash", "revision"})
     exact_keys(value["target"], {"method", "method_hash"})
     for side in ("expected", "target"):
@@ -167,7 +167,7 @@ def plan(root, expected, target, target_hash):
     snapshot = tx.capture(root)
     before = current(from_bytes(snapshot["texts"][PATH]))
     require(before["method"] == expected, "Unexpected current production default")
-    return validate_plan(rating.hashed({"format": IMAGE_PLAN if tx.image_generation(snapshot) else PLAN, "expected": before,
+    return validate_plan(rating.hashed({"format": IMAGE_PLAN, "expected": before,
         "target": {"method": target, "method_hash": target_hash}, "sources": source_hashes(snapshot)}, "result_hash"))
 
 
@@ -193,11 +193,8 @@ def adopt(root, value, *, apply=True, fail_step=None):
         require(sources == value["sources"], "Checkout changed since activation")
         return {"status": "no-op", "method": previous["method"]}
     require(current(previous) == value["expected"] and sources == value["sources"], "Stale activation plan")
-    from .content_registry import require_current
-    if apply: require_current(snapshot["registry"])
     record = record_for(value, previous)
-    journal = tx.prepare(root, snapshot, {PATH: canonical_bytes(record) + b"\n"}, operation="method-activation",
-                         generation="background" if value["format"] in (IMAGE_PLAN, PLAN) else "sd2")
+    journal = tx.record_journal(snapshot["texts"],{PATH:canonical_bytes(record)+b"\n"},operation="method-activation")
     if apply: tx.execute(root, journal, fail_step=fail_step)
     return {"status": "activated" if apply else "planned-activation", "method": record["method"], "record_hash": record["record_hash"]}
 

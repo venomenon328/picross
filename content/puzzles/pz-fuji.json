@@ -1,0 +1,210 @@
+{
+  "added": {
+    "added_at": "2026-11-25T22:54:35Z",
+    "provenance": {
+      "commit": null,
+      "evidence": null,
+      "kind": "registration",
+      "reason": "Successful first playable registration in the shared transaction.",
+      "reference_time": "2026-11-25T22:54:35Z"
+    }
+  },
+  "background": {
+    "asset": {
+      "bytes": 128752,
+      "file": "game/art/backgrounds/pz-fuji.png",
+      "sha256": "a6d183d48dd0b171c1047ead3a8d3e81b9fcc4e3e09d756ce387ec7a21d73173"
+    },
+    "image_revision": 1,
+    "status": "selected"
+  },
+  "category_id": "landschaften-natur",
+  "definition": {
+    "bytes": 1648,
+    "file": "game/data/content/pz-fuji.json",
+    "sha256": "3fa39aff9951bcd3ef920049954e830da421f5a866fc7cacd571cd4b4bbbfb9f"
+  },
+  "difficulty": {
+    "compact_analysis": {
+      "analysis_hash": "a0ad23ed8fc544400825158736b631b6243bc5d9cf0019217eebbd45dc3b20e0",
+      "deduction_complete": true,
+      "line_analysis_complete": true,
+      "line_fixpoint_confirmed": true,
+      "new_singletons": 216,
+      "profiles_hash": "9fea4c9fce9418f0e20a636fdd151cd35fc952dd13eac31736e3a1ba94c0a753",
+      "r4": null,
+      "reason": null,
+      "result_hash": "780d4715840f7bc96c13f5dcbc6ea732631342c314dfd6d5ee3e107d4169fcac",
+      "status": "solved",
+      "structure": {
+        "adjacent_color_changes": 0,
+        "cells": 216,
+        "clue_length_histogram": {
+          "1": 5,
+          "11": 1,
+          "14": 1,
+          "16": 1,
+          "18": 1,
+          "2": 11,
+          "3": 5,
+          "4": 3,
+          "5": 5,
+          "6": 3,
+          "7": 2
+        },
+        "colors": 1,
+        "geometric_slack": 252,
+        "height": 12,
+        "mandatory_gaps": 10,
+        "short_blocks": 16,
+        "total_clue_length": 170,
+        "total_clues": 38,
+        "width": 18
+      },
+      "trace_hash": "6d797705f31afac9b23d3436cdb7bdf58d49cb066bdb972d01917ff6ca918d59",
+      "wave_count": 10
+    },
+    "logic_binding": {
+      "matrix_hash": "8fb2ff38536a9b7a785e56d869a07d9a72f706fcc1b51d7167f04cb38ec125bf"
+    },
+    "rating": {
+      "analysis_result_hash": "780d4715840f7bc96c13f5dcbc6ea732631342c314dfd6d5ee3e107d4169fcac",
+      "format": "picross-catalog-sd2-rating-v1",
+      "method": "picross-difficulty-0.4",
+      "method_hash": "5508f0742aa858a6adc31aa621433e68298b915fb0fd6b8d9e74e576ba87caaf",
+      "rating_hash": "27193fa85784327cac9fccc9229c100e0cd5c63a58ed5b21313d3e6cfb0bbaad",
+      "result": {
+        "analysis_result_hash": "780d4715840f7bc96c13f5dcbc6ea732631342c314dfd6d5ee3e107d4169fcac",
+        "assessment": {
+          "boundaries": {
+            "distance_lower": [
+              169,
+              320
+            ],
+            "distance_upper": [
+              151,
+              320
+            ],
+            "lower": [
+              1,
+              1
+            ],
+            "nearest_distance": [
+              151,
+              320
+            ],
+            "upper": [
+              2,
+              1
+            ]
+          },
+          "contributions": {
+            "demand": [
+              1,
+              1
+            ],
+            "search": [
+              1,
+              2
+            ],
+            "workload": [
+              9,
+              320
+            ]
+          },
+          "level": 2,
+          "level_without_workload": 2,
+          "score": [
+            489,
+            320
+          ],
+          "signals": {
+            "context": [
+              0,
+              1
+            ],
+            "fluent": false,
+            "highest_family": "E1",
+            "longest_narrow_run": 0,
+            "narrow_waves": 0,
+            "peak_search": [
+              1,
+              2
+            ],
+            "raw_workload": [
+              9,
+              320
+            ],
+            "spans": 58,
+            "workload_ceiling": 3,
+            "workload_guard": "none"
+          },
+          "without_workload": [
+            3,
+            2
+          ]
+        },
+        "confidence": "medium",
+        "estimated_minutes": null,
+        "explanation": "Model estimate from synthetic references; no human calibration or time estimate. Demand, search and bounded workload use independently checked line profiles.",
+        "format": "picross-sd2-rating-v1",
+        "method": "picross-difficulty-0.4",
+        "method_hash": "5508f0742aa858a6adc31aa621433e68298b915fb0fd6b8d9e74e576ba87caaf",
+        "profile_scope": "complete_line",
+        "reason": "complete_line",
+        "status": "rated"
+      },
+      "source": {
+        "bytes": 1648,
+        "definition_id": "pz-fuji",
+        "engine_logic_hash": "50eda543dc187d23aea9631199c35bbd5cab87c73d05b3f3f72ba50641b3a49b",
+        "kind": "runtime",
+        "production_mode": "unknown",
+        "runtime_revision": 2,
+        "sha256": "3fa39aff9951bcd3ef920049954e830da421f5a866fc7cacd571cd4b4bbbfb9f"
+      }
+    },
+    "rating_revision": 1
+  },
+  "format": "picross-puzzle-record-v1",
+  "id": "pz-fuji",
+  "mode": "mono",
+  "name": "Fuji",
+  "reveal": {
+    "asset": {
+      "bytes": 815262,
+      "file": "game/art/content/pz-fuji.png",
+      "sha256": "8daa09fd4bc7d3898cee3b14c385fe9355554efae777f28675ed0edebf87658f"
+    },
+    "catalog": {
+      "generator": "picross-catalog-reveal-1",
+      "profiles": [
+        {
+          "asset": {
+            "bytes": 10074,
+            "file": "game/art/catalog/pz-fuji-ui100.png",
+            "sha256": "f2cfab31cb904224d506bdfaab2d27910af9ae29cbbebf26248fcee0c717b3f0"
+          },
+          "height": 112,
+          "profile": "catalog-ui100-v1",
+          "width": 150
+        },
+        {
+          "asset": {
+            "bytes": 14704,
+            "file": "game/art/catalog/pz-fuji-ui125.png",
+            "sha256": "909389be00435117debd714e05ebec8b18d61ca01e5a87112d9c1e3f3cb189ce"
+          },
+          "height": 140,
+          "profile": "catalog-ui125-v1",
+          "width": 187
+        }
+      ],
+      "source_height": 1086,
+      "source_width": 1448
+    },
+    "image_revision": 1
+  },
+  "save_slot": "pz-fuji",
+  "visible": true
+}

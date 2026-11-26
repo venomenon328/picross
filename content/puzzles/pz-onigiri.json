@@ -1,0 +1,202 @@
+{
+  "added": {
+    "added_at": "2026-11-21T20:48:25Z",
+    "provenance": {
+      "commit": null,
+      "evidence": null,
+      "kind": "registration",
+      "reason": "Successful first playable registration in the shared transaction.",
+      "reference_time": "2026-11-21T20:48:25Z"
+    }
+  },
+  "background": {
+    "asset": {
+      "bytes": 351104,
+      "file": "game/art/backgrounds/pz-onigiri.png",
+      "sha256": "6f555f10ab10a27779f7f04651f95d1fdb9dcba5e76dca62d1c0d48c9c0d83c1"
+    },
+    "image_revision": 1,
+    "status": "selected"
+  },
+  "category_id": "gerichte-herzhaftes",
+  "definition": {
+    "bytes": 1422,
+    "file": "game/data/content/pz-onigiri.json",
+    "sha256": "38a43a69988a430c1a0225a262f5df22684274d1e361bf8d8474d2f2b42dc7c9"
+  },
+  "difficulty": {
+    "compact_analysis": {
+      "analysis_hash": "9983df752867ee2a3247406abbb7e4974a0bbfb43615ec818a44acdf7a9d4fef",
+      "deduction_complete": true,
+      "line_analysis_complete": false,
+      "line_fixpoint_confirmed": true,
+      "new_singletons": 92,
+      "profiles_hash": "0c30153283c61915dd9a67b1df2181e4ccabf9dcc3589546ff5f4ddd60e87d28",
+      "r4": {
+        "baseline": {
+          "bytes": 7346,
+          "sha256": "6213f4f1952b596dc536323e55f9b52efb7a83b5e1c466a07cf3462c645709f8"
+        },
+        "baseline_profile_hash": "f63ee6c88e6baa9f6a22f386ae532482d7ffb7b9a2237867f0d7cd9960ab608f",
+        "baseline_status": "stalled",
+        "baseline_verified": true,
+        "instrumentation": "separate_R4_evidence_not_synchronous_waves",
+        "label": "linienübergreifend / besonders hoher logischer Anspruch",
+        "necessity": "required",
+        "proof": {
+          "bytes": 9092,
+          "sha256": "7590c235219fc34039a1311b65defe6f74919f674945c71b1ce401c136548624"
+        },
+        "proof_profile_hash": "9dfe08bdb9738dc64d778149490cc3dd43815aee68900291d2e84a3f9ef55727",
+        "proof_status": "solved",
+        "proof_verified": true,
+        "required": true
+      },
+      "reason": null,
+      "result_hash": "7ab21b472de11f640061748ac3838b46b6eb3e917d8315379865ed03835af512",
+      "status": "stalled",
+      "structure": {
+        "adjacent_color_changes": 0,
+        "cells": 100,
+        "clue_length_histogram": {
+          "1": 18,
+          "10": 1,
+          "2": 9,
+          "3": 2,
+          "4": 5,
+          "5": 4
+        },
+        "colors": 1,
+        "geometric_slack": 89,
+        "height": 10,
+        "mandatory_gaps": 19,
+        "short_blocks": 27,
+        "total_clue_length": 92,
+        "total_clues": 39,
+        "width": 10
+      },
+      "trace_hash": "e8de7c0db685dc7ce2724868bf11827c0aab26f726fa2dcbe7d05297941d39e1",
+      "wave_count": 11
+    },
+    "logic_binding": {
+      "matrix_hash": "e08419fd09e989a8c44ef5d7424a39fa372f1f31a417ca1d76a323f4b7c6d98a"
+    },
+    "rating": {
+      "analysis_result_hash": "7ab21b472de11f640061748ac3838b46b6eb3e917d8315379865ed03835af512",
+      "format": "picross-catalog-sd2-rating-v1",
+      "method": "picross-difficulty-0.4",
+      "method_hash": "5508f0742aa858a6adc31aa621433e68298b915fb0fd6b8d9e74e576ba87caaf",
+      "rating_hash": "2276a3a8e2c074a5eeec7d01f6c79ecbe1e90d8dab3c6099c280c0da022cea0d",
+      "result": {
+        "analysis_result_hash": "7ab21b472de11f640061748ac3838b46b6eb3e917d8315379865ed03835af512",
+        "assessment": {
+          "boundaries": {
+            "distance_lower": [
+              1,
+              2
+            ],
+            "distance_upper": null,
+            "lower": [
+              4,
+              1
+            ],
+            "nearest_distance": [
+              1,
+              2
+            ],
+            "upper": null
+          },
+          "contributions": {
+            "demand": [
+              9,
+              2
+            ],
+            "search": [
+              0,
+              1
+            ],
+            "workload": [
+              0,
+              1
+            ]
+          },
+          "level": 5,
+          "level_without_workload": 5,
+          "score": [
+            9,
+            2
+          ],
+          "signals": {
+            "line_profiles_are_prefix": true,
+            "r4_required": true,
+            "search_and_workload": "fixed_anchor_not_full_pair_measurement"
+          },
+          "without_workload": [
+            9,
+            2
+          ]
+        },
+        "confidence": "medium",
+        "estimated_minutes": null,
+        "explanation": "Model estimate from synthetic references; no human calibration or time estimate. Required R4 uses a fixed anchor; line profiles are prefixes, not complete pair measurements.",
+        "format": "picross-sd2-rating-v1",
+        "method": "picross-difficulty-0.4",
+        "method_hash": "5508f0742aa858a6adc31aa621433e68298b915fb0fd6b8d9e74e576ba87caaf",
+        "profile_scope": "line_prefix",
+        "reason": "required_r4",
+        "status": "rated"
+      },
+      "source": {
+        "bytes": 1422,
+        "definition_id": "pz-onigiri",
+        "engine_logic_hash": "de18809acf413afbf59d52bf62c37e302c86359017cd2036c58982577c35d8de",
+        "kind": "runtime",
+        "production_mode": "unknown",
+        "runtime_revision": 4,
+        "sha256": "38a43a69988a430c1a0225a262f5df22684274d1e361bf8d8474d2f2b42dc7c9"
+      }
+    },
+    "rating_revision": 1
+  },
+  "format": "picross-puzzle-record-v1",
+  "id": "pz-onigiri",
+  "mode": "mono",
+  "name": "Onigiri",
+  "reveal": {
+    "asset": {
+      "bytes": 1864961,
+      "file": "game/art/content/pz-onigiri.png",
+      "sha256": "21fea280feb2a5d4a562f264d81fab2a941eab3fed7cbba4f62012fff72085af"
+    },
+    "catalog": {
+      "generator": "picross-catalog-reveal-1",
+      "profiles": [
+        {
+          "asset": {
+            "bytes": 20015,
+            "file": "game/art/catalog/pz-onigiri-ui100.png",
+            "sha256": "da388aa5cfa7e2765525f8379f76300244961e7a919a2972627c58bbaa10a2b4"
+          },
+          "height": 112,
+          "profile": "catalog-ui100-v1",
+          "width": 112
+        },
+        {
+          "asset": {
+            "bytes": 29539,
+            "file": "game/art/catalog/pz-onigiri-ui125.png",
+            "sha256": "c59ead5b0e0081e24ef82160f137c87193fac439c86e01c4f0a07922ad1593f1"
+          },
+          "height": 140,
+          "profile": "catalog-ui125-v1",
+          "width": 140
+        }
+      ],
+      "source_height": 1254,
+      "source_width": 1254
+    },
+    "image_revision": 1
+  },
+  "save_slot": "pz-onigiri",
+  "visible": true
+}

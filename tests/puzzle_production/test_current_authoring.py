@@ -533,7 +533,7 @@ class CurrentAuthoringTests(unittest.TestCase):
         git(self.root,'update-ref','refs/remotes/origin/main',product)
         # Completion runs on the work branch after product-only data is made available.
         git(self.root,'checkout','-qb','work',work_commit)
-        self.assertEqual(json.loads((self.root/'content/registry.json').read_bytes())['entries'],[])
+        self.assertEqual(json.loads((self.root/'game/data/registry.json').read_bytes())['entries'],[])
         result=projector.complete(self.root,current.path('pz-current'),product,current_input=self.work/'integration')
         self.assertEqual(result['status'],'built');completed=commit(self.root,'completed work')
         self.job=json.loads((self.root/current.path('pz-current')).read_bytes())

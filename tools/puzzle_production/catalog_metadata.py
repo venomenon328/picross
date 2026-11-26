@@ -10,7 +10,7 @@ from copy import deepcopy
 import uuid
 
 from . import catalog_io as io, catalog_transaction as tx, categories
-from . import content_registry as registry
+from . import content_registry as registry, puzzle_record, puzzle_catalog
 from .authoring_package import require
 from .contract import canonical_bytes, exact_keys
 
@@ -25,17 +25,6 @@ def _bytes(value):
     return canonical_bytes(value) + b"\n"
 
 
-def _catalog(texts):
-    return categories.validate(io.json_bytes(texts[categories.PATH], categories.MAX_BYTES))
-
-
-def _metadata(value, catalog, texts):
-    definitions = None
-    if value["format"] != registry.METADATA_FORMAT:
-        definitions = {e["id"]: texts["game/" + e["definition"]] for e in value["entries"]}
-    return registry.current_metadata(value, catalog, definitions=definitions)
-
-
 def _unlocked(root):
     from . import catalog_publication
     require(not io.safe(root, tx.LOCK).exists() and not catalog_publication.staging(root),
@@ -44,7 +33,7 @@ def _unlocked(root):
 
 def _index_state(root):
     state = []
-    for name in (categories.PATH, registry.REGISTRY):
+    for name in (categories.PATH, registry.RUNTIME):
         info = io.safe(root, name).lstat()
         state.append((io.signature(info), info.st_ctime_ns))
     return state
@@ -57,11 +46,8 @@ class MetadataView:
         root = io.external(root)
         _unlocked(root)
         before = _index_state(root)
-        catalog = categories.validate(io.json_bytes(
-            io.read(root, categories.PATH, categories.MAX_BYTES), categories.MAX_BYTES))
-        value = registry.validate(io.json_bytes(
-            io.read(root, registry.REGISTRY, 8 * 1024 * 1024), 8 * 1024 * 1024), catalog)
-        self._entries = registry.current_metadata(value, catalog, root=root)
+        catalog, runtime = puzzle_catalog.inspect(root)
+        self._entries = {r["id"]:{k:r[k] for k in ("id","name","category_id")} for r in runtime["entries"]}
         self._categories = categories.ordered(catalog)
         require(_index_state(root) == before, "Catalog changed while reading metadata")
         _unlocked(root)
@@ -109,7 +95,7 @@ def _operations(value, *, expanded=False, catalog=None):
     return result
 
 
-def _edit(before, catalog, operations, *, validate_registry=registry.validate):
+def _edit(before, catalog, operations, *, validate_registry):
     after, target = deepcopy(before), deepcopy(catalog)
     rows = {row["id"]: row for row in after["metadata"]}
     for item in operations:
@@ -142,88 +128,75 @@ def _edit(before, catalog, operations, *, validate_registry=registry.validate):
     return after, target
 
 
-def _summary(journal):
-    sides = {}
-    for side in ("old", "new"):
-        texts = {name: text.encode() if text is not None else None for name, text in journal[side].items()}
-        catalog = _catalog(texts)
-        value = registry.validate(io.json_bytes(texts[registry.REGISTRY], 8 * 1024 * 1024), catalog)
-        sides[side] = {"puzzle": _metadata(value, catalog, texts),
-                       "category": {e["id"]: e for e in catalog["categories"]}}
-    changes = []
-    for kind in ("puzzle", "category"):
-        before, after = sides["old"][kind], sides["new"][kind]
-        for identifier in sorted(set(before) | set(after)):
-            if before.get(identifier) != after.get(identifier):
-                changes.append({"kind": kind, "id": identifier,
-                                "before": before.get(identifier), "after": after.get(identifier)})
-    files = sorted(name for name in journal["old"] if journal["old"][name] != journal["new"][name])
-    return changes, files
+def _state(runtime):
+    return {"metadata":[{k:row[k] for k in ("id","name","category_id")} for row in runtime["entries"]]}
 
 
-def _plan(root, snapshot, after, catalog, operations, operation):
-    changes = {}
-    if after != snapshot["registry"]:
-        changes[registry.REGISTRY] = _bytes(after)
-    if catalog != _catalog(snapshot["texts"]):
-        changes[categories.PATH] = _bytes(catalog)
-    journal = tx.prepare(root, snapshot, changes, operation=operation, generation="metadata")
-    preview, files = _summary(journal)
-    result = {"format": IMAGE_PLAN_FORMAT if tx.image_generation(snapshot) else PLAN_FORMAT,
-              "operation": operation, "operations": operations,
-              "changes": preview, "files": files, "journal": journal}
-    require(len(_bytes(result)) <= PLAN_LIMIT, "Metadata plan exceeds 32 MiB")
-    return result
+def _validate_metadata(value,cats):
+    categories.validate(cats)
+    for row in value["metadata"]:
+        registry.validate_name(row["name"])
+        categories.lookup(cats,row["category_id"])
+
+
+PLAN_FORMAT = "picross-puzzle-metadata-plan-v1"
 
 
 @io.bounded
 def plan(root, operations, *, _snapshot=None):
-    """Prepare an edit without writing any content or generating a save revision."""
     root = io.external(root)
-    snapshot = tx.capture(root) if _snapshot is None else _snapshot
-    registry.require_current(snapshot["registry"])
-    catalog = _catalog(snapshot["texts"])
-    expanded = _operations(operations, catalog=catalog)
-    after, target = _edit(snapshot["registry"], catalog, expanded)
-    return _plan(root, snapshot, after, target, expanded, "metadata")
+    _unlocked(root)
+    texts = {}
+    def read(name,limit):
+        if name not in texts:
+            texts[name] = io.read(root,name,limit)
+        return texts[name]
+    ids = puzzle_record.inventory(root)
+    cats, runtime = puzzle_catalog.index(read,ids)
+    before = _state(runtime)
+    expanded = _operations(operations,catalog=cats,expanded=_snapshot=="expanded")
+    after,target = _edit(before,cats,expanded,validate_registry=_validate_metadata)
+    new = {}
+    result = deepcopy(runtime)
+    result["categories"] = categories.ordered(target)
+    changes = []
+    for row, old, updated in zip(result["entries"],before["metadata"],after["metadata"],strict=True):
+        if old == updated:
+            continue
+        key = row["id"]
+        record = puzzle_record.load(root,key,category_catalog=cats,read=read)
+        require(puzzle_record.runtime_row(record) == row, "Selected metadata projection differs")
+        record.update(name=updated["name"],category_id=updated["category_id"])
+        new[puzzle_record.path(key)] = puzzle_record.encode(record)
+        row.update(updated)
+        changes.append({"kind":"puzzle","id":key,"before":old,"after":updated})
+    a,b = ({r["id"]:r for r in cat["categories"]} for cat in (cats,target))
+    changes += [{"kind":"category","id":k,"before":a.get(k),"after":b.get(k)} for k in sorted(a.keys()|b.keys()) if a.get(k)!=b.get(k)]
+    if target != cats:
+        new[categories.PATH] = _bytes(target)
+    if result != runtime:
+        new[registry.RUNTIME] = _bytes(result)
+    journal = tx.record_journal(texts,new,operation="metadata")
+    require(puzzle_record.inventory(root) == ids and all(io.read(root,n,tx.LIMIT) == v for n,v in texts.items()),
+            "Metadata sources changed")
+    _unlocked(root)
+    return {"format":PLAN_FORMAT,"operation":"metadata","operations":expanded,"changes":changes,
+            "files":sorted(new),"journal":journal}
 
 
 @io.bounded
-def apply(root, value, *, fail_step=None):
-    """Revalidate a reviewed plan and publish through the existing guarded writer."""
+def apply(root,value,*,fail_step=None):
     root = io.external(root)
-    _unlocked(root)
-    value = io.json_bytes(_bytes(value), PLAN_LIMIT)
-    exact_keys(value, {"format", "operation", "operations", "changes", "files", "journal"})
-    require(value["format"] == IMAGE_PLAN_FORMAT and value["operation"] == "metadata",
-            "Unsupported metadata plan")
-    journal = value["journal"]
-    formats = tx.IMAGE_FORMATS if value["format"] == IMAGE_PLAN_FORMAT else tx.PE_FORMATS
-    require(isinstance(journal, dict) and journal.get("operation") == value["operation"] and
-            journal.get("format") == formats[value["operation"]], "Wrong metadata journal binding")
-    tx.validate_journal(root, journal, before_write=True)
-    operations = _operations(value["operations"], expanded=True)
-    old_texts = {name: text.encode() if text is not None else None for name, text in journal["old"].items()}
-    before = io.json_bytes(old_texts[registry.REGISTRY], 8 * 1024 * 1024)
-    catalog = _catalog(old_texts)
-    if value["operation"] == "metadata":
-        registry.require_current(before)
-        after, target = _edit(before, catalog, operations)
-        require(io.json_bytes(journal["new"][registry.REGISTRY].encode(), 8 * 1024 * 1024) == after and
-                io.json_bytes(journal["new"][categories.PATH].encode(), categories.MAX_BYTES) == target,
-                "Metadata operations differ from the bound proposed result")
-    else:
-        require(not operations, "Migration cannot contain metadata edits")
-    changes, files = _summary(journal)
-    require(value["changes"] == changes and value["files"] == files, "Metadata plan preview differs from its journal")
-    # The shared guard includes unchanged bytes, missing sidecars and namespaces.
-    tx.guard(root, journal, old_only=True)
-    _unlocked(root)
-    if not files:
-        return {"status": "noop", "changes": [], "files": []}
-    tx.execute(root, journal, fail_step=fail_step)
-    return {"status": "migrated" if value["operation"] == "metadata-migration" else "updated",
-            "changes": changes, "files": files}
+    exact_keys(value, {"format","operation","operations","changes","files","journal"})
+    require(value["format"] == PLAN_FORMAT and value["operation"] == "metadata", "Invalid metadata plan")
+    _operations(value["operations"],expanded=True)
+    # Reproduce the exact proposal against the current source bytes; preserve generated category IDs.
+    fresh = plan(root,value["operations"],_snapshot="expanded")
+    require(value == fresh, "Metadata plan differs from current request or sources")
+    if not value["files"]:
+        return {"status":"noop","changes":[],"files":[]}
+    tx.execute(root,value["journal"],fail_step=fail_step)
+    return {"status":"updated","changes":value["changes"],"files":value["files"]}
 
 
 def recover(root):

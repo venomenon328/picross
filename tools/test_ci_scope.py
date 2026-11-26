@@ -11,14 +11,14 @@ from ci_scope import FLAGS, JOBS, apply_event_policy, classify, content_path, ev
 
 class SelectionTests(unittest.TestCase):
     def test_background_paths_use_shared_content_contract(self):
-        paths = ['content/backgrounds/pz-synthetic.json',
+        paths = ['content/puzzles/pz-synthetic.json',
                  'game/art/backgrounds/pz-synthetic.png', 'game/art/backgrounds/pz-synthetic.txt']
         plan = classify(paths)
         self.assertTrue(plan['content_only'])
         self.assertTrue(plan['selected']['docs'])
         self.assertFalse(any(plan['selected'][key] for key in FLAGS))
         for path in ('game/data/background-capability.json', 'game/art/backgrounds/pz-synthetic.png.import',
-                     'content/backgrounds/pz-synthetic/record.json', 'tools/ci_paths.py'):
+                     'content/puzzles/pz-synthetic/record.json', 'tools/ci_paths.py'):
             with self.subTest(path=path):
                 self.assertFalse(content_path(path))
                 self.assertFalse(classify(paths + [path])['content_only'])
@@ -40,12 +40,12 @@ class SelectionTests(unittest.TestCase):
 
     def test_added_data_path_and_both_tree_modes_are_exact(self):
         from unittest.mock import patch
-        valid = "content/added/pz-synthetic.json"
+        valid = "content/puzzles/pz-synthetic.json"
         self.assertTrue(classify([valid])["content_only"])
-        for path in ("content/added/PZ-synthetic.json", "content/added/pz-Synthetic.json",
-                     "content/added/pz-synthetic.JSON", "content/added/pz-synthetic.json.py",
-                     "content/added/pz-synthetic/rating.json", "content/added/../pz-synthetic.json",
-                     "content/added/pz-synthetic.json/", "content/added/pz-.json", "content/added/other.json"):
+        for path in ("content/puzzles/PZ-synthetic.json", "content/puzzles/pz-Synthetic.json",
+                     "content/puzzles/pz-synthetic.JSON", "content/puzzles/pz-synthetic.json.py",
+                     "content/puzzles/pz-synthetic/rating.json", "content/puzzles/../pz-synthetic.json",
+                     "content/puzzles/pz-synthetic.json/", "content/puzzles/pz-.json", "content/puzzles/other.json"):
             with self.subTest(path=path): self.assertFalse(content_path(path))
         modes = [("000000", "100644")]
         def fake_git(*args):
@@ -68,11 +68,11 @@ class SelectionTests(unittest.TestCase):
 
     def test_at_reveal_paths_and_both_sides_of_git_modes(self):
         from unittest.mock import patch
-        valid = 'content/reveals/pz-test.json'
+        valid = 'content/puzzles/pz-test.json'
         self.assertTrue(classify([valid])['content_only'])
-        for path in ('content/reveals/PZ-test.json', 'content/reveals/pz-Test.json', 'content/reveals/pz-test.JSON',
-                     'content/reveals/pz-test/record.json', 'content/reveals/pz-test.json.py', 'content/reveals/../pz-test.json',
-                     'content/reveals/pz-test.json/', 'content/reveals/pz-.json', 'content/reveals/other.json'):
+        for path in ('content/puzzles/PZ-test.json', 'content/puzzles/pz-Test.json', 'content/puzzles/pz-test.JSON',
+                     'content/puzzles/pz-test/record.json', 'content/puzzles/pz-test.json.py', 'content/puzzles/../pz-test.json',
+                     'content/puzzles/pz-test.json/', 'content/puzzles/pz-.json', 'content/puzzles/other.json'):
             with self.subTest(path=path): self.assertFalse(content_path(path))
         paths, modes = [valid], [('000000','100644')]
         def fake_git(*args):
@@ -93,15 +93,15 @@ class SelectionTests(unittest.TestCase):
             self.assertTrue(all(selected[k] for k in ('docs','production','product','delivery')))
 
     def test_difficulty_data_allowlist_is_exact_and_c1_keeps_full_ci(self):
-        allowed = ["content/difficulty/pz-test/rating.json", "content/difficulty/reports/first-run/report.json",
+        allowed = ["content/puzzles/pz-test.json", "content/difficulty/reports/first-run/report.json",
                    "content/difficulty/reports/first-run/report.md"]
         self.assertTrue(classify(allowed)["content_only"])
         for path in ["content/difficulty/pz-test/rating.py", "content/difficulty/pz-test/report.json",
                      "content/difficulty/reports/first-run/trace.json", "content/difficulty/reports/Upper/report.md",
-                     "content/difficulty/pz-Test/rating.json", "content/difficulty/pz-test/nested/rating.json",
+                     "content/puzzles/pz-Test.json", "content/difficulty/pz-test/nested/rating.json",
                      "content/difficulty/reports/../report.md", "content/difficulty/reports/a/report.gd",
                      "content/difficulty/reports/con/report.md", "content/difficulty/reports/lpt9/report.json",
-                     "content/difficulty/pz-test/rating.json/", "content/difficulty/pz-test/rating.json.py"]:
+                     "content/puzzles/pz-test.json/", "content/puzzles/pz-test.json.py"]:
             with self.subTest(path=path):
                 self.assertFalse(content_path(path))
                 self.assertFalse(classify(allowed + [path])["content_only"])
@@ -109,7 +109,7 @@ class SelectionTests(unittest.TestCase):
 
     def test_difficulty_modes_deletions_and_renames_use_both_tree_paths(self):
         from unittest.mock import patch
-        paths = ["content/difficulty/pz-a/rating.json", "content/difficulty/reports/one/report.md"]
+        paths = ["content/puzzles/pz-a.json", "content/difficulty/reports/one/report.md"]
         modes = [("100644", "000000"), ("000000", "100644")]
         def fake_git(*args):
             if "--name-only" in args: return ("\0".join(paths) + "\0").encode()
@@ -128,7 +128,7 @@ class SelectionTests(unittest.TestCase):
             self.assertTrue(all(v for k, v in make_plan("a"*40,"b"*40,"auto")["selected"].items() if k != "web"))
 
     def test_puzzle_deliveries_select_no_test_suites_at_any_catalog_size(self):
-        paths = ["content/registry.json", "game/data/registry.json", "content/authoring/index.json"]
+        paths = ["content/puzzles/pz-test.json", "game/data/registry.json", "content/authoring/index.json"]
         for i in range(500):
             paths += [f"content/authoring/pz-{i}/r01/package.zip",
                       f"content/packages/pz-{i}/r01/input/import/area-proof.json",
@@ -148,8 +148,8 @@ class SelectionTests(unittest.TestCase):
                 plan = classify(["game/data/content/a.json", path])
                 self.assertFalse(plan["content_only"])
                 self.assertTrue(any(plan["selected"][k] for k in FLAGS))
-        self.assertFalse(classify(["content/registry.json", "docs/CI_POLICY.md"])["content_only"])
-        self.assertFalse(classify(["content/registry.json"], "all")["content_only"])
+        self.assertFalse(classify(["content/puzzles/pz-test.json", "docs/CI_POLICY.md"])["content_only"])
+        self.assertFalse(classify(["content/puzzles/pz-test.json"], "all")["content_only"])
 
     def test_content_diff_uses_no_blob_reads_and_rejects_executable_or_symlink(self):
         from unittest.mock import patch
@@ -629,7 +629,7 @@ class RequiredGateTests(unittest.TestCase):
             self.assertEqual(len(json.loads(path.read_text())["changed_paths"]), 5000)
 
     def test_content_result_still_requires_successful_scope_job(self):
-        plan = classify(["content/registry.json"])
+        plan = classify(["content/puzzles/pz-test.json"])
         results = {key: {"result": "success" if key == "docs" else "skipped"} for key in JOBS}
         self.assertTrue(all(row["accepted"] for row in evaluate(plan, results)))
         results["docs"]["result"] = "failure"

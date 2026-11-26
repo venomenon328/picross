@@ -1,0 +1,207 @@
+{
+  "added": {
+    "added_at": "2026-10-23T08:56:22Z",
+    "provenance": {
+      "commit": null,
+      "evidence": null,
+      "kind": "registration",
+      "reason": "Successful first playable registration in the shared transaction.",
+      "reference_time": "2026-10-23T08:56:22Z"
+    }
+  },
+  "background": {
+    "asset": {
+      "bytes": 431599,
+      "file": "game/art/backgrounds/pz-6d980b0285604e22b8ecfce205aa008b.png",
+      "sha256": "e81ad50bf9021538f98bf8759b70d2f9e338256d5a9fb9a6945859ef24df030e"
+    },
+    "image_revision": 2,
+    "status": "selected"
+  },
+  "category_id": "technik-erfindungen",
+  "definition": {
+    "bytes": 7184,
+    "file": "game/data/content/webcam_001.json",
+    "sha256": "d744f65d7eac8f72c8b7f721af1625767ed20cc553d803a3fd437962bdc569af"
+  },
+  "difficulty": {
+    "compact_analysis": {
+      "analysis_hash": "5030990db5ee507807ac8820cb5e2251b68031197981520491f077db3af4c023",
+      "deduction_complete": true,
+      "line_analysis_complete": true,
+      "line_fixpoint_confirmed": true,
+      "new_singletons": 540,
+      "profiles_hash": "b2719526a123d096c086c0be13e3321a58ab59cae746fe19391c42095bbd4163",
+      "r4": null,
+      "reason": null,
+      "result_hash": "bb0c5051d12cd35d36be17ba0473c7b471c873db362b361a6069e5ee6332a9d7",
+      "status": "solved",
+      "structure": {
+        "adjacent_color_changes": 185,
+        "cells": 540,
+        "clue_length_histogram": {
+          "1": 123,
+          "10": 11,
+          "11": 2,
+          "12": 4,
+          "14": 3,
+          "2": 42,
+          "20": 1,
+          "3": 21,
+          "4": 7,
+          "5": 1,
+          "6": 2,
+          "7": 20,
+          "8": 2,
+          "9": 1
+        },
+        "colors": 4,
+        "geometric_slack": 350,
+        "height": 18,
+        "mandatory_gaps": 8,
+        "short_blocks": 165,
+        "total_clue_length": 722,
+        "total_clues": 240,
+        "width": 30
+      },
+      "trace_hash": "1f5ce931f330ddf0572f31b896044aa8315c1887210be9a0f16e344b85015680",
+      "wave_count": 7
+    },
+    "logic_binding": {
+      "matrix_hash": "d0b39d0afcaa6094e7c216ac564995fc6237894020045ff6fd8ce39dc6266cca"
+    },
+    "rating": {
+      "analysis_result_hash": "bb0c5051d12cd35d36be17ba0473c7b471c873db362b361a6069e5ee6332a9d7",
+      "format": "picross-catalog-sd2-rating-v1",
+      "method": "picross-difficulty-0.4",
+      "method_hash": "5508f0742aa858a6adc31aa621433e68298b915fb0fd6b8d9e74e576ba87caaf",
+      "rating_hash": "f49c6ff51c85dc160d070784244fffffc7509b90532d96c222ff4eee6390d4e5",
+      "result": {
+        "analysis_result_hash": "bb0c5051d12cd35d36be17ba0473c7b471c873db362b361a6069e5ee6332a9d7",
+        "assessment": {
+          "boundaries": {
+            "distance_lower": null,
+            "distance_upper": [
+              3,
+              4
+            ],
+            "lower": null,
+            "nearest_distance": [
+              3,
+              4
+            ],
+            "upper": [
+              1,
+              1
+            ]
+          },
+          "contributions": {
+            "demand": [
+              1,
+              4
+            ],
+            "search": [
+              0,
+              1
+            ],
+            "workload": [
+              0,
+              1
+            ]
+          },
+          "level": 1,
+          "level_without_workload": 1,
+          "score": [
+            1,
+            4
+          ],
+          "signals": {
+            "context": [
+              0,
+              1
+            ],
+            "fluent": true,
+            "highest_family": "E1",
+            "longest_narrow_run": 0,
+            "narrow_waves": 0,
+            "peak_search": [
+              0,
+              1
+            ],
+            "raw_workload": [
+              63,
+              320
+            ],
+            "spans": 166,
+            "workload_ceiling": 3,
+            "workload_guard": "fluent"
+          },
+          "without_workload": [
+            1,
+            4
+          ]
+        },
+        "confidence": "medium",
+        "estimated_minutes": null,
+        "explanation": "Model estimate from synthetic references; no human calibration or time estimate. Demand, search and bounded workload use independently checked line profiles.",
+        "format": "picross-sd2-rating-v1",
+        "method": "picross-difficulty-0.4",
+        "method_hash": "5508f0742aa858a6adc31aa621433e68298b915fb0fd6b8d9e74e576ba87caaf",
+        "profile_scope": "complete_line",
+        "reason": "complete_line",
+        "status": "rated"
+      },
+      "source": {
+        "bytes": 7184,
+        "definition_id": "pz-6d980b0285604e22b8ecfce205aa008b",
+        "engine_logic_hash": "12b73125bd1f66ac21d4cede0be3d5ab5fa2863e80ed9e2b98f91b3c85bd154c",
+        "kind": "runtime",
+        "production_mode": "unknown",
+        "runtime_revision": 1,
+        "sha256": "d744f65d7eac8f72c8b7f721af1625767ed20cc553d803a3fd437962bdc569af"
+      }
+    },
+    "rating_revision": 2
+  },
+  "format": "picross-puzzle-record-v1",
+  "id": "pz-6d980b0285604e22b8ecfce205aa008b",
+  "mode": "color",
+  "name": "Webcam",
+  "reveal": {
+    "asset": {
+      "bytes": 1667919,
+      "file": "game/art/content/webcam_001.png",
+      "sha256": "12f53a2adb863ccb0fe19445c50d603bbcff4ebb2dbeb64f30b6f36e5b1948e8"
+    },
+    "catalog": {
+      "generator": "picross-catalog-reveal-1",
+      "profiles": [
+        {
+          "asset": {
+            "bytes": 25812,
+            "file": "game/art/catalog/pz-6d980b0285604e22b8ecfce205aa008b-ui100.png",
+            "sha256": "e5e669c132b590076b8d76425f4669496d5ce5e913ddd5f8ae783c5b3d353266"
+          },
+          "height": 112,
+          "profile": "catalog-ui100-v1",
+          "width": 187
+        },
+        {
+          "asset": {
+            "bytes": 38411,
+            "file": "game/art/catalog/pz-6d980b0285604e22b8ecfce205aa008b-ui125.png",
+            "sha256": "79c74dd07f351b1768287bcda0ce279bd90491356d2071103e9a66348ca929b2"
+          },
+          "height": 140,
+          "profile": "catalog-ui125-v1",
+          "width": 234
+        }
+      ],
+      "source_height": 971,
+      "source_width": 1619
+    },
+    "image_revision": 1
+  },
+  "save_slot": "webcam_001",
+  "visible": true
+}

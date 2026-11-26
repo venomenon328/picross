@@ -38,48 +38,35 @@ verwenden, solange sie denselben finalen Integrationsinput liefern.
 
 ## 2. Aktuelle Inhalte als einzige Bestandsautorität
 
-Der aktuelle Inhaltsindex bleibt `content/registry.json`. Seine
-Identitäts-/Pfadfelder und die bestehende Metadatenzuordnung werden weiter
-verwendet; das historische `entry.production` ist keine aktuelle Bestandsautorität. Insbesondere entfallen Paketpfad/-hash,
-ursprünglicher Exportanker, Produktionsrevision/-status/-blocker und
-historische Produktions-Difficulty als zweite Autorität.
+Eine registrierte ID besitzt genau einen führenden Datensatz unter
+`content/puzzles/<id>.json`. `puzzle_record` liest und validiert das geschlossene
+Format `picross-puzzle-record-v1`. Der Dateiname muss zur ID passen. Der Writer
+sortiert Objektschlüssel, rückt mit zwei Leerzeichen ein und schreibt UTF-8 mit
+abschließendem LF. Die Grenze beträgt 128 KiB. Unbekannte, doppelte und
+fehlende Felder sowie nichtkanonische Bytes werden abgewiesen.
 
-| Benötigte Information | Verbindliche aktuelle Autorität |
+| Feld | Herkunft und Bindung |
 | --- | --- |
-| ID, Key, Save-Slot, Definitionspfad, Sichtbarkeit | Aktueller Inhaltsindex; bisherige Identitäten bleiben erhalten |
-| Runtime-Rätselrevision, Raster, Hinweise, Palette und Maße | Tatsächliche aktuelle Definition; keine Ableitung aus Produktionshistorie |
-| Mono-/Farbmodus | Aktuelles Feld `mode` im Inhaltsindex und Integrationsinput; bei Überführung den vorhandenen wirksamen Modus erhalten |
-| Name und Kategorie | Bestehende aktuelle Metadaten und Kategorienzuordnung |
-| Reveal und Hintergrundpräferenz/-asset | Aktuelle Bildquellen und Livebytes; nur der derzeit wirksame Zustand |
-| Schwierigkeit und Hinzugefügt-Datum | Aktuelle fachliche Bewertungs-/Datumdaten; kein historischer Erzeugerreplay |
-| Nutzungsgrundlage | Tatsächlich benötigte aktuelle Rechte-/Attributionsangaben und Notices |
+| `format,id,save_slot,visible,mode` | Stabile ID und Save-Slot, boolesche Sichtbarkeit und ausdrücklicher Modus mono/color. Der Runtime-Key ergibt sich aus der ID. |
+| `name,category_id` | Ein redaktioneller Name und eine ID aus `content/categories.json`. |
+| `definition` | Ref mit genau `file,bytes,sha256`. Die Definition enthält Maße, Palette, Raster, Hinweise und Rasterrevision. |
+| `added` | `added_at,provenance` nach Katalogsortierung. Auch ein belegt unbekanntes Datum bleibt erhalten. |
+| `reveal` | `image_revision,asset,catalog`. Der Katalog bindet Generator, natürliche Maße und zwei geprüfte Profile. Der Quellhash kommt aus dem Assetref. |
+| `background` | `status,image_revision,asset`. Nur selected führt einen PNG-Ref. none und standard führen null. |
+| `difficulty` | `rating_revision,logic_binding,rating,compact_analysis`. Methode und unabhängiger ursprünglicher Bewertungsinput kommen aus der eingebetteten Bewertung. Die Matrixbindung bleibt gespeichert. Bei 0.4 liefert die kompakte Analyse ihren Analysehash, bei 0.3 enthält ihn die Logikbindung. |
 
-Aktuelle Reveal-/Hintergrundquellen bauen auf dem vorhandenen schlanken
-`binding/current`-Prinzip auf. Die Bindung darf aktuelle ID, Definition,
-Runtime-Rätselrevision und das aktuelle Asset referenzieren. Sie enthält keine
-Kopie von `entry.production`, keinen Originalexport und keine historische
-Integrationskette. Aktuelle Inhaltsprüfsummen zur Datei-/Änderungszuordnung
-sind zulässig; sie werden nicht zu einem Herkunftsausweis ausgebaut.
+Alle Assetrefs haben die Form `file,bytes,sha256` mit repositoryrelativem Pfad.
+Rechte und erforderliche Notices verbleiben bei den aktiven Dateien. Die
+Definitionsfelder für Spielername und Reveal behalten ihre Spielerbedeutung.
+Die getrennte aktive Schwierigkeitsmethode steuert neue Bewertungen.
 
-`production.package` wird nicht durch eine neue obligatorische Receipt-,
-Zertifikats- oder „Aktuellbeleg“-Datei ersetzt. Maße werden aus der Definition gelesen. Der Modus wird als aktuelles Feld
-`mode` mit den bisherigen Werten `mono` oder `color` im Inhaltsindex erhalten;
-bei der einmaligen Überführung wird der bestehende wirksame Wert aus
-`production.mode` übernommen. Definitionen enthalten heute kein eindeutiges
-Modusfeld. Registrierte Altstände behalten ihren wirksamen Modus. Ein neuer
-Eingang erfüllt die Modusgrenze anhand der verwendeten Zellwerte nach [ZA-1](ZA1_ADAPTER.md#eingang-und-grenzen). Bereits bestehende aktuelle
-Metadaten-, Rating- und Datumquellen werden wiederverwendet, ohne eine zweite
-bearbeitbare Datenhaltung aufzubauen.
-
-Runtime v9 übernimmt die bestehenden Werte und projiziert zusätzlich die geprüften
-Katalogprofile. Die einmalige Überführung bindet die gesamte Registrykohorte.
-Nur die technische Reveal-Recordrevision steigt. Alle bestehenden
-Definitionen, Originalbilder, Notices, Bewertungen und Added-Dateien bleiben bytegleich.
-
-Die Bezeichnung einer fachlichen Difficulty-Methode bleibt zur Bedeutung
-einer Bewertung erhalten. Sie verlangt keinen alten Gitcommit oder bytegleichen
-historischen Werkzeugstand. Neue Rätsel erhalten weiterhin die aktuelle
-fachliche Bewertung; bestehende Rätsel werden nicht ungefragt neu bewertet.
+Liste und Kollisionsprüfung vergleichen die sortierten Runtimezeilen mit den
+Dateinamen im flachen Recordverzeichnis beziehungsweise im gebundenen Git-Tree.
+Einzeloperationen lesen den betroffenen Record und prüfen seine Projektion.
+Der explizite Vollcheck prüft alle Quellen und vergleicht die vollständig
+rekonstruierte Runtime byteweise. Grenzen sind 10.000 Rätsel, 256 Kategorien
+und 16 MiB für die Runtime. Die einmalige Migration und ihr Vergleich richten
+sich nach [CAT-CONS-A](https://github.com/venomenon328/picross/issues/895).
 
 ### 2.1 Geschlossene aktuelle Runtimeprojektion
 

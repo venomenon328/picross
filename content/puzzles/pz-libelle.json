@@ -1,0 +1,204 @@
+{
+  "added": {
+    "added_at": "2026-11-15T23:22:23Z",
+    "provenance": {
+      "commit": null,
+      "evidence": null,
+      "kind": "registration",
+      "reason": "Successful first playable registration in the shared transaction.",
+      "reference_time": "2026-11-15T23:22:23Z"
+    }
+  },
+  "background": {
+    "asset": {
+      "bytes": 574066,
+      "file": "game/art/backgrounds/pz-libelle.png",
+      "sha256": "63716f4c061d36c9bfef0b7c1efb69383fe5c12eb51a16eb0c1acc8e35bd2342"
+    },
+    "image_revision": 2,
+    "status": "selected"
+  },
+  "category_id": "insekten-kleine-tiere",
+  "definition": {
+    "bytes": 2415,
+    "file": "game/data/content/libelle_001.json",
+    "sha256": "04cce3352980a321a893939709244fc58878c7139a9fc3c1fea4f18a05548716"
+  },
+  "difficulty": {
+    "compact_analysis": {
+      "analysis_hash": "7dff4d3ad4f308d9fee6ded4d0d3fcd32a94516f7ddfb41317cb26ff72eca5bf",
+      "deduction_complete": true,
+      "line_analysis_complete": false,
+      "line_fixpoint_confirmed": true,
+      "new_singletons": 44,
+      "profiles_hash": "f39fab69045cdeb0dd6b8c8d5cdc33275c04fd2cc8fd1072f9ea478f3b44fbaf",
+      "r4": {
+        "baseline": {
+          "bytes": 7328,
+          "sha256": "8b202b9053c62fb0421b717dcdd40fce1eb0c0ad04fd5923a023a79c8b8d0be5"
+        },
+        "baseline_profile_hash": "f63ee6c88e6baa9f6a22f386ae532482d7ffb7b9a2237867f0d7cd9960ab608f",
+        "baseline_status": "stalled",
+        "baseline_verified": true,
+        "instrumentation": "separate_R4_evidence_not_synchronous_waves",
+        "label": "linienübergreifend / besonders hoher logischer Anspruch",
+        "necessity": "required",
+        "proof": {
+          "bytes": 27526,
+          "sha256": "7d86273242ddd9e4871010f460cfae82684c10acb3a9346f978d2f7f5fddc3ee"
+        },
+        "proof_profile_hash": "9dfe08bdb9738dc64d778149490cc3dd43815aee68900291d2e84a3f9ef55727",
+        "proof_status": "solved",
+        "proof_verified": true,
+        "required": true
+      },
+      "reason": null,
+      "result_hash": "ee434a5edd22e60da9efd3a561f69e0ff5ffd232a98718e87ee8d2dc264585c6",
+      "status": "stalled",
+      "structure": {
+        "adjacent_color_changes": 0,
+        "cells": 300,
+        "clue_length_histogram": {
+          "1": 4,
+          "18": 1,
+          "2": 27,
+          "3": 15,
+          "4": 6,
+          "5": 6,
+          "6": 3,
+          "7": 1
+        },
+        "colors": 1,
+        "geometric_slack": 372,
+        "height": 15,
+        "mandatory_gaps": 28,
+        "short_blocks": 31,
+        "total_clue_length": 200,
+        "total_clues": 63,
+        "width": 20
+      },
+      "trace_hash": "0eddb1bbc1a5cdfbbf8c9a5c6bc2cb21251d54390d2839c519bb7010e246d364",
+      "wave_count": 4
+    },
+    "logic_binding": {
+      "matrix_hash": "6014f154f7a5f1d1efecf1be3c801c3316cd609a4f090622ecae2d05d1c6d7be"
+    },
+    "rating": {
+      "analysis_result_hash": "ee434a5edd22e60da9efd3a561f69e0ff5ffd232a98718e87ee8d2dc264585c6",
+      "format": "picross-catalog-sd2-rating-v1",
+      "method": "picross-difficulty-0.4",
+      "method_hash": "5508f0742aa858a6adc31aa621433e68298b915fb0fd6b8d9e74e576ba87caaf",
+      "rating_hash": "f14868e186d5439f1e961c55f0685068efd9146ef06abf5c2b4829735c10bf52",
+      "result": {
+        "analysis_result_hash": "ee434a5edd22e60da9efd3a561f69e0ff5ffd232a98718e87ee8d2dc264585c6",
+        "assessment": {
+          "boundaries": {
+            "distance_lower": [
+              1,
+              2
+            ],
+            "distance_upper": null,
+            "lower": [
+              4,
+              1
+            ],
+            "nearest_distance": [
+              1,
+              2
+            ],
+            "upper": null
+          },
+          "contributions": {
+            "demand": [
+              9,
+              2
+            ],
+            "search": [
+              0,
+              1
+            ],
+            "workload": [
+              0,
+              1
+            ]
+          },
+          "level": 5,
+          "level_without_workload": 5,
+          "score": [
+            9,
+            2
+          ],
+          "signals": {
+            "line_profiles_are_prefix": true,
+            "r4_required": true,
+            "search_and_workload": "fixed_anchor_not_full_pair_measurement"
+          },
+          "without_workload": [
+            9,
+            2
+          ]
+        },
+        "confidence": "medium",
+        "estimated_minutes": null,
+        "explanation": "Model estimate from synthetic references; no human calibration or time estimate. Required R4 uses a fixed anchor; line profiles are prefixes, not complete pair measurements.",
+        "format": "picross-sd2-rating-v1",
+        "method": "picross-difficulty-0.4",
+        "method_hash": "5508f0742aa858a6adc31aa621433e68298b915fb0fd6b8d9e74e576ba87caaf",
+        "profile_scope": "line_prefix",
+        "reason": "required_r4",
+        "status": "rated"
+      },
+      "source": {
+        "bytes": 2434,
+        "definition_id": "pz-libelle",
+        "engine_logic_hash": "72d0038272baaebde197a4d6374ac033e3f1abc71a5358b1f0fba6c27fbd4613",
+        "kind": "runtime",
+        "production_mode": "unknown",
+        "runtime_revision": 1,
+        "sha256": "abdc70ba6b8c5a54b5efac598f0dc3865a3d03f98050aea1afda38f0ef5225be"
+      }
+    },
+    "rating_revision": 1
+  },
+  "format": "picross-puzzle-record-v1",
+  "id": "pz-libelle",
+  "mode": "mono",
+  "name": "Libelle",
+  "reveal": {
+    "asset": {
+      "bytes": 1345641,
+      "file": "game/art/content/libelle_001.png",
+      "sha256": "fa9115bf5ba8ad8bce8af8f19c5b5d50578e5f388692adc3c14ccc0d89a5b4da"
+    },
+    "catalog": {
+      "generator": "picross-catalog-reveal-1",
+      "profiles": [
+        {
+          "asset": {
+            "bytes": 18699,
+            "file": "game/art/catalog/pz-libelle-ui100.png",
+            "sha256": "2e8f4971e87916e22e9dc395defa05e38922c2e22fc9128c7b8b492e9a074e23"
+          },
+          "height": 112,
+          "profile": "catalog-ui100-v1",
+          "width": 140
+        },
+        {
+          "asset": {
+            "bytes": 27490,
+            "file": "game/art/catalog/pz-libelle-ui125.png",
+            "sha256": "98d2aac95caf5f5aab2f726a5259f28ac44e08ec74b86041bdbe3ef6e94b0261"
+          },
+          "height": 140,
+          "profile": "catalog-ui125-v1",
+          "width": 175
+        }
+      ],
+      "source_height": 1122,
+      "source_width": 1402
+    },
+    "image_revision": 1
+  },
+  "save_slot": "libelle_001",
+  "visible": true
+}

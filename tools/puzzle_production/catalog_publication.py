@@ -1,7 +1,7 @@
 """Durable filesystem primitives shared by the current operation writers."""
 NORMAL_LIMIT = 128 * 1024 * 1024
 LIMIT = NORMAL_LIMIT
-EDITOR_PREFIX = b"PICROSS-EDITOR-CHANGE-JOURNAL-V2\n"
+EDITOR_PREFIX = b"PICROSS-PUZZLE-EDITOR-JOURNAL-V1\n"
 PREFIXES = ()
 import base64
 
@@ -152,7 +152,7 @@ def durable_parents(root, name):
 
 def journal_bytes(value):
     import zlib
-    require(value["format"] == "picross-editor-change-journal-v2", "Use the current operation writer")
+    require(value["format"] == "picross-puzzle-editor-journal-v1", "Use the current operation writer")
     raw = canonical_bytes(value) + b"\n"
     require(len(raw) <= LIMIT, "Editor journal exceeds 128 MiB")
     return EDITOR_PREFIX + zlib.compress(raw, level=6)

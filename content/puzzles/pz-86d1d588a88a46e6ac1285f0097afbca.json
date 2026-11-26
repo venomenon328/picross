@@ -1,0 +1,213 @@
+{
+  "added": {
+    "added_at": "2026-10-25T11:47:50Z",
+    "provenance": {
+      "commit": null,
+      "evidence": null,
+      "kind": "registration",
+      "reason": "Successful first playable registration in the shared transaction.",
+      "reference_time": "2026-10-25T11:47:50Z"
+    }
+  },
+  "background": {
+    "asset": {
+      "bytes": 969274,
+      "file": "game/art/backgrounds/pz-86d1d588a88a46e6ac1285f0097afbca.png",
+      "sha256": "ebea9794f266380c76385cff454db8986494cbbf233e99786b4b76e99896b5d1"
+    },
+    "image_revision": 3,
+    "status": "selected"
+  },
+  "category_id": "gebaeude-bauwerke",
+  "definition": {
+    "bytes": 12801,
+    "file": "game/data/content/cau_vang_001.json",
+    "sha256": "3c31e1c59b314962e90ecc63fe0bbb43e576ec9a178bbcc6bd6ca11a8c7a6322"
+  },
+  "difficulty": {
+    "compact_analysis": {
+      "analysis_hash": "3b1fcbf910a4286b5a0c674ccf70f96f2808c0b0e89b408fc5de10f27c4b8ba6",
+      "deduction_complete": true,
+      "line_analysis_complete": true,
+      "line_fixpoint_confirmed": true,
+      "new_singletons": 800,
+      "profiles_hash": "61696079b6a8f8719b0836ef2147c5b8e5ce1e4d1c26238f8a61283e2b3294b1",
+      "r4": null,
+      "reason": null,
+      "result_hash": "ddc506e1646c81deefb5f4242f810d8558c377374b512be6e272107e1ae339ff",
+      "status": "solved",
+      "structure": {
+        "adjacent_color_changes": 390,
+        "cells": 800,
+        "clue_length_histogram": {
+          "1": 256,
+          "11": 1,
+          "12": 2,
+          "13": 1,
+          "14": 1,
+          "19": 1,
+          "2": 105,
+          "24": 1,
+          "3": 50,
+          "4": 21,
+          "5": 14,
+          "6": 3,
+          "8": 2,
+          "9": 1
+        },
+        "colors": 5,
+        "geometric_slack": 672,
+        "height": 20,
+        "mandatory_gaps": 10,
+        "short_blocks": 361,
+        "total_clue_length": 918,
+        "total_clues": 459,
+        "width": 40
+      },
+      "trace_hash": "8c3f487f388919e2f1b58481fafedb4a5a6d405785eec3e00ddf6ff456c9d780",
+      "wave_count": 24
+    },
+    "logic_binding": {
+      "matrix_hash": "e34418208f992e1e482e131302e5ed58719cce6b68e3e28e9fbdc88f7fe098f2"
+    },
+    "rating": {
+      "analysis_result_hash": "ddc506e1646c81deefb5f4242f810d8558c377374b512be6e272107e1ae339ff",
+      "format": "picross-catalog-sd2-rating-v1",
+      "method": "picross-difficulty-0.4",
+      "method_hash": "5508f0742aa858a6adc31aa621433e68298b915fb0fd6b8d9e74e576ba87caaf",
+      "rating_hash": "a2552f5649ae86f7465bff2175d14c15e5cf41de551b21d7a2867e0548323999",
+      "result": {
+        "analysis_result_hash": "ddc506e1646c81deefb5f4242f810d8558c377374b512be6e272107e1ae339ff",
+        "assessment": {
+          "boundaries": {
+            "distance_lower": [
+              66383,
+              135000
+            ],
+            "distance_upper": [
+              68617,
+              135000
+            ],
+            "lower": [
+              3,
+              1
+            ],
+            "nearest_distance": [
+              66383,
+              135000
+            ],
+            "upper": [
+              4,
+              1
+            ]
+          },
+          "contributions": {
+            "demand": [
+              235,
+              108
+            ],
+            "search": [
+              5329,
+              5000
+            ],
+            "workload": [
+              1,
+              4
+            ]
+          },
+          "level": 4,
+          "level_without_workload": 4,
+          "score": [
+            471383,
+            135000
+          ],
+          "signals": {
+            "context": [
+              19,
+              27
+            ],
+            "fluent": false,
+            "highest_family": "E2",
+            "longest_narrow_run": 2,
+            "narrow_waves": 2,
+            "peak_search": [
+              588,
+              625
+            ],
+            "raw_workload": [
+              1,
+              4
+            ],
+            "spans": 452,
+            "workload_ceiling": 4,
+            "workload_guard": "none"
+          },
+          "without_workload": [
+            437633,
+            135000
+          ]
+        },
+        "confidence": "medium",
+        "estimated_minutes": null,
+        "explanation": "Model estimate from synthetic references; no human calibration or time estimate. Demand, search and bounded workload use independently checked line profiles.",
+        "format": "picross-sd2-rating-v1",
+        "method": "picross-difficulty-0.4",
+        "method_hash": "5508f0742aa858a6adc31aa621433e68298b915fb0fd6b8d9e74e576ba87caaf",
+        "profile_scope": "complete_line",
+        "reason": "complete_line",
+        "status": "rated"
+      },
+      "source": {
+        "bytes": 12801,
+        "definition_id": "pz-86d1d588a88a46e6ac1285f0097afbca",
+        "engine_logic_hash": "37554bcfc1bea9d7eb5676149d0d7d16952d3f26fc4d35cedec25f4fbbf4aceb",
+        "kind": "runtime",
+        "production_mode": "unknown",
+        "runtime_revision": 1,
+        "sha256": "3c31e1c59b314962e90ecc63fe0bbb43e576ec9a178bbcc6bd6ca11a8c7a6322"
+      }
+    },
+    "rating_revision": 2
+  },
+  "format": "picross-puzzle-record-v1",
+  "id": "pz-86d1d588a88a46e6ac1285f0097afbca",
+  "mode": "color",
+  "name": "Cầu Vàng",
+  "reveal": {
+    "asset": {
+      "bytes": 2022326,
+      "file": "game/art/content/cau_vang_001.png",
+      "sha256": "b88c7dee737be9f5ee20c4793c6c47cb600dd9c9fa92f2eea599abdc93f93dbb"
+    },
+    "catalog": {
+      "generator": "picross-catalog-reveal-1",
+      "profiles": [
+        {
+          "asset": {
+            "bytes": 26973,
+            "file": "game/art/catalog/pz-86d1d588a88a46e6ac1285f0097afbca-ui100.png",
+            "sha256": "f7e2f8d17b6e9806a4dd3f0e1478f6605408a0d243ccee6cfbcb91c69b0ae397"
+          },
+          "height": 112,
+          "profile": "catalog-ui100-v1",
+          "width": 150
+        },
+        {
+          "asset": {
+            "bytes": 40172,
+            "file": "game/art/catalog/pz-86d1d588a88a46e6ac1285f0097afbca-ui125.png",
+            "sha256": "f343c977e62ba8c0dbc924f52758fbc76b531d5bcec4ffaad3c8754ec7b197a0"
+          },
+          "height": 140,
+          "profile": "catalog-ui125-v1",
+          "width": 187
+        }
+      ],
+      "source_height": 1086,
+      "source_width": 1448
+    },
+    "image_revision": 1
+  },
+  "save_slot": "cau_vang_001",
+  "visible": true
+}

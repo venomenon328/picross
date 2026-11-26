@@ -1,0 +1,224 @@
+{
+  "added": {
+    "added_at": "2026-10-15T14:21:41Z",
+    "provenance": {
+      "commit": "02805818341a14c2e922dd07e87be2791cd79174",
+      "evidence": {
+        "path": "content/added/reports/ku-b-initial.json",
+        "sha256": "e6d7a01e740adbc40cdc90e64c733f95907c8924cfe1f0a4bb734bb7bc6b7884"
+      },
+      "kind": "git-snapshot",
+      "reason": "No direct UTC first-registration receipt found in reviewed sources; earliest verified visible integrated catalog snapshot including bound PR history. Commit UTC is a reconstructed reference, not tool execution time.",
+      "reference_time": "2026-10-15T14:21:41Z"
+    }
+  },
+  "background": {
+    "asset": {
+      "bytes": 2224281,
+      "file": "game/art/backgrounds/pz-51405ea1ad194507a60c9b6701d802f0.png",
+      "sha256": "b26fca076d2ad833ddebd6d148da2f83496d630454275a7b0c12e83336aa9a53"
+    },
+    "image_revision": 2,
+    "status": "selected"
+  },
+  "category_id": "haushalt-alltag",
+  "definition": {
+    "bytes": 4106,
+    "file": "game/data/content/japanische_teekanne_001.json",
+    "sha256": "05b8abcdfcfb478ca19538e2b8132a91ce364ffb52fa5699605f8a00741b253a"
+  },
+  "difficulty": {
+    "compact_analysis": {
+      "analysis_hash": "963fab62a41b207e2f9caf165459524ce8ed7cb4a21c3bd396e507a592903d42",
+      "deduction_complete": true,
+      "line_analysis_complete": true,
+      "line_fixpoint_confirmed": true,
+      "new_singletons": 750,
+      "profiles_hash": "8bcddb5fcf57b4bf9b3e790eecc44e76fce5f896f798da81737287b32c3bb781",
+      "r4": null,
+      "reason": null,
+      "result_hash": "52c4f04c9ceee80aa8720babefa7eb6bdfe858d5be7f75538b54029bf59a54e5",
+      "status": "solved",
+      "structure": {
+        "adjacent_color_changes": 0,
+        "cells": 750,
+        "clue_length_histogram": {
+          "1": 12,
+          "10": 2,
+          "12": 1,
+          "13": 5,
+          "14": 3,
+          "15": 5,
+          "16": 5,
+          "18": 3,
+          "19": 2,
+          "2": 22,
+          "20": 1,
+          "21": 1,
+          "23": 1,
+          "24": 1,
+          "26": 4,
+          "27": 2,
+          "3": 9,
+          "4": 2,
+          "6": 1,
+          "7": 5,
+          "8": 1,
+          "9": 2
+        },
+        "colors": 1,
+        "geometric_slack": 674,
+        "height": 25,
+        "mandatory_gaps": 36,
+        "short_blocks": 34,
+        "total_clue_length": 790,
+        "total_clues": 90,
+        "width": 30
+      },
+      "trace_hash": "d0e092dabc2f57b9ddbc522a840d68a2bc16c4e9ed19cc34b3827758fb41fdd7",
+      "wave_count": 37
+    },
+    "logic_binding": {
+      "matrix_hash": "800af9f7edd03ae03a09f9c4c4c918a773907b96c13c1ec58e92f92fd120a71c"
+    },
+    "rating": {
+      "analysis_result_hash": "52c4f04c9ceee80aa8720babefa7eb6bdfe858d5be7f75538b54029bf59a54e5",
+      "format": "picross-catalog-sd2-rating-v1",
+      "method": "picross-difficulty-0.4",
+      "method_hash": "5508f0742aa858a6adc31aa621433e68298b915fb0fd6b8d9e74e576ba87caaf",
+      "rating_hash": "2c5b0935716eaa24fd2cbcae3e758211fd4fd408006a7c21235c7f8ea5bb31ef",
+      "result": {
+        "analysis_result_hash": "52c4f04c9ceee80aa8720babefa7eb6bdfe858d5be7f75538b54029bf59a54e5",
+        "assessment": {
+          "boundaries": {
+            "distance_lower": [
+              355753,
+              731104
+            ],
+            "distance_upper": [
+              375351,
+              731104
+            ],
+            "lower": [
+              3,
+              1
+            ],
+            "nearest_distance": [
+              355753,
+              731104
+            ],
+            "upper": [
+              4,
+              1
+            ]
+          },
+          "contributions": {
+            "demand": [
+              551,
+              268
+            ],
+            "search": [
+              12883,
+              10912
+            ],
+            "workload": [
+              1,
+              4
+            ]
+          },
+          "level": 4,
+          "level_without_workload": 4,
+          "score": [
+            2549065,
+            731104
+          ],
+          "signals": {
+            "context": [
+              15,
+              67
+            ],
+            "fluent": false,
+            "highest_family": "E2",
+            "longest_narrow_run": 3,
+            "narrow_waves": 14,
+            "peak_search": [
+              328,
+              341
+            ],
+            "raw_workload": [
+              1,
+              4
+            ],
+            "spans": 237,
+            "workload_ceiling": 4,
+            "workload_guard": "none"
+          },
+          "without_workload": [
+            2366289,
+            731104
+          ]
+        },
+        "confidence": "medium",
+        "estimated_minutes": null,
+        "explanation": "Model estimate from synthetic references; no human calibration or time estimate. Demand, search and bounded workload use independently checked line profiles.",
+        "format": "picross-sd2-rating-v1",
+        "method": "picross-difficulty-0.4",
+        "method_hash": "5508f0742aa858a6adc31aa621433e68298b915fb0fd6b8d9e74e576ba87caaf",
+        "profile_scope": "complete_line",
+        "reason": "complete_line",
+        "status": "rated"
+      },
+      "source": {
+        "bytes": 4106,
+        "definition_id": "pz-51405ea1ad194507a60c9b6701d802f0",
+        "engine_logic_hash": "8ba7ecaabbb0e8460869a588ca1c7f82523edc217239b793d2b8b8b17f8a8808",
+        "kind": "runtime",
+        "production_mode": "unknown",
+        "runtime_revision": 1,
+        "sha256": "05b8abcdfcfb478ca19538e2b8132a91ce364ffb52fa5699605f8a00741b253a"
+      }
+    },
+    "rating_revision": 2
+  },
+  "format": "picross-puzzle-record-v1",
+  "id": "pz-51405ea1ad194507a60c9b6701d802f0",
+  "mode": "mono",
+  "name": "Japanische Teekanne",
+  "reveal": {
+    "asset": {
+      "bytes": 2114210,
+      "file": "game/art/content/japanische_teekanne_001.png",
+      "sha256": "53fe49d243f772215efe018bbd8c8d2376fa265c7be9f3b47452c08904e473b9"
+    },
+    "catalog": {
+      "generator": "picross-catalog-reveal-1",
+      "profiles": [
+        {
+          "asset": {
+            "bytes": 25331,
+            "file": "game/art/catalog/pz-51405ea1ad194507a60c9b6701d802f0-ui100.png",
+            "sha256": "902c927d0eb6f75a2771a614a5fdeba27842036292cee04ee2541e07a93d50b5"
+          },
+          "height": 112,
+          "profile": "catalog-ui100-v1",
+          "width": 168
+        },
+        {
+          "asset": {
+            "bytes": 37509,
+            "file": "game/art/catalog/pz-51405ea1ad194507a60c9b6701d802f0-ui125.png",
+            "sha256": "678713e4be46cfbaf4e74584f1ecbff7d4e6d86de9d40b51f204b61622c12c79"
+          },
+          "height": 140,
+          "profile": "catalog-ui125-v1",
+          "width": 210
+        }
+      ],
+      "source_height": 1024,
+      "source_width": 1536
+    },
+    "image_revision": 1
+  },
+  "save_slot": "japanische_teekanne_001",
+  "visible": true
+}

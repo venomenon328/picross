@@ -24,9 +24,11 @@ PREVIOUS_FORMAT = "picross-catalog-difficulty-report-v2"
 AT_FORMAT = "picross-catalog-difficulty-report-v3"
 SD2_FORMAT = "picross-catalog-difficulty-report-v4"
 FORMAT = "picross-catalog-difficulty-report-v5"
-IMAGE_FORMAT = "picross-catalog-difficulty-report-v7"
-SOURCE_FORMATS = (IMAGE_FORMAT, FORMAT, SD2_FORMAT, AT_FORMAT, PREVIOUS_FORMAT)
-METHOD_FORMATS = (IMAGE_FORMAT, FORMAT, SD2_FORMAT)
+from . import puzzle_record, puzzle_catalog
+HISTORICAL_IMAGE_FORMAT = "picross-catalog-difficulty-report-v7"
+IMAGE_FORMAT = "picross-puzzle-difficulty-report-v1"
+SOURCE_FORMATS = (IMAGE_FORMAT, HISTORICAL_IMAGE_FORMAT, FORMAT, SD2_FORMAT, AT_FORMAT, PREVIOUS_FORMAT)
+METHOD_FORMATS = (IMAGE_FORMAT, HISTORICAL_IMAGE_FORMAT, FORMAT, SD2_FORMAT)
 REPORT_LIMIT = 16 * 1024 * 1024
 
 
@@ -130,7 +132,7 @@ def validate_report(report):
             re.fullmatch(r"[0-9a-f]{40}", r["source_commit"]), "Invalid report selection/commit")
     method = r.get("method", METHOD_ID)
     require(sha(r["method_hash"]) == catalog_method.method_hash(method), "Wrong report method")
-    exact_keys(r["snapshot"], {tx.REGISTRY, tx.RUNTIME, "content/categories.json"})
+    exact_keys(r["snapshot"], {tx.RUNTIME, "content/categories.json"} | (set() if report["format"] == IMAGE_FORMAT else {"content/registry.json"}))
     for h in r["snapshot"].values(): sha(h)
     rows = r["entries"]
     require(isinstance(rows, list) and len(rows) <= 10000, "Invalid report entries")
@@ -138,7 +140,9 @@ def validate_report(report):
     for row in rows:
         exact_keys(row, {"id", "current_source", "logic_binding", "old", "proposed", "status", "reason", "rating_hash", "checked_hash", "previous_record_hash"} |
                    ({"previous_rating_revision"} if report["format"] in SOURCE_FORMATS else set()) |
-                   ({"assessment"} if report["format"] in METHOD_FORMATS else set()))
+                   ({"assessment"} if report["format"] in METHOD_FORMATS else set()) |
+                   ({"other_fields_sha256"} if report["format"] == IMAGE_FORMAT else set()))
+        if report["format"] == IMAGE_FORMAT: sha(row["other_fields_sha256"])
         if report["format"] in SOURCE_FORMATS:
             if row["previous_record_hash"] is None:
                 require(row["previous_rating_revision"] is None, "Unexpected previous rating revision")
@@ -209,8 +213,8 @@ def preview(root, output, run, source_commit, *, ids=None, all_entries=False, ch
     require(isinstance(source_commit, str) and re.fullmatch(r"[0-9a-f]{40}", source_commit), "Explicit source commit required")
     output = work_directory(output, root)
     require(not output.exists(), "Preview output already exists")
-    snapshot = tx.capture(root)
-    entries = {e["id"]: e for e in snapshot["registry"]["entries"]}
+    snapshot = tx.capture(root,None if all_entries else ids)
+    entries = snapshot["records"]
     selected = sorted(entries) if all_entries else sorted(ids)
     require(len(selected) == len(set(selected)) and all(i in entries for i in selected), "Duplicate or unknown selected ID")
     require(set(checked_inputs or {}) <= set(selected) and set(r4_inputs or {}) <= set(selected), "Input outside explicit selection")
@@ -218,14 +222,14 @@ def preview(root, output, run, source_commit, *, ids=None, all_entries=False, ch
     rows = []
     for identifier in selected:
         e = entries[identifier]
-        raw = snapshot["texts"]["game/" + e["definition"]]
-        prior_raw = snapshot["texts"][rating.path(identifier)]
-        prior = rating.validate(rating.bytes_json(prior_raw), definition_bytes=raw) if prior_raw is not None else None
-        row = {"id": identifier, "current_source": None, "logic_binding": None,
-               "old": rating.project(prior) if prior else None,
-               "proposed": None, "status": "invalid_input", "reason": None, "rating_hash": None, "checked_hash": None,
-               "previous_record_hash": prior["record_hash"] if prior else None,
-               "previous_rating_revision": prior["rating_revision"] if prior else None, "assessment": None}
+        raw = snapshot["texts"][e["definition"]["file"]]
+        prior = e["difficulty"]
+        row = {"id":identifier,"current_source":None,"logic_binding":None,
+               "old":rating.project_rating(prior["rating"]),"proposed":None,"status":"invalid_input",
+               "reason":None,"rating_hash":None,"checked_hash":None,
+               "previous_record_hash":catalog_io.checksum(snapshot["texts"][puzzle_record.path(identifier)]),
+               "previous_rating_revision":prior["rating_revision"],"assessment":None,
+               "other_fields_sha256":digest({k:v for k,v in e.items() if k != "difficulty"})}
         try:
             _, _, row["current_source"], row["logic_binding"] = rating.definition(raw, method=method)
             if checked_inputs is not None:
@@ -252,9 +256,9 @@ def preview(root, output, run, source_commit, *, ids=None, all_entries=False, ch
         rows.append(row)
     result = {"selection": "all" if all_entries else "ids", "source_commit": source_commit, "method": method, "method_hash": method_hash,
               "sources": source_hashes(snapshot),
-              "snapshot": {n: hashlib.sha256(snapshot["texts"][n]).hexdigest() for n in (tx.REGISTRY, tx.RUNTIME, "content/categories.json")},
+              "snapshot": {n: hashlib.sha256(snapshot["texts"][n]).hexdigest() for n in (tx.RUNTIME, "content/categories.json")},
               "entries": rows, "distribution": {k: _distribution(rows, k) for k in ("old", "proposed")}}
-    report = validate_report({"format": IMAGE_FORMAT if tx.image_generation(snapshot) else FORMAT,
+    report = validate_report({"format": IMAGE_FORMAT,
         "run_id": run, "result": result, "result_hash": digest(result),
         "operation": {"created_utc": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"), "phase": "preview"}})
     write_new(output / "report.json", canonical_bytes(report) + b"\n")
@@ -270,46 +274,23 @@ def source_hashes(snapshot, report_format=None):
 def check_repeat(report, snapshot):
     """Accept precisely the expected end state, not the original runtime bytes."""
     r = report["result"]
-    for name in (tx.REGISTRY, "content/categories.json"):
-        require(hashlib.sha256(snapshot["texts"][name]).hexdigest() == r["snapshot"][name], "Checkout changed since preview")
-    current = source_hashes(snapshot, report["format"])
-    for name in tx.report_names(report["run_id"]): current.pop(name, None)
-    modern = report["format"] in SOURCE_FORMATS
-    if modern:
-        require(set(current) == set(r["sources"]), "Checkout sources changed since preview")
-    # Restore only the selected pre-adoption projections in memory. Adoption
-    # intentionally changed those fields; all other runtime bytes must agree.
-    runtime = rating.bytes_json(snapshot["texts"][tx.RUNTIME], tx.content.RUNTIME_LIMIT)
-    projections = {e["id"]: e for e in runtime["entries"]}
+    current = source_hashes(snapshot,report["format"])
+    require(set(current) == set(r["sources"]),"Changed source inventory")
+    runtime = deepcopy(snapshot["runtime"])
+    projections = {row["id"]:row for row in runtime["entries"]}
     for row in r["entries"]:
-        name = rating.path(row["id"])
-        if row["status"] == "rated":
-            active = rating.validate(rating.bytes_json(snapshot["texts"][name]))
-            changed = current[name] != r["sources"][name] if modern else active["record_hash"] != row["previous_record_hash"]
-            if changed:
-                require(active["rating_revision"] == (row["previous_rating_revision"] or 0)+1 and
-                        active["rating"]["rating_hash"] == row["rating_hash"] and
-                        rating.project(active) == row["proposed"] and
-                        snapshot["texts"][name] == rating.encoded(active),
-                        "Active current rating changed since adoption")
-                if modern: current[name] = r["sources"][name]
-        projections[row["id"]]["difficulty"] = row["old"]
-    candidates = [runtime]
-    if report["format"] in METHOD_FORMATS and runtime["format"] not in ("picross-runtime-registry-v6", "picross-runtime-registry-v7", "picross-runtime-registry-v8", "picross-runtime-registry-v9"):
-        for version in (2, 3, 4):
-            old = deepcopy(runtime)
-            old["format"] = "picross-runtime-registry-v" + str(version)
-            for e in old["entries"]:
-                if version < 4: e.pop("added_at", None)
-                if version < 3: e.pop("difficulty", None)
-            candidates.append(old)
-    if report["format"] == IMAGE_FORMAT:
-        # The v6 source map also binds the three root texts. The independent
-        # reconstructed-runtime comparison below proves this one owned delta.
-        current[tx.RUNTIME] = r["sources"][tx.RUNTIME]
-    require((not modern or current == r["sources"]) and
-            any(hashlib.sha256(canonical_bytes(v) + b"\n").hexdigest() == r["snapshot"][tx.RUNTIME] for v in candidates),
-            "Checkout sources/projection changed since preview")
+        key = row["id"]
+        name = puzzle_record.path(key)
+        record = snapshot["records"][key]
+        if current[name] != r["sources"][name]:
+            require(row["status"] == "rated" and record["difficulty"]["rating_revision"] == row["previous_rating_revision"]+1
+                    and record["difficulty"]["rating"]["rating_hash"] == row["rating_hash"] and
+                    digest({k:v for k,v in record.items() if k != "difficulty"}) == row["other_fields_sha256"]
+                    and projections[key]["difficulty"] == row["proposed"], "Changed adopted puzzle")
+            current[name] = r["sources"][name]
+        projections[key]["difficulty"] = row["old"]
+    current[tx.RUNTIME] = catalog_io.checksum(tx.content.encoded(runtime))
+    require(current == r["sources"],"Changed sources since rating adoption")
 
 
 def adopt(root, workspace, *, apply=False, fail_step=None):
@@ -318,25 +299,26 @@ def adopt(root, workspace, *, apply=False, fail_step=None):
     report_bytes = rating.read_file(safe_external(workspace / "report.json"), REPORT_LIMIT)
     report = validate_report(rating.bytes_json(report_bytes, REPORT_LIMIT))
     require(safe_external(workspace / "report.md").read_bytes() == markdown(report).encode(), "Preview Markdown differs")
-    snapshot = tx.capture(root)
-    source_hashes(snapshot, report["format"])
-    entries = {e["id"]: e for e in snapshot["registry"]["entries"]}
+    require(report["format"] == IMAGE_FORMAT and report["operation"]["phase"] == "preview","Current rating plan required")
     rows = report["result"]["entries"]
-    if report["result"]["selection"] == "all": require(sorted(entries) == [r["id"] for r in rows], "Catalog selection changed")
+    snapshot = tx.capture(root,[r["id"] for r in rows])
+    entries = snapshot["records"]
+    if report["result"]["selection"] == "all":
+        require(sorted(entries) == [r["id"] for r in snapshot["runtime"]["entries"]],"Catalog selection changed")
     changes = {}
     externals = {workspace / "report.json": report_bytes, workspace / "report.md": markdown(report).encode()}
     same = True
     for row in rows:
         require(row["id"] in entries, "Selected ID disappeared")
         e = entries[row["id"]]
-        raw = snapshot["texts"]["game/" + e["definition"]]
+        raw = snapshot["texts"][e["definition"]["file"]]
         if row["current_source"] is not None:
             _, _, current, logic = rating.definition(raw, method=report["result"].get("method", METHOD_ID))
             require(current == row["current_source"] and logic == row["logic_binding"], "Selected definition changed since preview")
-        prior_raw = snapshot["texts"][rating.path(row["id"])]
-        prior = rating.validate(rating.bytes_json(prior_raw), definition_bytes=raw) if prior_raw else None
+        name = puzzle_record.path(row["id"])
+        prior = e["difficulty"]
         if row["status"] != "rated":
-            require((prior["record_hash"] if prior else None) == row["previous_record_hash"], "Active rating changed since preview")
+            require(catalog_io.checksum(snapshot["texts"][name]) == row["previous_record_hash"],"Selected record changed")
             continue
         p = safe_external(workspace / "checked" / (row["id"] + ".json"))
         externals[p] = rating.read_file(p)
@@ -346,11 +328,12 @@ def adopt(root, workspace, *, apply=False, fail_step=None):
                 rating.project(checked) == row["proposed"], "Checked preview input changed")
         if report["format"] in METHOD_FORMATS:
             require(row["assessment"] == checked["rating"]["result"].get("assessment"), "Checked preview assessment changed")
-        value = rating.active_record(checked, prior, report={"run_id": report["run_id"], "result_hash": report["result_hash"]})
-        if prior != value:
+        new = puzzle_catalog.difficulty_fields(rating.active_record(checked))
+        if any(new[k] != prior[k] for k in prior if k != "rating_revision"):
             same = False
-            require((prior["record_hash"] if prior else None) == row["previous_record_hash"], "Active rating changed since preview")
-            changes[rating.path(row["id"])] = rating.encoded(value)
+            require(catalog_io.checksum(snapshot["texts"][name]) == row["previous_record_hash"], "Active record changed")
+            new["rating_revision"] = prior["rating_revision"] + 1
+            changes[name] = puzzle_record.encode(dict(e,difficulty=new))
     final = deepcopy(report)
     final["operation"]["phase"] = "adopted"
     prefix = "content/difficulty/reports/" + report["run_id"] + "/report."
@@ -364,11 +347,14 @@ def adopt(root, workspace, *, apply=False, fail_step=None):
             "Checkout changed since preview")
     if report["format"] in SOURCE_FORMATS:
         require(source_hashes(snapshot, report["format"]) == report["result"]["sources"], "Checkout sources changed since preview")
+    runtime = deepcopy(snapshot["runtime"])
+    for row in runtime["entries"]:
+        name = puzzle_record.path(row["id"])
+        if name in changes:
+            row.update(puzzle_record.runtime_row(puzzle_record.decode(changes[name],row["id"])))
+    changes[tx.RUNTIME] = tx.content.encoded(runtime)
     changes.update(durable)
-    from .content_registry import require_current
-    if apply: require_current(snapshot["registry"])
-    journal = tx.prepare(root, snapshot, changes, operation="adoption", report_run=report["run_id"],
-                         generation="background" if report["format"] in (IMAGE_FORMAT, FORMAT) else "sd2" if report["format"] == SD2_FORMAT else "at")
+    journal = tx.record_journal({**snapshot["texts"],**existing},changes,operation="adoption")
     require(all(safe_external(p).read_bytes() == b for p, b in externals.items()), "Preview inputs changed during planning")
     plan = {"status": "planned-adoption", "changes": sorted(n for n in journal["new"] if journal["old"][n] != journal["new"][n]),
             "report_hash": report["result_hash"], "open_ids": [r["id"] for r in rows if r["status"] != "rated"]}

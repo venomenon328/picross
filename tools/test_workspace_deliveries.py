@@ -72,7 +72,7 @@ class DeliveryTests(unittest.TestCase):
             source=GitSource(self.repo)
             from tools.puzzle_production.current_delivery import snapshot
             live=snapshot(lambda n,l,**kw:source.read(self.head,n,l,**kw),ID)
-            for name in {*live['files'],current_content.REGISTRY,current_content.RUNTIME}:
+            for name in {*live['files'],current_content.RUNTIME}:
                 put(self.repo,name,source.read(self.head,name,64*1024*1024))
             if git(self.repo,'status','--porcelain').strip():commit(self.repo)
         else:
@@ -115,8 +115,7 @@ class DeliveryTests(unittest.TestCase):
             self.assertNotEqual(at, branch, 'Registered production branch was opened')
             self.assertNotIn('/' + ID + '/', name)
             self.assertNotIn('/packages/', name)
-            self.assertNotEqual(name, current_content.RUNTIME)
-            self.assertFalse(name.startswith(('game/', 'content/backgrounds/', 'content/reveals/')))
+            self.assertTrue(name == current_content.RUNTIME or not name.startswith(('game/','content/puzzles/')))
             return original(source, at, name, *args, **kwargs)
 
         with patch.object(GitSource, 'read', trap):
@@ -132,9 +131,8 @@ class DeliveryTests(unittest.TestCase):
         publish_pointer(self.repo, ID, 'early-alpha')
         commit(self.repo)
         git(self.repo, 'checkout', '-q', 'main')
-        value = p.parse((self.repo / current_content.REGISTRY).read_bytes())
-        value['metadata'][0]['name'] = 'Later name'
-        put(self.repo, current_content.REGISTRY, value)
+        from tools.puzzle_production import catalog_metadata as metadata
+        metadata.apply(self.repo,metadata.plan(self.repo,[{"op":"set_metadata","id":ID,"name":"Later name"}]))
         put(self.repo, 'game/art/content/' + ID + '.png', b'Later live image bytes')
         commit(self.repo)
         self.push()
@@ -163,9 +161,9 @@ class DeliveryTests(unittest.TestCase):
         self.assertEqual({j['puzzle_id'] for j in first['jobs']}, {'pz-open'})
         self.assertTrue(first['completion']['confirmed'])
 
-        valid = p.parse((self.repo / current_content.REGISTRY).read_bytes())
+        valid = p.parse((self.repo / current_content.RUNTIME).read_bytes())
         valid['entries'].append(dict(valid['entries'][0]))
-        put(self.repo, current_content.REGISTRY, valid)
+        put(self.repo, current_content.RUNTIME, valid)
         metadata_job(self.repo, 'r01', puzzle_id='pz-new')
         commit(self.repo)
         self.push()

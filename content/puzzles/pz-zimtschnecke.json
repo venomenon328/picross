@@ -1,0 +1,208 @@
+{
+  "added": {
+    "added_at": "2026-11-22T09:43:45Z",
+    "provenance": {
+      "commit": null,
+      "evidence": null,
+      "kind": "registration",
+      "reason": "Successful first playable registration in the shared transaction.",
+      "reference_time": "2026-11-22T09:43:45Z"
+    }
+  },
+  "background": {
+    "asset": {
+      "bytes": 283799,
+      "file": "game/art/backgrounds/pz-zimtschnecke.png",
+      "sha256": "8d0e943c319c1353b4d01fcd5c1f7fce35be3805cb58c1472e1de3a4b8f1735e"
+    },
+    "image_revision": 1,
+    "status": "selected"
+  },
+  "category_id": "suesses-getraenke",
+  "definition": {
+    "bytes": 2983,
+    "file": "game/data/content/pz-zimtschnecke.json",
+    "sha256": "a53f1479f8120764338263c168b0d2dd8a77136703de8b478b82703d45eb63ba"
+  },
+  "difficulty": {
+    "compact_analysis": {
+      "analysis_hash": "067471515ce7225e245957bbddc20e3a9bd49138088d92ef2ea7d7d7eccf0e6c",
+      "deduction_complete": true,
+      "line_analysis_complete": true,
+      "line_fixpoint_confirmed": true,
+      "new_singletons": 224,
+      "profiles_hash": "95401bdd482dab88b74490550cf4a57bf7578254f3fe704d8308ab4c85f09f6c",
+      "r4": null,
+      "reason": null,
+      "result_hash": "52a6043a9df7b1babac60c46c8b4f750efd785f02402fbe89d4629d805c95827",
+      "status": "solved",
+      "structure": {
+        "adjacent_color_changes": 0,
+        "cells": 224,
+        "clue_length_histogram": {
+          "1": 35,
+          "10": 1,
+          "2": 34,
+          "3": 11,
+          "4": 7,
+          "5": 3,
+          "6": 1,
+          "7": 1,
+          "8": 1
+        },
+        "colors": 1,
+        "geometric_slack": 174,
+        "height": 14,
+        "mandatory_gaps": 64,
+        "short_blocks": 69,
+        "total_clue_length": 210,
+        "total_clues": 94,
+        "width": 16
+      },
+      "trace_hash": "777c8a7d6fd4eae8f70f5f4b2b6460bd21864ccdd25f0e068fa84ea6232b724f",
+      "wave_count": 36
+    },
+    "logic_binding": {
+      "matrix_hash": "c1667e210f558fc4d0d1b90a956f5049bf2841ca2c48ebe4d775502174ddd1f7"
+    },
+    "rating": {
+      "analysis_result_hash": "52a6043a9df7b1babac60c46c8b4f750efd785f02402fbe89d4629d805c95827",
+      "format": "picross-catalog-sd2-rating-v1",
+      "method": "picross-difficulty-0.4",
+      "method_hash": "5508f0742aa858a6adc31aa621433e68298b915fb0fd6b8d9e74e576ba87caaf",
+      "rating_hash": "3100e3b001747e2521d12f8ebc917bc7e0c680d3a17e9140fa073d84d84ee7bf",
+      "result": {
+        "analysis_result_hash": "52a6043a9df7b1babac60c46c8b4f750efd785f02402fbe89d4629d805c95827",
+        "assessment": {
+          "boundaries": {
+            "distance_lower": [
+              420723,
+              864640
+            ],
+            "distance_upper": [
+              443917,
+              864640
+            ],
+            "lower": [
+              3,
+              1
+            ],
+            "nearest_distance": [
+              420723,
+              864640
+            ],
+            "upper": [
+              4,
+              1
+            ]
+          },
+          "contributions": {
+            "demand": [
+              59,
+              28
+            ],
+            "search": [
+              4619,
+              3860
+            ],
+            "workload": [
+              117,
+              640
+            ]
+          },
+          "level": 4,
+          "level_without_workload": 4,
+          "score": [
+            3014643,
+            864640
+          ],
+          "signals": {
+            "context": [
+              3,
+              7
+            ],
+            "fluent": false,
+            "highest_family": "E2",
+            "longest_narrow_run": 5,
+            "narrow_waves": 18,
+            "peak_search": [
+              1827,
+              1930
+            ],
+            "raw_workload": [
+              117,
+              640
+            ],
+            "spans": 157,
+            "workload_ceiling": 4,
+            "workload_guard": "none"
+          },
+          "without_workload": [
+            22317,
+            6755
+          ]
+        },
+        "confidence": "medium",
+        "estimated_minutes": null,
+        "explanation": "Model estimate from synthetic references; no human calibration or time estimate. Demand, search and bounded workload use independently checked line profiles.",
+        "format": "picross-sd2-rating-v1",
+        "method": "picross-difficulty-0.4",
+        "method_hash": "5508f0742aa858a6adc31aa621433e68298b915fb0fd6b8d9e74e576ba87caaf",
+        "profile_scope": "complete_line",
+        "reason": "complete_line",
+        "status": "rated"
+      },
+      "source": {
+        "bytes": 2983,
+        "definition_id": "pz-zimtschnecke",
+        "engine_logic_hash": "dcca590eca1cd09773b402a09e863e7a2866ec87bb2f24fd65691dc581e851b5",
+        "kind": "runtime",
+        "production_mode": "unknown",
+        "runtime_revision": 3,
+        "sha256": "a53f1479f8120764338263c168b0d2dd8a77136703de8b478b82703d45eb63ba"
+      }
+    },
+    "rating_revision": 1
+  },
+  "format": "picross-puzzle-record-v1",
+  "id": "pz-zimtschnecke",
+  "mode": "mono",
+  "name": "Zimtschnecke",
+  "reveal": {
+    "asset": {
+      "bytes": 2603003,
+      "file": "game/art/content/pz-zimtschnecke.png",
+      "sha256": "77f7bb9a8f0648f3244e2f3d0db6738310fff7ee3c18a4c259feb2e6cbb71e71"
+    },
+    "catalog": {
+      "generator": "picross-catalog-reveal-1",
+      "profiles": [
+        {
+          "asset": {
+            "bytes": 27222,
+            "file": "game/art/catalog/pz-zimtschnecke-ui100.png",
+            "sha256": "0fad46bf9d4a51fdd841cd5bad53710bcefe8b97d55f32ec607942afd730a26f"
+          },
+          "height": 112,
+          "profile": "catalog-ui100-v1",
+          "width": 123
+        },
+        {
+          "asset": {
+            "bytes": 41069,
+            "file": "game/art/catalog/pz-zimtschnecke-ui125.png",
+            "sha256": "85363aaa824f826b36645f95ab056e5f5fc08013f3b555a603e646172869461c"
+          },
+          "height": 140,
+          "profile": "catalog-ui125-v1",
+          "width": 154
+        }
+      ],
+      "source_height": 1199,
+      "source_width": 1312
+    },
+    "image_revision": 1
+  },
+  "save_slot": "pz-zimtschnecke",
+  "visible": true
+}

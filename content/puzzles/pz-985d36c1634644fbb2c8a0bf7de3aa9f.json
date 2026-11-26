@@ -1,0 +1,220 @@
+{
+  "added": {
+    "added_at": "2026-10-14T15:41:15Z",
+    "provenance": {
+      "commit": "6dc1017378dfca6ae45d213aba5e2b99aedf5ab9",
+      "evidence": {
+        "path": "content/added/reports/ku-b-initial.json",
+        "sha256": "e6d7a01e740adbc40cdc90e64c733f95907c8924cfe1f0a4bb734bb7bc6b7884"
+      },
+      "kind": "git-snapshot",
+      "reason": "No direct UTC first-registration receipt found in reviewed sources; earliest verified visible integrated catalog snapshot including bound PR history. Commit UTC is a reconstructed reference, not tool execution time.",
+      "reference_time": "2026-10-14T15:41:15Z"
+    }
+  },
+  "background": {
+    "asset": {
+      "bytes": 627305,
+      "file": "game/art/backgrounds/pz-985d36c1634644fbb2c8a0bf7de3aa9f.png",
+      "sha256": "985fc5c92eef351bf714ee100463a5cf01b44e060a994947f5c8675a7b0c25e6"
+    },
+    "image_revision": 2,
+    "status": "selected"
+  },
+  "category_id": "gemuese-pilze-kraeuter",
+  "definition": {
+    "bytes": 2787,
+    "file": "game/data/content/ingwer_001.json",
+    "sha256": "14dbbf1dc064d9674a96b964100267213bca3535ecf6e1bef9d083ce8ac6200f"
+  },
+  "difficulty": {
+    "compact_analysis": {
+      "analysis_hash": "3f8c0572c6dceb55c02701f493f4832b5167ed23ab8a2be0d9a14cd420c5b0ea",
+      "deduction_complete": true,
+      "line_analysis_complete": true,
+      "line_fixpoint_confirmed": true,
+      "new_singletons": 500,
+      "profiles_hash": "05d01092c40ef911cd9c6e84e096f14a54000fe4223a551469328a4f9154ea5a",
+      "r4": null,
+      "reason": null,
+      "result_hash": "d8588a3925f74ef56992e8393c24f5c59e3dc6e9918cf446a6b19c6b1de4cfc1",
+      "status": "solved",
+      "structure": {
+        "adjacent_color_changes": 0,
+        "cells": 500,
+        "clue_length_histogram": {
+          "1": 1,
+          "10": 7,
+          "11": 2,
+          "12": 3,
+          "13": 2,
+          "14": 1,
+          "15": 2,
+          "16": 3,
+          "17": 1,
+          "18": 1,
+          "2": 4,
+          "3": 4,
+          "4": 3,
+          "5": 8,
+          "6": 6,
+          "7": 2,
+          "8": 3,
+          "9": 4
+        },
+        "colors": 1,
+        "geometric_slack": 523,
+        "height": 25,
+        "mandatory_gaps": 13,
+        "short_blocks": 5,
+        "total_clue_length": 464,
+        "total_clues": 57,
+        "width": 20
+      },
+      "trace_hash": "be64e08300f021f4dec71fc5d20ff819ce293223c9eb235d99a9007d6075767f",
+      "wave_count": 15
+    },
+    "logic_binding": {
+      "matrix_hash": "4f86e950b935f649b05309a937f93ccc80ed8ded7809701a32dad24a60165223"
+    },
+    "rating": {
+      "analysis_result_hash": "d8588a3925f74ef56992e8393c24f5c59e3dc6e9918cf446a6b19c6b1de4cfc1",
+      "format": "picross-catalog-sd2-rating-v1",
+      "method": "picross-difficulty-0.4",
+      "method_hash": "5508f0742aa858a6adc31aa621433e68298b915fb0fd6b8d9e74e576ba87caaf",
+      "rating_hash": "c4883c3ca8a6c749539951179efe5338fed081be06b19324c2b9c600e9d3b3d9",
+      "result": {
+        "analysis_result_hash": "d8588a3925f74ef56992e8393c24f5c59e3dc6e9918cf446a6b19c6b1de4cfc1",
+        "assessment": {
+          "boundaries": {
+            "distance_lower": [
+              604357,
+              696960
+            ],
+            "distance_upper": [
+              92603,
+              696960
+            ],
+            "lower": [
+              1,
+              1
+            ],
+            "nearest_distance": [
+              92603,
+              696960
+            ],
+            "upper": [
+              2,
+              1
+            ]
+          },
+          "contributions": {
+            "demand": [
+              1,
+              1
+            ],
+            "search": [
+              718,
+              1089
+            ],
+            "workload": [
+              133,
+              640
+            ]
+          },
+          "level": 2,
+          "level_without_workload": 2,
+          "score": [
+            1301317,
+            696960
+          ],
+          "signals": {
+            "context": [
+              0,
+              1
+            ],
+            "fluent": false,
+            "highest_family": "E1",
+            "longest_narrow_run": 0,
+            "narrow_waves": 0,
+            "peak_search": [
+              718,
+              1089
+            ],
+            "raw_workload": [
+              133,
+              640
+            ],
+            "spans": 173,
+            "workload_ceiling": 3,
+            "workload_guard": "none"
+          },
+          "without_workload": [
+            1807,
+            1089
+          ]
+        },
+        "confidence": "medium",
+        "estimated_minutes": null,
+        "explanation": "Model estimate from synthetic references; no human calibration or time estimate. Demand, search and bounded workload use independently checked line profiles.",
+        "format": "picross-sd2-rating-v1",
+        "method": "picross-difficulty-0.4",
+        "method_hash": "5508f0742aa858a6adc31aa621433e68298b915fb0fd6b8d9e74e576ba87caaf",
+        "profile_scope": "complete_line",
+        "reason": "complete_line",
+        "status": "rated"
+      },
+      "source": {
+        "bytes": 2787,
+        "definition_id": "pz-985d36c1634644fbb2c8a0bf7de3aa9f",
+        "engine_logic_hash": "c85d37e31599a3d7dfb4bf82b2651551524b2acadaede7d49305e89c577a8957",
+        "kind": "runtime",
+        "production_mode": "unknown",
+        "runtime_revision": 1,
+        "sha256": "14dbbf1dc064d9674a96b964100267213bca3535ecf6e1bef9d083ce8ac6200f"
+      }
+    },
+    "rating_revision": 2
+  },
+  "format": "picross-puzzle-record-v1",
+  "id": "pz-985d36c1634644fbb2c8a0bf7de3aa9f",
+  "mode": "mono",
+  "name": "Ingwer",
+  "reveal": {
+    "asset": {
+      "bytes": 1468177,
+      "file": "game/art/content/ingwer_001.png",
+      "sha256": "286186c60a9390c60cb829b119ea9fbf32abe5462bb7c58ac9a2e3872523431f"
+    },
+    "catalog": {
+      "generator": "picross-catalog-reveal-1",
+      "profiles": [
+        {
+          "asset": {
+            "bytes": 16193,
+            "file": "game/art/catalog/pz-985d36c1634644fbb2c8a0bf7de3aa9f-ui100.png",
+            "sha256": "b065f3260581b88a58e6603c8fc95460d06ce2da00ae2fd4fbd0efa39f961ce5"
+          },
+          "height": 112,
+          "profile": "catalog-ui100-v1",
+          "width": 90
+        },
+        {
+          "asset": {
+            "bytes": 23749,
+            "file": "game/art/catalog/pz-985d36c1634644fbb2c8a0bf7de3aa9f-ui125.png",
+            "sha256": "ea72175088615f929690404dca28c51865174dacb1b4eec89d1a5c118c561071"
+          },
+          "height": 140,
+          "profile": "catalog-ui125-v1",
+          "width": 113
+        }
+      ],
+      "source_height": 1402,
+      "source_width": 1122
+    },
+    "image_revision": 1
+  },
+  "save_slot": "ingwer_001",
+  "visible": true
+}

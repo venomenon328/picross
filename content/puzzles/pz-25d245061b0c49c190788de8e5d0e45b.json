@@ -1,0 +1,223 @@
+{
+  "added": {
+    "added_at": "2026-10-17T00:31:01Z",
+    "provenance": {
+      "commit": "6e2dd3b38c90dd300278c24f488ac589a857dd27",
+      "evidence": {
+        "path": "content/added/reports/ku-b-initial.json",
+        "sha256": "e6d7a01e740adbc40cdc90e64c733f95907c8924cfe1f0a4bb734bb7bc6b7884"
+      },
+      "kind": "git-snapshot",
+      "reason": "No direct UTC first-registration receipt found in reviewed sources; earliest verified visible integrated catalog snapshot including bound PR history. Commit UTC is a reconstructed reference, not tool execution time.",
+      "reference_time": "2026-10-17T00:31:01Z"
+    }
+  },
+  "background": {
+    "asset": {
+      "bytes": 533786,
+      "file": "game/art/backgrounds/pz-25d245061b0c49c190788de8e5d0e45b.png",
+      "sha256": "32b80dee0be619c5540afdb7f7988d7feb1729614e2a1345dd9eb5444024824f"
+    },
+    "image_revision": 2,
+    "status": "selected"
+  },
+  "category_id": "voegel",
+  "definition": {
+    "bytes": 5433,
+    "file": "game/data/content/kolibri_001.json",
+    "sha256": "6c3525419f9ca193efd72bab11b9d6ca85fc7ba09507c65388d21921db291592"
+  },
+  "difficulty": {
+    "compact_analysis": {
+      "analysis_hash": "050b3bfb21c652dfd5f7cc195f553c45b1bd28c6f9b7715c0c565105fdecbf24",
+      "deduction_complete": true,
+      "line_analysis_complete": true,
+      "line_fixpoint_confirmed": true,
+      "new_singletons": 1200,
+      "profiles_hash": "17454110d5097b9b65340e1f31e7d8b2fbf4f20f03537957280289684451f0a8",
+      "r4": null,
+      "reason": null,
+      "result_hash": "f2eae3023f9f6df35e255f43097de05f496ba297270d1ea05de826a118a6c644",
+      "status": "solved",
+      "structure": {
+        "adjacent_color_changes": 0,
+        "cells": 1200,
+        "clue_length_histogram": {
+          "1": 14,
+          "10": 1,
+          "11": 6,
+          "12": 8,
+          "13": 2,
+          "14": 1,
+          "15": 3,
+          "16": 2,
+          "18": 1,
+          "19": 2,
+          "2": 13,
+          "20": 1,
+          "21": 1,
+          "22": 1,
+          "3": 9,
+          "4": 11,
+          "5": 7,
+          "6": 13,
+          "7": 7,
+          "8": 4,
+          "9": 1
+        },
+        "colors": 1,
+        "geometric_slack": 1635,
+        "height": 30,
+        "mandatory_gaps": 43,
+        "short_blocks": 27,
+        "total_clue_length": 722,
+        "total_clues": 108,
+        "width": 40
+      },
+      "trace_hash": "5f188266a15a4c10aadb1dd8aa57b3047ff1a17cae01e72ad2e128aae925b041",
+      "wave_count": 57
+    },
+    "logic_binding": {
+      "matrix_hash": "0b7f00f3104fcc6fee8a53346ec841a15181f00170a2024210e3ec69b0e02e32"
+    },
+    "rating": {
+      "analysis_result_hash": "f2eae3023f9f6df35e255f43097de05f496ba297270d1ea05de826a118a6c644",
+      "format": "picross-catalog-sd2-rating-v1",
+      "method": "picross-difficulty-0.4",
+      "method_hash": "5508f0742aa858a6adc31aa621433e68298b915fb0fd6b8d9e74e576ba87caaf",
+      "rating_hash": "a1b514b85280155fcc97376168e899f0c51aeacca6ba72191dd5fae5b5a7b0ce",
+      "result": {
+        "analysis_result_hash": "f2eae3023f9f6df35e255f43097de05f496ba297270d1ea05de826a118a6c644",
+        "assessment": {
+          "boundaries": {
+            "distance_lower": [
+              80969,
+              140985
+            ],
+            "distance_upper": [
+              60016,
+              140985
+            ],
+            "lower": [
+              3,
+              1
+            ],
+            "nearest_distance": [
+              60016,
+              140985
+            ],
+            "upper": [
+              4,
+              1
+            ]
+          },
+          "contributions": {
+            "demand": [
+              19,
+              9
+            ],
+            "search": [
+              76019,
+              62660
+            ],
+            "workload": [
+              1,
+              4
+            ]
+          },
+          "level": 4,
+          "level_without_workload": 4,
+          "score": [
+            503924,
+            140985
+          ],
+          "signals": {
+            "context": [
+              4,
+              9
+            ],
+            "fluent": false,
+            "highest_family": "E2",
+            "longest_narrow_run": 15,
+            "narrow_waves": 32,
+            "peak_search": [
+              30177,
+              31330
+            ],
+            "raw_workload": [
+              1,
+              4
+            ],
+            "spans": 523,
+            "workload_ceiling": 4,
+            "workload_guard": "none"
+          },
+          "without_workload": [
+            1874711,
+            563940
+          ]
+        },
+        "confidence": "medium",
+        "estimated_minutes": null,
+        "explanation": "Model estimate from synthetic references; no human calibration or time estimate. Demand, search and bounded workload use independently checked line profiles.",
+        "format": "picross-sd2-rating-v1",
+        "method": "picross-difficulty-0.4",
+        "method_hash": "5508f0742aa858a6adc31aa621433e68298b915fb0fd6b8d9e74e576ba87caaf",
+        "profile_scope": "complete_line",
+        "reason": "complete_line",
+        "status": "rated"
+      },
+      "source": {
+        "bytes": 5433,
+        "definition_id": "pz-25d245061b0c49c190788de8e5d0e45b",
+        "engine_logic_hash": "bb46b329e6762a9da1aa5f15c29d28a8980136252b68e1266387959b74332910",
+        "kind": "runtime",
+        "production_mode": "unknown",
+        "runtime_revision": 1,
+        "sha256": "6c3525419f9ca193efd72bab11b9d6ca85fc7ba09507c65388d21921db291592"
+      }
+    },
+    "rating_revision": 2
+  },
+  "format": "picross-puzzle-record-v1",
+  "id": "pz-25d245061b0c49c190788de8e5d0e45b",
+  "mode": "mono",
+  "name": "Kolibri",
+  "reveal": {
+    "asset": {
+      "bytes": 1241679,
+      "file": "game/art/content/kolibri_001.png",
+      "sha256": "0afea62b0d1580edf84654ed327988383ab7ac4c872ae5f425e92f6a2907bb60"
+    },
+    "catalog": {
+      "generator": "picross-catalog-reveal-1",
+      "profiles": [
+        {
+          "asset": {
+            "bytes": 19684,
+            "file": "game/art/catalog/pz-25d245061b0c49c190788de8e5d0e45b-ui100.png",
+            "sha256": "85af3caa212edf8cccce14bc66ce811ff796583007d53ac90ae32b9071101fc7"
+          },
+          "height": 112,
+          "profile": "catalog-ui100-v1",
+          "width": 150
+        },
+        {
+          "asset": {
+            "bytes": 28846,
+            "file": "game/art/catalog/pz-25d245061b0c49c190788de8e5d0e45b-ui125.png",
+            "sha256": "ef2828ed2ff91a75731d358f3e723db5eb103f2d89349f86795126a8fbe9fef5"
+          },
+          "height": 140,
+          "profile": "catalog-ui125-v1",
+          "width": 187
+        }
+      ],
+      "source_height": 1086,
+      "source_width": 1448
+    },
+    "image_revision": 1
+  },
+  "save_slot": "kolibri_001",
+  "visible": true
+}

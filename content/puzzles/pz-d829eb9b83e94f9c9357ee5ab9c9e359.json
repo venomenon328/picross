@@ -1,0 +1,223 @@
+{
+  "added": {
+    "added_at": "2026-10-17T11:08:40Z",
+    "provenance": {
+      "commit": "84e36dc7f389a99a5bfc38cb2ad458c2d78ec324",
+      "evidence": {
+        "path": "content/added/reports/ku-b-initial.json",
+        "sha256": "e6d7a01e740adbc40cdc90e64c733f95907c8924cfe1f0a4bb734bb7bc6b7884"
+      },
+      "kind": "git-snapshot",
+      "reason": "No direct UTC first-registration receipt found in reviewed sources; earliest verified visible integrated catalog snapshot including bound PR history. Commit UTC is a reconstructed reference, not tool execution time.",
+      "reference_time": "2026-10-17T11:08:40Z"
+    }
+  },
+  "background": {
+    "asset": {
+      "bytes": 625902,
+      "file": "game/art/backgrounds/pz-d829eb9b83e94f9c9357ee5ab9c9e359.png",
+      "sha256": "e2c2b77307592016b0844991d3a524ff077f33f2dec2792865d511a91c088ecc"
+    },
+    "image_revision": 2,
+    "status": "selected"
+  },
+  "category_id": "menschen-berufe",
+  "definition": {
+    "bytes": 12200,
+    "file": "game/data/content/marie_curie_001.json",
+    "sha256": "8c37e04c51dfdc512d81a626148de77d051448ca9ffcd695ceb4858477bb0c42"
+  },
+  "difficulty": {
+    "compact_analysis": {
+      "analysis_hash": "4203a0c0429c439c1e4cfcff57152ea7b964eea8c0800f0d19b9074d9612d769",
+      "deduction_complete": true,
+      "line_analysis_complete": true,
+      "line_fixpoint_confirmed": true,
+      "new_singletons": 1200,
+      "profiles_hash": "a4a32532a7eaa3a90cc2e14e98404fc37bd3946a9002a07cdf470df02e80fc85",
+      "r4": null,
+      "reason": null,
+      "result_hash": "79773a62767e7d91e39df8bfb4a170f872583085c25e480de92087790b457d7e",
+      "status": "solved",
+      "structure": {
+        "adjacent_color_changes": 318,
+        "cells": 1200,
+        "clue_length_histogram": {
+          "1": 204,
+          "10": 5,
+          "11": 7,
+          "12": 11,
+          "13": 10,
+          "14": 4,
+          "15": 3,
+          "16": 2,
+          "17": 1,
+          "2": 40,
+          "24": 1,
+          "26": 1,
+          "29": 1,
+          "3": 27,
+          "30": 9,
+          "4": 24,
+          "5": 11,
+          "6": 7,
+          "7": 8,
+          "8": 11,
+          "9": 8
+        },
+        "colors": 4,
+        "geometric_slack": 731,
+        "height": 40,
+        "mandatory_gaps": 7,
+        "short_blocks": 244,
+        "total_clue_length": 1662,
+        "total_clues": 395,
+        "width": 30
+      },
+      "trace_hash": "737368bc1c841afc0461e298b0ecae1fc47d472dbe1a172204ed9b8279a48403",
+      "wave_count": 26
+    },
+    "logic_binding": {
+      "matrix_hash": "485b7ac0f6113154588f48510c69494a2dbd77d383e957ae65f695a690177c3c"
+    },
+    "rating": {
+      "analysis_result_hash": "79773a62767e7d91e39df8bfb4a170f872583085c25e480de92087790b457d7e",
+      "format": "picross-catalog-sd2-rating-v1",
+      "method": "picross-difficulty-0.4",
+      "method_hash": "5508f0742aa858a6adc31aa621433e68298b915fb0fd6b8d9e74e576ba87caaf",
+      "rating_hash": "4336239347a7a00599da581984f4bc5ef4164d48e5bf9f4d8856c8e104ac12ce",
+      "result": {
+        "analysis_result_hash": "79773a62767e7d91e39df8bfb4a170f872583085c25e480de92087790b457d7e",
+        "assessment": {
+          "boundaries": {
+            "distance_lower": [
+              9927,
+              38048
+            ],
+            "distance_upper": [
+              28121,
+              38048
+            ],
+            "lower": [
+              3,
+              1
+            ],
+            "nearest_distance": [
+              9927,
+              38048
+            ],
+            "upper": [
+              4,
+              1
+            ]
+          },
+          "contributions": {
+            "demand": [
+              125,
+              58
+            ],
+            "search": [
+              32559,
+              38048
+            ],
+            "workload": [
+              1,
+              4
+            ]
+          },
+          "level": 4,
+          "level_without_workload": 4,
+          "score": [
+            124071,
+            38048
+          ],
+          "signals": {
+            "context": [
+              18,
+              29
+            ],
+            "fluent": false,
+            "highest_family": "E2",
+            "longest_narrow_run": 1,
+            "narrow_waves": 2,
+            "peak_search": [
+              906,
+              1189
+            ],
+            "raw_workload": [
+              1,
+              4
+            ],
+            "spans": 516,
+            "workload_ceiling": 4,
+            "workload_guard": "none"
+          },
+          "without_workload": [
+            114559,
+            38048
+          ]
+        },
+        "confidence": "medium",
+        "estimated_minutes": null,
+        "explanation": "Model estimate from synthetic references; no human calibration or time estimate. Demand, search and bounded workload use independently checked line profiles.",
+        "format": "picross-sd2-rating-v1",
+        "method": "picross-difficulty-0.4",
+        "method_hash": "5508f0742aa858a6adc31aa621433e68298b915fb0fd6b8d9e74e576ba87caaf",
+        "profile_scope": "complete_line",
+        "reason": "complete_line",
+        "status": "rated"
+      },
+      "source": {
+        "bytes": 12200,
+        "definition_id": "pz-d829eb9b83e94f9c9357ee5ab9c9e359",
+        "engine_logic_hash": "5c8054f18f7ce5367bec2c0f9437ecbe08d946bbfa9b283a909513fb34668fa9",
+        "kind": "runtime",
+        "production_mode": "unknown",
+        "runtime_revision": 2,
+        "sha256": "8c37e04c51dfdc512d81a626148de77d051448ca9ffcd695ceb4858477bb0c42"
+      }
+    },
+    "rating_revision": 2
+  },
+  "format": "picross-puzzle-record-v1",
+  "id": "pz-d829eb9b83e94f9c9357ee5ab9c9e359",
+  "mode": "color",
+  "name": "Marie Curie",
+  "reveal": {
+    "asset": {
+      "bytes": 1917222,
+      "file": "game/art/content/marie_curie_001.png",
+      "sha256": "6e45b1af156ae97217989d0dca99da60891ac765b7819fa0aab5f430f2a4c75b"
+    },
+    "catalog": {
+      "generator": "picross-catalog-reveal-1",
+      "profiles": [
+        {
+          "asset": {
+            "bytes": 15932,
+            "file": "game/art/catalog/pz-d829eb9b83e94f9c9357ee5ab9c9e359-ui100.png",
+            "sha256": "2d3e78a33ba3eb73f5eb2a66afcbc52848c91029f8a147c4a2df13060cdf0813"
+          },
+          "height": 112,
+          "profile": "catalog-ui100-v1",
+          "width": 75
+        },
+        {
+          "asset": {
+            "bytes": 23551,
+            "file": "game/art/catalog/pz-d829eb9b83e94f9c9357ee5ab9c9e359-ui125.png",
+            "sha256": "0d88ad153c658250a7103c378f981847041fcc27a5015760d4d282e8998fd6c6"
+          },
+          "height": 140,
+          "profile": "catalog-ui125-v1",
+          "width": 94
+        }
+      ],
+      "source_height": 1536,
+      "source_width": 1024
+    },
+    "image_revision": 1
+  },
+  "save_slot": "marie_curie_001",
+  "visible": true
+}

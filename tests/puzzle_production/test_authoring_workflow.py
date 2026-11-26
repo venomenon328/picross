@@ -301,7 +301,7 @@ class WorkflowTests(unittest.TestCase):
         from tools.production_workspace.server import Service
         from tests.puzzle_production.current_fixtures import checkout
         catalog = checkout(f.root / 'catalog')
-        for name in ('content/categories.json', 'content/registry.json'):
+        for name in ('content/categories.json', 'game/data/registry.json'):
             put(f.helper.output, name, (catalog / name).read_bytes())
         cv.handoff(f.helper.output, 'pz-hp-synthetic', 'r01')
         git(f.helper.output, 'branch', 'main', f.commit())

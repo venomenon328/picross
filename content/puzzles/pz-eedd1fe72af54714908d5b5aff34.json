@@ -1,0 +1,218 @@
+{
+  "added": {
+    "added_at": "2026-10-13T11:20:24Z",
+    "provenance": {
+      "commit": "0f1b4bfaf04b8ac60406ce51dad5bda02424e56b",
+      "evidence": {
+        "path": "content/added/reports/ku-b-initial.json",
+        "sha256": "e6d7a01e740adbc40cdc90e64c733f95907c8924cfe1f0a4bb734bb7bc6b7884"
+      },
+      "kind": "git-snapshot",
+      "reason": "No direct UTC first-registration receipt found in reviewed sources; earliest verified visible integrated catalog snapshot including bound PR history. Commit UTC is a reconstructed reference, not tool execution time.",
+      "reference_time": "2026-10-13T11:20:24Z"
+    }
+  },
+  "background": {
+    "asset": {
+      "bytes": 1402561,
+      "file": "game/art/backgrounds/pz-eedd1fe72af54714908d5b5aff34.png",
+      "sha256": "0afb0c85b8155939118b8d8774ad7d79e95b4f4704495e04ff89f43554611141"
+    },
+    "image_revision": 2,
+    "status": "selected"
+  },
+  "category_id": "insekten-kleine-tiere",
+  "definition": {
+    "bytes": 4436,
+    "file": "game/data/content/regenwurm_001.json",
+    "sha256": "bfbb38c63bc7bd3e45f10b4ce052d5fb7db6a7304143b907dc7e3ecf538bf6ba"
+  },
+  "difficulty": {
+    "compact_analysis": {
+      "analysis_hash": "8533760aec72daaddeb980bc701e705e20672e2fc8dbf416c9d32a3b1370c5b7",
+      "deduction_complete": true,
+      "line_analysis_complete": true,
+      "line_fixpoint_confirmed": true,
+      "new_singletons": 875,
+      "profiles_hash": "25950e2d8e2f549d1ba1873554691c94a3db07b6444b0d581aeb7fd7f939991f",
+      "r4": null,
+      "reason": null,
+      "result_hash": "5d4a1dd40fdd8f5f82b8004ddef7e7839ca847e28f91a9c0536f0495810c1229",
+      "status": "solved",
+      "structure": {
+        "adjacent_color_changes": 0,
+        "cells": 875,
+        "clue_length_histogram": {
+          "1": 4,
+          "10": 3,
+          "11": 4,
+          "12": 5,
+          "13": 6,
+          "14": 2,
+          "15": 2,
+          "16": 1,
+          "2": 5,
+          "3": 2,
+          "4": 7,
+          "5": 9,
+          "6": 20,
+          "7": 12,
+          "8": 5,
+          "9": 7
+        },
+        "colors": 1,
+        "geometric_slack": 1030,
+        "height": 35,
+        "mandatory_gaps": 34,
+        "short_blocks": 9,
+        "total_clue_length": 686,
+        "total_clues": 94,
+        "width": 25
+      },
+      "trace_hash": "24b66a33ed751389544bd23de70964446efd7eb831a9910f3a8ea2efb5cd99bf",
+      "wave_count": 29
+    },
+    "logic_binding": {
+      "matrix_hash": "86d7c1a3c55c616a3ab614d3a328d1f78fbaf3ccc4880b1c8284508719ff0ca7"
+    },
+    "rating": {
+      "analysis_result_hash": "5d4a1dd40fdd8f5f82b8004ddef7e7839ca847e28f91a9c0536f0495810c1229",
+      "format": "picross-catalog-sd2-rating-v1",
+      "method": "picross-difficulty-0.4",
+      "method_hash": "5508f0742aa858a6adc31aa621433e68298b915fb0fd6b8d9e74e576ba87caaf",
+      "rating_hash": "4b29faed592fe200971bca1b8db780163c537bee4be378433ba53a4e922bcb55",
+      "result": {
+        "analysis_result_hash": "5d4a1dd40fdd8f5f82b8004ddef7e7839ca847e28f91a9c0536f0495810c1229",
+        "assessment": {
+          "boundaries": {
+            "distance_lower": [
+              5069,
+              11235
+            ],
+            "distance_upper": [
+              6166,
+              11235
+            ],
+            "lower": [
+              2,
+              1
+            ],
+            "nearest_distance": [
+              5069,
+              11235
+            ],
+            "upper": [
+              3,
+              1
+            ]
+          },
+          "contributions": {
+            "demand": [
+              1,
+              1
+            ],
+            "search": [
+              53981,
+              44940
+            ],
+            "workload": [
+              1,
+              4
+            ]
+          },
+          "level": 3,
+          "level_without_workload": 3,
+          "score": [
+            27539,
+            11235
+          ],
+          "signals": {
+            "context": [
+              0,
+              1
+            ],
+            "fluent": false,
+            "highest_family": "E1",
+            "longest_narrow_run": 12,
+            "narrow_waves": 12,
+            "peak_search": [
+              21373,
+              22470
+            ],
+            "raw_workload": [
+              1,
+              4
+            ],
+            "spans": 353,
+            "workload_ceiling": 3,
+            "workload_guard": "none"
+          },
+          "without_workload": [
+            98921,
+            44940
+          ]
+        },
+        "confidence": "medium",
+        "estimated_minutes": null,
+        "explanation": "Model estimate from synthetic references; no human calibration or time estimate. Demand, search and bounded workload use independently checked line profiles.",
+        "format": "picross-sd2-rating-v1",
+        "method": "picross-difficulty-0.4",
+        "method_hash": "5508f0742aa858a6adc31aa621433e68298b915fb0fd6b8d9e74e576ba87caaf",
+        "profile_scope": "complete_line",
+        "reason": "complete_line",
+        "status": "rated"
+      },
+      "source": {
+        "bytes": 4436,
+        "definition_id": "pz-eedd1fe72af54714908d5b5aff34",
+        "engine_logic_hash": "abdc1276dfab82586cfc6ba4f7257d015e3d17a2cd97ed896513334e17448786",
+        "kind": "runtime",
+        "production_mode": "unknown",
+        "runtime_revision": 1,
+        "sha256": "bfbb38c63bc7bd3e45f10b4ce052d5fb7db6a7304143b907dc7e3ecf538bf6ba"
+      }
+    },
+    "rating_revision": 2
+  },
+  "format": "picross-puzzle-record-v1",
+  "id": "pz-eedd1fe72af54714908d5b5aff34",
+  "mode": "mono",
+  "name": "Regenwurm",
+  "reveal": {
+    "asset": {
+      "bytes": 928504,
+      "file": "game/art/content/regenwurm_001.png",
+      "sha256": "7e2e4f65553be736d5ceb599d66a63f3f742d1f06feb07d76e4958c0330aa52c"
+    },
+    "catalog": {
+      "generator": "picross-catalog-reveal-1",
+      "profiles": [
+        {
+          "asset": {
+            "bytes": 11803,
+            "file": "game/art/catalog/pz-eedd1fe72af54714908d5b5aff34-ui100.png",
+            "sha256": "5a05ec292a1abe570ff0464041846a0c5ecc40aa680a935a0e144b2e64dad96f"
+          },
+          "height": 112,
+          "profile": "catalog-ui100-v1",
+          "width": 112
+        },
+        {
+          "asset": {
+            "bytes": 17210,
+            "file": "game/art/catalog/pz-eedd1fe72af54714908d5b5aff34-ui125.png",
+            "sha256": "1f71783cb913c98817d8cd41936b1c2dfaa0fe48fe682c43917122960a09d982"
+          },
+          "height": 140,
+          "profile": "catalog-ui125-v1",
+          "width": 140
+        }
+      ],
+      "source_height": 1254,
+      "source_width": 1254
+    },
+    "image_revision": 1
+  },
+  "save_slot": "regenwurm_001",
+  "visible": true
+}

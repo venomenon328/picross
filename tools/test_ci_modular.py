@@ -13,7 +13,7 @@ import zipfile
 import ci_modular as ci
 
 
-BACKGROUND_PATHS = ('content/backgrounds/pz-synthetic.json',
+BACKGROUND_PATHS = ('content/puzzles/pz-synthetic.json',
                     'game/art/backgrounds/pz-synthetic.png',
                     'game/art/backgrounds/pz-synthetic.txt')
 
@@ -35,7 +35,7 @@ class PackageContract(unittest.TestCase):
             return ci.player_requirement(paths, ['sync.server'], event='pull_request', **options)['required']
         self.assertFalse(required([path, ci.PLAN_PATH, 'docs/game/SAVE_SYNC.md']))
         self.assertTrue(required([path, 'tools/shared.py']))
-        self.assertTrue(required([path, 'content/registry.json']))
+        self.assertTrue(required([path, 'content/puzzles/pz-test.json']))
         self.assertTrue(required([path], nonregular=[path]))
         binding = {k: v for k, v in plan.items() if k not in ('modules', 'player')}
         expected = {f'SYNC-A-{n:02}': 'passed' for n in range(1, 10)}
@@ -144,15 +144,15 @@ class PackageContract(unittest.TestCase):
             (['README.md', ci.PLAN_PATH], [], False),
             (['docs/workflow/Entwicklungsworkflow_Cheat-Sheet.html'], [], False),
             (['content/authoring/pz-test/r1/package.zip'], [], False),
-            (['content/registry.json', 'content/packages/pz-test/r1/manifest.json',
+            (['content/puzzles/pz-test.json', 'content/packages/pz-test/r1/manifest.json',
               'game/data/content/test.json', 'game/art/content/test.png', 'docs/CI_POLICY.md', ci.PLAN_PATH], [], False),
-            (['content/reveals/pz-test.json'], ['production.images'], False),
+            (['content/puzzles/pz-test.json'], ['production.images'], False),
             (['README.md'], ['tools'], False),
             (['README.md'], ['native.history'], True),
             (['README.md'], ['preflight'], True),
             (['README.md'], ['delivery'], True),
             (['README.md', 'game/main.gd'], [], True),
-            (['content/registry.json', 'tools/puzzle_production/solver.py'], [], True),
+            (['content/puzzles/pz-test.json', 'tools/puzzle_production/solver.py'], [], True),
             (['.github/workflows/ci-modular.yml'], [], True),
             (['docs/helper.py'], [], True),
             (['examples/rp1/SELECTION.md'], [], True),
@@ -165,17 +165,17 @@ class PackageContract(unittest.TestCase):
         cases += [(list(BACKGROUND_PATHS), modules, False)
                   for modules in ([], ['tools'], ['production.images'])]
         cases += [([f'{prefix}/{identity}.{suffix}'], [], False)
-                  for prefix, suffix in (('content/backgrounds', 'json'), ('game/art/backgrounds', 'png'),
+                  for prefix, suffix in (('content/puzzles', 'json'), ('game/art/backgrounds', 'png'),
                                          ('game/art/backgrounds', 'txt'))
                   for identity in ('pz-0', 'pz-' + 'a' * 60)]
         cases += [(list(BACKGROUND_PATHS), [module], True)
                   for module in ('preflight', 'delivery', *(f'native.{group}' for group in ci.NATIVE))]
         cases += [(list(BACKGROUND_PATHS) + [path], [], True) for path in (
-            'content/backgrounds/pz-.json', 'content/backgrounds/pz-Upper.json',
-            'content/backgrounds/pz-bad_id.json', 'content/backgrounds/pz-' + 'a' * 61 + '.json',
-            'content/backgrounds/pz-synthetic/record.json', 'content/backgrounds/../pz-synthetic.json',
-            'content/backgrounds/pz-synthetic.json/', 'content/backgrounds/pz-synthetic.json.py',
-            'content/backgrounds/pz-synthetic.JSON', 'content/backgrounds/pz-synthetic.png',
+            'content/puzzles/pz-.json', 'content/puzzles/pz-Upper.json',
+            'content/puzzles/pz-bad_id.json', 'content/puzzles/pz-' + 'a' * 61 + '.json',
+            'content/puzzles/pz-synthetic/record.json', 'content/puzzles/../pz-synthetic.json',
+            'content/puzzles/pz-synthetic.json/', 'content/puzzles/pz-synthetic.json.py',
+            'content/puzzles/pz-synthetic.JSON', 'content/puzzles/pz-synthetic.png',
             'game/art/backgrounds/pz-synthetic.json', 'game/art/backgrounds/pz-synthetic.PNG',
             'game/art/backgrounds/pz-synthetic.png.import', 'game/art/backgrounds/pz-synthetic.gdshader',
             'game/art/backgrounds/loader.gd', 'game/data/background-capability.json',
@@ -371,33 +371,29 @@ class GitBinding(unittest.TestCase):
             git('config', 'user.name', 'Synthetic')
             git('config', 'user.email', 'synthetic@example.invalid')
             other = {'id': 'pz-older', 'name': 'Older'}
-            content = dict(format='picross-content-registry-v5', entries=[other], metadata=[other], backgrounds=[other])
             runtime = dict(format='picross-runtime-registry-v9', categories=[], entries=[other])
-            put(production.CONTENT, content)
             put(production.RUNTIME, runtime)
             put('game/data/content/pz-older.json', other)
             put(ci.PLAN_PATH, package())
             base = commit('base')
-            paths = (f'content/added/{job}.json', f'content/difficulty/{job}/rating.json',
-                     f'content/reveals/{job}.json', f'game/data/content/{job}.json',
+            paths = (f'game/data/content/{job}.json',
                      f'game/art/content/{job}.png', f'game/art/content/{job}.txt',
                      f'game/art/catalog/{job}-ui100.png', f'game/art/catalog/{job}-ui125.png')
-            background = f'content/backgrounds/{job}.json'
+            record_path = f'content/puzzles/{job}.json'
             row = {'id': job, 'key': job, 'save_slot': job, 'definition': f'data/content/{job}.json',
                    'reveal': f'art/content/{job}.png', 'category_id': 'fixture'}
             plan = production.package(job)
             put(ci.PLAN_PATH, plan)
             for path in paths:
                 put(path, {'id': job})
-            content['entries'].append(row)
-            content['metadata'].append({'id': job, 'name': 'Synthetic', 'category_id': 'fixture'})
-            content['backgrounds'].append({'id': job, 'source': {'file': background}})
-            put(production.CONTENT, content)
             for status in ('none', 'standard', 'selected'):
                 asset = {'file': f'art/backgrounds/{job}.png'} if status == 'selected' else None
                 runtime['entries'] = [other, {**row, 'name': 'Synthetic', 'background': {'status': status, 'asset': asset}}]
                 put(production.RUNTIME, runtime)
-                put(background, {'id': job, 'current': {'status': status, 'asset': {'file': 'game/' + asset['file']} if asset else None}})
+                put(record_path, {'format':'picross-puzzle-record-v1','id':job,'save_slot':job,'name':'Synthetic',
+                                  'category_id':'fixture','definition':{'file':'game/'+row['definition']},
+                                  'reveal':{'asset':{'file':'game/'+row['reveal']}},
+                                  'background':{'status':status,'asset':{'file':'game/'+asset['file']} if asset else None}})
                 if asset:
                     put('game/' + asset['file'], {})
                     put(f'game/art/backgrounds/{job}.txt', {})
@@ -425,8 +421,8 @@ class GitBinding(unittest.TestCase):
             reject('extra module', lambda: put(ci.PLAN_PATH, dict(plan, modules=['tools'])))
             reject('code mixed into delivery', lambda: put('game/main.gd', {}))
             reject('second product ID', lambda: put('game/data/content/pz-second.json', {}))
-            reject('foreign row change', lambda: put(production.CONTENT,
-                   dict(content, metadata=[dict(other, name='Modified'), content['metadata'][1]])))
+            reject('foreign row change', lambda: put(production.RUNTIME,
+                   dict(runtime, entries=[dict(other,name='Modified'),runtime['entries'][1]])))
             reject('foreign file replaced', lambda: put('game/data/content/pz-older.json', {}))
             reject('deleted old file', lambda: (root/'game/data/content/pz-older.json').unlink())
             reject('renamed old file', lambda: git('mv', 'game/data/content/pz-older.json', 'game/data/content/renamed.json'))
@@ -495,12 +491,10 @@ class GitBinding(unittest.TestCase):
             git('init', '-q'); git('config', 'user.name', 'test'); git('config', 'user.email', 'test@example.invalid')
             (root/'.ci').mkdir()
             base = commit('base')
-            for path in (*BACKGROUND_PATHS, 'content/registry.json', 'content/authoring/index.json',
+            for path in (*BACKGROUND_PATHS, 'content/puzzles/pz-test.json', 'content/authoring/index.json',
                          'content/authoring/pz-synthetic/current-view.json',
                          'content/authoring/pz-synthetic/r01/record.json',
                          'content/packages/pz-synthetic/r01/package.zip',
-                         'content/reveals/pz-synthetic.json', 'content/added/pz-synthetic.json',
-                         'content/difficulty/pz-synthetic/rating.json',
                          'content/difficulty/reports/synthetic/report.json',
                          'game/data/registry.json', 'game/data/content/synthetic.json',
                          'game/art/content/synthetic.png'):

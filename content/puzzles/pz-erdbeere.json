@@ -1,0 +1,204 @@
+{
+  "added": {
+    "added_at": "2026-11-12T19:08:12Z",
+    "provenance": {
+      "commit": null,
+      "evidence": null,
+      "kind": "registration",
+      "reason": "Successful first playable registration in the shared transaction.",
+      "reference_time": "2026-11-12T19:08:12Z"
+    }
+  },
+  "background": {
+    "asset": {
+      "bytes": 854144,
+      "file": "game/art/backgrounds/pz-erdbeere.png",
+      "sha256": "c7c9cc14ec1cbeac01c60cb2891c2a1d485884bfddf0454262755b6deb1f3b14"
+    },
+    "image_revision": 3,
+    "status": "selected"
+  },
+  "category_id": "obst-nuesse",
+  "definition": {
+    "bytes": 3708,
+    "file": "game/data/content/erdbeere_001.json",
+    "sha256": "6ffdb921524ebb322784777747a80ef3cee88e36845be7ec817d2da33aea0325"
+  },
+  "difficulty": {
+    "compact_analysis": {
+      "analysis_hash": "3baec845a788bb4a415a862382f2d139f8ea7d21743f6bad04d016945aa48859",
+      "deduction_complete": true,
+      "line_analysis_complete": true,
+      "line_fixpoint_confirmed": true,
+      "new_singletons": 286,
+      "profiles_hash": "7ee36189f6b25b7a88d299d0278a228955a74c5ef1617b70d6ce46416f210bbc",
+      "r4": null,
+      "reason": null,
+      "result_hash": "3afd816d68042000be1693dc14328bfaface5963f0aa26ab48ff14f4c7ade8e2",
+      "status": "solved",
+      "structure": {
+        "adjacent_color_changes": 77,
+        "cells": 286,
+        "clue_length_histogram": {
+          "1": 51,
+          "10": 4,
+          "12": 2,
+          "2": 19,
+          "3": 13,
+          "4": 11,
+          "5": 5,
+          "6": 5,
+          "7": 2,
+          "8": 3,
+          "9": 1
+        },
+        "colors": 3,
+        "geometric_slack": 229,
+        "height": 22,
+        "mandatory_gaps": 5,
+        "short_blocks": 70,
+        "total_clue_length": 338,
+        "total_clues": 116,
+        "width": 13
+      },
+      "trace_hash": "fb2093b9001737028b83dcdfe565af0c14452ae2f892b41679183b51628875e0",
+      "wave_count": 11
+    },
+    "logic_binding": {
+      "matrix_hash": "4cb0f0d17433b43ddb5ec650be99478a0e83447eeb19a5601aa767592eb0205f"
+    },
+    "rating": {
+      "analysis_result_hash": "3afd816d68042000be1693dc14328bfaface5963f0aa26ab48ff14f4c7ade8e2",
+      "format": "picross-catalog-sd2-rating-v1",
+      "method": "picross-difficulty-0.4",
+      "method_hash": "5508f0742aa858a6adc31aa621433e68298b915fb0fd6b8d9e74e576ba87caaf",
+      "rating_hash": "5bd6c00891e7c03e238e46f1d8cd800e1c583f13f828d1b59ec95c026a4a7e09",
+      "result": {
+        "analysis_result_hash": "3afd816d68042000be1693dc14328bfaface5963f0aa26ab48ff14f4c7ade8e2",
+        "assessment": {
+          "boundaries": {
+            "distance_lower": null,
+            "distance_upper": [
+              167,
+              396
+            ],
+            "lower": null,
+            "nearest_distance": [
+              167,
+              396
+            ],
+            "upper": [
+              1,
+              1
+            ]
+          },
+          "contributions": {
+            "demand": [
+              1,
+              4
+            ],
+            "search": [
+              65,
+              198
+            ],
+            "workload": [
+              0,
+              1
+            ]
+          },
+          "level": 1,
+          "level_without_workload": 1,
+          "score": [
+            229,
+            396
+          ],
+          "signals": {
+            "context": [
+              0,
+              1
+            ],
+            "fluent": true,
+            "highest_family": "E1",
+            "longest_narrow_run": 0,
+            "narrow_waves": 0,
+            "peak_search": [
+              65,
+              198
+            ],
+            "raw_workload": [
+              121,
+              640
+            ],
+            "spans": 161,
+            "workload_ceiling": 3,
+            "workload_guard": "fluent"
+          },
+          "without_workload": [
+            229,
+            396
+          ]
+        },
+        "confidence": "medium",
+        "estimated_minutes": null,
+        "explanation": "Model estimate from synthetic references; no human calibration or time estimate. Demand, search and bounded workload use independently checked line profiles.",
+        "format": "picross-sd2-rating-v1",
+        "method": "picross-difficulty-0.4",
+        "method_hash": "5508f0742aa858a6adc31aa621433e68298b915fb0fd6b8d9e74e576ba87caaf",
+        "profile_scope": "complete_line",
+        "reason": "complete_line",
+        "status": "rated"
+      },
+      "source": {
+        "bytes": 3725,
+        "definition_id": "pz-erdbeere",
+        "engine_logic_hash": "0aae9e54887d941d7bf1fb1eede2e2f610cbc41439faa8b46da281fe5a3467a2",
+        "kind": "runtime",
+        "production_mode": "unknown",
+        "runtime_revision": 1,
+        "sha256": "fcde0c74a77a198115e4130cfd6a504a548bca2f10b8c4e75233a3ee659241ad"
+      }
+    },
+    "rating_revision": 1
+  },
+  "format": "picross-puzzle-record-v1",
+  "id": "pz-erdbeere",
+  "mode": "color",
+  "name": "Erdbeere",
+  "reveal": {
+    "asset": {
+      "bytes": 1666798,
+      "file": "game/art/content/erdbeere_001.png",
+      "sha256": "cc202e928cc2f64a8c78a02e56fac3c9e61103c1973ebae64c98d16ffbac1809"
+    },
+    "catalog": {
+      "generator": "picross-catalog-reveal-1",
+      "profiles": [
+        {
+          "asset": {
+            "bytes": 18805,
+            "file": "game/art/catalog/pz-erdbeere-ui100.png",
+            "sha256": "d9e8a019f99fc7045fe8fe197439e1cbeecb3c3a6d3dbc9b21ee74118416a922"
+          },
+          "height": 112,
+          "profile": "catalog-ui100-v1",
+          "width": 112
+        },
+        {
+          "asset": {
+            "bytes": 27725,
+            "file": "game/art/catalog/pz-erdbeere-ui125.png",
+            "sha256": "df03dc44859e791fa3e66eb45fe72831184126685a8f605bd555ed954373ce54"
+          },
+          "height": 140,
+          "profile": "catalog-ui125-v1",
+          "width": 140
+        }
+      ],
+      "source_height": 1254,
+      "source_width": 1254
+    },
+    "image_revision": 1
+  },
+  "save_slot": "erdbeere_001",
+  "visible": true
+}

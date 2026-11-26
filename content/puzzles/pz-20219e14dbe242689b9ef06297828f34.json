@@ -1,0 +1,212 @@
+{
+  "added": {
+    "added_at": "2026-10-15T21:53:14Z",
+    "provenance": {
+      "commit": "075d80ab9f51c37c9e57d3456feef7e10db2e3b5",
+      "evidence": {
+        "path": "content/added/reports/ku-b-initial.json",
+        "sha256": "e6d7a01e740adbc40cdc90e64c733f95907c8924cfe1f0a4bb734bb7bc6b7884"
+      },
+      "kind": "git-snapshot",
+      "reason": "No direct UTC first-registration receipt found in reviewed sources; earliest verified visible integrated catalog snapshot including bound PR history. Commit UTC is a reconstructed reference, not tool execution time.",
+      "reference_time": "2026-10-15T21:53:14Z"
+    }
+  },
+  "background": {
+    "asset": {
+      "bytes": 488262,
+      "file": "game/art/backgrounds/pz-20219e14dbe242689b9ef06297828f34.png",
+      "sha256": "2f125b32ac9a9722e48ca12e9e50e493819c87386f20994bc6d88aca8e7010c9"
+    },
+    "image_revision": 2,
+    "status": "selected"
+  },
+  "category_id": "musik-buehne",
+  "definition": {
+    "bytes": 3252,
+    "file": "game/data/content/windspiel_001.json",
+    "sha256": "c590aa9ba963a98f2c53819c9313925e4a3b54bcb7360ea41b86d39037351155"
+  },
+  "difficulty": {
+    "compact_analysis": {
+      "analysis_hash": "281d1b866d5a4e42fae475cbb6ec938d0e75306f5cf14f0df0853ca28462f4f3",
+      "deduction_complete": true,
+      "line_analysis_complete": true,
+      "line_fixpoint_confirmed": true,
+      "new_singletons": 420,
+      "profiles_hash": "55c01382701772148fa54a2522e8c44629f3fcf4ce32cb0bbaf665fd656c659c",
+      "r4": null,
+      "reason": null,
+      "result_hash": "4a3a337827913a083207d519fadf79243697f3529d897630394f8c59e1fbfadf",
+      "status": "solved",
+      "structure": {
+        "adjacent_color_changes": 0,
+        "cells": 420,
+        "clue_length_histogram": {
+          "1": 14,
+          "10": 3,
+          "12": 1,
+          "13": 3,
+          "2": 46,
+          "3": 3,
+          "4": 7,
+          "6": 1,
+          "7": 2,
+          "9": 4
+        },
+        "colors": 1,
+        "geometric_slack": 514,
+        "height": 30,
+        "mandatory_gaps": 46,
+        "short_blocks": 60,
+        "total_clue_length": 280,
+        "total_clues": 84,
+        "width": 14
+      },
+      "trace_hash": "879a5f0a91e39077f49808777127f244f7c985ff66795c3805cbabaf7f3f5d32",
+      "wave_count": 10
+    },
+    "logic_binding": {
+      "matrix_hash": "03594ff80ae9ac61ce2f23947094c71ca89b1c2053434f11c4bb767f90eef04c"
+    },
+    "rating": {
+      "analysis_result_hash": "4a3a337827913a083207d519fadf79243697f3529d897630394f8c59e1fbfadf",
+      "format": "picross-catalog-sd2-rating-v1",
+      "method": "picross-difficulty-0.4",
+      "method_hash": "5508f0742aa858a6adc31aa621433e68298b915fb0fd6b8d9e74e576ba87caaf",
+      "rating_hash": "b21ad6f1ccdcd806a90d578dddb651de2148215b971e336c7f2cd70700630e89",
+      "result": {
+        "analysis_result_hash": "4a3a337827913a083207d519fadf79243697f3529d897630394f8c59e1fbfadf",
+        "assessment": {
+          "boundaries": {
+            "distance_lower": [
+              160861,
+              255360
+            ],
+            "distance_upper": [
+              94499,
+              255360
+            ],
+            "lower": [
+              1,
+              1
+            ],
+            "nearest_distance": [
+              94499,
+              255360
+            ],
+            "upper": [
+              2,
+              1
+            ]
+          },
+          "contributions": {
+            "demand": [
+              1,
+              1
+            ],
+            "search": [
+              6467,
+              12768
+            ],
+            "workload": [
+              79,
+              640
+            ]
+          },
+          "level": 2,
+          "level_without_workload": 2,
+          "score": [
+            416221,
+            255360
+          ],
+          "signals": {
+            "context": [
+              0,
+              1
+            ],
+            "fluent": false,
+            "highest_family": "E1",
+            "longest_narrow_run": 0,
+            "narrow_waves": 0,
+            "peak_search": [
+              6467,
+              12768
+            ],
+            "raw_workload": [
+              79,
+              640
+            ],
+            "spans": 119,
+            "workload_ceiling": 3,
+            "workload_guard": "none"
+          },
+          "without_workload": [
+            19235,
+            12768
+          ]
+        },
+        "confidence": "medium",
+        "estimated_minutes": null,
+        "explanation": "Model estimate from synthetic references; no human calibration or time estimate. Demand, search and bounded workload use independently checked line profiles.",
+        "format": "picross-sd2-rating-v1",
+        "method": "picross-difficulty-0.4",
+        "method_hash": "5508f0742aa858a6adc31aa621433e68298b915fb0fd6b8d9e74e576ba87caaf",
+        "profile_scope": "complete_line",
+        "reason": "complete_line",
+        "status": "rated"
+      },
+      "source": {
+        "bytes": 3252,
+        "definition_id": "pz-20219e14dbe242689b9ef06297828f34",
+        "engine_logic_hash": "b0c4f6795381c8e13a9f41f521bd0db2b859191f719f81c249df8114aee6a6ac",
+        "kind": "runtime",
+        "production_mode": "unknown",
+        "runtime_revision": 1,
+        "sha256": "c590aa9ba963a98f2c53819c9313925e4a3b54bcb7360ea41b86d39037351155"
+      }
+    },
+    "rating_revision": 2
+  },
+  "format": "picross-puzzle-record-v1",
+  "id": "pz-20219e14dbe242689b9ef06297828f34",
+  "mode": "mono",
+  "name": "Windspiel",
+  "reveal": {
+    "asset": {
+      "bytes": 1703793,
+      "file": "game/art/content/windspiel_001.png",
+      "sha256": "7eb95ed3144950bb3e9235cee17736fef6ed6a8505abddf615cccfb253e44a72"
+    },
+    "catalog": {
+      "generator": "picross-catalog-reveal-1",
+      "profiles": [
+        {
+          "asset": {
+            "bytes": 9878,
+            "file": "game/art/catalog/pz-20219e14dbe242689b9ef06297828f34-ui100.png",
+            "sha256": "65b0454002a020d6a6ef46f12c195c4df0e0838909094dee302d5b3da6981057"
+          },
+          "height": 112,
+          "profile": "catalog-ui100-v1",
+          "width": 75
+        },
+        {
+          "asset": {
+            "bytes": 14273,
+            "file": "game/art/catalog/pz-20219e14dbe242689b9ef06297828f34-ui125.png",
+            "sha256": "ac769845bf17f6b483227ea9264cb8c81c4faeacbecac8e2d4bff0b35f9caa9e"
+          },
+          "height": 140,
+          "profile": "catalog-ui125-v1",
+          "width": 94
+        }
+      ],
+      "source_height": 1536,
+      "source_width": 1024
+    },
+    "image_revision": 1
+  },
+  "save_slot": "windspiel_001",
+  "visible": true
+}

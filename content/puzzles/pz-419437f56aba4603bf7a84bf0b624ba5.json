@@ -1,0 +1,223 @@
+{
+  "added": {
+    "added_at": "2026-10-28T20:27:02Z",
+    "provenance": {
+      "commit": null,
+      "evidence": null,
+      "kind": "registration",
+      "reason": "Successful first playable registration in the shared transaction.",
+      "reference_time": "2026-10-28T20:27:02Z"
+    }
+  },
+  "background": {
+    "asset": {
+      "bytes": 751172,
+      "file": "game/art/backgrounds/pz-419437f56aba4603bf7a84bf0b624ba5.png",
+      "sha256": "a278bff8a91e0ed69ce7e48df010b6ef0684ecd0d391d16fdb8c405c34622bd7"
+    },
+    "image_revision": 2,
+    "status": "selected"
+  },
+  "category_id": "voegel",
+  "definition": {
+    "bytes": 5102,
+    "file": "game/data/content/huhn_419437f5.json",
+    "sha256": "6d7db2b23a5281701fbd1bfd98b53ab6f79db670a4c7bee212c36e9d35b31b9d"
+  },
+  "difficulty": {
+    "compact_analysis": {
+      "analysis_hash": "7fdfdd650058f9ed5f712591797b70105a42f53763e39728d30dd740a004e21b",
+      "deduction_complete": true,
+      "line_analysis_complete": true,
+      "line_fixpoint_confirmed": true,
+      "new_singletons": 960,
+      "profiles_hash": "7209959eefd70e8eefa37040607dabd8647332f38ba31781a677d687206e1c89",
+      "r4": null,
+      "reason": null,
+      "result_hash": "97eeb11415b26b2bfc4b30aa0d4d9b43f69afd1fbf3bf3e76ef06af2d29b39f2",
+      "status": "solved",
+      "structure": {
+        "adjacent_color_changes": 0,
+        "cells": 960,
+        "clue_length_histogram": {
+          "1": 15,
+          "11": 2,
+          "12": 1,
+          "13": 5,
+          "14": 4,
+          "15": 2,
+          "16": 2,
+          "17": 3,
+          "18": 3,
+          "19": 2,
+          "2": 17,
+          "20": 1,
+          "21": 3,
+          "22": 1,
+          "23": 1,
+          "24": 1,
+          "27": 1,
+          "3": 11,
+          "4": 10,
+          "5": 5,
+          "6": 9,
+          "7": 4,
+          "8": 8,
+          "9": 4
+        },
+        "colors": 1,
+        "geometric_slack": 996,
+        "height": 32,
+        "mandatory_gaps": 56,
+        "short_blocks": 32,
+        "total_clue_length": 868,
+        "total_clues": 115,
+        "width": 30
+      },
+      "trace_hash": "6bc1e93445d858b91ec1a941105f2430583c1a2633c3cc664b558bf817129276",
+      "wave_count": 23
+    },
+    "logic_binding": {
+      "matrix_hash": "f4ce5c27ee7be55c113c3e35fc06734633740b5ed61f974b08e14dc448fa4fe2"
+    },
+    "rating": {
+      "analysis_result_hash": "97eeb11415b26b2bfc4b30aa0d4d9b43f69afd1fbf3bf3e76ef06af2d29b39f2",
+      "format": "picross-catalog-sd2-rating-v1",
+      "method": "picross-difficulty-0.4",
+      "method_hash": "5508f0742aa858a6adc31aa621433e68298b915fb0fd6b8d9e74e576ba87caaf",
+      "rating_hash": "fbe62978cff16267c9fad52686dae76719ac80bb6d374602cbe81170350912c4",
+      "result": {
+        "analysis_result_hash": "97eeb11415b26b2bfc4b30aa0d4d9b43f69afd1fbf3bf3e76ef06af2d29b39f2",
+        "assessment": {
+          "boundaries": {
+            "distance_lower": [
+              409,
+              484
+            ],
+            "distance_upper": [
+              75,
+              484
+            ],
+            "lower": [
+              1,
+              1
+            ],
+            "nearest_distance": [
+              75,
+              484
+            ],
+            "upper": [
+              2,
+              1
+            ]
+          },
+          "contributions": {
+            "demand": [
+              1,
+              1
+            ],
+            "search": [
+              72,
+              121
+            ],
+            "workload": [
+              1,
+              4
+            ]
+          },
+          "level": 2,
+          "level_without_workload": 2,
+          "score": [
+            893,
+            484
+          ],
+          "signals": {
+            "context": [
+              0,
+              1
+            ],
+            "fluent": false,
+            "highest_family": "E1",
+            "longest_narrow_run": 0,
+            "narrow_waves": 0,
+            "peak_search": [
+              72,
+              121
+            ],
+            "raw_workload": [
+              1,
+              4
+            ],
+            "spans": 419,
+            "workload_ceiling": 3,
+            "workload_guard": "none"
+          },
+          "without_workload": [
+            193,
+            121
+          ]
+        },
+        "confidence": "medium",
+        "estimated_minutes": null,
+        "explanation": "Model estimate from synthetic references; no human calibration or time estimate. Demand, search and bounded workload use independently checked line profiles.",
+        "format": "picross-sd2-rating-v1",
+        "method": "picross-difficulty-0.4",
+        "method_hash": "5508f0742aa858a6adc31aa621433e68298b915fb0fd6b8d9e74e576ba87caaf",
+        "profile_scope": "complete_line",
+        "reason": "complete_line",
+        "status": "rated"
+      },
+      "source": {
+        "bytes": 5122,
+        "definition_id": "pz-419437f56aba4603bf7a84bf0b624ba5",
+        "engine_logic_hash": "3c9d8646138c1e1c5ba0f521687b24bcab6e1639504247672e39bc96176f7718",
+        "kind": "runtime",
+        "production_mode": "unknown",
+        "runtime_revision": 1,
+        "sha256": "d75ec5c682998993a4d52546e0d28dd045b21804f919a83734e60ad508b8bb72"
+      }
+    },
+    "rating_revision": 1
+  },
+  "format": "picross-puzzle-record-v1",
+  "id": "pz-419437f56aba4603bf7a84bf0b624ba5",
+  "mode": "mono",
+  "name": "Huhn",
+  "reveal": {
+    "asset": {
+      "bytes": 1401062,
+      "file": "game/art/content/huhn_419437f5.png",
+      "sha256": "2672b5a69ca8b35bb78a0360860cbd415e285c5ba5c113c2867153b7e17c7328"
+    },
+    "catalog": {
+      "generator": "picross-catalog-reveal-1",
+      "profiles": [
+        {
+          "asset": {
+            "bytes": 17992,
+            "file": "game/art/catalog/pz-419437f56aba4603bf7a84bf0b624ba5-ui100.png",
+            "sha256": "e9e1881eddd0d361bcae327936a0b1a4ae57c95acbcece03dab2f8fab29ec71a"
+          },
+          "height": 112,
+          "profile": "catalog-ui100-v1",
+          "width": 112
+        },
+        {
+          "asset": {
+            "bytes": 26028,
+            "file": "game/art/catalog/pz-419437f56aba4603bf7a84bf0b624ba5-ui125.png",
+            "sha256": "59b9cbd529d2a19800ddf2d0d9f1cf27399f5ea3aedde68df7fcb81b99590abb"
+          },
+          "height": 140,
+          "profile": "catalog-ui125-v1",
+          "width": 140
+        }
+      ],
+      "source_height": 1254,
+      "source_width": 1254
+    },
+    "image_revision": 1
+  },
+  "save_slot": "huhn_419437f5",
+  "visible": true
+}

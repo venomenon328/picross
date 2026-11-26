@@ -1,0 +1,210 @@
+{
+  "added": {
+    "added_at": "2026-11-15T23:36:49Z",
+    "provenance": {
+      "commit": null,
+      "evidence": null,
+      "kind": "registration",
+      "reason": "Successful first playable registration in the shared transaction.",
+      "reference_time": "2026-11-15T23:36:49Z"
+    }
+  },
+  "background": {
+    "asset": {
+      "bytes": 835194,
+      "file": "game/art/backgrounds/pz-schnecke.png",
+      "sha256": "8ce722539c267815f3fcbbd212187a3d298ba3beeb9beca75ec8003c4a23db82"
+    },
+    "image_revision": 2,
+    "status": "selected"
+  },
+  "category_id": "insekten-kleine-tiere",
+  "definition": {
+    "bytes": 2382,
+    "file": "game/data/content/schnecke_001.json",
+    "sha256": "4dd31af626da130e466e2c1c8335a30e3279de7dedb062792ce1e6a2e1e940bf"
+  },
+  "difficulty": {
+    "compact_analysis": {
+      "analysis_hash": "533290a741c4fb51efd30f7042e53aad07f7431f284a293308a1babf02ad1bcd",
+      "deduction_complete": true,
+      "line_analysis_complete": true,
+      "line_fixpoint_confirmed": true,
+      "new_singletons": 240,
+      "profiles_hash": "f3413112664391b8a55237aea9c9004d7638c9cde4fce51d8c133b3cb24e4194",
+      "r4": null,
+      "reason": null,
+      "result_hash": "069b8feca30ad1455ca62aa30392195838b209eaf661f1712fd31917e0990440",
+      "status": "solved",
+      "structure": {
+        "adjacent_color_changes": 0,
+        "cells": 240,
+        "clue_length_histogram": {
+          "1": 18,
+          "10": 1,
+          "15": 2,
+          "2": 13,
+          "3": 5,
+          "4": 16,
+          "5": 4,
+          "6": 2,
+          "7": 4,
+          "8": 1,
+          "9": 1
+        },
+        "colors": 1,
+        "geometric_slack": 204,
+        "height": 12,
+        "mandatory_gaps": 36,
+        "short_blocks": 31,
+        "total_clue_length": 240,
+        "total_clues": 67,
+        "width": 20
+      },
+      "trace_hash": "af75e9e15dcd620063cad8952401a2b3c112592506b190011a9cde8b8c5a0b4d",
+      "wave_count": 19
+    },
+    "logic_binding": {
+      "matrix_hash": "472872a8e8e543740e7150440edb7ca7477dfcde94aac3acbb791e8fa54d3eb7"
+    },
+    "rating": {
+      "analysis_result_hash": "069b8feca30ad1455ca62aa30392195838b209eaf661f1712fd31917e0990440",
+      "format": "picross-catalog-sd2-rating-v1",
+      "method": "picross-difficulty-0.4",
+      "method_hash": "5508f0742aa858a6adc31aa621433e68298b915fb0fd6b8d9e74e576ba87caaf",
+      "rating_hash": "17470e2687f49e1922cc1b119fb8402605ec6608d3adc073807b04d2f370a1a1",
+      "result": {
+        "analysis_result_hash": "069b8feca30ad1455ca62aa30392195838b209eaf661f1712fd31917e0990440",
+        "assessment": {
+          "boundaries": {
+            "distance_lower": [
+              1773,
+              49280
+            ],
+            "distance_upper": [
+              47507,
+              49280
+            ],
+            "lower": [
+              3,
+              1
+            ],
+            "nearest_distance": [
+              1773,
+              49280
+            ],
+            "upper": [
+              4,
+              1
+            ]
+          },
+          "contributions": {
+            "demand": [
+              59,
+              28
+            ],
+            "search": [
+              139,
+              176
+            ],
+            "workload": [
+              89,
+              640
+            ]
+          },
+          "level": 4,
+          "level_without_workload": 3,
+          "score": [
+            149613,
+            49280
+          ],
+          "signals": {
+            "context": [
+              3,
+              7
+            ],
+            "fluent": false,
+            "highest_family": "E2",
+            "longest_narrow_run": 1,
+            "narrow_waves": 1,
+            "peak_search": [
+              8,
+              11
+            ],
+            "raw_workload": [
+              89,
+              640
+            ],
+            "spans": 129,
+            "workload_ceiling": 4,
+            "workload_guard": "none"
+          },
+          "without_workload": [
+            3569,
+            1232
+          ]
+        },
+        "confidence": "medium",
+        "estimated_minutes": null,
+        "explanation": "Model estimate from synthetic references; no human calibration or time estimate. Demand, search and bounded workload use independently checked line profiles.",
+        "format": "picross-sd2-rating-v1",
+        "method": "picross-difficulty-0.4",
+        "method_hash": "5508f0742aa858a6adc31aa621433e68298b915fb0fd6b8d9e74e576ba87caaf",
+        "profile_scope": "complete_line",
+        "reason": "complete_line",
+        "status": "rated"
+      },
+      "source": {
+        "bytes": 2399,
+        "definition_id": "pz-schnecke",
+        "engine_logic_hash": "82c1c40061f4f003c34a65eacda46f187937606262635d4d6e5c039017c4b046",
+        "kind": "runtime",
+        "production_mode": "unknown",
+        "runtime_revision": 1,
+        "sha256": "4d6bded01144c12b33d52cff72c25c745f736457738bff0e38d70ca3325c6c38"
+      }
+    },
+    "rating_revision": 1
+  },
+  "format": "picross-puzzle-record-v1",
+  "id": "pz-schnecke",
+  "mode": "mono",
+  "name": "Schnecke",
+  "reveal": {
+    "asset": {
+      "bytes": 1779203,
+      "file": "game/art/content/schnecke_001.png",
+      "sha256": "022a3b29113a1cd837fef05df12682154f8984d918f6a879ddf042765cb0373e"
+    },
+    "catalog": {
+      "generator": "picross-catalog-reveal-1",
+      "profiles": [
+        {
+          "asset": {
+            "bytes": 25581,
+            "file": "game/art/catalog/pz-schnecke-ui100.png",
+            "sha256": "3753fe315c47e1f17197cdc4eadfe485060d2bf20337d222e14971ab2349adf2"
+          },
+          "height": 112,
+          "profile": "catalog-ui100-v1",
+          "width": 161
+        },
+        {
+          "asset": {
+            "bytes": 38321,
+            "file": "game/art/catalog/pz-schnecke-ui125.png",
+            "sha256": "a9ea7be0f107de7844a6bfab59ad9464aa39c8160b67ad60e1611e803f2815b5"
+          },
+          "height": 140,
+          "profile": "catalog-ui125-v1",
+          "width": 201
+        }
+      ],
+      "source_height": 1049,
+      "source_width": 1499
+    },
+    "image_revision": 1
+  },
+  "save_slot": "schnecke_001",
+  "visible": true
+}

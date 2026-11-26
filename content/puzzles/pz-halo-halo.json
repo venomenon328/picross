@@ -1,0 +1,201 @@
+{
+  "added": {
+    "added_at": "2026-11-22T13:36:19Z",
+    "provenance": {
+      "commit": null,
+      "evidence": null,
+      "kind": "registration",
+      "reason": "Successful first playable registration in the shared transaction.",
+      "reference_time": "2026-11-22T13:36:19Z"
+    }
+  },
+  "background": {
+    "asset": {
+      "bytes": 546429,
+      "file": "game/art/backgrounds/pz-halo-halo.png",
+      "sha256": "d4e3974caf585a278646525548399e8b1c3acd3913d6637aa88c4e7683331ded"
+    },
+    "image_revision": 1,
+    "status": "selected"
+  },
+  "category_id": "suesses-getraenke",
+  "definition": {
+    "bytes": 2959,
+    "file": "game/data/content/pz-halo-halo.json",
+    "sha256": "82d99a2a0385bf729029aeb67ecc14d64351fdb91a3a63dc426df70f0c187519"
+  },
+  "difficulty": {
+    "compact_analysis": {
+      "analysis_hash": "e6c054b88f22f0d2227eb13e3635fa2e03d3930e6993e21ea382c82f5843f08f",
+      "deduction_complete": true,
+      "line_analysis_complete": true,
+      "line_fixpoint_confirmed": true,
+      "new_singletons": 250,
+      "profiles_hash": "a57f0bffd35805c7fec9b8f4e31d730a05be6b36cab68505814d926582df1bbe",
+      "r4": null,
+      "reason": null,
+      "result_hash": "6cb40e38093a8c100ab900bddc1b95aed90a58e18035603200409250a9290cd9",
+      "status": "solved",
+      "structure": {
+        "adjacent_color_changes": 50,
+        "cells": 250,
+        "clue_length_histogram": {
+          "1": 11,
+          "2": 13,
+          "3": 14,
+          "4": 17,
+          "5": 11,
+          "6": 10,
+          "7": 2,
+          "8": 5
+        },
+        "colors": 5,
+        "geometric_slack": 184,
+        "height": 25,
+        "mandatory_gaps": 0,
+        "short_blocks": 24,
+        "total_clue_length": 316,
+        "total_clues": 83,
+        "width": 10
+      },
+      "trace_hash": "9df546784b438c8761cc3f7b43c8d3ad165f998008a0634fe1903f57b944ac9a",
+      "wave_count": 6
+    },
+    "logic_binding": {
+      "matrix_hash": "fe7713733f387f797b5db108f0b8240007abbc633d8fdd0227c151916337dcda"
+    },
+    "rating": {
+      "analysis_result_hash": "6cb40e38093a8c100ab900bddc1b95aed90a58e18035603200409250a9290cd9",
+      "format": "picross-catalog-sd2-rating-v1",
+      "method": "picross-difficulty-0.4",
+      "method_hash": "5508f0742aa858a6adc31aa621433e68298b915fb0fd6b8d9e74e576ba87caaf",
+      "rating_hash": "32a506d36cac6a88cb3413687b6b334f307cd35cf5cdee0902ced0a020452623",
+      "result": {
+        "analysis_result_hash": "6cb40e38093a8c100ab900bddc1b95aed90a58e18035603200409250a9290cd9",
+        "assessment": {
+          "boundaries": {
+            "distance_lower": null,
+            "distance_upper": [
+              1273,
+              1716
+            ],
+            "lower": null,
+            "nearest_distance": [
+              1273,
+              1716
+            ],
+            "upper": [
+              1,
+              1
+            ]
+          },
+          "contributions": {
+            "demand": [
+              1,
+              4
+            ],
+            "search": [
+              7,
+              858
+            ],
+            "workload": [
+              0,
+              1
+            ]
+          },
+          "level": 1,
+          "level_without_workload": 1,
+          "score": [
+            443,
+            1716
+          ],
+          "signals": {
+            "context": [
+              0,
+              1
+            ],
+            "fluent": true,
+            "highest_family": "E1",
+            "longest_narrow_run": 0,
+            "narrow_waves": 0,
+            "peak_search": [
+              7,
+              858
+            ],
+            "raw_workload": [
+              31,
+              640
+            ],
+            "spans": 71,
+            "workload_ceiling": 3,
+            "workload_guard": "fluent"
+          },
+          "without_workload": [
+            443,
+            1716
+          ]
+        },
+        "confidence": "medium",
+        "estimated_minutes": null,
+        "explanation": "Model estimate from synthetic references; no human calibration or time estimate. Demand, search and bounded workload use independently checked line profiles.",
+        "format": "picross-sd2-rating-v1",
+        "method": "picross-difficulty-0.4",
+        "method_hash": "5508f0742aa858a6adc31aa621433e68298b915fb0fd6b8d9e74e576ba87caaf",
+        "profile_scope": "complete_line",
+        "reason": "complete_line",
+        "status": "rated"
+      },
+      "source": {
+        "bytes": 2959,
+        "definition_id": "pz-halo-halo",
+        "engine_logic_hash": "0d57d440961e10b420d2fefd6a1198acff62bbea46af66669d1be73c3e9a2125",
+        "kind": "runtime",
+        "production_mode": "unknown",
+        "runtime_revision": 3,
+        "sha256": "82d99a2a0385bf729029aeb67ecc14d64351fdb91a3a63dc426df70f0c187519"
+      }
+    },
+    "rating_revision": 1
+  },
+  "format": "picross-puzzle-record-v1",
+  "id": "pz-halo-halo",
+  "mode": "color",
+  "name": "Halo-Halo",
+  "reveal": {
+    "asset": {
+      "bytes": 2491087,
+      "file": "game/art/content/pz-halo-halo.png",
+      "sha256": "5ae26cd70e848e9b4f26ee81a6f58ff1f51ea65f1cf8aec81ab70e78366d2e19"
+    },
+    "catalog": {
+      "generator": "picross-catalog-reveal-1",
+      "profiles": [
+        {
+          "asset": {
+            "bytes": 13646,
+            "file": "game/art/catalog/pz-halo-halo-ui100.png",
+            "sha256": "21a7393b40384d0c870173b3cb5fb0d78c79aa23fb4cb17a51501a3bc2b7cea6"
+          },
+          "height": 112,
+          "profile": "catalog-ui100-v1",
+          "width": 75
+        },
+        {
+          "asset": {
+            "bytes": 20237,
+            "file": "game/art/catalog/pz-halo-halo-ui125.png",
+            "sha256": "17a76301f7bc5688a26cce71f2ff7a82ad614befb908de0be0fae8d261d443d9"
+          },
+          "height": 140,
+          "profile": "catalog-ui125-v1",
+          "width": 94
+        }
+      ],
+      "source_height": 1536,
+      "source_width": 1024
+    },
+    "image_revision": 1
+  },
+  "save_slot": "pz-halo-halo",
+  "visible": true
+}

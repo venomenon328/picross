@@ -37,7 +37,7 @@ class ExplicitRequest(unittest.TestCase):
         self.assertTrue(apply_event_policy(classify([], 'production'), 'workflow_dispatch')['selected']['production'])
 
     def test_automatic_and_general_manual_scopes_never_install_or_expect_browser(self):
-        for paths in ([], ['docs/note.md'], ['content/registry.json'],
+        for paths in ([], ['docs/note.md'], ['content/puzzles/pz-test.json'],
                       ['tools/puzzle_production/sd2_rating.py'], ['game/ui/main.gd'],
                       ['tools/ci_scope.py'], ['unknown.py'], ['README.md', 'game/ui/board.gd']):
             for scope in ('auto', 'all', 'toolchain', 'runtime', 'visual', 'perf-b', 'production'):

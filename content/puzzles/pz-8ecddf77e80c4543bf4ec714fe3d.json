@@ -1,0 +1,213 @@
+{
+  "added": {
+    "added_at": "2026-10-14T13:52:47Z",
+    "provenance": {
+      "commit": "ad101343304ef5664e7915dc402c4ef12a67c880",
+      "evidence": {
+        "path": "content/added/reports/ku-b-initial.json",
+        "sha256": "e6d7a01e740adbc40cdc90e64c733f95907c8924cfe1f0a4bb734bb7bc6b7884"
+      },
+      "kind": "git-snapshot",
+      "reason": "No direct UTC first-registration receipt found in reviewed sources; earliest verified visible integrated catalog snapshot including bound PR history. Commit UTC is a reconstructed reference, not tool execution time.",
+      "reference_time": "2026-10-14T13:52:47Z"
+    }
+  },
+  "background": {
+    "asset": {
+      "bytes": 657915,
+      "file": "game/art/backgrounds/pz-8ecddf77e80c4543bf4ec714fe3d.png",
+      "sha256": "fe83a2209e9631d3f7ff770d1e42ff5719076eb75c4b34b000149234963bde72"
+    },
+    "image_revision": 2,
+    "status": "selected"
+  },
+  "category_id": "gebaeude-bauwerke",
+  "definition": {
+    "bytes": 11496,
+    "file": "game/data/content/warnemuende_001.json",
+    "sha256": "885e498fdc6c9674b584b8c8cd1e35b7dc92a8ef1335e152bbff08f847b32937"
+  },
+  "difficulty": {
+    "compact_analysis": {
+      "analysis_hash": "853bdac8d362febc453ed7662bc996115ce252a8d49a8a432d13f6be7e26b017",
+      "deduction_complete": true,
+      "line_analysis_complete": true,
+      "line_fixpoint_confirmed": true,
+      "new_singletons": 1050,
+      "profiles_hash": "3408e72dfeb5b0a490363293b45704d0e291f673fa8169ce34d2642c6edc330b",
+      "r4": null,
+      "reason": null,
+      "result_hash": "93d13997e6a0d5b9deb329cd528b62afb21b06acac14716c847fe6750649462b",
+      "status": "solved",
+      "structure": {
+        "adjacent_color_changes": 271,
+        "cells": 1050,
+        "clue_length_histogram": {
+          "1": 213,
+          "11": 3,
+          "13": 1,
+          "17": 1,
+          "2": 92,
+          "3": 40,
+          "30": 2,
+          "4": 11,
+          "5": 6,
+          "6": 4,
+          "7": 6
+        },
+        "colors": 5,
+        "geometric_slack": 1276,
+        "height": 35,
+        "mandatory_gaps": 44,
+        "short_blocks": 305,
+        "total_clue_length": 780,
+        "total_clues": 379,
+        "width": 30
+      },
+      "trace_hash": "7577c61b275cabe4d30c54042042cbf059b1309b64d123b0312a9d5cdb75f592",
+      "wave_count": 33
+    },
+    "logic_binding": {
+      "matrix_hash": "213aadd127e7b13855b1878eb4b2341b41368d6c7ccc6ca956cb4f71028baecf"
+    },
+    "rating": {
+      "analysis_result_hash": "93d13997e6a0d5b9deb329cd528b62afb21b06acac14716c847fe6750649462b",
+      "format": "picross-catalog-sd2-rating-v1",
+      "method": "picross-difficulty-0.4",
+      "method_hash": "5508f0742aa858a6adc31aa621433e68298b915fb0fd6b8d9e74e576ba87caaf",
+      "rating_hash": "7e539456babee999aa42ca97b2f17966f119ee3cc26ca824d3687b02bc41e1f9",
+      "result": {
+        "analysis_result_hash": "93d13997e6a0d5b9deb329cd528b62afb21b06acac14716c847fe6750649462b",
+        "assessment": {
+          "boundaries": {
+            "distance_lower": [
+              637023,
+              1134224
+            ],
+            "distance_upper": [
+              497201,
+              1134224
+            ],
+            "lower": [
+              3,
+              1
+            ],
+            "nearest_distance": [
+              497201,
+              1134224
+            ],
+            "upper": [
+              4,
+              1
+            ]
+          },
+          "contributions": {
+            "demand": [
+              28,
+              13
+            ],
+            "search": [
+              101015,
+              87248
+            ],
+            "workload": [
+              1,
+              4
+            ]
+          },
+          "level": 4,
+          "level_without_workload": 4,
+          "score": [
+            4039695,
+            1134224
+          ],
+          "signals": {
+            "context": [
+              8,
+              13
+            ],
+            "fluent": false,
+            "highest_family": "E2",
+            "longest_narrow_run": 2,
+            "narrow_waves": 7,
+            "peak_search": [
+              5291,
+              5453
+            ],
+            "raw_workload": [
+              1,
+              4
+            ],
+            "spans": 353,
+            "workload_ceiling": 4,
+            "workload_guard": "none"
+          },
+          "without_workload": [
+            3756139,
+            1134224
+          ]
+        },
+        "confidence": "medium",
+        "estimated_minutes": null,
+        "explanation": "Model estimate from synthetic references; no human calibration or time estimate. Demand, search and bounded workload use independently checked line profiles.",
+        "format": "picross-sd2-rating-v1",
+        "method": "picross-difficulty-0.4",
+        "method_hash": "5508f0742aa858a6adc31aa621433e68298b915fb0fd6b8d9e74e576ba87caaf",
+        "profile_scope": "complete_line",
+        "reason": "complete_line",
+        "status": "rated"
+      },
+      "source": {
+        "bytes": 11496,
+        "definition_id": "pz-8ecddf77e80c4543bf4ec714fe3d",
+        "engine_logic_hash": "676b1b945de867a1e73a3b26772706dd2509ade4eae4882aef1c064d9cef78e4",
+        "kind": "runtime",
+        "production_mode": "unknown",
+        "runtime_revision": 2,
+        "sha256": "885e498fdc6c9674b584b8c8cd1e35b7dc92a8ef1335e152bbff08f847b32937"
+      }
+    },
+    "rating_revision": 2
+  },
+  "format": "picross-puzzle-record-v1",
+  "id": "pz-8ecddf77e80c4543bf4ec714fe3d",
+  "mode": "color",
+  "name": "Warnemünde",
+  "reveal": {
+    "asset": {
+      "bytes": 2194120,
+      "file": "game/art/content/warnemuende_001.png",
+      "sha256": "c8300e88d06a79457dbfcb40460521c7fd2cf4b9d2a8c1a2d2de6bfffde8231e"
+    },
+    "catalog": {
+      "generator": "picross-catalog-reveal-1",
+      "profiles": [
+        {
+          "asset": {
+            "bytes": 18946,
+            "file": "game/art/catalog/pz-8ecddf77e80c4543bf4ec714fe3d-ui100.png",
+            "sha256": "d6ad0edf4b4ee4c47201ada742bb102ed968954b9a503cb915c10f1e20dbccc4"
+          },
+          "height": 112,
+          "profile": "catalog-ui100-v1",
+          "width": 84
+        },
+        {
+          "asset": {
+            "bytes": 28252,
+            "file": "game/art/catalog/pz-8ecddf77e80c4543bf4ec714fe3d-ui125.png",
+            "sha256": "b311da29cb095acb6c66db62636a78499e51292632b2e3f0b3f833bbb716d197"
+          },
+          "height": 140,
+          "profile": "catalog-ui125-v1",
+          "width": 105
+        }
+      ],
+      "source_height": 1448,
+      "source_width": 1086
+    },
+    "image_revision": 1
+  },
+  "save_slot": "warnemuende_001",
+  "visible": true
+}

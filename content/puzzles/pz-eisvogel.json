@@ -1,0 +1,201 @@
+{
+  "added": {
+    "added_at": "2026-11-25T11:28:59Z",
+    "provenance": {
+      "commit": null,
+      "evidence": null,
+      "kind": "registration",
+      "reason": "Successful first playable registration in the shared transaction.",
+      "reference_time": "2026-11-25T11:28:59Z"
+    }
+  },
+  "background": {
+    "asset": {
+      "bytes": 540142,
+      "file": "game/art/backgrounds/pz-eisvogel.png",
+      "sha256": "6fcb9a0fad60dfdd23c7b28d56e207ae259c2ba778e2d599eeeac6b0319cb18c"
+    },
+    "image_revision": 1,
+    "status": "selected"
+  },
+  "category_id": "voegel",
+  "definition": {
+    "bytes": 3588,
+    "file": "game/data/content/pz-eisvogel.json",
+    "sha256": "b47a1f52105a62e223e4366cfcf321ca5f39a24b5a93b64ea9fe94e2ee4d2ce1"
+  },
+  "difficulty": {
+    "compact_analysis": {
+      "analysis_hash": "e350608fce2ce36feef55c90cdae2e2163f2c1da30086b76e7b741a368620b1c",
+      "deduction_complete": true,
+      "line_analysis_complete": true,
+      "line_fixpoint_confirmed": true,
+      "new_singletons": 340,
+      "profiles_hash": "8a6dfd4c9293ac74fe4417e9c926291bd3427e31c1b2f17769b6d668cabd435d",
+      "r4": null,
+      "reason": null,
+      "result_hash": "7c11bb001a3cc9296c5ed474076c338a00477063d068058b534fb2f56d06c0c6",
+      "status": "solved",
+      "structure": {
+        "adjacent_color_changes": 67,
+        "cells": 340,
+        "clue_length_histogram": {
+          "1": 31,
+          "2": 23,
+          "3": 12,
+          "4": 11,
+          "5": 8,
+          "6": 11,
+          "7": 7,
+          "8": 2
+        },
+        "colors": 4,
+        "geometric_slack": 351,
+        "height": 17,
+        "mandatory_gaps": 1,
+        "short_blocks": 54,
+        "total_clue_length": 328,
+        "total_clues": 105,
+        "width": 20
+      },
+      "trace_hash": "1da4d3aaa807d4c0f9defb25b22cd60a3a9f81dc9319c1c404f0bf216884f6ac",
+      "wave_count": 12
+    },
+    "logic_binding": {
+      "matrix_hash": "eefa4bbf5e719d5d0bc0d61d32ec0c38620214e3ef1f302c980c0ed26df26501"
+    },
+    "rating": {
+      "analysis_result_hash": "7c11bb001a3cc9296c5ed474076c338a00477063d068058b534fb2f56d06c0c6",
+      "format": "picross-catalog-sd2-rating-v1",
+      "method": "picross-difficulty-0.4",
+      "method_hash": "5508f0742aa858a6adc31aa621433e68298b915fb0fd6b8d9e74e576ba87caaf",
+      "rating_hash": "43e62b34a20025ecad47254a59b070275d9fb371fcd5f470e0fc8685d906035c",
+      "result": {
+        "analysis_result_hash": "7c11bb001a3cc9296c5ed474076c338a00477063d068058b534fb2f56d06c0c6",
+        "assessment": {
+          "boundaries": {
+            "distance_lower": null,
+            "distance_upper": [
+              113,
+              220
+            ],
+            "lower": null,
+            "nearest_distance": [
+              113,
+              220
+            ],
+            "upper": [
+              1,
+              1
+            ]
+          },
+          "contributions": {
+            "demand": [
+              1,
+              4
+            ],
+            "search": [
+              13,
+              55
+            ],
+            "workload": [
+              0,
+              1
+            ]
+          },
+          "level": 1,
+          "level_without_workload": 1,
+          "score": [
+            107,
+            220
+          ],
+          "signals": {
+            "context": [
+              0,
+              1
+            ],
+            "fluent": true,
+            "highest_family": "E1",
+            "longest_narrow_run": 0,
+            "narrow_waves": 0,
+            "peak_search": [
+              13,
+              55
+            ],
+            "raw_workload": [
+              69,
+              320
+            ],
+            "spans": 178,
+            "workload_ceiling": 3,
+            "workload_guard": "fluent"
+          },
+          "without_workload": [
+            107,
+            220
+          ]
+        },
+        "confidence": "medium",
+        "estimated_minutes": null,
+        "explanation": "Model estimate from synthetic references; no human calibration or time estimate. Demand, search and bounded workload use independently checked line profiles.",
+        "format": "picross-sd2-rating-v1",
+        "method": "picross-difficulty-0.4",
+        "method_hash": "5508f0742aa858a6adc31aa621433e68298b915fb0fd6b8d9e74e576ba87caaf",
+        "profile_scope": "complete_line",
+        "reason": "complete_line",
+        "status": "rated"
+      },
+      "source": {
+        "bytes": 3588,
+        "definition_id": "pz-eisvogel",
+        "engine_logic_hash": "d89b75fb9bc754f5448190f16ff5a686e341277c01cf68a4c436cf9e83d71f07",
+        "kind": "runtime",
+        "production_mode": "unknown",
+        "runtime_revision": 2,
+        "sha256": "b47a1f52105a62e223e4366cfcf321ca5f39a24b5a93b64ea9fe94e2ee4d2ce1"
+      }
+    },
+    "rating_revision": 1
+  },
+  "format": "picross-puzzle-record-v1",
+  "id": "pz-eisvogel",
+  "mode": "color",
+  "name": "Eisvogel",
+  "reveal": {
+    "asset": {
+      "bytes": 1454879,
+      "file": "game/art/content/pz-eisvogel.png",
+      "sha256": "0db458c01de1ac120da20b58cc328c3d47289aa2a9af23ed537baa77dc225278"
+    },
+    "catalog": {
+      "generator": "picross-catalog-reveal-1",
+      "profiles": [
+        {
+          "asset": {
+            "bytes": 15244,
+            "file": "game/art/catalog/pz-eisvogel-ui100.png",
+            "sha256": "828b91b180aaabaffc41b0a00ff2136a68d0895b87843d46ef815f54af8aee04"
+          },
+          "height": 112,
+          "profile": "catalog-ui100-v1",
+          "width": 112
+        },
+        {
+          "asset": {
+            "bytes": 22427,
+            "file": "game/art/catalog/pz-eisvogel-ui125.png",
+            "sha256": "e8ee417d46f3869af6310e297adb9e24dbbccc2fa6891d6141396c392cfd03b2"
+          },
+          "height": 140,
+          "profile": "catalog-ui125-v1",
+          "width": 140
+        }
+      ],
+      "source_height": 1254,
+      "source_width": 1254
+    },
+    "image_revision": 1
+  },
+  "save_slot": "pz-eisvogel",
+  "visible": true
+}

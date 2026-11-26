@@ -6,7 +6,6 @@ import unittest
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from tools.puzzle_production.catalog_difficulty import project
-from tools.puzzle_production.content_registry import projection, validate
 from tools.puzzle_production.contract import InvalidInput, load_json, canonical_bytes
 
 
@@ -60,11 +59,3 @@ class DifficultyTests(unittest.TestCase):
                              ("logical_demand", None), ("r4_required", False)):
             changed = deepcopy(raw); changed[field] = value
             with self.subTest(field=field), self.assertRaises(InvalidInput): project(changed)
-
-    def test_current_projection_requires_explicit_current_values(self):
-        root=Path(__file__).resolve().parents[1]/"tests/puzzle_production/fixtures/catalog"
-        registry,catalog=load_json(root/"validation.json"),load_json(root/"categories.json")
-        validate(registry,catalog)
-        with self.assertRaisesRegex(InvalidInput,"complete current data"):
-            projection(registry,catalog)
-        self.assertTrue(all("production" not in e and e["mode"]=="mono" for e in registry["entries"]))

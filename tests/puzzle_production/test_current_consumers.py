@@ -7,7 +7,7 @@ from tests.puzzle_production.current_fixtures import checkout,make,fingerprints,
 from tools.puzzle_production import catalog_integration as core,catalog_method as method,catalog_analysis as analysis
 from tools.puzzle_production import catalog_rating as rating,catalog_added as added,current_content as content
 from tools.puzzle_production import content_registry as registry,catalog_transaction as tx,catalog_metadata as metadata
-from tools.puzzle_production import editor_cli,catalog_background_change as images
+from tools.puzzle_production import puzzle_record, editor_cli,catalog_background_change as images
 from tools.puzzle_production.contract import InvalidInput, digest
 
 
@@ -26,13 +26,11 @@ class CurrentConsumerTests(unittest.TestCase):
         return plan
 
     def test_activation_and_new_color_keep_existing_rating_and_dates(self):
-        original=(self.root/rating.path('pz-current')).read_bytes()
-        date=(self.root/added.path('pz-current')).read_bytes()
+        original=(self.root/puzzle_record.path('pz-current')).read_bytes()
         self.activate()
         source=make(self.work/'color',identifier='pz-color-two',mode='color',colors=2,method=method.NEW)
         self.assertEqual(core.integrate(source,self.root,apply=True)['status'],'registered')
-        self.assertEqual((self.root/rating.path('pz-current')).read_bytes(),original)
-        self.assertEqual((self.root/added.path('pz-current')).read_bytes(),date)
+        self.assertEqual((self.root/puzzle_record.path('pz-current')).read_bytes(),original)
         registry.check_checkout(self.root)
 
     def test_first_registration_rejects_color_one_before_writing(self):
@@ -50,12 +48,11 @@ class CurrentConsumerTests(unittest.TestCase):
                     core.integrate(source, self.root, apply=apply)
                 self.assertEqual(fingerprints(self.root), before)
         # A mode already bound to registered history remains readable.
-        rating_file = self.root/rating.path('pz-current')
-        historical = json.loads(rating_file.read_bytes())
-        historical['production_mode'] = 'color'
-        historical['record_hash'] = digest({k: v for k, v in historical.items() if k != 'record_hash'})
-        original = (self.source/'definition.json').read_bytes()
-        self.assertEqual(rating.validate(historical, definition_bytes=original)['production_mode'], 'color')
+        rating_file = self.root/puzzle_record.path('pz-current')
+        record = puzzle_record.decode(rating_file.read_bytes(),'pz-current')
+        record["mode"] = "color"
+        definition = (self.source/"definition.json").read_bytes()
+        self.assertEqual(puzzle_record.validate(record,'pz-current',definition)["mode"],'color')
 
     def test_current_preview_adopt_repeat_and_source_change_guard(self):
         self.activate();output=self.work/'preview'
@@ -65,25 +62,25 @@ class CurrentConsumerTests(unittest.TestCase):
         self.assertEqual(analysis.adopt(self.root,output,apply=True)['status'],'no-op')
         self.assertEqual(before,fingerprints(self.root))
         registry.check_checkout(self.root)
-        self.assertNotIn('adoption',json.loads((self.root/rating.path('pz-current')).read_bytes()))
+        self.assertNotIn('adoption',json.loads((self.root/puzzle_record.path('pz-current')).read_bytes()))
 
     def test_current_catalog_recovery_restores_method_and_repeats(self):
         plan=method.plan(self.root,method.OLD,method.NEW,method.method_hash(method.NEW))
         before=fingerprints(self.root)
-        with self.assertRaises(RuntimeError):method.adopt(self.root,plan,fail_step=4)
+        with self.assertRaises(RuntimeError):method.adopt(self.root,plan,fail_step=2)
         self.assertEqual(registry.recover(self.root)['status'],'rolled-back')
         self.assertEqual({n:v[0] for n,v in fingerprints(self.root).items()},{n:v[0] for n,v in before.items()})
         self.assertEqual(registry.recover(self.root)['status'],'no-op')
 
     def test_current_metadata_and_date_readers_need_no_reports_or_archives(self):
-        index=json.loads((self.root/content.REGISTRY).read_bytes())
-        self.assertEqual(list(added.load_sources(self.root,index)),['pz-current'])
-        self.assertEqual(list(rating.load_sources(self.root,index)),['pz-current'])
+        record = puzzle_record.load(self.root,'pz-current',category_catalog=None)
+        self.assertEqual(record["added"]["provenance"]["kind"],"registration")
+        self.assertEqual(record["difficulty"]["rating_revision"],1)
         plan=metadata.plan(self.root,[{'op':'set_metadata','id':'pz-current','name':'Current name'}])
-        self.assertEqual(plan["format"], "picross-editor-metadata-plan-v3")
+        self.assertEqual(plan["format"], metadata.PLAN_FORMAT)
         retained = plan["journal"]["retained"]
         for label in ("ui100", "ui125"):
-            self.assertIn("game/art/catalog/pz-current-" + label + ".png", retained)
+            self.assertNotIn("game/art/catalog/pz-current-" + label + ".png", retained)
         self.assertEqual(metadata.apply(self.root,plan)['status'],'updated')
         self.assertEqual(metadata.view(self.root)['entries'][0]['name'],'Current name')
         registry.check_checkout(self.root)

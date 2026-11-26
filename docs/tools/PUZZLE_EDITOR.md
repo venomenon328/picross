@@ -465,14 +465,11 @@ zur Einführungshistorie, nicht zum normalen Editorbetrieb.
 
 ### 13.1 Lese- und Prüfgrenze
 
-Start/Liste lesen nur Inhaltsregistry, Runtime und Kategorien. Detail liest
-zusätzlich die ausgewählte Definition und ihre kleinen aktuellen Bildreferenzen;
-sichtbare Bilder werden bedarfsweise geladen. Keine rekursive Inventur, keine
-Pakete, historischen Freigaben oder unbeteiligten Einzeldateien, auch nicht im
-Hintergrund. Name/Kategorie/Kategorienpflege benötigen ausschließlich die drei
-Indizes. Lesen und Schreiben verlangen den aktuellen Katalog mit Runtime v8.
-Es gibt keine Migration in UI, Dienst, Worker oder portablem Paket. Die einmalige Bestandsüberführung gehört zum RI-ONE-Produktdiff; kein
-dauerhafter Legacyimporter wird installiert.
+Start und Liste prüfen Kategorien, Runtime v9 und Recordnamen. Detail und
+Pflege lesen zusätzlich die ausgewählten Records und Definitionen. Bilder
+werden bei Bedarf gelesen. Kategorienpflege bindet die von einer Neuzuordnung
+betroffenen IDs. Eine Schreiboperation prüft die erwarteten Bytes unter
+gemeinsamer Sperre. Die Bestandsüberführung ist einmaliger Teil des Produktdiffs.
 Die unveränderten Runtimezeilen werden übernommen, nicht aus allen Definitionen
 rekonstruiert. Suche und Sortierung laufen ausschließlich im Browserspeicher.
 
@@ -548,15 +545,15 @@ Lesen der Base64-Vergrößerung der betroffenen Bildbytes; alte Journale werden 
 
 | Form | Exakte Felder |
 | --- | --- |
-| `picross-editor-change-plan-v2` | `format,action,id,entry,reads,changes,before,after,quality,plan_hash` |
+| `picross-puzzle-editor-plan-v1` | `format,action,id,entry,reads,changes,before,after,quality,plan_hash` |
 | `action` | `metadata`, `images` oder `raster`; Kategorienpflege ist metadata mit id/entry null. |
-| `entry` | Der ausgewählte unveränderte Inhaltsregistryeintrag, bei Kategorienpflege null. Er begrenzt technische Zielpfade, keine erneute Produktionsabnahme. |
+| `entry` | Der aus dem ausgewählten Record abgeleitete Identitätseintrag, bei Kategorienpflege null. Er begrenzt technische Zielpfade, keine erneute Produktionsabnahme. |
 | `reads` | Pfad → SHA-256 oder null für tatsächlich benötigte aktuelle Quellen/Abwesenheiten. Keine Namespace- oder Vollbestandsbindung. |
 | `changes` | Pfad → exakt `{old,new}`; jede Seite Base64 der tatsächlichen Bytes oder null. Nur unterschiedliche Seiten, ausschließlich tatsächliche Schreibmenge. |
 | `before,after` | Lesbare fachliche Vorschau der betroffenen Werte; keine zusätzliche Schreibautorität. |
 | `quality` | null ohne Logikänderung; sonst der tatsächlich erzeugte Rating-/Proofbefund mit `method,checked,proof,baseline,proof_data,baseline_data`. `proof` und gegebenenfalls `baseline` sind Byte-Refs `file,bytes,sha256`; die zugehörigen `*_data` enthalten die tatsächlich geprüften JSON-Belege. Ohne Paired-Profil sind beide Baselinefelder null. |
 | `plan_hash` | Kanonischer Hash aller anderen Planfelder. |
-| `picross-editor-change-journal-v2` | `format,action,id,entry,reads,changes,quality`; dieselben bereits vorbereiteten Quellen, Schreibseiten und gegebenenfalls Prüfbelege. |
+| `picross-puzzle-editor-journal-v1` | `format,action,id,entry,reads,changes,quality`; dieselben bereits vorbereiteten Quellen, Schreibseiten und gegebenenfalls Prüfbelege. |
 
 Ein Zielpfad muss aus den drei Indexpfaden oder der ausgewählten Entry-ID und
 ihren festen Definitions-/Bildstämmen herleitbar sein. Kategorienpflege
@@ -595,13 +592,8 @@ Die gemeinsamen Recoverydispatches erkennen diese Generation ausdrücklich.
 
 ### 13.3 Aktive Quellen
 
-Registry v5, Reveal v5 und Hintergrund v7 folgen exakt [RI](../production/PUZZLE_INTEGRATION.md).
-Die geschlossene Runtime v8 steht in [RI-ONE §2.1](../production/PUZZLE_INTEGRATION_SINGLE_PATH.md#21-geschlossene-aktuelle-runtimeprojektion).
-`binding` enthält nur `identity` mit Key, Slot, aktuellem Definitionsref und
-Runtime-Revision. Keine eingebettete Entry-Produktion, kein `origin`, kein
-Paket-/Receiptanker. Namen, Kategorien und expliziter Mono-/Color-Modus kommen
-aus der aktuellen Autorität. PNG/SVG und selected/none/standard bleiben erhalten;
-Bildrevisionen erhöhen nur die tatsächliche aktuelle Bildrevision.
+Der Rätselrecord enthält Name, Kategorie, Modus sowie Reveal- und Hintergrundentscheidung nach [RI-ONE §2](../production/PUZZLE_INTEGRATION_SINGLE_PATH.md#2-aktuelle-inhalte-als-einzige-bestandsautorität).
+Die Runtime v9 projiziert die Spielerwerte. Nur eine tatsächliche Bildänderung erhöht die betroffene Bildrevision.
 
 Der Editor führt keine automatische Migration aus. Runtime-/Rätselrevision,
 Slots, Bewertung und Datum bleiben bei Bild-/Metadatenpflege gleich. Rasteränderung

@@ -8,9 +8,8 @@ from .authoring_package import ID, STEM, require
 from .contract import canonical_bytes
 from . import operation_diagnostics as diagnostic
 
-REGISTRY, RUNTIME = current.REGISTRY, current.RUNTIME
-FORMAT = BACKGROUND_FORMAT = METADATA_FORMAT = current.FORMAT
-METADATA_RUNTIME_FORMAT = IMAGE_RUNTIME_FORMAT = current.RUNTIME_FORMAT
+RUNTIME = current.RUNTIME
+IMAGE_RUNTIME_FORMAT = current.RUNTIME_FORMAT
 ROOT = Path(__file__).resolve().parents[2]
 
 
@@ -24,43 +23,9 @@ def atomic_bytes(path, data):
         Path(name).unlink(missing_ok=True)
 
 
-def validate(registry, catalog):
-    return current.validate(registry, catalog)
-
-
-def validate_entries(entries, catalog=None):
-    return current.entries(entries, catalog)
-
-
 def validate_name(name):
     require(isinstance(name, str) and 1 <= len(name) <= 128 and name.strip(), "Invalid puzzle name")
     return name
-
-
-def require_current(registry):
-    require(isinstance(registry, dict) and registry.get("format") == FORMAT, "Current content authority required")
-
-
-def current_metadata(registry, catalog, root=None, *, definitions=None):
-    validate(registry, catalog)
-    return {row["id"]: deepcopy(row) for row in registry["metadata"]}
-
-
-def projection(registry, catalog, root=None, *, ratings=None, added=None, backgrounds=None, reveals=None, catalogs=None, version=None):
-    validate(registry, catalog)
-    require(version is None or version == 9, "Runtime v9 required")
-    if root is not None and all(v is None for v in (ratings, added, backgrounds, reveals, catalogs)):
-        rows = [current.runtime_row(current.selected(root, registry, e["id"])) for e in registry["entries"]]
-    else:
-        require(all(v is not None for v in (ratings, added, backgrounds, reveals, catalogs)), "Projection requires complete current data")
-        meta = {row["id"]: row for row in registry["metadata"]}
-        rows = [{**{k: e[k] for k in ("id", "key", "save_slot", "definition", "visible")},
-                 "catalog_reveal": catalogs[e["id"]], "reveal": reveals[e["id"]], "name": meta[e["id"]]["name"], "category_id": meta[e["id"]]["category_id"],
-                 "difficulty": catalog_rating.project(ratings[e["id"]]), "added_at": added[e["id"]]["added_at"],
-                 "background": backgrounds[e["id"]]} for e in registry["entries"]]
-    result = {"format": IMAGE_RUNTIME_FORMAT, "categories": categories.ordered(catalog), "entries": rows}
-    require(len(current.encoded(result)) <= current.RUNTIME_LIMIT, "Runtime exceeds byte limit")
-    return result
 
 
 @diagnostic.measured("Checkout validation", "checkout_validations")
@@ -69,28 +34,32 @@ def check_checkout(root, replay=False, *, check_projection=True, pending_journal
     lock = catalog_io.read(root, "content/.registration-pending.json", 128*1024*1024, missing=True)
     require(lock is None or lock == pending_journal, "Interrupted publication requires recovery")
     catalog = categories.load(root/categories.PATH)
-    registry = validate(catalog_io.json_bytes(catalog_io.read(root, REGISTRY, 8*1024*1024), 8*1024*1024), catalog)
-    result = projection(registry, catalog, root)
+    from . import puzzle_catalog, puzzle_record
+    ids = puzzle_record.inventory(root)
+    rows = []
+    for identifier in sorted(ids):
+        record = puzzle_record.load(root,identifier,category_catalog=catalog)
+        row = puzzle_record.runtime_row(record)
+        puzzle_catalog.delivery(lambda n,limit,missing=False: catalog_io.read(root,n,limit,missing=missing),
+                                identifier,catalog,row)
+        rows.append(row)
+    result = {"format":current.RUNTIME_FORMAT,"entries":rows,"categories":categories.ordered(catalog)}
+    puzzle_catalog.validate_runtime(result,catalog,ids)
     if check_projection:
-        require(catalog_io.read(root, RUNTIME, current.RUNTIME_LIMIT) == current.encoded(result), "Stale current runtime")
-    return {"status": "valid", "entries": len(registry["entries"]), "categories": len(catalog["categories"])}
+        require(catalog_io.read(root,RUNTIME,current.RUNTIME_LIMIT) == current.encoded(result),"Stale current runtime")
+    return {"status":"valid","entries":len(rows),"categories":len(catalog["categories"])}
 
 
-def check_detail(root, snapshot, identifier):
-    delivery = current.selected(root, snapshot["registry"], identifier)
-    runtime = catalog_io.json_bytes(snapshot["texts"][RUNTIME], current.RUNTIME_LIMIT)
-    require(next(e for e in runtime["entries"] if e["id"] == identifier) == current.runtime_row(delivery), "Stale selected runtime")
+def check_detail(root,snapshot,identifier):
+    from .current_registration import Snapshot
+    delivery = Snapshot(root,identifier).delivery
+    require(delivery is not None,"Unknown puzzle ID")
     return delivery
 
 
 def sync_runtime(root):
     from . import catalog_transaction as tx
-    snapshot = tx.capture(root, allow_stale=True)
-    catalog = catalog_io.json_bytes(snapshot["texts"][categories.PATH], categories.MAX_BYTES)
-    expected = current.encoded(projection(snapshot["registry"], catalog, root))
-    if snapshot["texts"][RUNTIME] != expected:
-        tx.execute(root, tx.prepare(root, snapshot, {}, operation="sync"))
-    return {"status": "projected", "entries": len(snapshot["registry"]["entries"]), "categories": len(catalog["categories"])}
+    return tx.sync_runtime(root)
 
 
 def registration(export_dir, root, *, apply=False, fail_step=None, publication_seconds=None, recovery_seconds=None):

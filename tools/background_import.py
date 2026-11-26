@@ -118,32 +118,29 @@ def source_inventory(root: Path) -> dict:
     game = root / "game"
     raw = (game / "data/registry.json").read_bytes()
     runtime = json.loads(raw)
-    registry = io.json_bytes(io.read(root, "content/registry.json", 8 * 1024 * 1024), 8 * 1024 * 1024)
-    background.source_paths(root, registry)
-    indexed = background.index(registry)
-    if registry["format"] != catalog.FORMAT or runtime["format"] != catalog.IMAGE_RUNTIME_FORMAT:
-        raise ValueError("Current background catalog/runtime required")
-    texts = {name: io.read(root, name, background.LIMIT, missing=True)
-             for name in background.text_names(registry)}
-    projected = background.projection(registry, texts)
-    sources = {identifier: io.json_bytes(texts[ref["file"]], background.LIMIT)
-               for identifier, ref in indexed.items()}
-    background.capability(root, required=any(row["status"] in ("selected", "none") for row in projected.values()))
+    from tools.puzzle_production import puzzle_record
+    identifiers = puzzle_record.inventory(root)
     entries = runtime["entries"]
-    if len(entries) != len(projected) or {e["id"] for e in entries} != set(projected):
+    if runtime.get("format") != catalog.IMAGE_RUNTIME_FORMAT or [e["id"] for e in entries] != sorted(identifiers):
         raise ValueError("Background runtime/source IDs differ")
+    background.capability(root,required=any(e["background"]["status"] in ("selected","none") for e in entries))
     assets = []
     for entry in entries:
         identifier = entry["id"]
-        expected = projected[identifier]
-        if entry.get("background") != expected:
-            raise ValueError("Background runtime projection is stale: " + identifier)
-        if expected["status"] != "selected":
+        record = puzzle_record.decode(io.read(root,puzzle_record.path(identifier),puzzle_record.LIMIT),identifier)
+        current = record["background"]
+        expected = dict(current)
+        if current["asset"] is not None:
+            ref = current["asset"]
+            if ref["file"] != "game/art/backgrounds/"+identifier+".png":
+                raise ValueError("Foreign background asset")
+            expected["asset"] = {**ref,"file":ref["file"].removeprefix("game/")}
+        if (set(current) != {"asset","status","image_revision"} or expected != entry["background"] or
+                current["status"] not in ("selected","standard","none") or
+                (current["status"] == "selected") != (current["asset"] is not None)):
+            raise ValueError("Background runtime projection differs: "+identifier)
+        if current["status"] != "selected":
             continue
-        # projection() already checked the compact source against its indexed hash
-        # and closed source schema. The notice is not repeated in runtime data.
-        source = sources[identifier]
-        active = background.current(source)
         # Current technical source; preserve any existing rights notice.
         notice_name = background.notice_path(identifier)
         notice_raw = io.read(root, notice_name, 65536, missing=True)

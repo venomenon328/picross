@@ -47,23 +47,3 @@ def manual_notice(prefix, provenance, declaration):
 def reveal_candidates(entry):
     stem = PurePosixPath("game/" + entry["reveal"]).with_suffix("")
     return {str(stem) + ".png", str(stem) + ".svg"}
-
-from . import current_content as current
-REVEAL_FORMAT=current.REVEAL
-BACKGROUND_FORMAT=current.BACKGROUND
-FORMATS=(REVEAL_FORMAT,BACKGROUND_FORMAT)
-LIMIT=1024*1024
-IMAGE_LIMIT=32*1024*1024
-
-def is_editor(value):
-    return isinstance(value,dict) and value.get("format") in FORMATS
-
-def validate(value,catalog=None):
-    return current.validate_source(value)
-
-def validate_binding(value,identifier):
-    return current.validate_binding(value,identifier)
-
-def reveal_path(entry,record):
-    current.validate_source(record,entry)
-    return record["current"]["asset"]["file"].removeprefix("game/")

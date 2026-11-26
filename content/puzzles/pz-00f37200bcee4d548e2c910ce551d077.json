@@ -1,0 +1,213 @@
+{
+  "added": {
+    "added_at": "2026-10-23T21:06:01Z",
+    "provenance": {
+      "commit": null,
+      "evidence": null,
+      "kind": "registration",
+      "reason": "Successful first playable registration in the shared transaction.",
+      "reference_time": "2026-10-23T21:06:01Z"
+    }
+  },
+  "background": {
+    "asset": {
+      "bytes": 878304,
+      "file": "game/art/backgrounds/pz-00f37200bcee4d548e2c910ce551d077.png",
+      "sha256": "92924cc3e6921a7b53c58d927a4466ec2a0caab4d38f1ed6d09e10478861ffdc"
+    },
+    "image_revision": 3,
+    "status": "selected"
+  },
+  "category_id": "obst-nuesse",
+  "definition": {
+    "bytes": 7191,
+    "file": "game/data/content/drachenfrucht_001.json",
+    "sha256": "16a02e1c6236eec15e8dd9ecb1d5ab9617ae2276d9990888028d42af90d14897"
+  },
+  "difficulty": {
+    "compact_analysis": {
+      "analysis_hash": "6a10b2573116c926fe11aa7e6b102196d8ebddc734b129ac0293e4cd9b34c33a",
+      "deduction_complete": true,
+      "line_analysis_complete": true,
+      "line_fixpoint_confirmed": true,
+      "new_singletons": 528,
+      "profiles_hash": "b4ef2e54da2db5abe13eb239a69817ea0009a8df89cbf1e974e0e8993457edc2",
+      "r4": null,
+      "reason": null,
+      "result_hash": "bf2d3c0819ea4bf6efe9b59f5e4cc1305a1d4b1cb328f3c4ba81e5c72ef139ef",
+      "status": "solved",
+      "structure": {
+        "adjacent_color_changes": 193,
+        "cells": 528,
+        "clue_length_histogram": {
+          "1": 89,
+          "10": 1,
+          "11": 1,
+          "12": 4,
+          "13": 1,
+          "14": 1,
+          "2": 55,
+          "3": 36,
+          "4": 16,
+          "5": 8,
+          "6": 12,
+          "7": 9,
+          "8": 6,
+          "9": 2
+        },
+        "colors": 4,
+        "geometric_slack": 346,
+        "height": 24,
+        "mandatory_gaps": 2,
+        "short_blocks": 144,
+        "total_clue_length": 708,
+        "total_clues": 241,
+        "width": 22
+      },
+      "trace_hash": "7f39a7d54035fadbd063899d73fc4943d774f2d1c05c0ffe3b3889b91ec18f6d",
+      "wave_count": 11
+    },
+    "logic_binding": {
+      "matrix_hash": "1539995ae3cb00c9f35e54ac0f33a6d5c9a05335e51e86bff4974bcd6a6aad69"
+    },
+    "rating": {
+      "analysis_result_hash": "bf2d3c0819ea4bf6efe9b59f5e4cc1305a1d4b1cb328f3c4ba81e5c72ef139ef",
+      "format": "picross-catalog-sd2-rating-v1",
+      "method": "picross-difficulty-0.4",
+      "method_hash": "5508f0742aa858a6adc31aa621433e68298b915fb0fd6b8d9e74e576ba87caaf",
+      "rating_hash": "df515f6ebf4e375d4ec5f060b5e2bef831a3cdabebf8f194d2692cddae96f8cf",
+      "result": {
+        "analysis_result_hash": "bf2d3c0819ea4bf6efe9b59f5e4cc1305a1d4b1cb328f3c4ba81e5c72ef139ef",
+        "assessment": {
+          "boundaries": {
+            "distance_lower": [
+              103349,
+              150738
+            ],
+            "distance_upper": [
+              47389,
+              150738
+            ],
+            "lower": [
+              2,
+              1
+            ],
+            "nearest_distance": [
+              47389,
+              150738
+            ],
+            "upper": [
+              3,
+              1
+            ]
+          },
+          "contributions": {
+            "demand": [
+              181,
+              84
+            ],
+            "search": [
+              1008,
+              3589
+            ],
+            "workload": [
+              1,
+              4
+            ]
+          },
+          "level": 3,
+          "level_without_workload": 3,
+          "score": [
+            404825,
+            150738
+          ],
+          "signals": {
+            "context": [
+              13,
+              21
+            ],
+            "fluent": false,
+            "highest_family": "E2",
+            "longest_narrow_run": 0,
+            "narrow_waves": 0,
+            "peak_search": [
+              1008,
+              3589
+            ],
+            "raw_workload": [
+              1,
+              4
+            ],
+            "spans": 307,
+            "workload_ceiling": 3,
+            "workload_guard": "none"
+          },
+          "without_workload": [
+            734281,
+            301476
+          ]
+        },
+        "confidence": "medium",
+        "estimated_minutes": null,
+        "explanation": "Model estimate from synthetic references; no human calibration or time estimate. Demand, search and bounded workload use independently checked line profiles.",
+        "format": "picross-sd2-rating-v1",
+        "method": "picross-difficulty-0.4",
+        "method_hash": "5508f0742aa858a6adc31aa621433e68298b915fb0fd6b8d9e74e576ba87caaf",
+        "profile_scope": "complete_line",
+        "reason": "complete_line",
+        "status": "rated"
+      },
+      "source": {
+        "bytes": 7191,
+        "definition_id": "pz-00f37200bcee4d548e2c910ce551d077",
+        "engine_logic_hash": "d03bba05e425fac74cd8235d99a3df2d35e86e81edba8273e117b6e0bfe01ce9",
+        "kind": "runtime",
+        "production_mode": "unknown",
+        "runtime_revision": 1,
+        "sha256": "16a02e1c6236eec15e8dd9ecb1d5ab9617ae2276d9990888028d42af90d14897"
+      }
+    },
+    "rating_revision": 2
+  },
+  "format": "picross-puzzle-record-v1",
+  "id": "pz-00f37200bcee4d548e2c910ce551d077",
+  "mode": "color",
+  "name": "Drachenfrucht",
+  "reveal": {
+    "asset": {
+      "bytes": 2049368,
+      "file": "game/art/content/drachenfrucht_001.png",
+      "sha256": "5c0b9e57e2a66edfcdd223d72718383c62b205766eb59247bac0a290aaa81070"
+    },
+    "catalog": {
+      "generator": "picross-catalog-reveal-1",
+      "profiles": [
+        {
+          "asset": {
+            "bytes": 25634,
+            "file": "game/art/catalog/pz-00f37200bcee4d548e2c910ce551d077-ui100.png",
+            "sha256": "9030bc706cfaa49bf275da82b38ccc4724595292ac028e952be6797d02995b6c"
+          },
+          "height": 112,
+          "profile": "catalog-ui100-v1",
+          "width": 112
+        },
+        {
+          "asset": {
+            "bytes": 37439,
+            "file": "game/art/catalog/pz-00f37200bcee4d548e2c910ce551d077-ui125.png",
+            "sha256": "91337b045e9441ab1eba274a3ba869e6af2838f94cff01846324e6e4e259dc21"
+          },
+          "height": 140,
+          "profile": "catalog-ui125-v1",
+          "width": 140
+        }
+      ],
+      "source_height": 1254,
+      "source_width": 1254
+    },
+    "image_revision": 1
+  },
+  "save_slot": "drachenfrucht_001",
+  "visible": true
+}

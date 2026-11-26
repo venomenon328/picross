@@ -1,0 +1,206 @@
+{
+  "added": {
+    "added_at": "2026-10-15T12:17:55Z",
+    "provenance": {
+      "commit": "4efc96098c45d961a4d966b25722d38392f7434f",
+      "evidence": {
+        "path": "content/added/reports/ku-b-initial.json",
+        "sha256": "e6d7a01e740adbc40cdc90e64c733f95907c8924cfe1f0a4bb734bb7bc6b7884"
+      },
+      "kind": "git-snapshot",
+      "reason": "No direct UTC first-registration receipt found in reviewed sources; earliest verified visible integrated catalog snapshot including bound PR history. Commit UTC is a reconstructed reference, not tool execution time.",
+      "reference_time": "2026-10-15T12:17:55Z"
+    }
+  },
+  "background": {
+    "asset": {
+      "bytes": 550365,
+      "file": "game/art/backgrounds/pz-d7e68d1138a3448c8b2a4b07e8632350.png",
+      "sha256": "a106df27b4f86bfe750464d5446017cb24f0462d361132c325a8aec4055a7ffc"
+    },
+    "image_revision": 2,
+    "status": "selected"
+  },
+  "category_id": "blumen-pflanzen",
+  "definition": {
+    "bytes": 11221,
+    "file": "game/data/content/rote_nelke_001.json",
+    "sha256": "f54a0ec597198a25a77677d0cde321bea69ad1ecaff934ad0b9236edd82b2556"
+  },
+  "difficulty": {
+    "compact_analysis": {
+      "analysis_hash": "a56feabb45b22ab986319348c3a2afa7ed7a07affa3ca25eee3a72c960692fc7",
+      "deduction_complete": true,
+      "line_analysis_complete": true,
+      "line_fixpoint_confirmed": true,
+      "new_singletons": 960,
+      "profiles_hash": "9938bdca387afb46de3efd744f671cfd20945b8c2566a128dcd7b64f7a0c484e",
+      "r4": null,
+      "reason": null,
+      "result_hash": "f29363e7a4a96deac7cb259dd2cc4116a4cc53da4209507cf816ef76a2ca8cc5",
+      "status": "solved",
+      "structure": {
+        "adjacent_color_changes": 301,
+        "cells": 960,
+        "clue_length_histogram": {
+          "1": 175,
+          "10": 2,
+          "11": 1,
+          "2": 104,
+          "3": 47,
+          "4": 24,
+          "5": 12,
+          "6": 10,
+          "7": 1,
+          "8": 1
+        },
+        "colors": 4,
+        "geometric_slack": 1119,
+        "height": 32,
+        "mandatory_gaps": 15,
+        "short_blocks": 279,
+        "total_clue_length": 786,
+        "total_clues": 377,
+        "width": 30
+      },
+      "trace_hash": "8a765d0d7ad0a1808ebc6032894a643e400f3f2e9fa0b3725a67a5e29af6c847",
+      "wave_count": 53
+    },
+    "logic_binding": {
+      "matrix_hash": "9ccf298b218a59faaab43eebe9b5dfdcaca84dca3bb4ee5587d13c148778b276"
+    },
+    "rating": {
+      "analysis_result_hash": "f29363e7a4a96deac7cb259dd2cc4116a4cc53da4209507cf816ef76a2ca8cc5",
+      "format": "picross-catalog-sd2-rating-v1",
+      "method": "picross-difficulty-0.4",
+      "method_hash": "5508f0742aa858a6adc31aa621433e68298b915fb0fd6b8d9e74e576ba87caaf",
+      "rating_hash": "f852c70666d264e11f20d4cace3ca379f0e161d030b9e921a8bd03366e3811ad",
+      "result": {
+        "analysis_result_hash": "f29363e7a4a96deac7cb259dd2cc4116a4cc53da4209507cf816ef76a2ca8cc5",
+        "assessment": {
+          "boundaries": {
+            "distance_lower": [
+              12682,
+              19725
+            ],
+            "distance_upper": null,
+            "lower": [
+              4,
+              1
+            ],
+            "nearest_distance": [
+              12682,
+              19725
+            ],
+            "upper": null
+          },
+          "contributions": {
+            "demand": [
+              19,
+              6
+            ],
+            "search": [
+              32251,
+              26300
+            ],
+            "workload": [
+              1,
+              4
+            ]
+          },
+          "level": 5,
+          "level_without_workload": 5,
+          "score": [
+            91582,
+            19725
+          ],
+          "signals": {
+            "context": [
+              2,
+              3
+            ],
+            "fluent": false,
+            "highest_family": "E3",
+            "longest_narrow_run": 8,
+            "narrow_waves": 23,
+            "peak_search": [
+              6419,
+              6575
+            ],
+            "raw_workload": [
+              1,
+              4
+            ],
+            "spans": 511,
+            "workload_ceiling": 5,
+            "workload_guard": "none"
+          },
+          "without_workload": [
+            346603,
+            78900
+          ]
+        },
+        "confidence": "medium",
+        "estimated_minutes": null,
+        "explanation": "Model estimate from synthetic references; no human calibration or time estimate. Demand, search and bounded workload use independently checked line profiles.",
+        "format": "picross-sd2-rating-v1",
+        "method": "picross-difficulty-0.4",
+        "method_hash": "5508f0742aa858a6adc31aa621433e68298b915fb0fd6b8d9e74e576ba87caaf",
+        "profile_scope": "complete_line",
+        "reason": "complete_line",
+        "status": "rated"
+      },
+      "source": {
+        "bytes": 11221,
+        "definition_id": "pz-d7e68d1138a3448c8b2a4b07e8632350",
+        "engine_logic_hash": "68a9aab34d32f3647c57e064a4a2639333da38aca832513d00c2c90f13118265",
+        "kind": "runtime",
+        "production_mode": "unknown",
+        "runtime_revision": 1,
+        "sha256": "f54a0ec597198a25a77677d0cde321bea69ad1ecaff934ad0b9236edd82b2556"
+      }
+    },
+    "rating_revision": 2
+  },
+  "format": "picross-puzzle-record-v1",
+  "id": "pz-d7e68d1138a3448c8b2a4b07e8632350",
+  "mode": "color",
+  "name": "Rote Nelke",
+  "reveal": {
+    "asset": {
+      "bytes": 1349321,
+      "file": "game/art/content/rote_nelke_001.png",
+      "sha256": "c30cc030c4b4621ccedb3a5fff9b00be1fc07a54f03b35cf3d4de0e494a29232"
+    },
+    "catalog": {
+      "generator": "picross-catalog-reveal-1",
+      "profiles": [
+        {
+          "asset": {
+            "bytes": 18401,
+            "file": "game/art/catalog/pz-d7e68d1138a3448c8b2a4b07e8632350-ui100.png",
+            "sha256": "7285e693897bc211c29918f57b306e98125c11a02ae59694c0a9951331e74ff9"
+          },
+          "height": 112,
+          "profile": "catalog-ui100-v1",
+          "width": 112
+        },
+        {
+          "asset": {
+            "bytes": 26890,
+            "file": "game/art/catalog/pz-d7e68d1138a3448c8b2a4b07e8632350-ui125.png",
+            "sha256": "cc9ce0a4a5cbc48eed7df51fac71eaf5341125d0faf248cb66e0f31d2403398a"
+          },
+          "height": 140,
+          "profile": "catalog-ui125-v1",
+          "width": 140
+        }
+      ],
+      "source_height": 1254,
+      "source_width": 1254
+    },
+    "image_revision": 1
+  },
+  "save_slot": "rote_nelke_001",
+  "visible": true
+}

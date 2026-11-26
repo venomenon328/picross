@@ -761,7 +761,7 @@ except BuildError:
         merged = fixtures.git(root,'commit-tree',tree,'-p',self.main,'-p',imported,'-m','import')
         with self.assertRaises(subprocess.CalledProcessError):
             guard.check_range(root,merged,[self.main])
-        fixtures.git(root,'mv','content/registry.json','content/authoring/output.json')
+        fixtures.git(root,'mv','content/puzzles/pz-test.json','content/authoring/output.json')
         fixtures.git(root,'commit','-qm','rename to a working output')
         head = fixtures.git(root,'rev-parse','HEAD')
         with self.assertRaisesRegex(ValueError,'production working file'):

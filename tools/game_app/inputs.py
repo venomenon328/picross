@@ -22,7 +22,7 @@ COMMON = {
 BACKGROUND = {
     '__init__', 'analysis_contract', 'analysis_io', 'authoring_package', 'background_contract', 'catalog_added',
     'catalog_background', 'catalog_io', 'catalog_method', 'catalog_rating',
-    'categories', 'content_registry', 'contract', 'current_content', 'difficulty_identity',
+    'puzzle_record', 'current_rating', 'categories', 'content_registry', 'contract', 'current_content', 'difficulty_identity',
     'difficulty_rating', 'operation_diagnostics',
 }
 GAME_APP = {
@@ -57,9 +57,9 @@ def runtime(path):
 
 
 def selected(path):
-    return (path in TOOLS or path in LICENSES or path in {'game/README.md', 'content/registry.json'}
+    return (path in TOOLS or path in LICENSES or path in {'game/README.md'}
             or runtime(path)
-            or re.fullmatch(r'content/backgrounds/pz-[a-z0-9][a-z0-9-]{0,59}\.json', path) is not None
+            or re.fullmatch(r'content/puzzles/pz-[a-z0-9][a-z0-9-]{0,59}\.json', path) is not None
             or path.removeprefix('tools/game_app/') in GAME_APP
             or path.removeprefix('tools/production_workspace/') in COMMON
             or (path.startswith('tools/production_workspace/licenses/') and Path(path).suffix == '.txt')

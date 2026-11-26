@@ -1,0 +1,213 @@
+{
+  "added": {
+    "added_at": "2026-11-21T18:39:38Z",
+    "provenance": {
+      "commit": null,
+      "evidence": null,
+      "kind": "registration",
+      "reason": "Successful first playable registration in the shared transaction.",
+      "reference_time": "2026-11-21T18:39:38Z"
+    }
+  },
+  "background": {
+    "asset": {
+      "bytes": 385369,
+      "file": "game/art/backgrounds/pz-shiitake.png",
+      "sha256": "d816aa682c52c8c9b6617f0cb213b7fa8b76be2fa8a4e7dad5ea9e636cde8880"
+    },
+    "image_revision": 1,
+    "status": "selected"
+  },
+  "category_id": "gemuese-pilze-kraeuter",
+  "definition": {
+    "bytes": 2471,
+    "file": "game/data/content/pz-shiitake.json",
+    "sha256": "1cc512ca64977822df921e3635e8953295fda3a31c77a6ffc67ce599e9c7ac68"
+  },
+  "difficulty": {
+    "compact_analysis": {
+      "analysis_hash": "d2ec710b7bf6f1feeb19a052062c28017409b060dfc087e738f71d7ef1af0e19",
+      "deduction_complete": true,
+      "line_analysis_complete": true,
+      "line_fixpoint_confirmed": true,
+      "new_singletons": 352,
+      "profiles_hash": "e40726e69906ed763190f6be0246a44c37644a20581d71d8386b6b6c5d998756",
+      "r4": null,
+      "reason": null,
+      "result_hash": "c822a861b0e1c3f140beced10f773eaa1b4db180ff9db5caa493acc034569025",
+      "status": "solved",
+      "structure": {
+        "adjacent_color_changes": 0,
+        "cells": 352,
+        "clue_length_histogram": {
+          "1": 7,
+          "10": 2,
+          "13": 2,
+          "14": 3,
+          "15": 1,
+          "16": 1,
+          "2": 14,
+          "3": 10,
+          "4": 9,
+          "5": 4,
+          "6": 4,
+          "7": 1,
+          "8": 1,
+          "9": 1
+        },
+        "colors": 1,
+        "geometric_slack": 392,
+        "height": 16,
+        "mandatory_gaps": 24,
+        "short_blocks": 21,
+        "total_clue_length": 288,
+        "total_clues": 60,
+        "width": 22
+      },
+      "trace_hash": "59c0d92d405cdac510365abb8e12623f73cc84d0c3e5c5685825c5d64b989d2e",
+      "wave_count": 15
+    },
+    "logic_binding": {
+      "matrix_hash": "a25a5cf7958bfad9543b1c662d2f19b5cc1c56bb78f5ae63dbd3ec2af98570a4"
+    },
+    "rating": {
+      "analysis_result_hash": "c822a861b0e1c3f140beced10f773eaa1b4db180ff9db5caa493acc034569025",
+      "format": "picross-catalog-sd2-rating-v1",
+      "method": "picross-difficulty-0.4",
+      "method_hash": "5508f0742aa858a6adc31aa621433e68298b915fb0fd6b8d9e74e576ba87caaf",
+      "rating_hash": "26c1463f3be97cc09361b3e7705267d4130fc68892c31000349b34e937469280",
+      "result": {
+        "analysis_result_hash": "c822a861b0e1c3f140beced10f773eaa1b4db180ff9db5caa493acc034569025",
+        "assessment": {
+          "boundaries": {
+            "distance_lower": [
+              1873,
+              2160
+            ],
+            "distance_upper": [
+              287,
+              2160
+            ],
+            "lower": [
+              1,
+              1
+            ],
+            "nearest_distance": [
+              287,
+              2160
+            ],
+            "upper": [
+              2,
+              1
+            ]
+          },
+          "contributions": {
+            "demand": [
+              1,
+              1
+            ],
+            "search": [
+              299,
+              432
+            ],
+            "workload": [
+              7,
+              40
+            ]
+          },
+          "level": 2,
+          "level_without_workload": 2,
+          "score": [
+            4033,
+            2160
+          ],
+          "signals": {
+            "context": [
+              0,
+              1
+            ],
+            "fluent": false,
+            "highest_family": "E1",
+            "longest_narrow_run": 1,
+            "narrow_waves": 1,
+            "peak_search": [
+              17,
+              27
+            ],
+            "raw_workload": [
+              7,
+              40
+            ],
+            "spans": 152,
+            "workload_ceiling": 3,
+            "workload_guard": "none"
+          },
+          "without_workload": [
+            731,
+            432
+          ]
+        },
+        "confidence": "medium",
+        "estimated_minutes": null,
+        "explanation": "Model estimate from synthetic references; no human calibration or time estimate. Demand, search and bounded workload use independently checked line profiles.",
+        "format": "picross-sd2-rating-v1",
+        "method": "picross-difficulty-0.4",
+        "method_hash": "5508f0742aa858a6adc31aa621433e68298b915fb0fd6b8d9e74e576ba87caaf",
+        "profile_scope": "complete_line",
+        "reason": "complete_line",
+        "status": "rated"
+      },
+      "source": {
+        "bytes": 2471,
+        "definition_id": "pz-shiitake",
+        "engine_logic_hash": "6b920c4f83ecfa59eab85ba19a418a0a10ff02a5cd6c9b05db3e376bad5805fd",
+        "kind": "runtime",
+        "production_mode": "unknown",
+        "runtime_revision": 2,
+        "sha256": "1cc512ca64977822df921e3635e8953295fda3a31c77a6ffc67ce599e9c7ac68"
+      }
+    },
+    "rating_revision": 1
+  },
+  "format": "picross-puzzle-record-v1",
+  "id": "pz-shiitake",
+  "mode": "mono",
+  "name": "Shiitake",
+  "reveal": {
+    "asset": {
+      "bytes": 2147840,
+      "file": "game/art/content/pz-shiitake.png",
+      "sha256": "cb9b3925d6764a611515b7785c2d9a426e53e6089dfef9d0185d3cc3f66b7746"
+    },
+    "catalog": {
+      "generator": "picross-catalog-reveal-1",
+      "profiles": [
+        {
+          "asset": {
+            "bytes": 26151,
+            "file": "game/art/catalog/pz-shiitake-ui100.png",
+            "sha256": "0e14b1029b3aa124057f58a10785f280c4e28b4a76ad886da1a686ef85e251a8"
+          },
+          "height": 112,
+          "profile": "catalog-ui100-v1",
+          "width": 150
+        },
+        {
+          "asset": {
+            "bytes": 39220,
+            "file": "game/art/catalog/pz-shiitake-ui125.png",
+            "sha256": "1df47e9fd99f7442a9d8617e870a3a264a5766bf4b935c33e5343877a7b601fa"
+          },
+          "height": 140,
+          "profile": "catalog-ui125-v1",
+          "width": 187
+        }
+      ],
+      "source_height": 1086,
+      "source_width": 1448
+    },
+    "image_revision": 1
+  },
+  "save_slot": "pz-shiitake",
+  "visible": true
+}

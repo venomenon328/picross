@@ -1,0 +1,228 @@
+{
+  "added": {
+    "added_at": "2026-10-22T22:35:57Z",
+    "provenance": {
+      "commit": null,
+      "evidence": null,
+      "kind": "registration",
+      "reason": "Successful first playable registration in the shared transaction.",
+      "reference_time": "2026-10-22T22:35:57Z"
+    }
+  },
+  "background": {
+    "asset": {
+      "bytes": 574379,
+      "file": "game/art/backgrounds/pz-b180c25084a34b019f35ad2244f03c24.png",
+      "sha256": "5e09ca89283c097d24e40d0de3c20111eb4f2f5d7815b98ddd1dab17f7ddf89d"
+    },
+    "image_revision": 2,
+    "status": "selected"
+  },
+  "category_id": "menschen-berufe",
+  "definition": {
+    "bytes": 16475,
+    "file": "game/data/content/jose_rizal_001.json",
+    "sha256": "2006da0fe28a5cd75cb116b9b9a768cad0d690932e55ca76a81156703004778d"
+  },
+  "difficulty": {
+    "compact_analysis": {
+      "analysis_hash": "2105d8324878693a9fd9e9d6cb35d2cf117fb6570c3229d59427cebc805f3af6",
+      "deduction_complete": true,
+      "line_analysis_complete": true,
+      "line_fixpoint_confirmed": true,
+      "new_singletons": 2112,
+      "profiles_hash": "c16ef544b64139c134455facd9271118e8f027efb86f6dffca9bbc1f9a86e0a9",
+      "r4": null,
+      "reason": null,
+      "result_hash": "d252801d5e5c66f4f38c3934ad55deac8a3d15c46e27d36ba4cccadef975458d",
+      "status": "solved",
+      "structure": {
+        "adjacent_color_changes": 403,
+        "cells": 2112,
+        "clue_length_histogram": {
+          "1": 219,
+          "10": 6,
+          "11": 8,
+          "12": 8,
+          "13": 5,
+          "14": 8,
+          "16": 10,
+          "17": 3,
+          "18": 6,
+          "19": 4,
+          "2": 62,
+          "20": 3,
+          "21": 1,
+          "22": 6,
+          "23": 1,
+          "28": 1,
+          "3": 40,
+          "31": 1,
+          "34": 1,
+          "35": 1,
+          "36": 1,
+          "38": 1,
+          "39": 2,
+          "4": 29,
+          "5": 21,
+          "6": 16,
+          "7": 14,
+          "8": 6,
+          "9": 14
+        },
+        "colors": 4,
+        "geometric_slack": 1836,
+        "height": 48,
+        "mandatory_gaps": 4,
+        "short_blocks": 281,
+        "total_clue_length": 2384,
+        "total_clues": 498,
+        "width": 44
+      },
+      "trace_hash": "09c76911f97448a74946139a1da39107388bc4be63a66a28ad596745af20fa8a",
+      "wave_count": 28
+    },
+    "logic_binding": {
+      "matrix_hash": "2b51f166f2a9068be81ac1479cf9aff5ce385828af14e496b2f424f72d62c403"
+    },
+    "rating": {
+      "analysis_result_hash": "d252801d5e5c66f4f38c3934ad55deac8a3d15c46e27d36ba4cccadef975458d",
+      "format": "picross-catalog-sd2-rating-v1",
+      "method": "picross-difficulty-0.4",
+      "method_hash": "5508f0742aa858a6adc31aa621433e68298b915fb0fd6b8d9e74e576ba87caaf",
+      "rating_hash": "c4afc491824d0f4beb12b1b7d243bfd6cd67c47d9028b53ae6e17ac567a90db7",
+      "result": {
+        "analysis_result_hash": "d252801d5e5c66f4f38c3934ad55deac8a3d15c46e27d36ba4cccadef975458d",
+        "assessment": {
+          "boundaries": {
+            "distance_lower": [
+              1099653,
+              2437856
+            ],
+            "distance_upper": [
+              1338203,
+              2437856
+            ],
+            "lower": [
+              3,
+              1
+            ],
+            "nearest_distance": [
+              1099653,
+              2437856
+            ],
+            "upper": [
+              4,
+              1
+            ]
+          },
+          "contributions": {
+            "demand": [
+              319,
+              148
+            ],
+            "search": [
+              68897,
+              65888
+            ],
+            "workload": [
+              1,
+              4
+            ]
+          },
+          "level": 4,
+          "level_without_workload": 4,
+          "score": [
+            8413221,
+            2437856
+          ],
+          "signals": {
+            "context": [
+              23,
+              37
+            ],
+            "fluent": false,
+            "highest_family": "E2",
+            "longest_narrow_run": 1,
+            "narrow_waves": 2,
+            "peak_search": [
+              1960,
+              2059
+            ],
+            "raw_workload": [
+              1,
+              4
+            ],
+            "spans": 903,
+            "workload_ceiling": 4,
+            "workload_guard": "none"
+          },
+          "without_workload": [
+            7803757,
+            2437856
+          ]
+        },
+        "confidence": "medium",
+        "estimated_minutes": null,
+        "explanation": "Model estimate from synthetic references; no human calibration or time estimate. Demand, search and bounded workload use independently checked line profiles.",
+        "format": "picross-sd2-rating-v1",
+        "method": "picross-difficulty-0.4",
+        "method_hash": "5508f0742aa858a6adc31aa621433e68298b915fb0fd6b8d9e74e576ba87caaf",
+        "profile_scope": "complete_line",
+        "reason": "complete_line",
+        "status": "rated"
+      },
+      "source": {
+        "bytes": 16475,
+        "definition_id": "pz-b180c25084a34b019f35ad2244f03c24",
+        "engine_logic_hash": "8b2055f85b483c818127a5a8b21327263f10516c9febf11c9ae722e496876de5",
+        "kind": "runtime",
+        "production_mode": "unknown",
+        "runtime_revision": 1,
+        "sha256": "2006da0fe28a5cd75cb116b9b9a768cad0d690932e55ca76a81156703004778d"
+      }
+    },
+    "rating_revision": 2
+  },
+  "format": "picross-puzzle-record-v1",
+  "id": "pz-b180c25084a34b019f35ad2244f03c24",
+  "mode": "color",
+  "name": "José Rizal",
+  "reveal": {
+    "asset": {
+      "bytes": 2017899,
+      "file": "game/art/content/jose_rizal_001.png",
+      "sha256": "ca042226c76c485abd2e89aae1fed574787e393a5faf69e058bd3fca223f911d"
+    },
+    "catalog": {
+      "generator": "picross-catalog-reveal-1",
+      "profiles": [
+        {
+          "asset": {
+            "bytes": 19136,
+            "file": "game/art/catalog/pz-b180c25084a34b019f35ad2244f03c24-ui100.png",
+            "sha256": "675073ae63f221bedf05f65686601c71ba57f3f72c97021bf66d4231e2711176"
+          },
+          "height": 112,
+          "profile": "catalog-ui100-v1",
+          "width": 103
+        },
+        {
+          "asset": {
+            "bytes": 27886,
+            "file": "game/art/catalog/pz-b180c25084a34b019f35ad2244f03c24-ui125.png",
+            "sha256": "e16effad4ac73217f9540bfb23f362769a49538f6d19f47f37786b6c044354d4"
+          },
+          "height": 140,
+          "profile": "catalog-ui125-v1",
+          "width": 128
+        }
+      ],
+      "source_height": 1312,
+      "source_width": 1199
+    },
+    "image_revision": 1
+  },
+  "save_slot": "jose_rizal_001",
+  "visible": true
+}
