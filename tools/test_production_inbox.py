@@ -45,7 +45,7 @@ class InboxTests(unittest.TestCase):
         job['assets'].append({'id': 'one', 'role': 'reveal', 'label': 'Original', 'file': ref, 'review': {}, 'rights': None})
         self.order = {'request_id': str(uuid4()), 'puzzle_id': job['puzzle_id'], 'phase': 'reveal', 'intent': 'offer',
                       'source': {'main_commit': job['source_commit'], 'work_head': None, 'record_sha256': None},
-                      'limits': job['budgets']['limits'], 'brief': job['brief'], 'test_only': True,
+                      'limits': deepcopy(job['budgets']['limits']), 'brief': job['brief'], 'test_only': True,
                       'step': 'scan', 'files': {}, 'status': ''}
         self.value = {'format': contract.FORMAT, 'repository': contract.REPOSITORY, 'delivery_id': delivery,
                       **{k: self.order[k] for k in ('request_id','puzzle_id','phase','source')},
@@ -56,6 +56,40 @@ class InboxTests(unittest.TestCase):
 
     def deliver(self):
         (self.folder / self.manifest).write_bytes(current.encoded(self.value))
+
+    def test_first_incomplete_offer_records_exhausted_budget(self):
+        from tests.puzzle_production.current_fixtures import checkout
+        from tests.puzzle_production.test_current_authoring import judgment
+
+        root = checkout(self.root / 'checkout')
+        subprocess.run(['git', 'init', '-q', str(root)], check=True)
+        request = self.value['request']
+        request['record']['budgets']['used']['image_corrections'] = 2
+        request['record']['assets'][0].update(
+            rights=dict.fromkeys(('author', 'usage_basis', 'source', 'changes'), 'Synthetic test'),
+            review=judgment(current.CRITERIA['reveal']))
+        self.inbox.save()
+        self.deliver()
+        (self.folder / self.filename).write_bytes(self.png)
+
+        resumed = Inbox(self.service)
+        order = resumed.data['orders']['pz-current']
+        self.assertEqual(order['source'], self.order['source'])
+        received = resumed.receive(order, self.folder)['request']
+        contract.delta(order, received, None)
+        built = current.build(received, resumed.stage(order), root)
+
+        stored = current.validate(json.loads((root / built['record']).read_bytes()))
+        self.assertEqual(stored['budgets'], request['record']['budgets'])
+        self.assertEqual(stored['state'], 'reveal_review')
+        self.assertIsNone(stored['selected']['reveal'])
+        self.assertEqual(stored['decisions'], [])
+        original, = stored['assets']
+        self.assertEqual((root / original['file']['file']).read_bytes(), self.png)
+        fact, = stored['qualification']['facts'].values()
+        self.assertEqual((fact['mime'], fact['missing']), ('image/png', []))
+        self.assertTrue(current.Checked(stored, lambda name, limit: contract.io.read(root, name, limit))
+                        .qualified(original['id']))
 
     def test_arrival_restart_and_exact_snapshot(self):
         self.deliver()
@@ -431,7 +465,63 @@ class InboxTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             contract.delta(self.order, request, None)
 
-    def test_role_scoped_assessment_and_correction(self):
+    def test_waiting_order_keeps_source_binding_after_budget_contract_update(self):
+        from contextlib import nullcontext
+        from tools.production_workspace import inbox_writer as writer
+
+        request = self.value['request']
+        request['record']['budgets']['used']['image_corrections'] = 2
+        source = deepcopy(self.order['source'])
+        main = 'b' * 40
+        self.deliver()
+        (self.folder / self.filename).write_bytes(self.png)
+        received = self.inbox.receive(self.order, self.folder)['request']
+        self.inbox.writer.root.mkdir()
+
+        with patch.object(writer.publisher, 'publisher_auth', return_value=nullcontext()), \
+             patch.object(writer.ws, 'store_for', return_value=(None, self.root)), \
+             patch.object(writer.ws, 'prepare', return_value={'job': self.root}), \
+             patch.object(writer.git, 'remote_head', side_effect=[main, None] * 4), \
+             patch.object(writer.git, 'git') as git, patch.object(writer, 'GitSource') as git_source, \
+             patch.object(writer.deliveries, 'registered_ids', return_value=set()), \
+             patch.object(current, 'build', side_effect=ValueError('builder reached')) as build:
+            git_source.return_value.read.return_value = None
+            clarified = (b':100644 100644 4573b0d872443737f771261ec2305bef2ef00fcc '
+                         b'8fe7dd048b1dc5b318c41bc3714852f26ac3e158 M\0docs/tools/PW_IMPORT.md\0')
+            for rules in (clarified.replace(b'100644 100644', b'100644 100755'),
+                          clarified + clarified.replace(b'docs/tools/PW_IMPORT.md', b'AGENTS.md')):
+                with self.subTest(rules=rules):
+                    git.return_value = rules
+                    with self.assertRaisesRegex(ValueError, 'Auftragsgrundlage auf main verändert'):
+                        self.inbox.writer.publish(self.order, received, self.inbox.stage(self.order), self.inbox.save)
+                    build.assert_not_called()
+            with patch.object(self.inbox.writer, 'bound_work', return_value=self.root):
+                for rules in (clarified, b''):
+                    git.return_value = rules
+                    with self.assertRaisesRegex(ValueError, 'builder reached'):
+                        self.inbox.writer.publish(self.order, received, self.inbox.stage(self.order), self.inbox.save)
+                    self.assertEqual(git.call_args.args[1:9],
+                                     ('diff', '--raw', '-z', '--no-abbrev', '--no-renames', source['main_commit'], main, '--'))
+            self.assertEqual(build.call_count, 2)
+            build.assert_called_with(received, self.inbox.stage(self.order), self.root)
+        self.assertEqual(self.order['source'], source)
+        self.assertEqual((self.inbox.stage(self.order) / self.filename).read_bytes(), self.png)
+
+    def check_bound_delta(self, previous, request, phase, intent):
+        source = {**self.order['source'], 'work_head': 'b' * 40,
+                  'record_sha256': contract.io.checksum(current.encoded(previous))}
+        order = {**self.order, 'source': source, 'phase': phase, 'intent': intent,
+                 'target': None if intent == 'offer' else 'one'}
+        value = {**self.value, 'source': source, 'phase': phase,
+                 'request': {**request, 'expected': source['record_sha256']}}
+        delivery = contract.envelope(current.encoded(value), self.manifest, order)
+        contract.delta(order, delivery['request'], previous)
+
+    def test_role_scoped_offers_assessments_and_corrections(self):
+        stream = BytesIO()
+        Image.new('RGBA', (10, 10), 'purple').save(stream, format='PNG')
+        ref = content.ref('content/authoring/pz-current/data/two.png', stream.getvalue())
+        original = [{'path': ref['file'], 'source': self.filename, 'bytes': ref['bytes'], 'sha256': ref['sha256']}]
         for phase in contract.PHASES:
             with self.subTest(phase=phase):
                 old = deepcopy(self.value['request']['record'])
@@ -440,21 +530,72 @@ class InboxTests(unittest.TestCase):
                 if phase == 'background':
                     asset.update(prepared=None, profile='picross-background-png2304x768-v1')
                 old['state'] = contract.PHASES[phase]
-                order = {**self.order, 'phase': phase, 'intent': 'assessment', 'target': 'one'}
-                request = {**self.value['request'], 'record': deepcopy(old), 'files': []}
-                contract.delta(order, request, old)
-                request['record']['assets'][0]['label'] = 'other'
+                for previous_used, offered_used in ((0, 0), (0, 1), (0, 2), (1, 1), (1, 2), (2, 2)):
+                    with self.subTest(previous_used=previous_used, offered_used=offered_used):
+                        old['budgets']['used']['image_corrections'] = previous_used
+                        draft = deepcopy(old)
+                        draft['budgets']['used']['image_corrections'] = offered_used
+                        draft['assets'].append({**asset, 'id': 'two', 'file': ref})
+                        request = {**self.value['request'], 'record': draft, 'files': original}
+                        self.check_bound_delta(old, request, phase, 'offer')
+                        if offered_used > previous_used:
+                            draft['assets'].remove(asset)
+                            self.check_bound_delta(old, request, phase, 'correction')
+
+                draft = deepcopy(old)
+                request = {**self.value['request'], 'record': draft, 'files': []}
+                self.check_bound_delta(old, request, phase, 'assessment')
+                draft['assets'][0]['label'] = 'other'
+                with self.assertRaisesRegex(ValueError, 'Bewertung ändert Original oder Herkunft'):
+                    self.check_bound_delta(old, request, phase, 'assessment')
+
+    def test_import_budget_cannot_change_other_bound_fields(self):
+        from tests.puzzle_production.test_current_authoring import decide
+
+        previous = deepcopy(self.value['request']['record'])
+        previous['budgets']['used'].update(image_corrections=1, raster_candidates=1, repair_rounds=1)
+        draft = deepcopy(previous)
+        new = deepcopy(previous['assets'][0])
+        new.update(id='two', file=content.ref('content/authoring/pz-current/data/two.png', b'new'))
+        draft['assets'].append(new)
+        ref = new['file']
+        request = {**self.value['request'], 'record': draft,
+                   'files': [{'path': ref['file'], 'source': self.filename, 'bytes': ref['bytes'], 'sha256': ref['sha256']}]}
+        for section, key, invalid in [('used', 'image_corrections', value) for value in (-1, 0, 3, True, 1.0, '1')] + [
+                ('used', 'raster_candidates', 2), ('used', 'repair_rounds', 2), ('used', 'other', 1),
+                ('limits', 'image_corrections', 3), ('limits', 'repair_rounds', 3)]:
+            with self.subTest(section=section, key=key, invalid=invalid), patch.dict(draft['budgets'][section], {key: invalid}):
                 with self.assertRaises(ValueError):
-                    contract.delta(order, request, old)
-                request['record'] = deepcopy(old)
-                altered = request['record']['assets'][0]
-                altered['id'] = 'two'
-                altered['file'] = content.ref('content/authoring/pz-current/data/two.png', b'new')
-                request['record']['budgets']['used']['image_corrections'] += 1
-                request['files'] = [{'path': altered['file']['file']}]
-                contract.delta({**order, 'intent': 'correction'}, request, old)
+                    self.check_bound_delta(previous, request, 'reveal', 'offer')
+        with patch.dict(draft, {'unexpected': []}), self.assertRaises(ValueError):
+            self.check_bound_delta(previous, request, 'reveal', 'offer')
+        decide(draft, 'budget')
+        with self.assertRaisesRegex(ValueError, 'Recorddelta'):
+            self.check_bound_delta(previous, request, 'reveal', 'offer')
+        draft['decisions'].clear()
+
+        for used in (1, 2):
+            with self.subTest(exhausted=used == 2):
+                previous['budgets']['used']['image_corrections'] = used
+                draft['budgets']['used']['image_corrections'] = used
+                with patch.dict(draft, {'assets': [new]}), self.assertRaisesRegex(ValueError, 'Bildkorrekturrunden'):
+                    self.check_bound_delta(previous, request, 'reveal', 'correction')
+        with patch.dict(draft, {'assets': previous['assets']}), patch.dict(request, {'files': []}):
+            with self.assertRaisesRegex(ValueError, 'keine neue Variante'):
+                self.check_bound_delta(previous, request, 'reveal', 'offer')
+            draft['budgets']['used']['image_corrections'] = 1
+            with self.assertRaisesRegex(ValueError, 'Recorddelta'):
+                self.check_bound_delta(previous, request, 'reveal', 'assessment')
+        previous['budgets']['used']['image_corrections'] = 0
+        sibling = {**previous['assets'][0], 'id': 'sibling'}
+        previous['assets'].append(sibling)
+        draft['budgets']['used']['image_corrections'] = 2
+        draft['assets'] = [new, {**sibling, 'label': 'Unbeauftragte Änderung'}]
+        with self.assertRaisesRegex(ValueError, 'Unbeauftragte Änderung'):
+            self.check_bound_delta(previous, request, 'reveal', 'correction')
 
     def test_restart_after_publish_and_cleanup_does_not_consume_order_twice(self):
+        self.value['request']['record']['budgets']['used']['image_corrections'] = 2
         self.deliver()
         (self.folder / self.filename).write_bytes(self.png)
         self.service.operation = threading.Lock()
@@ -463,12 +604,16 @@ class InboxTests(unittest.TestCase):
         publications = {}
 
         def publish(order, request, stage, save):
+            contract.delta(order, request, None)
+            used = request['record']['budgets']['used']['image_corrections']
             order['step'] = 'publish'
             save()
             if not publications:
-                publications[order['request_id']] = confirmed
+                publications[order['request_id']] = used, confirmed
                 raise ConnectionError('response lost')
-            return publications[order['request_id']]
+            published_used, receipt = publications[order['request_id']]
+            self.assertEqual(used, published_used)
+            return receipt
 
         self.inbox.writer.publish = publish
         self.inbox.advance(self.order)
@@ -498,6 +643,7 @@ class InboxTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             restarted.action('retry', binding)
         self.assertEqual(Inbox(self.service).data['orders'], {})
+        self.assertEqual(publications, {binding['request_id']: (2, confirmed)})
         restarted.writer.publish.assert_not_called()
 
     def test_wrong_job_format_and_windows_delivery_alias_are_rejected(self):

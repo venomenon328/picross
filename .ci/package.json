@@ -1,23 +1,18 @@
 {
   "format": "development-ci-plan/v1",
-  "issue": "https://github.com/venomenon328/picross/issues/912",
-  "package": "PW-IMPORT-UX-A",
+  "issue": "https://github.com/venomenon328/picross/issues/914",
+  "package": "PW-IMPORT-BUDGET-A",
   "modules": [
     "tools",
     "production.adapter"
   ],
-  "purpose": "Normaler Bildauftrag, persistenter Drive-Stamm, gebundene Rätselordner und Referenzanlage im Windows-Writer.",
-  "omitted": "Bestehende Bildaufbereitung, Rasteralgorithmen, Spiel und registrierter Katalog bleiben beim bisherigen Fachkern. T02 prüft den realen Windows-/Drive-/GitHub-Weg separat.",
+  "purpose": "Importer, Wiederaufnahme und gemeinsamer Authoring-Übergang für kumulierten Bildkorrekturverbrauch einschließlich synchronisiertem CMD-Fallback. Der Werkzeugdiff erfordert den regulären Windows-x64-Spielerbau.",
+  "omitted": "Unveränderte Bildaufbereitung, Solver, Katalog, native Spielmodule, Preflight, Delivery, Sync und Browserdiagnose. T02 prüft den nicht veröffentlichenden PW-Windows-Kandidaten und den synthetischen Empfang separat.",
   "test_changes": [
     {
       "path": "tools/test_production_inbox.py",
       "disposition": "change-scoped",
-      "reason": "Prüft Start, Rollen, gebundene Referenz, Ziel und den erlaubten Angebotsdelta bei Wiederaufnahme."
-    },
-    {
-      "path": "tools/production_workspace/check_ui_loading.cjs",
-      "disposition": "change-scoped",
-      "reason": "Übt den normalen Kopierknopf gegen den Loopback-Dienst bei Antwortverlust, Clipboardfehler und Wiederaufnahme offener Reveal- und Motivangebote aus."
+      "reason": "Prüft Budgetgrenzen aller Bildabsichten, geschlossene Recordfelder, Empfang und Builder-Readback mit einem Original bei 2/2 sowie Bindung und Einmalwirkung bei Wiederaufnahme."
     }
   ],
   "core_change": null,
