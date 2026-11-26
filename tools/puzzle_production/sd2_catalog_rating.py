@@ -13,7 +13,6 @@ from .contract import canonical_bytes, digest, exact_keys, integer
 from . import catalog_rating as common, catalog_method
 from .sd2_rating import METHOD_ID, RATING, _aggregate, _workload, CONFIG
 
-FORMAT = "picross-catalog-difficulty-v3"
 CHECKED = "picross-checked-difficulty-v3"
 CONTEXT = "picross-difficulty-context-v2"
 RATING_FORMAT = "picross-catalog-sd2-rating-v1"
@@ -140,9 +139,10 @@ def rating(value, evidence, identifier):
 
 
 def validate(value, *, active=True, definition_bytes=None, production_mode=None):
-    extras = {"rating_revision", "adoption", "record_hash"} if active else {"analysis_report_hash", "verification_hash", "tool", "checked_hash"}
+    require(not active, "Expected checked assessment")
+    extras = {"analysis_report_hash", "verification_hash", "tool", "checked_hash"}
     exact_keys(value, {"format", "production_mode"} | common.FIELDS | extras)
-    require(value["format"] == (FORMAT if active else CHECKED), "Wrong SD2 envelope")
+    require(value["format"] == CHECKED, "Wrong SD2 envelope")
     common.encoded(value)
     common.mode(value["production_mode"])
     if production_mode is not None: require(value["production_mode"] == common.mode(production_mode), "Stale difficulty production mode; new analysis required")
@@ -150,32 +150,16 @@ def validate(value, *, active=True, definition_bytes=None, production_mode=None)
     compact(value["compact_analysis"])
     require(value["compact_analysis"]["analysis_hash"] == value["logic_binding"]["analysis_hash"], "Wrong SD2 normalized logic binding")
     rating(value["rating"], value["compact_analysis"], value["current_source"]["id"])
-    if not active:
-        from .raster_parameters import require_color_count, used_foreground
-        require_color_count(value["production_mode"], value["compact_analysis"]["structure"]["colors"])
-    a = value
-    if active:
-        integer(value["rating_revision"], 1, 1000000, "rating revision")
-        a = exact_keys(value["adoption"], {"kind", "previous_record_hash", "analysis_report_hash", "verification_hash", "tool", "report"})
-        require(a["kind"] in ("analysis", "rebind"), "Invalid SD2 adoption kind")
-        if a["previous_record_hash"] is not None: sha(a["previous_record_hash"])
-        if a["report"] is not None:
-            from .catalog_analysis import run_id
-            exact_keys(a["report"], {"run_id", "result_hash"})
-            run_id(a["report"]["run_id"]); sha(a["report"]["result_hash"])
-        require(value["rating"]["result"]["status"] == "rated", "Active SD2 must be complete")
-    for k in ("analysis_report_hash", "verification_hash"): sha(a[k])
-    common.tool(a["tool"], version=2)
-    common.check_hash(value, "record_hash" if active else "checked_hash")
+    from .raster_parameters import require_color_count, used_foreground
+    require_color_count(value["production_mode"], value["compact_analysis"]["structure"]["colors"])
+    for key in ("analysis_report_hash", "verification_hash"): sha(value[key])
+    common.tool(value["tool"], version=2)
+    common.check_hash(value, "checked_hash")
     if definition_bytes is not None:
         data, puzzle, source, binding = common.definition(definition_bytes, method=METHOD_ID)
         require(source == value["current_source"] and binding == value["logic_binding"] and
                 value["rating"]["source"]["engine_logic_hash"] == puzzle.logic_hash, "Stale SD2 source/logic/matrix binding")
-        if not active:
-            require_color_count(value["production_mode"], len(used_foreground(data["solution"])))
-        else:
-            require(value["production_mode"] != "mono" or len(puzzle.colors) == 1,
-                    "Mono mode requires one foreground color")
+        require_color_count(value["production_mode"], len(used_foreground(data["solution"])))
         from .sd2_profiles import structure as expected_structure
         require(value["compact_analysis"]["structure"] == expected_structure(puzzle), "Wrong SD2 definition workload")
         if value["compact_analysis"]["r4"]:

@@ -124,13 +124,3 @@ def operation(root):
     token = io._retirement_reads.set(reads)
     try: yield reads
     finally: io._retirement_reads.reset(token)
-
-
-def capture(root, ids):
-    from .current_registration import Snapshot
-    snapshots=[Snapshot(root,identifier) for identifier in ids]
-    texts={}
-    for snapshot in snapshots:
-        require(snapshot.delivery is not None,"Unknown selected delivery")
-        texts.update(snapshot.raw)
-    return {"registry":snapshots[0].registry,"texts":texts,"retained":{},"namespaces":{}}

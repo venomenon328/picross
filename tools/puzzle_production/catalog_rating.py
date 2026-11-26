@@ -18,9 +18,7 @@ from .difficulty_rating import (METHOD_ID, RATING_FORMAT, frozen_method,
                                 logical_level, size_effect)
 from . import operation_diagnostics as diagnostic
 
-LEGACY_FORMAT = "picross-catalog-difficulty-v1"
 LEGACY_CHECKED = "picross-checked-difficulty-v1"
-FORMAT = "picross-catalog-difficulty-v2"
 CHECKED = "picross-checked-difficulty-v2"
 CONTEXT = "picross-difficulty-context-v1"
 LIMIT = 96 * 1024
@@ -95,14 +93,14 @@ def mode(value):
 
 
 def fields(value):
-    return FIELDS | ({"production_mode"} if value["format"] not in (LEGACY_FORMAT, LEGACY_CHECKED) else set())
+    return FIELDS | ({"production_mode"} if value["format"] != LEGACY_CHECKED else set())
 
 
 def method(value):
     if value.get("format") == "picross-current-difficulty-v1": return value["method"]
-    from .sd2_catalog_rating import FORMAT as SD2, CHECKED as SD2_CHECKED
+    from .sd2_catalog_rating import CHECKED as SD2_CHECKED
     from .catalog_method import NEW
-    return NEW if value["format"] in (SD2, SD2_CHECKED) else METHOD_ID
+    return NEW if value["format"] == SD2_CHECKED else METHOD_ID
 
 
 def definition(raw, *, method=METHOD_ID):
@@ -303,11 +301,12 @@ def validate(value, *, active=True, definition_bytes=None, production_mode=None)
         from .current_rating import validate as current
         return current(value,definition_bytes=definition_bytes,production_mode=production_mode,active=active)
     from . import sd2_catalog_rating as sd2
-    if isinstance(value, dict) and value.get("format") in (sd2.FORMAT, sd2.CHECKED):
-        return sd2.validate(value, active=active, definition_bytes=definition_bytes, production_mode=production_mode)
-    extras = {"rating_revision", "adoption", "record_hash"} if active else {"analysis_report_hash", "verification_hash", "tool", "checked_hash"}
+    require(not active, "Expected current assessment envelope")
+    if isinstance(value, dict) and value.get("format") == sd2.CHECKED:
+        return sd2.validate(value, active=False, definition_bytes=definition_bytes, production_mode=production_mode)
+    extras = {"analysis_report_hash", "verification_hash", "tool", "checked_hash"}
     require(isinstance(value, dict) and value.get("format") in
-            ((FORMAT, LEGACY_FORMAT) if active else (CHECKED, LEGACY_CHECKED)), "Unknown catalog difficulty format")
+            (CHECKED, LEGACY_CHECKED), "Unknown catalog difficulty format")
     exact_keys(value, {"format"} | fields(value) | extras)
     if "production_mode" in value:
         mode(value["production_mode"])
@@ -317,27 +316,15 @@ def validate(value, *, active=True, definition_bytes=None, production_mode=None)
     source(value["current_source"]); binding(value["logic_binding"])
     _compact(value["compact_analysis"])
     _rating(value["rating"], value["compact_analysis"], value["current_source"]["id"])
-    if not active and "production_mode" in value:
+    if "production_mode" in value:
         from .raster_parameters import require_color_count, used_foreground
         require_color_count(value["production_mode"], value["compact_analysis"]["metrics"]["workload"]["colors"])
-    if active:
-        integer(value["rating_revision"], 1, 1000000, "rating revision")
-        a = exact_keys(value["adoption"], {"kind", "previous_record_hash", "analysis_report_hash", "verification_hash", "tool", "report"})
-        require(a["kind"] in ("analysis", "rebind"), "Unknown adoption kind")
-        if a["previous_record_hash"] is not None: sha(a["previous_record_hash"])
-        if a["report"] is not None:
-            from .catalog_analysis import run_id
-            exact_keys(a["report"], {"run_id", "result_hash"})
-            run_id(a["report"]["run_id"]); sha(a["report"]["result_hash"])
-        require(value["rating"]["result"]["status"] == "rated", "Active difficulty must be complete")
-    else:
-        a = value
-    for k in ("analysis_report_hash", "verification_hash"): sha(a[k])
-    tool(a["tool"])
-    check_hash(value, "record_hash" if active else "checked_hash")
+    for k in ("analysis_report_hash", "verification_hash"): sha(value[k])
+    tool(value["tool"])
+    check_hash(value, "checked_hash")
     if definition_bytes is not None:
         data, puzzle, current, logic = definition(definition_bytes)
-        if not active and "production_mode" in value:
+        if "production_mode" in value:
             require_color_count(value["production_mode"], len(used_foreground(data["solution"])))
         else:
             require(value.get("production_mode") != "mono" or len(puzzle.colors) == 1,
@@ -438,13 +425,3 @@ def active_record(checked, previous=None, *, report=None, kind="analysis"):
             return qualified
     value = checked if checked.get("format") == current_rating.FORMAT else current_rating.from_checked(checked)
     return current_rating.active(value,previous)
-
-
-def checked_from_active(value):
-    if value.get("format") == "picross-current-difficulty-v1":
-        return deepcopy(validate(value))
-    from . import sd2_catalog_rating as sd2
-    validate(value)
-    return validate(hashed({"format": sd2.CHECKED if value["format"] == sd2.FORMAT else CHECKED if value["format"] == FORMAT else LEGACY_CHECKED,
-        **{k: deepcopy(value[k]) for k in fields(value)},
-        **{k: deepcopy(value["adoption"][k]) for k in ("analysis_report_hash", "verification_hash", "tool")}}, "checked_hash"), active=False)

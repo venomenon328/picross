@@ -1,9 +1,4 @@
-"""Current puzzle metadata and category edits through the shared catalog writer.
-
-Reading a v4 view only opens the two authoring indexes. Planning and applying
-deliberately use the full source-bound transaction path; no player saves, image
-derivation or production proof generation belongs to this module.
-"""
+"""Targeted record and category metadata edits through the shared catalog writer."""
 from __future__ import annotations
 
 from copy import deepcopy
@@ -14,8 +9,7 @@ from . import content_registry as registry, puzzle_record, puzzle_catalog
 from .authoring_package import require
 from .contract import canonical_bytes, exact_keys
 
-PLAN_FORMAT = "picross-editor-metadata-plan-v1"
-IMAGE_PLAN_FORMAT = "picross-editor-metadata-plan-v3"
+PLAN_FORMAT = "picross-puzzle-metadata-plan-v1"
 VIEW_FORMAT = "picross-metadata-view-v1"
 PLAN_LIMIT = 32 * 1024 * 1024
 MAX_OPERATIONS = 10000

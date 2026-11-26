@@ -72,32 +72,11 @@ unverändert. Rebind benötigt gleiche ID, normalisierte Logik, Matrix und Modus
 nur `current_source` und der äußere Hash ändern sich. Echte Logik-/Modusänderung
 benötigt die neue passende Analyse der aktiven Produktionsmethode.
 
-### Checked-Hüllen und weiterhin lesbare aktive Alt-Hüllen
+### Checked-Arbeitsinput und registrierte Bewertung
 
-Basismenge `B = {current_source,logic_binding,rating,compact_analysis}`.
-Die Feldmengen sind geschlossen:
+Analyzer und expliziter Bundleimport erzeugen geprüfte Arbeitsdaten. Ihre Bindungen sind `current_source,logic_binding,rating,compact_analysis` sowie `analysis_report_hash,verification_hash,tool,checked_hash`. Der modusgebundene Eingang enthält zusätzlich `production_mode`. Die geprüfte Bewertung darf für abgeschlossene oder abgebrochene Analysen vorliegen. Registrierung verlangt ein vollständiges Ergebnis. Toolversion 1 bindet die vier Module des 0.3-Analyzers, Version 2 zusätzlich die SD2- und Methodenmodule.
 
-| Hülle | Exakte äußere Feldmenge |
-| --- | --- |
-| Checked v1 | `format` + B + `analysis_report_hash,verification_hash,tool,checked_hash` |
-| Checked v2/v3 | Checked-v1-Felder + `production_mode` |
-| Aktive v1 | `format` + B + `rating_revision,adoption,record_hash` |
-| Aktive v2/v3 | Aktive-v1-Felder + `production_mode` |
-| Historische `adoption` | `kind,previous_record_hash,analysis_report_hash,verification_hash,tool,report`; kind `analysis`/`rebind`, Vorgänger null oder SHA-256, report null oder exakt `run_id,result_hash`. |
-
-Äußere Dateien höchstens **96 KiB**, eingebettete Bewertung **64 KiB**.
-`rating_revision` liegt in 1…1000000. Der jeweilige äußere Hash bindet alle
-anderen Felder. Aktive Hüllen verlangen `rated`; unvollständige, widersprüchliche
-oder abgebrochene Befunde dürfen Checked-Arbeitsdaten sein, jedoch keine aktive
-Bewertung. Ihre Nichtübernahme erhält gültige Altwerte.
-
-`tool` hat exakt `id,version,modules`, ID `picross-catalog-difficulty`.
-Version 1 bindet die Hashfelder für `catalog_rating.py`, `catalog_analysis.py`,
-`catalog_transaction.py`, `catalog_integration.py`; Version 2 zusätzlich
-`sd2_catalog_rating.py`, `catalog_method.py`. 0.3-Hüllen verwenden Version 1,
-0.4-Hüllen Version 2. Historische Werkzeugidentitäten werden strukturell geprüft,
-nicht gegen spätere lokale Integrationsbytes verglichen. Die aktuelle Hülle
-benötigt diese Provenienzfelder nicht; ihre Definition bleibt in SD-Catalog.
+Der aktuelle Rätselrecord übernimmt die vier fachlichen Felder gemäß [SD-Catalog](SD_CATALOG.md#aktuelle-bewertung-und-geprüfter-eingang). Originalbewertungsinput, Methodenkennung, eigene Revisionswerte und innere Hashes bleiben erhalten. Auswahlberichte behalten ihre historische Bindung.
 
 ### Eingebettete Bewertung und kompakte Analyse
 

@@ -188,7 +188,6 @@ def plan(root, request, *, uploads=None, work=None, expected=None, expected_defi
     def put(name, raw):
         old = inputs.read(name, missing=True)
         if old != raw: changes[name] = {"old": pack(old), "new": pack(raw)}
-    require(runtime["format"] == registry.IMAGE_RUNTIME_FORMAT, "This checkout requires external migration: issue #641")
     exact_keys(request, {"id", "metadata", "text", "profile", "reveal", "background"})
     operations = request["metadata"] if identifier is None else (
         [{"op": "set_metadata", "id": identifier, **request["metadata"]}] if request["metadata"] else [])
@@ -206,10 +205,10 @@ def plan(root, request, *, uploads=None, work=None, expected=None, expected_defi
             if key != identifier:
                 put(puzzle_record.path(key), puzzle_record.encode(updated))
     if identifier is not None and any(request[k] is not None for k in ("text", "reveal", "background")):
-        require(runtime["format"] == registry.IMAGE_RUNTIME_FORMAT, "Explicit v7→v8 migration required")
         action = "raster" if request["text"] is not None else "images"
         definition_raw = inputs.read("game/"+entry["definition"], 2*1024*1024)
-        definition = parsed_definition(definition_raw)[0]
+        definition = io.json_bytes(definition_raw, 2*1024*1024)
+        _hashes.get()[id(definition_raw)] = (definition_raw, original["definition"]["sha256"])
         require(expected_definition is None or checksum(definition_raw) == expected_definition, "Selected raster changed; reload")
         target_row = next(r for r in target_runtime["entries"] if r["id"] == identifier)
         if request["text"] is not None:

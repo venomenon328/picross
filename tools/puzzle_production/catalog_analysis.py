@@ -421,8 +421,6 @@ def main(argv=None):
                 result = rating.import_bundle(safe_external(args.input), work_directory(args.bundle), budget=AnalysisBudget(**limits()))
             else:
                 value = load_json(safe_external(args.rating), rating.LIMIT)
-                from .sd2_catalog_rating import FORMAT as SD2_FORMAT
-                if value.get("format") in (rating.FORMAT, rating.LEGACY_FORMAT, SD2_FORMAT): value = rating.checked_from_active(value)
                 result = rating.rebind_checked(value, rating.read_file(safe_external(args.input), 2 * 1024 * 1024), production_mode=args.production_mode)
             write_new(work_directory(args.output), rating.encoded(result))
         elif args.command in ("preview", "preview-checked"):

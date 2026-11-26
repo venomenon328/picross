@@ -15,8 +15,6 @@ NEW = "picross-difficulty-0.4"
 METHODS = (OLD, NEW)
 PATH = "content/difficulty-method.json"
 FORMAT = "picross-difficulty-default-v1"
-LEGACY_PLAN = "picross-difficulty-activation-plan-v1"
-PLAN = "picross-difficulty-activation-plan-v2"
 IMAGE_PLAN = "picross-puzzle-method-plan-v1"
 LIMIT = 4096
 PLAN_LIMIT = 16 * 1024 * 1024
@@ -154,7 +152,7 @@ def validate_plan(value):
     integer(value["expected"]["revision"], 0, 1000000, "expected default revision")
     require((value["expected"]["record_hash"] is None) == (value["expected"]["revision"] == 0), "Unbound expected default revision")
     sources = value["sources"]
-    require(isinstance(sources, dict) and PATH in sources and len(sources) <= (110005 if value["format"] == IMAGE_PLAN else 80004), "Invalid activation sources")
+    require(isinstance(sources, dict) and PATH in sources and len(sources) <= 110005, "Invalid activation sources")
     for name, checksum in sources.items():
         relative(name)
         if checksum is not None: sha(checksum)

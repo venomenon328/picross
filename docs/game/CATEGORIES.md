@@ -38,8 +38,8 @@ Der Writer/Reader verwendet `picross-categories-v1`.
 ## 3. Aktuelle Zuordnung und Pflege
 
 Jede registrierte Rätsel-ID verweist unabhängig von Sichtbarkeit auf genau eine
-vorhandene Kategorie. Aktueller Motivname und Kategoriezuordnung werden aus der
-aktuellen Inhaltsautorität aufgelöst. Historische Produktionsangaben werden bei
+vorhandene Kategorie. Aktueller Motivname und Kategoriezuordnung werden aus
+`name` und `category_id` des Rätselrecords unter `content/puzzles/<id>.json` gelesen. Historische Produktionsangaben werden bei
 Pflege nicht rückwirkend geändert und überschreiben keine aktuelle Zuordnung.
 
 Umbenennen erhält Kategorie-ID, Rätsel-ID, Key, Save-Slot und Rasterrevision.

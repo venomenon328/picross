@@ -232,68 +232,11 @@ Fachautorität für Hinzugefügt-Sidecars, Nachtragspläne und Sortierpräferenz
 
 ### Autoritative Hinzugefügt-Daten und Herkunft
 
-Je registrierter ID ist `content/added/<id>.json` die einzige Datumsquelle.
-Die aktuelle Inhaltsautorität verlangt diesen Record auch für einen ausdrücklich
-unbekannten Wert. Fehlende optionale Werte historischer Spielerprojektionen
-folgen deren Lesekompatibilität; sie erlauben keine fehlende erforderliche
-aktuelle Quelldatei.
-Format `picross-added-v1`, exakt `format,id,added_at,provenance`; UTF-8 ohne BOM,
-kanonisches JSON (sortierte Schlüssel, kompakte Separatoren) plus LF, höchstens
-64 KiB. ID-Grammatik und Bindung folgen der Content-Registry. `added_at` ist
-`null` oder ein wirklich existierender UTC-Kalenderzeitpunkt mit sekundengenauem
-Format `YYYY-MM-DDTHH:MM:SSZ`, Jahr 0001–9999, ohne Schaltsekunde/Offset/Bruchteil.
-Ein unbekannter Zeitpunkt steht ausdrücklich als `null` im Record.
-Eine vorhandene ungültige Datei ist ein Fehler.
-
-`provenance` enthält exakt `kind,reference_time,commit,evidence,reason`.
-`kind` ist `registration`, `direct`, `git-snapshot` oder `unknown`.
-`reference_time` ist derselbe Zeitpunkt wie `added_at`; `unknown` verlangt null,
-alle anderen Arten einen Zeitpunkt. `commit` ist bei `git-snapshot` ein voller
-kleingeschriebener Git-SHA-1, bei `registration` null und bei den übrigen Arten
-null oder ein solcher SHA. `reason` ist
-nichtleerer Text, höchstens 2048 Zeichen ohne Steuerzeichen. `evidence` ist bei
-`registration` null; sonst exakt `path,sha256`, gebunden an einen dauerhaften
-Nachtragsbericht unter `content/added/reports/<run>.json` (Run-Grammatik wie SD).
-Ein unbekannter Bestandswert erhält eine konkrete Quellen-/Mehrdeutigkeitsbegründung.
-
-Records haben keine doppelten JSON-Schlüssel, unbekannten Felder oder falschen
-Typen. Sichere Pfadprüfungen gelten für die tatsächlich konsumierten Quellen.
-Ein ausdrücklicher Namespaceaudit akzeptiert ausschließlich bekannte ID-Dateien
-und referenzierte Berichte, keine Fremd-IDs, Aliasnamen, fremden Unterverzeichnisse,
-Links oder Reparse-Points. Berichte sind höchstens 8 MiB; höchstens 10000 ID-Dateien.
-Der aktuelle Quellenreader spielt vorhandene historische Berichte nicht nach und
-macht diesen Gesamtaudit nicht zur neuen Integrationspflicht. Runtime enthält
-ausschließlich den Zeitpunkt oder null, niemals Herkunft oder Zugriff auf Git/GitHub.
+Je registrierter ID führt der Einzelrecord `content/puzzles/<id>.json` das Objekt `added` mit exakt `added_at,provenance`. Der Zeitpunkt wird bei der ersten erfolgreichen Registrierung gesetzt. Die Runtime v9 enthält ausschließlich den UTC-Zeitpunkt oder null. Die Herkunft enthält genau `kind,reference_time,commit,evidence,reason`. Die Fälle registration, direct, git-snapshot und unknown behalten ihren wirksamen Bezug. Bestehende Verweise auf Nachtragsberichte binden Pfad und SHA-256 der damaligen Originalbytes.
 
 ### Historischer Plan und explizite Übernahme
 
-Ein aktueller nur lesender Plan `picross-added-plan-v5` enthält exakt
-`format,run_id,base_commit,sources,evidence,entries`.
-`sources` bindet die aktuellen Katalogquellen des SD-Catalog-Transaktionswegs
-per SHA-256 (null bei zulässiger Abwesenheit): gemeinsame Indizes, Kategorien,
-Methode und Capability, aktuelle Definitionen, Notices, Ratings, Added-Dateien,
-Bildsources und wirksame Livebilder. Historische Producer-/Paketbytes sind keine
-aktuelle Abhängigkeit. Die Formate `picross-added-plan-v1` bis `v4` bleiben
-strukturell unterscheidbare historische Berichte; aktuelle Quellenprüfung und
-Übernahme verlangen v5. Die Formatlesbarkeit autorisiert keinen alten Plan.
-`evidence` ist eine nach stabilen Kennungen geordnete Liste unveränderlicher
-Quellbelege mit Commit, Dateipfad, unveränderten UTF-8-Dateibytes und SHA-256;
-Gitbelege binden zusätzlich den nachweislichen Integrations-/PR-Zusammenhang und
-den Commitzeitpunkt. `entries` enthält in kanonischer ID-Reihenfolge exakt alle
-aktuellen IDs mit altem Wert/Recordhash, vorgeschlagenem Zeitpunkt, Herkunftsart,
-Referenzzeitpunkt, Quellcommit, Belegkennung und begründeter Quellenentscheidung.
-Keine Uhrzeit wird aus dem Planlauf abgeleitet.
-
-Die Quellenpriorität und der Unterschied zwischen Ereignis- und rekonstruierter
-Referenzzeit folgen D05. Nur der ausdrückliche redaktionelle Planbefehl liest Git.
-Allgemeine Tests verwenden synthetische Verläufe.
-
-Die getrennte Übernahme validiert Plan und vollständige Quellenbindung, schreibt
-seine unveränderten Bytes als dauerhaften Bericht und bindet dessen Hash in den
-ID-Records. Keine Analyse, Produktionsreplays oder Savezugriffe. Identische
-Wiederholung prüft die erwarteten Ergebnisbytes und rekonstruiert die gebundene
-Ausgangsprojektion im Speicher; sie schreibt weder Dateien noch Journal oder
-Zeitstempel. Abweichende Quellen/neue IDs verlangen einen neuen Plan.
+Die einmalige Bestandsrekonstruktion nach D05 ist abgeschlossen. Ein aktueller Datumsplan bindet Basiscommit, Kategorien, Runtime und die gewählten Record- und Definitionsbytes. Bereits bekannte Erstaufnahmen bleiben auch bei späteren Integrationen und bei identischer Wiederholung erhalten. Eine Uhrzeit aus einem Folgelauf ist keine Erstaufnahme.
 
 ### Lokale UI-Präferenz
 
