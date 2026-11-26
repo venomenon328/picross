@@ -21,6 +21,44 @@ def uuid4_text(value):
     return value
 
 
+def producer_prompt(root_id, binding, reference):
+    import json
+    job = binding['puzzle_id']
+    prompt = (f"Arbeite in {REPOSITORY} nach AGENTS.md, den für diese Phase gerouteten Authoring-/Bildquellen "
+              "und docs/tools/PW_IMPORT.md am gebundenen Commit. Übernimm die kreative Arbeit und tatsächliche "
+              "Originalsichtung. Liefere ausschließlich beauftragte Bytes und das Manifest. Die Windows-PW "
+              "prüft und veröffentlicht den Arbeitsstand mit ihrer gh-Anmeldung. "
+              f"Drive: Suche unter Root-ID {root_id} ausschließlich das direkte Kind mit exaktem Namen {job}. "
+              "Prüfe alle Ergebnisseiten einschließlich gleichnamiger Nichtordner, Eltern-ID, exakten Namen, "
+              "Ordnertyp und trashed=false. Bei Mehrdeutigkeit oder Nichtordner mit Konflikt stoppen. "
+              "Eindeutigen Ordner wiederverwenden, bei Abwesenheit einmal erstellen und ID und Elternbindung "
+              "zurücklesen. Nach Antwortverlust zuerst erneut auflösen. Vor Upload eindeutige Zuordnung nochmals "
+              "prüfen und ausschließlich die tatsächliche Kind-ID verwenden. Originale zuerst, Manifest zuletzt. "
+              "Bei Neuanlage brief unverändert übernehmen, sonst nichtleeren Zusatz mit zwei Zeilenumbrüchen "
+              "anhängen. Rasterwünsche sind keine Parameterfreigabe. Auftragsbindung: "
+              + json.dumps(binding, ensure_ascii=False))
+    if reference:
+        prompt += (" Öffne die native Chat-Anlage als Original vor der Generierung. Prüfe Name, Bytezahl und "
+                   "SHA-256 gegen " + json.dumps(reference, ensure_ascii=False) + ". Bei fehlender oder mehrdeutiger "
+                   "Anlage anhalten. Dokumentiere Herkunft nach Authoring und liefere dieselben Bytes als genau "
+                   "ein input-Asset im ersten Reveal, getrennt von den Bildangeboten.")
+    if binding['phase'] == 'background':
+        prompt += (" Nach bestätigter Veröffentlichung Schritt 4 am veröffentlichten Stand über PW_REMOTE "
+                   "mit prepare, Originalzustellung, tatsächlicher Sichtung und assessment fortsetzen.")
+    return prompt
+
+
+def reference_binding(value):
+    exact_keys(value, {'name', 'bytes', 'sha256'})
+    name = value['name']
+    require(isinstance(name, str) and 0 < len(name) <= 255 and not re.search(r'[\\\\/:\x00-\x1f]', name)
+            and PurePosixPath(name).suffix.lower() in ('.png', '.jpeg', '.jpg'),
+            'Die Referenz muss ein einzelnes PNG- oder JPEG-Bild sein.')
+    require(type(value['bytes']) is int and 0 < value['bytes'] <= 32 * current.LIMIT and
+            isinstance(value['sha256'], str) and re.fullmatch('[0-9a-f]{64}', value['sha256']),
+            'Ungültige Bytebindung der Referenz.')
+
+
 def envelope(raw, filename, order):
     value = io.json_bytes(raw, 2 * current.LIMIT)
     exact_keys(value, {'format', 'delivery_id', 'request_id', 'repository', 'puzzle_id', 'phase', 'source', 'request'})
@@ -39,6 +77,15 @@ def envelope(raw, filename, order):
     current.validate(record)
     require(isinstance(request['files'], list) and len(request['files']) <= 100, 'Dateiinventar ungültig.')
     by_path = {a['file']['file']: a for a in record['assets'] if a['role'] == order['phase']}
+    reference = order.get('inputs', {}).get('reference')
+    if reference:
+        sources = [a for a in record['assets'] if a['role'] == 'input']
+        require(len(sources) == 1 and all(sources[0]['file'][k] == reference[k] for k in ('bytes', 'sha256')),
+                'Genau die gebundene Referenzdatei mitliefern.')
+        require(all(a['file']['sha256'] != reference['sha256'] and
+                    a['file']['file'].casefold() != sources[0]['file']['file'].casefold() for a in by_path.values()),
+                'Die Referenz darf nicht zugleich als Bildangebot geliefert werden.')
+        by_path[sources[0]['file']['file']] = sources[0]
     paths = set()
     for index, item in enumerate(request['files'], 1):
         exact_keys(item, {'path', 'source', 'bytes', 'sha256'})
@@ -49,8 +96,9 @@ def envelope(raw, filename, order):
                 not any(part.startswith('.') for part in PurePosixPath(name).parts), 'Original kollidiert mit Produktionsmetadaten.')
         paths.add(name.casefold())
         suffix = PurePosixPath(name).suffix
-        allowed = {'reveal': {'.png', '.svg'}, 'motif': {'.png', '.jpg', '.jpeg'}, 'background': {'.png'}}
-        require(suffix in allowed[order['phase']] and item['source'] == f'{delivery}--{index}{suffix}',
+        allowed = {'reveal': {'.png', '.svg'}, 'motif': {'.png', '.jpg', '.jpeg'},
+                   'background': {'.png'}, 'input': {'.png', '.jpg', '.jpeg'}}
+        require(suffix in allowed[by_path[name]['role']] and item['source'] == f'{delivery}--{index}{suffix}',
                 'Quelldateiname oder Bildtyp passt nicht zur Lieferung.')
         require(by_path[name]['file'] == {'file': name, 'bytes': item['bytes'], 'sha256': item['sha256']} and
                 type(item['bytes']) is int and 0 < item['bytes'] <= 32 * current.LIMIT, 'Dateibindung weicht ab.')
@@ -60,11 +108,12 @@ def envelope(raw, filename, order):
 def creative_brief(inputs, role, action, *, new):
     """Only explicit creative intent may update the brief. Decisions have their own binding."""
     exact_keys(inputs, {'brief', 'notes', 'feedback', 'parameters', 'context', 'reference', 'grid'})
-    for key in ('brief', 'notes', 'feedback', 'parameters', 'context', 'reference'):
+    for key in ('brief', 'notes', 'feedback', 'parameters', 'context'):
         value = inputs[key]
         require(isinstance(value, str) and len(value) <= 4096 and '\x00' not in value, 'Ungültiger Auftragstext.')
-    require(not inputs['reference'], 'Das ausgewählte Referenzbild ist im Empfangsauftrag nicht erreichbar. '
-            'Den normalen Auftrag mit angehängter Originaldatei senden oder die Dateiauswahl bewusst zurücknehmen.')
+    if inputs['reference'] != '':
+        require(new and role == 'reveal' and action == 'offer', 'Eine neue Anlage gehört zum ersten Abschlussbildauftrag.')
+        reference_binding(inputs['reference'])
     require(bool(inputs['brief'].strip()) == new, 'Ein neuer Auftrag benötigt das Motivbriefing. Bestehendes Briefing aus der Quelle verwenden.')
     require(bool(inputs['feedback'].strip()) == (action == 'correction'),
             'Für eine Korrektur unter „Nächste Aktion“ die gewünschte Änderung beschreiben.')
@@ -149,6 +198,15 @@ def delta(order, request, previous):
     old = {a['id']: a for a in prior['assets'] if a['role'] == role}
     new = {a['id']: a for a in job['assets'] if a['role'] == role}
     require(new and prior['selected'][role] is None, 'Diese Auswahl ist nicht offen.')
+    reference = order.get('inputs', {}).get('reference')
+    input_paths = set()
+    if reference:
+        sources = [a for a in job['assets'] if a['role'] == 'input']
+        require(not previous and role == 'reveal' and intent == 'offer' and len(sources) == 1 and
+                all(sources[0]['file'][key] == reference[key] for key in ('bytes', 'sha256')) and
+                not sources[0]['review'], 'Unerwartete Referenz oder Bewertung.')
+        prior['assets'].append(sources[0])
+        input_paths.add(sources[0]['file']['file'])
     require([a for a in job['assets'] if a['role'] != role] == [a for a in prior['assets'] if a['role'] != role],
             'Fremde Bildrolle verändert.')
     target = order.get('target')
@@ -175,7 +233,7 @@ def delta(order, request, previous):
         if key not in old:
             require(new[key].get('prepared') is None, 'Aufbereitung erfolgt nach dem Originaleingang.')
     required = {new[key]['file']['file'] for key in editable if key not in old}
-    require(required == {item['path'] for item in request['files']}, 'Dateiliste entspricht nicht den neuen Originalen.')
+    require(required | input_paths == {item['path'] for item in request['files']}, 'Dateiliste entspricht nicht den neuen Originalen.')
     keep = set(editable) | ({target} if intent == 'correction' else set())
     require([r for r in job['findings'] if r['target'] not in keep] == [r for r in prior['findings'] if r['target'] not in keep],
             'Fremde Sichtbefunde verändert.')

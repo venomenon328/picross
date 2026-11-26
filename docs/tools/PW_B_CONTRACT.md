@@ -193,7 +193,7 @@ Erst danach entfallen ersetzte Originale. Aktive Auswahlen haben keine
 technische Siebentagesfrist. Rollout und Produktionsfreigabe setzen einen
 tatsächlich verfügbaren v2-Reader und bestätigten Originalzugriff voraus.
 
-Die im abgesendeten Auftrag erklärte und an den aktuellen Record gebundene
+Die mit der Bildempfangs-Startaktion oder im abgesendeten Auftrag erklärte und an den aktuellen Record gebundene
 Kandidatenwahl deckt die anschließende automatische Bereinigung der nicht mehr
 referenzierten, eindeutig eigenen Arbeitsrelease-Assets bereits ab. Nach
 bestätigter Record-/Ref-Veröffentlichung führt `work_publish publish` diesen
@@ -226,7 +226,9 @@ oder current-view.json pro aktuellem Job: Liste, Bilder, Angebote und Folgeauftr
 werden direkt aus dem Record abgeleitet und gegen denselben fixierten Gitstand
 geprüft. Der lesende Dienst bleibt ohne fachlichen Writer. Arbeitsref
 `content/pw/<id>` sichert die aktuelle Auswahl; unerreichbare Quellen bleiben Fehler.
-Öffnen/Kopieren ist keine Entscheidung. Bestehende UI und sichere Remoteauswahl
+Der ausdrückliche Start eines [Bildauftrags](PW_IMPORT.md) bindet die angezeigte Auswahl.
+Seine native Erstanlage darf als bytegebundenes input-Asset mitgeliefert werden.
+Öffnen und erneutes Kopieren erteilen keine Entscheidung. Bestehende UI und sichere Remoteauswahl
 bleiben erhalten. Auswahlkennungen und Inhaltsbindungen verhindern Verwechslung.
 
 ## Übergabe und Abschluss

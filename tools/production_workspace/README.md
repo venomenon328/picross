@@ -14,11 +14,13 @@ verwendete Operation abschnittsbezogen gelesen, nicht pauschal vollständig.
 Die [ursprüngliche PW-B-Paketentscheidung](https://github.com/venomenon328/picross/issues/578#issuecomment-6799208194)
 ist eine Entwicklungs-/Herkunftsquelle, keine zusätzliche Routinelektüre.
 
-Unter „Originale über Google Drive empfangen“ den privaten Ordner bestätigen,
-das neue Motiv oder die aktuelle Remoteversion öffnen und den Empfang für die
-gewählte Bildrolle starten. Der angezeigte ChatGPT-Auftrag enthält Kennung und
-Quelle. Nach der GitHub-Bestätigung den neueren Stand laden. Einen angezeigten
-Bereinigungsrest am selben Vorgang prüfen und fortsetzen.
+Unter „Einstellungen für Google Drive“ einmal die private Stammordner-ID und den
+zugehörigen synchronisierten Windows-Ordner speichern. Im Produktionsbereich
+das Motiv beschreiben oder die gewünschte Variante wählen. Bei ChatGPT-Bildarbeit
+„Auftrag starten und kopieren“ wählen und den Auftrag im Chat senden. Eine
+ausgewählte Referenzdatei dort anhängen. Die Werkstatt zeigt den Empfang bis
+zur bestätigten Veröffentlichung. Dort den neuen Arbeitsstand öffnen oder einen
+angezeigten Bereinigungsrest fortsetzen.
 
 PW2-B stellt Bilder, fällige Entscheidungen und relevante Parameter vor die
 technischen Originaldetails. Bei der Hintergrundwahl zeigt die Schlussübersicht
@@ -54,8 +56,9 @@ direkt zugänglich. Änderungen an einem vorgelegten Korridor laufen über
 „Gezielt korrigieren“. Eine ID entsteht erst im Auftrag.
 Die fünf Schritte zeigen Abschlussbilder, Motivvorlage, geprüfte Rasterangebote,
 danach Kontextzeichnungen und schließlich Endabnahme/Integration. Ein Klick
-merkt eine Auswahl nur vor. „Auftrag kopieren“ erzeugt den gebundenen Auftrag;
-erst das Absenden und der folgende veröffentlichte Gitstand bestätigen Fortschritt.
+merkt eine Auswahl nur vor. Beim ChatGPT-Bildempfang bestätigt „Auftrag starten und
+kopieren“ die angezeigte Wahl. Bei den übrigen Aufträgen bestätigt das Absenden
+die Wahl. Den Fortschritt zeigt die Werkstatt am veröffentlichten Gitstand.
 Fortsetzen und Korrektur verwenden dieselben Originalquellen. Eine vorhandene
 gültige Endabnahme wird nicht nochmals angefordert. Arbeitswurzel und bedingte
 Mergefreigabe sind persönliche Optionen, niemals Recordbefugnisse. Zusätzliche
@@ -194,7 +197,7 @@ Der Regressionstest vergleicht die eingebetteten Bytes mit den Quellen.
 
 ## Bedienung und Quellenstatus
 
-Neben „Auftrag kopieren“ wählst du ChatGPT oder Codex. Die Werkstatt merkt
+Neben der Hauptaktion wählst du ChatGPT oder Codex. Die Werkstatt merkt
 sich die Wahl pro beauftragtem Schritt im aktuellen Browser. Ohne eigene Wahl
 beginnen Schritt 1, 2 und 4 mit Codex sowie Schritt 3 und 5 mit ChatGPT.
 Eine Anschlussabsicht in Schritt 4 ändert die Ausführungswahl eines
@@ -207,7 +210,7 @@ Unterbrechung am zuletzt gesichert veröffentlichten Stand an. Offene
 Eingaben, Wahlen und der Umfang eines Schlussauftrags bleiben beim
 Ausführungswechsel erhalten.
 
-Bei v3-Ständen steht die Bereitschaft auf der Bildkarte. Die Erklärung eines Befunds lässt sich mit Enter öffnen. Annahme und Behandlung gelten erst mit dem gesendeten Auftrag. „Korrigieren“ an der Karte setzt die Arbeitsgrundlage und springt zum Änderungsfeld. Die Auswahl einer Motivvorlage umfasst auch die konkrete Parameteralternative.
+Bei v3-Ständen steht die Bereitschaft auf der Bildkarte. Die Erklärung eines Befunds lässt sich mit Enter öffnen. Beim Bildempfang bindet die Start-und-Kopieraktion Annahme und Behandlung, beim übrigen Auftragsweg das Absenden. „Korrigieren“ an der Karte setzt die Arbeitsgrundlage und springt zum Änderungsfeld. Die Auswahl einer Motivvorlage umfasst auch die konkrete Parameteralternative.
 
 Das Hauptdropdown enthält genau eine offene Produktion pro Rätsel-ID mit Titel
 und aktueller Phase; titelgleiche IDs bleiben unterscheidbar. Im bewusst

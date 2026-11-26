@@ -20,6 +20,12 @@ class Writer:
     def __init__(self, state):
         self.root = Path(state) / 'import-writer'
 
+    def check_access(self):
+        with publisher.publisher_auth('gh'):
+            metadata = publisher.request('', 'GET')
+        require(metadata.get('full_name') == self.repository and metadata.get('permissions', {}).get('push') is True,
+                'Die Windows-gh-Anmeldung benötigt Schreibzugriff auf das Produktionsrepository.')
+
     def bound_work(self, db, order):
         job = order['puzzle_id']
         leaf = order.get('work_leaf', 'job-' + job)

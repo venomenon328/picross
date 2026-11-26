@@ -14,6 +14,11 @@ Einrichtung und Cache liegen getrennt unter %LOCALAPPDATA%\PicrossProductionWork
 Ein vorhandener Zustand bleibt nutzbar. Einen anderen bewusst gewählten Zustand
 mit Picross-Start.exe --state "D:\Eigener Zustand" öffnen.
 
+Für ChatGPT-Bildaufträge einmal unter „Einstellungen für Google Drive“ die
+private Stammordner-ID und den synchronisierten Windows-Ordner speichern.
+„Auftrag starten und kopieren“ bindet den Rätselordner und startet den Empfang.
+Den Auftrag in ChatGPT senden und eine gewählte Referenz dort anhängen.
+
 Das kleine Steuerfenster bietet „Im Browser öffnen“ und „Assistent beenden“.
 Minimieren lässt den Dienst laufen; Fensterschließen beendet ihn kontrolliert.
 Tab schließen stoppt ihn nicht. Ein zweiter Start öffnet die passende vorhandene

@@ -5,7 +5,7 @@ const assert = require('node:assert/strict');
 const {readFileSync} = require('node:fs');
 const {createHash} = require('node:crypto');
 const vm = require('node:vm');
-const [origin, token, expectedHashesJson, mode = 'late'] = process.argv.slice(2);
+const [origin, token, expectedHashesJson, mode = 'late', action] = process.argv.slice(2);
 const expectedHashes = JSON.parse(expectedHashesJson);
 class Element {
   constructor(tag) { this.tag = tag; this.children = []; this.dataset = {}; this.classList = {toggle(){}}; }
@@ -16,13 +16,17 @@ class Element {
   close() { this.open=false; }
   showModal() { this.open=true; }
   focus() {}
+  select() {}
 }
 const elements = new Map();
 const stored = new Map();
 if(mode==='parameters')stored.set('pw-options',JSON.stringify({
   workroot:'E:/Synthetic',merge:false,executors:{2:'malformed',3:'ChatGPT'}
 }));
-let copied;
+if(mode==='inbox-resume')stored.set('pw-options',JSON.stringify({
+  executors:{1:'ChatGPT',2:'ChatGPT'}
+}));
+let copied, starts=0;
 const document = {
   documentElement: new Element('html'),
   getElementById(id) {
@@ -59,7 +63,15 @@ const context = vm.createContext({
   crypto: require('node:crypto').webcrypto,
   URL: {createObjectURL() { return 'blob:test-' + hashes.length; }, revokeObjectURL(){}},
   fetch: async (path, options) => {
-    if(path.startsWith('/api/removal/'))options={...options,headers:{...options.headers,Origin:origin}};
+    if(path.startsWith('/api/removal/')||path.startsWith('/api/inbox/'))options={...options,headers:{...options.headers,Origin:origin}};
+    if(mode==='inbox'&&path==='/api/jobs')return new Promise(()=>{});
+    if(mode==='inbox'&&path==='/api/inbox/start'){
+      starts++;
+      const response=await fetch(origin+path,options);
+      assert.equal(response.status,200);
+      if(starts===1)throw Error('Test: Aktivierungsantwort verloren');
+      return response;
+    }
     if (!path.includes('/assets/')) {
       const delayed=holdDetail&&path.startsWith('/api/jobs/');
       if(delayed)holdDetail=false;
@@ -89,6 +101,52 @@ const run = code => vm.runInContext(code, context);
 (async () => {
   run(readFileSync(__dirname + '/ui/workflow.js', 'utf8'));
   run(readFileSync(__dirname + '/ui/app.js', 'utf8'));
+  if(mode==='inbox-resume'){
+    const get=id=>document.getElementById(id);
+    await until(()=>run('inboxState?.folder&&readyImages.has("one")&&detail')&&get('copyOrder').onclick);
+    const modeSelect=get('nextActionMode');
+    if(action==='resume-close'){
+      const closeReceipt=descendants(get('inboxOrders')).find(el=>el.textContent==='Quittung schließen');
+      assert(closeReceipt);
+      await closeReceipt.onclick();
+      assert.equal(run('currentOrder()'),undefined);
+    }
+    if(run('detail.facts.state')==='reveal_review'){
+      const choice=descendants(get('view')).find(el=>el.dataset.choice==='one');
+      assert.equal(choice.disabled,false);
+      choice.onclick();
+      const wishes=descendants(get('view')).find(el=>el.textContent?.startsWith('Neue/zusätzliche Wünsche zur Motivvorlage'));
+      wishes.children[0].value='Kontur für die Motivvorlage erhalten';wishes.children[0].oninput();
+    }
+    modeSelect.value=action==='continue'?'continue':'resume';modeSelect.onchange();
+    assert.equal(get('executor').value,'ChatGPT');
+    assert.equal(get('copyOrder').textContent,'Auftrag starten und kopieren');
+    assert.equal(get('copyOrder').disabled,false,get('orderStatus').textContent);
+    await get('copyOrder').onclick();
+    assert.equal(get('orderStatus').textContent,'Auftrag kopiert.');
+    assert.match(copied,/Drive: Suche unter Root-ID fixture/);
+    if(run('detail.facts.state')==='reveal_review')assert.equal(run('intent.selection'),'one');
+    console.log(JSON.stringify(copied));return;
+  }
+  if(mode==='inbox'){
+    await until(()=>run('inboxState?.folder'));
+    run("listing={snapshot:'snapshot',jobs:[]};newDraft();remember('brief','Fuchs');personal.executors[1]='ChatGPT';updatePrompt()");
+    const get=id=>document.getElementById(id);
+    assert.equal(starts,0);
+    assert.equal(get('orderText').value,'');
+    await Promise.all([get('copyOrder').onclick(),get('copyOrder').onclick()]);
+    assert.equal(starts,1);
+    assert.match(get('orderStatus').textContent,/verloren/);
+    context.navigator.clipboard.writeText=async()=>{throw Error('Clipboard');};
+    await get('copyOrder').onclick();
+    assert.match(get('orderStatus').textContent,/Kopieren fehlgeschlagen/);
+    const saved=get('orderText').value;
+    assert.match(saved,/pz-fuchs/);
+    context.navigator.clipboard.writeText=async text=>{copied=text;};
+    await get('copyOrder').onclick();
+    assert.equal(copied,saved);
+    console.log(JSON.stringify(copied));return;
+  }
   await until(()=>run('listing!==null'));
   // Pointerless synthetic legacy inputs now require a deliberate version choice.
   if(mode==='published')await run('open(listing.jobs.find(j=>j.revision==="r01").id)');
@@ -149,13 +207,18 @@ const run = code => vm.runInContext(code, context);
     const feedback=get('correctionFeedback');feedback.value='Kontur {A} ergänzen';feedback.oninput();
     assert.match(prompt(),/Kontur \{A\} ergänzen/);
     executor('ChatGPT');
-    assert.match(prompt(),/native Bildgenerierung/);
+    assert.equal(prompt(),'','creative order becomes copyable after successful activation');
+    assert.equal(get('copyOrder').textContent,'Auftrag starten und kopieren');
     assert.equal(feedback.value,'Kontur {A} ergänzen');
     assert.doesNotMatch(prompt(),/gebe Motivvorlage/);
     mode.value='resume';mode.onchange();
     assert.equal(get('executor').value,'ChatGPT');
+    assert.equal(get('copyOrder').textContent,'Auftrag starten und kopieren');
+    assert.equal(prompt(),'','the ChatGPT resume prompt requires a bound order');
+    executor('Codex');
     assert.match(prompt(),/wieder aufnehmen/);
     assert.doesNotMatch(prompt(),/gebe Motivvorlage/);
+    executor('ChatGPT');
     mode.value='continue';mode.onchange();
     assert.equal(get('copyOrder').disabled,true,'a correction basis is never a motif approval');
     executor('Codex');
@@ -391,9 +454,13 @@ const run = code => vm.runInContext(code, context);
 
     run('newDraft()');input('Was soll dein Rätsel zeigen?').value='Keep this local brief';input('Was soll dein Rätsel zeigen?').oninput();
     input('Breite').value='33';input('Breite').oninput();
-    const keptDraft=run('draft.id'),keptDraftStorage=stored.get('pw-briefs');
+    const keptDraft=run('draft.id');
     const draftView=document.getElementById('view').children,draftGeneration=run('generation');
-    const reference=fields().find(el=>el.type==='file');reference.files=[{name:'local-reference.png'}];reference.onchange();
+    const reference=fields().find(el=>el.type==='file'),bytes=Uint8Array.of(1,2,3);
+    reference.files=[{name:'local-reference.png',size:bytes.length,arrayBuffer:async()=>bytes.buffer}];
+    await reference.onchange();
+    assert.equal(run('draft.reference.sha256'),createHash('sha256').update(bytes).digest('hex'));
+    const keptDraftStorage=stored.get('pw-briefs');
     const empty={...base,snapshot:'pw-done-empty',jobs:[],motifs:[],completion:{...completion,completed_ids:[done.puzzle_id]}};
     context.completionSnapshot=empty;await run('checkSources(completionSnapshot)');document.getElementById('load').onclick();
     assert.equal(run('draft.id'),keptDraft,'an active local draft survives explicit adoption');

@@ -69,14 +69,23 @@ ein. Keine Migration alter WIP-Stände.
 
 ## IMPORT-03 · Einrichtung und tatsächlicher Auftrag
 
-Einmalig bestätigt der Benutzer den privaten Drive-Zielordner und dessen lokales
+In den Einstellungen speichert der Benutzer den privaten Drive-Stammordner und dessen lokales
 Eingangsverzeichnis. Die Cloud-Ordner-ID ist eine nicht geheime Auftragsbindung;
 der Windows-Pfad bleibt lokale Einrichtung und wird nicht als Cloudquelle
 ausgegeben. Der App-Gitcache und die eigene vollständige Gitbasis liegen
 außerhalb des synchronisierten Eingangs. Keine Speicherung persönlicher Pfade
 oder Zugangsdaten im Repository.
 
-Ein bewusst gestarteter Produktionsauftrag aktiviert genau seinen Empfang.
+„Auftrag starten und kopieren“ im Produktionsbereich aktiviert genau einen Empfang.
+PW weist dem Entwurf beim ersten Start eine freie Produktions-ID zu. Jeder neue
+Auftrag bindet einen direkten Kindordner mit dieser ID. Nur ChatGPT löst dessen
+Namen, Typ und Elternbindung vollständig paginiert über den Drive-Connector auf.
+Bei Abwesenheit erstellt der Akteur den Ordner einmal. Nach Antwortverlust und
+vor dem Upload prüft er die eindeutige Zuordnung erneut und verwendet die
+tatsächliche Ordner-ID. Ein gleichnamiger Nichtordner oder mehrere Treffer
+sperren die Lieferung. PW wartet auf das synchronisierte Kindverzeichnis.
+Eine geänderte Einstellung gilt für neu gestartete Aufträge. Vor dem Update
+begonnene flache Lieferungen werden im ursprünglich gebundenen Eingang beendet.
 Die Aktion nennt verständlich, dass passende Ergebnisse automatisch geprüft
 und als Arbeitsstand veröffentlicht werden. Sie bindet serverseitig
 Repository, Job, Phase, konkrete Absicht, erwarteten Arbeitsstand, zulässige
@@ -88,8 +97,14 @@ nicht hinter einem unverändert beschrifteten Kopierbutton verstecken.
 Die tatsächliche Startaktion kann eine bereits gewählte und angezeigte
 Kandidatenentscheidung zugleich erklären. Sie erteilt keine Auswahl künftig
 gelieferter Bytes und keine Endabnahme, Integration, Merge- oder Retirementbefugnis.
-Bestehende gültige Erklärungen werden übernommen. Der Lieferant darf keine
-zusätzlichen Erklärungen oder Befugniserweiterungen behaupten.
+„Arbeit wieder aufnehmen“ verwendet den offenen gebundenen Auftrag. Ohne
+offenen Auftrag bindet PW ein weiterhin offenes Reveal- oder Motivangebot am
+aktuellen Record im selben Rätselordner. Bestehende gültige
+Erklärungen bleiben wirksam. Eine neue Vorauswahl für die Folgephase erfordert
+„Fortsetzen / Entscheidung senden“ mit einer dafür qualifizierten Variante.
+Vorgemerkte Auswahlen und Befundänderungen bleiben bei der Wiederaufnahme in der
+Oberfläche. Der Lieferant darf keine zusätzlichen Erklärungen oder
+Befugniserweiterungen behaupten.
 
 Pro Job gibt es höchstens einen aktiven Empfangsauftrag; andere Jobs dürfen
 unabhängig warten. Abbrechen oder Ersetzen eines Empfangs macht die alte
@@ -114,13 +129,13 @@ aufgehobene Vorgaben, Motivvorlagenwünsche, Korrekturtext und Kontextwunsch an
 die gewählte Bildrolle und Handlung. Bei der Neuanlage wird das gebundene
 Briefing übernommen. Bei bestehenden Jobs bleibt das bisherige Briefing erhalten;
 neue Absichten werden als exakt gebundener Zusatz fortgeschrieben. Der normale
-Auftragsweg mit Dateianhang ist für ein lokal ausgewähltes Referenzbild verfügbar.
-Der Empfangsauftrag sperrt den Start, solange diese Referenz nur lokal vorliegt.
-Keine Wiederholung des vollständigen Regelwerks, keine vom Benutzer zu
-pflegenden Hashfelder. Bei einem Referenzbild muss der Akteur dessen Original
-tatsächlich erreichen können; ein lokaler Windows-Pfad ersetzt die Zustellung
-nicht. Ausführungswahl und bisheriger Nicht-Importweg bleiben ausdrücklich
-unterscheidbar.
+Auftragsweg bindet den Namen, die Bytezahl und SHA-256 der gewählten PNG-/JPEG-
+Referenz. Der Benutzer hängt die Datei beim Absenden nativ in ChatGPT an.
+Vor der Generierung öffnet der Akteur die tatsächliche Anlage, prüft alle drei
+Werte und dokumentiert die erforderliche Herkunft. Eine fehlende oder mehrdeutige
+Anlage sperrt die abhängige Generierung. Bei der ersten Reveal-Lieferung ist
+genau diese Referenz als zusätzliches `input`-Asset zulässig und erforderlich.
+Folgeaufträge verwenden die aktiven veröffentlichten Quellen.
 
 ## IMPORT-04 · Geschlossene Lieferhülle
 

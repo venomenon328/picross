@@ -396,7 +396,7 @@ class Handler(BaseHTTPRequestHandler):
             ap.require(not self.headers.get('Transfer-Encoding'), 'Transfer-Encoding ist nicht erlaubt.')
             removal = method == 'POST' and self.path in ('/api/removal/preview', '/api/removal/confirm')
             inbox_action = path.path.removeprefix('/api/inbox/') if path.path.startswith('/api/inbox/') else None
-            inbox_write = method == 'POST' and inbox_action in ('configure', 'activate', 'cancel', 'retry')
+            inbox_write = method == 'POST' and inbox_action in ('configure', 'start', 'cancel', 'retry')
             body = None
             if removal or inbox_write:
                 ap.require(origin == self.server.origin, 'Entfernung benötigt den eigenen Browserursprung.')
@@ -405,7 +405,7 @@ class Handler(BaseHTTPRequestHandler):
                            'Genau ein JSON-Content-Type und Content-Length erforderlich.')
                 length = self.headers.get('Content-Length', '')
                 maximum = 32 * 1024 if inbox_write else 2048
-                if inbox_write and inbox_action == 'activate':
+                if inbox_write and inbox_action == 'start':
                     maximum = 96 * 1024  # UTF-8 creative brief, grid changes and bound findings.
                 ap.require(length.isascii() and length.isdecimal() and 0 < int(length) <= maximum,
                            'Ungültige JSON-Anfragegröße.')
@@ -422,7 +422,7 @@ class Handler(BaseHTTPRequestHandler):
                 except (UnicodeDecodeError, json.JSONDecodeError) as exc:
                     raise InvalidInput('Gültiges UTF-8-JSON erforderlich.') from exc
                 ap.require(isinstance(body, dict) and all(
-                    isinstance(value, dict) if inbox_write and inbox_action == 'activate' and key == 'inputs'
+                    isinstance(value, dict) if inbox_write and inbox_action == 'start' and key == 'inputs'
                     else isinstance(value, str) and (len(value) <= 4096 if inbox_write else 0 < len(value) <= 160)
                     for key, value in body.items()),
                            'Nur kurze Textkennungen sind erlaubt.')

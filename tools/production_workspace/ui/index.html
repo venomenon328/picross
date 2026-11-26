@@ -25,24 +25,18 @@
       <div class="actions"><button id="refresh">Neuere Ergebnisse suchen</button><button id="load" hidden>Neueren Stand laden</button></div>
     </section>
     <details id="inbox">
-      <summary>Originale über Google Drive empfangen</summary>
-      <details><summary>Privaten Eingangsordner einrichten</summary>
-        <label>Drive-Ordner-ID<input id="inboxFolder" autocomplete="off"></label>
-        <label>Synchronisierter Windows-Ordner<input id="inboxDirectory" autocomplete="off"></label>
-        <button id="inboxSetup">Privaten Eingang bestätigen</button>
-      </details>
-      <label>Produktions-ID für ein neues Motiv<input id="inboxJob" placeholder="pz-mein-motiv"></label>
-      <label>Bildrolle<select id="inboxPhase"><option value="reveal">Abschlussbild</option><option value="motif">Motivvorlage</option><option value="background">Kontextzeichnung</option></select></label>
-      <label>Auftrag<select id="inboxIntent"><option value="offer">Angebot anlegen oder ergänzen</option><option value="correction">Gewählte Variante korrigieren</option><option value="assessment">Gewählte Variante neu bewerten</option></select></label>
-      <button id="inboxStart">Für die aktive Produktion empfangen und mit der gh-Anmeldung veröffentlichen</button>
+      <summary>Einstellungen für Google Drive</summary>
+      <label>Drive-Stammordner-ID<input id="inboxFolder" autocomplete="off"></label>
+      <label>Synchronisierter Windows-Stammordner<input id="inboxDirectory" autocomplete="off"></label>
+      <button id="inboxSetup">Einstellungen speichern</button>
       <p id="inboxMessage" role="status"></p>
-      <div id="inboxOrders"></div>
     </details>
     <p id="error" role="alert" hidden></p>
     <div class="workspace">
       <aside aria-label="Produktionsnavigation">
         <h2>Deine Produktionen</h2>
         <button id="newJob"><span aria-hidden="true">+</span> Neues Motiv</button>
+        <div id="inboxOrders" aria-label="Gestartete Aufträge"></div>
         <div id="navigation">
           <label class="jobPicker">Offene Produktionen<select id="jobs"><option>Wird geladen …</option></select></label>
           <p id="motifStatus" role="status" class="hint"></p>
