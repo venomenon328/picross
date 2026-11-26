@@ -323,7 +323,8 @@ class Inbox:
         require(order.get('manifest', name) == name and order.get('manifest_hash', manifest_id['sha256']) == manifest_id['sha256'],
                 'Lieferkennung oder Manifestbytes wurden ausgetauscht.')
         if 'manifest' not in order:
-            order.update(manifest=name, manifest_hash=manifest_id['sha256'], step='stage')
+            order.update(manifest=name, manifest_hash=manifest_id['sha256'], step='stage',
+                         status='Liefermanifest eingetroffen. Originaldateien werden geprüft.')
             self.save()
         directory = self.stage(order)
         directory.mkdir(parents=True, exist_ok=True)
@@ -371,6 +372,7 @@ class Inbox:
                     raw = io.read(self.stage(order), order['manifest'], 2 * current.LIMIT)
                     require(io.checksum(raw) == order['manifest_hash'], 'Gesicherte Lieferbytes verändert.')
                     value = contract.envelope(raw, order['manifest'], order)
+                self.message(order, 'Übernahme läuft. Arbeitsstand und Originale werden geprüft und veröffentlicht.')
                 result = self.writer.publish(order, value['request'], self.stage(order), self.save)
                 order.update(step='cleanup', result=result, remaining=list(order['files']),
                              status='GitHub-Veröffentlichung bestätigt. Eingangsbereinigung läuft.')

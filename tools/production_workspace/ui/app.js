@@ -86,7 +86,9 @@ function updatePrompt(){
    const same=boundPreview?.key===intentKey(body);
    box.value=same?boundPreview.prompt:'';
    button.textContent=same?'Gebundenen Auftrag erneut kopieren':'Auftrag starten und kopieren';
-   $('executorHint').textContent='Beim Start werden die angezeigte Wahl und die Befunderklärungen gebunden. PW prüft passende Drive-Ergebnisse und veröffentlicht den Arbeitsstand automatisch.';
+   const open=currentOrder();
+   const effect=open&&!open.result?' Eine geänderte Vorgabe ersetzt den noch wartenden Auftrag.':'';
+   $('executorHint').textContent='Beim Start werden die angezeigte Wahl und die Befunderklärungen gebunden. PW prüft passende Drive-Ergebnisse und veröffentlicht den Arbeitsstand automatisch.'+effect;
   }else box.value=PW.prompt(detail,intent,personal);
   button.disabled=starting;
   status.textContent=final?(personal.merge?'Auftrag bis main und Produktionsabschluss – nach erfüllten Pflichtgates.':'Auftrag bis Draft-PR – kein Merge.'):'';

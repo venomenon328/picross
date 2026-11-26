@@ -262,6 +262,9 @@ class InboxTests(unittest.TestCase):
             self.assertEqual((order['step'], order['paused']), ('publish', True))
             with self.assertRaises(ValueError):
                 resumed.action('cancel', binding)
+            # The failed cancel rolled back the transaction. Observe the durable order.
+            resumed = Inbox(self.service)
+            order = resumed.data['orders'][job]
             # Even a saved build must respect a publication journal.
             order.update(step='build', paused=False)
             journal = ws.gitdir(work) / JOURNAL
