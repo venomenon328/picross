@@ -193,7 +193,7 @@ Erst danach entfallen ersetzte Originale. Aktive Auswahlen haben keine
 technische Siebentagesfrist. Rollout und Produktionsfreigabe setzen einen
 tatsächlich verfügbaren v2-Reader und bestätigten Originalzugriff voraus.
 
-Die im abgesendeten Auftrag erklärte und an den aktuellen Record gebundene
+Die mit der Bildempfangs-Startaktion oder im abgesendeten Auftrag erklärte und an den aktuellen Record gebundene
 Kandidatenwahl deckt die anschließende automatische Bereinigung der nicht mehr
 referenzierten, eindeutig eigenen Arbeitsrelease-Assets bereits ab. Nach
 bestätigter Record-/Ref-Veröffentlichung führt `work_publish publish` diesen

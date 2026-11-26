@@ -145,6 +145,9 @@ class Inbox:
         prior = self.data['orders'].get(job)
         generation = prior['request_id'] if prior else self.data['generations'].get(job, '')
         signature = io.checksum(current.encoded([head, action, candidate, body['inputs'], body['findings']]))
+        if prior and action == 'resume' and prior['step'] != 'done':
+            require(prior['source']['work_head'] == head, 'Quelle des offenen Auftrags hat sich geändert. Gebundenen Auftrag prüfen.')
+            return job
         if prior and (signature == prior.get('signature') or action == 'resume' and prior['source']['work_head'] == head):
             require(prior['step'] != 'done' or action != 'resume', 'Veröffentlichten Stand für die Fortsetzung öffnen.')
             return job

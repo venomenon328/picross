@@ -537,9 +537,10 @@ Ein geänderter freigegebener Korridor geht über den bestehenden Korrekturweg z
 erneuten Entscheidung. Die bewusst angeforderte reguläre Freigabe in Schritt 3
 bleibt erhalten.
 
-Die Auswahl im Assistenten ist zunächst Bedienabsicht. Erst der ausdrücklich
-abgesendete Auftrag erklärt eine Bild-/Motiv-/Endfreigabe oder beauftragt eine
-Integration. Ein neuer Quellstand oder geänderte relevante Bildbytes entwerten
+Die Auswahl im Assistenten ist zunächst Bedienabsicht. Beim gebundenen Bildempfang
+bestätigt „Auftrag starten und kopieren“ die angezeigte Auswahl. Auf dem übrigen
+Auftragsweg erklärt das Absenden die Freigabe oder beauftragt die Integration.
+Ein neuer Quellstand oder geänderte relevante Bildbytes entwerten
 stale Auswahlabsichten gezielt. Kein automatischer Modellaufruf, keine Modell-API,
 kein Freigabewriter im Hilfsdienst und keine automatische Serienfreigabe.
 
@@ -617,7 +618,7 @@ unmittelbar neu angezeigt; andere Kandidaten bleiben unverändert.
 | Fortsetzen / Entscheidung senden | Den vorhandenen Kandidaten einschließlich der im selben Auftrag erklärten zulässigen Annahmen für die fällige Folge verwenden. Keine zusätzliche Annahme-/Auswahlrunde. |
 | Korrigieren | Den Kandidaten, auch mit offenen Blockern, als Grundlage der beschriebenen Änderung verwenden. Behandlungsvorgaben mitnehmen; keine kreative Wahl künftiger Bytes. |
 
-Checkbox, Texte und Auswahl bleiben bis zum tatsächlichen Absenden lokale
+Checkbox, Texte und Auswahl bleiben bis zur Start-und-Kopieraktion beim Bildempfang bzw. zum Absenden des übrigen Auftrags lokale
 Bedienabsichten. Das UI unterscheidet vorgemerkte und veröffentlichte Entscheidungen.
 Der Auftrag trägt neue Annahmen/Widerrufe mit Kandidaten-/Befundzuordnung,
 Behandlung, konkrete Wahl oder Korrekturgrundlage und nächste Aktion. Bereits

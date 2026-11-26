@@ -130,7 +130,7 @@ direkt per Squash-Merge integrieren. Die normale Abschlusskette läuft ohne
 Zweitreviewer, Copilot-Anfrage oder Weitergabe des PR-Inhalts an Copilot.
 Nach bestätigter autorisierter Integration führt der Akteur den gebundenen
 Abschluss samt Branch, Arbeitsrelease und Tag direkt nach Schritt 5 §9 aus.
-Ausdrücklicher Draftumfang bleibt. Erst Absenden erklärt Rechte, Gitdaten belegen Erfolg.
+Ausdrücklicher Draftumfang bleibt. Beim Bildempfang bindet die ausdrückliche Startaktion die angezeigte Wahl, sonst erklärt das Absenden die Rechte. Gitdaten belegen Erfolg.
 
 ## Darstellungen und Sichtung
 
@@ -211,7 +211,7 @@ entfernen, sobald keine aktuelle Nutzung mehr besteht. Kein Archivieren und
 keine Wartepflicht auf Main. Gewählte Bilder/Raster/Proofs nur so lange erhalten,
 wie die aktuelle Phase sie braucht; wiederverwendete Dateien nicht duplizieren.
 
-Die im abgesendeten Auftrag ausdrücklich erklärte, aktuelle und eindeutig an
+Die beim Start des gebundenen Bildempfangs oder im abgesendeten Auftrag ausdrücklich erklärte, aktuelle und eindeutig an
 Kandidaten-ID sowie unveränderte Originalbytes/Revision gebundene Wahl umfasst
 die anschließende Entfernung der dadurch ausgeschiedenen, nachweislich nicht
 mehr benötigten eigenen Alternativen samt exklusiver Hilfsdateien und

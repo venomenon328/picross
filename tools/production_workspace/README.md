@@ -56,8 +56,9 @@ direkt zugänglich. Änderungen an einem vorgelegten Korridor laufen über
 „Gezielt korrigieren“. Eine ID entsteht erst im Auftrag.
 Die fünf Schritte zeigen Abschlussbilder, Motivvorlage, geprüfte Rasterangebote,
 danach Kontextzeichnungen und schließlich Endabnahme/Integration. Ein Klick
-merkt eine Auswahl nur vor. „Auftrag kopieren“ erzeugt den gebundenen Auftrag;
-erst das Absenden und der folgende veröffentlichte Gitstand bestätigen Fortschritt.
+merkt eine Auswahl nur vor. Beim ChatGPT-Bildempfang bestätigt „Auftrag starten und
+kopieren“ die angezeigte Wahl. Bei den übrigen Aufträgen bestätigt das Absenden
+die Wahl. Den Fortschritt zeigt die Werkstatt am veröffentlichten Gitstand.
 Fortsetzen und Korrektur verwenden dieselben Originalquellen. Eine vorhandene
 gültige Endabnahme wird nicht nochmals angefordert. Arbeitswurzel und bedingte
 Mergefreigabe sind persönliche Optionen, niemals Recordbefugnisse. Zusätzliche
@@ -196,7 +197,7 @@ Der Regressionstest vergleicht die eingebetteten Bytes mit den Quellen.
 
 ## Bedienung und Quellenstatus
 
-Neben „Auftrag kopieren“ wählst du ChatGPT oder Codex. Die Werkstatt merkt
+Neben der Hauptaktion wählst du ChatGPT oder Codex. Die Werkstatt merkt
 sich die Wahl pro beauftragtem Schritt im aktuellen Browser. Ohne eigene Wahl
 beginnen Schritt 1, 2 und 4 mit Codex sowie Schritt 3 und 5 mit ChatGPT.
 Eine Anschlussabsicht in Schritt 4 ändert die Ausführungswahl eines
@@ -209,7 +210,7 @@ Unterbrechung am zuletzt gesichert veröffentlichten Stand an. Offene
 Eingaben, Wahlen und der Umfang eines Schlussauftrags bleiben beim
 Ausführungswechsel erhalten.
 
-Bei v3-Ständen steht die Bereitschaft auf der Bildkarte. Die Erklärung eines Befunds lässt sich mit Enter öffnen. Annahme und Behandlung gelten erst mit dem gesendeten Auftrag. „Korrigieren“ an der Karte setzt die Arbeitsgrundlage und springt zum Änderungsfeld. Die Auswahl einer Motivvorlage umfasst auch die konkrete Parameteralternative.
+Bei v3-Ständen steht die Bereitschaft auf der Bildkarte. Die Erklärung eines Befunds lässt sich mit Enter öffnen. Beim Bildempfang bindet die Start-und-Kopieraktion Annahme und Behandlung, beim übrigen Auftragsweg das Absenden. „Korrigieren“ an der Karte setzt die Arbeitsgrundlage und springt zum Änderungsfeld. Die Auswahl einer Motivvorlage umfasst auch die konkrete Parameteralternative.
 
 Das Hauptdropdown enthält genau eine offene Produktion pro Rätsel-ID mit Titel
 und aktueller Phase; titelgleiche IDs bleiben unterscheidbar. Im bewusst
