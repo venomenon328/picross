@@ -443,13 +443,19 @@ class MotifTests(unittest.TestCase):
 
     def test_same_revision_local_bytes_never_block_remote(self):
         self.build('r01'); remote = self.remote(); service = self.service(remote)
-        from tools.test_workspace_deliveries import put, publish_pointer
+        from tools.test_workspace_deliveries import put
+        from tools.production_workspace import current_view
         name = 'content/authoring/pz-workspace-test/r01/record.json'
         record = p.parse((self.repo / name).read_bytes()); record['next_step'] += ' local only'
         ref = put(self.repo, name, record)
         name = name.replace('record.json', 'workspace.json')
         view = p.parse((self.repo / name).read_bytes()); view['record'].update(ref)
-        put(self.repo, name, view); publish_pointer(self.repo, 'pz-workspace-test', 'r01'); commit(self.repo)
+        projection_ref = put(self.repo, name, view)
+        pointer_path = current_view.path('pz-workspace-test')
+        pointer = p.parse((self.repo / pointer_path).read_bytes())
+        pointer.update(record=ref, projection=projection_ref)
+        put(self.repo, pointer_path, pointer)
+        commit(self.repo)
         value = service.listing(refresh=True); motif = value['motifs'][0]
         self.assertIsNotNone(motif['current_job'])
         self.assertEqual(len(motif['versions']), 1)
