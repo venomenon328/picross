@@ -1,0 +1,4 @@
+author: OpenAI ImageGen (KI-generierte Kontextzeichnung)
+changes: Korrigiertes ImageGen-Original, PNG-Bytes unverändert übernommen.
+source: Native Bilderzeugung in ChatGPT für pz-honigbiene, Schritt 4.
+usage_basis: Für den beauftragten picross-Produktionsschritt aus eigenen Jobvorgaben erzeugt.
