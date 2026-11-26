@@ -124,6 +124,29 @@ const cases=[
         repo.availability.return_value = None
         self.service.operation = threading.Lock()
         self.service.acquire_operation = self.service.operation.acquire
+        from http.client import HTTPConnection
+        from tools.production_workspace.server import Server
+        self.service.stopping = False
+        self.service.secret = 'test-session'
+        self.service.workers = threading.BoundedSemaphore(4)
+        self.service.inbox = self.inbox
+        server = Server(self.service)
+        self.addCleanup(server.server_close)
+        thread = threading.Thread(target=server.serve_forever, kwargs={'poll_interval': 0.02})
+        thread.start()
+        self.addCleanup(thread.join)
+        self.addCleanup(server.shutdown)
+        def activate(body):
+            connection = HTTPConnection(*server.server_address, timeout=5)
+            try:
+                connection.request('POST', '/api/inbox/activate', body=json.dumps(body).encode(),
+                    headers={'Content-Type': 'application/json', 'Origin': server.origin,
+                             'X-Workspace-Session': self.service.secret})
+                response = connection.getresponse()
+                return response.status, json.loads(response.read())
+            finally:
+                connection.close()
+
         expected = [('Fuchs', 'Zusätzliche Motivhinweise: Im Profil', 'Breite: exakt 17 Zellen.'),
                     ('Ohren erhalten', 'Breite: bisherigen Wunsch ausdrücklich aufheben.'),
                     ('Ohr abrunden',), ('Waldrand bei Nacht',)]
@@ -139,7 +162,8 @@ const cases=[
                     self.service.selected = Mock(return_value={'puzzle_id': 'pz-current', 'commit': head,
                         '_record': {**old, 'format': current.findings.PUBLISHED},
                         '_projection': {'record': {'sha256': 'c' * 64}}})
-                self.inbox.action('activate', body)
+                status, result = activate(body)
+                self.assertEqual(status, 200, result)
                 order = Inbox(self.service).data['orders']['pz-current']
                 for phrase in phrases:
                     self.assertIn(phrase, order['brief'])
@@ -167,8 +191,9 @@ const cases=[
                 with self.assertRaises(ValueError):
                     contract.delta(order, request, old)
         self.inbox.data['orders'].clear()
-        with self.assertRaisesRegex(ValueError, 'Referenzbild.*nicht erreichbar'):
-            self.inbox.action('activate', bodies[-1])
+        status, result = activate(bodies[-1])
+        self.assertEqual(status, 400)
+        self.assertRegex(result['error'], 'Referenzbild.*nicht erreichbar')
         self.assertFalse(self.inbox.data['orders'])
 
     def test_persisted_build_can_rebind_but_unknown_publish_cannot(self):

@@ -405,6 +405,8 @@ class Handler(BaseHTTPRequestHandler):
                            'Genau ein JSON-Content-Type und Content-Length erforderlich.')
                 length = self.headers.get('Content-Length', '')
                 maximum = 32 * 1024 if inbox_write else 2048
+                if inbox_write and inbox_action == 'activate':
+                    maximum = 96 * 1024  # UTF-8 creative brief, grid changes and bound findings.
                 ap.require(length.isascii() and length.isdecimal() and 0 < int(length) <= maximum,
                            'Ungültige JSON-Anfragegröße.')
                 raw = self.rfile.read(int(length))
@@ -419,8 +421,10 @@ class Handler(BaseHTTPRequestHandler):
                     body = json.loads(raw.decode('utf-8'), object_pairs_hook=unique)
                 except (UnicodeDecodeError, json.JSONDecodeError) as exc:
                     raise InvalidInput('Gültiges UTF-8-JSON erforderlich.') from exc
-                ap.require(isinstance(body, dict) and all(isinstance(v, str) and
-                           (len(v) <= 4096 if inbox_write else 0 < len(v) <= 160) for v in body.values()),
+                ap.require(isinstance(body, dict) and all(
+                    isinstance(value, dict) if inbox_write and inbox_action == 'activate' and key == 'inputs'
+                    else isinstance(value, str) and (len(value) <= 4096 if inbox_write else 0 < len(value) <= 160)
+                    for key, value in body.items()),
                            'Nur kurze Textkennungen sind erlaubt.')
             else:
                 ap.require(self.headers.get('Content-Length', '0') == '0', 'Anfrageinhalt ist nicht erlaubt.')
