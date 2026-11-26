@@ -39,7 +39,8 @@ PRODUCTION_WRITER_EXCLUDES = (
 
 def frozen_excludes(app):
     if app == PW:
-        return FROZEN_EXCLUDES + tuple(n for n in PRODUCTION_WRITER_EXCLUDES if n not in PW_WRITER_MODULES)
+        return FROZEN_EXCLUDES + ('work_ref_check', 'tools.work_ref_check') + tuple(
+            name for name in PRODUCTION_WRITER_EXCLUDES if name not in PW_WRITER_MODULES)
     return FROZEN_EXCLUDES + (PRODUCTION_WRITER_EXCLUDES if app == PE else ())
 
 

@@ -1,7 +1,6 @@
 """One durable, explicit receipt per job. All mutations share the PW operation lock."""
 from datetime import datetime, timezone
 import json
-import os
 from pathlib import Path
 import re
 import subprocess
@@ -195,29 +194,31 @@ class Inbox:
 
     def receive(self, order, folder):
         matches = []
-        with os.scandir(folder) as entries:
-            for entry in entries:
-                if not re.fullmatch(r'[0-9a-fA-F-]{36}\.json', entry.name, re.I):
-                    continue
-                try:
-                    raw, identity = files.read(folder, entry.name, 2 * current.LIMIT)
-                except files.Waiting:
-                    continue
-                try:
-                    # Route a bounded parse. Duplicate-key deliveries with a bound
-                    # request are errors, even if the last occurrence claims a different ID.
-                    route = io.json_bytes(raw, 2 * current.LIMIT)
-                except (json.JSONDecodeError, UnicodeDecodeError):
-                    continue
-                except ValueError:
-                    if order['request_id'].encode('ascii') in raw:
-                        raise
-                    continue
-                if entry.name == order.get('manifest'):
-                    require(identity['sha256'] == order['manifest_hash'], 'Lieferkennung mit geänderten Manifestbytes.')
-                if isinstance(route, dict) and route.get('request_id') == order['request_id']:
-                    matches.append((entry.name, raw, identity))
-                    require(len(matches) == 1, 'Konflikt: mehrere Lieferungen für diesen Auftrag.')
+        candidates = 0
+        for entry in files.entries(folder):
+            if not re.fullmatch(r'[0-9a-fA-F-]{36}\.json', entry.name, re.I):
+                continue
+            candidates += 1
+            require(candidates <= 32, 'Zu viele Liefermanifeste im privaten Eingang.')
+            try:
+                raw, identity = files.read(folder, entry.name, 2 * current.LIMIT)
+            except files.Waiting:
+                continue
+            try:
+                # Route a bounded parse. Duplicate-key deliveries with a bound
+                # request are errors, even if the last occurrence claims a different ID.
+                route = io.json_bytes(raw, 2 * current.LIMIT)
+            except (json.JSONDecodeError, UnicodeDecodeError):
+                continue
+            except ValueError:
+                if order['request_id'].encode('ascii') in raw:
+                    raise
+                continue
+            if entry.name == order.get('manifest'):
+                require(identity['sha256'] == order['manifest_hash'], 'Lieferkennung mit geänderten Manifestbytes.')
+            if isinstance(route, dict) and route.get('request_id') == order['request_id']:
+                matches.append((entry.name, raw, identity))
+                require(len(matches) == 1, 'Konflikt: mehrere Lieferungen für diesen Auftrag.')
         if not matches:
             raise files.Waiting
         name, raw, manifest_id = matches[0]

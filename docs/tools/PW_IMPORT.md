@@ -307,3 +307,5 @@ tatsächlich unterstützten Stand angepasst: PRODUCTION_WORKSPACE, PW_B_CONTRACT
 PRODUCTION_GIT_WORKSPACE, PW_REMOTE, betroffene Authoring-/Qualitätsabschnitte,
 Windows-Payload-/Updatevertrag und Werkzeuganleitung. Prüfbedarf, konkrete
 Einführungsnachweise und offene Gates stehen ausschließlich im Issue/Paket.
+
+Der lokale Empfänger prüft pro Durchlauf höchstens 1024 Verzeichniseinträge und 32 mögliche Manifeste. Bei Überschreitung bleibt die Lieferung zur Klärung stehen.
