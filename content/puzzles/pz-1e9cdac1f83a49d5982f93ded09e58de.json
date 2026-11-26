@@ -1,0 +1,211 @@
+{
+  "added": {
+    "added_at": "2026-10-25T00:56:50Z",
+    "provenance": {
+      "commit": null,
+      "evidence": null,
+      "kind": "registration",
+      "reason": "Successful first playable registration in the shared transaction.",
+      "reference_time": "2026-10-25T00:56:50Z"
+    }
+  },
+  "background": {
+    "asset": {
+      "bytes": 1054945,
+      "file": "game/art/backgrounds/pz-1e9cdac1f83a49d5982f93ded09e58de.png",
+      "sha256": "cb684bb7d857e173db753180af0aa8aec66deb95acf030c654c10910b9952893"
+    },
+    "image_revision": 2,
+    "status": "selected"
+  },
+  "category_id": "mythen-fantasie",
+  "definition": {
+    "bytes": 4395,
+    "file": "game/data/content/pentagramm_001.json",
+    "sha256": "913b58b617b2cc5ee77473285107b08e353b258eab0f2911c402f27af3eb5691"
+  },
+  "difficulty": {
+    "compact_analysis": {
+      "analysis_hash": "b7acc1bd43cc104287d773a07fd3442a87d64a459dfd473cf667bd3ca6592c54",
+      "deduction_complete": true,
+      "line_analysis_complete": true,
+      "line_fixpoint_confirmed": true,
+      "new_singletons": 484,
+      "profiles_hash": "2f43ca6d239c385b90c7a3ee58368fb1ed07ae09ac41d8c68357d80efb55c315",
+      "r4": null,
+      "reason": null,
+      "result_hash": "db6236c999ca57f12ed3bc54623fb3aef965b30a9717c804bc51a7be6c909656",
+      "status": "solved",
+      "structure": {
+        "adjacent_color_changes": 0,
+        "cells": 484,
+        "clue_length_histogram": {
+          "1": 6,
+          "10": 4,
+          "11": 1,
+          "2": 53,
+          "21": 1,
+          "22": 1,
+          "3": 25,
+          "4": 16,
+          "5": 7,
+          "6": 9,
+          "7": 4,
+          "8": 2
+        },
+        "colors": 1,
+        "geometric_slack": 405,
+        "height": 22,
+        "mandatory_gaps": 85,
+        "short_blocks": 59,
+        "total_clue_length": 478,
+        "total_clues": 129,
+        "width": 22
+      },
+      "trace_hash": "77fc7cdfd54a8a3df68a288867a445de26e7ca9d347217777a6e7fab5e41f633",
+      "wave_count": 46
+    },
+    "logic_binding": {
+      "matrix_hash": "16998b8381e835923b7f969007e9bef5b981b177bb0614820140ced7e2fcea14"
+    },
+    "rating": {
+      "analysis_result_hash": "db6236c999ca57f12ed3bc54623fb3aef965b30a9717c804bc51a7be6c909656",
+      "format": "picross-catalog-sd2-rating-v1",
+      "method": "picross-difficulty-0.4",
+      "method_hash": "5508f0742aa858a6adc31aa621433e68298b915fb0fd6b8d9e74e576ba87caaf",
+      "rating_hash": "e434deab92c633db3a9ca43886903af59ee2b87025a897a152615f524a156100",
+      "result": {
+        "analysis_result_hash": "db6236c999ca57f12ed3bc54623fb3aef965b30a9717c804bc51a7be6c909656",
+        "assessment": {
+          "boundaries": {
+            "distance_lower": [
+              63451,
+              109779
+            ],
+            "distance_upper": [
+              46328,
+              109779
+            ],
+            "lower": [
+              3,
+              1
+            ],
+            "nearest_distance": [
+              46328,
+              109779
+            ],
+            "upper": [
+              4,
+              1
+            ]
+          },
+          "contributions": {
+            "demand": [
+              467,
+              222
+            ],
+            "search": [
+              14531,
+              11868
+            ],
+            "workload": [
+              1,
+              4
+            ]
+          },
+          "level": 4,
+          "level_without_workload": 4,
+          "score": [
+            392788,
+            109779
+          ],
+          "signals": {
+            "context": [
+              46,
+              111
+            ],
+            "fluent": false,
+            "highest_family": "E2",
+            "longest_narrow_run": 20,
+            "narrow_waves": 29,
+            "peak_search": [
+              2891,
+              2967
+            ],
+            "raw_workload": [
+              1,
+              4
+            ],
+            "spans": 304,
+            "workload_ceiling": 4,
+            "workload_guard": "none"
+          },
+          "without_workload": [
+            1461373,
+            439116
+          ]
+        },
+        "confidence": "medium",
+        "estimated_minutes": null,
+        "explanation": "Model estimate from synthetic references; no human calibration or time estimate. Demand, search and bounded workload use independently checked line profiles.",
+        "format": "picross-sd2-rating-v1",
+        "method": "picross-difficulty-0.4",
+        "method_hash": "5508f0742aa858a6adc31aa621433e68298b915fb0fd6b8d9e74e576ba87caaf",
+        "profile_scope": "complete_line",
+        "reason": "complete_line",
+        "status": "rated"
+      },
+      "source": {
+        "bytes": 4395,
+        "definition_id": "pz-1e9cdac1f83a49d5982f93ded09e58de",
+        "engine_logic_hash": "9c538316510705d6b8ab0bd4fb138f360f6cd575fad606ea6fbd1980a12414d2",
+        "kind": "runtime",
+        "production_mode": "unknown",
+        "runtime_revision": 1,
+        "sha256": "913b58b617b2cc5ee77473285107b08e353b258eab0f2911c402f27af3eb5691"
+      }
+    },
+    "rating_revision": 2
+  },
+  "format": "picross-puzzle-record-v1",
+  "id": "pz-1e9cdac1f83a49d5982f93ded09e58de",
+  "mode": "mono",
+  "name": "Pentagramm",
+  "reveal": {
+    "asset": {
+      "bytes": 1594419,
+      "file": "game/art/content/pentagramm_001.png",
+      "sha256": "d98d365128e3146657440f35645fea55d95aa23bd74efd7038d240e1026db12d"
+    },
+    "catalog": {
+      "generator": "picross-catalog-reveal-1",
+      "profiles": [
+        {
+          "asset": {
+            "bytes": 19965,
+            "file": "game/art/catalog/pz-1e9cdac1f83a49d5982f93ded09e58de-ui100.png",
+            "sha256": "2fc1c739f65842998df2b3229ecfd9011398903155fa8d58a80ae8f1d9356dd1"
+          },
+          "height": 112,
+          "profile": "catalog-ui100-v1",
+          "width": 112
+        },
+        {
+          "asset": {
+            "bytes": 28211,
+            "file": "game/art/catalog/pz-1e9cdac1f83a49d5982f93ded09e58de-ui125.png",
+            "sha256": "1ddfd4a1cbfd5f6b272191fbc6883a39e7a5ce0ef20830f64c2d478dbf647321"
+          },
+          "height": 140,
+          "profile": "catalog-ui125-v1",
+          "width": 140
+        }
+      ],
+      "source_height": 1254,
+      "source_width": 1254
+    },
+    "image_revision": 1
+  },
+  "save_slot": "pentagramm_001",
+  "visible": true
+}

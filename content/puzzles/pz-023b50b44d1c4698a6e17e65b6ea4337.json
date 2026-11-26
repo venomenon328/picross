@@ -1,0 +1,220 @@
+{
+  "added": {
+    "added_at": "2026-10-14T20:14:44Z",
+    "provenance": {
+      "commit": "f15392cc9c33756d6b8e52b070ffc208d9a70bc7",
+      "evidence": {
+        "path": "content/added/reports/ku-b-initial.json",
+        "sha256": "e6d7a01e740adbc40cdc90e64c733f95907c8924cfe1f0a4bb734bb7bc6b7884"
+      },
+      "kind": "git-snapshot",
+      "reason": "No direct UTC first-registration receipt found in reviewed sources; earliest verified visible integrated catalog snapshot including bound PR history. Commit UTC is a reconstructed reference, not tool execution time.",
+      "reference_time": "2026-10-14T20:14:44Z"
+    }
+  },
+  "background": {
+    "asset": {
+      "bytes": 810683,
+      "file": "game/art/backgrounds/pz-023b50b44d1c4698a6e17e65b6ea4337.png",
+      "sha256": "da467a32f014cad7af7a275a4fd359ce3e634dd4da8708369af30ded473e82fb"
+    },
+    "image_revision": 3,
+    "status": "selected"
+  },
+  "category_id": "menschen-berufe",
+  "definition": {
+    "bytes": 22568,
+    "file": "game/data/content/ho_chi_minh_001.json",
+    "sha256": "3bcde54a01d96e81529e41ac358157523f0aa113b84c1c9fdc15d43002d19523"
+  },
+  "difficulty": {
+    "compact_analysis": {
+      "analysis_hash": "b14439843eaaf6158a1c91903569ac1e07b9439875e40406f2b238fcec7e6cba",
+      "deduction_complete": true,
+      "line_analysis_complete": true,
+      "line_fixpoint_confirmed": true,
+      "new_singletons": 1728,
+      "profiles_hash": "eaeaeb9d8fd9a7af598f654e5ba95149277ec0b51f1bf08f6dec52fa472d6f46",
+      "r4": null,
+      "reason": null,
+      "result_hash": "be70a422eaeb760934e73736c32951d437e90e43f488451526971f51dcf22828",
+      "status": "solved",
+      "structure": {
+        "adjacent_color_changes": 711,
+        "cells": 1728,
+        "clue_length_histogram": {
+          "1": 396,
+          "10": 10,
+          "11": 12,
+          "12": 11,
+          "13": 5,
+          "14": 6,
+          "15": 4,
+          "16": 1,
+          "17": 2,
+          "18": 2,
+          "2": 132,
+          "3": 75,
+          "4": 54,
+          "5": 31,
+          "6": 23,
+          "7": 13,
+          "8": 7,
+          "9": 14
+        },
+        "colors": 4,
+        "geometric_slack": 1126,
+        "height": 48,
+        "mandatory_gaps": 4,
+        "short_blocks": 528,
+        "total_clue_length": 2326,
+        "total_clues": 798,
+        "width": 36
+      },
+      "trace_hash": "091bdaa337883bd3776ee67d6eae768d016a5d4396cfab93d0c61c431b45deee",
+      "wave_count": 27
+    },
+    "logic_binding": {
+      "matrix_hash": "37034e864a3e3fb978922393bee93bb05b866adbcb775f2d41b58cc739dba86f"
+    },
+    "rating": {
+      "analysis_result_hash": "be70a422eaeb760934e73736c32951d437e90e43f488451526971f51dcf22828",
+      "format": "picross-catalog-sd2-rating-v1",
+      "method": "picross-difficulty-0.4",
+      "method_hash": "5508f0742aa858a6adc31aa621433e68298b915fb0fd6b8d9e74e576ba87caaf",
+      "rating_hash": "24f89cfe8774a14bf15c35106780ba2d61cf85a429dd0da99482fb0b72d99f23",
+      "result": {
+        "analysis_result_hash": "be70a422eaeb760934e73736c32951d437e90e43f488451526971f51dcf22828",
+        "assessment": {
+          "boundaries": {
+            "distance_lower": [
+              12085,
+              33696
+            ],
+            "distance_upper": [
+              21611,
+              33696
+            ],
+            "lower": [
+              3,
+              1
+            ],
+            "nearest_distance": [
+              12085,
+              33696
+            ],
+            "upper": [
+              4,
+              1
+            ]
+          },
+          "contributions": {
+            "demand": [
+              113,
+              52
+            ],
+            "search": [
+              2425,
+              2592
+            ],
+            "workload": [
+              1,
+              4
+            ]
+          },
+          "level": 4,
+          "level_without_workload": 4,
+          "score": [
+            113173,
+            33696
+          ],
+          "signals": {
+            "context": [
+              9,
+              13
+            ],
+            "fluent": false,
+            "highest_family": "E2",
+            "longest_narrow_run": 1,
+            "narrow_waves": 5,
+            "peak_search": [
+              505,
+              648
+            ],
+            "raw_workload": [
+              1,
+              4
+            ],
+            "spans": 682,
+            "workload_ceiling": 4,
+            "workload_guard": "none"
+          },
+          "without_workload": [
+            104749,
+            33696
+          ]
+        },
+        "confidence": "medium",
+        "estimated_minutes": null,
+        "explanation": "Model estimate from synthetic references; no human calibration or time estimate. Demand, search and bounded workload use independently checked line profiles.",
+        "format": "picross-sd2-rating-v1",
+        "method": "picross-difficulty-0.4",
+        "method_hash": "5508f0742aa858a6adc31aa621433e68298b915fb0fd6b8d9e74e576ba87caaf",
+        "profile_scope": "complete_line",
+        "reason": "complete_line",
+        "status": "rated"
+      },
+      "source": {
+        "bytes": 22568,
+        "definition_id": "pz-023b50b44d1c4698a6e17e65b6ea4337",
+        "engine_logic_hash": "625525852e1ecca38260cb6ac92b2e940d15fd883bb1aeb5b6bee16286c1bf07",
+        "kind": "runtime",
+        "production_mode": "unknown",
+        "runtime_revision": 1,
+        "sha256": "3bcde54a01d96e81529e41ac358157523f0aa113b84c1c9fdc15d43002d19523"
+      }
+    },
+    "rating_revision": 2
+  },
+  "format": "picross-puzzle-record-v1",
+  "id": "pz-023b50b44d1c4698a6e17e65b6ea4337",
+  "mode": "color",
+  "name": "Ho Chi Minh",
+  "reveal": {
+    "asset": {
+      "bytes": 1615316,
+      "file": "game/art/content/ho_chi_minh_001.png",
+      "sha256": "1f5ba4ca6d8d366fa53bb98ada40d24466e90c5655b45a03c8f9a32f7f7fc8af"
+    },
+    "catalog": {
+      "generator": "picross-catalog-reveal-1",
+      "profiles": [
+        {
+          "asset": {
+            "bytes": 16336,
+            "file": "game/art/catalog/pz-023b50b44d1c4698a6e17e65b6ea4337-ui100.png",
+            "sha256": "c7c18e2aab26d907c704a08b8c6d581653cfe07176e33f273b09611e2772efcc"
+          },
+          "height": 112,
+          "profile": "catalog-ui100-v1",
+          "width": 84
+        },
+        {
+          "asset": {
+            "bytes": 23859,
+            "file": "game/art/catalog/pz-023b50b44d1c4698a6e17e65b6ea4337-ui125.png",
+            "sha256": "13fc03685fc4252a4750a9a8a3b6580e43a70ceb60d74bac57fe27dd0de34ac3"
+          },
+          "height": 140,
+          "profile": "catalog-ui125-v1",
+          "width": 105
+        }
+      ],
+      "source_height": 1448,
+      "source_width": 1086
+    },
+    "image_revision": 1
+  },
+  "save_slot": "ho_chi_minh_001",
+  "visible": true
+}

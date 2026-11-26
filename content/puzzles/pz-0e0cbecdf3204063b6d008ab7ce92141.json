@@ -1,0 +1,223 @@
+{
+  "added": {
+    "added_at": "2026-10-28T23:46:43Z",
+    "provenance": {
+      "commit": null,
+      "evidence": null,
+      "kind": "registration",
+      "reason": "Successful first playable registration in the shared transaction.",
+      "reference_time": "2026-10-28T23:46:43Z"
+    }
+  },
+  "background": {
+    "asset": {
+      "bytes": 1010920,
+      "file": "game/art/backgrounds/pz-0e0cbecdf3204063b6d008ab7ce92141.png",
+      "sha256": "65066973868af26257c8d69f277794e21d1e21b6744e8f95b232b6cc8b765158"
+    },
+    "image_revision": 3,
+    "status": "selected"
+  },
+  "category_id": "gerichte-herzhaftes",
+  "definition": {
+    "bytes": 13641,
+    "file": "game/data/content/balut.json",
+    "sha256": "5fb93ef0aa65d32fc3910538b6824898a264669d9381d3b99834eece1753de1e"
+  },
+  "difficulty": {
+    "compact_analysis": {
+      "analysis_hash": "0a1846718df5f2b61e27d036d47b1fff064edee68d992129e02892e627c26b25",
+      "deduction_complete": true,
+      "line_analysis_complete": true,
+      "line_fixpoint_confirmed": true,
+      "new_singletons": 1080,
+      "profiles_hash": "d0d9d7255532f16046e12752bc4b0c0cbf38bba9cf9df7ff18491d326b08dcae",
+      "r4": null,
+      "reason": null,
+      "result_hash": "e0b7d7933dfcddb2940e2731eb3599a25d4e7d58604664241c35f868a0e8e55f",
+      "status": "solved",
+      "structure": {
+        "adjacent_color_changes": 405,
+        "cells": 1080,
+        "clue_length_histogram": {
+          "1": 220,
+          "10": 6,
+          "11": 6,
+          "12": 9,
+          "13": 3,
+          "14": 2,
+          "15": 2,
+          "16": 3,
+          "17": 1,
+          "18": 1,
+          "19": 2,
+          "2": 79,
+          "20": 1,
+          "22": 2,
+          "23": 1,
+          "24": 1,
+          "25": 2,
+          "3": 52,
+          "4": 26,
+          "5": 17,
+          "6": 10,
+          "7": 8,
+          "8": 10,
+          "9": 6
+        },
+        "colors": 4,
+        "geometric_slack": 574,
+        "height": 36,
+        "mandatory_gaps": 0,
+        "short_blocks": 299,
+        "total_clue_length": 1586,
+        "total_clues": 470,
+        "width": 30
+      },
+      "trace_hash": "5aeef5dda05d7ed68dc723a176f10dca29127502d789f0a8ae0604e37b5f75bf",
+      "wave_count": 37
+    },
+    "logic_binding": {
+      "matrix_hash": "ceb54de1f1b574197412f3b6325cd473e2ec5a5c638a6f54582b96bc876bd91d"
+    },
+    "rating": {
+      "analysis_result_hash": "e0b7d7933dfcddb2940e2731eb3599a25d4e7d58604664241c35f868a0e8e55f",
+      "format": "picross-catalog-sd2-rating-v1",
+      "method": "picross-difficulty-0.4",
+      "method_hash": "5508f0742aa858a6adc31aa621433e68298b915fb0fd6b8d9e74e576ba87caaf",
+      "rating_hash": "3c307b6e5bffaa333a269ec0c631ed1ef4163cc548e05a317d7fedada01b6d32",
+      "result": {
+        "analysis_result_hash": "e0b7d7933dfcddb2940e2731eb3599a25d4e7d58604664241c35f868a0e8e55f",
+        "assessment": {
+          "boundaries": {
+            "distance_lower": [
+              4201,
+              7520
+            ],
+            "distance_upper": [
+              3319,
+              7520
+            ],
+            "lower": [
+              3,
+              1
+            ],
+            "nearest_distance": [
+              3319,
+              7520
+            ],
+            "upper": [
+              4,
+              1
+            ]
+          },
+          "contributions": {
+            "demand": [
+              407,
+              188
+            ],
+            "search": [
+              183,
+              160
+            ],
+            "workload": [
+              1,
+              4
+            ]
+          },
+          "level": 4,
+          "level_without_workload": 4,
+          "score": [
+            26761,
+            7520
+          ],
+          "signals": {
+            "context": [
+              31,
+              47
+            ],
+            "fluent": false,
+            "highest_family": "E2",
+            "longest_narrow_run": 8,
+            "narrow_waves": 10,
+            "peak_search": [
+              143,
+              160
+            ],
+            "raw_workload": [
+              1,
+              4
+            ],
+            "spans": 481,
+            "workload_ceiling": 4,
+            "workload_guard": "none"
+          },
+          "without_workload": [
+            24881,
+            7520
+          ]
+        },
+        "confidence": "medium",
+        "estimated_minutes": null,
+        "explanation": "Model estimate from synthetic references; no human calibration or time estimate. Demand, search and bounded workload use independently checked line profiles.",
+        "format": "picross-sd2-rating-v1",
+        "method": "picross-difficulty-0.4",
+        "method_hash": "5508f0742aa858a6adc31aa621433e68298b915fb0fd6b8d9e74e576ba87caaf",
+        "profile_scope": "complete_line",
+        "reason": "complete_line",
+        "status": "rated"
+      },
+      "source": {
+        "bytes": 13668,
+        "definition_id": "pz-0e0cbecdf3204063b6d008ab7ce92141",
+        "engine_logic_hash": "07e17cb9905b47f9bde1a13d891cfbf151a98194436c9c32766238994f8cadce",
+        "kind": "runtime",
+        "production_mode": "unknown",
+        "runtime_revision": 1,
+        "sha256": "364b034a2a7c74941d90296dc8537932e0aef05947c0ce49e8b82847d063cff7"
+      }
+    },
+    "rating_revision": 1
+  },
+  "format": "picross-puzzle-record-v1",
+  "id": "pz-0e0cbecdf3204063b6d008ab7ce92141",
+  "mode": "color",
+  "name": "Balut",
+  "reveal": {
+    "asset": {
+      "bytes": 2035886,
+      "file": "game/art/content/balut.png",
+      "sha256": "f157ea64818caf859ad50cbf5ede92e0c7091f1f57ab1c7f1f7dbdb108025669"
+    },
+    "catalog": {
+      "generator": "picross-catalog-reveal-1",
+      "profiles": [
+        {
+          "asset": {
+            "bytes": 22306,
+            "file": "game/art/catalog/pz-0e0cbecdf3204063b6d008ab7ce92141-ui100.png",
+            "sha256": "acb20e2670a1dc3835f0ac1a8c04d02c9215ab42f4a6929b0564e913854777cf"
+          },
+          "height": 112,
+          "profile": "catalog-ui100-v1",
+          "width": 112
+        },
+        {
+          "asset": {
+            "bytes": 32979,
+            "file": "game/art/catalog/pz-0e0cbecdf3204063b6d008ab7ce92141-ui125.png",
+            "sha256": "a0425ccf4c03b8b5280262e547e86869859e37f1c323eab838a0dca2331de06b"
+          },
+          "height": 140,
+          "profile": "catalog-ui125-v1",
+          "width": 140
+        }
+      ],
+      "source_height": 1254,
+      "source_width": 1254
+    },
+    "image_revision": 1
+  },
+  "save_slot": "balut",
+  "visible": true
+}

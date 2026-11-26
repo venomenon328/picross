@@ -117,24 +117,22 @@ mit ID-Änderungen nicht als gemeinsame atomare Transaktion darstellen.
 
 ## Versionen und Recovery
 
-Der Editor verwendet aktuelle RI-ONE-Quellen: Inhaltsregistry v5, Reveal v5,
-Hintergrund v7 und Runtime v8, ohne Produktionsarchive. Es gibt keine Migration
-im UI/API oder beim Öffnen. Nicht unterstützte Quellen werden unverändert mit
-einem gezielten Fehler abgewiesen. Die externe Bestandsumstellung ist abgeschlossen;
-#641 ist kein allgemeiner Reparaturauftrag.
+Der Editor nutzt den [RI-ONE-Bestand](../../docs/production/PUZZLE_INTEGRATION_SINGLE_PATH.md)
+mit einem führenden Record je Rätsel unter `content/puzzles/<id>.json`, dem
+gemeinsamen Kategorienkatalog und der erzeugten Runtime v9. Ungültige Quellen
+führen zu einem gezielten Fehler.
 
-Normale Editoraktionen prüfen ihre Eingaben und Änderungen, nicht den ganzen
-Bestand oder historische Produktionsbelege. Liste/Metadaten lesen nur die drei
-kleinen Indizes. Bildwechsel benötigen keinen Solver; unveränderte Rasterlogik
+Start und Liste prüfen Kategorien, Runtime v9 und Recordnamen. Detailansicht
+und Pflege lesen zusätzlich die betroffenen Records und Definitionen. Bildwechsel
+benötigen keinen Solver. Unveränderte Rasterlogik
 erzeugt weder neue Analyse noch Revision. Explizite Produktionsdiagnosen bleiben
 separate Werkzeuge und werden vom Editor nicht automatisch gestartet.
 
 Ein offenes Journal sperrt neue Arbeit. „Gebundenen Altstand wiederherstellen“
 stellt nur nachweislich eigene Zustände der betroffenen Dateien wieder her,
 wiederholbar und mit Runtime zuletzt. Bei fremden Bytes bleiben Journal und
-Daten erhalten. Aktuelle Editorjournale werden gezielt geprüft. Alte/unklare Journale bleiben
-erhalten und verlangen ihren passenden externen Altweg; keine automatische
-Migration oder Interpretation im aktuellen Editor.
+Daten erhalten. Recovery verarbeitet das aktuelle Editorjournal. Abweichende
+oder unklare Journale bleiben zur Klärung erhalten.
 Request-/Tababbruch beendet keinen Writer. Bei verlorener Browserquittung erst
 neu laden und den tatsächlichen Zustand prüfen, dann gegebenenfalls neu planen.
 Keine freie Restorepfad- oder Löschfunktion.

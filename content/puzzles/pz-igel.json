@@ -1,0 +1,211 @@
+{
+  "added": {
+    "added_at": "2026-11-22T15:28:02Z",
+    "provenance": {
+      "commit": null,
+      "evidence": null,
+      "kind": "registration",
+      "reason": "Successful first playable registration in the shared transaction.",
+      "reference_time": "2026-11-22T15:28:02Z"
+    }
+  },
+  "background": {
+    "asset": {
+      "bytes": 571966,
+      "file": "game/art/backgrounds/pz-igel.png",
+      "sha256": "fc0657672157f00d40d38a50d09eb1f39ca8dfb4587f186c08a98aef0923d3af"
+    },
+    "image_revision": 1,
+    "status": "selected"
+  },
+  "category_id": "saeuger",
+  "definition": {
+    "bytes": 1426,
+    "file": "game/data/content/pz-igel.json",
+    "sha256": "001ec7b8bf36cccb444a85e93f7f54ec99526e07dfc36e8d5ec675f1955341b2"
+  },
+  "difficulty": {
+    "compact_analysis": {
+      "analysis_hash": "ee93f5049db41d7df119d05d304f34f6be7f661217b25dc27b3a15c466c9dbbe",
+      "deduction_complete": true,
+      "line_analysis_complete": true,
+      "line_fixpoint_confirmed": true,
+      "new_singletons": 195,
+      "profiles_hash": "0cf9d953890124962f2e28b95d3aac7d81b26beb4fb8f1989561383a95c01740",
+      "r4": null,
+      "reason": null,
+      "result_hash": "d975c7881d22247ab346f774aa4de29dd89837831cde078cf4aafa51ef6331a4",
+      "status": "solved",
+      "structure": {
+        "adjacent_color_changes": 0,
+        "cells": 195,
+        "clue_length_histogram": {
+          "1": 6,
+          "10": 4,
+          "11": 1,
+          "12": 1,
+          "13": 1,
+          "14": 2,
+          "2": 4,
+          "4": 1,
+          "5": 1,
+          "6": 1,
+          "8": 3,
+          "9": 5
+        },
+        "colors": 1,
+        "geometric_slack": 183,
+        "height": 13,
+        "mandatory_gaps": 5,
+        "short_blocks": 10,
+        "total_clue_length": 202,
+        "total_clues": 30,
+        "width": 15
+      },
+      "trace_hash": "efe317b54de9729f29bff4da2c7bebbacafefe7e20002969b62c253dce820be4",
+      "wave_count": 9
+    },
+    "logic_binding": {
+      "matrix_hash": "b93e85599341a4cc29066867b0b7e0b6f39014d19017313eb3d291de1366c254"
+    },
+    "rating": {
+      "analysis_result_hash": "d975c7881d22247ab346f774aa4de29dd89837831cde078cf4aafa51ef6331a4",
+      "format": "picross-catalog-sd2-rating-v1",
+      "method": "picross-difficulty-0.4",
+      "method_hash": "5508f0742aa858a6adc31aa621433e68298b915fb0fd6b8d9e74e576ba87caaf",
+      "rating_hash": "a0e382b29b0fccbe8276a4e06c1e949c88e16f69656db3c42f30c9d48e635589",
+      "result": {
+        "analysis_result_hash": "d975c7881d22247ab346f774aa4de29dd89837831cde078cf4aafa51ef6331a4",
+        "assessment": {
+          "boundaries": {
+            "distance_lower": [
+              217,
+              640
+            ],
+            "distance_upper": [
+              423,
+              640
+            ],
+            "lower": [
+              1,
+              1
+            ],
+            "nearest_distance": [
+              217,
+              640
+            ],
+            "upper": [
+              2,
+              1
+            ]
+          },
+          "contributions": {
+            "demand": [
+              1,
+              1
+            ],
+            "search": [
+              5,
+              16
+            ],
+            "workload": [
+              17,
+              640
+            ]
+          },
+          "level": 2,
+          "level_without_workload": 2,
+          "score": [
+            857,
+            640
+          ],
+          "signals": {
+            "context": [
+              0,
+              1
+            ],
+            "fluent": false,
+            "highest_family": "E1",
+            "longest_narrow_run": 0,
+            "narrow_waves": 0,
+            "peak_search": [
+              5,
+              16
+            ],
+            "raw_workload": [
+              17,
+              640
+            ],
+            "spans": 57,
+            "workload_ceiling": 3,
+            "workload_guard": "none"
+          },
+          "without_workload": [
+            21,
+            16
+          ]
+        },
+        "confidence": "medium",
+        "estimated_minutes": null,
+        "explanation": "Model estimate from synthetic references; no human calibration or time estimate. Demand, search and bounded workload use independently checked line profiles.",
+        "format": "picross-sd2-rating-v1",
+        "method": "picross-difficulty-0.4",
+        "method_hash": "5508f0742aa858a6adc31aa621433e68298b915fb0fd6b8d9e74e576ba87caaf",
+        "profile_scope": "complete_line",
+        "reason": "complete_line",
+        "status": "rated"
+      },
+      "source": {
+        "bytes": 1426,
+        "definition_id": "pz-igel",
+        "engine_logic_hash": "1c1f0cc42e480e4e789dc46450f37b21f9993b4cce594392fcc6192e24cb6479",
+        "kind": "runtime",
+        "production_mode": "unknown",
+        "runtime_revision": 1,
+        "sha256": "001ec7b8bf36cccb444a85e93f7f54ec99526e07dfc36e8d5ec675f1955341b2"
+      }
+    },
+    "rating_revision": 1
+  },
+  "format": "picross-puzzle-record-v1",
+  "id": "pz-igel",
+  "mode": "mono",
+  "name": "Igel",
+  "reveal": {
+    "asset": {
+      "bytes": 3223131,
+      "file": "game/art/content/pz-igel.png",
+      "sha256": "eb87cbb682ead4215fab0f1c3bbd7eaeabb4839f202f8ba9a58c70784a1d4c87"
+    },
+    "catalog": {
+      "generator": "picross-catalog-reveal-1",
+      "profiles": [
+        {
+          "asset": {
+            "bytes": 42974,
+            "file": "game/art/catalog/pz-igel-ui100.png",
+            "sha256": "45bbb3f92be3b073b04e1fa053e1201f8aae799b2f381825b65463eb4e628c84"
+          },
+          "height": 112,
+          "profile": "catalog-ui100-v1",
+          "width": 168
+        },
+        {
+          "asset": {
+            "bytes": 65243,
+            "file": "game/art/catalog/pz-igel-ui125.png",
+            "sha256": "54cf3fc2a42e055bf67e8aa4054c9cbb61fc8c0239b024da5a2e9f1aeb298178"
+          },
+          "height": 140,
+          "profile": "catalog-ui125-v1",
+          "width": 210
+        }
+      ],
+      "source_height": 1024,
+      "source_width": 1536
+    },
+    "image_revision": 1
+  },
+  "save_slot": "pz-igel",
+  "visible": true
+}

@@ -1,0 +1,202 @@
+{
+  "added": {
+    "added_at": "2026-11-22T14:22:21Z",
+    "provenance": {
+      "commit": null,
+      "evidence": null,
+      "kind": "registration",
+      "reason": "Successful first playable registration in the shared transaction.",
+      "reference_time": "2026-11-22T14:22:21Z"
+    }
+  },
+  "background": {
+    "asset": {
+      "bytes": 1570290,
+      "file": "game/art/backgrounds/pz-macaron.png",
+      "sha256": "c70edc66eb0f2f456caed2bbce554496647aba7fea08a62ed5b08880547c16c5"
+    },
+    "image_revision": 1,
+    "status": "selected"
+  },
+  "category_id": "suesses-getraenke",
+  "definition": {
+    "bytes": 2536,
+    "file": "game/data/content/pz-macaron.json",
+    "sha256": "f6a6f6f18cc48d4dee9eda6e082486e209a0d57e308f16d7b46c6e5e44540769"
+  },
+  "difficulty": {
+    "compact_analysis": {
+      "analysis_hash": "5e47d23d6aed93886ca6cbf34ff981c9ea91ea68b38d912324f30a9acfb0f476",
+      "deduction_complete": true,
+      "line_analysis_complete": true,
+      "line_fixpoint_confirmed": true,
+      "new_singletons": 150,
+      "profiles_hash": "1668b273014c9a5fe5e95416011e68f95acce4c4744df8fc111c2d7be2a1096d",
+      "r4": null,
+      "reason": null,
+      "result_hash": "c01637056233dff0ea67646e9523b4f59d419fea243153bc29505b47b7504822",
+      "status": "solved",
+      "structure": {
+        "adjacent_color_changes": 55,
+        "cells": 150,
+        "clue_length_histogram": {
+          "1": 46,
+          "10": 4,
+          "12": 1,
+          "13": 1,
+          "2": 10,
+          "3": 7,
+          "4": 6,
+          "5": 2,
+          "9": 2
+        },
+        "colors": 3,
+        "geometric_slack": 96,
+        "height": 10,
+        "mandatory_gaps": 0,
+        "short_blocks": 56,
+        "total_clue_length": 204,
+        "total_clues": 79,
+        "width": 15
+      },
+      "trace_hash": "d27fb625ca009779c2d4e837314e680f09ca3e5a5e5fe22109f427172a2d943d",
+      "wave_count": 7
+    },
+    "logic_binding": {
+      "matrix_hash": "c45da1e0756dd5cd259a03c859f1474df8b923c6291f4c2c141b288832d7746f"
+    },
+    "rating": {
+      "analysis_result_hash": "c01637056233dff0ea67646e9523b4f59d419fea243153bc29505b47b7504822",
+      "format": "picross-catalog-sd2-rating-v1",
+      "method": "picross-difficulty-0.4",
+      "method_hash": "5508f0742aa858a6adc31aa621433e68298b915fb0fd6b8d9e74e576ba87caaf",
+      "rating_hash": "5753b58ed45aa85fffa60484ba3e54ec8acb33815dac6e2e6d0986fad32fe4bd",
+      "result": {
+        "analysis_result_hash": "c01637056233dff0ea67646e9523b4f59d419fea243153bc29505b47b7504822",
+        "assessment": {
+          "boundaries": {
+            "distance_lower": null,
+            "distance_upper": [
+              517,
+              756
+            ],
+            "lower": null,
+            "nearest_distance": [
+              517,
+              756
+            ],
+            "upper": [
+              1,
+              1
+            ]
+          },
+          "contributions": {
+            "demand": [
+              1,
+              4
+            ],
+            "search": [
+              25,
+              378
+            ],
+            "workload": [
+              0,
+              1
+            ]
+          },
+          "level": 1,
+          "level_without_workload": 1,
+          "score": [
+            239,
+            756
+          ],
+          "signals": {
+            "context": [
+              0,
+              1
+            ],
+            "fluent": true,
+            "highest_family": "E1",
+            "longest_narrow_run": 0,
+            "narrow_waves": 0,
+            "peak_search": [
+              25,
+              378
+            ],
+            "raw_workload": [
+              3,
+              128
+            ],
+            "spans": 55,
+            "workload_ceiling": 3,
+            "workload_guard": "fluent"
+          },
+          "without_workload": [
+            239,
+            756
+          ]
+        },
+        "confidence": "medium",
+        "estimated_minutes": null,
+        "explanation": "Model estimate from synthetic references; no human calibration or time estimate. Demand, search and bounded workload use independently checked line profiles.",
+        "format": "picross-sd2-rating-v1",
+        "method": "picross-difficulty-0.4",
+        "method_hash": "5508f0742aa858a6adc31aa621433e68298b915fb0fd6b8d9e74e576ba87caaf",
+        "profile_scope": "complete_line",
+        "reason": "complete_line",
+        "status": "rated"
+      },
+      "source": {
+        "bytes": 2536,
+        "definition_id": "pz-macaron",
+        "engine_logic_hash": "de013231a2f159c6dccd78db61415c065da1d7ab8afa278f2a704f7d3c3eacf1",
+        "kind": "runtime",
+        "production_mode": "unknown",
+        "runtime_revision": 3,
+        "sha256": "f6a6f6f18cc48d4dee9eda6e082486e209a0d57e308f16d7b46c6e5e44540769"
+      }
+    },
+    "rating_revision": 1
+  },
+  "format": "picross-puzzle-record-v1",
+  "id": "pz-macaron",
+  "mode": "color",
+  "name": "Macaron",
+  "reveal": {
+    "asset": {
+      "bytes": 2794678,
+      "file": "game/art/content/pz-macaron.png",
+      "sha256": "359d185a8dd61766d09e4756a464839f55a060c34976d27dd5c24274233f799c"
+    },
+    "catalog": {
+      "generator": "picross-catalog-reveal-1",
+      "profiles": [
+        {
+          "asset": {
+            "bytes": 36589,
+            "file": "game/art/catalog/pz-macaron-ui100.png",
+            "sha256": "c28f94eb84a5f082c869cd9920efaf3049a26e142b0bec81ec83f9c29802602c"
+          },
+          "height": 112,
+          "profile": "catalog-ui100-v1",
+          "width": 183
+        },
+        {
+          "asset": {
+            "bytes": 55073,
+            "file": "game/art/catalog/pz-macaron-ui125.png",
+            "sha256": "ce229245fabd75ce2b55b4da4a09d218d87f5d554a8236a9d3f8b5104c807389"
+          },
+          "height": 140,
+          "profile": "catalog-ui125-v1",
+          "width": 229
+        }
+      ],
+      "source_height": 982,
+      "source_width": 1602
+    },
+    "image_revision": 1
+  },
+  "save_slot": "pz-macaron",
+  "visible": true
+}

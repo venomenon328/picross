@@ -1,0 +1,214 @@
+{
+  "added": {
+    "added_at": "2026-10-14T17:47:03Z",
+    "provenance": {
+      "commit": "dbd42b05280d16978c892105beea457c07ddc8ba",
+      "evidence": {
+        "path": "content/added/reports/ku-b-initial.json",
+        "sha256": "e6d7a01e740adbc40cdc90e64c733f95907c8924cfe1f0a4bb734bb7bc6b7884"
+      },
+      "kind": "git-snapshot",
+      "reason": "No direct UTC first-registration receipt found in reviewed sources; earliest verified visible integrated catalog snapshot including bound PR history. Commit UTC is a reconstructed reference, not tool execution time.",
+      "reference_time": "2026-10-14T17:47:03Z"
+    }
+  },
+  "background": {
+    "asset": {
+      "bytes": 520435,
+      "file": "game/art/backgrounds/pz-5ad1e06e19ab475baebc582d4999daa5.png",
+      "sha256": "7f34e99d55f04bdfb51bfecc61f4658e677115da6248b6a5568a17e56969c98c"
+    },
+    "image_revision": 3,
+    "status": "selected"
+  },
+  "category_id": "insekten-kleine-tiere",
+  "definition": {
+    "bytes": 2645,
+    "file": "game/data/content/gecko_001.json",
+    "sha256": "aed678373d87e89a2b00b15c27b38ba6a8321a5960f1cf03c7a989e54c54ff14"
+  },
+  "difficulty": {
+    "compact_analysis": {
+      "analysis_hash": "37f8a0aec4b6a832a51a23324646f7202b13259a787a3f099be527aabe9928c9",
+      "deduction_complete": true,
+      "line_analysis_complete": true,
+      "line_fixpoint_confirmed": true,
+      "new_singletons": 384,
+      "profiles_hash": "74d8e8df48bf51139da6ae8aefd9b82e0d1eea1e7f7b93644538e5541e287c94",
+      "r4": null,
+      "reason": null,
+      "result_hash": "7b856d5f919a12b8ecf29ee749d52b2392b8f6c8fd80e6257027a53dbff798b0",
+      "status": "solved",
+      "structure": {
+        "adjacent_color_changes": 0,
+        "cells": 384,
+        "clue_length_histogram": {
+          "1": 8,
+          "11": 1,
+          "2": 18,
+          "23": 1,
+          "27": 1,
+          "3": 17,
+          "30": 1,
+          "4": 5,
+          "5": 6,
+          "7": 3,
+          "8": 1,
+          "9": 1
+        },
+        "colors": 1,
+        "geometric_slack": 474,
+        "height": 12,
+        "mandatory_gaps": 20,
+        "short_blocks": 26,
+        "total_clue_length": 274,
+        "total_clues": 63,
+        "width": 32
+      },
+      "trace_hash": "f9fb09b8581e5fff050501a1f5954f6004aaa32dbd594639cec67b79179da400",
+      "wave_count": 14
+    },
+    "logic_binding": {
+      "matrix_hash": "4b0748c5f32e0992484ae79050f299192b6a7dbacf66d77b17f72753daefbf7b"
+    },
+    "rating": {
+      "analysis_result_hash": "7b856d5f919a12b8ecf29ee749d52b2392b8f6c8fd80e6257027a53dbff798b0",
+      "format": "picross-catalog-sd2-rating-v1",
+      "method": "picross-difficulty-0.4",
+      "method_hash": "5508f0742aa858a6adc31aa621433e68298b915fb0fd6b8d9e74e576ba87caaf",
+      "rating_hash": "a18efc9113bf2b44dbd9fcdd44f5aa1e14ec22442d837a6c92f2eed4e4d66d34",
+      "result": {
+        "analysis_result_hash": "7b856d5f919a12b8ecf29ee749d52b2392b8f6c8fd80e6257027a53dbff798b0",
+        "assessment": {
+          "boundaries": {
+            "distance_lower": [
+              22513,
+              27520
+            ],
+            "distance_upper": [
+              5007,
+              27520
+            ],
+            "lower": [
+              1,
+              1
+            ],
+            "nearest_distance": [
+              5007,
+              27520
+            ],
+            "upper": [
+              2,
+              1
+            ]
+          },
+          "contributions": {
+            "demand": [
+              1,
+              1
+            ],
+            "search": [
+              887,
+              1376
+            ],
+            "workload": [
+              111,
+              640
+            ]
+          },
+          "level": 2,
+          "level_without_workload": 2,
+          "score": [
+            50033,
+            27520
+          ],
+          "signals": {
+            "context": [
+              0,
+              1
+            ],
+            "fluent": false,
+            "highest_family": "E1",
+            "longest_narrow_run": 1,
+            "narrow_waves": 1,
+            "peak_search": [
+              801,
+              1376
+            ],
+            "raw_workload": [
+              111,
+              640
+            ],
+            "spans": 151,
+            "workload_ceiling": 3,
+            "workload_guard": "none"
+          },
+          "without_workload": [
+            2263,
+            1376
+          ]
+        },
+        "confidence": "medium",
+        "estimated_minutes": null,
+        "explanation": "Model estimate from synthetic references; no human calibration or time estimate. Demand, search and bounded workload use independently checked line profiles.",
+        "format": "picross-sd2-rating-v1",
+        "method": "picross-difficulty-0.4",
+        "method_hash": "5508f0742aa858a6adc31aa621433e68298b915fb0fd6b8d9e74e576ba87caaf",
+        "profile_scope": "complete_line",
+        "reason": "complete_line",
+        "status": "rated"
+      },
+      "source": {
+        "bytes": 2645,
+        "definition_id": "pz-5ad1e06e19ab475baebc582d4999daa5",
+        "engine_logic_hash": "20e2c91e2721b2462d6ecbe4fd1bf87f13d01dc699f286d6998bc0ead6ac5a4c",
+        "kind": "runtime",
+        "production_mode": "unknown",
+        "runtime_revision": 1,
+        "sha256": "aed678373d87e89a2b00b15c27b38ba6a8321a5960f1cf03c7a989e54c54ff14"
+      }
+    },
+    "rating_revision": 2
+  },
+  "format": "picross-puzzle-record-v1",
+  "id": "pz-5ad1e06e19ab475baebc582d4999daa5",
+  "mode": "mono",
+  "name": "Gecko",
+  "reveal": {
+    "asset": {
+      "bytes": 1044090,
+      "file": "game/art/content/gecko_001.png",
+      "sha256": "df663428366ba6a0802d28934bf1a0ee4dfb76ae32c9200e89057a7434dfb45b"
+    },
+    "catalog": {
+      "generator": "picross-catalog-reveal-1",
+      "profiles": [
+        {
+          "asset": {
+            "bytes": 25499,
+            "file": "game/art/catalog/pz-5ad1e06e19ab475baebc582d4999daa5-ui100.png",
+            "sha256": "fac39203630dfd911f7385f43f69c4d632e72083acb8fed7a73200a284ae1c4c"
+          },
+          "height": 112,
+          "profile": "catalog-ui100-v1",
+          "width": 224
+        },
+        {
+          "asset": {
+            "bytes": 37768,
+            "file": "game/art/catalog/pz-5ad1e06e19ab475baebc582d4999daa5-ui125.png",
+            "sha256": "1181f9183890648a480d577754ba1a0318f29f5964cb195eaaa31929ebd22197"
+          },
+          "height": 140,
+          "profile": "catalog-ui125-v1",
+          "width": 280
+        }
+      ],
+      "source_height": 887,
+      "source_width": 1774
+    },
+    "image_revision": 1
+  },
+  "save_slot": "gecko_001",
+  "visible": true
+}

@@ -1,0 +1,218 @@
+{
+  "added": {
+    "added_at": "2026-10-13T19:00:10Z",
+    "provenance": {
+      "commit": "ff5f0dbe0ff78e5806bd7b8364981011a8c80ea8",
+      "evidence": {
+        "path": "content/added/reports/ku-b-initial.json",
+        "sha256": "e6d7a01e740adbc40cdc90e64c733f95907c8924cfe1f0a4bb734bb7bc6b7884"
+      },
+      "kind": "git-snapshot",
+      "reason": "No direct UTC first-registration receipt found in reviewed sources; earliest verified visible integrated catalog snapshot including bound PR history. Commit UTC is a reconstructed reference, not tool execution time.",
+      "reference_time": "2026-10-13T19:00:10Z"
+    }
+  },
+  "background": {
+    "asset": {
+      "bytes": 994886,
+      "file": "game/art/backgrounds/pz-b3368aea28ac4a11bf09e0dc9c48.png",
+      "sha256": "81aac87562d401e4556ce16e78a428c1b51bec225194aadd7c563ecfabb73d42"
+    },
+    "image_revision": 2,
+    "status": "selected"
+  },
+  "category_id": "gerichte-herzhaftes",
+  "definition": {
+    "bytes": 4554,
+    "file": "game/data/content/hamburger_001.json",
+    "sha256": "5ce8a8f5dd6c7bb286120a79dc4cf6ff543e31530b058d0802cd0dd52ab48f23"
+  },
+  "difficulty": {
+    "compact_analysis": {
+      "analysis_hash": "f46c8077eacc8d1ab37261355de66e23e09dec7b97c2b135c7a58796a7f87cd1",
+      "deduction_complete": true,
+      "line_analysis_complete": true,
+      "line_fixpoint_confirmed": true,
+      "new_singletons": 550,
+      "profiles_hash": "2e703d7bd1327ab360fa438aa4357f8a0316c01916a91b11caf618f2af61144e",
+      "r4": null,
+      "reason": null,
+      "result_hash": "9c8e7ae33f571d32d78df3ccfc3f23102dab7a69a13651e979c5486d10e510c3",
+      "status": "solved",
+      "structure": {
+        "adjacent_color_changes": 0,
+        "cells": 550,
+        "clue_length_histogram": {
+          "1": 13,
+          "10": 1,
+          "11": 1,
+          "19": 1,
+          "2": 23,
+          "20": 2,
+          "21": 2,
+          "22": 1,
+          "23": 5,
+          "3": 38,
+          "4": 19,
+          "5": 4,
+          "6": 6,
+          "7": 8,
+          "8": 4,
+          "9": 2
+        },
+        "colors": 1,
+        "geometric_slack": 345,
+        "height": 22,
+        "mandatory_gaps": 85,
+        "short_blocks": 36,
+        "total_clue_length": 670,
+        "total_clues": 130,
+        "width": 25
+      },
+      "trace_hash": "cd526cf5e06e5cc38c2bfe0aaa972d53e66e757e3549646b09b6f12661ccf39e",
+      "wave_count": 18
+    },
+    "logic_binding": {
+      "matrix_hash": "8c77b2568914aa749029441becbdaaa3639c2cc7987db4df21d1ced6fd7df5df"
+    },
+    "rating": {
+      "analysis_result_hash": "9c8e7ae33f571d32d78df3ccfc3f23102dab7a69a13651e979c5486d10e510c3",
+      "format": "picross-catalog-sd2-rating-v1",
+      "method": "picross-difficulty-0.4",
+      "method_hash": "5508f0742aa858a6adc31aa621433e68298b915fb0fd6b8d9e74e576ba87caaf",
+      "rating_hash": "01627128cda739619dc4c29689d0130c035bc6cf46253cdac87b7dc7549b7471",
+      "result": {
+        "analysis_result_hash": "9c8e7ae33f571d32d78df3ccfc3f23102dab7a69a13651e979c5486d10e510c3",
+        "assessment": {
+          "boundaries": {
+            "distance_lower": [
+              6361,
+              17280
+            ],
+            "distance_upper": [
+              10919,
+              17280
+            ],
+            "lower": [
+              3,
+              1
+            ],
+            "nearest_distance": [
+              6361,
+              17280
+            ],
+            "upper": [
+              4,
+              1
+            ]
+          },
+          "contributions": {
+            "demand": [
+              19,
+              9
+            ],
+            "search": [
+              115,
+              108
+            ],
+            "workload": [
+              123,
+              640
+            ]
+          },
+          "level": 4,
+          "level_without_workload": 4,
+          "score": [
+            58201,
+            17280
+          ],
+          "signals": {
+            "context": [
+              4,
+              9
+            ],
+            "fluent": false,
+            "highest_family": "E2",
+            "longest_narrow_run": 6,
+            "narrow_waves": 6,
+            "peak_search": [
+              22,
+              27
+            ],
+            "raw_workload": [
+              123,
+              640
+            ],
+            "spans": 163,
+            "workload_ceiling": 4,
+            "workload_guard": "none"
+          },
+          "without_workload": [
+            343,
+            108
+          ]
+        },
+        "confidence": "medium",
+        "estimated_minutes": null,
+        "explanation": "Model estimate from synthetic references; no human calibration or time estimate. Demand, search and bounded workload use independently checked line profiles.",
+        "format": "picross-sd2-rating-v1",
+        "method": "picross-difficulty-0.4",
+        "method_hash": "5508f0742aa858a6adc31aa621433e68298b915fb0fd6b8d9e74e576ba87caaf",
+        "profile_scope": "complete_line",
+        "reason": "complete_line",
+        "status": "rated"
+      },
+      "source": {
+        "bytes": 4554,
+        "definition_id": "pz-b3368aea28ac4a11bf09e0dc9c48",
+        "engine_logic_hash": "c6394e24d16a4076720fcb39636978b9306e4cd656525de4cb9a6ecda045e18b",
+        "kind": "runtime",
+        "production_mode": "unknown",
+        "runtime_revision": 1,
+        "sha256": "5ce8a8f5dd6c7bb286120a79dc4cf6ff543e31530b058d0802cd0dd52ab48f23"
+      }
+    },
+    "rating_revision": 2
+  },
+  "format": "picross-puzzle-record-v1",
+  "id": "pz-b3368aea28ac4a11bf09e0dc9c48",
+  "mode": "mono",
+  "name": "Hamburger",
+  "reveal": {
+    "asset": {
+      "bytes": 2183606,
+      "file": "game/art/content/hamburger_001.png",
+      "sha256": "5260b0701ae62bb130cdd09c876ec5b5a83d956c65cc9e5546fb393251939517"
+    },
+    "catalog": {
+      "generator": "picross-catalog-reveal-1",
+      "profiles": [
+        {
+          "asset": {
+            "bytes": 26569,
+            "file": "game/art/catalog/pz-b3368aea28ac4a11bf09e0dc9c48-ui100.png",
+            "sha256": "b1de0be470338c9759e8424a8d2c262f793beff67c0334840cd528c5ec773e4b"
+          },
+          "height": 112,
+          "profile": "catalog-ui100-v1",
+          "width": 112
+        },
+        {
+          "asset": {
+            "bytes": 40090,
+            "file": "game/art/catalog/pz-b3368aea28ac4a11bf09e0dc9c48-ui125.png",
+            "sha256": "c4a3bd2b7ba9b862cb9e8fb9768c2202ec83c5219ddba05b02bfeee38cdc7cb9"
+          },
+          "height": 140,
+          "profile": "catalog-ui125-v1",
+          "width": 140
+        }
+      ],
+      "source_height": 1254,
+      "source_width": 1254
+    },
+    "image_revision": 1
+  },
+  "save_slot": "hamburger_001",
+  "visible": true
+}

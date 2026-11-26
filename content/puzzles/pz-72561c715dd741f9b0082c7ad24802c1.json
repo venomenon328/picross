@@ -1,0 +1,214 @@
+{
+  "added": {
+    "added_at": "2026-10-15T15:55:31Z",
+    "provenance": {
+      "commit": "e34be58337e1a8ffa22e21b96d1f2e99ca1ad94f",
+      "evidence": {
+        "path": "content/added/reports/ku-b-initial.json",
+        "sha256": "e6d7a01e740adbc40cdc90e64c733f95907c8924cfe1f0a4bb734bb7bc6b7884"
+      },
+      "kind": "git-snapshot",
+      "reason": "No direct UTC first-registration receipt found in reviewed sources; earliest verified visible integrated catalog snapshot including bound PR history. Commit UTC is a reconstructed reference, not tool execution time.",
+      "reference_time": "2026-10-15T15:55:31Z"
+    }
+  },
+  "background": {
+    "asset": {
+      "bytes": 737437,
+      "file": "game/art/backgrounds/pz-72561c715dd741f9b0082c7ad24802c1.png",
+      "sha256": "2b7c35eca4576c6b2827a812229286debf6d95fe98561e29250979702c891b2c"
+    },
+    "image_revision": 2,
+    "status": "selected"
+  },
+  "category_id": "obst-nuesse",
+  "definition": {
+    "bytes": 9203,
+    "file": "game/data/content/pfirsich_001.json",
+    "sha256": "6f755f67359f46015b8bc2eee79849c87d2d46e3a041c91234b3fb09f4bfdd4b"
+  },
+  "difficulty": {
+    "compact_analysis": {
+      "analysis_hash": "0eaef582090fe6c6e44c69a86acbf4fca92d5491315f31001c2842181fa6d05e",
+      "deduction_complete": true,
+      "line_analysis_complete": true,
+      "line_fixpoint_confirmed": true,
+      "new_singletons": 1024,
+      "profiles_hash": "49e5938794c099781019ed34a9edebe77ec26def71201668d050ca951812d027",
+      "r4": null,
+      "reason": null,
+      "result_hash": "2660addbc86ea4cade7680738d1920b52ecec1fe1ff957c28e66f286243d88e6",
+      "status": "solved",
+      "structure": {
+        "adjacent_color_changes": 220,
+        "cells": 1024,
+        "clue_length_histogram": {
+          "1": 95,
+          "10": 17,
+          "11": 13,
+          "12": 8,
+          "13": 5,
+          "16": 2,
+          "18": 3,
+          "19": 3,
+          "2": 31,
+          "20": 4,
+          "22": 2,
+          "3": 16,
+          "4": 14,
+          "5": 15,
+          "6": 12,
+          "7": 18,
+          "8": 12,
+          "9": 13
+        },
+        "colors": 3,
+        "geometric_slack": 559,
+        "height": 32,
+        "mandatory_gaps": 1,
+        "short_blocks": 126,
+        "total_clue_length": 1488,
+        "total_clues": 283,
+        "width": 32
+      },
+      "trace_hash": "42cee26fa4926515fc5afb0fcbb0fae0da35b6a95b7525774871951dbe994c6e",
+      "wave_count": 12
+    },
+    "logic_binding": {
+      "matrix_hash": "fbabfa8cd07285406c83499e44bac171c4e214b9c3b001f52aa5d43c60aa4421"
+    },
+    "rating": {
+      "analysis_result_hash": "2660addbc86ea4cade7680738d1920b52ecec1fe1ff957c28e66f286243d88e6",
+      "format": "picross-catalog-sd2-rating-v1",
+      "method": "picross-difficulty-0.4",
+      "method_hash": "5508f0742aa858a6adc31aa621433e68298b915fb0fd6b8d9e74e576ba87caaf",
+      "rating_hash": "7d009690648143fb0db12d745f8cbb1707f1853f0d66f3b98d345737ceb57cc0",
+      "result": {
+        "analysis_result_hash": "2660addbc86ea4cade7680738d1920b52ecec1fe1ff957c28e66f286243d88e6",
+        "assessment": {
+          "boundaries": {
+            "distance_lower": null,
+            "distance_upper": [
+              47,
+              124
+            ],
+            "lower": null,
+            "nearest_distance": [
+              47,
+              124
+            ],
+            "upper": [
+              1,
+              1
+            ]
+          },
+          "contributions": {
+            "demand": [
+              1,
+              4
+            ],
+            "search": [
+              23,
+              62
+            ],
+            "workload": [
+              0,
+              1
+            ]
+          },
+          "level": 1,
+          "level_without_workload": 1,
+          "score": [
+            77,
+            124
+          ],
+          "signals": {
+            "context": [
+              0,
+              1
+            ],
+            "fluent": true,
+            "highest_family": "E1",
+            "longest_narrow_run": 0,
+            "narrow_waves": 0,
+            "peak_search": [
+              23,
+              62
+            ],
+            "raw_workload": [
+              1,
+              4
+            ],
+            "spans": 358,
+            "workload_ceiling": 3,
+            "workload_guard": "fluent"
+          },
+          "without_workload": [
+            77,
+            124
+          ]
+        },
+        "confidence": "medium",
+        "estimated_minutes": null,
+        "explanation": "Model estimate from synthetic references; no human calibration or time estimate. Demand, search and bounded workload use independently checked line profiles.",
+        "format": "picross-sd2-rating-v1",
+        "method": "picross-difficulty-0.4",
+        "method_hash": "5508f0742aa858a6adc31aa621433e68298b915fb0fd6b8d9e74e576ba87caaf",
+        "profile_scope": "complete_line",
+        "reason": "complete_line",
+        "status": "rated"
+      },
+      "source": {
+        "bytes": 9203,
+        "definition_id": "pz-72561c715dd741f9b0082c7ad24802c1",
+        "engine_logic_hash": "60598a83db5ca2d4e451cadab010e08728e5437375d7f0e35764497e403dccaa",
+        "kind": "runtime",
+        "production_mode": "unknown",
+        "runtime_revision": 1,
+        "sha256": "6f755f67359f46015b8bc2eee79849c87d2d46e3a041c91234b3fb09f4bfdd4b"
+      }
+    },
+    "rating_revision": 2
+  },
+  "format": "picross-puzzle-record-v1",
+  "id": "pz-72561c715dd741f9b0082c7ad24802c1",
+  "mode": "color",
+  "name": "Pfirsich",
+  "reveal": {
+    "asset": {
+      "bytes": 1308501,
+      "file": "game/art/content/pfirsich_001.png",
+      "sha256": "3706d19818ea7a61cbfcb95402554113d247f1063a2e2ca83e0cf5fe0c2f3cbe"
+    },
+    "catalog": {
+      "generator": "picross-catalog-reveal-1",
+      "profiles": [
+        {
+          "asset": {
+            "bytes": 20656,
+            "file": "game/art/catalog/pz-72561c715dd741f9b0082c7ad24802c1-ui100.png",
+            "sha256": "4e456bdea4d34fb568361e07a785e84f55fc551788a9befc45f5e7b3b264c870"
+          },
+          "height": 112,
+          "profile": "catalog-ui100-v1",
+          "width": 114
+        },
+        {
+          "asset": {
+            "bytes": 29727,
+            "file": "game/art/catalog/pz-72561c715dd741f9b0082c7ad24802c1-ui125.png",
+            "sha256": "bb7bcbdef3bf8de751c3724043f66e854c64fe48f437e7444cf08744f5e0e640"
+          },
+          "height": 140,
+          "profile": "catalog-ui125-v1",
+          "width": 142
+        }
+      ],
+      "source_height": 1246,
+      "source_width": 1263
+    },
+    "image_revision": 1
+  },
+  "save_slot": "pfirsich_001",
+  "visible": true
+}

@@ -1,0 +1,208 @@
+{
+  "added": {
+    "added_at": "2026-10-21T15:22:46Z",
+    "provenance": {
+      "commit": null,
+      "evidence": null,
+      "kind": "registration",
+      "reason": "Successful first playable registration in the shared transaction.",
+      "reference_time": "2026-10-21T15:22:46Z"
+    }
+  },
+  "background": {
+    "asset": {
+      "bytes": 627398,
+      "file": "game/art/backgrounds/pz-87bf2975c82540a399a3d0c7fa180a25.png",
+      "sha256": "7883c3128bdaaddeb3cb87188dd517c775cb0edc895b4ff3242e5a5f94f7b631"
+    },
+    "image_revision": 2,
+    "status": "selected"
+  },
+  "category_id": "mythen-fantasie",
+  "definition": {
+    "bytes": 5461,
+    "file": "game/data/content/om_001.json",
+    "sha256": "2021497d6e79578feca61b836986280a54f33e7a91eac06dfe6c970567068912"
+  },
+  "difficulty": {
+    "compact_analysis": {
+      "analysis_hash": "82314321c710694a8533d87f9a79b9f6f448fc13ee8ab0e5bfa38d355e78205e",
+      "deduction_complete": true,
+      "line_analysis_complete": false,
+      "line_fixpoint_confirmed": true,
+      "new_singletons": 54,
+      "profiles_hash": "9917716be8b364a833df0fba46c1f66ab1b2fca3e66a4eaaa5a67fe68e878440",
+      "r4": {
+        "baseline": {
+          "bytes": 16203,
+          "sha256": "f2d5011080f17a6b7dec48546266c41d85754755290501b014e72d8e1832b828"
+        },
+        "baseline_profile_hash": "f63ee6c88e6baa9f6a22f386ae532482d7ffb7b9a2237867f0d7cd9960ab608f",
+        "baseline_status": "stalled",
+        "baseline_verified": true,
+        "instrumentation": "separate_R4_evidence_not_synchronous_waves",
+        "label": "linienübergreifend / besonders hoher logischer Anspruch",
+        "necessity": "required",
+        "proof": {
+          "bytes": 78680,
+          "sha256": "d740e93a7a975ad7ede1c41924710ef7a60428706062d8d0b70a61fd2427ed62"
+        },
+        "proof_profile_hash": "9dfe08bdb9738dc64d778149490cc3dd43815aee68900291d2e84a3f9ef55727",
+        "proof_status": "solved",
+        "proof_verified": true,
+        "required": true
+      },
+      "reason": null,
+      "result_hash": "173e88f24d2494b40be3384d1859345ff0a211016ad6a72e5f6d038a178d1909",
+      "status": "stalled",
+      "structure": {
+        "adjacent_color_changes": 0,
+        "cells": 841,
+        "clue_length_histogram": {
+          "1": 11,
+          "10": 4,
+          "11": 4,
+          "12": 2,
+          "2": 23,
+          "3": 23,
+          "4": 39,
+          "5": 20,
+          "6": 6,
+          "7": 5,
+          "8": 1,
+          "9": 5
+        },
+        "colors": 1,
+        "geometric_slack": 982,
+        "height": 29,
+        "mandatory_gaps": 86,
+        "short_blocks": 34,
+        "total_clue_length": 614,
+        "total_clues": 143,
+        "width": 29
+      },
+      "trace_hash": "27c3aeb4f1ac8906429b56f94b3a4d4dde4a6df7747d3c2364fba5441651669e",
+      "wave_count": 4
+    },
+    "logic_binding": {
+      "matrix_hash": "aad0f038f6895b080a9746c88215ac15a6b8810a1ab0bdc6c9647c5a8d87f052"
+    },
+    "rating": {
+      "analysis_result_hash": "173e88f24d2494b40be3384d1859345ff0a211016ad6a72e5f6d038a178d1909",
+      "format": "picross-catalog-sd2-rating-v1",
+      "method": "picross-difficulty-0.4",
+      "method_hash": "5508f0742aa858a6adc31aa621433e68298b915fb0fd6b8d9e74e576ba87caaf",
+      "rating_hash": "105babea8019188b1ec90987bac41c56721dc948104bbfdedd0856f8d29ab83c",
+      "result": {
+        "analysis_result_hash": "173e88f24d2494b40be3384d1859345ff0a211016ad6a72e5f6d038a178d1909",
+        "assessment": {
+          "boundaries": {
+            "distance_lower": [
+              1,
+              2
+            ],
+            "distance_upper": null,
+            "lower": [
+              4,
+              1
+            ],
+            "nearest_distance": [
+              1,
+              2
+            ],
+            "upper": null
+          },
+          "contributions": {
+            "demand": [
+              9,
+              2
+            ],
+            "search": [
+              0,
+              1
+            ],
+            "workload": [
+              0,
+              1
+            ]
+          },
+          "level": 5,
+          "level_without_workload": 5,
+          "score": [
+            9,
+            2
+          ],
+          "signals": {
+            "line_profiles_are_prefix": true,
+            "r4_required": true,
+            "search_and_workload": "fixed_anchor_not_full_pair_measurement"
+          },
+          "without_workload": [
+            9,
+            2
+          ]
+        },
+        "confidence": "medium",
+        "estimated_minutes": null,
+        "explanation": "Model estimate from synthetic references; no human calibration or time estimate. Required R4 uses a fixed anchor; line profiles are prefixes, not complete pair measurements.",
+        "format": "picross-sd2-rating-v1",
+        "method": "picross-difficulty-0.4",
+        "method_hash": "5508f0742aa858a6adc31aa621433e68298b915fb0fd6b8d9e74e576ba87caaf",
+        "profile_scope": "line_prefix",
+        "reason": "required_r4",
+        "status": "rated"
+      },
+      "source": {
+        "bytes": 5461,
+        "definition_id": "pz-87bf2975c82540a399a3d0c7fa180a25",
+        "engine_logic_hash": "c0751a6de35f2519e3ea99c3cc7e0e8ae221a3c73d0b48a9f4c0b56a1d6299fc",
+        "kind": "runtime",
+        "production_mode": "unknown",
+        "runtime_revision": 1,
+        "sha256": "2021497d6e79578feca61b836986280a54f33e7a91eac06dfe6c970567068912"
+      }
+    },
+    "rating_revision": 2
+  },
+  "format": "picross-puzzle-record-v1",
+  "id": "pz-87bf2975c82540a399a3d0c7fa180a25",
+  "mode": "mono",
+  "name": "Om",
+  "reveal": {
+    "asset": {
+      "bytes": 1369591,
+      "file": "game/art/content/om_001.png",
+      "sha256": "3ce9799443da21c46dc63754670f3fb89ec3822ca267c26c27d1e4cb4ce3387e"
+    },
+    "catalog": {
+      "generator": "picross-catalog-reveal-1",
+      "profiles": [
+        {
+          "asset": {
+            "bytes": 18922,
+            "file": "game/art/catalog/pz-87bf2975c82540a399a3d0c7fa180a25-ui100.png",
+            "sha256": "1e6127dd388afffc7e350b1c550ceb0a79507c42a100f357ae6a3a83d7334a8e"
+          },
+          "height": 112,
+          "profile": "catalog-ui100-v1",
+          "width": 112
+        },
+        {
+          "asset": {
+            "bytes": 27198,
+            "file": "game/art/catalog/pz-87bf2975c82540a399a3d0c7fa180a25-ui125.png",
+            "sha256": "efd902a30774d70183903244afe6820da65369c1bfb5fbceee313eb0f136e23f"
+          },
+          "height": 140,
+          "profile": "catalog-ui125-v1",
+          "width": 140
+        }
+      ],
+      "source_height": 1254,
+      "source_width": 1254
+    },
+    "image_revision": 1
+  },
+  "save_slot": "om_001",
+  "visible": true
+}

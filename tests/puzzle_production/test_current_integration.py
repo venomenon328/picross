@@ -50,13 +50,13 @@ class CurrentIntegrationTests(unittest.TestCase):
                 before=fingerprints(root)
                 plan = core.integrate(source,root)
                 self.assertEqual(plan["status"], "planned")
-                self.assertEqual(len(plan["changes"]), 13 if status == "selected" else 11)
+                self.assertEqual(len(plan["changes"]), 9 if status == "selected" else 7)
                 self.assertEqual(fingerprints(root),before)
                 self.assertEqual(core.integrate(source,root,apply=True)["status"],"registered")
                 before=fingerprints(root)
                 self.assertEqual(core.integrate(source,root,apply=True)["status"],"no-op")
                 self.assertEqual(fingerprints(root),before)
-                entry=json.loads((root/content.REGISTRY).read_bytes())["entries"][0]
+                entry=json.loads((root/"content/puzzles/pz-current.json").read_bytes())
                 self.assertEqual(entry["mode"],mode)
                 self.assertNotIn("production",entry)
                 self.assertFalse((root/"content/packages").exists())
@@ -112,7 +112,7 @@ class CurrentIntegrationTests(unittest.TestCase):
         value=json.loads((other/"manifest.json").read_bytes())
         value["entry"]["save_slot"]="pz-current";approve(other,value)
         before=fingerprints(self.root)
-        with self.assertRaisesRegex(InvalidInput,"collision"):
+        with self.assertRaisesRegex(InvalidInput,"Occupied current save_slot"):
             core.integrate(other,self.root,apply=True)
         self.assertEqual(fingerprints(self.root),before)
         value=json.loads((source/"manifest.json").read_bytes())
@@ -139,7 +139,7 @@ class CurrentIntegrationTests(unittest.TestCase):
         source=make(self.work/"input")
         with self.assertRaises(RuntimeError):
             core.integrate(source,self.root,apply=True,fail_step=4)
-        changed=self.root/content.REGISTRY
+        changed=self.root/"content/puzzles/pz-current.json"
         changed.write_bytes(b'{"foreign":true}\n')
         before=fingerprints(self.root)
         with self.assertRaisesRegex(InvalidInput,"Foreign"):
@@ -226,7 +226,7 @@ class CurrentIntegrationTests(unittest.TestCase):
     def test_profile_and_runtime_interruptions_are_recoverable(self):
         source = make(self.work/"profile-input")
         before = {n: v[0] for n, v in fingerprints(self.root).items()}
-        for path in ("game/art/catalog/pz-current-ui100.png", "content/reveals/pz-current.json", content.RUNTIME):
+        for path in ("game/art/catalog/pz-current-ui100.png", "content/puzzles/pz-current.json", content.RUNTIME):
             def interrupt(phase, name=None):
                 if phase == "after-write" and name == path:
                     raise RuntimeError("synthetic interruption")

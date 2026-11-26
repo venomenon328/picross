@@ -1,0 +1,221 @@
+{
+  "added": {
+    "added_at": "2026-10-20T11:48:44Z",
+    "provenance": {
+      "commit": null,
+      "evidence": null,
+      "kind": "registration",
+      "reason": "Successful first playable registration in the shared transaction.",
+      "reference_time": "2026-10-20T11:48:44Z"
+    }
+  },
+  "background": {
+    "asset": {
+      "bytes": 661332,
+      "file": "game/art/backgrounds/pz-9f7c59054ebb4f3f861e2bce3034320e.png",
+      "sha256": "b49bdb09f24594ab43f167e348fb6146f3b105d9b5c46c8ac54b6e8079dc327f"
+    },
+    "image_revision": 2,
+    "status": "selected"
+  },
+  "category_id": "technik-erfindungen",
+  "definition": {
+    "bytes": 7024,
+    "file": "game/data/content/sega_game_gear_001.json",
+    "sha256": "f3eac70daa0319d5f421706d86f1004e1847a256dd0596f7a4a544fce3493ea9"
+  },
+  "difficulty": {
+    "compact_analysis": {
+      "analysis_hash": "15a3582cee57e8dd3d18c4d384ce94eaa30f08baa6ca5d612d70c93156c20c86",
+      "deduction_complete": true,
+      "line_analysis_complete": true,
+      "line_fixpoint_confirmed": true,
+      "new_singletons": 1056,
+      "profiles_hash": "03d62ac5bf3a14bbc01c0572e018b8165576189932a875d83643721106eb8089",
+      "r4": null,
+      "reason": null,
+      "result_hash": "2ab91a2635e28fa03ad220a0b100b412eee6c3f34d71bc5d27e62b6b72275bee",
+      "status": "solved",
+      "structure": {
+        "adjacent_color_changes": 0,
+        "cells": 1056,
+        "clue_length_histogram": {
+          "1": 14,
+          "10": 3,
+          "11": 3,
+          "12": 1,
+          "13": 1,
+          "14": 3,
+          "15": 3,
+          "16": 2,
+          "2": 36,
+          "20": 6,
+          "27": 1,
+          "3": 29,
+          "4": 11,
+          "40": 1,
+          "43": 1,
+          "44": 2,
+          "46": 1,
+          "5": 37,
+          "6": 13,
+          "7": 17,
+          "8": 3,
+          "9": 2
+        },
+        "colors": 1,
+        "geometric_slack": 779,
+        "height": 22,
+        "mandatory_gaps": 121,
+        "short_blocks": 50,
+        "total_clue_length": 1212,
+        "total_clues": 190,
+        "width": 48
+      },
+      "trace_hash": "40005db85e50b62a28802bb424329dc90e06a50432a7dae0e90f934563d6e1d1",
+      "wave_count": 12
+    },
+    "logic_binding": {
+      "matrix_hash": "0a034c0b43f1fd27326b6e34eb72813f532807b70d4708cebeccfbb6c0303863"
+    },
+    "rating": {
+      "analysis_result_hash": "2ab91a2635e28fa03ad220a0b100b412eee6c3f34d71bc5d27e62b6b72275bee",
+      "format": "picross-catalog-sd2-rating-v1",
+      "method": "picross-difficulty-0.4",
+      "method_hash": "5508f0742aa858a6adc31aa621433e68298b915fb0fd6b8d9e74e576ba87caaf",
+      "rating_hash": "87870dc8423cd1528b9e0c691003de0dfd81401f9ee56b0ca8fdfed7e8774b70",
+      "result": {
+        "analysis_result_hash": "2ab91a2635e28fa03ad220a0b100b412eee6c3f34d71bc5d27e62b6b72275bee",
+        "assessment": {
+          "boundaries": {
+            "distance_lower": [
+              2201,
+              3864
+            ],
+            "distance_upper": [
+              1663,
+              3864
+            ],
+            "lower": [
+              1,
+              1
+            ],
+            "nearest_distance": [
+              1663,
+              3864
+            ],
+            "upper": [
+              2,
+              1
+            ]
+          },
+          "contributions": {
+            "demand": [
+              1,
+              1
+            ],
+            "search": [
+              1235,
+              3864
+            ],
+            "workload": [
+              1,
+              4
+            ]
+          },
+          "level": 2,
+          "level_without_workload": 2,
+          "score": [
+            6065,
+            3864
+          ],
+          "signals": {
+            "context": [
+              0,
+              1
+            ],
+            "fluent": false,
+            "highest_family": "E1",
+            "longest_narrow_run": 0,
+            "narrow_waves": 0,
+            "peak_search": [
+              1235,
+              3864
+            ],
+            "raw_workload": [
+              1,
+              4
+            ],
+            "spans": 307,
+            "workload_ceiling": 3,
+            "workload_guard": "none"
+          },
+          "without_workload": [
+            5099,
+            3864
+          ]
+        },
+        "confidence": "medium",
+        "estimated_minutes": null,
+        "explanation": "Model estimate from synthetic references; no human calibration or time estimate. Demand, search and bounded workload use independently checked line profiles.",
+        "format": "picross-sd2-rating-v1",
+        "method": "picross-difficulty-0.4",
+        "method_hash": "5508f0742aa858a6adc31aa621433e68298b915fb0fd6b8d9e74e576ba87caaf",
+        "profile_scope": "complete_line",
+        "reason": "complete_line",
+        "status": "rated"
+      },
+      "source": {
+        "bytes": 7024,
+        "definition_id": "pz-9f7c59054ebb4f3f861e2bce3034320e",
+        "engine_logic_hash": "68ea37b05565d99386cbed1e7e313df2b20bd5be4f3c16f16e73a598860aeec7",
+        "kind": "runtime",
+        "production_mode": "unknown",
+        "runtime_revision": 1,
+        "sha256": "f3eac70daa0319d5f421706d86f1004e1847a256dd0596f7a4a544fce3493ea9"
+      }
+    },
+    "rating_revision": 2
+  },
+  "format": "picross-puzzle-record-v1",
+  "id": "pz-9f7c59054ebb4f3f861e2bce3034320e",
+  "mode": "mono",
+  "name": "Game Gear",
+  "reveal": {
+    "asset": {
+      "bytes": 1924767,
+      "file": "game/art/content/sega_game_gear_001.png",
+      "sha256": "e875ff4f7fd543a477e0269fe0d2ef0bd635fd3ac929e8363174edf47ec9ba4a"
+    },
+    "catalog": {
+      "generator": "picross-catalog-reveal-1",
+      "profiles": [
+        {
+          "asset": {
+            "bytes": 33953,
+            "file": "game/art/catalog/pz-9f7c59054ebb4f3f861e2bce3034320e-ui100.png",
+            "sha256": "6cffc244a7574c432febed14bfc63b6db9da89eb275c426529af4dee7733e54f"
+          },
+          "height": 112,
+          "profile": "catalog-ui100-v1",
+          "width": 224
+        },
+        {
+          "asset": {
+            "bytes": 49569,
+            "file": "game/art/catalog/pz-9f7c59054ebb4f3f861e2bce3034320e-ui125.png",
+            "sha256": "577fe4e3332eec32e5c6884f12929ad3b8bdcdd26742dd89f1a24200cb9dc6ed"
+          },
+          "height": 140,
+          "profile": "catalog-ui125-v1",
+          "width": 280
+        }
+      ],
+      "source_height": 887,
+      "source_width": 1774
+    },
+    "image_revision": 1
+  },
+  "save_slot": "sega_game_gear_001",
+  "visible": true
+}

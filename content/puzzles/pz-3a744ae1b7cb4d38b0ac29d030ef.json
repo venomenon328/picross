@@ -1,0 +1,230 @@
+{
+  "added": {
+    "added_at": "2026-10-12T16:10:45Z",
+    "provenance": {
+      "commit": "3c470e15112a3d9dc8da2f46e2e58ceda7ac0485",
+      "evidence": {
+        "path": "content/added/reports/ku-b-initial.json",
+        "sha256": "e6d7a01e740adbc40cdc90e64c733f95907c8924cfe1f0a4bb734bb7bc6b7884"
+      },
+      "kind": "git-snapshot",
+      "reason": "No direct UTC first-registration receipt found in reviewed sources; earliest verified visible integrated catalog snapshot including bound PR history. Commit UTC is a reconstructed reference, not tool execution time.",
+      "reference_time": "2026-10-12T16:10:45Z"
+    }
+  },
+  "background": {
+    "asset": {
+      "bytes": 992828,
+      "file": "game/art/backgrounds/pz-3a744ae1b7cb4d38b0ac29d030ef.png",
+      "sha256": "2eee7b60c11bda38653900d459feaf933b4b4ce447579e406365cd24c3156994"
+    },
+    "image_revision": 2,
+    "status": "selected"
+  },
+  "category_id": "gemuese-pilze-kraeuter",
+  "definition": {
+    "bytes": 8680,
+    "file": "game/data/content/knoblauch_001.json",
+    "sha256": "c5d5685f0bf4810ea2208aad43170fd9484fbb9c1d198f03edba07a9f858a63a"
+  },
+  "difficulty": {
+    "compact_analysis": {
+      "analysis_hash": "a66b2243fd3b2c9cfba207cc59789fe97aee90750272561b87296738083a62fd",
+      "deduction_complete": true,
+      "line_analysis_complete": true,
+      "line_fixpoint_confirmed": true,
+      "new_singletons": 1600,
+      "profiles_hash": "148a21c787f1ed2ce19e22db090472e2d67401b33311b7ebe457cf163f67c1fd",
+      "r4": null,
+      "reason": null,
+      "result_hash": "705ee2ef5748047b3b33390408b6064fcc73d05dbc83df0e8e059d2f71953b2e",
+      "status": "solved",
+      "structure": {
+        "adjacent_color_changes": 0,
+        "cells": 1600,
+        "clue_length_histogram": {
+          "1": 36,
+          "10": 2,
+          "11": 3,
+          "12": 1,
+          "13": 2,
+          "14": 3,
+          "15": 2,
+          "16": 5,
+          "17": 1,
+          "18": 10,
+          "19": 3,
+          "2": 35,
+          "20": 8,
+          "21": 2,
+          "22": 2,
+          "23": 1,
+          "24": 2,
+          "25": 1,
+          "27": 1,
+          "3": 14,
+          "30": 1,
+          "32": 1,
+          "4": 10,
+          "5": 7,
+          "6": 12,
+          "7": 13,
+          "8": 30,
+          "9": 4
+        },
+        "colors": 1,
+        "geometric_slack": 1476,
+        "height": 40,
+        "mandatory_gaps": 134,
+        "short_blocks": 71,
+        "total_clue_length": 1590,
+        "total_clues": 212,
+        "width": 40
+      },
+      "trace_hash": "75c907f7071eb0bc9e1c64f1de10565632a3eb44a7e738ffc223495f92cd15c8",
+      "wave_count": 65
+    },
+    "logic_binding": {
+      "matrix_hash": "8960d051821d39c075fd7042e13d0f51b1aa69b7d5470e2db780cf7548625b08"
+    },
+    "rating": {
+      "analysis_result_hash": "705ee2ef5748047b3b33390408b6064fcc73d05dbc83df0e8e059d2f71953b2e",
+      "format": "picross-catalog-sd2-rating-v1",
+      "method": "picross-difficulty-0.4",
+      "method_hash": "5508f0742aa858a6adc31aa621433e68298b915fb0fd6b8d9e74e576ba87caaf",
+      "rating_hash": "820399fb319c108e9660a1f01fb7c3834a606eaa66f9616a18952b73945a6943",
+      "result": {
+        "analysis_result_hash": "705ee2ef5748047b3b33390408b6064fcc73d05dbc83df0e8e059d2f71953b2e",
+        "assessment": {
+          "boundaries": {
+            "distance_lower": [
+              4397,
+              7708
+            ],
+            "distance_upper": [
+              3311,
+              7708
+            ],
+            "lower": [
+              3,
+              1
+            ],
+            "nearest_distance": [
+              3311,
+              7708
+            ],
+            "upper": [
+              4,
+              1
+            ]
+          },
+          "contributions": {
+            "demand": [
+              345,
+              164
+            ],
+            "search": [
+              9379,
+              7708
+            ],
+            "workload": [
+              1,
+              4
+            ]
+          },
+          "level": 4,
+          "level_without_workload": 4,
+          "score": [
+            27521,
+            7708
+          ],
+          "signals": {
+            "context": [
+              17,
+              41
+            ],
+            "fluent": false,
+            "highest_family": "E2",
+            "longest_narrow_run": 12,
+            "narrow_waves": 33,
+            "peak_search": [
+              1863,
+              1927
+            ],
+            "raw_workload": [
+              1,
+              4
+            ],
+            "spans": 687,
+            "workload_ceiling": 4,
+            "workload_guard": "none"
+          },
+          "without_workload": [
+            12797,
+            3854
+          ]
+        },
+        "confidence": "medium",
+        "estimated_minutes": null,
+        "explanation": "Model estimate from synthetic references; no human calibration or time estimate. Demand, search and bounded workload use independently checked line profiles.",
+        "format": "picross-sd2-rating-v1",
+        "method": "picross-difficulty-0.4",
+        "method_hash": "5508f0742aa858a6adc31aa621433e68298b915fb0fd6b8d9e74e576ba87caaf",
+        "profile_scope": "complete_line",
+        "reason": "complete_line",
+        "status": "rated"
+      },
+      "source": {
+        "bytes": 8680,
+        "definition_id": "pz-3a744ae1b7cb4d38b0ac29d030ef",
+        "engine_logic_hash": "b855aceb5d5d82db17021b9e3db59c56f9387bb5136c9fd7f4099f4ae7ecee48",
+        "kind": "runtime",
+        "production_mode": "unknown",
+        "runtime_revision": 1,
+        "sha256": "c5d5685f0bf4810ea2208aad43170fd9484fbb9c1d198f03edba07a9f858a63a"
+      }
+    },
+    "rating_revision": 2
+  },
+  "format": "picross-puzzle-record-v1",
+  "id": "pz-3a744ae1b7cb4d38b0ac29d030ef",
+  "mode": "mono",
+  "name": "Knoblauch",
+  "reveal": {
+    "asset": {
+      "bytes": 1481354,
+      "file": "game/art/content/knoblauch_001.png",
+      "sha256": "0d6bf175396e5afae00269e667f8a0351513b5829aa6a8180526053b34c8ebdc"
+    },
+    "catalog": {
+      "generator": "picross-catalog-reveal-1",
+      "profiles": [
+        {
+          "asset": {
+            "bytes": 19012,
+            "file": "game/art/catalog/pz-3a744ae1b7cb4d38b0ac29d030ef-ui100.png",
+            "sha256": "6a5364d8e5f1a38c312a59dc1e1446d276adb7ea1e61b5b4b60c5d32f93b369d"
+          },
+          "height": 112,
+          "profile": "catalog-ui100-v1",
+          "width": 112
+        },
+        {
+          "asset": {
+            "bytes": 28132,
+            "file": "game/art/catalog/pz-3a744ae1b7cb4d38b0ac29d030ef-ui125.png",
+            "sha256": "0bfebbfcb60f06a2d8fa1803b46c494db1d5eefae3b3c3b08222d954e4883038"
+          },
+          "height": 140,
+          "profile": "catalog-ui125-v1",
+          "width": 140
+        }
+      ],
+      "source_height": 1254,
+      "source_width": 1254
+    },
+    "image_revision": 1
+  },
+  "save_slot": "knoblauch_001",
+  "visible": true
+}

@@ -1,0 +1,214 @@
+{
+  "added": {
+    "added_at": "2026-11-21T20:51:54Z",
+    "provenance": {
+      "commit": null,
+      "evidence": null,
+      "kind": "registration",
+      "reason": "Successful first playable registration in the shared transaction.",
+      "reference_time": "2026-11-21T20:51:54Z"
+    }
+  },
+  "background": {
+    "asset": {
+      "bytes": 167102,
+      "file": "game/art/backgrounds/pz-durian.png",
+      "sha256": "3fe3d8d44b602b95ed870a5cb4e3415c296d63fdfdfdaa60c6cdfcdd2b0bc9b5"
+    },
+    "image_revision": 1,
+    "status": "selected"
+  },
+  "category_id": "obst-nuesse",
+  "definition": {
+    "bytes": 3149,
+    "file": "game/data/content/pz-durian.json",
+    "sha256": "9bede38481447321a13c45bdf574cb96df5be58ee8084986452bdae83019d68e"
+  },
+  "difficulty": {
+    "compact_analysis": {
+      "analysis_hash": "16f0b1f64939cad26f55ee7519ec592510bb0b60bd048dd43e5a67d3ef502f6a",
+      "deduction_complete": true,
+      "line_analysis_complete": true,
+      "line_fixpoint_confirmed": true,
+      "new_singletons": 500,
+      "profiles_hash": "7d758b9b9c1c56adbce5fc1e7f4a9293cde0a371c9e8b700b7d38871723677f2",
+      "r4": null,
+      "reason": null,
+      "result_hash": "69e7abc111a56b56231361561503380995c9f654839a35fa568f05d49090642c",
+      "status": "solved",
+      "structure": {
+        "adjacent_color_changes": 0,
+        "cells": 500,
+        "clue_length_histogram": {
+          "1": 2,
+          "10": 4,
+          "11": 1,
+          "12": 1,
+          "13": 1,
+          "14": 1,
+          "15": 1,
+          "2": 10,
+          "3": 19,
+          "4": 12,
+          "5": 9,
+          "6": 7,
+          "7": 4,
+          "8": 3,
+          "9": 1
+        },
+        "colors": 1,
+        "geometric_slack": 587,
+        "height": 20,
+        "mandatory_gaps": 33,
+        "short_blocks": 12,
+        "total_clue_length": 380,
+        "total_clues": 76,
+        "width": 25
+      },
+      "trace_hash": "18491772462352be9c0108ecf868e08eacba791a7a5f23493799d49f306a3ac7",
+      "wave_count": 32
+    },
+    "logic_binding": {
+      "matrix_hash": "738f406c060b18e4f1e828fa1c4beff09f67dc6590e97fc280330e46997fcb11"
+    },
+    "rating": {
+      "analysis_result_hash": "69e7abc111a56b56231361561503380995c9f654839a35fa568f05d49090642c",
+      "format": "picross-catalog-sd2-rating-v1",
+      "method": "picross-difficulty-0.4",
+      "method_hash": "5508f0742aa858a6adc31aa621433e68298b915fb0fd6b8d9e74e576ba87caaf",
+      "rating_hash": "2c35a1627ff6f43593eefdb473cb05134c5ba3fcb03045549ae6804780ce6c4c",
+      "result": {
+        "analysis_result_hash": "69e7abc111a56b56231361561503380995c9f654839a35fa568f05d49090642c",
+        "assessment": {
+          "boundaries": {
+            "distance_lower": [
+              12443,
+              34314
+            ],
+            "distance_upper": [
+              21871,
+              34314
+            ],
+            "lower": [
+              2,
+              1
+            ],
+            "nearest_distance": [
+              12443,
+              34314
+            ],
+            "upper": [
+              3,
+              1
+            ]
+          },
+          "contributions": {
+            "demand": [
+              1,
+              1
+            ],
+            "search": [
+              76357,
+              68628
+            ],
+            "workload": [
+              1,
+              4
+            ]
+          },
+          "level": 3,
+          "level_without_workload": 3,
+          "score": [
+            81071,
+            34314
+          ],
+          "signals": {
+            "context": [
+              0,
+              1
+            ],
+            "fluent": false,
+            "highest_family": "E1",
+            "longest_narrow_run": 4,
+            "narrow_waves": 12,
+            "peak_search": [
+              14800,
+              17157
+            ],
+            "raw_workload": [
+              1,
+              4
+            ],
+            "spans": 234,
+            "workload_ceiling": 3,
+            "workload_guard": "none"
+          },
+          "without_workload": [
+            144985,
+            68628
+          ]
+        },
+        "confidence": "medium",
+        "estimated_minutes": null,
+        "explanation": "Model estimate from synthetic references; no human calibration or time estimate. Demand, search and bounded workload use independently checked line profiles.",
+        "format": "picross-sd2-rating-v1",
+        "method": "picross-difficulty-0.4",
+        "method_hash": "5508f0742aa858a6adc31aa621433e68298b915fb0fd6b8d9e74e576ba87caaf",
+        "profile_scope": "complete_line",
+        "reason": "complete_line",
+        "status": "rated"
+      },
+      "source": {
+        "bytes": 3149,
+        "definition_id": "pz-durian",
+        "engine_logic_hash": "d49e72fce1b4d7b6d3f8aa94eea4508d91864a5433691fae85146ef8b3c52430",
+        "kind": "runtime",
+        "production_mode": "unknown",
+        "runtime_revision": 2,
+        "sha256": "9bede38481447321a13c45bdf574cb96df5be58ee8084986452bdae83019d68e"
+      }
+    },
+    "rating_revision": 1
+  },
+  "format": "picross-puzzle-record-v1",
+  "id": "pz-durian",
+  "mode": "mono",
+  "name": "Durian",
+  "reveal": {
+    "asset": {
+      "bytes": 1776638,
+      "file": "game/art/content/pz-durian.png",
+      "sha256": "6f705befae76442dd7e950778eeab997f78fdcfb76dd6badd4102a4d5b757832"
+    },
+    "catalog": {
+      "generator": "picross-catalog-reveal-1",
+      "profiles": [
+        {
+          "asset": {
+            "bytes": 25434,
+            "file": "game/art/catalog/pz-durian-ui100.png",
+            "sha256": "e5c567ee84d2b087fa16158f66b456e8588469e08ab019eba9b688c0533ee0a0"
+          },
+          "height": 112,
+          "profile": "catalog-ui100-v1",
+          "width": 140
+        },
+        {
+          "asset": {
+            "bytes": 37565,
+            "file": "game/art/catalog/pz-durian-ui125.png",
+            "sha256": "0e6b26c24f272184902ce4e609cbc05bdd6a8f3628cda95d786d9672eff5379c"
+          },
+          "height": 140,
+          "profile": "catalog-ui125-v1",
+          "width": 175
+        }
+      ],
+      "source_height": 1122,
+      "source_width": 1402
+    },
+    "image_revision": 1
+  },
+  "save_slot": "pz-durian",
+  "visible": true
+}

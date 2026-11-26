@@ -1,0 +1,210 @@
+{
+  "added": {
+    "added_at": "2026-10-20T09:15:33Z",
+    "provenance": {
+      "commit": null,
+      "evidence": null,
+      "kind": "registration",
+      "reason": "Successful first playable registration in the shared transaction.",
+      "reference_time": "2026-10-20T09:15:33Z"
+    }
+  },
+  "background": {
+    "asset": {
+      "bytes": 740083,
+      "file": "game/art/backgrounds/pz-49a9e539419b48119e8f5f506fcf6dc7.png",
+      "sha256": "2f015dc6fe7acbe2c7b7da5f0c74afb2b2f3481e907367dca08b7746aa939738"
+    },
+    "image_revision": 3,
+    "status": "selected"
+  },
+  "category_id": "obst-nuesse",
+  "definition": {
+    "bytes": 1729,
+    "file": "game/data/content/banane_001.json",
+    "sha256": "9469e7af01face9b7db111a2c82603fe9c846891c88ac8a03325d9bd7ac6cf82"
+  },
+  "difficulty": {
+    "compact_analysis": {
+      "analysis_hash": "493d1eac5630ce6f15484725720716dbab6e1a9aa6fe903aa453f1e348665d83",
+      "deduction_complete": true,
+      "line_analysis_complete": true,
+      "line_fixpoint_confirmed": true,
+      "new_singletons": 240,
+      "profiles_hash": "6ac5b587e0ec60987b80af7103063460067cd740475bd20c652584bf75c9c858",
+      "r4": null,
+      "reason": null,
+      "result_hash": "ae339659dd6dd49a142a05651c8aaa11658194a614ec23fceb7bf43a1cb8a131",
+      "status": "solved",
+      "structure": {
+        "adjacent_color_changes": 0,
+        "cells": 240,
+        "clue_length_histogram": {
+          "1": 1,
+          "12": 1,
+          "14": 1,
+          "16": 1,
+          "2": 4,
+          "3": 1,
+          "4": 7,
+          "5": 10,
+          "6": 5,
+          "7": 2,
+          "8": 3
+        },
+        "colors": 1,
+        "geometric_slack": 275,
+        "height": 20,
+        "mandatory_gaps": 5,
+        "short_blocks": 5,
+        "total_clue_length": 200,
+        "total_clues": 36,
+        "width": 12
+      },
+      "trace_hash": "6853f4a81ba4c421a728f4f71e7cbacfa8a54023de98d201d40d6a43137f51f6",
+      "wave_count": 23
+    },
+    "logic_binding": {
+      "matrix_hash": "1531e7464987b070b5a63fbc9e631bb25d3fe1cfc6a5f9c764acefeffb49ef54"
+    },
+    "rating": {
+      "analysis_result_hash": "ae339659dd6dd49a142a05651c8aaa11658194a614ec23fceb7bf43a1cb8a131",
+      "format": "picross-catalog-sd2-rating-v1",
+      "method": "picross-difficulty-0.4",
+      "method_hash": "5508f0742aa858a6adc31aa621433e68298b915fb0fd6b8d9e74e576ba87caaf",
+      "rating_hash": "41be188432e6b874fee429aed49f3ed339272212b794c27112e1a59ffb949d59",
+      "result": {
+        "analysis_result_hash": "ae339659dd6dd49a142a05651c8aaa11658194a614ec23fceb7bf43a1cb8a131",
+        "assessment": {
+          "boundaries": {
+            "distance_lower": [
+              827,
+              14880
+            ],
+            "distance_upper": [
+              14053,
+              14880
+            ],
+            "lower": [
+              2,
+              1
+            ],
+            "nearest_distance": [
+              827,
+              14880
+            ],
+            "upper": [
+              3,
+              1
+            ]
+          },
+          "contributions": {
+            "demand": [
+              1,
+              1
+            ],
+            "search": [
+              697,
+              744
+            ],
+            "workload": [
+              19,
+              160
+            ]
+          },
+          "level": 3,
+          "level_without_workload": 2,
+          "score": [
+            30587,
+            14880
+          ],
+          "signals": {
+            "context": [
+              0,
+              1
+            ],
+            "fluent": false,
+            "highest_family": "E1",
+            "longest_narrow_run": 1,
+            "narrow_waves": 3,
+            "peak_search": [
+              151,
+              186
+            ],
+            "raw_workload": [
+              19,
+              160
+            ],
+            "spans": 116,
+            "workload_ceiling": 3,
+            "workload_guard": "none"
+          },
+          "without_workload": [
+            1441,
+            744
+          ]
+        },
+        "confidence": "medium",
+        "estimated_minutes": null,
+        "explanation": "Model estimate from synthetic references; no human calibration or time estimate. Demand, search and bounded workload use independently checked line profiles.",
+        "format": "picross-sd2-rating-v1",
+        "method": "picross-difficulty-0.4",
+        "method_hash": "5508f0742aa858a6adc31aa621433e68298b915fb0fd6b8d9e74e576ba87caaf",
+        "profile_scope": "complete_line",
+        "reason": "complete_line",
+        "status": "rated"
+      },
+      "source": {
+        "bytes": 1729,
+        "definition_id": "pz-49a9e539419b48119e8f5f506fcf6dc7",
+        "engine_logic_hash": "d7f386eccc91967f2786bef71ab984a715628bf3c585995145bccaa3e8f23036",
+        "kind": "runtime",
+        "production_mode": "unknown",
+        "runtime_revision": 1,
+        "sha256": "9469e7af01face9b7db111a2c82603fe9c846891c88ac8a03325d9bd7ac6cf82"
+      }
+    },
+    "rating_revision": 2
+  },
+  "format": "picross-puzzle-record-v1",
+  "id": "pz-49a9e539419b48119e8f5f506fcf6dc7",
+  "mode": "mono",
+  "name": "Banane",
+  "reveal": {
+    "asset": {
+      "bytes": 1037502,
+      "file": "game/art/content/banane_001.png",
+      "sha256": "af8ed145889d410fe5d49e9e44bc01765dafadecb9e8e1f6ec026fdac06b65b8"
+    },
+    "catalog": {
+      "generator": "picross-catalog-reveal-1",
+      "profiles": [
+        {
+          "asset": {
+            "bytes": 10386,
+            "file": "game/art/catalog/pz-49a9e539419b48119e8f5f506fcf6dc7-ui100.png",
+            "sha256": "c61f8b0a8ed9fc4a925c16403a16b74b917e2fa6afd9e4c182201691b6bb5d07"
+          },
+          "height": 112,
+          "profile": "catalog-ui100-v1",
+          "width": 84
+        },
+        {
+          "asset": {
+            "bytes": 14926,
+            "file": "game/art/catalog/pz-49a9e539419b48119e8f5f506fcf6dc7-ui125.png",
+            "sha256": "c1351db01e00ccbb6861e934c04d6fef116c84a89dc9d0342ed168063699bd79"
+          },
+          "height": 140,
+          "profile": "catalog-ui125-v1",
+          "width": 105
+        }
+      ],
+      "source_height": 1448,
+      "source_width": 1086
+    },
+    "image_revision": 1
+  },
+  "save_slot": "banane_001",
+  "visible": true
+}

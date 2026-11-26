@@ -1,0 +1,223 @@
+{
+  "added": {
+    "added_at": "2026-10-17T10:17:32Z",
+    "provenance": {
+      "commit": "8069ee5d9c1b88e8403045d810c5b56d3f7fbf41",
+      "evidence": {
+        "path": "content/added/reports/ku-b-initial.json",
+        "sha256": "e6d7a01e740adbc40cdc90e64c733f95907c8924cfe1f0a4bb734bb7bc6b7884"
+      },
+      "kind": "git-snapshot",
+      "reason": "No direct UTC first-registration receipt found in reviewed sources; earliest verified visible integrated catalog snapshot including bound PR history. Commit UTC is a reconstructed reference, not tool execution time.",
+      "reference_time": "2026-10-17T10:17:32Z"
+    }
+  },
+  "background": {
+    "asset": {
+      "bytes": 693253,
+      "file": "game/art/backgrounds/pz-3e97c042f0bf474e8608a84ea034c246.png",
+      "sha256": "c906419c45feea6531d04d61cd34966e4f25c1256e5098c32c8cb3cff65e4a1f"
+    },
+    "image_revision": 2,
+    "status": "selected"
+  },
+  "category_id": "mythen-fantasie",
+  "definition": {
+    "bytes": 4246,
+    "file": "game/data/content/yin_yang_001.json",
+    "sha256": "ac3c241cf208ae5f696a717bbd39cc3293f8396c4cb2bedc11efa8c17a6cf226"
+  },
+  "difficulty": {
+    "compact_analysis": {
+      "analysis_hash": "495d863f4db5ec50ff44aaed3c391c17b9ec2661d71a1964be8c4464666cda4c",
+      "deduction_complete": true,
+      "line_analysis_complete": true,
+      "line_fixpoint_confirmed": true,
+      "new_singletons": 625,
+      "profiles_hash": "cb89f689da70fe3c44cbcf9ba17457ce645d5669a2a81098ed2949f3601cd28f",
+      "r4": null,
+      "reason": null,
+      "result_hash": "01a367b700909ecc70997b06bde2c02d1b7e9552e8c2c2bf9045f7d5d8ebd54c",
+      "status": "solved",
+      "structure": {
+        "adjacent_color_changes": 0,
+        "cells": 625,
+        "clue_length_histogram": {
+          "1": 7,
+          "10": 2,
+          "11": 1,
+          "12": 2,
+          "13": 2,
+          "14": 4,
+          "15": 4,
+          "16": 1,
+          "17": 1,
+          "18": 2,
+          "2": 10,
+          "20": 1,
+          "21": 1,
+          "23": 1,
+          "3": 28,
+          "4": 13,
+          "5": 13,
+          "6": 4,
+          "7": 2,
+          "8": 2,
+          "9": 8
+        },
+        "colors": 1,
+        "geometric_slack": 507,
+        "height": 25,
+        "mandatory_gaps": 59,
+        "short_blocks": 17,
+        "total_clue_length": 684,
+        "total_clues": 109,
+        "width": 25
+      },
+      "trace_hash": "4db9bf97001c3064afbf4ab0edd8fdf4da5dd2d29858fa8d8f0f177da2e73735",
+      "wave_count": 43
+    },
+    "logic_binding": {
+      "matrix_hash": "823cc6373bf531c8aeadfed9d4f6bdcea33f0770957fde30aa66a9163fc275c6"
+    },
+    "rating": {
+      "analysis_result_hash": "01a367b700909ecc70997b06bde2c02d1b7e9552e8c2c2bf9045f7d5d8ebd54c",
+      "format": "picross-catalog-sd2-rating-v1",
+      "method": "picross-difficulty-0.4",
+      "method_hash": "5508f0742aa858a6adc31aa621433e68298b915fb0fd6b8d9e74e576ba87caaf",
+      "rating_hash": "ff2dd2a9b552ffe3d38efa2ac5ebb27d15da5edc6b3fd65544cd02c86c07b98d",
+      "result": {
+        "analysis_result_hash": "01a367b700909ecc70997b06bde2c02d1b7e9552e8c2c2bf9045f7d5d8ebd54c",
+        "assessment": {
+          "boundaries": {
+            "distance_lower": [
+              17759,
+              32980
+            ],
+            "distance_upper": [
+              15221,
+              32980
+            ],
+            "lower": [
+              3,
+              1
+            ],
+            "nearest_distance": [
+              15221,
+              32980
+            ],
+            "upper": [
+              4,
+              1
+            ]
+          },
+          "contributions": {
+            "demand": [
+              141,
+              68
+            ],
+            "search": [
+              2357,
+              1940
+            ],
+            "workload": [
+              1,
+              4
+            ]
+          },
+          "level": 4,
+          "level_without_workload": 4,
+          "score": [
+            116699,
+            32980
+          ],
+          "signals": {
+            "context": [
+              5,
+              17
+            ],
+            "fluent": false,
+            "highest_family": "E2",
+            "longest_narrow_run": 7,
+            "narrow_waves": 22,
+            "peak_search": [
+              468,
+              485
+            ],
+            "raw_workload": [
+              1,
+              4
+            ],
+            "spans": 283,
+            "workload_ceiling": 4,
+            "workload_guard": "none"
+          },
+          "without_workload": [
+            54227,
+            16490
+          ]
+        },
+        "confidence": "medium",
+        "estimated_minutes": null,
+        "explanation": "Model estimate from synthetic references; no human calibration or time estimate. Demand, search and bounded workload use independently checked line profiles.",
+        "format": "picross-sd2-rating-v1",
+        "method": "picross-difficulty-0.4",
+        "method_hash": "5508f0742aa858a6adc31aa621433e68298b915fb0fd6b8d9e74e576ba87caaf",
+        "profile_scope": "complete_line",
+        "reason": "complete_line",
+        "status": "rated"
+      },
+      "source": {
+        "bytes": 4246,
+        "definition_id": "pz-3e97c042f0bf474e8608a84ea034c246",
+        "engine_logic_hash": "9f65bae675748494f1f51fc34680a3df214d242194b2f66861c289a2c7b6af2e",
+        "kind": "runtime",
+        "production_mode": "unknown",
+        "runtime_revision": 1,
+        "sha256": "ac3c241cf208ae5f696a717bbd39cc3293f8396c4cb2bedc11efa8c17a6cf226"
+      }
+    },
+    "rating_revision": 2
+  },
+  "format": "picross-puzzle-record-v1",
+  "id": "pz-3e97c042f0bf474e8608a84ea034c246",
+  "mode": "mono",
+  "name": "Yin-Yang",
+  "reveal": {
+    "asset": {
+      "bytes": 2210166,
+      "file": "game/art/content/yin_yang_001.png",
+      "sha256": "a3c192f26e416d4ce4fadf273239d181dda581cfc415bcd869ec1a65518b61fe"
+    },
+    "catalog": {
+      "generator": "picross-catalog-reveal-1",
+      "profiles": [
+        {
+          "asset": {
+            "bytes": 24289,
+            "file": "game/art/catalog/pz-3e97c042f0bf474e8608a84ea034c246-ui100.png",
+            "sha256": "3b5715e69cd34c22024b55eae143013c1dfdf4e21b2a4f103017cae5634edcc4"
+          },
+          "height": 112,
+          "profile": "catalog-ui100-v1",
+          "width": 112
+        },
+        {
+          "asset": {
+            "bytes": 36147,
+            "file": "game/art/catalog/pz-3e97c042f0bf474e8608a84ea034c246-ui125.png",
+            "sha256": "e1edff54d90627aad81c8531e4c8bce8d6ab76da9753b15bb81f475f503eb527"
+          },
+          "height": 140,
+          "profile": "catalog-ui125-v1",
+          "width": 140
+        }
+      ],
+      "source_height": 1254,
+      "source_width": 1254
+    },
+    "image_revision": 1
+  },
+  "save_slot": "yin_yang_001",
+  "visible": true
+}

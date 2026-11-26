@@ -14,18 +14,17 @@ from functools import wraps
 from .authoring_package import require, relative, sha
 from .contract import canonical_bytes, digest, exact_keys, integer
 from . import catalog_io as io, categories, content_registry as registry, current_content
+from . import puzzle_record, puzzle_catalog
 from . import catalog_publication as publication, catalog_metadata as metadata
 from . import catalog_background as bg, editor_raster as raster, catalog_rating as rating, catalog_method
 
-PLAN = "picross-editor-change-plan-v2"
-JOURNAL = "picross-editor-change-journal-v2"
+PLAN = "picross-puzzle-editor-plan-v1"
+JOURNAL = "picross-puzzle-editor-journal-v1"
 LOCK = "content/.registration-pending.json"
 STAGE = "content/.editor-change-journal.tmp"
-INDEXES = (registry.REGISTRY, categories.PATH, registry.RUNTIME)
+INDEXES = (categories.PATH, registry.RUNTIME)
 LIMIT = 128 * 1024 * 1024
 FILE_LIMIT = 64 * 1024 * 1024
-REVEAL = current_content.REVEAL
-BACKGROUND = current_content.BACKGROUND
 
 
 _hashes = ContextVar("editor_operation_hashes", default=None)
@@ -83,11 +82,6 @@ def pending(root):
             or bool(publication.staging(root)))
 
 
-def validate_index(value, cats):
-    return current_content.validate(value, cats)
-
-
-
 class Inputs:
     """One operation's explicit read set, not a cache across operations."""
     def __init__(self, root):
@@ -106,24 +100,8 @@ class Inputs:
 
     def indices(self):
         require(not pending(self.root), "Interrupted publication: recovery required")
-        cats = categories.validate(self.json(categories.PATH, categories.MAX_BYTES))
-        value = validate_index(self.json(registry.REGISTRY), cats)
-        registry.require_current(value)
-        runtime = self.json(registry.RUNTIME, current_content.RUNTIME_LIMIT)
-        exact_keys(runtime, {"format", "categories", "entries"})
-        require(runtime["format"] in (registry.METADATA_RUNTIME_FORMAT, registry.IMAGE_RUNTIME_FORMAT),
-                "Explicit metadata migration required")
-        require(isinstance(runtime["entries"], list), "Invalid runtime entries")
-        ids = [row["id"] for row in runtime["entries"]]
-        require(ids == [row["id"] for row in value["entries"]], "Runtime IDs differ from current index")
-        require(runtime["categories"] == categories.ordered(cats), "Runtime categories differ")
-        for row, entry, meta in zip(runtime["entries"], value["entries"], value["metadata"]):
-            require(all(row[key] == entry[key] for key in ("id", "key", "save_slot", "definition", "visible"))
-                    and row["name"] == meta["name"] and row["category_id"] == meta["category_id"],
-                    "Current runtime metadata differs")
-            relative("game/"+row["reveal"])
-            if runtime["format"] == registry.IMAGE_RUNTIME_FORMAT:
-                current_content.catalog_profiles.validate_projection(row)
+        cats,runtime = puzzle_catalog.index(self.read,puzzle_record.inventory(self.root))
+        value = metadata._state(runtime)
         require(not pending(self.root), "Publication started while reading indices")
         return value, cats, runtime
 
@@ -143,60 +121,20 @@ def listing(root, *, inputs=None):
 
 def readback(raw, identifier):
     """Project the bytes actually read under lock / after the changed writes."""
-    value = io.json_bytes(raw[registry.REGISTRY], 8*1024*1024)
-    cats = io.json_bytes(raw[categories.PATH], categories.MAX_BYTES)
-    runtime = io.json_bytes(raw[registry.RUNTIME], current_content.RUNTIME_LIMIT)
+    cats = io.json_bytes(raw[categories.PATH],categories.MAX_BYTES)
+    runtime = io.json_bytes(raw[registry.RUNTIME],current_content.RUNTIME_LIMIT)
+    value = metadata._state(runtime)
     return {"catalog": {"format": "picross-pe-api-v1", "entries": value["metadata"],
             "categories": categories.ordered(cats), "snapshot": token(raw), "runtime_format": runtime["format"],
             "migration_required": runtime["format"] != registry.IMAGE_RUNTIME_FORMAT},
             "runtime": next((e for e in runtime["entries"] if e["id"] == identifier), None)}
 
 
-def selected(value, runtime, identifier):
-    entry = next((e for e in value["entries"] if e["id"] == identifier), None)
-    require(entry is not None, "Unknown puzzle ID")
-    return entry, next(e for e in runtime["entries"] if e["id"] == identifier)
-
-
-def slim(value): return isinstance(value, dict) and value.get("format") in (REVEAL, BACKGROUND)
-
-
-def technical_entry(entry):
-    current_content.entries([entry])
-    return entry
-
-
-
-def validate_binding(value, identifier):
-    return current_content.validate_binding(value, identifier)
-
-
-
-def validate_source(value, entry=None):
-    return current_content.validate_source(value, entry)
-
-
-
-def source(inputs, entry, kind):
-    name = "content/"+("reveals" if kind == "reveal" else "backgrounds")+"/"+entry["id"]+".json"
-    value = inputs.json(name, 1024*1024, missing=True)
-    if slim(value): validate_source(value, entry)
-    if kind == "background":
-        index = inputs.json(registry.REGISTRY)
-        declared = next((r["source"] for r in index["backgrounds"] if r["id"] == entry["id"]), None)
-        require((value is None) == (declared is None), "Background source/index differ")
-        if declared is not None: require(ref(name, inputs.raw[name]) == declared, "Background index binding differs")
-    if slim(value):
-        runtime = inputs.json(registry.RUNTIME, current_content.RUNTIME_LIMIT)
-        row = next(r for r in runtime["entries"] if r["id"] == entry["id"])
-        if kind == "reveal":
-            require(current_content.catalog_profiles.project(value["catalog"]) == row["catalog_reveal"] and
-                    value["current"]["asset"]["file"] == "game/"+row["reveal"], "Current reveal projection differs")
-        else:
-            projected = deepcopy(value["current"])
-            if projected["asset"]: projected["asset"]["file"] = projected["asset"]["file"].removeprefix("game/")
-            require(projected == row["background"], "Current background projection differs")
-    return value
+def selected(inputs,cats,runtime,identifier):
+    record = puzzle_record.load(inputs.root,identifier,category_catalog=cats,read=inputs.read)
+    row = next((r for r in runtime["entries"] if r["id"] == identifier),None)
+    require(row == puzzle_record.runtime_row(record), "Selected projection differs")
+    return record,row
 
 
 @operation
@@ -204,38 +142,28 @@ def detail(root, identifier, expected=None):
     inputs = Inputs(root)
     value, cats, runtime = inputs.indices()
     require(expected is None or expected == token(inputs.raw), "Catalog changed; reload")
-    entry, row = selected(value, runtime, identifier)
-    raw = inputs.read("game/"+entry["definition"], 2*1024*1024)
-    definition = parsed_definition(raw)[0]
-    reveal, background = source(inputs, entry, "reveal"), source(inputs, entry, "background")
-    result = {"id": identifier, "entry": entry, "metadata": next(e for e in value["metadata"] if e["id"] == identifier),
-              "reveal": reveal, "background": background, "runtime": row}
-    # UI receives only current technical values, never historical descriptions.
-    result["reveal"] = {"file": row["reveal"]}
-    result["background"] = deepcopy(row["background"])
-    names = {"game/"+row["reveal"]: None}
-    if slim(reveal): names = {reveal["current"]["asset"]["file"]: reveal["current"]["asset"]["sha256"]}
-    if row["background"]["status"] == "selected":
-        ref = row["background"]["asset"]
-        names["game/"+ref["file"]] = ref["sha256"]
+    record,row = selected(inputs,cats,runtime,identifier)
+    entry = puzzle_record.entry(record)
+    raw = inputs.read(record["definition"]["file"],2*1024*1024)
+    definition = io.json_bytes(raw,2*1024*1024)
+    result = {"id":identifier,"entry":entry,"metadata":{k:record[k] for k in ("id","name","category_id")},
+              "reveal":{"file":row["reveal"]},"background":deepcopy(row["background"]),"runtime":row}
+    names = {record["reveal"]["asset"]["file"]:record["reveal"]["asset"]["sha256"]}
+    if record["background"]["asset"]:
+        asset = record["background"]["asset"]
+        names[asset["file"]] = asset["sha256"]
     return {"detail": result, "raster": {"text": "\n".join(" ".join(map(str, r)) for r in definition["solution"]),
             "palette": definition["palette"], "width": definition["width"], "height": definition["height"],
             "revision": definition["revision"]}, "snapshot": token(inputs.raw),
             "definition_sha256": checksum(raw), "_resources": names,
-            "source_migration_required": not slim(reveal) or not slim(background)}
+            "source_migration_required": False}
 
 
-def _summary(value, runtime, identifier):
-    if identifier is None: return None
-    entry, row = selected(value, runtime, identifier)
-    return {"entry": deepcopy(entry), "metadata": deepcopy(next(e for e in value["metadata"] if e["id"] == identifier)),
-            "runtime": deepcopy(row), "reveal": row["reveal"], "background": deepcopy(row["background"])}
-
-
-def _record(entry, definition_raw, previous, kind, current, catalog=None):
-    return current_content.source(entry, definition_raw, current, kind,
-                                  record_revision=previous["record_revision"]+1, catalog=catalog)
-
+def _summary(record,row):
+    if record is None:
+        return None
+    return {"entry":puzzle_record.entry(record),"metadata":{k:record[k] for k in ("id","name","category_id")},
+            "runtime":deepcopy(row),"reveal":row["reveal"],"background":deepcopy(row["background"])}
 
 
 @catalog_method.bound_validation
@@ -251,31 +179,38 @@ def plan(root, request, *, uploads=None, work=None, expected=None, expected_defi
     require(expected is None or token(inputs.raw) == expected, "Relevant catalog changed; reload")
     target, target_cats, target_runtime = deepcopy(value), deepcopy(cats), deepcopy(runtime)
     identifier = request.get("id") if request else None
-    entry, row = selected(value, runtime, identifier) if identifier is not None else (None, None)
-    before = _summary(value, runtime, identifier)
+    original,row = selected(inputs,cats,runtime,identifier) if identifier is not None else (None,None)
+    proposed = deepcopy(original)
+    entry = puzzle_record.entry(original) if original else None
+    before = _summary(original,row)
     changes, quality = {}, None
     action = "metadata"
     def put(name, raw):
         old = inputs.read(name, missing=True)
         if old != raw: changes[name] = {"old": pack(old), "new": pack(raw)}
-    require(runtime["format"] == registry.IMAGE_RUNTIME_FORMAT, "This checkout requires external migration: issue #641")
     exact_keys(request, {"id", "metadata", "text", "profile", "reveal", "background"})
     operations = request["metadata"] if identifier is None else (
         [{"op": "set_metadata", "id": identifier, **request["metadata"]}] if request["metadata"] else [])
     if identifier is None:
         require(all(request[k] is None for k in ("text", "profile", "reveal", "background")), "Category action has puzzle inputs")
-    target, target_cats = metadata._edit(value, cats, metadata._operations(operations, catalog=cats), validate_registry=validate_index)
+    target, target_cats = metadata._edit(value, cats, metadata._operations(operations, catalog=cats), validate_registry=metadata._validate_metadata)
     target_runtime["categories"] = categories.ordered(target_cats)
     meta = {e["id"]: e for e in target["metadata"]}
     for item in target_runtime["entries"]:
-        item.update(name=meta[item["id"]]["name"], category_id=meta[item["id"]]["category_id"])
+        key = item["id"]
+        if any(item[k] != meta[key][k] for k in ("name","category_id")):
+            updated = proposed if key == identifier else selected(inputs,cats,runtime,key)[0]
+            updated.update(meta[key])
+            item.update(meta[key])
+            if key != identifier:
+                put(puzzle_record.path(key), puzzle_record.encode(updated))
     if identifier is not None and any(request[k] is not None for k in ("text", "reveal", "background")):
-        require(runtime["format"] == registry.IMAGE_RUNTIME_FORMAT, "Explicit v7→v8 migration required")
         action = "raster" if request["text"] is not None else "images"
         definition_raw = inputs.read("game/"+entry["definition"], 2*1024*1024)
-        definition = parsed_definition(definition_raw)[0]
+        definition = io.json_bytes(definition_raw, 2*1024*1024)
+        _hashes.get()[id(definition_raw)] = (definition_raw, original["definition"]["sha256"])
         require(expected_definition is None or checksum(definition_raw) == expected_definition, "Selected raster changed; reload")
-        target_entry, target_row = selected(target, target_runtime, identifier)
+        target_row = next(r for r in target_runtime["entries"] if r["id"] == identifier)
         if request["text"] is not None:
             matrix = raster.parse(request["text"], definition["palette"])
             new_definition = raster.definition(definition, matrix)
@@ -287,20 +222,19 @@ def plan(root, request, *, uploads=None, work=None, expected=None, expected_defi
                 quality, package = _prepare_raster(inputs, entry, definition_raw, new_definition, request["profile"], Path(work))
                 definition_raw = encoded(new_definition)
                 put("game/"+entry["definition"], definition_raw)
-                rating_path = rating.path(identifier)
-                previous_rating = inputs.json(rating_path, 1024*1024, missing=True)
-                active = rating.active_record(quality["checked"], previous_rating)
-                put(rating_path, encoded(active))
+                active = rating.active_record(quality["checked"])
+                proposed["difficulty"] = puzzle_catalog.difficulty_fields(active)
+                proposed["difficulty"]["rating_revision"] = original["difficulty"]["rating_revision"] + 1
+                proposed["definition"] = ref("game/"+entry["definition"],definition_raw)
                 target_row["difficulty"] = rating.project(active)
             definition = new_definition
         for kind in ("reveal", "background"):
             part = request[kind]
             # Only a real raster change needs both current bindings rebound.
             if part is None and quality is None: continue
-            previous = source(inputs, entry, kind)
-            require(slim(previous), "Current image sources require external migration: issue #641 M2")
+            previous = original[kind]
             current = None
-            catalog = previous.get("catalog")
+            catalog = puzzle_record.catalog(original) if kind == "reveal" else None
             if kind == "reveal":
                 old_name = "game/"+row["reveal"]
                 if part is not None:
@@ -313,7 +247,7 @@ def plan(root, request, *, uploads=None, work=None, expected=None, expected_defi
                     name = Path("game/"+entry["reveal"]).with_suffix("."+suffix).as_posix()
                     old = inputs.read(old_name, 32*1024*1024)
                     if raw != old or name != old_name:
-                        require(ref(old_name, old) == previous["current"]["asset"], "Previous reveal bytes differ")
+                        require(ref(old_name, old) == previous["asset"], "Previous reveal bytes differ")
                         catalog, profiles = current_content.catalog_profiles.generate(identifier, ref(name, raw), raw)
                         for profile in previous["catalog"]["profiles"]:
                             asset = profile["asset"]
@@ -324,11 +258,11 @@ def plan(root, request, *, uploads=None, work=None, expected=None, expected_defi
                             require(inputs.read(name, 32*1024*1024, missing=True) is None, "New original path is occupied")
                             put(old_name, None)
                         put(name, raw)
-                        old_revision = (previous.get("current", {}).get("image_revision", 0) if previous else 0)
+                        old_revision = (previous["image_revision"] if previous else 0)
                         current = {"image_revision": old_revision+1, "asset": ref(name, raw)}
                         target_row["reveal"] = name.removeprefix("game/")
                 if current is None and quality is not None:
-                    current = deepcopy(previous["current"])
+                    current = {k:v for k,v in previous.items() if k != "catalog"}
             else:
                 old_current = row["background"]
                 if part is not None:
@@ -369,15 +303,14 @@ def plan(root, request, *, uploads=None, work=None, expected=None, expected_defi
                     current = deepcopy(row["background"])
                     if current["asset"]: current["asset"]["file"] = "game/"+current["asset"]["file"]
             if current is not None:
-                record = _record(target_entry, definition_raw, previous, kind, current, catalog)
-                name = "content/"+("reveals" if kind == "reveal" else "backgrounds")+"/"+identifier+".json"
-                put(name, encoded(record))
-                if kind == "background":
-                    target["backgrounds"] = sorted([e for e in target["backgrounds"] if e["id"] != identifier]+
-                        [{"id": identifier, "source": ref(name, encoded(record))}], key=lambda e: e["id"])
-    for name, old, new in ((registry.REGISTRY, value, target), (categories.PATH, cats, target_cats), (registry.RUNTIME, runtime, target_runtime)):
-        if old != new: put(name, encoded(new))
-    after = _summary(target, target_runtime, identifier)
+                proposed[kind] = current
+                if kind == "reveal":
+                    proposed[kind]["catalog"] = {k:v for k,v in catalog.items() if k != "source_sha256"}
+    if proposed != original:
+        put(puzzle_record.path(identifier),puzzle_record.encode(proposed))
+    for name,old,new in ((categories.PATH,cats,target_cats),(registry.RUNTIME,runtime,target_runtime)):
+        if old != new: put(name,encoded(new))
+    after = _summary(proposed,next((r for r in target_runtime["entries"] if r["id"] == identifier),None))
     if action == "raster": after["definition"] = definition
     if action == "metadata":
         before, after = [], []
@@ -440,21 +373,29 @@ def validate(value, *, journal=False):
     allowed = set(INDEXES)
     entry, identifier = value["entry"], value["id"]
     if identifier is not None:
-        technical_entry(entry)
+        current_content.entries([entry])
         require(entry["id"] == identifier, "Selected identity differs")
     else: require(entry is None, "Unselected entry")
     if value["action"] in ("images", "raster"):
         require(entry is not None, "Puzzle action requires ID")
-        allowed |= {"game/"+entry["definition"], "content/reveals/"+identifier+".json", bg.path(identifier), bg.asset_path(identifier), "game/art/backgrounds/"+identifier+".txt", bg.CAPABILITY}
+        allowed |= {"game/"+entry["definition"], puzzle_record.path(identifier), bg.asset_path(identifier), "game/art/backgrounds/"+identifier+".txt", bg.CAPABILITY}
         allowed.update(current_content.catalog_profiles.path(identifier, label) for label, _, _ in current_content.catalog_profiles.PROFILES)
         allowed |= {Path("game/"+entry["reveal"]).with_suffix(s).as_posix() for s in (".png", ".svg")}
     if value["action"] == "raster":
         from .catalog_method import PATH
-        allowed |= {rating.path(identifier), PATH}
+        allowed.add(PATH)
     require(isinstance(value["reads"], dict) and isinstance(value["changes"], dict), "Invalid read/write set")
     require(set(INDEXES) <= set(value["reads"]), "Missing index conflict bindings")
+    if identifier is not None:
+        require({puzzle_record.path(identifier),"game/"+entry["definition"]} <= value["reads"].keys(),
+                "Selected plan entry lacks bound record or definition")
     for name, expected_hash in value["reads"].items():
         relative(name)
+        if re.fullmatch(r"content/puzzles/pz-[a-z0-9][a-z0-9-]{0,59}\.json",name):
+            require(identifier is None or name == puzzle_record.path(identifier),"Foreign selected record")
+            allowed.add(name)
+        if re.fullmatch(r"game/data/content/[a-z][a-z0-9_-]{0,63}\.json",name):
+            allowed.add(name)
         require(name in allowed, "Unrelated editor input: "+name)
         if expected_hash is not None: sha(expected_hash)
     sides = {}
@@ -464,121 +405,85 @@ def validate(value, *, journal=False):
         old, new = unpack(pair["old"]), unpack(pair["new"])
         require(old != new and checksum(old) == value["reads"][name], "Invalid old target binding")
         require(name not in (bg.CAPABILITY, "content/difficulty-method.json"), "Read-only input cannot be edited")
-        if value["action"] != "raster": require(name in allowed and (entry is None or name != "game/"+entry["definition"]), "Invalid action target")
+        if name.startswith("game/data/content/"):
+            require(value["action"] == "raster" and name == "game/"+entry["definition"], "Invalid definition write")
         sides[name] = (old, new)
     require(len(encoded(value)) <= LIMIT, "Oversized editor transaction")
     return sides
 
 
 @catalog_method.bound_validation
-def validate_targets(value, sides, actual):
+def validate_targets(root, value, sides, actual, *, journal_temps=()):
     """Closed technical deltas, using already read bytes; no plan rebuilding."""
     target = {**actual, **{name: pair[1] for name, pair in sides.items()}}
-    before = io.json_bytes(actual[registry.REGISTRY], 8*1024*1024)
-    cats = categories.validate(io.json_bytes(target[categories.PATH], categories.MAX_BYTES))
-    after = validate_index(io.json_bytes(target[registry.REGISTRY], 8*1024*1024), cats)
-    action, identifier = value["action"], value["id"]
-    if identifier is not None:
-        require(next((e for e in before["entries"] if e["id"] == identifier), None) == value["entry"],
-                "Selected plan entry differs from current index")
+    old_runtime,runtime = (io.json_bytes(data[registry.RUNTIME],current_content.RUNTIME_LIMIT) for data in (actual,target))
+    ids = puzzle_record.inventory(root,journal_temps=journal_temps)
+    old_cats,cats = (categories.validate(io.json_bytes(data[categories.PATH],categories.MAX_BYTES)) for data in (actual,target))
+    puzzle_catalog.validate_runtime(old_runtime,old_cats,ids)
+    puzzle_catalog.validate_runtime(runtime,cats,ids)
+    identifier,action = value["id"],value["action"]
     if action != "metadata":
-        require(actual[categories.PATH] == target[categories.PATH], "Puzzle edit changes category definitions")
-    require([e["id"] for e in before["entries"]] == [e["id"] for e in after["entries"]], "Editor cannot create/remove puzzle IDs")
-    require(before["entries"] == after["entries"], "Editor changes fixed current identity")
-    if action == "metadata":
-        require(before["backgrounds"] == after["backgrounds"], "Metadata changes image sources")
-    else:
-        require([e for e in before["backgrounds"] if e["id"] != identifier] ==
-                [e for e in after["backgrounds"] if e["id"] != identifier], "Unrelated background index changed")
-        require([e for e in before["metadata"] if e["id"] != identifier] ==
-                [e for e in after["metadata"] if e["id"] != identifier], "Unrelated metadata changed")
-    old_runtime = io.json_bytes(actual[registry.RUNTIME], current_content.RUNTIME_LIMIT)
-    runtime = io.json_bytes(target[registry.RUNTIME], current_content.RUNTIME_LIMIT)
-    exact_keys(runtime, {"format", "categories", "entries"})
-    require(runtime["categories"] == categories.ordered(cats), "Runtime category projection differs")
-    require(runtime["format"] == registry.IMAGE_RUNTIME_FORMAT, "Invalid runtime generation")
-    require(len(runtime["entries"]) == len(old_runtime["entries"]), "Runtime IDs changed")
-    for old, new, meta in zip(old_runtime["entries"], runtime["entries"], after["metadata"]):
-        expected = {**old, "name": meta["name"], "category_id": meta["category_id"]}
-        if identifier == old["id"] and action in ("images", "raster"):
-            for key in ("reveal", "catalog_reveal", "background") + (("difficulty",) if action == "raster" else ()):
-                expected[key] = new[key]
-        require(expected == new, "Unexpected runtime delta")
-    for name, (_, raw) in sides.items():
-        if name.startswith(("content/reveals/", "content/backgrounds/")):
-            require(raw is not None, "Cannot remove active editor source")
-            entry = next(e for e in after["entries"] if e["id"] == identifier)
-            validate_source(io.json_bytes(raw, 1024*1024), entry)
-    if identifier and action in ("images", "raster"):
-        entry, row = selected(after, runtime, identifier)
-        definition_path = "game/"+entry["definition"]
-        for kind, field in (("reveal", "reveal"), ("background", "background")):
-            source_path = "content/"+("reveals" if kind == "reveal" else "backgrounds")+"/"+identifier+".json"
-            old_row = next(r for r in old_runtime["entries"] if r["id"] == identifier)
-            if row[field] != old_row[field] or definition_path in sides or (kind == "reveal" and row["catalog_reveal"] != old_row["catalog_reveal"]):
-                require(source_path in sides, "Changed runtime/definition lacks current image source")
-            if kind == "background" and before["backgrounds"] != after["backgrounds"]:
-                require(source_path in sides, "Background index changed without source")
-        for name, (old_raw, new_raw) in sides.items():
-            if not name.startswith("game/art/"): continue
-            if name.startswith("game/art/catalog/"):
-                require(current_content.source_path(identifier, "reveal") in sides and new_raw is not None,
-                        "Profile change requires its reveal source")
-                continue
-            if name == "game/art/backgrounds/"+identifier+".txt":
-                from .reveal_source import make_notice
-                require(new_raw is not None and row["background"]["status"] == "selected", "Notice needs current selected background")
-                make_notice(new_raw)
-                continue
-            kind = "background" if name == bg.asset_path(identifier) else "reveal"
-            source_path = "content/"+("reveals" if kind == "reveal" else "backgrounds")+"/"+identifier+".json"
-            require(source_path in sides, "Image bytes changed without current source")
-            current = io.json_bytes(target[source_path], 1024*1024)["current"]["asset"]
-            previous = io.json_bytes(actual[source_path], 1024*1024)["current"]["asset"]
-            if new_raw is None:
-                require(previous is not None and previous["file"] == name and
-                        (current is None or current["file"] != name), "Unbound image deletion")
-            else:
-                require(current == ref(name, new_raw), "Image bytes lack exact current binding")
+        require(identifier in ids and old_cats == cats, "Invalid puzzle edit")
+    record_names = {n for n in actual if n.startswith(puzzle_record.DIRECTORY+"/")}
+    require(record_names <= {puzzle_record.path(k) for k in ids},"Foreign record read")
+    for old_row,row in zip(old_runtime["entries"],runtime["entries"],strict=True):
+        key = row["id"]
+        name = puzzle_record.path(key)
+        if name not in record_names:
+            require(row == old_row, "Unbound runtime change")
+            continue
+        old,record = (puzzle_record.decode(data[name],key) for data in (actual,target))
+        definition_path = old["definition"]["file"]
         definition_raw = target[definition_path]
-        for kind in ("reveal", "background"):
-            name = "content/"+("reveals" if kind == "reveal" else "backgrounds")+"/"+identifier+".json"
-            if name not in sides: continue
-            current = io.json_bytes(target[name], 1024*1024)
-            require(current["binding"]["identity"] == identity(entry, definition_raw), "New source definition binding differs")
-            old = io.json_bytes(actual[name], 1024*1024)
-            validate_source(old, value["entry"])
-            require(current["record_revision"] == old["record_revision"]+1, "Invalid source revision")
-            previous_image, image = old["current"], current["current"]
-            require(image["image_revision"] == previous_image["image_revision"] +
-                    int({k: v for k, v in image.items() if k != "image_revision"} !=
-                        {k: v for k, v in previous_image.items() if k != "image_revision"}), "Invalid image revision")
-            if image["asset"] and image["asset"]["file"] in sides:
-                require(ref(image["asset"]["file"], target[image["asset"]["file"]]) == image["asset"], "New image bytes differ")
+        puzzle_record.validate(old,key,actual[definition_path],category_catalog=old_cats)
+        puzzle_record.validate(record,key,definition_raw,category_catalog=cats)
+        require(puzzle_record.runtime_row(old) == old_row and puzzle_record.runtime_row(record) == row,
+                "Editor projection differs")
+        fields = {"name","category_id"}
+        if key == identifier:
+            require(puzzle_record.entry(old) == value["entry"],"Foreign selected entry")
+            if action in ("images","raster"):
+                fields |= {"reveal","background"}
+            if action == "raster":
+                fields |= {"definition","difficulty"}
+        require(all(old[k] == record[k] for k in record.keys()-fields), "Unrelated record change")
+        if action == "metadata" or key != identifier:
+            continue
+        require(old["definition"]["file"] == record["definition"]["file"], "Definition path changed")
+        require((old["difficulty"] != record["difficulty"]) == (definition_path in sides),"Unbound rating change")
+        if definition_path in sides:
+            require(record["difficulty"]["rating_revision"] == old["difficulty"]["rating_revision"]+1,"Invalid rating revision")
+        bound = {}
+        for kind in ("reveal","background"):
+            prior,following = old[kind],record[kind]
+            changed = any(prior[k] != following[k] for k in prior if k not in ("image_revision","catalog"))
+            require(following["image_revision"] == prior["image_revision"] + int(changed),"Invalid image revision")
+            a,b = prior["asset"],following["asset"]
+            if a != b:
+                if a and (not b or a["file"] != b["file"]):
+                    require(a["file"] in sides and sides[a["file"]][1] is None,"Previous image not removed")
+                    bound[a["file"]] = None
+                if b:
+                    require(b["file"] in sides and ref(b["file"],sides[b["file"]][1]) == b,"Image bytes differ")
+                    require(a and a["file"] == b["file"] or sides[b["file"]][0] is None,"Occupied image destination")
+                    bound[b["file"]] = b
             if kind == "reveal":
-                require(row["reveal"] == image["asset"]["file"].removeprefix("game/") and
-                        row["catalog_reveal"] == current_content.catalog_profiles.project(current["catalog"]),
-                        "New reveal projection differs")
-                if image == previous_image:
-                    require(current["catalog"] == old["catalog"], "Raster rebind changes catalog profiles")
-                else:
-                    new_path = image["asset"]["file"]
-                    old_path = previous_image["asset"]["file"]
-                    require(new_path in sides, "Reveal switch lacks prepared original")
-                    if new_path != old_path:
-                        require(sides[new_path][0] is None and old_path in sides and sides[old_path][1] is None,
-                                "Reveal suffix switch requires a free destination and deletion of the previous original")
-                for old_profile, new_profile in zip(old["catalog"]["profiles"], current["catalog"]["profiles"]):
-                    asset = new_profile["asset"]
-                    path = asset["file"]
-                    if path in sides or image != previous_image:
-                        require(path in actual and ref(path, actual[path]) == old_profile["asset"] and
-                                ref(path, target[path]) == asset, "Catalog profile bytes differ")
-                        current_content.catalog_profiles.validate_png(new_profile, target[path])
-            else:
-                projected = deepcopy(image)
-                if projected["asset"]: projected["asset"]["file"] = projected["asset"]["file"].removeprefix("game/")
-                require(row["background"] == projected and next(r["source"] for r in after["backgrounds"] if r["id"] == identifier) == ref(name, target[name]), "New background projection differs")
+                require(changed or following["catalog"] == prior["catalog"], "Unexpected catalog profile change")
+                if changed:
+                    require(Path(a["file"]).with_suffix("") == Path(b["file"]).with_suffix(""),"Reveal stem changed")
+                    for previous,current in zip(prior["catalog"]["profiles"],following["catalog"]["profiles"],strict=True):
+                        asset = current["asset"]
+                        n = asset["file"]
+                        require(n in actual and ref(n,actual[n]) == previous["asset"],"Changed old profile")
+                        current_content.catalog_profiles.validate_png(current,target[n])
+                        bound[n] = asset
+        notice = bg.notice_path(key)
+        if notice in sides:
+            from .reveal_source import make_notice
+            require(record["background"]["status"] == "selected" and target[notice] is not None,"Invalid rights change")
+            make_notice(target[notice])
+            bound[notice] = None
+        require(all(n in bound for n in sides if n.startswith("game/art/")), "Unbound asset change")
         if definition_path in sides:
             old_def, new_def = (io.json_bytes(raw, 2*1024*1024) for raw in sides[definition_path])
             require(new_def == raster.definition(old_def, new_def["solution"]) and new_def["revision"] == old_def["revision"]+1, "Invalid raster delta")
@@ -590,8 +495,10 @@ def validate_targets(value, sides, actual):
             checked = verify(parsed_definition(definition_raw)[1], proof, Budget())
             require(checked["certified"], "Raster proof incomplete")
             raster.check_end(new_def, proof)
-            active = rating.validate(io.json_bytes(target[rating.path(identifier)], 1024*1024), definition_bytes=definition_raw)
-            require(row["difficulty"] == rating.project(active), "New difficulty projection differs")
+            active = rating.active_record(evidence["checked"])
+            expected = puzzle_catalog.difficulty_fields(active)
+            expected["rating_revision"] = record["difficulty"]["rating_revision"]
+            require(expected == record["difficulty"], "New assessment differs from approved raster")
     return target
 
 
@@ -632,6 +539,7 @@ def apply(root, value):
         for name, expected_hash in value["reads"].items():
             actual[name] = io.read(root, name, FILE_LIMIT, missing=True)
             require(checksum(actual[name]) == expected_hash, "Relevant input changed: "+name)
+        validate_targets(root,value,sides,actual)
         require(not pending(root), "Publication started during no-op readback")
         return {"status": "noop", "files": [], **readback(actual, value["id"])}
     journal = {k: deepcopy(value[k]) for k in ("action", "id", "entry", "reads", "changes", "quality")}
@@ -639,35 +547,35 @@ def apply(root, value):
     raw = publication.journal_bytes(journal)
     journal_hash = checksum(raw)
     checkpoint("before-journal")
-    with io.safe(root, STAGE).open("xb") as stream:
-        require(stream.write(raw) == len(raw), "Short journal write")
-        stream.flush(); os.fsync(stream.fileno())
-    publication.rename(io.safe(root, STAGE), io.safe(root, LOCK), replace=False)
-    lock_identity = io.signature(io.safe(root, LOCK).stat())
-    checkpoint("after-journal")
-    # One fresh relevant-input pass under the common lock, byte based even when
-    # an external writer preserves mtime. No reconstruction of the preparation.
-    actual = {}
-    try:
-        require(io.signature(io.safe(root, LOCK).stat()) == lock_identity, "Writer lock changed")
-        for name, expected in value["reads"].items():
-            actual[name] = io.read(root, name, FILE_LIMIT, missing=True)
-            require(checksum(actual[name]) == expected, "Relevant input changed: "+name)
-        validate_targets(value, sides, actual)
-    except Exception:
-        # No target write has started. Release only our byte-identical journal;
-        # a stale plan must not strand a foreign edit behind an unusable lock.
-        if io.read(root, LOCK, LIMIT) == raw:
-            io.safe(root, LOCK).unlink(); publication.sync_directory(root/"content")
-        raise
-    for name in sorted(sides, key=lambda n: (n == registry.RUNTIME, n)):
-        require(io.signature(io.safe(root, LOCK).stat()) == lock_identity, "Writer lock changed")
-        actual[name] = _write(root, name, *sides[name], journal_hash)
-    require(io.read(root, LOCK, LIMIT) == raw, "Writer journal changed")
-    io.safe(root, LOCK).unlink(); publication.sync_directory(root/"content")
-    checkpoint("complete")
-    return {"status": "updated", "files": sorted(sides), **readback(actual, value["id"]),
-            "definition_sha256": checksum(actual.get("game/"+value["entry"]["definition"])) if value["entry"] else None}
+    def rollback():
+        with io.budget():
+            recover(root)
+    with publication.owned_journal(root,STAGE,LOCK,raw,rollback):
+        lock_identity = io.signature(io.safe(root, LOCK).stat())
+        checkpoint("after-journal")
+        # One fresh relevant-input pass under the common lock, byte based even when
+        # an external writer preserves mtime. No reconstruction of the preparation.
+        actual = {}
+        try:
+            require(io.signature(io.safe(root, LOCK).stat()) == lock_identity, "Writer lock changed")
+            for name, expected in value["reads"].items():
+                actual[name] = io.read(root, name, FILE_LIMIT, missing=True)
+                require(checksum(actual[name]) == expected, "Relevant input changed: "+name)
+            validate_targets(root, value, sides, actual)
+        except Exception:
+            # No target write has started. Release only our byte-identical journal;
+            # a stale plan must not strand a foreign edit behind an unusable lock.
+            if io.read(root, LOCK, LIMIT) == raw:
+                io.safe(root, LOCK).unlink(); publication.sync_directory(root/"content")
+            raise
+        for name in sorted(sides, key=lambda n: (n == registry.RUNTIME, n)):
+            require(io.signature(io.safe(root, LOCK).stat()) == lock_identity, "Writer lock changed")
+            actual[name] = _write(root, name, *sides[name], journal_hash)
+        require(io.read(root, LOCK, LIMIT) == raw, "Writer journal changed")
+        io.safe(root, LOCK).unlink(); publication.sync_directory(root/"content")
+        checkpoint("complete")
+        return {"status": "updated", "files": sorted(sides), **readback(actual, value["id"]),
+                "definition_sha256": checksum(actual.get("game/"+value["entry"]["definition"])) if value["entry"] else None}
 
 
 @operation
@@ -703,7 +611,7 @@ def recover(root):
         if target not in sides:
             old_inputs[target] = io.read(root, target, FILE_LIMIT, missing=True)
             require(checksum(old_inputs[target]) == expected, "Recovery dependency changed: "+target)
-    validate_targets(journal, sides, old_inputs)
+    validate_targets(root, journal, sides, old_inputs, journal_temps=temps)
     for temporary, temp in temps.items():
         require(io.read(root, temporary, FILE_LIMIT) == temp, "Recovery temporary changed")
         io.safe(root, temporary).unlink(); publication.sync_directory(io.safe(root, temporary).parent)

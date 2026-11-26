@@ -127,12 +127,14 @@ def profile(db, commit, job, role):
         for ref in current.references(record):
             if 'asset' not in ref:
                 names.add(ref['file'])
-    registry = io.json_bytes(source.read(commit, content.REGISTRY, 8 * current.LIMIT), 8 * current.LIMIT)
-    if any(entry['id'] == job for entry in registry['entries']):
-        def selected(name, limit, *, missing=False):
-            names.add(name)
-            return source.read(commit, name, limit, missing)
-        content.selected(None, registry, job, read=selected)
+    from tools.puzzle_production import puzzle_catalog
+    def selected(name, limit, *, missing=False):
+        names.add(name)
+        return source.read(commit,name,limit,missing)
+    cats,runtime = puzzle_catalog.index(selected,source.puzzle_ids(commit))
+    row = next((r for r in runtime['entries'] if r['id']==job),None)
+    if row is not None:
+        puzzle_catalog.delivery(selected,job,cats,row)
     return names
 
 

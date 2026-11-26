@@ -3,16 +3,17 @@ from copy import deepcopy
 from pathlib import Path
 import os
 from . import catalog_io as io, current_content as content, current_registration as registration
+from . import puzzle_record, puzzle_catalog
 from . import categories, catalog_rating as rating, catalog_added as added, catalog_method
 from . import catalog_background as background_source, reveal_source as reveal
 from . import catalog_publication as publication
 from .authoring_package import require, relative, sha
 from .contract import exact_keys
 
-REGISTRY, RUNTIME, LOCK = content.REGISTRY, content.RUNTIME, registration.LOCK
+RUNTIME, LOCK = content.RUNTIME, registration.LOCK
 LIMIT = 24*1024*1024
 REVEAL_LIMIT = 128*1024*1024
-FORMAT = "picross-current-catalog-journal-v2"
+FORMAT = "picross-puzzle-catalog-journal-v1"
 OPERATIONS = ("adoption", "added-adoption", "method-activation", "metadata", "sync")
 IMAGE_FORMATS = PE_FORMATS = FORMATS = dict.fromkeys(OPERATIONS, FORMAT)
 STAGE = "content/.registration-journal-catalog.tmp"
@@ -31,202 +32,182 @@ def file_limit(root,name,journal=None):
     return content.LIMIT
 
 
-def image_generation(snapshot):
-    raw = snapshot["texts"][RUNTIME]
-    if isinstance(raw,str): raw=raw.encode()
-    return io.json_bytes(raw,content.RUNTIME_LIMIT)["format"] == content.RUNTIME_FORMAT
-
-
-def active_reveal(entry,texts):
-    raw=texts[reveal.path(entry["id"])]
-    if isinstance(raw,str): raw=raw.encode()
-    return content.validate_source(io.json_bytes(raw,reveal.LIMIT),entry)["current"]["asset"]["file"]
-
-
-def text_names(registry, **unused):
-    names={REGISTRY,RUNTIME,categories.PATH,catalog_method.PATH,background_source.CAPABILITY}
-    for entry in registry["entries"]:
-        identifier=entry["id"]
-        names.update(("game/"+entry["definition"],content.notice_path(entry),rating.path(identifier),added.path(identifier),
-                      reveal.path(identifier),background_source.path(identifier),background_source.notice_path(identifier)))
-    return names
-
-
-def report_names(run, operation="adoption"):
-    if run is None: return set()
-    if operation == "added-adoption": return {added.report_path(run)}
-    from .catalog_analysis import run_id
-    prefix="content/difficulty/reports/"+run_id(run)
-    return {prefix+"/report.json",prefix+"/report.md"}
-
-
-def image_candidates(registry):
-    return {name for entry in registry["entries"] for name in
-            (*(Path("game/"+entry["reveal"]).with_suffix(s).as_posix() for s in (".png",".svg")),
-             *(content.catalog_profiles.path(entry["id"], label) for label, _, _ in content.catalog_profiles.PROFILES),
-             background_source.asset_path(entry["id"]))}
-
-
-def retained_names(root,registry,**options):
-    texts=options.get("texts") or {n:read(root,n) for n in text_names(registry)}
-    names={active_reveal(e,texts) for e in registry["entries"]}
-    names.update(content.catalog_profiles.path(e["id"], label) for e in registry["entries"]
-                 for label, _, _ in content.catalog_profiles.PROFILES)
-    names |= background_source.retained_names(root,registry,texts)
-    return names-set(options.get("exclude",()))
-
-
-def namespaces(root,registry,**unused):
-    # Names of current resources only; no archive enumeration.
-    return {"current":sorted(text_names(registry)|retained_names(root,registry))}
+def capture(root, identifiers=(), *, allow_stale=False):
+    root = io.external(root)
+    require(not registration.pending(root),"Pending publication requires recovery")
+    ids = puzzle_record.inventory(root)
+    texts = {}
+    def bound(name,limit,*,missing=False):
+        if name not in texts:
+            texts[name] = io.read(root,name,limit,missing=missing)
+        return texts[name]
+    cats = categories.validate(io.json_bytes(bound(categories.PATH,categories.MAX_BYTES),categories.MAX_BYTES))
+    raw = bound(RUNTIME,content.RUNTIME_LIMIT)
+    runtime = None if allow_stale else puzzle_catalog.validate_runtime(io.json_bytes(raw,content.RUNTIME_LIMIT),cats,ids)
+    if allow_stale:
+        old = io.json_bytes(raw,content.RUNTIME_LIMIT)
+        exact_keys(old, {"format","entries","categories"})
+        require(old["format"] == content.RUNTIME_FORMAT and
+                [row["id"] for row in old["entries"]] == sorted(ids), "Cannot sync a different record inventory")
+    rows = {} if runtime is None else {r["id"]:r for r in runtime["entries"]}
+    bound(catalog_method.PATH,catalog_method.LIMIT,missing=True)
+    records = {}
+    selected = sorted(ids) if identifiers is None else list(identifiers)
+    require(len(selected) == len(set(selected)) and set(selected) <= ids,"Unknown or duplicate puzzle selection")
+    for identifier in selected:
+        record = puzzle_record.load(root,identifier,category_catalog=cats,read=bound)
+        require(allow_stale or puzzle_record.runtime_row(record) == rows[identifier],"Stale selected projection")
+        records[identifier] = record
+    require(not registration.pending(root) and all(read(root,n)==v for n,v in texts.items())
+            and ids == puzzle_record.inventory(root),"Catalog changed during capture")
+    return {"texts":texts,"records":records,"runtime":runtime,"categories":cats}
 
 
 def image_snapshot(snapshot):
-    return {"sources":{**snapshot["retained"],**{n:io.checksum(raw.encode() if isinstance(raw,str) else raw)
-                                               for n,raw in snapshot["texts"].items()}},
-            "namespaces":deepcopy(snapshot["namespaces"])}
+    return {"sources":{n:io.checksum(raw) for n,raw in snapshot["texts"].items()}}
 
 
-def capture(root, *, allow_stale=False):
-    root=io.external(root)
-    require(not registration.pending(root),"Pending publication requires recovery")
-    value=content.validate(io.json_bytes(read(root,REGISTRY),8*1024*1024),
-                           io.json_bytes(read(root,categories.PATH),categories.MAX_BYTES))
-    texts={n:read(root,n) for n in text_names(value)}
-    retained={n:file_hash(root,n) for n in retained_names(root,value,texts=texts)}
-    validate_retained(value, texts, retained)
-    expected=projection(texts,value)
-    require(allow_stale or texts[RUNTIME] == expected,"Stale runtime")
-    snapshot={"registry":value,"texts":texts,"retained":retained,"namespaces":{"current":sorted(set(texts)|set(retained))}}
-    recheck(root,snapshot)
-    return snapshot
+def report_names(run, operation="adoption"):
+    from .catalog_analysis import run_id
+    if run is None: return set()
+    if operation == "added-adoption": return {added.report_path(run)}
+    prefix = "content/difficulty/reports/"+run_id(run)+"/report."
+    return {prefix+"json",prefix+"md"}
 
 
-def capture_detail(root,identifier):
-    s=registration.Snapshot(root,identifier)
-    require(s.delivery is not None,"Unknown current ID")
-    return {"registry":s.registry,"texts":s.raw,"retained":{},"namespaces":{"current":sorted(s.raw)}}
+def sync_runtime(root):
+    snapshot = capture(root,None,allow_stale=True)
+    rows = [puzzle_record.runtime_row(r) for r in snapshot["records"].values()]
+    expected = content.encoded({"format":content.RUNTIME_FORMAT,"categories":categories.ordered(snapshot["categories"]),"entries":rows})
+    if expected != snapshot["texts"][RUNTIME]:
+        execute(root,record_journal(snapshot["texts"],{RUNTIME:expected},operation="sync"))
+    return {"status":"projected","entries":len(rows),"categories":len(snapshot["categories"]["categories"])}
 
 
-def validate_retained(registry, texts, retained):
-    for entry in registry["entries"]:
-        raw = texts[reveal.path(entry["id"])]
-        record = content.validate_source(io.json_bytes(raw, reveal.LIMIT), entry)
-        for asset in [record["current"]["asset"], *(r["asset"] for r in record["catalog"]["profiles"])]:
-            require(retained.get(asset["file"]) == asset["sha256"], "Retained reveal binding differs: "+asset["file"])
+def record_journal(texts, changes, *, operation):
+    require(changes.keys() <= texts.keys(), "Unbound catalog change")
+    sides = {name:raw.decode() if raw is not None else None for name,raw in texts.items()
+             if name in changes or name in (categories.PATH,RUNTIME)}
+    new = {**sides, **{n:raw.decode() for n,raw in changes.items()}}
+    return {"format":FORMAT,"operation":operation,"old":sides,"new":new,
+            "retained":{n:io.checksum(raw) for n,raw in texts.items() if n not in sides}}
 
 
-def recheck(root,snapshot):
-    require(not registration.pending(root),"Concurrent publication")
-    require(all(read(root,n)==raw for n,raw in snapshot["texts"].items()) and
-            all(file_hash(root,n)==h for n,h in snapshot["retained"].items()),"Current catalog changed")
+def validate_metadata_journal(root,journal,*,journal_temps=()):
+    exact_keys(journal,{"format","operation","old","new","retained"})
+    require(journal["format"] == FORMAT and journal["operation"] == "metadata" and
+            len(content.encoded(journal)) <= LIMIT, "Invalid metadata journal")
+    require(set(journal["old"]) == set(journal["new"]), "Different metadata sides")
+    ids = puzzle_record.inventory(root,journal_temps=journal_temps)
+    selected = {Path(n).stem for n in journal["old"] if n.startswith(puzzle_record.DIRECTORY+"/")}
+    require(selected <= ids and set(journal["old"]) == {RUNTIME,categories.PATH,*map(puzzle_record.path,selected)},
+            "Foreign metadata targets")
+    sides = {s:{n:raw.encode() for n,raw in journal[s].items()} for s in ("old","new")}
+    states = {}
+    for side, files in sides.items():
+        cats, runtime = puzzle_catalog.index(lambda n,limit:files[n],ids)
+        rows = {r["id"]:r for r in runtime["entries"]}
+        definitions = {}
+        records = {}
+        for identifier in selected:
+            record = puzzle_record.decode(files[puzzle_record.path(identifier)],identifier)
+            row = rows[identifier]
+            name = "game/"+row["definition"]
+            raw = io.read(root,name,2*1024*1024)
+            definitions[name] = io.checksum(raw)
+            puzzle_record.validate(record,identifier,raw,category_catalog=cats)
+            require(row == puzzle_record.runtime_row(record), "Metadata projection mismatch")
+            records[identifier] = record
+        require(definitions == journal["retained"], "Metadata definition binding differs")
+        states[side] = rows,records
+    old_rows, old_records = states["old"]
+    new_rows, new_records = states["new"]
+    require(all(old_rows[k] == new_rows[k] for k in ids-selected), "Foreign metadata row change")
+    for key in selected:
+        require(all(old_records[key][k] == v for k,v in new_records[key].items() if k not in ("name","category_id")),
+                "Metadata changed another field")
+    return sides
 
 
-def projection(texts,registry,version=None):
-    from .content_registry import projection as project
-    def raw(name):
-        value=texts[name]
-        return value.encode() if isinstance(value,str) else value
-    cats=io.json_bytes(raw(categories.PATH),categories.MAX_BYTES)
-    ratings,dates,reveals,catalogs={},{},{},{}
-    for entry in registry["entries"]:
-        identifier=entry["id"]
-        ratings[identifier]=rating.validate(io.json_bytes(raw(rating.path(identifier)),rating.LIMIT),
-                                           definition_bytes=raw("game/"+entry["definition"]),production_mode=entry["mode"])
-        dates[identifier]=added.validate(io.json_bytes(raw(added.path(identifier)),added.LIMIT),identifier)
-        record = content.validate_source(io.json_bytes(raw(reveal.path(identifier)), reveal.LIMIT), entry)
-        require(record["binding"]["identity"] == content.identity(entry, raw("game/"+entry["definition"])),
-                "Stale catalog reveal definition")
-        reveals[identifier] = record["current"]["asset"]["file"].removeprefix("game/")
-        catalogs[identifier] = content.catalog_profiles.project(record["catalog"])
-    return content.encoded(project(registry,cats,ratings=ratings,added=dates,reveals=reveals,
-                                   backgrounds=background_source.projection(registry,texts),catalogs=catalogs,version=9))
-
-
-def prepare(root,snapshot,changes,*,operation,additions=None,report_run=None,replacements=None,generation=None):
-    require(operation in OPERATIONS,"Operation requires its dedicated current writer")
-    require(not additions and not replacements,"Current metadata transaction does not write assets")
-    recheck(root,snapshot)
-    allowed={RUNTIME}
-    if operation=="metadata": allowed|={REGISTRY,categories.PATH}
-    elif operation=="method-activation": allowed.add(catalog_method.PATH)
-    elif operation=="adoption": allowed|={rating.path(e["id"]) for e in snapshot["registry"]["entries"]}|report_names(report_run)
-    elif operation=="added-adoption": allowed|={added.path(e["id"]) for e in snapshot["registry"]["entries"]}|report_names(report_run,operation)
-    require(set(changes)<=allowed,"Foreign current mutation")
-    old={**snapshot["texts"],**{n:read(root,n) for n in set(changes)-set(snapshot["texts"])}}
-    new={**old,**changes}
-    value=io.json_bytes(new[REGISTRY],8*1024*1024)
-    new[RUNTIME]=projection(new,value)
-    journal={"format":FORMAT,"operation":operation,"report_run":report_run,
-             "old":{n:raw.decode() if raw is not None else None for n,raw in old.items()},
-             "new":{n:raw.decode() if raw is not None else None for n,raw in new.items()},
-             "retained":snapshot["retained"],"additions":{},"replacements":{}}
-    validate_journal(root,journal,before_write=True)
-    return journal
-
-
-def validate_journal(root,journal,*,before_write=False):
-    exact_keys(journal,{"format","operation","report_run","old","new","retained","additions","replacements"})
-    require(journal["format"]==FORMAT and journal["operation"] in OPERATIONS and not journal["additions"] and
-            not journal["replacements"],"Current metadata journal required")
-    size = len(content.encoded(journal))
-    require(size <= LIMIT, f"Catalog journal {size} exceeds {LIMIT} bytes")
-    require(set(journal["old"]) == set(journal["new"]), "Invalid journal sides")
-    sides={side:{n:raw.encode() if raw is not None else None for n,raw in journal[side].items()} for side in ("old","new")}
-    indices={}
-    for side,values in sides.items():
-        indices[side]=content.validate(io.json_bytes(values[REGISTRY],8*1024*1024),
-                                      io.json_bytes(values[categories.PATH],categories.MAX_BYTES))
-        require(set(values)==text_names(indices[side])|report_names(journal["report_run"],journal["operation"]),"Foreign journal inventory")
-        # Stale runtime is only permissible on the old side of explicit sync.
-        if side=="new" or journal["operation"]!="sync":
-            require(values[RUNTIME]==projection(values,indices[side]),"Current journal projection differs")
-    require(indices["old"]["entries"]==indices["new"]["entries"] and
-            indices["old"]["backgrounds"]==indices["new"]["backgrounds"],"Metadata writer changes content identity")
-    allowed={RUNTIME}
-    op=journal["operation"]
-    if op=="metadata": allowed|={REGISTRY,categories.PATH}
-    elif op=="method-activation": allowed.add(catalog_method.PATH)
-    elif op=="adoption": allowed|={rating.path(e["id"]) for e in indices["old"]["entries"]}|report_names(journal["report_run"])
-    elif op=="added-adoption": allowed|={added.path(e["id"]) for e in indices["old"]["entries"]}|report_names(journal["report_run"],op)
-    require(all(n in allowed or sides["old"][n]==raw for n,raw in sides["new"].items()),"Foreign operation delta")
-    if op=="adoption":
-        from . import catalog_analysis as analysis
-        prefix="content/difficulty/reports/"+analysis.run_id(journal["report_run"])+"/report."
-        report=analysis.validate_report(io.json_bytes(sides["new"][prefix+"json"],analysis.REPORT_LIMIT))
-        require(report["format"]==analysis.IMAGE_FORMAT and report["run_id"]==journal["report_run"] and
-                report["operation"]["phase"]=="adopted","Invalid current adoption report")
-        require(all(sides["old"][prefix+ext] is None for ext in ("json","md")) and
-                sides["new"][prefix+"md"]==analysis.markdown(report).encode(),"Changed adoption report")
-        sources={n:io.checksum(raw) for n,raw in sides["old"].items() if n not in report_names(journal["report_run"])}
-        sources.update(journal["retained"])
-        require(sources==report["result"]["sources"],"Adoption report source binding differs")
-        rows={row["id"]:row for row in report["result"]["entries"]}
-        for entry in indices["old"]["entries"]:
-            identifier=entry["id"];name=rating.path(identifier)
-            old=rating.validate(io.json_bytes(sides["old"][name],rating.LIMIT))
-            new=rating.validate(io.json_bytes(sides["new"][name],rating.LIMIT))
-            row=rows.get(identifier)
-            if row is None or row["status"]!="rated":
-                require(old==new,"Unselected/open rating changed")
-            else:
-                require(row["old"]==rating.project(old) and row["previous_record_hash"]==old["record_hash"] and
-                        row["proposed"]==rating.project(new) and row["rating_hash"]==new["rating"]["rating_hash"] and
-                        row["current_source"]==new["current_source"] and row["logic_binding"]==new["logic_binding"],
-                        "Adoption rating delta differs from report")
-                require(old==new or new["rating_revision"]==old["rating_revision"]+1,"Invalid rating revision")
-    elif op=="added-adoption":
-        from .catalog_added_history import validate_delta
-        validate_delta(journal,indices["old"])
-    elif op=="method-activation":
-        old=catalog_method.from_bytes(sides["old"][catalog_method.PATH])
-        new=catalog_method.from_bytes(sides["new"][catalog_method.PATH])
-        require(new is not None and new["revision"]==(old["revision"]+1 if old else 1) and
-                new["previous_record_hash"]==(old["record_hash"] if old else None),"Invalid method activation chain")
-    expected=retained_names(root,indices["old"],texts=sides["old"])
-    require(set(journal["retained"])==expected,"Foreign retained inventory")
-    validate_retained(indices["old"], sides["old"], journal["retained"])
-    for h in journal["retained"].values(): sha(h)
+def validate_journal(root,journal,*,journal_temps=()):
+    if journal.get("operation") == "metadata":
+        return validate_metadata_journal(root,journal,journal_temps=journal_temps)
+    exact_keys(journal,{"format","operation","old","new","retained"})
+    require(journal["format"] == FORMAT and len(content.encoded(journal)) <= LIMIT, "Invalid catalog journal")
+    op = journal["operation"]
+    require(op in ("sync","method-activation","adoption","added-adoption"),"Unknown catalog operation")
+    require(journal["old"].keys() == journal["new"].keys(), "Different catalog sides")
+    sides = {s:{n:raw.encode() if raw is not None else None for n,raw in journal[s].items()} for s in ("old","new")}
+    old,new = sides["old"],sides["new"]
+    cats = categories.validate(io.json_bytes(old[categories.PATH],categories.MAX_BYTES))
+    require(new[categories.PATH] == old[categories.PATH],"Foreign category change")
+    ids = puzzle_record.inventory(root,journal_temps=journal_temps)
+    if op == "added-adoption":
+        from . import catalog_added_history
+        return catalog_added_history.validate_journal(root,journal,sides,ids,cats)
+    if op == "method-activation":
+        require(old.keys() == {RUNTIME,categories.PATH,catalog_method.PATH} and not journal["retained"]
+                and old[RUNTIME] == new[RUNTIME],"Foreign activation targets")
+        puzzle_catalog.validate_runtime(io.json_bytes(old[RUNTIME],content.RUNTIME_LIMIT),cats,ids)
+        previous = catalog_method.from_bytes(old[catalog_method.PATH])
+        following = catalog_method.from_bytes(new[catalog_method.PATH])
+        require(following and following["revision"] == (previous["revision"]+1 if previous else 1) and
+                following["previous_record_hash"] == (previous["record_hash"] if previous else None) and
+                following["method"] != catalog_method.current(previous)["method"], "Invalid method transition")
+        return sides
+    if op == "sync":
+        prior = io.json_bytes(old[RUNTIME],content.RUNTIME_LIMIT)
+        require(prior["format"] == content.RUNTIME_FORMAT and [row["id"] for row in prior["entries"]] == sorted(ids),
+                "Cannot recover a different record inventory")
+        require(old.keys() == {RUNTIME,categories.PATH}, "Foreign sync target")
+        retained = {}
+        def bound(n,limit):
+            raw = io.read(root,n,limit)
+            retained[n] = io.checksum(raw)
+            return raw
+        rows = [puzzle_record.runtime_row(puzzle_record.load(root,key,category_catalog=cats,read=bound)) for key in sorted(ids)]
+        retained[catalog_method.PATH] = io.checksum(read(root,catalog_method.PATH))
+        require(retained == journal["retained"] and new[RUNTIME] == content.encoded(
+            {"format":content.RUNTIME_FORMAT,"categories":categories.ordered(cats),"entries":rows}),"Sync projection differs")
+        puzzle_catalog.validate_runtime(io.json_bytes(new[RUNTIME],content.RUNTIME_LIMIT),cats,ids)
+        return sides
+    from . import catalog_analysis as analysis
+    report_paths = [n for n in new if n.startswith("content/difficulty/reports/") and n.endswith("/report.json")]
+    require(len(report_paths) == 1,"Missing rating report")
+    report_name = report_paths[0]
+    report = analysis.validate_report(io.json_bytes(new[report_name],analysis.REPORT_LIMIT))
+    run = report["run_id"]
+    reports = report_names(run)
+    require(report_name in reports and report["format"] == analysis.IMAGE_FORMAT and report["operation"]["phase"] == "adopted"
+            and all(old[n] is None for n in reports) and
+            new[report_name[:-4]+"md"] == analysis.markdown(report).encode(),"Invalid adoption report")
+    result = report["result"]
+    selected = {r["id"]:r for r in result["entries"]}
+    old_runtime = puzzle_catalog.validate_runtime(io.json_bytes(old[RUNTIME],content.RUNTIME_LIMIT),cats,ids)
+    projected = deepcopy(old_runtime)
+    sources = dict(journal["retained"])
+    sources.update({n:io.checksum(raw) for n,raw in old.items() if n not in reports})
+    require(sources == result["sources"] and set(old)-reports-{categories.PATH,RUNTIME} <= {puzzle_record.path(k) for k in selected},
+            "Foreign adoption sources or targets")
+    expected_sources = {categories.PATH,RUNTIME,catalog_method.PATH}
+    for row in projected["entries"]:
+        key = row["id"]
+        if key not in selected: continue
+        request = selected[key]
+        name = puzzle_record.path(key)
+        definition_name = "game/"+row["definition"]
+        expected_sources.update((name,definition_name))
+        if name not in old: continue
+        raw = io.read(root,definition_name,2*1024*1024)
+        prior, record = (puzzle_record.validate(puzzle_record.decode(side[name],key),key,raw,category_catalog=cats) for side in (old,new))
+        require(request["status"] == "rated" and io.checksum(old[name]) == request["previous_record_hash"] and
+                all(prior[k] == record[k] for k in prior if k != "difficulty") and
+                prior["difficulty"]["rating_revision"]+1 == record["difficulty"]["rating_revision"] and
+                record["difficulty"]["rating"]["rating_hash"] == request["rating_hash"] and
+                puzzle_record.runtime_row(prior) == row,"Invalid adopted rating change")
+        row.update(puzzle_record.runtime_row(record))
+        require(row["difficulty"] == request["proposed"],"Wrong adoption projection")
+    require(set(sources) == expected_sources and content.encoded(projected) == new[RUNTIME],"Foreign adoption result")
     return sides
 
 
@@ -240,28 +221,29 @@ def guard(root,journal,*,old_only=False,**unused):
 def execute(root,journal,additions=None,*,fail_step=None,**unused):
     root=io.external(root)
     require(not registration.pending(root),"Publication pending")
-    sides=validate_journal(root,journal,before_write=True)
+    sides=validate_journal(root,journal)
     guard(root,journal,old_only=True)
     raw=content.encoded(journal)
-    with io.safe(root,STAGE).open("xb") as stream:
-        stream.write(raw);stream.flush();os.fsync(stream.fileno())
-    publication.rename(io.safe(root,STAGE),io.safe(root,LOCK),replace=False)
-    guard(root,journal,old_only=True)
-    expected=dict(sides["old"])
-    def fresh():
-        require(read(root,LOCK)==raw,"Catalog lock changed")
-        require(all(read(root,n)==v for n,v in expected.items()),"Current catalog phase changed")
-        require(all(file_hash(root,n)==h for n,h in journal["retained"].items()),"Foreign retained data")
-    for step,name in enumerate(sorted(sides["old"],key=lambda n:(n==RUNTIME,n)),1):
+    def rollback():
+        with io.budget():
+            recover(root)
+    with publication.owned_journal(root,STAGE,LOCK,raw,rollback):
+        guard(root,journal,old_only=True)
+        expected=dict(sides["old"])
+        def fresh():
+            require(read(root,LOCK)==raw,"Catalog lock changed")
+            require(all(read(root,n)==v for n,v in expected.items()),"Current catalog phase changed")
+            require(all(file_hash(root,n)==h for n,h in journal["retained"].items()),"Foreign retained data")
+        for step,name in enumerate(sorted(sides["old"],key=lambda n:(n==RUNTIME,n)),1):
+            fresh()
+            if sides["old"][name]!=sides["new"][name]:
+                registration.write(root,name,sides["old"][name],sides["new"][name],raw,guard=fresh)
+                expected[name]=sides["new"][name]
+            if fail_step==step: raise RuntimeError("Injected current catalog interruption")
         fresh()
-        if sides["old"][name]!=sides["new"][name]:
-            registration.write(root,name,sides["old"][name],sides["new"][name],raw,guard=fresh)
-            expected[name]=sides["new"][name]
-        if fail_step==step: raise RuntimeError("Injected current catalog interruption")
-    fresh()
-    require(read(root,LOCK)==raw,"Catalog journal changed")
-    io.safe(root,LOCK).unlink();publication.sync_directory(root/"content")
-    return {"status":"applied"}
+        require(read(root,LOCK)==raw,"Catalog journal changed")
+        io.safe(root,LOCK).unlink();publication.sync_directory(root/"content")
+        return {"status":"applied"}
 
 
 def recover(root):
@@ -270,8 +252,11 @@ def recover(root):
     raw=read(root,name)
     if raw is None:return {"status":"no-op"}
     journal=io.json_bytes(raw,LIMIT)
-    sides=validate_journal(root,journal)
     require(content.encoded(journal)==raw,"Noncanonical journal")
+    require(isinstance(journal.get("old"),dict),"Missing journal targets")
+    journal_hash = io.checksum(raw)
+    journal_temps = {registration.temporary(n,journal_hash) for n in journal["old"]}
+    sides=validate_journal(root,journal,journal_temps=journal_temps)
     guard(root,journal)
     temps={}
     for target in sides["old"]:

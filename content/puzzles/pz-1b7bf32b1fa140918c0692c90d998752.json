@@ -1,0 +1,216 @@
+{
+  "added": {
+    "added_at": "2026-10-21T18:02:28Z",
+    "provenance": {
+      "commit": null,
+      "evidence": null,
+      "kind": "registration",
+      "reason": "Successful first playable registration in the shared transaction.",
+      "reference_time": "2026-10-21T18:02:28Z"
+    }
+  },
+  "background": {
+    "asset": {
+      "bytes": 665480,
+      "file": "game/art/backgrounds/pz-1b7bf32b1fa140918c0692c90d998752.png",
+      "sha256": "39feaa43bcd497bf8a28aae699fe2f130286b7d31c20afd095b74cbc517b39cd"
+    },
+    "image_revision": 3,
+    "status": "selected"
+  },
+  "category_id": "mythen-fantasie",
+  "definition": {
+    "bytes": 13206,
+    "file": "game/data/content/chupacabra_001.json",
+    "sha256": "7c697f5015681b6e31c9873a93f053b19bdad9a9704c55a7ff6602007a817451"
+  },
+  "difficulty": {
+    "compact_analysis": {
+      "analysis_hash": "dcf8993684c3bad0265c988dc0e632928853ba67a00dcd23023c093390615c82",
+      "deduction_complete": true,
+      "line_analysis_complete": true,
+      "line_fixpoint_confirmed": true,
+      "new_singletons": 1240,
+      "profiles_hash": "e815668aa1589a02a372ec07dff622528cd828eca1633aa4e080aadd32d904c4",
+      "r4": null,
+      "reason": null,
+      "result_hash": "bcb8ec64fc2f1a2bd99d12ecace7d04678f1f0189018dce14faeb22a46df21b8",
+      "status": "solved",
+      "structure": {
+        "adjacent_color_changes": 332,
+        "cells": 1240,
+        "clue_length_histogram": {
+          "1": 214,
+          "10": 4,
+          "11": 3,
+          "12": 1,
+          "13": 1,
+          "14": 2,
+          "15": 1,
+          "16": 1,
+          "17": 1,
+          "2": 88,
+          "3": 50,
+          "4": 22,
+          "5": 19,
+          "6": 16,
+          "7": 7,
+          "8": 3,
+          "9": 4
+        },
+        "colors": 4,
+        "geometric_slack": 1343,
+        "height": 40,
+        "mandatory_gaps": 35,
+        "short_blocks": 302,
+        "total_clue_length": 1102,
+        "total_clues": 437,
+        "width": 31
+      },
+      "trace_hash": "6e88b1d906e3a129001df1441d484ffceb6b135bebd65093e0888562894de487",
+      "wave_count": 53
+    },
+    "logic_binding": {
+      "matrix_hash": "56b767b533632e23193c823f54c1a717d0944576ec5a7fb8f5c50f4ca74d2c7d"
+    },
+    "rating": {
+      "analysis_result_hash": "bcb8ec64fc2f1a2bd99d12ecace7d04678f1f0189018dce14faeb22a46df21b8",
+      "format": "picross-catalog-sd2-rating-v1",
+      "method": "picross-difficulty-0.4",
+      "method_hash": "5508f0742aa858a6adc31aa621433e68298b915fb0fd6b8d9e74e576ba87caaf",
+      "rating_hash": "c91fbb02f372e840a27c588857cc6c71a429b977b6fed340c84dba1d588453dd",
+      "result": {
+        "analysis_result_hash": "bcb8ec64fc2f1a2bd99d12ecace7d04678f1f0189018dce14faeb22a46df21b8",
+        "assessment": {
+          "boundaries": {
+            "distance_lower": [
+              86007,
+              153296
+            ],
+            "distance_upper": [
+              67289,
+              153296
+            ],
+            "lower": [
+              3,
+              1
+            ],
+            "nearest_distance": [
+              67289,
+              153296
+            ],
+            "upper": [
+              4,
+              1
+            ]
+          },
+          "contributions": {
+            "demand": [
+              113,
+              52
+            ],
+            "search": [
+              13419,
+              11792
+            ],
+            "workload": [
+              1,
+              4
+            ]
+          },
+          "level": 4,
+          "level_without_workload": 4,
+          "score": [
+            545895,
+            153296
+          ],
+          "signals": {
+            "context": [
+              9,
+              13
+            ],
+            "fluent": false,
+            "highest_family": "E2",
+            "longest_narrow_run": 2,
+            "narrow_waves": 18,
+            "peak_search": [
+              1401,
+              1474
+            ],
+            "raw_workload": [
+              1,
+              4
+            ],
+            "spans": 754,
+            "workload_ceiling": 4,
+            "workload_guard": "none"
+          },
+          "without_workload": [
+            507571,
+            153296
+          ]
+        },
+        "confidence": "medium",
+        "estimated_minutes": null,
+        "explanation": "Model estimate from synthetic references; no human calibration or time estimate. Demand, search and bounded workload use independently checked line profiles.",
+        "format": "picross-sd2-rating-v1",
+        "method": "picross-difficulty-0.4",
+        "method_hash": "5508f0742aa858a6adc31aa621433e68298b915fb0fd6b8d9e74e576ba87caaf",
+        "profile_scope": "complete_line",
+        "reason": "complete_line",
+        "status": "rated"
+      },
+      "source": {
+        "bytes": 13206,
+        "definition_id": "pz-1b7bf32b1fa140918c0692c90d998752",
+        "engine_logic_hash": "663abc46cbab11c62b33314baaa52cbf22fd4ae8db1624df0ff8a0690f60a402",
+        "kind": "runtime",
+        "production_mode": "unknown",
+        "runtime_revision": 1,
+        "sha256": "7c697f5015681b6e31c9873a93f053b19bdad9a9704c55a7ff6602007a817451"
+      }
+    },
+    "rating_revision": 2
+  },
+  "format": "picross-puzzle-record-v1",
+  "id": "pz-1b7bf32b1fa140918c0692c90d998752",
+  "mode": "color",
+  "name": "Chupacabra",
+  "reveal": {
+    "asset": {
+      "bytes": 1661548,
+      "file": "game/art/content/chupacabra_001.png",
+      "sha256": "d89938b8a221b221384d4e3d3bb80dd3691ab4de244689538f8b896d026c0f4c"
+    },
+    "catalog": {
+      "generator": "picross-catalog-reveal-1",
+      "profiles": [
+        {
+          "asset": {
+            "bytes": 16727,
+            "file": "game/art/catalog/pz-1b7bf32b1fa140918c0692c90d998752-ui100.png",
+            "sha256": "39fe97fc6c83b445f36f8627660809e0d7331e931af888a21cf7305a771974d8"
+          },
+          "height": 112,
+          "profile": "catalog-ui100-v1",
+          "width": 88
+        },
+        {
+          "asset": {
+            "bytes": 24321,
+            "file": "game/art/catalog/pz-1b7bf32b1fa140918c0692c90d998752-ui125.png",
+            "sha256": "c33a33ac96e1d5ddcc1027085be0faf4ef9734c1c71c68b7b926f3f98704f0e5"
+          },
+          "height": 140,
+          "profile": "catalog-ui125-v1",
+          "width": 110
+        }
+      ],
+      "source_height": 1419,
+      "source_width": 1108
+    },
+    "image_revision": 1
+  },
+  "save_slot": "chupacabra_001",
+  "visible": true
+}

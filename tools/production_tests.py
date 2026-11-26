@@ -165,7 +165,7 @@ def run_tests(groups, directory):
                              (content_registry, 'registration'), (content_registry, 'check_checkout'),
                              (images, 'import_image'), (shutil, 'copytree'),
                              (catalog_io, 'safe'), (catalog_io, 'read'),
-                             (catalog_transaction, 'capture'), (catalog_transaction, 'prepare'),
+                             (catalog_transaction, 'capture'), (catalog_transaction, 'record_journal'),
                              (current_registration, 'write'), (current_registration, 'execute'),
                              (current_registration, 'recover'), (za1_fixtures, 'make')):
             original = getattr(module, name)

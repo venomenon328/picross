@@ -1,0 +1,204 @@
+{
+  "added": {
+    "added_at": "2026-11-22T10:07:00Z",
+    "provenance": {
+      "commit": null,
+      "evidence": null,
+      "kind": "registration",
+      "reason": "Successful first playable registration in the shared transaction.",
+      "reference_time": "2026-11-22T10:07:00Z"
+    }
+  },
+  "background": {
+    "asset": {
+      "bytes": 503898,
+      "file": "game/art/backgrounds/pz-taiyaki.png",
+      "sha256": "94a770b16ac834d5ffa0579e42303fc4c9f21228e1689e3a4137a68ab15d9555"
+    },
+    "image_revision": 1,
+    "status": "selected"
+  },
+  "category_id": "suesses-getraenke",
+  "definition": {
+    "bytes": 2301,
+    "file": "game/data/content/pz-taiyaki.json",
+    "sha256": "eed4e2af12bec6ed0d1b0965c9f2c4e77cf965e609f8bad3bc128fffee2da823"
+  },
+  "difficulty": {
+    "compact_analysis": {
+      "analysis_hash": "654e3b2b5e0c8cbc70b4758ceaabb9966ef7260a00f98bee069dd8a0f8124e56",
+      "deduction_complete": true,
+      "line_analysis_complete": true,
+      "line_fixpoint_confirmed": true,
+      "new_singletons": 247,
+      "profiles_hash": "379af8deae73ce52066d8c2dfb7f8c826da94320933ac2094bceb850ff1dbf6e",
+      "r4": null,
+      "reason": null,
+      "result_hash": "11b66882a39a518cf7076ab6dc5ba64f7d53fc03f172062e0c51aea37260125c",
+      "status": "solved",
+      "structure": {
+        "adjacent_color_changes": 0,
+        "cells": 247,
+        "clue_length_histogram": {
+          "1": 14,
+          "10": 1,
+          "11": 1,
+          "2": 14,
+          "3": 6,
+          "4": 5,
+          "5": 6,
+          "6": 6,
+          "7": 4,
+          "8": 5,
+          "9": 1
+        },
+        "colors": 1,
+        "geometric_slack": 217,
+        "height": 13,
+        "mandatory_gaps": 33,
+        "short_blocks": 28,
+        "total_clue_length": 244,
+        "total_clues": 63,
+        "width": 19
+      },
+      "trace_hash": "adcf976a70368c0796d9ad6e5179809e61fb0ebaec1ec8d904d0d3d615935c8d",
+      "wave_count": 9
+    },
+    "logic_binding": {
+      "matrix_hash": "79c51446e72a09a08907e1f76404bcea34402e1873f81bbb36f267b880f68f37"
+    },
+    "rating": {
+      "analysis_result_hash": "11b66882a39a518cf7076ab6dc5ba64f7d53fc03f172062e0c51aea37260125c",
+      "format": "picross-catalog-sd2-rating-v1",
+      "method": "picross-difficulty-0.4",
+      "method_hash": "5508f0742aa858a6adc31aa621433e68298b915fb0fd6b8d9e74e576ba87caaf",
+      "rating_hash": "e70914c52a9ce7f8d4685086dc30b1f12948d475ce35b91e9382ed8362bfda7a",
+      "result": {
+        "analysis_result_hash": "11b66882a39a518cf7076ab6dc5ba64f7d53fc03f172062e0c51aea37260125c",
+        "assessment": {
+          "boundaries": {
+            "distance_lower": null,
+            "distance_upper": [
+              1253,
+              2204
+            ],
+            "lower": null,
+            "nearest_distance": [
+              1253,
+              2204
+            ],
+            "upper": [
+              1,
+              1
+            ]
+          },
+          "contributions": {
+            "demand": [
+              1,
+              4
+            ],
+            "search": [
+              100,
+              551
+            ],
+            "workload": [
+              0,
+              1
+            ]
+          },
+          "level": 1,
+          "level_without_workload": 1,
+          "score": [
+            951,
+            2204
+          ],
+          "signals": {
+            "context": [
+              0,
+              1
+            ],
+            "fluent": true,
+            "highest_family": "E1",
+            "longest_narrow_run": 0,
+            "narrow_waves": 0,
+            "peak_search": [
+              100,
+              551
+            ],
+            "raw_workload": [
+              43,
+              320
+            ],
+            "spans": 126,
+            "workload_ceiling": 3,
+            "workload_guard": "fluent"
+          },
+          "without_workload": [
+            951,
+            2204
+          ]
+        },
+        "confidence": "medium",
+        "estimated_minutes": null,
+        "explanation": "Model estimate from synthetic references; no human calibration or time estimate. Demand, search and bounded workload use independently checked line profiles.",
+        "format": "picross-sd2-rating-v1",
+        "method": "picross-difficulty-0.4",
+        "method_hash": "5508f0742aa858a6adc31aa621433e68298b915fb0fd6b8d9e74e576ba87caaf",
+        "profile_scope": "complete_line",
+        "reason": "complete_line",
+        "status": "rated"
+      },
+      "source": {
+        "bytes": 2301,
+        "definition_id": "pz-taiyaki",
+        "engine_logic_hash": "da1c7b38aa2d49d9d07b66ed0827112d2cb0b0ac2d60f0932ac4ccc23a1d9276",
+        "kind": "runtime",
+        "production_mode": "unknown",
+        "runtime_revision": 1,
+        "sha256": "eed4e2af12bec6ed0d1b0965c9f2c4e77cf965e609f8bad3bc128fffee2da823"
+      }
+    },
+    "rating_revision": 1
+  },
+  "format": "picross-puzzle-record-v1",
+  "id": "pz-taiyaki",
+  "mode": "mono",
+  "name": "Taiyaki",
+  "reveal": {
+    "asset": {
+      "bytes": 2698603,
+      "file": "game/art/content/pz-taiyaki.png",
+      "sha256": "3b867ff4b44a4cb870f262a59962bfa88875f600c7af6a1ea90465b051aa92e7"
+    },
+    "catalog": {
+      "generator": "picross-catalog-reveal-1",
+      "profiles": [
+        {
+          "asset": {
+            "bytes": 29264,
+            "file": "game/art/catalog/pz-taiyaki-ui100.png",
+            "sha256": "c2564cf5f9c3e38583b2628b699e2449dbc251d3e4fa1a7456092034d67858ca"
+          },
+          "height": 112,
+          "profile": "catalog-ui100-v1",
+          "width": 168
+        },
+        {
+          "asset": {
+            "bytes": 42862,
+            "file": "game/art/catalog/pz-taiyaki-ui125.png",
+            "sha256": "4d8cbad4f33d3e0706bb5f2d249daf22b1777cb6bf99f2b9bc9a94562125d2ec"
+          },
+          "height": 140,
+          "profile": "catalog-ui125-v1",
+          "width": 210
+        }
+      ],
+      "source_height": 1024,
+      "source_width": 1536
+    },
+    "image_revision": 1
+  },
+  "save_slot": "pz-taiyaki",
+  "visible": true
+}

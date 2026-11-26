@@ -1,0 +1,208 @@
+{
+  "added": {
+    "added_at": "2026-10-24T12:38:01Z",
+    "provenance": {
+      "commit": null,
+      "evidence": null,
+      "kind": "registration",
+      "reason": "Successful first playable registration in the shared transaction.",
+      "reference_time": "2026-10-24T12:38:01Z"
+    }
+  },
+  "background": {
+    "asset": {
+      "bytes": 755526,
+      "file": "game/art/backgrounds/pz-f68e79ef419a4322b68d06817b39330d.png",
+      "sha256": "47ded63289458902adfe81b45b40e2d8e2998ba28f7c70b2b9704acf2d738047"
+    },
+    "image_revision": 2,
+    "status": "selected"
+  },
+  "category_id": "gebaeude-bauwerke",
+  "definition": {
+    "bytes": 2767,
+    "file": "game/data/content/torii_001.json",
+    "sha256": "1b5ab3b03fdbc0673b6cb86b61d3d32a676361f0efa73f87b04734c85f6d71ad"
+  },
+  "difficulty": {
+    "compact_analysis": {
+      "analysis_hash": "a29ab62c0daa56bef22430094bc17371ed67f0228a688a88c4d3de5ace8ed715",
+      "deduction_complete": true,
+      "line_analysis_complete": true,
+      "line_fixpoint_confirmed": true,
+      "new_singletons": 374,
+      "profiles_hash": "e6187b8ee5a66040fa224ff8be437f393994058795b295ec2b7dd79087b306d7",
+      "r4": null,
+      "reason": null,
+      "result_hash": "cecbced608a66be2ce9c947e482e03f1959fdf3a27c3459458414d7c83eac9a8",
+      "status": "solved",
+      "structure": {
+        "adjacent_color_changes": 0,
+        "cells": 374,
+        "clue_length_histogram": {
+          "1": 4,
+          "15": 4,
+          "2": 34,
+          "20": 4,
+          "3": 17,
+          "4": 2,
+          "5": 2,
+          "8": 1,
+          "9": 1
+        },
+        "colors": 1,
+        "geometric_slack": 419,
+        "height": 17,
+        "mandatory_gaps": 31,
+        "short_blocks": 38,
+        "total_clue_length": 298,
+        "total_clues": 69,
+        "width": 22
+      },
+      "trace_hash": "dc0dc8cc0c4c787f629984162dd792e50cca908437470788c6f13836aaaf5a05",
+      "wave_count": 9
+    },
+    "logic_binding": {
+      "matrix_hash": "610ddd7729079621025a4834ae74025e56f925a99faab52fcb0f11cef2613351"
+    },
+    "rating": {
+      "analysis_result_hash": "cecbced608a66be2ce9c947e482e03f1959fdf3a27c3459458414d7c83eac9a8",
+      "format": "picross-catalog-sd2-rating-v1",
+      "method": "picross-difficulty-0.4",
+      "method_hash": "5508f0742aa858a6adc31aa621433e68298b915fb0fd6b8d9e74e576ba87caaf",
+      "rating_hash": "4c6b49844e3679fa609ea68fdda5e6ff5ad0b174411541105a41adb4167d2dc0",
+      "result": {
+        "analysis_result_hash": "cecbced608a66be2ce9c947e482e03f1959fdf3a27c3459458414d7c83eac9a8",
+        "assessment": {
+          "boundaries": {
+            "distance_lower": [
+              2757,
+              4480
+            ],
+            "distance_upper": [
+              1723,
+              4480
+            ],
+            "lower": [
+              1,
+              1
+            ],
+            "nearest_distance": [
+              1723,
+              4480
+            ],
+            "upper": [
+              2,
+              1
+            ]
+          },
+          "contributions": {
+            "demand": [
+              1,
+              1
+            ],
+            "search": [
+              15,
+              28
+            ],
+            "workload": [
+              51,
+              640
+            ]
+          },
+          "level": 2,
+          "level_without_workload": 2,
+          "score": [
+            7237,
+            4480
+          ],
+          "signals": {
+            "context": [
+              0,
+              1
+            ],
+            "fluent": false,
+            "highest_family": "E1",
+            "longest_narrow_run": 0,
+            "narrow_waves": 0,
+            "peak_search": [
+              15,
+              28
+            ],
+            "raw_workload": [
+              51,
+              640
+            ],
+            "spans": 91,
+            "workload_ceiling": 3,
+            "workload_guard": "none"
+          },
+          "without_workload": [
+            43,
+            28
+          ]
+        },
+        "confidence": "medium",
+        "estimated_minutes": null,
+        "explanation": "Model estimate from synthetic references; no human calibration or time estimate. Demand, search and bounded workload use independently checked line profiles.",
+        "format": "picross-sd2-rating-v1",
+        "method": "picross-difficulty-0.4",
+        "method_hash": "5508f0742aa858a6adc31aa621433e68298b915fb0fd6b8d9e74e576ba87caaf",
+        "profile_scope": "complete_line",
+        "reason": "complete_line",
+        "status": "rated"
+      },
+      "source": {
+        "bytes": 2767,
+        "definition_id": "pz-f68e79ef419a4322b68d06817b39330d",
+        "engine_logic_hash": "022ea0408e3ead5c55bc1a20fae949d24ef7b6048d94144621e4c3c0d1811625",
+        "kind": "runtime",
+        "production_mode": "unknown",
+        "runtime_revision": 1,
+        "sha256": "1b5ab3b03fdbc0673b6cb86b61d3d32a676361f0efa73f87b04734c85f6d71ad"
+      }
+    },
+    "rating_revision": 2
+  },
+  "format": "picross-puzzle-record-v1",
+  "id": "pz-f68e79ef419a4322b68d06817b39330d",
+  "mode": "mono",
+  "name": "Torii",
+  "reveal": {
+    "asset": {
+      "bytes": 918609,
+      "file": "game/art/content/torii_001.png",
+      "sha256": "3f68fdcfee77d780c4fd6de4693795fc680b86b98bbb201c54045a0e151dd167"
+    },
+    "catalog": {
+      "generator": "picross-catalog-reveal-1",
+      "profiles": [
+        {
+          "asset": {
+            "bytes": 13629,
+            "file": "game/art/catalog/pz-f68e79ef419a4322b68d06817b39330d-ui100.png",
+            "sha256": "9d04c551f5bb4ff6db7f9db053e1a95fa8b2c2c3635ea289705d150643985a15"
+          },
+          "height": 112,
+          "profile": "catalog-ui100-v1",
+          "width": 140
+        },
+        {
+          "asset": {
+            "bytes": 19697,
+            "file": "game/art/catalog/pz-f68e79ef419a4322b68d06817b39330d-ui125.png",
+            "sha256": "87f8cf8c7e8c48d353cc22cd073dd473179bca9a0f8d34b31ae6d5da6c2dde5b"
+          },
+          "height": 140,
+          "profile": "catalog-ui125-v1",
+          "width": 175
+        }
+      ],
+      "source_height": 1122,
+      "source_width": 1402
+    },
+    "image_revision": 1
+  },
+  "save_slot": "torii_001",
+  "visible": true
+}

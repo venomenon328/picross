@@ -117,7 +117,7 @@ Restzustand angeben. Mit bestätigtem §9-Readback und dessen Mitteilung ist der
 
 Dauerhaft bleiben aktuelle Definition, Matrix, Hinweise, Bilder, Rechte, Notices,
 IDs, Save-Slots, Revisionen, Namen, Kategorien, Bewertungen und Added-Daten.
-Aktuelle Bildquellen binden die aktuelle Identität und Bildbytes.
+Prüfe am gebundenen Integrationscommit den Einzelrecord `content/puzzles/<id>.json`, seine Runtimezeile und die tatsächlich gewählten Definition-, Bild- und Noticebytes.
 
 Spätere echte Änderungen bleiben eigene Aufträge. Fehlende frühere Arbeitsdateien sind kein Defekt. Raster-/Reveal-/Hintergrundänderungen verwenden den [gezielten Editorvertrag](../../tools/PUZZLE_EDITOR.md#13-pe-edit2-gezielte-pflege-statt-vollbestandsprüfung), keinen neuen alten Export. Gültige aktuelle Bilder und Korrekturbefugnisse bleiben erhalten. Ihre eindeutig zugeordneten Arbeitsdaten nach tatsächlich bestätigtem Mainstand gezielt abschließen; aktuelle Rechte/Notices erhalten. Lokale Checkoutbereinigung richtet sich gesondert nach WORKSPACE und Benutzerauftrag.
 

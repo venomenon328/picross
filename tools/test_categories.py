@@ -9,14 +9,7 @@ import unittest
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from tools.puzzle_production import categories
-from tools.puzzle_production.content_registry import validate, projection as project
-
-def projection(registry,catalog):
-    ids=[e["id"] for e in registry["entries"]]
-    with patch("tools.puzzle_production.catalog_rating.project", return_value=None):
-        return project(registry,catalog,ratings=dict.fromkeys(ids),added={i:{"added_at":None} for i in ids},
-                   catalogs=dict.fromkeys(ids, {}), reveals={e["id"]:e["reveal"] for e in registry["entries"]},
-                   backgrounds={i:{"status":"standard","image_revision":1,"asset":None} for i in ids})
+from tools.puzzle_production import current_content
 from tools.puzzle_production.contract import InvalidInput, load_json, write_json
 from ci_scope import classify
 
@@ -26,7 +19,9 @@ ROOT = Path(__file__).resolve().parents[1]
 class CategoryTests(unittest.TestCase):
     def setUp(self):
         self.catalog = categories.load(ROOT / "tests/puzzle_production/fixtures/catalog/categories.json")
-        self.registry = load_json(ROOT / "tests/puzzle_production/fixtures/catalog/validation.json")
+        self.entry = {"id":"pz-sample","key":"pz-sample","save_slot":"sample","visible":True,
+                      "mode":"mono","category_id":"voegel","reveal":"art/content/sample.png",
+                      "definition":"data/content/sample.json"}
 
     def test_frozen_pre_migration_inputs(self):
         folder = ROOT / "game/tests/fixtures/kat1"
@@ -53,9 +48,7 @@ class CategoryTests(unittest.TestCase):
             ("mythen-fantasie", "Mythen & Fantasie")]
         self.assertEqual([(c["id"], c["name"]) for c in categories.ordered(self.catalog)], expected)
         self.assertEqual([c["order"] for c in categories.ordered(self.catalog)], list(range(1, 21)))
-        self.assertEqual([e["category_id"] for e in self.registry["entries"]], [
-            "fahrzeuge-verkehr", "voegel"])
-        validate(self.registry, self.catalog)
+        current_content.entries([self.entry], self.catalog)
 
     def test_category_fields_types_duplicates_and_limits(self):
         for field, values in {
@@ -90,27 +83,26 @@ class CategoryTests(unittest.TestCase):
 
     def test_association_required_and_reference_removal_rejected(self):
         for value in (None, "missing", [], ["voegel", "wasserwelt"]):
-            raw = deepcopy(self.registry)
-            raw["entries"][0]["category_id"] = value
-            with self.assertRaises(InvalidInput): validate(raw, self.catalog)
-        raw = deepcopy(self.registry)
-        del raw["entries"][0]["category_id"]
-        with self.assertRaises(InvalidInput): validate(raw, self.catalog)
-        raw = deepcopy(self.registry)
-        raw["entries"][0]["category_ids"] = ["voegel"]
-        with self.assertRaises(InvalidInput): validate(raw, self.catalog)
+            raw = [deepcopy(self.entry)]
+            raw[0]["category_id"] = value
+            with self.assertRaises(InvalidInput): current_content.entries(raw, self.catalog)
+        raw = [deepcopy(self.entry)]
+        del raw[0]["category_id"]
+        with self.assertRaises(InvalidInput): current_content.entries(raw, self.catalog)
+        raw = [deepcopy(self.entry)]
+        raw[0]["category_ids"] = ["voegel"]
+        with self.assertRaises(InvalidInput): current_content.entries(raw, self.catalog)
         catalog = deepcopy(self.catalog)
         catalog["categories"] = [c for c in catalog["categories"] if c["id"] != "voegel"]
         with self.assertRaisesRegex(InvalidInput, "Unknown category_id: voegel"):
-            validate(self.registry, catalog)
+            current_content.entries([self.entry], catalog)
 
     def test_order_is_data_and_names_are_not_puzzle_identity(self):
         catalog = deepcopy(self.catalog)
         catalog["categories"].reverse()
-        self.assertEqual(projection(self.registry, catalog), projection(self.registry, self.catalog))
+        self.assertEqual(categories.ordered(catalog), categories.ordered(self.catalog))
         catalog["categories"][0]["name"] = "Neuer Name"
-        validate(self.registry, catalog)
-        self.assertEqual(projection(self.registry, catalog)["entries"], projection(self.registry, self.catalog)["entries"])
+        current_content.entries([self.entry], catalog)
         for path in (categories.PATH, "game/data/registry.json", "tools/puzzle_production/categories.py"):
             selected = classify([path])["selected"]
             self.assertEqual(selected["production"], path == "tools/puzzle_production/categories.py", path)

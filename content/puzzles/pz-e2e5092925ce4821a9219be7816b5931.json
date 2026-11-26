@@ -1,0 +1,205 @@
+{
+  "added": {
+    "added_at": "2026-10-23T19:34:21Z",
+    "provenance": {
+      "commit": null,
+      "evidence": null,
+      "kind": "registration",
+      "reason": "Successful first playable registration in the shared transaction.",
+      "reference_time": "2026-10-23T19:34:21Z"
+    }
+  },
+  "background": {
+    "asset": {
+      "bytes": 573048,
+      "file": "game/art/backgrounds/pz-e2e5092925ce4821a9219be7816b5931.png",
+      "sha256": "615a2d29d7cb0f42635b1290aa1490d870479b70ed77c3e321ca84966b4a2c63"
+    },
+    "image_revision": 2,
+    "status": "selected"
+  },
+  "category_id": "gemuese-pilze-kraeuter",
+  "definition": {
+    "bytes": 2151,
+    "file": "game/data/content/tomate_001.json",
+    "sha256": "d79ede152529b7977b826391ed373ab6fa9c39c4217a3b38a1800c00db5f1d7a"
+  },
+  "difficulty": {
+    "compact_analysis": {
+      "analysis_hash": "c0481296ea83712fa9a49cb55136a58fe7ace81fcac7f0c092b2fa5c3d1725cc",
+      "deduction_complete": true,
+      "line_analysis_complete": true,
+      "line_fixpoint_confirmed": true,
+      "new_singletons": 225,
+      "profiles_hash": "c6ce8e334a72d9fd24e9cddb8cc8d163c0fabf8454dcc2d022c5b6036888e915",
+      "r4": null,
+      "reason": null,
+      "result_hash": "d73d1b3c2b1b65d81115cd78913ef7fd24aec71948437069f11d7023df2240ee",
+      "status": "solved",
+      "structure": {
+        "adjacent_color_changes": 24,
+        "cells": 225,
+        "clue_length_histogram": {
+          "1": 14,
+          "10": 7,
+          "11": 3,
+          "13": 1,
+          "15": 5,
+          "2": 3,
+          "3": 6,
+          "4": 3,
+          "5": 6,
+          "7": 1,
+          "8": 3,
+          "9": 2
+        },
+        "colors": 2,
+        "geometric_slack": 129,
+        "height": 15,
+        "mandatory_gaps": 1,
+        "short_blocks": 17,
+        "total_clue_length": 320,
+        "total_clues": 54,
+        "width": 15
+      },
+      "trace_hash": "e5d581e1c1321bb19c1f571fc75d4a7f2a63167ce0aff8a75e07a6e3dd415b64",
+      "wave_count": 9
+    },
+    "logic_binding": {
+      "matrix_hash": "b349d6a67b8575389e2588435a2717edd53fe39c033db06f051b682e091caafc"
+    },
+    "rating": {
+      "analysis_result_hash": "d73d1b3c2b1b65d81115cd78913ef7fd24aec71948437069f11d7023df2240ee",
+      "format": "picross-catalog-sd2-rating-v1",
+      "method": "picross-difficulty-0.4",
+      "method_hash": "5508f0742aa858a6adc31aa621433e68298b915fb0fd6b8d9e74e576ba87caaf",
+      "rating_hash": "deb94bd6629396d9cb892c18d753aafb75fd9225f3ba1d8f489b0192674a30a7",
+      "result": {
+        "analysis_result_hash": "d73d1b3c2b1b65d81115cd78913ef7fd24aec71948437069f11d7023df2240ee",
+        "assessment": {
+          "boundaries": {
+            "distance_lower": null,
+            "distance_upper": [
+              73,
+              110
+            ],
+            "lower": null,
+            "nearest_distance": [
+              73,
+              110
+            ],
+            "upper": [
+              1,
+              1
+            ]
+          },
+          "contributions": {
+            "demand": [
+              1,
+              4
+            ],
+            "search": [
+              19,
+              220
+            ],
+            "workload": [
+              0,
+              1
+            ]
+          },
+          "level": 1,
+          "level_without_workload": 1,
+          "score": [
+            37,
+            110
+          ],
+          "signals": {
+            "context": [
+              0,
+              1
+            ],
+            "fluent": true,
+            "highest_family": "E1",
+            "longest_narrow_run": 0,
+            "narrow_waves": 0,
+            "peak_search": [
+              19,
+              220
+            ],
+            "raw_workload": [
+              13,
+              320
+            ],
+            "spans": 66,
+            "workload_ceiling": 3,
+            "workload_guard": "fluent"
+          },
+          "without_workload": [
+            37,
+            110
+          ]
+        },
+        "confidence": "medium",
+        "estimated_minutes": null,
+        "explanation": "Model estimate from synthetic references; no human calibration or time estimate. Demand, search and bounded workload use independently checked line profiles.",
+        "format": "picross-sd2-rating-v1",
+        "method": "picross-difficulty-0.4",
+        "method_hash": "5508f0742aa858a6adc31aa621433e68298b915fb0fd6b8d9e74e576ba87caaf",
+        "profile_scope": "complete_line",
+        "reason": "complete_line",
+        "status": "rated"
+      },
+      "source": {
+        "bytes": 2151,
+        "definition_id": "pz-e2e5092925ce4821a9219be7816b5931",
+        "engine_logic_hash": "4d65cec87e8b461fdddae18da27d51b6049c7abe840b19dc7c71de92ad7743b0",
+        "kind": "runtime",
+        "production_mode": "unknown",
+        "runtime_revision": 1,
+        "sha256": "d79ede152529b7977b826391ed373ab6fa9c39c4217a3b38a1800c00db5f1d7a"
+      }
+    },
+    "rating_revision": 2
+  },
+  "format": "picross-puzzle-record-v1",
+  "id": "pz-e2e5092925ce4821a9219be7816b5931",
+  "mode": "color",
+  "name": "Tomate",
+  "reveal": {
+    "asset": {
+      "bytes": 2020576,
+      "file": "game/art/content/tomate_001.png",
+      "sha256": "853f8cfd9dd984dd244e0093e7f83719f9285c8ffcc3df61585fabb301e34e74"
+    },
+    "catalog": {
+      "generator": "picross-catalog-reveal-1",
+      "profiles": [
+        {
+          "asset": {
+            "bytes": 21307,
+            "file": "game/art/catalog/pz-e2e5092925ce4821a9219be7816b5931-ui100.png",
+            "sha256": "5693d188e85f56594ef2eb137dbd0bba0a9ba633d938faf537f416b360cd74f3"
+          },
+          "height": 112,
+          "profile": "catalog-ui100-v1",
+          "width": 112
+        },
+        {
+          "asset": {
+            "bytes": 31429,
+            "file": "game/art/catalog/pz-e2e5092925ce4821a9219be7816b5931-ui125.png",
+            "sha256": "3f09e1f56bfff20065d8a24317a6349a929c2ab09cf9a186789819eb7ebc3378"
+          },
+          "height": 140,
+          "profile": "catalog-ui125-v1",
+          "width": 140
+        }
+      ],
+      "source_height": 1254,
+      "source_width": 1254
+    },
+    "image_revision": 1
+  },
+  "save_slot": "tomate_001",
+  "visible": true
+}

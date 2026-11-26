@@ -3,13 +3,13 @@ from pathlib import Path
 import tempfile
 import unittest
 from unittest.mock import patch
-from tools.production_workspace import current_view as cv, presentation as p
+from tools.production_workspace import presentation as p
 from tools.production_workspace.repository import Repository, configure
 from tools.production_workspace.sources import GitSource, INDEX, git
 from tools.puzzle_production import catalog_io as io, current_content, catalog_integration
-from tools.puzzle_production.authoring_finalization import RECORD_KEYS
+from tools.puzzle_production import current_authoring, current_delivery
 from tools.test_production_workspace import commit
-from tests.puzzle_production.current_fixtures import make, checkout
+from tests.puzzle_production.current_fixtures import make, checkout, brief_job
 
 ID='pz-workspace-test'
 
@@ -20,31 +20,15 @@ def put(root,name,value):
     return {'file':name,'sha256':io.checksum(raw),'bytes':len(raw)}
 
 
-def publish_pointer(root,puzzle_id,revision):
-    directory=f'content/authoring/{puzzle_id}/{revision}'
-    value={'format':cv.FORMAT,'puzzle_id':puzzle_id,'revision':revision}
-    for field,leaf in (('record','record.json'),('projection','workspace.json')):
-        name=directory+'/'+leaf;value[field]=cv.reference(name,(root/name).read_bytes())
-    put(root,cv.path(puzzle_id),value)
-
-
-def metadata_job(root,revision,*,puzzle_id=ID,state='reveal_review'):
-    directory=f'content/authoring/{puzzle_id}/{revision}'
-    record=dict.fromkeys(RECORD_KEYS|{'raster_selection','presentation','candidate'})
-    record.update(format='picross-authoring-record-v4',puzzle_id=puzzle_id,revision=revision,state=state,
-                  category_id='test',blockers=[],document_revision=1,build_request_sha256='1'*64,repo_commit='a'*40,
-                  inventory_sha256='2'*64,rulebook={},reveal_options=[],parameters=[],
-                  verification={'effective_state':state},next_action='TEST ONLY',next_step='TEST ONLY')
-    for field,leaf,raw in (('package','package.zip',b'Not a ZIP. Never needed for list completion.'),
-                           ('handoff','handoff.json',b'{}'),('final_editorial_approval','approval.json',b'{}')):
-        record[field]=put(root,directory+'/'+leaf,raw)
-    projection={'format':p.CURRENT_FORMAT,'puzzle_id':puzzle_id,'revision':revision,
-                'record':{'commit':None,**put(root,directory+'/record.json',record)},
-                'title':'TEST ONLY synthetic','assets':[],'offers':[]}
-    put(root,directory+'/workspace.json',projection)
-    index=p.parse((root/INDEX).read_bytes());index['entries'].append({'puzzle_id':puzzle_id,'revision':revision,'record':directory+'/record.json'})
-    put(root,INDEX,index);publish_pointer(root,puzzle_id,revision)
-    return record
+def metadata_job(root, puzzle_id=ID, title="Synthetic"):
+    record = brief_job(puzzle_id, git(root,"rev-parse","HEAD").decode().strip())
+    record["title"] = title
+    name = current_authoring.path(puzzle_id)
+    put(root,name,record)
+    index = p.parse((root/INDEX).read_bytes())
+    if not any(row["puzzle_id"] == puzzle_id for row in index["entries"]):
+        index["entries"].append({"puzzle_id":puzzle_id,"revision":"current","record":name})
+        put(root,INDEX,index)
 
 
 class DeliveryTests(unittest.TestCase):
@@ -53,13 +37,9 @@ class DeliveryTests(unittest.TestCase):
         self.root=Path(temp.name);self.repo=checkout(self.root/'repo')
         git(self.repo,'init','-q','-b','main');git(self.repo,'config','core.autocrlf','false');commit(self.repo)
         self.branch='content/pw/'+ID;git(self.repo,'checkout','-qb',self.branch)
-        metadata_job(self.repo,'early-alpha');commit(self.repo)
+        metadata_job(self.repo);commit(self.repo)
         self.input=make(self.root/'input',identifier=ID)
         catalog_integration.integrate(self.input,self.repo,apply=True)
-        metadata_job(self.repo,'r02',state='editorially_approved')
-        self.integrated=commit(self.repo)
-        from tools.production_workspace.projector import complete
-        complete(self.repo,f'content/authoring/{ID}/r02/record.json',self.integrated,current_input=self.input)
         self.head=commit(self.repo)
         self.remote=self.root/'remote';self.remote.mkdir();git(self.remote,'init','--bare','-q');self.push()
         configure(self.repo,self.root/'state',remote=str(self.remote));self.reader=Repository(self.root/'state')
@@ -70,9 +50,8 @@ class DeliveryTests(unittest.TestCase):
         git(self.repo,'checkout','-q','main')
         if mode=='copy':
             source=GitSource(self.repo)
-            from tools.puzzle_production.current_delivery import snapshot
-            live=snapshot(lambda n,l,**kw:source.read(self.head,n,l,**kw),ID)
-            for name in {*live['files'],current_content.REGISTRY,current_content.RUNTIME}:
+            live=current_delivery.from_source(source,self.head,ID)
+            for name in {*live['files'],current_content.RUNTIME}:
                 put(self.repo,name,source.read(self.head,name,64*1024*1024))
             if git(self.repo,'status','--porcelain').strip():commit(self.repo)
         else:
@@ -82,8 +61,8 @@ class DeliveryTests(unittest.TestCase):
         main=git(self.repo,'rev-parse','HEAD').decode().strip()
         git(self.repo,'checkout','-q',self.branch);self.push();return main
 
-    def test_fresh_main_and_unchanged_branch_hide_current_and_earlier_phases(self):
-        before=self.reader.refresh();self.assertEqual({j['revision'] for j in before['jobs']},{'early-alpha','r02'})
+    def test_fresh_main_and_unchanged_branch_hide_registered_job(self):
+        before=self.reader.refresh();self.assertEqual({j['revision'] for j in before['jobs']},{'current'})
         main=self.integrate();after=self.reader.refresh()
         self.assertEqual(after['jobs'],[],after['errors']);self.assertEqual(after['completion']['main_commit'],main)
         self.assertEqual(git(self.repo,'rev-parse','HEAD').decode().strip(),self.head)
@@ -98,15 +77,14 @@ class DeliveryTests(unittest.TestCase):
 
     def test_skip_registered_branches_and_main_rows_before_historical_reads(self):
         self.integrate()
-        registered_branch_record = f'content/authoring/{ID}/r02/record.json'
+        registered_branch_record = current_authoring.path(ID)
         put(self.repo, registered_branch_record, b'{broken')
-        publish_pointer(self.repo, ID, 'r02')
         branch = commit(self.repo)
         git(self.repo, 'checkout', '-q', 'main')
         put(self.repo, registered_branch_record, b'old unreadable record')
-        metadata_job(self.repo, 'r01', puzzle_id='pz-open')
-        metadata_job(self.repo, 'r01', puzzle_id='pz-broken')
-        put(self.repo, 'content/authoring/pz-broken/r01/record.json', b'{broken')
+        metadata_job(self.repo, puzzle_id='pz-open')
+        metadata_job(self.repo, puzzle_id='pz-broken')
+        put(self.repo, current_authoring.path('pz-broken'), b'{broken')
         commit(self.repo)
         self.push()
         original = GitSource.read
@@ -115,8 +93,7 @@ class DeliveryTests(unittest.TestCase):
             self.assertNotEqual(at, branch, 'Registered production branch was opened')
             self.assertNotIn('/' + ID + '/', name)
             self.assertNotIn('/packages/', name)
-            self.assertNotEqual(name, current_content.RUNTIME)
-            self.assertFalse(name.startswith(('game/', 'content/backgrounds/', 'content/reveals/')))
+            self.assertTrue(name == current_content.RUNTIME or not name.startswith(('game/','content/puzzles/')))
             return original(source, at, name, *args, **kwargs)
 
         with patch.object(GitSource, 'read', trap):
@@ -124,17 +101,15 @@ class DeliveryTests(unittest.TestCase):
         self.assertEqual({j['puzzle_id'] for j in listing['jobs']}, {'pz-open'})
         self.assertEqual(listing['completion']['completed_ids'], [ID])
         self.assertEqual(len(listing['errors']), 1)
-        self.assertIn('pz-broken/r01', listing['errors'][0])
+        self.assertIn('pz-broken/current', listing['errors'][0])
 
     def test_later_live_changes_and_reopened_phases_stay_hidden(self):
         self.integrate('copy')
-        metadata_job(self.repo, 'r99', state='raster_ready')
-        publish_pointer(self.repo, ID, 'early-alpha')
+        metadata_job(self.repo,title='Reopened')
         commit(self.repo)
         git(self.repo, 'checkout', '-q', 'main')
-        value = p.parse((self.repo / current_content.REGISTRY).read_bytes())
-        value['metadata'][0]['name'] = 'Later name'
-        put(self.repo, current_content.REGISTRY, value)
+        from tools.puzzle_production import catalog_metadata as metadata
+        metadata.apply(self.repo,metadata.plan(self.repo,[{"op":"set_metadata","id":ID,"name":"Later name"}]))
         put(self.repo, 'game/art/content/' + ID + '.png', b'Later live image bytes')
         commit(self.repo)
         self.push()
@@ -155,7 +130,7 @@ class DeliveryTests(unittest.TestCase):
         from tools.production_workspace.server import Service
         self.integrate('copy')
         git(self.repo, 'checkout', '-q', 'main')
-        metadata_job(self.repo, 'r01', puzzle_id='pz-open')
+        metadata_job(self.repo, puzzle_id='pz-open')
         main = commit(self.repo)
         self.push()
         service = Service(self.reader)
@@ -163,10 +138,10 @@ class DeliveryTests(unittest.TestCase):
         self.assertEqual({j['puzzle_id'] for j in first['jobs']}, {'pz-open'})
         self.assertTrue(first['completion']['confirmed'])
 
-        valid = p.parse((self.repo / current_content.REGISTRY).read_bytes())
+        valid = p.parse((self.repo / current_content.RUNTIME).read_bytes())
         valid['entries'].append(dict(valid['entries'][0]))
-        put(self.repo, current_content.REGISTRY, valid)
-        metadata_job(self.repo, 'r01', puzzle_id='pz-new')
+        put(self.repo, current_content.RUNTIME, valid)
+        metadata_job(self.repo, puzzle_id='pz-new')
         commit(self.repo)
         self.push()
 

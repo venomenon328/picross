@@ -57,12 +57,12 @@ und deaktivierten Systemfonts. Pillow schreibt RGBA8 ohne Metadaten, mit
 Kompressionsstufe 9 und ohne Encoderoptimierung. Die Obergrenze je Datei
 beträgt 256 KiB. Änderungen an diesem Verfahren benötigen eine neue Generatorversion.
 
-Die Reveal-Source v6 führt das technische Feld
-`catalog={generator,source_sha256,source_width,source_height,profiles}`.
+Im Einzelrecord enthält `reveal.catalog` genau
+`generator,source_width,source_height,profiles`.
 Die zwei geordneten Einträge binden jeweils `profile,asset,width,height`.
-Der Hash gehört zum Original in `current.asset`, der Assetref zu den
-tatsächlichen PNG-Bytes. Runtime v9 projiziert die Maße, den Quellhash und
-dieselben Profile mit spielrelativen Pfaden nach `catalog_reveal`.
+Die Assetrefs der Profile binden die PNG-Bytes. Runtime v9 projiziert die Maße,
+den Hash aus `reveal.asset.sha256` und dieselben Profile mit spielrelativen
+Pfaden nach `catalog_reveal`.
 
 ## 3. Reine Bildrevision: Identität und historische Bindungen
 
@@ -76,7 +76,7 @@ benötigte aktuelle Bildbindung. Sie ist kein Rasterupdate.
 | Fortschritt | Saves, Redo, Abschlusszustand und Recent-Marker bleiben gültig; kein Reset, keine Migration und keine Rückstufung. |
 | Metadaten | Schwierigkeit, Rating-/Added-Daten und ihre Bindungen bleiben erhalten; ein neues Bild ist keine neue Katalogaufnahme. |
 | Tatsächliche Entscheidungen | Aktuelle Bildwahl und benötigte Nutzungsgrundlagen bleiben konkret an die gewählten Bytes gebunden. Tatsächlich vorhandene alte Belege nicht auf einen neuen Bildhash umschreiben; ihre Aufbewahrung oder Rekonstruktion ist keine Voraussetzung der aktuellen Produktion. |
-| Neue Bildfassung | Neue Bild-/Recordrevision mit tatsächlicher Entscheidung und aktueller Identitäts-/Bytebindung. Herkunft, Rechte und tatsächlich nötige Notices erhalten. |
+| Neue Bildfassung | Neue Bildrevision im Einzelrecord mit tatsächlicher Entscheidung und aktueller Identitäts-/Bytebindung. Herkunft, Rechte und tatsächlich nötige Notices erhalten. |
 
 Der aktuelle Editor prüft die ausgewählten neuen Bildbytes und die relevanten
 aktuellen Bindungen gemäß PE §13. Die ausdrückliche Eigentümerauswahl erzeugt
@@ -92,13 +92,13 @@ Vorschau ohne Dateibindung oder frühere Auswahl ist keine Freigabe neuer Bytes.
 ## 4. Gemeinsamer technischer Vertrag
 
 Erstregistrierung verwendet den aktuellen `picross-integration-input-v1` nach
-RI/ZA-1. Aktuelle Quellen binden Identität und Livebytes; Produktionsarchive,
+RI/ZA-1. Das Feld `reveal` des Einzelrecords bindet Bildrevision, Originalasset, natürliche Maße und beide Katalogprofile. Die Projektion leitet `source_sha256` vom Originalasset ab. Identität und Definition sind gemeinsam gebunden; Produktionsarchive,
 Producer- oder Regelbuch-Allowlisten sind keine neue Integrationsvoraussetzung.
 Raster-, Reveal-, Hintergrund- und Metadatenpflege bleiben getrennte Operationen.
 
 Zulässige vorbereitete PNGs und begrenzte lokale SVGs werden bytegleich importiert;
 variable Maße und Seitenverhältnisse sind erlaubt. PNG↔SVG wechselt den
-verwalteten technischen Pfad samt Source/Notice/Runtime und entfernt nur die
+verwalteten Pfad in Einzelrecord, Notice und Runtime und entfernt nur die
 eigene verdrängte Live-Datei im gemeinsamen Journal. Bestehende ursprüngliche
 Produktions-/Definitionsbelege dürfen keine neue Aufbewahrungspflicht begründen;
 der aktuelle Stand folgt [PW-B](../tools/PW_B_CONTRACT.md).

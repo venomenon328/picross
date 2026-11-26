@@ -1,0 +1,220 @@
+{
+  "added": {
+    "added_at": "2026-10-13T21:57:24Z",
+    "provenance": {
+      "commit": "9371ef8107dc0b1b0ea3118c3b1d5d102bf79d9f",
+      "evidence": {
+        "path": "content/added/reports/ku-b-initial.json",
+        "sha256": "e6d7a01e740adbc40cdc90e64c733f95907c8924cfe1f0a4bb734bb7bc6b7884"
+      },
+      "kind": "git-snapshot",
+      "reason": "No direct UTC first-registration receipt found in reviewed sources; earliest verified visible integrated catalog snapshot including bound PR history. Commit UTC is a reconstructed reference, not tool execution time.",
+      "reference_time": "2026-10-13T21:57:24Z"
+    }
+  },
+  "background": {
+    "asset": {
+      "bytes": 621084,
+      "file": "game/art/backgrounds/pz-2a8481f61e6443bda174bd3da67c.png",
+      "sha256": "e00564e352a423f393bad6a08d840dbfae33469981cc991173acd5c6ac7207d2"
+    },
+    "image_revision": 3,
+    "status": "selected"
+  },
+  "category_id": "gebaeude-bauwerke",
+  "definition": {
+    "bytes": 6483,
+    "file": "game/data/content/brandenburger_tor_001.json",
+    "sha256": "9021e828087d070457210b75dccdbf35fb01f2dde4be739eee3dd433ff29f831"
+  },
+  "difficulty": {
+    "compact_analysis": {
+      "analysis_hash": "a8fafc8a3ad7c981612c22875089ab4147cd60365383620863ae4e5162979ee9",
+      "deduction_complete": true,
+      "line_analysis_complete": true,
+      "line_fixpoint_confirmed": true,
+      "new_singletons": 1200,
+      "profiles_hash": "8d65a6159575fe93ada7cc9e6a6ddc4ea28ae2eaa51f1026d07419ccfa2dcf9b",
+      "r4": null,
+      "reason": null,
+      "result_hash": "7b79c7a1070bd24c9bc2b842bd0ef07c282185fdd219f8497e5915c189d7f599",
+      "status": "solved",
+      "structure": {
+        "adjacent_color_changes": 0,
+        "cells": 1200,
+        "clue_length_histogram": {
+          "1": 16,
+          "10": 4,
+          "11": 1,
+          "12": 3,
+          "15": 1,
+          "19": 2,
+          "2": 4,
+          "21": 12,
+          "22": 2,
+          "24": 2,
+          "26": 2,
+          "3": 50,
+          "36": 1,
+          "38": 5,
+          "4": 33,
+          "40": 1,
+          "5": 2,
+          "7": 12
+        },
+        "colors": 1,
+        "geometric_slack": 1114,
+        "height": 30,
+        "mandatory_gaps": 84,
+        "short_blocks": 20,
+        "total_clue_length": 1202,
+        "total_clues": 153,
+        "width": 40
+      },
+      "trace_hash": "df11fb3abef69499f3136bf82d0a620f039731a824785a48940efa3c0354df7d",
+      "wave_count": 9
+    },
+    "logic_binding": {
+      "matrix_hash": "4d371a5ebd56d24a53e5539eca2b94cf6411d1fa11c4032f973a70900d11ebaf"
+    },
+    "rating": {
+      "analysis_result_hash": "7b79c7a1070bd24c9bc2b842bd0ef07c282185fdd219f8497e5915c189d7f599",
+      "format": "picross-catalog-sd2-rating-v1",
+      "method": "picross-difficulty-0.4",
+      "method_hash": "5508f0742aa858a6adc31aa621433e68298b915fb0fd6b8d9e74e576ba87caaf",
+      "rating_hash": "6e54445e518a4b84740938a1ba4e464ca2581e453a1640841fbd7c675d633c1c",
+      "result": {
+        "analysis_result_hash": "7b79c7a1070bd24c9bc2b842bd0ef07c282185fdd219f8497e5915c189d7f599",
+        "assessment": {
+          "boundaries": {
+            "distance_lower": [
+              224471,
+              326784
+            ],
+            "distance_upper": [
+              102313,
+              326784
+            ],
+            "lower": [
+              1,
+              1
+            ],
+            "nearest_distance": [
+              102313,
+              326784
+            ],
+            "upper": [
+              2,
+              1
+            ]
+          },
+          "contributions": {
+            "demand": [
+              1,
+              1
+            ],
+            "search": [
+              9083,
+              20424
+            ],
+            "workload": [
+              31,
+              128
+            ]
+          },
+          "level": 2,
+          "level_without_workload": 2,
+          "score": [
+            551255,
+            326784
+          ],
+          "signals": {
+            "context": [
+              0,
+              1
+            ],
+            "fluent": false,
+            "highest_family": "E1",
+            "longest_narrow_run": 0,
+            "narrow_waves": 0,
+            "peak_search": [
+              9083,
+              20424
+            ],
+            "raw_workload": [
+              31,
+              128
+            ],
+            "spans": 195,
+            "workload_ceiling": 3,
+            "workload_guard": "none"
+          },
+          "without_workload": [
+            29507,
+            20424
+          ]
+        },
+        "confidence": "medium",
+        "estimated_minutes": null,
+        "explanation": "Model estimate from synthetic references; no human calibration or time estimate. Demand, search and bounded workload use independently checked line profiles.",
+        "format": "picross-sd2-rating-v1",
+        "method": "picross-difficulty-0.4",
+        "method_hash": "5508f0742aa858a6adc31aa621433e68298b915fb0fd6b8d9e74e576ba87caaf",
+        "profile_scope": "complete_line",
+        "reason": "complete_line",
+        "status": "rated"
+      },
+      "source": {
+        "bytes": 6483,
+        "definition_id": "pz-2a8481f61e6443bda174bd3da67c",
+        "engine_logic_hash": "deb6139f2236467cc088aa04f6ac77f645da55ad53e522547eafec79266f4ae2",
+        "kind": "runtime",
+        "production_mode": "unknown",
+        "runtime_revision": 1,
+        "sha256": "9021e828087d070457210b75dccdbf35fb01f2dde4be739eee3dd433ff29f831"
+      }
+    },
+    "rating_revision": 2
+  },
+  "format": "picross-puzzle-record-v1",
+  "id": "pz-2a8481f61e6443bda174bd3da67c",
+  "mode": "mono",
+  "name": "Brandenburger Tor",
+  "reveal": {
+    "asset": {
+      "bytes": 1978700,
+      "file": "game/art/content/brandenburger_tor_001.png",
+      "sha256": "496479ab0cd2b214560f5f9f18ea6067ac21b91aab76af48874282aacd63af48"
+    },
+    "catalog": {
+      "generator": "picross-catalog-reveal-1",
+      "profiles": [
+        {
+          "asset": {
+            "bytes": 28501,
+            "file": "game/art/catalog/pz-2a8481f61e6443bda174bd3da67c-ui100.png",
+            "sha256": "fc43d810e854c5a42902929a215fc553160c43ece917fdc8d0de1ddc224f712d"
+          },
+          "height": 112,
+          "profile": "catalog-ui100-v1",
+          "width": 168
+        },
+        {
+          "asset": {
+            "bytes": 41759,
+            "file": "game/art/catalog/pz-2a8481f61e6443bda174bd3da67c-ui125.png",
+            "sha256": "c4095e2d226f1acd1930b6bb8c4a69cf12f3730b4fdff74c36aca52d630456ad"
+          },
+          "height": 140,
+          "profile": "catalog-ui125-v1",
+          "width": 210
+        }
+      ],
+      "source_height": 1024,
+      "source_width": 1536
+    },
+    "image_revision": 1
+  },
+  "save_slot": "brandenburger_tor_001",
+  "visible": true
+}

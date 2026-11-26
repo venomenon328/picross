@@ -437,7 +437,7 @@ def main(argv: list[str] | None = None) -> int:
         if args.core:
             evidence.scope_start("core")
         evidence.report["project_name"] = project_name(root / "game/project.godot")
-        registry = json.loads((root / "content/registry.json").read_text(encoding="utf-8"))
+        registry = json.loads((root / "game/data/registry.json").read_text(encoding="utf-8"))
         evidence.report["book_resources"] = python_phase("current-resource-hashes", z2_resources.verify)
         editor = toolchain.EDITORS[host]
 

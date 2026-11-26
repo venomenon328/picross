@@ -1,0 +1,221 @@
+{
+  "added": {
+    "added_at": "2026-10-24T11:33:55Z",
+    "provenance": {
+      "commit": null,
+      "evidence": null,
+      "kind": "registration",
+      "reason": "Successful first playable registration in the shared transaction.",
+      "reference_time": "2026-10-24T11:33:55Z"
+    }
+  },
+  "background": {
+    "asset": {
+      "bytes": 568637,
+      "file": "game/art/backgrounds/pz-d6cb06cb41854b1da84f0ba2f043aa14.png",
+      "sha256": "093d8238bc93dd760e1993e18d1a56fcbebb6d9fb39d72ce7647370252524756"
+    },
+    "image_revision": 2,
+    "status": "selected"
+  },
+  "category_id": "gebaeude-bauwerke",
+  "definition": {
+    "bytes": 14988,
+    "file": "game/data/content/jinja_001.json",
+    "sha256": "199cd5da7524731358cccbb798f18d1af1696dd7b83266399dc45af998232f11"
+  },
+  "difficulty": {
+    "compact_analysis": {
+      "analysis_hash": "142f3ae2422bb9d1d44ab32f4d6d640cce7c5843e3eca0f30351f0f5608bf196",
+      "deduction_complete": true,
+      "line_analysis_complete": true,
+      "line_fixpoint_confirmed": true,
+      "new_singletons": 1350,
+      "profiles_hash": "42423195d584f8fe602ab3d0e64e4a7d02c84698cee85fbe0a8c2477315f0015",
+      "r4": null,
+      "reason": null,
+      "result_hash": "f2d5f7ca06a6c8569be7f236131d54280b90ce1c9a8a4396df8521cd9038e653",
+      "status": "solved",
+      "structure": {
+        "adjacent_color_changes": 363,
+        "cells": 1350,
+        "clue_length_histogram": {
+          "1": 213,
+          "10": 2,
+          "11": 4,
+          "12": 8,
+          "14": 4,
+          "15": 4,
+          "16": 4,
+          "17": 2,
+          "19": 1,
+          "2": 111,
+          "21": 1,
+          "3": 48,
+          "31": 1,
+          "39": 1,
+          "4": 26,
+          "41": 1,
+          "43": 1,
+          "5": 23,
+          "6": 26,
+          "7": 18,
+          "8": 4,
+          "9": 2
+        },
+        "colors": 4,
+        "geometric_slack": 934,
+        "height": 30,
+        "mandatory_gaps": 68,
+        "short_blocks": 324,
+        "total_clue_length": 1698,
+        "total_clues": 505,
+        "width": 45
+      },
+      "trace_hash": "e60da4d90c9ea5bfc2d437cbbbf6f70e0285089dd53ae695b07e995b58dcb206",
+      "wave_count": 12
+    },
+    "logic_binding": {
+      "matrix_hash": "e6bc6cd20331c2e72d4085ae2a0a6b9daf8365818a2a43fc19270ff0ee1baa91"
+    },
+    "rating": {
+      "analysis_result_hash": "f2d5f7ca06a6c8569be7f236131d54280b90ce1c9a8a4396df8521cd9038e653",
+      "format": "picross-catalog-sd2-rating-v1",
+      "method": "picross-difficulty-0.4",
+      "method_hash": "5508f0742aa858a6adc31aa621433e68298b915fb0fd6b8d9e74e576ba87caaf",
+      "rating_hash": "e1c342e993cd6f51f6cd9d10b5a6df92eeec11ba19048c3ab92967626ebb08d6",
+      "result": {
+        "analysis_result_hash": "f2d5f7ca06a6c8569be7f236131d54280b90ce1c9a8a4396df8521cd9038e653",
+        "assessment": {
+          "boundaries": {
+            "distance_lower": [
+              353,
+              1680
+            ],
+            "distance_upper": [
+              1327,
+              1680
+            ],
+            "lower": [
+              3,
+              1
+            ],
+            "nearest_distance": [
+              353,
+              1680
+            ],
+            "upper": [
+              4,
+              1
+            ]
+          },
+          "contributions": {
+            "demand": [
+              131,
+              60
+            ],
+            "search": [
+              87,
+              112
+            ],
+            "workload": [
+              1,
+              4
+            ]
+          },
+          "level": 4,
+          "level_without_workload": 3,
+          "score": [
+            5393,
+            1680
+          ],
+          "signals": {
+            "context": [
+              11,
+              15
+            ],
+            "fluent": false,
+            "highest_family": "E2",
+            "longest_narrow_run": 1,
+            "narrow_waves": 1,
+            "peak_search": [
+              5,
+              7
+            ],
+            "raw_workload": [
+              1,
+              4
+            ],
+            "spans": 563,
+            "workload_ceiling": 4,
+            "workload_guard": "none"
+          },
+          "without_workload": [
+            4973,
+            1680
+          ]
+        },
+        "confidence": "medium",
+        "estimated_minutes": null,
+        "explanation": "Model estimate from synthetic references; no human calibration or time estimate. Demand, search and bounded workload use independently checked line profiles.",
+        "format": "picross-sd2-rating-v1",
+        "method": "picross-difficulty-0.4",
+        "method_hash": "5508f0742aa858a6adc31aa621433e68298b915fb0fd6b8d9e74e576ba87caaf",
+        "profile_scope": "complete_line",
+        "reason": "complete_line",
+        "status": "rated"
+      },
+      "source": {
+        "bytes": 14988,
+        "definition_id": "pz-d6cb06cb41854b1da84f0ba2f043aa14",
+        "engine_logic_hash": "9dade8084525d6f40c114a03da8bdeb673fabcb1df1277e43b86e0ec70176e73",
+        "kind": "runtime",
+        "production_mode": "unknown",
+        "runtime_revision": 1,
+        "sha256": "199cd5da7524731358cccbb798f18d1af1696dd7b83266399dc45af998232f11"
+      }
+    },
+    "rating_revision": 2
+  },
+  "format": "picross-puzzle-record-v1",
+  "id": "pz-d6cb06cb41854b1da84f0ba2f043aa14",
+  "mode": "color",
+  "name": "Jinja",
+  "reveal": {
+    "asset": {
+      "bytes": 2595936,
+      "file": "game/art/content/jinja_001.png",
+      "sha256": "0154da8f3bbb63fb10b71b2181abd7e420204bfb548e643b2304341a10af661d"
+    },
+    "catalog": {
+      "generator": "picross-catalog-reveal-1",
+      "profiles": [
+        {
+          "asset": {
+            "bytes": 33960,
+            "file": "game/art/catalog/pz-d6cb06cb41854b1da84f0ba2f043aa14-ui100.png",
+            "sha256": "5b93d6a84080fea6d0630acaff4c62c0b255a7231b146598719a071f47fc8114"
+          },
+          "height": 112,
+          "profile": "catalog-ui100-v1",
+          "width": 168
+        },
+        {
+          "asset": {
+            "bytes": 50260,
+            "file": "game/art/catalog/pz-d6cb06cb41854b1da84f0ba2f043aa14-ui125.png",
+            "sha256": "d330b4ed62c87003b946d75dc77b588a57b21dbb62510d4875420abe29843771"
+          },
+          "height": 140,
+          "profile": "catalog-ui125-v1",
+          "width": 210
+        }
+      ],
+      "source_height": 1024,
+      "source_width": 1536
+    },
+    "image_revision": 1
+  },
+  "save_slot": "jinja_001",
+  "visible": true
+}

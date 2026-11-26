@@ -37,9 +37,9 @@ HTML-Sheets und ihre Dokumentressourcen), reine Produktionsdateien gemäß
 [`content_path`](../../tools/ci_paths.py) und der aktuelle Paketplan lösen allein
 keinen Player-Build aus. Das umfasst Authoringablage, registrierte Rätselinhalte,
 generierte Runtime-Daten/-Bilder und deren reine Datenbereinigung. Dazu gehören
-auch die rätselspezifischen Hintergrundquellen `content/backgrounds/pz-<id>.json`
+auch die Rätselrecords `content/puzzles/pz-<id>.json`
 und ihre Assets `game/art/backgrounds/pz-<id>.png` / `.txt`. Diese vollständigen
-Pfadmatches verwenden dieselbe geschlossene ID-Grammatik wie Revealquellen:
+Pfadmatches verwenden dieselbe geschlossene ID-Grammatik wie das flache Recordinventar:
 `pz-[a-z0-9][a-z0-9-]{0,59}`. Capabilitydateien, Loader, Shader und `.import`-Dateien
 sind keine Produktionsdaten. Code, gemeinsame Spielgrafik, Werkzeug-/CI-Änderungen,
 unbekannte Pfade oder nicht reguläre Dateimodi
@@ -80,14 +80,7 @@ Codex lokal und den ChatGPT-Worker v2.
 
 CI liest den neuen Plan aus dem Original-PR-Head. Der vollständige
 Git-Diff muss genau den regulären Satz neuer Lieferdateien für die gebundene
-ID, den Paketplan und die beiden bestehenden Registrydateien enthalten.
-Die beiden Seiten einer Umbenennung und die Git-Dateimodi gehen in die
-Prüfung ein. Pro Registrytabelle kommt ausschließlich der Eintrag dieser
-ID hinzu. Definition, Added, Rating, Reveal- und Hintergrundquelle, Reveal
-mit Notice und beide UI-Profile werden neu angelegt. Bei `selected`
-kommen Hintergrund-PNG und Notice hinzu. `none` und `standard`
-verwenden allein die Hintergrundquelle. Gemischte Diffs, weitere IDs,
-Bestandsrevisionen und Cleanup benötigen ihren bisherigen Plan.
+ID, den Paketplan und die bestehende Runtimeprojektion enthalten. Der Vergleich prüft beide Seiten einer Umbenennung und die Git-Dateimodi. Die Runtime erhält ausschließlich die Zeile der neuen ID. Neu entstehen genau der Einzelrecord, die Definition, Reveal mit Notice und beide UI-Profile. Bei selected kommen Hintergrund-PNG und Notice hinzu. none und standard benötigen allein die Entscheidung im Record. Gemischte Diffs, weitere IDs, Bestandsrevisionen und Cleanup benötigen einen Entwicklungsplan.
 `development-ci-plan/v1` behält die eigene Issue-URL und den bisherigen
 Test-/Kernvertrag. In beiden Fällen folgt die Buildpflicht aus dem tatsächlichen
 Diff.

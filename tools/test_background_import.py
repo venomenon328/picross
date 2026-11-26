@@ -186,7 +186,6 @@ class BackgroundImportTests(unittest.TestCase):
         source_root = self.root / "legacy"
         (source_root / "game/data").mkdir(parents=True)
         (source_root / "content").mkdir()
-        (source_root / "content/registry.json").write_text(json.dumps(dict(format="picross-content-registry-v5", entries=[],metadata=[],backgrounds=[])))
         (source_root / "game/data/registry.json").write_text(json.dumps(dict(format="picross-runtime-registry-v9", categories=[], entries=[])))
         self.assertEqual(background.source_inventory(source_root)["assets"], [])
         stray = source_root / "game/art/backgrounds/pz-unbound.png.import"
@@ -199,14 +198,12 @@ class BackgroundImportTests(unittest.TestCase):
         source_root = self.root / "metadata"
         (source_root / "game/data").mkdir(parents=True)
         (source_root / "content").mkdir()
-        (source_root / "content/registry.json").write_text(json.dumps(dict(
-            format="picross-content-registry-v5", entries=[], metadata=[], backgrounds=[])))
         runtime_path = source_root / "game/data/registry.json"
         runtime = dict(format="picross-runtime-registry-v9", categories=[], entries=[])
         runtime_path.write_text(json.dumps(runtime))
         self.assertEqual(background.source_inventory(source_root)["assets"], [])
         runtime_path.write_text(json.dumps({**runtime, "format": "picross-runtime-registry-v8"}))
-        with self.assertRaisesRegex(ValueError, "Current background"):
+        with self.assertRaisesRegex(ValueError, "Background runtime/source"):
             background.source_inventory(source_root)
         runtime_path.write_text(json.dumps(runtime))
         capability = dict(format="picross-runtime-background-capability-v1",
@@ -216,7 +213,7 @@ class BackgroundImportTests(unittest.TestCase):
         capability_path.write_text(json.dumps(capability))
         self.assertEqual(background.source_inventory(source_root)["assets"], [])
         runtime_path.write_text(json.dumps({**runtime, "format": "picross-runtime-registry-v6"}))
-        with self.assertRaisesRegex(ValueError, "Current background"):
+        with self.assertRaisesRegex(ValueError, "Background runtime/source"):
             background.source_inventory(source_root)
         runtime_path.write_text(json.dumps(runtime))
         capability_path.write_text(json.dumps({**capability, "enabled": "false"}))
@@ -234,16 +231,16 @@ class BackgroundImportTests(unittest.TestCase):
                      visible=True, category_id="test", mode="mono")
         current = dict(status="selected", image_revision=1,
                        asset={**self.inventory["assets"][0]["asset"], "file":"game/"+self.inventory["assets"][0]["asset"]["file"]})
-        source = dict(format=edit.BACKGROUND, id=identifier, record_revision=1,
-                      binding=dict(identity=edit.identity(entry, definition)), current=current)
-        source["record_hash"] = digest(source)
-        raw = edit.encoded(edit.validate_source(source, entry))
-        source_path = root/bg.path(identifier)
-        source_path.parent.mkdir(parents=True)
-        source_path.write_bytes(raw)
-        index = dict(format="picross-content-registry-v5", entries=[entry], metadata=[],
-                     backgrounds=[dict(id=identifier, source=bg.ref(bg.path(identifier),raw))])
-        (root/"content/registry.json").write_bytes(edit.encoded(index))
+        from tests.puzzle_production.current_fixtures import checkout,make
+        from tools.puzzle_production import catalog_integration as core,puzzle_record
+        catalog = checkout(self.root/"registered")
+        inputs = make(self.root/"synthetic-input",identifier=identifier)
+        core.integrate(inputs,catalog,apply=True)
+        name = puzzle_record.path(identifier)
+        record = puzzle_record.decode((catalog/name).read_bytes(),identifier)
+        record["background"] = current
+        (root/name).parent.mkdir(parents=True)
+        (root/name).write_bytes(puzzle_record.encode(record))
         runtime = dict(format="picross-runtime-registry-v9", categories=[], entries=[dict(
             id=identifier, background={**current, "asset":self.inventory["assets"][0]["asset"]})])
         (self.source/"data/registry.json").write_bytes(edit.encoded(runtime))

@@ -10,12 +10,13 @@ from .authoring_package import require
 from .contract import exact_keys, InvalidInput, Aborted
 from . import catalog_rating as rating, catalog_added as added, catalog_method
 from .sparse_registration import TrackedPaths
+from . import puzzle_record, puzzle_catalog
 
-FORMAT = "picross-current-registration-journal-v2"
+FORMAT = "picross-puzzle-registration-journal-v1"
 LOCK = "content/.registration-pending.json"
 STAGE = "content/.registration-journal-current.tmp"
 LIMIT = 128*1024*1024
-SHARED = (content.REGISTRY, content.RUNTIME, categories.PATH, catalog_method.PATH,
+SHARED = (content.RUNTIME, categories.PATH, catalog_method.PATH,
           "game/data/background-capability.json")
 
 
@@ -54,26 +55,13 @@ class Snapshot:
         for name in (LOCK, STAGE):
             self.tracked.check(name)
         require(not pending(self.root), "Pending publication requires recovery")
-        self.catalog = categories.validate(self.json(categories.PATH, categories.MAX_BYTES))
-        self.registry = content.validate(self.json(content.REGISTRY), self.catalog)
-        self.runtime = self.json(content.RUNTIME, content.RUNTIME_LIMIT)
-        exact_keys(self.runtime, {"format", "categories", "entries"})
-        require(self.runtime["format"] == content.RUNTIME_FORMAT and
-                self.runtime["categories"] == categories.ordered(self.catalog), "Current runtime required")
-        require(len(self.runtime["entries"]) == len(self.registry["entries"]), "Runtime size differs")
-        for entry, row, meta in zip(self.registry["entries"], self.runtime["entries"], self.registry["metadata"]):
-            exact_keys(row, {"id", "key", "save_slot", "definition", "reveal", "visible", "category_id",
-                             "name", "difficulty", "added_at", "background", "catalog_reveal"})
-            require(all(row[k] == entry[k] for k in ("id", "key", "save_slot", "definition", "visible")) and
-                    row["name"] == meta["name"] and row["category_id"] == meta["category_id"], "Runtime identity differs")
-            content.catalog_profiles.validate_projection(row)
+        ids = puzzle_record.inventory(self.root, self.tracked)
+        self.catalog, self.runtime = puzzle_catalog.index(self.read, ids)
+        self.ids = ids
         self.read(catalog_method.PATH, catalog_method.LIMIT, missing=True)
         self.read(SHARED[-1], 4096)
-        self.existing = next((e for e in self.registry["entries"] if e["id"].casefold() == identifier.casefold()), None)
-        self.delivery = content.selected(self.root, self.registry, self.existing["id"], read=self.read) if self.existing else None
-        if self.delivery:
-            require(content.runtime_row(self.delivery) == next(e for e in self.runtime["entries"] if e["id"] == identifier),
-                    "Current runtime result differs")
+        self.existing = next((row for row in self.runtime["entries"] if row["id"] == identifier), None)
+        self.delivery = puzzle_catalog.delivery(self.read, identifier, self.catalog, self.existing) if self.existing else None
         self.recheck()
 
     def read(self, name, limit=content.LIMIT, *, missing=False):
@@ -87,6 +75,7 @@ class Snapshot:
 
     def recheck(self, *, locked=False):
         self.tracked.recheck()
+        require(locked or puzzle_record.inventory(self.root,self.tracked) == self.ids, "Record inventory changed")
         require(locked or not pending(self.root), "Concurrent publication")
         for name, raw in self.raw.items():
             require(io.read(self.root, name, content.LIMIT, missing=True) == raw, "Changed dependency: "+name)
@@ -112,53 +101,41 @@ def validate(value):
     exact_keys(value, {"format", "id", "dependencies", "files"})
     require(value["format"] == FORMAT, "Only current registration recovery is supported")
     identifier = rating.identity(value["id"])
-    require(isinstance(value["files"], dict) and 2 <= len(value["files"]) <= 13 and
+    require(isinstance(value["files"], dict) and len(value["files"]) in (7,9) and
             isinstance(value["dependencies"], dict) and len(value["dependencies"]) <= 8, "Invalid journal inventory")
     sides = {}
     for name, pair in value["files"].items():
         content.relative(name); exact_keys(pair, {"old", "new"})
         sides[name] = (unpack(pair["old"]), unpack(pair["new"]))
         require(sides[name][0] != sides[name][1] and sides[name][1] is not None, "Invalid registration side")
-    require(content.REGISTRY in sides and content.RUNTIME in sides, "Missing current indices")
-    before, after = (io.json_bytes(raw, 8*1024*1024) for raw in sides[content.REGISTRY])
-    for index in (before, after):
-        exact_keys(index, {"format", "entries", "metadata", "backgrounds"})
-        require(index["format"] == content.FORMAT, "Wrong journal index format")
-        content.entries(index["entries"])
-    entry = next((e for e in after["entries"] if e["id"] == identifier), None)
-    require(entry is not None and all(e["id"] != identifier for e in before["entries"]), "Journal is not first integration")
-    require([e for e in after["entries"] if e["id"] != identifier] == before["entries"], "Foreign entry mutation")
-    for key in ("metadata", "backgrounds"):
-        require([e for e in after[key] if e["id"] != identifier] == before[key] and
-                sum(e["id"] == identifier for e in after[key]) == 1, "Foreign current index mutation")
-    allowed = {content.REGISTRY, content.RUNTIME, "game/"+entry["definition"], "game/"+entry["reveal"],
-               content.notice_path(entry), rating.path(identifier), added.path(identifier),
-               content.source_path(identifier, "reveal"), content.source_path(identifier, "background")}
-    allowed.update(content.catalog_profiles.path(identifier, label) for label, _, _ in content.catalog_profiles.PROFILES)
-    image = io.json_bytes(sides[content.source_path(identifier, "background")][1], 1024*1024)
-    content.validate_source(image, entry)
-    if image["current"]["status"] == "selected":
-        allowed.update(("game/art/backgrounds/"+identifier+".png", "game/art/backgrounds/"+identifier+".txt"))
-    require(set(sides) == allowed, "Foreign or incomplete registration write inventory")
-    require(all(old is None for name, (old, new) in sides.items() if name not in (content.REGISTRY, content.RUNTIME)),
+    record_path = puzzle_record.path(identifier)
+    require(record_path in sides and content.RUNTIME in sides, "Missing new record or runtime")
+    require(all(old is None for name,(old,new) in sides.items() if name != content.RUNTIME),
             "Registration may not replace occupied content")
-    require(set(value["dependencies"]) == set(SHARED)-set(sides), "Foreign recovery dependency")
-    for name, checksum in value["dependencies"].items():
+    require(set(value["dependencies"]) == set(SHARED)-{content.RUNTIME}, "Foreign recovery dependency")
+    for checksum in value["dependencies"].values():
         if checksum is not None: content.sha(checksum)
-    old_runtime, runtime = (io.json_bytes(raw, content.RUNTIME_LIMIT) for raw in sides[content.RUNTIME])
-    require(runtime["format"] == old_runtime["format"] == content.RUNTIME_FORMAT and
-            runtime["categories"] == old_runtime["categories"] and
-            [e for e in runtime["entries"] if e["id"] != identifier] == old_runtime["entries"] and
-            sum(e["id"] == identifier for e in runtime["entries"]) == 1, "Foreign runtime mutation")
-    # Recovery validates the actual new delivery, not just the write inventory.
-    delivery = content.selected(None, after, identifier,
-                                read=lambda n, limit=content.LIMIT, *, missing=False:
-                                sides.get(n, (None, None))[1] if missing else sides[n][1])
-    require(content.runtime_row(delivery) == next(e for e in runtime["entries"] if e["id"] == identifier),
-            "Registration journal runtime does not describe its current data")
-    require(delivery["reveal"]["record_revision"] == delivery["background"]["record_revision"] == 1 and
-            delivery["reveal"]["current"]["image_revision"] == delivery["background"]["current"]["image_revision"] == 1,
-            "First integration requires initial current source revisions")
+    before, after = (io.json_bytes(raw,content.RUNTIME_LIMIT) for raw in sides[content.RUNTIME])
+    cats = {"format":categories.FORMAT, "categories":after["categories"]}
+    require(before["categories"] == after["categories"], "Foreign category mutation")
+    old_ids = [row["id"] for row in before["entries"]]
+    require(identifier not in old_ids, "ID already registered")
+    puzzle_catalog.validate_runtime(before,cats,old_ids)
+    puzzle_catalog.validate_runtime(after,cats,[*old_ids,identifier])
+    require([row for row in after["entries"] if row["id"] != identifier] == before["entries"],
+            "Foreign runtime mutation")
+    row = next(row for row in after["entries"] if row["id"] == identifier)
+    def read(name, limit, *, missing=False):
+        raw = sides.get(name,(None,None))[1]
+        require(raw is not None and len(raw) <= limit or raw is None and missing, "Missing or oversized delivery: "+name)
+        return raw
+    delivery = puzzle_catalog.delivery(read,identifier,cats,row)
+    record = delivery["record"]
+    require(all(record[k]["image_revision"] == 1 for k in ("reveal","background")) and
+            record["difficulty"]["rating_revision"] == 1, "First registration requires initial revisions")
+    require(record["added"]["provenance"]["kind"] == "registration", "First registration date required")
+    require(set(sides) == {content.RUNTIME,*delivery["files"]} and all(delivery["files"].values()),
+            "Foreign or incomplete registration write inventory")
     return sides
 
 
@@ -208,55 +185,40 @@ def _publish(snapshot, journal, *, publication_seconds=None, recovery_seconds=No
                                recovery_seconds=recovery_seconds):
         snapshot.recheck()
         boundary("before-journal")
-        with io.safe(root, STAGE).open("xb") as stream:
-            require(stream.write(raw) == len(raw), "Short journal write")
-            stream.flush(); os.fsync(stream.fileno())
-        publication.rename(io.safe(root, STAGE), io.safe(root, LOCK), replace=False)
-        boundary("after-journal")
-        expected=dict(snapshot.raw)
-        def guard():
-            snapshot.tracked.recheck()
-            require(io.read(root,LOCK,LIMIT)==raw,"Writer lock changed")
-            for path,data in expected.items():
-                require(io.read(root,path,content.LIMIT,missing=True)==data,"Changed current dependency: "+path)
-            if source_check is not None: source_check()
-        try:
-            snapshot.recheck(locked=True)
+        with publication.owned_journal(root,STAGE,LOCK,raw,lambda: recover(root,recovery_seconds=recovery_seconds)):
+            boundary("after-journal")
+            expected=dict(snapshot.raw)
+            def guard():
+                snapshot.tracked.recheck()
+                require(io.read(root,LOCK,LIMIT)==raw,"Writer lock changed")
+                for path,data in expected.items():
+                    require(io.read(root,path,content.LIMIT,missing=True)==data,"Changed current dependency: "+path)
+                if source_check is not None: source_check()
+            try:
+                snapshot.recheck(locked=True)
+                guard()
+            except Exception:
+                # Nothing was written. Do not retain a stale plan over another edit.
+                require(io.read(root, LOCK, LIMIT) == raw, "Writer lock changed")
+                io.safe(root, LOCK).unlink(); publication.sync_directory(root/"content")
+                raise
+            for step, name in enumerate(sorted(sides, key=lambda n: (n == content.RUNTIME, n)), 1):
+                guard()
+                write(root, name, *sides[name], raw, guard=guard)
+                expected[name]=sides[name][1]
+                if fail_step == step: raise RuntimeError("Injected current publication interruption")
             guard()
-        except Exception:
-            # Nothing was written. Do not retain a stale plan over another edit.
+            for name, (_, new) in sides.items():
+                require(io.read(root, name, content.LIMIT) == new, "Final readback differs")
             require(io.read(root, LOCK, LIMIT) == raw, "Writer lock changed")
             io.safe(root, LOCK).unlink(); publication.sync_directory(root/"content")
-            raise
-        for step, name in enumerate(sorted(sides, key=lambda n: (n == content.RUNTIME, n)), 1):
-            guard()
-            write(root, name, *sides[name], raw, guard=guard)
-            expected[name]=sides[name][1]
-            if fail_step == step: raise RuntimeError("Injected current publication interruption")
-        guard()
-        for name, (_, new) in sides.items():
-            require(io.read(root, name, content.LIMIT) == new, "Final readback differs")
-        require(io.read(root, LOCK, LIMIT) == raw, "Writer lock changed")
-        io.safe(root, LOCK).unlink(); publication.sync_directory(root/"content")
-        diagnostics.durable("registered")
-    return {"status": "registered", "registered": True, "id": journal["id"]}
+            diagnostics.durable("registered")
+        return {"status": "registered", "registered": True, "id": journal["id"]}
 
 
 def execute(snapshot, journal, *, publication_seconds=None, recovery_seconds=None, fail_step=None, source_check=None):
-    try:
-        return _publish(snapshot,journal,publication_seconds=publication_seconds,recovery_seconds=recovery_seconds,
-                        fail_step=fail_step,source_check=source_check)
-    except (InvalidInput, Aborted, OSError) as error:
-        # A controlled failure gets an independent rollback budget. Injected
-        # process-interruption RuntimeError deliberately leaves the journal.
-        outer = io._deadline.set(None)
-        try:
-            try:
-                if pending(snapshot.root): recover(snapshot.root, recovery_seconds=recovery_seconds)
-            except (InvalidInput, Aborted, OSError, ValueError) as recovery_error:
-                error.add_note("Recovery incomplete; current journal retained: " + str(recovery_error))
-        finally: io._deadline.reset(outer)
-        raise
+    return _publish(snapshot,journal,publication_seconds=publication_seconds,recovery_seconds=recovery_seconds,
+                    fail_step=fail_step,source_check=source_check)
 
 
 def recover(root, *, recovery_seconds=None):

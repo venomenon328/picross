@@ -1,0 +1,215 @@
+{
+  "added": {
+    "added_at": "2026-10-28T14:54:11Z",
+    "provenance": {
+      "commit": null,
+      "evidence": null,
+      "kind": "registration",
+      "reason": "Successful first playable registration in the shared transaction.",
+      "reference_time": "2026-10-28T14:54:11Z"
+    }
+  },
+  "background": {
+    "asset": {
+      "bytes": 718702,
+      "file": "game/art/backgrounds/pz-dbcf38395b9f4dda86c8b3d6cdae1f2c.png",
+      "sha256": "c28e6ce5cdab7cc09a58e9eb7df2723314cb57e722d46a07f0d5796efd731f34"
+    },
+    "image_revision": 3,
+    "status": "selected"
+  },
+  "category_id": "gerichte-herzhaftes",
+  "definition": {
+    "bytes": 11042,
+    "file": "game/data/content/chicken_adobo.json",
+    "sha256": "086c6f920897ac76d7c496f12ec5cb74fa555d34ec120083573e40af556bb204"
+  },
+  "difficulty": {
+    "compact_analysis": {
+      "analysis_hash": "fb9a9ebce2147b8802a5123659813647955a78fe7233ff4c7484c8ec8da854ef",
+      "deduction_complete": true,
+      "line_analysis_complete": true,
+      "line_fixpoint_confirmed": true,
+      "new_singletons": 725,
+      "profiles_hash": "7bbb753829ef2bfb14026420a4349a4fa82506501d958e5914e093018ece9a2b",
+      "r4": null,
+      "reason": null,
+      "result_hash": "02d67ba4ef4ef8dd0be4744a18fb93aac482ff1d4d9bf4db37541d58b6c837ed",
+      "status": "solved",
+      "structure": {
+        "adjacent_color_changes": 336,
+        "cells": 725,
+        "clue_length_histogram": {
+          "1": 149,
+          "10": 1,
+          "11": 1,
+          "12": 1,
+          "14": 1,
+          "17": 1,
+          "18": 1,
+          "2": 82,
+          "20": 1,
+          "3": 64,
+          "4": 26,
+          "5": 25,
+          "6": 22,
+          "7": 7,
+          "8": 4,
+          "9": 3
+        },
+        "colors": 5,
+        "geometric_slack": 374,
+        "height": 25,
+        "mandatory_gaps": 0,
+        "short_blocks": 231,
+        "total_clue_length": 1076,
+        "total_clues": 389,
+        "width": 29
+      },
+      "trace_hash": "d358b5d2afcf7641181c93545c563673d725c772f2689c524f43d8f61b04a47a",
+      "wave_count": 16
+    },
+    "logic_binding": {
+      "matrix_hash": "755dc79336fae64dc5d2afce1215fd397b06243569f5688feedbb438e09b071b"
+    },
+    "rating": {
+      "analysis_result_hash": "02d67ba4ef4ef8dd0be4744a18fb93aac482ff1d4d9bf4db37541d58b6c837ed",
+      "format": "picross-catalog-sd2-rating-v1",
+      "method": "picross-difficulty-0.4",
+      "method_hash": "5508f0742aa858a6adc31aa621433e68298b915fb0fd6b8d9e74e576ba87caaf",
+      "rating_hash": "4d520c0fc2abf56ea6c3ac90ec97c83b23bfcf9d9de14b69082ea005bca2b965",
+      "result": {
+        "analysis_result_hash": "02d67ba4ef4ef8dd0be4744a18fb93aac482ff1d4d9bf4db37541d58b6c837ed",
+        "assessment": {
+          "boundaries": {
+            "distance_lower": [
+              59,
+              108
+            ],
+            "distance_upper": [
+              49,
+              108
+            ],
+            "lower": [
+              1,
+              1
+            ],
+            "nearest_distance": [
+              49,
+              108
+            ],
+            "upper": [
+              2,
+              1
+            ]
+          },
+          "contributions": {
+            "demand": [
+              1,
+              1
+            ],
+            "search": [
+              8,
+              27
+            ],
+            "workload": [
+              1,
+              4
+            ]
+          },
+          "level": 2,
+          "level_without_workload": 2,
+          "score": [
+            167,
+            108
+          ],
+          "signals": {
+            "context": [
+              0,
+              1
+            ],
+            "fluent": false,
+            "highest_family": "E1",
+            "longest_narrow_run": 0,
+            "narrow_waves": 0,
+            "peak_search": [
+              8,
+              27
+            ],
+            "raw_workload": [
+              1,
+              4
+            ],
+            "spans": 366,
+            "workload_ceiling": 3,
+            "workload_guard": "none"
+          },
+          "without_workload": [
+            35,
+            27
+          ]
+        },
+        "confidence": "medium",
+        "estimated_minutes": null,
+        "explanation": "Model estimate from synthetic references; no human calibration or time estimate. Demand, search and bounded workload use independently checked line profiles.",
+        "format": "picross-sd2-rating-v1",
+        "method": "picross-difficulty-0.4",
+        "method_hash": "5508f0742aa858a6adc31aa621433e68298b915fb0fd6b8d9e74e576ba87caaf",
+        "profile_scope": "complete_line",
+        "reason": "complete_line",
+        "status": "rated"
+      },
+      "source": {
+        "bytes": 11053,
+        "definition_id": "pz-dbcf38395b9f4dda86c8b3d6cdae1f2c",
+        "engine_logic_hash": "9c1ee026ffb08d376abb2c4fb7f579a033ecbe03cf38e26768828995eabe0454",
+        "kind": "runtime",
+        "production_mode": "unknown",
+        "runtime_revision": 1,
+        "sha256": "267434d9f23043b9ab1d7e7042e28763d78a27ca822df96e1ad26f282d9b660d"
+      }
+    },
+    "rating_revision": 1
+  },
+  "format": "picross-puzzle-record-v1",
+  "id": "pz-dbcf38395b9f4dda86c8b3d6cdae1f2c",
+  "mode": "color",
+  "name": "Chicken Adobo",
+  "reveal": {
+    "asset": {
+      "bytes": 2535758,
+      "file": "game/art/content/chicken_adobo.png",
+      "sha256": "d321cb52a6bcda782bba0829d2a7fa5eaeb91f7672807fd12ff6fec92d5113ce"
+    },
+    "catalog": {
+      "generator": "picross-catalog-reveal-1",
+      "profiles": [
+        {
+          "asset": {
+            "bytes": 28771,
+            "file": "game/art/catalog/pz-dbcf38395b9f4dda86c8b3d6cdae1f2c-ui100.png",
+            "sha256": "f674736aeb924b4aafed686d7a2f7c1ac9d770b382459456a08047ea7410156b"
+          },
+          "height": 112,
+          "profile": "catalog-ui100-v1",
+          "width": 123
+        },
+        {
+          "asset": {
+            "bytes": 43611,
+            "file": "game/art/catalog/pz-dbcf38395b9f4dda86c8b3d6cdae1f2c-ui125.png",
+            "sha256": "595053b8e7b67f734c4bb265a83a4fca3fa97b151739d5147f225660912fb916"
+          },
+          "height": 140,
+          "profile": "catalog-ui125-v1",
+          "width": 154
+        }
+      ],
+      "source_height": 1199,
+      "source_width": 1312
+    },
+    "image_revision": 1
+  },
+  "save_slot": "chicken_adobo",
+  "visible": true
+}

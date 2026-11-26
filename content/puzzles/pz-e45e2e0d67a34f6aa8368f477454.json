@@ -1,0 +1,226 @@
+{
+  "added": {
+    "added_at": "2026-10-13T23:39:12Z",
+    "provenance": {
+      "commit": "d9794c6da4e62f3e26b4d7d993026bc5cf1c917b",
+      "evidence": {
+        "path": "content/added/reports/ku-b-initial.json",
+        "sha256": "e6d7a01e740adbc40cdc90e64c733f95907c8924cfe1f0a4bb734bb7bc6b7884"
+      },
+      "kind": "git-snapshot",
+      "reason": "No direct UTC first-registration receipt found in reviewed sources; earliest verified visible integrated catalog snapshot including bound PR history. Commit UTC is a reconstructed reference, not tool execution time.",
+      "reference_time": "2026-10-13T23:39:12Z"
+    }
+  },
+  "background": {
+    "asset": {
+      "bytes": 1233887,
+      "file": "game/art/backgrounds/pz-e45e2e0d67a34f6aa8368f477454.png",
+      "sha256": "79e5c7b2e42aadbce9df7d6081aed8c3677664f67d7e3028e9540e5733539fc8"
+    },
+    "image_revision": 2,
+    "status": "selected"
+  },
+  "category_id": "gebaeude-bauwerke",
+  "definition": {
+    "bytes": 9112,
+    "file": "game/data/content/koelner_dom_001.json",
+    "sha256": "a21ecffd4b751ed71b97768eb8afa1f96331dc1fb193ccfdf85eeb7797314ef7"
+  },
+  "difficulty": {
+    "compact_analysis": {
+      "analysis_hash": "83980ad999f1ebe7c14fa8e317a3a006174beb6f5974abd43514b800b5c52962",
+      "deduction_complete": true,
+      "line_analysis_complete": true,
+      "line_fixpoint_confirmed": true,
+      "new_singletons": 1500,
+      "profiles_hash": "32146a990b192721e9b23a7e6a7395e6e2e1940192340b1250c9ce393d664b07",
+      "r4": null,
+      "reason": null,
+      "result_hash": "77d0521770e1b92ca462cbcf0cd34eb8d49317e725c407476df868d843bab9a7",
+      "status": "solved",
+      "structure": {
+        "adjacent_color_changes": 0,
+        "cells": 1500,
+        "clue_length_histogram": {
+          "1": 35,
+          "10": 7,
+          "12": 4,
+          "13": 2,
+          "14": 2,
+          "15": 2,
+          "2": 47,
+          "20": 4,
+          "22": 2,
+          "23": 2,
+          "24": 1,
+          "25": 3,
+          "28": 2,
+          "3": 30,
+          "33": 2,
+          "36": 2,
+          "38": 2,
+          "39": 2,
+          "4": 36,
+          "5": 27,
+          "6": 12,
+          "7": 5,
+          "8": 2,
+          "9": 6
+        },
+        "colors": 1,
+        "geometric_slack": 1346,
+        "height": 50,
+        "mandatory_gaps": 160,
+        "short_blocks": 82,
+        "total_clue_length": 1494,
+        "total_clues": 239,
+        "width": 30
+      },
+      "trace_hash": "f88d81499801577ef4d279a790d6290b154243db9207ce193a038d1220118915",
+      "wave_count": 12
+    },
+    "logic_binding": {
+      "matrix_hash": "07bde6c810ac3445f857867ad8f0eabbb58dab74be855d6c28cf13e62a22fb8a"
+    },
+    "rating": {
+      "analysis_result_hash": "77d0521770e1b92ca462cbcf0cd34eb8d49317e725c407476df868d843bab9a7",
+      "format": "picross-catalog-sd2-rating-v1",
+      "method": "picross-difficulty-0.4",
+      "method_hash": "5508f0742aa858a6adc31aa621433e68298b915fb0fd6b8d9e74e576ba87caaf",
+      "rating_hash": "bac22735162bf00c1eab13497cf9cd2f857fc13c49e4249e9d2a07639d8ecc7d",
+      "result": {
+        "analysis_result_hash": "77d0521770e1b92ca462cbcf0cd34eb8d49317e725c407476df868d843bab9a7",
+        "assessment": {
+          "boundaries": {
+            "distance_lower": [
+              34393,
+              46452
+            ],
+            "distance_upper": [
+              12059,
+              46452
+            ],
+            "lower": [
+              1,
+              1
+            ],
+            "nearest_distance": [
+              12059,
+              46452
+            ],
+            "upper": [
+              2,
+              1
+            ]
+          },
+          "contributions": {
+            "demand": [
+              1,
+              1
+            ],
+            "search": [
+              5695,
+              11613
+            ],
+            "workload": [
+              1,
+              4
+            ]
+          },
+          "level": 2,
+          "level_without_workload": 2,
+          "score": [
+            80845,
+            46452
+          ],
+          "signals": {
+            "context": [
+              0,
+              1
+            ],
+            "fluent": false,
+            "highest_family": "E1",
+            "longest_narrow_run": 0,
+            "narrow_waves": 0,
+            "peak_search": [
+              5695,
+              11613
+            ],
+            "raw_workload": [
+              1,
+              4
+            ],
+            "spans": 393,
+            "workload_ceiling": 3,
+            "workload_guard": "none"
+          },
+          "without_workload": [
+            17308,
+            11613
+          ]
+        },
+        "confidence": "medium",
+        "estimated_minutes": null,
+        "explanation": "Model estimate from synthetic references; no human calibration or time estimate. Demand, search and bounded workload use independently checked line profiles.",
+        "format": "picross-sd2-rating-v1",
+        "method": "picross-difficulty-0.4",
+        "method_hash": "5508f0742aa858a6adc31aa621433e68298b915fb0fd6b8d9e74e576ba87caaf",
+        "profile_scope": "complete_line",
+        "reason": "complete_line",
+        "status": "rated"
+      },
+      "source": {
+        "bytes": 9112,
+        "definition_id": "pz-e45e2e0d67a34f6aa8368f477454",
+        "engine_logic_hash": "a703cc26cb64f5501d8e9064fa43b79d06cd210e4c21945396a92670d5df21c0",
+        "kind": "runtime",
+        "production_mode": "unknown",
+        "runtime_revision": 1,
+        "sha256": "a21ecffd4b751ed71b97768eb8afa1f96331dc1fb193ccfdf85eeb7797314ef7"
+      }
+    },
+    "rating_revision": 2
+  },
+  "format": "picross-puzzle-record-v1",
+  "id": "pz-e45e2e0d67a34f6aa8368f477454",
+  "mode": "mono",
+  "name": "Kölner Dom",
+  "reveal": {
+    "asset": {
+      "bytes": 2741813,
+      "file": "game/art/content/koelner_dom_001.png",
+      "sha256": "5b5b97ec7bdf1965d38f65fe70e5cd51396e7c99454ae1a1390095dfb46e738e"
+    },
+    "catalog": {
+      "generator": "picross-catalog-reveal-1",
+      "profiles": [
+        {
+          "asset": {
+            "bytes": 16459,
+            "file": "game/art/catalog/pz-e45e2e0d67a34f6aa8368f477454-ui100.png",
+            "sha256": "542f6d90930a6dbb550f5d46603c84617120802822a758dbdd170b44bd4fb057"
+          },
+          "height": 112,
+          "profile": "catalog-ui100-v1",
+          "width": 75
+        },
+        {
+          "asset": {
+            "bytes": 25029,
+            "file": "game/art/catalog/pz-e45e2e0d67a34f6aa8368f477454-ui125.png",
+            "sha256": "81b9cf205b16382937b86400e991883060b9a7a53e5812db0b3d87edbc91f022"
+          },
+          "height": 140,
+          "profile": "catalog-ui125-v1",
+          "width": 94
+        }
+      ],
+      "source_height": 1536,
+      "source_width": 1024
+    },
+    "image_revision": 1
+  },
+  "save_slot": "koelner_dom_001",
+  "visible": true
+}

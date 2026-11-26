@@ -55,7 +55,7 @@ def frozen(build, output):
             require(bool(value['error'])==expected_error,'Unexpected frozen result: '+str(value['error']))
             return value['result']
         unrelated=root/'game/data/content/unrelated.json'; unrelated.write_bytes(b'not a selected definition')
-        identifier=json.loads((root/'content/registry.json').read_bytes())['entries'][0]['id']
+        identifier=json.loads((root/'game/data/registry.json').read_bytes())['entries'][0]['id']
         def snapshot():
             return edit.token({name:(root/name).read_bytes() for name in edit.INDEXES})
         def detail(): return call('detail',{'id':identifier,'snapshot':snapshot()})

@@ -201,12 +201,12 @@ def binding(data):
             and diff['total_commits'] == 1 and [c['sha'] for c in diff['commits']] == [head],
             'Different product comparison')
     delivery = {p for p, row in record['integration']['result']['files'].items() if row is not None}
-    expected_paths = delivery | {'content/registry.json', 'game/data/registry.json', '.ci/package.json',
-                                 f'content/backgrounds/{job}.json'}
+    require(f'content/puzzles/{job}.json' in delivery, 'Missing registered puzzle record')
+    expected_paths = delivery | {'game/data/registry.json', '.ci/package.json'}
     files = diff['files']
     require(len(files) == len(expected_paths) and {row['filename'] for row in files} == expected_paths
             and all(row['status'] == 'added' if row['filename'] not in
-                    {'content/registry.json', 'game/data/registry.json', '.ci/package.json'}
+                    {'game/data/registry.json', '.ci/package.json'}
                     else row['status'] in ('modified', 'added') for row in files),
             'Incomplete or foreign product diff')
     row = pr_slot(data['pulls'])

@@ -1,0 +1,208 @@
+{
+  "added": {
+    "added_at": "2026-11-21T22:09:24Z",
+    "provenance": {
+      "commit": null,
+      "evidence": null,
+      "kind": "registration",
+      "reason": "Successful first playable registration in the shared transaction.",
+      "reference_time": "2026-11-21T22:09:24Z"
+    }
+  },
+  "background": {
+    "asset": {
+      "bytes": 1080634,
+      "file": "game/art/backgrounds/pz-lotuswurzel.png",
+      "sha256": "822cca9263a8cc52e2f1e1119657a0178ef4b34afd50ef6e583310506d8fc488"
+    },
+    "image_revision": 1,
+    "status": "selected"
+  },
+  "category_id": "gemuese-pilze-kraeuter",
+  "definition": {
+    "bytes": 3145,
+    "file": "game/data/content/pz-lotuswurzel.json",
+    "sha256": "a7db8f14e0483dc8a55f7e8dbc8cc14df541974b96e4d8278c6806fb38a42ecc"
+  },
+  "difficulty": {
+    "compact_analysis": {
+      "analysis_hash": "3a66c1fbb5452e6c9d01fc54a31ca8f0c6c1f8d429beafa7f8f4eb9b3004484a",
+      "deduction_complete": true,
+      "line_analysis_complete": true,
+      "line_fixpoint_confirmed": true,
+      "new_singletons": 400,
+      "profiles_hash": "a288b358435ce6a52b06f4147611ba9fe8e8f04a7ef54790e46a4c68dc91289d",
+      "r4": null,
+      "reason": null,
+      "result_hash": "9bfaea4f3dd67f0f9b663bd8d0911353f7b2f7a7e3ac5a776e63de9cfee31d06",
+      "status": "solved",
+      "structure": {
+        "adjacent_color_changes": 0,
+        "cells": 400,
+        "clue_length_histogram": {
+          "1": 2,
+          "10": 4,
+          "11": 1,
+          "12": 4,
+          "13": 1,
+          "14": 1,
+          "2": 6,
+          "20": 2,
+          "3": 18,
+          "4": 11,
+          "5": 10,
+          "6": 13,
+          "7": 7,
+          "8": 3,
+          "9": 1
+        },
+        "colors": 1,
+        "geometric_slack": 268,
+        "height": 20,
+        "mandatory_gaps": 44,
+        "short_blocks": 8,
+        "total_clue_length": 488,
+        "total_clues": 84,
+        "width": 20
+      },
+      "trace_hash": "d13a9606535822ec4bd80962d86113d06c564a9bb5d0eca2351f48885eac4d21",
+      "wave_count": 11
+    },
+    "logic_binding": {
+      "matrix_hash": "275a83092e1b5f24faf54ba56df6837e90a9b69d679078c323c367f0fe81d431"
+    },
+    "rating": {
+      "analysis_result_hash": "9bfaea4f3dd67f0f9b663bd8d0911353f7b2f7a7e3ac5a776e63de9cfee31d06",
+      "format": "picross-catalog-sd2-rating-v1",
+      "method": "picross-difficulty-0.4",
+      "method_hash": "5508f0742aa858a6adc31aa621433e68298b915fb0fd6b8d9e74e576ba87caaf",
+      "rating_hash": "d5dca2f0c4798b6077f5acf6927099345c32dcea4a980c102f00ba0ed0c13f8f",
+      "result": {
+        "analysis_result_hash": "9bfaea4f3dd67f0f9b663bd8d0911353f7b2f7a7e3ac5a776e63de9cfee31d06",
+        "assessment": {
+          "boundaries": {
+            "distance_lower": null,
+            "distance_upper": [
+              11841,
+              27436
+            ],
+            "lower": null,
+            "nearest_distance": [
+              11841,
+              27436
+            ],
+            "upper": [
+              1,
+              1
+            ]
+          },
+          "contributions": {
+            "demand": [
+              1,
+              4
+            ],
+            "search": [
+              2184,
+              6859
+            ],
+            "workload": [
+              0,
+              1
+            ]
+          },
+          "level": 1,
+          "level_without_workload": 1,
+          "score": [
+            15595,
+            27436
+          ],
+          "signals": {
+            "context": [
+              0,
+              1
+            ],
+            "fluent": true,
+            "highest_family": "E1",
+            "longest_narrow_run": 0,
+            "narrow_waves": 0,
+            "peak_search": [
+              2184,
+              6859
+            ],
+            "raw_workload": [
+              1,
+              4
+            ],
+            "spans": 252,
+            "workload_ceiling": 3,
+            "workload_guard": "fluent"
+          },
+          "without_workload": [
+            15595,
+            27436
+          ]
+        },
+        "confidence": "medium",
+        "estimated_minutes": null,
+        "explanation": "Model estimate from synthetic references; no human calibration or time estimate. Demand, search and bounded workload use independently checked line profiles.",
+        "format": "picross-sd2-rating-v1",
+        "method": "picross-difficulty-0.4",
+        "method_hash": "5508f0742aa858a6adc31aa621433e68298b915fb0fd6b8d9e74e576ba87caaf",
+        "profile_scope": "complete_line",
+        "reason": "complete_line",
+        "status": "rated"
+      },
+      "source": {
+        "bytes": 3145,
+        "definition_id": "pz-lotuswurzel",
+        "engine_logic_hash": "d0b2f062e3b8668705feea400a686cfbd69b47eb1674d7a35919548ebfa3f240",
+        "kind": "runtime",
+        "production_mode": "unknown",
+        "runtime_revision": 1,
+        "sha256": "a7db8f14e0483dc8a55f7e8dbc8cc14df541974b96e4d8278c6806fb38a42ecc"
+      }
+    },
+    "rating_revision": 1
+  },
+  "format": "picross-puzzle-record-v1",
+  "id": "pz-lotuswurzel",
+  "mode": "mono",
+  "name": "Lotuswurzel",
+  "reveal": {
+    "asset": {
+      "bytes": 1753935,
+      "file": "game/art/content/pz-lotuswurzel.png",
+      "sha256": "11c4346a5a0d383cbd4c6e08c153277280a7a8d7d9d2fb0ea8d22019e1e62c4c"
+    },
+    "catalog": {
+      "generator": "picross-catalog-reveal-1",
+      "profiles": [
+        {
+          "asset": {
+            "bytes": 23046,
+            "file": "game/art/catalog/pz-lotuswurzel-ui100.png",
+            "sha256": "6f23be9da34efcae66c1207007533de0b9161bd36d31e0125a534bf18e1630e3"
+          },
+          "height": 112,
+          "profile": "catalog-ui100-v1",
+          "width": 112
+        },
+        {
+          "asset": {
+            "bytes": 33414,
+            "file": "game/art/catalog/pz-lotuswurzel-ui125.png",
+            "sha256": "dd2db6817753c489eda85ed6d91691b72ed8bdd4d0f9b231b3163c89adb075f5"
+          },
+          "height": 140,
+          "profile": "catalog-ui125-v1",
+          "width": 140
+        }
+      ],
+      "source_height": 1254,
+      "source_width": 1254
+    },
+    "image_revision": 1
+  },
+  "save_slot": "pz-lotuswurzel",
+  "visible": true
+}

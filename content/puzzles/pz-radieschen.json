@@ -1,0 +1,208 @@
+{
+  "added": {
+    "added_at": "2026-11-15T19:25:54Z",
+    "provenance": {
+      "commit": null,
+      "evidence": null,
+      "kind": "registration",
+      "reason": "Successful first playable registration in the shared transaction.",
+      "reference_time": "2026-11-15T19:25:54Z"
+    }
+  },
+  "background": {
+    "asset": {
+      "bytes": 497894,
+      "file": "game/art/backgrounds/pz-radieschen.png",
+      "sha256": "88102cc7a3c2c65644f967015a7482d7d7fb4216c24298122fbc38daaf38fe7d"
+    },
+    "image_revision": 2,
+    "status": "selected"
+  },
+  "category_id": "gemuese-pilze-kraeuter",
+  "definition": {
+    "bytes": 3554,
+    "file": "game/data/content/radieschen_001.json",
+    "sha256": "dec54b05fea3314f7ed9786cb065c977e0d4f87e66f14ed6ad12734ea762bf09"
+  },
+  "difficulty": {
+    "compact_analysis": {
+      "analysis_hash": "af9defd39c110a10aa09bef94c5348d73d5d4f1662dc2050f81f41b97bb3be1e",
+      "deduction_complete": true,
+      "line_analysis_complete": true,
+      "line_fixpoint_confirmed": true,
+      "new_singletons": 361,
+      "profiles_hash": "ea007db5ebb840c500f251d089618d4223b893bd31a12286cba320f6e2da59d8",
+      "r4": null,
+      "reason": null,
+      "result_hash": "97e5981fd54e471908de8f4662432aed0e7cae03bbbe97a3e45d7648ef218a65",
+      "status": "solved",
+      "structure": {
+        "adjacent_color_changes": 54,
+        "cells": 361,
+        "clue_length_histogram": {
+          "1": 38,
+          "10": 1,
+          "2": 17,
+          "3": 12,
+          "4": 7,
+          "5": 13,
+          "6": 7,
+          "7": 5,
+          "8": 1
+        },
+        "colors": 4,
+        "geometric_slack": 417,
+        "height": 19,
+        "mandatory_gaps": 9,
+        "short_blocks": 55,
+        "total_clue_length": 296,
+        "total_clues": 101,
+        "width": 19
+      },
+      "trace_hash": "e6f11a13940bf14fc8feec59f4c9de487904584dc3cc4ed51c3571abd9b7917e",
+      "wave_count": 15
+    },
+    "logic_binding": {
+      "matrix_hash": "67ea6c7172cd465d1542c3c625aff9f0eceaf8031e144d18ea4899592b45273b"
+    },
+    "rating": {
+      "analysis_result_hash": "97e5981fd54e471908de8f4662432aed0e7cae03bbbe97a3e45d7648ef218a65",
+      "format": "picross-catalog-sd2-rating-v1",
+      "method": "picross-difficulty-0.4",
+      "method_hash": "5508f0742aa858a6adc31aa621433e68298b915fb0fd6b8d9e74e576ba87caaf",
+      "rating_hash": "667977f292aa5eabee6cebf393ffab8528ea3809420e35e3b46d35c97a262e2a",
+      "result": {
+        "analysis_result_hash": "97e5981fd54e471908de8f4662432aed0e7cae03bbbe97a3e45d7648ef218a65",
+        "assessment": {
+          "boundaries": {
+            "distance_lower": [
+              187,
+              320
+            ],
+            "distance_upper": [
+              133,
+              320
+            ],
+            "lower": [
+              1,
+              1
+            ],
+            "nearest_distance": [
+              133,
+              320
+            ],
+            "upper": [
+              2,
+              1
+            ]
+          },
+          "contributions": {
+            "demand": [
+              1,
+              1
+            ],
+            "search": [
+              49,
+              128
+            ],
+            "workload": [
+              129,
+              640
+            ]
+          },
+          "level": 2,
+          "level_without_workload": 2,
+          "score": [
+            507,
+            320
+          ],
+          "signals": {
+            "context": [
+              0,
+              1
+            ],
+            "fluent": false,
+            "highest_family": "E1",
+            "longest_narrow_run": 0,
+            "narrow_waves": 0,
+            "peak_search": [
+              49,
+              128
+            ],
+            "raw_workload": [
+              129,
+              640
+            ],
+            "spans": 169,
+            "workload_ceiling": 3,
+            "workload_guard": "none"
+          },
+          "without_workload": [
+            177,
+            128
+          ]
+        },
+        "confidence": "medium",
+        "estimated_minutes": null,
+        "explanation": "Model estimate from synthetic references; no human calibration or time estimate. Demand, search and bounded workload use independently checked line profiles.",
+        "format": "picross-sd2-rating-v1",
+        "method": "picross-difficulty-0.4",
+        "method_hash": "5508f0742aa858a6adc31aa621433e68298b915fb0fd6b8d9e74e576ba87caaf",
+        "profile_scope": "complete_line",
+        "reason": "complete_line",
+        "status": "rated"
+      },
+      "source": {
+        "bytes": 3567,
+        "definition_id": "pz-radieschen",
+        "engine_logic_hash": "4dd1ae144c991e9c02727c53e3765f77404b3f513f9f5e3893cda742928d37d2",
+        "kind": "runtime",
+        "production_mode": "unknown",
+        "runtime_revision": 1,
+        "sha256": "8bb878f4c1f34ca27f3388b604fbe944daa9dc21f3295bd18a5d56e562f450b6"
+      }
+    },
+    "rating_revision": 1
+  },
+  "format": "picross-puzzle-record-v1",
+  "id": "pz-radieschen",
+  "mode": "color",
+  "name": "Radieschen",
+  "reveal": {
+    "asset": {
+      "bytes": 1679029,
+      "file": "game/art/content/radieschen_001.png",
+      "sha256": "f3c460b6e585ae1ee9a56957511c88b22679d1d8281a0047898fe4592794e3f2"
+    },
+    "catalog": {
+      "generator": "picross-catalog-reveal-1",
+      "profiles": [
+        {
+          "asset": {
+            "bytes": 19121,
+            "file": "game/art/catalog/pz-radieschen-ui100.png",
+            "sha256": "349aab18641cb90469dc4ab69b069fceca3b73ef8f78d1fa91401c5371e33448"
+          },
+          "height": 112,
+          "profile": "catalog-ui100-v1",
+          "width": 112
+        },
+        {
+          "asset": {
+            "bytes": 28083,
+            "file": "game/art/catalog/pz-radieschen-ui125.png",
+            "sha256": "66526c3d03d48eda15e65fee44c488ddaa91d881661be60004594db9822d02a9"
+          },
+          "height": 140,
+          "profile": "catalog-ui125-v1",
+          "width": 140
+        }
+      ],
+      "source_height": 1254,
+      "source_width": 1254
+    },
+    "image_revision": 1
+  },
+  "save_slot": "radieschen_001",
+  "visible": true
+}

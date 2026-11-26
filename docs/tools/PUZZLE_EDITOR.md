@@ -57,7 +57,7 @@ genügt; der Editor übernimmt keine verpflichtende Buchinszenierung des Spiels.
 
 ## 2. Datenautorität und Änderungsgrenzen
 
-Lesbare JSON-Quellen mit stabilen IDs bleiben maßgeblich. Die relationale Zuordnung
+Für jede registrierte ID ist `content/puzzles/<id>.json` die führende Quelle. Die relationale Zuordnung
 von Kategorien und Rätseln wird durch den gemeinsamen Datenzugriff geprüft.
 SQLite und ein eigener Datenbankserver sind für diesen Umfang nicht vorgesehen.
 Bilder bleiben Dateien. Der Spieler liest vorbereitete Laufzeitdaten und benötigt
@@ -190,63 +190,11 @@ der automatische revisionsbedingte Neustart wird in §9.3 festgelegt.
 
 ## 6. Gemeinsamer Zugriff, Speichern und Effizienz
 
-Ein lokaler Python-Dienst verwendet die vorhandenen Fachfunktionen und gemeinsame
-Writer. Die Browseroberfläche schreibt nicht an ihnen vorbei. Der Dienst bindet
-nur lokal und begrenzt Dateizugriffe auf den bewusst geöffneten Checkout und
-ausgewählte Importe; ein öffentliches Hosting wird nicht eingerichtet.
-
-Ein Speichervorgang darf mehrere geänderte Felder zusammen übernehmen. Vor der
-Mutation werden Eingaben, Ausgangsstand und betroffene Referenzen geprüft.
-Zwischenzeitliche fremde Änderungen erzeugen einen Konflikt statt Überschreiben.
-Zusammenhängende Dateien werden unter dem gemeinsamen Checkoutlock mit
-vorhandener Transaktions-/Recoverysemantik übernommen; Runtime zuletzt. Offene
-Journale werden nicht ignoriert. Ein No-op verändert keine Bytes oder mtimes.
-
-Die aktuelle Namens-/Kategorieansicht wird aus einem kleinen Katalog einmal
-geladen und nach ID aufgelöst. Dafür werden nicht sämtliche Rasterbilder oder
-Produktionsbelege geöffnet. Die jeweils benötigten Prüfungen folgen der gezielten Grenze aus §13;
-eine Texteingabe startet keine Bestandsprüfung. Dateihashes bleiben Integritäts- und
-Konfliktschutz; sie sind keine fachlichen Rätsel-IDs.
-
-PE verspricht keinen unbelegten Geschwindigkeitsgewinn. Der heutige Spielstart
-lädt viele Definitionen/Saves bereits vorab. Ein allgemeiner Umbau dieses
-Startverhaltens ist kein verdeckter Teil des Editors. Konkrete Engpässe werden anhand gemessener Zugriffe und Laufzeiten behandelt.
+Liste und Detail verwenden die Zugriffsgrenzen aus §13.1. Der Editor prüft die ID-Menge und die Kategorien der Runtime v9 gegen den gebundenen Bestand. Eine Detailansicht bindet den ausgewählten Einzelrecord an die aktuelle Definition. Beim Speichern werden die vorbereiteten Seiten unter dem gemeinsamen Lock verglichen. Die Runtime wird zuletzt ersetzt. Der abgeschlossene Schreibvorgang liest die tatsächlich veröffentlichten Werte zurück.
 
 ## 7. Metadatenpflege
 
-Die Editoroberfläche verwendet für Namen, Kategoriezuordnung und Kategorienaktionen
-den aktuellen Request und gezielten Änderungsplan aus §13. Technische Kategoriegrenzen
-stehen in [CATEGORIES](../game/CATEGORIES.md), aktuelle Registryformen in [RI](../production/PUZZLE_INTEGRATION.md).
-Die früheren PE-A1-v4/v7-Migrations- und Journalformen sind im
-[historischen §7](https://github.com/venomenon328/picross/blob/6fe91a08a4d073547df43c6aebbe8ead4c45ae0f/docs/PUZZLE_EDITOR.md#7-pe-a1-geschlossener-metadatenvertrag)
-erhalten. Sie sind keine aktuellen Writer- oder Recoveryeingänge.
-
-### 7.1 Getrennte aktuelle Metadaten-Fach-API
-
-`catalog_metadata.view/plan/apply` bleibt als separate Fach-API am aktuellen
-Katalog verfügbar. Die normale Editoroberfläche und `metadata_cli plan`
-verwenden den gezielten Änderungsplan aus §13. `metadata_cli apply` liest
-zusätzlich die folgende aktuelle Metadatenplanform; daraus entsteht keine
-v4/v7-Migrations- oder Altjournalunterstützung.
-
-| Form/Feld | Exakter Inhalt |
-| --- | --- |
-| `picross-editor-metadata-plan-v3` | `format,operation,operations,changes,files,journal`; `operation=metadata`. |
-| `operations` | Geprüfte Metadatenoperationen nach §13.2; bei `category_create` ist die erzeugte stabile `id` im Plan ergänzt. |
-| `changes` | Fachliche Vorschau als Liste mit `kind,id,before,after`; `kind=puzzle` oder `category`. |
-| `files` | Sortierte tatsächlich geänderte Pfade; keine zusätzliche Schreibautorität. |
-| `journal` | Aktuelles `picross-current-catalog-journal-v2` nach [SD-Catalog](../difficulty/SD_CATALOG.md#aktuelle-katalogjournale); dessen geschlossene Felder, Größe und Recovery gelten unverändert. |
-| Journaloperation | `operation=metadata`, `report_run=null`, `additions={}`, `replacements={}`. |
-| `old,new` | Gleiche geschlossene Menge benötigter aktueller Quellen; Pfad → UTF-8-Text oder null für gebundene Abwesenheit. |
-| `retained` | Pfad → SHA-256 der unveränderten aktuellen Bildbytes. Keine Produktionsarchive oder alten Paketnamespaces. |
-| Plangröße | Höchstens 32 MiB. |
-
-Diese Fach-API bindet die aktuellen gemeinsamen Katalogquellen und prüft ihre
-Projektion vollständig. Ihre Schreibmenge ist ausschließlich Registrymetadaten,
-Kategorien und daraus abgeleitete Runtime; Definitionen, Bildquellen, Bewertungen
-und Datumswerte bleiben erhalten. Die gezielte Lesegrenze der Editoroberfläche
-aus §13 wird dadurch nicht erweitert. Gemeinsamer Lock, frische Quellprüfung,
-Runtime zuletzt und aktuelle Katalogrecovery bleiben maßgeblich.
+Eine Namens- oder Kategorieänderung gilt für die ausdrücklich ausgewählte ID. Bei Kategorienlöschung mit Neuzuordnung bestimmt die Runtime alle betroffenen IDs. Der Plan bindet ihre Records und Definitionen. Die Schreibmenge besteht aus den geänderten Records, bei Kategorienpflege gegebenenfalls dem Kategorienkatalog und der abgeleiteten Runtime. Identische Pläne schreiben keine Dateien. Konflikt und Recovery folgen [SD-Catalog](../difficulty/SD_CATALOG.md#aktuelle-katalogjournale). Eine Datums-, Bild- oder Bewertungsänderung erfordert die jeweilige fachliche Operation.
 
 ## 8. Bildpflege
 
@@ -465,14 +413,11 @@ zur Einführungshistorie, nicht zum normalen Editorbetrieb.
 
 ### 13.1 Lese- und Prüfgrenze
 
-Start/Liste lesen nur Inhaltsregistry, Runtime und Kategorien. Detail liest
-zusätzlich die ausgewählte Definition und ihre kleinen aktuellen Bildreferenzen;
-sichtbare Bilder werden bedarfsweise geladen. Keine rekursive Inventur, keine
-Pakete, historischen Freigaben oder unbeteiligten Einzeldateien, auch nicht im
-Hintergrund. Name/Kategorie/Kategorienpflege benötigen ausschließlich die drei
-Indizes. Lesen und Schreiben verlangen den aktuellen Katalog mit Runtime v8.
-Es gibt keine Migration in UI, Dienst, Worker oder portablem Paket. Die einmalige Bestandsüberführung gehört zum RI-ONE-Produktdiff; kein
-dauerhafter Legacyimporter wird installiert.
+Start und Liste prüfen Kategorien, Runtime v9 und Recordnamen. Detail und
+Pflege lesen zusätzlich die ausgewählten Records und Definitionen. Bilder
+werden bei Bedarf gelesen. Kategorienpflege bindet die von einer Neuzuordnung
+betroffenen IDs. Eine Schreiboperation prüft die erwarteten Bytes unter
+gemeinsamer Sperre. Die Bestandsüberführung ist einmaliger Teil des Produktdiffs.
 Die unveränderten Runtimezeilen werden übernommen, nicht aus allen Definitionen
 rekonstruiert. Suche und Sortierung laufen ausschließlich im Browserspeicher.
 
@@ -528,8 +473,9 @@ Token und sitzungseigenen bereits geprüften Uploadschlüsseln.
 | `category_delete` | `op,id` und optional `reassign_to`; eine belegte Kategorie verlangt die vollständige Neuzuordnung auf eine andere vorhandene Kategorie. Ohne Belegung darf `reassign_to` fehlen oder null sein. |
 
 Namen, IDs, Zuordnungen und Reihenfolge werden nach jeder einzelnen Operation
-gegen den [Kategorienvertrag](../game/CATEGORIES.md) und den aktuellen Inhaltsindex
-geprüft. Die CLI akzeptiert bei `id=null` eine Liste mit höchstens 10.000
+gegen den [Kategorienvertrag](../game/CATEGORIES.md) und den Bestandszustand des
+Plans geprüft. Der Plan bindet die Runtime v9 und die betroffenen Einzelrecords.
+Die CLI akzeptiert bei `id=null` eine Liste mit höchstens 10.000
 Operationen; die Metadaten-Fach-API nimmt dieselbe Operationsliste direkt an.
 Eine leere Liste ist ein No-op. Die HTTP-Route
 beschränkt denselben Fall auf genau eine `category_*`-Operation. Bei `id=null`
@@ -548,15 +494,15 @@ Lesen der Base64-Vergrößerung der betroffenen Bildbytes; alte Journale werden 
 
 | Form | Exakte Felder |
 | --- | --- |
-| `picross-editor-change-plan-v2` | `format,action,id,entry,reads,changes,before,after,quality,plan_hash` |
+| `picross-puzzle-editor-plan-v1` | `format,action,id,entry,reads,changes,before,after,quality,plan_hash` |
 | `action` | `metadata`, `images` oder `raster`; Kategorienpflege ist metadata mit id/entry null. |
-| `entry` | Der ausgewählte unveränderte Inhaltsregistryeintrag, bei Kategorienpflege null. Er begrenzt technische Zielpfade, keine erneute Produktionsabnahme. |
+| `entry` | Der aus dem ausgewählten Record abgeleitete Identitätseintrag, bei Kategorienpflege null. Er begrenzt technische Zielpfade, keine erneute Produktionsabnahme. |
 | `reads` | Pfad → SHA-256 oder null für tatsächlich benötigte aktuelle Quellen/Abwesenheiten. Keine Namespace- oder Vollbestandsbindung. |
 | `changes` | Pfad → exakt `{old,new}`; jede Seite Base64 der tatsächlichen Bytes oder null. Nur unterschiedliche Seiten, ausschließlich tatsächliche Schreibmenge. |
 | `before,after` | Lesbare fachliche Vorschau der betroffenen Werte; keine zusätzliche Schreibautorität. |
 | `quality` | null ohne Logikänderung; sonst der tatsächlich erzeugte Rating-/Proofbefund mit `method,checked,proof,baseline,proof_data,baseline_data`. `proof` und gegebenenfalls `baseline` sind Byte-Refs `file,bytes,sha256`; die zugehörigen `*_data` enthalten die tatsächlich geprüften JSON-Belege. Ohne Paired-Profil sind beide Baselinefelder null. |
 | `plan_hash` | Kanonischer Hash aller anderen Planfelder. |
-| `picross-editor-change-journal-v2` | `format,action,id,entry,reads,changes,quality`; dieselben bereits vorbereiteten Quellen, Schreibseiten und gegebenenfalls Prüfbelege. |
+| `picross-puzzle-editor-journal-v1` | `format,action,id,entry,reads,changes,quality`; dieselben bereits vorbereiteten Quellen, Schreibseiten und gegebenenfalls Prüfbelege. |
 
 Ein Zielpfad muss aus den drei Indexpfaden oder der ausgewählten Entry-ID und
 ihren festen Definitions-/Bildstämmen herleitbar sein. Kategorienpflege
@@ -595,13 +541,8 @@ Die gemeinsamen Recoverydispatches erkennen diese Generation ausdrücklich.
 
 ### 13.3 Aktive Quellen
 
-Registry v5, Reveal v5 und Hintergrund v7 folgen exakt [RI](../production/PUZZLE_INTEGRATION.md).
-Die geschlossene Runtime v8 steht in [RI-ONE §2.1](../production/PUZZLE_INTEGRATION_SINGLE_PATH.md#21-geschlossene-aktuelle-runtimeprojektion).
-`binding` enthält nur `identity` mit Key, Slot, aktuellem Definitionsref und
-Runtime-Revision. Keine eingebettete Entry-Produktion, kein `origin`, kein
-Paket-/Receiptanker. Namen, Kategorien und expliziter Mono-/Color-Modus kommen
-aus der aktuellen Autorität. PNG/SVG und selected/none/standard bleiben erhalten;
-Bildrevisionen erhöhen nur die tatsächliche aktuelle Bildrevision.
+Der Rätselrecord enthält Name, Kategorie, Modus sowie Reveal- und Hintergrundentscheidung nach [RI-ONE §2](../production/PUZZLE_INTEGRATION_SINGLE_PATH.md#2-aktuelle-inhalte-als-einzige-bestandsautorität).
+Die Runtime v9 projiziert die Spielerwerte. Nur eine tatsächliche Bildänderung erhöht die betroffene Bildrevision.
 
 Der Editor führt keine automatische Migration aus. Runtime-/Rätselrevision,
 Slots, Bewertung und Datum bleiben bei Bild-/Metadatenpflege gleich. Rasteränderung

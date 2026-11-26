@@ -1,0 +1,218 @@
+{
+  "added": {
+    "added_at": "2026-10-21T20:16:59Z",
+    "provenance": {
+      "commit": null,
+      "evidence": null,
+      "kind": "registration",
+      "reason": "Successful first playable registration in the shared transaction.",
+      "reference_time": "2026-10-21T20:16:59Z"
+    }
+  },
+  "background": {
+    "asset": {
+      "bytes": 460257,
+      "file": "game/art/backgrounds/pz-a13368590b744814915eb722f5b2c5f2.png",
+      "sha256": "7389fc31b41392f06d27a7e21e5165f7ee41487fcb42dfbb83adacbb3b02ba24"
+    },
+    "image_revision": 2,
+    "status": "selected"
+  },
+  "category_id": "blumen-pflanzen",
+  "definition": {
+    "bytes": 9967,
+    "file": "game/data/content/sonnenblume_001.json",
+    "sha256": "74d87421e6da602ea868a27429333bfd3019fd78ef234263e61e53167db8a0bf"
+  },
+  "difficulty": {
+    "compact_analysis": {
+      "analysis_hash": "b7dd5a0c5ea6cf79e1a34d3205de0aefc72d5f72f4bc2fc4df9034522c84bfeb",
+      "deduction_complete": true,
+      "line_analysis_complete": true,
+      "line_fixpoint_confirmed": true,
+      "new_singletons": 1280,
+      "profiles_hash": "029c344bdeffd3da99abe5912aeb82da71f26e567de2df902faed081c6c99b44",
+      "r4": null,
+      "reason": null,
+      "result_hash": "fce7ee131945eef414956e00bb1484f000aed5fedae66090ce3ebd5d3df5e258",
+      "status": "solved",
+      "structure": {
+        "adjacent_color_changes": 188,
+        "cells": 1280,
+        "clue_length_histogram": {
+          "1": 96,
+          "10": 3,
+          "11": 9,
+          "12": 1,
+          "13": 2,
+          "14": 3,
+          "15": 2,
+          "16": 1,
+          "17": 1,
+          "18": 2,
+          "19": 1,
+          "2": 38,
+          "3": 16,
+          "4": 17,
+          "5": 26,
+          "6": 36,
+          "7": 18,
+          "8": 9,
+          "9": 11
+        },
+        "colors": 4,
+        "geometric_slack": 1268,
+        "height": 40,
+        "mandatory_gaps": 34,
+        "short_blocks": 134,
+        "total_clue_length": 1258,
+        "total_clues": 292,
+        "width": 32
+      },
+      "trace_hash": "50749b16b9c5d227ce10587b9810fc5ff02d5ce7d04558106274b9b3ce12b846",
+      "wave_count": 40
+    },
+    "logic_binding": {
+      "matrix_hash": "f236bf2eb36fe1daeb23ff42f3c0cbc618a3575908085d098dabc521b1e388ed"
+    },
+    "rating": {
+      "analysis_result_hash": "fce7ee131945eef414956e00bb1484f000aed5fedae66090ce3ebd5d3df5e258",
+      "format": "picross-catalog-sd2-rating-v1",
+      "method": "picross-difficulty-0.4",
+      "method_hash": "5508f0742aa858a6adc31aa621433e68298b915fb0fd6b8d9e74e576ba87caaf",
+      "rating_hash": "09608e00c90462c363d85e88ea04d1e07db996cb87d5e24a339fd92d4394a9e8",
+      "result": {
+        "analysis_result_hash": "fce7ee131945eef414956e00bb1484f000aed5fedae66090ce3ebd5d3df5e258",
+        "assessment": {
+          "boundaries": {
+            "distance_lower": [
+              23459,
+              48600
+            ],
+            "distance_upper": [
+              25141,
+              48600
+            ],
+            "lower": [
+              3,
+              1
+            ],
+            "nearest_distance": [
+              23459,
+              48600
+            ],
+            "upper": [
+              4,
+              1
+            ]
+          },
+          "contributions": {
+            "demand": [
+              171,
+              80
+            ],
+            "search": [
+              106453,
+              97200
+            ],
+            "workload": [
+              1,
+              4
+            ]
+          },
+          "level": 4,
+          "level_without_workload": 4,
+          "score": [
+            169259,
+            48600
+          ],
+          "signals": {
+            "context": [
+              11,
+              20
+            ],
+            "fluent": false,
+            "highest_family": "E2",
+            "longest_narrow_run": 2,
+            "narrow_waves": 4,
+            "peak_search": [
+              22057,
+              24300
+            ],
+            "raw_workload": [
+              1,
+              4
+            ],
+            "spans": 601,
+            "workload_ceiling": 4,
+            "workload_guard": "none"
+          },
+          "without_workload": [
+            157109,
+            48600
+          ]
+        },
+        "confidence": "medium",
+        "estimated_minutes": null,
+        "explanation": "Model estimate from synthetic references; no human calibration or time estimate. Demand, search and bounded workload use independently checked line profiles.",
+        "format": "picross-sd2-rating-v1",
+        "method": "picross-difficulty-0.4",
+        "method_hash": "5508f0742aa858a6adc31aa621433e68298b915fb0fd6b8d9e74e576ba87caaf",
+        "profile_scope": "complete_line",
+        "reason": "complete_line",
+        "status": "rated"
+      },
+      "source": {
+        "bytes": 9967,
+        "definition_id": "pz-a13368590b744814915eb722f5b2c5f2",
+        "engine_logic_hash": "619e60dca515174a95836398d23a4567f3a542f7721f9d105d4f7135882e9dd5",
+        "kind": "runtime",
+        "production_mode": "unknown",
+        "runtime_revision": 1,
+        "sha256": "74d87421e6da602ea868a27429333bfd3019fd78ef234263e61e53167db8a0bf"
+      }
+    },
+    "rating_revision": 2
+  },
+  "format": "picross-puzzle-record-v1",
+  "id": "pz-a13368590b744814915eb722f5b2c5f2",
+  "mode": "color",
+  "name": "Sonnenblume",
+  "reveal": {
+    "asset": {
+      "bytes": 1979782,
+      "file": "game/art/content/sonnenblume_001.png",
+      "sha256": "952719722a6fc542b025441a90ab3e876a2a38dbcd8313060e0c1a57db074ebd"
+    },
+    "catalog": {
+      "generator": "picross-catalog-reveal-1",
+      "profiles": [
+        {
+          "asset": {
+            "bytes": 20497,
+            "file": "game/art/catalog/pz-a13368590b744814915eb722f5b2c5f2-ui100.png",
+            "sha256": "dbbe31fbb8087e9181af67dd2be265ad4a0d1dd84a0e5b9374e51de05a7a702f"
+          },
+          "height": 112,
+          "profile": "catalog-ui100-v1",
+          "width": 96
+        },
+        {
+          "asset": {
+            "bytes": 30316,
+            "file": "game/art/catalog/pz-a13368590b744814915eb722f5b2c5f2-ui125.png",
+            "sha256": "35110d2095c69df22dc15f3ca498293cd26b80cf00e9a7ee0978515b8454e704"
+          },
+          "height": 140,
+          "profile": "catalog-ui125-v1",
+          "width": 120
+        }
+      ],
+      "source_height": 1358,
+      "source_width": 1158
+    },
+    "image_revision": 1
+  },
+  "save_slot": "sonnenblume_001",
+  "visible": true
+}

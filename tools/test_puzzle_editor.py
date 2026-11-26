@@ -14,7 +14,6 @@ from tools.puzzle_production.contract import write_json
 def fixture(root):
     (root/".git").mkdir(parents=True)
     write_json(root/"content/categories.json", {"format": "picross-categories-v1", "categories": []})
-    write_json(root/"content/registry.json", {"format": "picross-content-registry-v5", "entries": [], "metadata": [], "backgrounds": []})
     write_json(root/"game/data/registry.json", {"format": "picross-runtime-registry-v9", "categories": [], "entries": []})
     return root
 
@@ -53,7 +52,7 @@ class EditorHTTPTests(unittest.TestCase):
         self.assertEqual(headers["Cache-Control"], "no-store")
         self.assertIn("default-src 'none'", headers["Content-Security-Policy"])
         self.assertNotIn("Access-Control-Allow-Origin", headers)
-        for path in ("/../content/registry.json", "/%2e%2e/", "/api/pe/v1/catalog?path=x", "/tools/server.py"):
+        for path in ("/../game/data/registry.json", "/%2e%2e/", "/api/pe/v1/catalog?path=x", "/tools/server.py"):
             self.assertGreaterEqual(self.call(path)[0], 400)
         self.assertEqual(self.call(API+"catalog", method="PUT")[0], 403)
 
@@ -147,7 +146,7 @@ class EditorHTTPTests(unittest.TestCase):
         (package/"app.js").write_bytes(b"foreign")
         with self.assertRaises(ValueError): verify(package)
 
-    def test_catalog_reads_only_three_indices(self):
+    def test_catalog_reads_only_shared_indices(self):
         from unittest.mock import patch
         from tools.puzzle_editor.server import catalog
         from tools.puzzle_production import catalog_io as io, editor_change
@@ -166,13 +165,12 @@ class EditorHTTPTests(unittest.TestCase):
         self.assertTrue(not thread or not thread.is_alive(), "Worker did not drain")
         return self.service.status()["job"]
 
-    def test_old_runtime_has_no_migration_route_and_never_writes(self):
+    def test_invalid_runtime_rejects_listing_without_writes(self):
         path = self.root/"game/data/registry.json"
-        value = json.loads(path.read_bytes()); value["format"] = "picross-runtime-registry-v7"
+        value = json.loads(path.read_bytes()); value["format"] = "invalid-test-format"
         write_json(path, value)
         before = {p: (p.read_bytes(), p.stat().st_mtime_ns) for p in self.root.rglob("*") if p.is_file()}
         self.assertGreaterEqual(self.call(API+"catalog")[0],400)
-        self.assertGreaterEqual(self.call(API+"migration", {"snapshot": "unsupported"})[0], 400)
         self.assertEqual(before, {p: (p.read_bytes(), p.stat().st_mtime_ns) for p in before})
 
     def test_theme_persists_across_new_port_without_worker_or_content_write(self):

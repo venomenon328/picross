@@ -1,0 +1,216 @@
+{
+  "added": {
+    "added_at": "2026-10-16T12:09:09Z",
+    "provenance": {
+      "commit": "ad53fa92b0d43f99658a45829d44b2080522e82f",
+      "evidence": {
+        "path": "content/added/reports/ku-b-initial.json",
+        "sha256": "e6d7a01e740adbc40cdc90e64c733f95907c8924cfe1f0a4bb734bb7bc6b7884"
+      },
+      "kind": "git-snapshot",
+      "reason": "No direct UTC first-registration receipt found in reviewed sources; earliest verified visible integrated catalog snapshot including bound PR history. Commit UTC is a reconstructed reference, not tool execution time.",
+      "reference_time": "2026-10-16T12:09:09Z"
+    }
+  },
+  "background": {
+    "asset": {
+      "bytes": 626536,
+      "file": "game/art/backgrounds/pz-9a79befc7a834e2d9d5896a477328962.png",
+      "sha256": "b22e1880241f51bd7a33607c67e9c7c1dd338f0157c1e9f4ed48b9bb76cc7f49"
+    },
+    "image_revision": 3,
+    "status": "selected"
+  },
+  "category_id": "voegel",
+  "definition": {
+    "bytes": 9513,
+    "file": "game/data/content/buntspecht_001.json",
+    "sha256": "1f222523cd4bdff6bfc5440922f61788b529a25a28f90689b6c9c64f3012fef3"
+  },
+  "difficulty": {
+    "compact_analysis": {
+      "analysis_hash": "503f4f68dfaafc3fec510f454b24a02a01dfb8f7eb48859baf1358ee5393e98f",
+      "deduction_complete": true,
+      "line_analysis_complete": true,
+      "line_fixpoint_confirmed": true,
+      "new_singletons": 805,
+      "profiles_hash": "e0dacf669efd0ddf3015766594cac04a482febdfadd99e48bc87d12344cb65bf",
+      "r4": null,
+      "reason": null,
+      "result_hash": "eb1827f2d82b87eff206cf2d21acf0d34df81daefcc9788681a5324ba50232c8",
+      "status": "solved",
+      "structure": {
+        "adjacent_color_changes": 253,
+        "cells": 805,
+        "clue_length_histogram": {
+          "1": 172,
+          "11": 1,
+          "12": 1,
+          "13": 1,
+          "15": 1,
+          "2": 58,
+          "3": 18,
+          "34": 4,
+          "4": 19,
+          "5": 18,
+          "6": 11,
+          "7": 5,
+          "8": 5,
+          "9": 2
+        },
+        "colors": 4,
+        "geometric_slack": 748,
+        "height": 35,
+        "mandatory_gaps": 8,
+        "short_blocks": 230,
+        "total_clue_length": 854,
+        "total_clues": 316,
+        "width": 23
+      },
+      "trace_hash": "9d18c55df9940a6eae62bd9cf6fc3d22c9fafdecb1cd6a0b9dc28ffa013fb19b",
+      "wave_count": 37
+    },
+    "logic_binding": {
+      "matrix_hash": "b02b2f43871c478bae8f46d761087ae63e955b144369c41713609980c0195afd"
+    },
+    "rating": {
+      "analysis_result_hash": "eb1827f2d82b87eff206cf2d21acf0d34df81daefcc9788681a5324ba50232c8",
+      "format": "picross-catalog-sd2-rating-v1",
+      "method": "picross-difficulty-0.4",
+      "method_hash": "5508f0742aa858a6adc31aa621433e68298b915fb0fd6b8d9e74e576ba87caaf",
+      "rating_hash": "9983f6d616e72411f4dc1cba123bc49b9c22a142153fecca8825dcca5173d6d6",
+      "result": {
+        "analysis_result_hash": "eb1827f2d82b87eff206cf2d21acf0d34df81daefcc9788681a5324ba50232c8",
+        "assessment": {
+          "boundaries": {
+            "distance_lower": [
+              547423,
+              921060
+            ],
+            "distance_upper": [
+              373637,
+              921060
+            ],
+            "lower": [
+              3,
+              1
+            ],
+            "nearest_distance": [
+              373637,
+              921060
+            ],
+            "upper": [
+              4,
+              1
+            ]
+          },
+          "contributions": {
+            "demand": [
+              2605,
+              1204
+            ],
+            "search": [
+              3613,
+              3060
+            ],
+            "workload": [
+              1,
+              4
+            ]
+          },
+          "level": 4,
+          "level_without_workload": 4,
+          "score": [
+            3310603,
+            921060
+          ],
+          "signals": {
+            "context": [
+              197,
+              301
+            ],
+            "fluent": false,
+            "highest_family": "E2",
+            "longest_narrow_run": 5,
+            "narrow_waves": 15,
+            "peak_search": [
+              712,
+              765
+            ],
+            "raw_workload": [
+              1,
+              4
+            ],
+            "spans": 303,
+            "workload_ceiling": 4,
+            "workload_guard": "none"
+          },
+          "without_workload": [
+            1540169,
+            460530
+          ]
+        },
+        "confidence": "medium",
+        "estimated_minutes": null,
+        "explanation": "Model estimate from synthetic references; no human calibration or time estimate. Demand, search and bounded workload use independently checked line profiles.",
+        "format": "picross-sd2-rating-v1",
+        "method": "picross-difficulty-0.4",
+        "method_hash": "5508f0742aa858a6adc31aa621433e68298b915fb0fd6b8d9e74e576ba87caaf",
+        "profile_scope": "complete_line",
+        "reason": "complete_line",
+        "status": "rated"
+      },
+      "source": {
+        "bytes": 9513,
+        "definition_id": "pz-9a79befc7a834e2d9d5896a477328962",
+        "engine_logic_hash": "5a2eb23c07ac96a148575716f03c807a23c08d205eb0cbf78664a1e947811242",
+        "kind": "runtime",
+        "production_mode": "unknown",
+        "runtime_revision": 1,
+        "sha256": "1f222523cd4bdff6bfc5440922f61788b529a25a28f90689b6c9c64f3012fef3"
+      }
+    },
+    "rating_revision": 2
+  },
+  "format": "picross-puzzle-record-v1",
+  "id": "pz-9a79befc7a834e2d9d5896a477328962",
+  "mode": "color",
+  "name": "Buntspecht",
+  "reveal": {
+    "asset": {
+      "bytes": 2301738,
+      "file": "game/art/content/buntspecht_001.png",
+      "sha256": "611cf52c2f087f8e1d18c7e79b23c4508a9e54e63d2669348750f0b22405caf8"
+    },
+    "catalog": {
+      "generator": "picross-catalog-reveal-1",
+      "profiles": [
+        {
+          "asset": {
+            "bytes": 14614,
+            "file": "game/art/catalog/pz-9a79befc7a834e2d9d5896a477328962-ui100.png",
+            "sha256": "67da8b3848e870efbafc6298071103c3156cec72aa19d3a3ba930b355d9d7a85"
+          },
+          "height": 112,
+          "profile": "catalog-ui100-v1",
+          "width": 75
+        },
+        {
+          "asset": {
+            "bytes": 21883,
+            "file": "game/art/catalog/pz-9a79befc7a834e2d9d5896a477328962-ui125.png",
+            "sha256": "c24692b8a443be65a5994c297c60c25398fed242fa612ae1b5b3ea590497d87c"
+          },
+          "height": 140,
+          "profile": "catalog-ui125-v1",
+          "width": 94
+        }
+      ],
+      "source_height": 1536,
+      "source_width": 1024
+    },
+    "image_revision": 1
+  },
+  "save_slot": "buntspecht_001",
+  "visible": true
+}

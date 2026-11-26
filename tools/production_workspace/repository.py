@@ -177,14 +177,14 @@ class ProductionRemoval:
         # A private-cache read of the fresh main tip, never a local/main mutation.
         raw = repo.cached.read(sha, INDEX, 8 * JSON_LIMIT, missing=True)
         revisions = [e['revision'] for e in index_value(raw)['entries'] if e['puzzle_id'] == puzzle_id] if raw else []
-        registry = repo.cached.read(sha, 'content/registry.json', 8 * JSON_LIMIT, missing=True)
-        registered = False
-        if registry:
-            value = p.parse(registry, 8 * JSON_LIMIT)
-            ap.require(isinstance(value, dict) and isinstance(value.get('entries'), list) and
-                       all(isinstance(row, dict) and isinstance(row.get('id'), str) for row in value['entries']),
-                       'Mainkatalog nicht prüfbar.')
-            registered = any(row.get('id') == puzzle_id for row in value['entries'])
+        registered = puzzle_id in deliveries.registered_ids(repo.cached,sha)
+        if registered:
+            from tools.puzzle_production import puzzle_catalog, puzzle_record
+            read = lambda n,limit:repo.cached.read(sha,n,limit)
+            cats,runtime = puzzle_catalog.index(read,repo.cached.puzzle_ids(sha))
+            record = puzzle_record.load(None,puzzle_id,category_catalog=cats,read=read)
+            ap.require(puzzle_record.runtime_row(record) == next(r for r in runtime['entries'] if r['id']==puzzle_id),
+                       'Mainprojektion weicht vom Rätselrecord ab.')
         return {'commit': sha, 'revisions': sorted(revisions), 'registered': registered}
 
     def probe(self, job):

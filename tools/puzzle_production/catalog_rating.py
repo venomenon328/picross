@@ -18,9 +18,7 @@ from .difficulty_rating import (METHOD_ID, RATING_FORMAT, frozen_method,
                                 logical_level, size_effect)
 from . import operation_diagnostics as diagnostic
 
-LEGACY_FORMAT = "picross-catalog-difficulty-v1"
 LEGACY_CHECKED = "picross-checked-difficulty-v1"
-FORMAT = "picross-catalog-difficulty-v2"
 CHECKED = "picross-checked-difficulty-v2"
 CONTEXT = "picross-difficulty-context-v1"
 LIMIT = 96 * 1024
@@ -75,10 +73,6 @@ def identity(value):
     return value
 
 
-def path(identifier):
-    return "content/difficulty/" + identity(identifier) + "/rating.json"
-
-
 def source(value):
     exact_keys(value, {"id", "runtime_revision", "definition_sha256"})
     identity(value["id"])
@@ -99,14 +93,14 @@ def mode(value):
 
 
 def fields(value):
-    return FIELDS | ({"production_mode"} if value["format"] not in (LEGACY_FORMAT, LEGACY_CHECKED) else set())
+    return FIELDS | ({"production_mode"} if value["format"] != LEGACY_CHECKED else set())
 
 
 def method(value):
     if value.get("format") == "picross-current-difficulty-v1": return value["method"]
-    from .sd2_catalog_rating import FORMAT as SD2, CHECKED as SD2_CHECKED
+    from .sd2_catalog_rating import CHECKED as SD2_CHECKED
     from .catalog_method import NEW
-    return NEW if value["format"] in (SD2, SD2_CHECKED) else METHOD_ID
+    return NEW if value["format"] == SD2_CHECKED else METHOD_ID
 
 
 def definition(raw, *, method=METHOD_ID):
@@ -307,11 +301,12 @@ def validate(value, *, active=True, definition_bytes=None, production_mode=None)
         from .current_rating import validate as current
         return current(value,definition_bytes=definition_bytes,production_mode=production_mode,active=active)
     from . import sd2_catalog_rating as sd2
-    if isinstance(value, dict) and value.get("format") in (sd2.FORMAT, sd2.CHECKED):
-        return sd2.validate(value, active=active, definition_bytes=definition_bytes, production_mode=production_mode)
-    extras = {"rating_revision", "adoption", "record_hash"} if active else {"analysis_report_hash", "verification_hash", "tool", "checked_hash"}
+    require(not active, "Expected current assessment envelope")
+    if isinstance(value, dict) and value.get("format") == sd2.CHECKED:
+        return sd2.validate(value, active=False, definition_bytes=definition_bytes, production_mode=production_mode)
+    extras = {"analysis_report_hash", "verification_hash", "tool", "checked_hash"}
     require(isinstance(value, dict) and value.get("format") in
-            ((FORMAT, LEGACY_FORMAT) if active else (CHECKED, LEGACY_CHECKED)), "Unknown catalog difficulty format")
+            (CHECKED, LEGACY_CHECKED), "Unknown catalog difficulty format")
     exact_keys(value, {"format"} | fields(value) | extras)
     if "production_mode" in value:
         mode(value["production_mode"])
@@ -321,27 +316,15 @@ def validate(value, *, active=True, definition_bytes=None, production_mode=None)
     source(value["current_source"]); binding(value["logic_binding"])
     _compact(value["compact_analysis"])
     _rating(value["rating"], value["compact_analysis"], value["current_source"]["id"])
-    if not active and "production_mode" in value:
+    if "production_mode" in value:
         from .raster_parameters import require_color_count, used_foreground
         require_color_count(value["production_mode"], value["compact_analysis"]["metrics"]["workload"]["colors"])
-    if active:
-        integer(value["rating_revision"], 1, 1000000, "rating revision")
-        a = exact_keys(value["adoption"], {"kind", "previous_record_hash", "analysis_report_hash", "verification_hash", "tool", "report"})
-        require(a["kind"] in ("analysis", "rebind"), "Unknown adoption kind")
-        if a["previous_record_hash"] is not None: sha(a["previous_record_hash"])
-        if a["report"] is not None:
-            from .catalog_analysis import run_id
-            exact_keys(a["report"], {"run_id", "result_hash"})
-            run_id(a["report"]["run_id"]); sha(a["report"]["result_hash"])
-        require(value["rating"]["result"]["status"] == "rated", "Active difficulty must be complete")
-    else:
-        a = value
-    for k in ("analysis_report_hash", "verification_hash"): sha(a[k])
-    tool(a["tool"])
-    check_hash(value, "record_hash" if active else "checked_hash")
+    for k in ("analysis_report_hash", "verification_hash"): sha(value[k])
+    tool(value["tool"])
+    check_hash(value, "checked_hash")
     if definition_bytes is not None:
         data, puzzle, current, logic = definition(definition_bytes)
-        if not active and "production_mode" in value:
+        if "production_mode" in value:
             require_color_count(value["production_mode"], len(used_foreground(data["solution"])))
         else:
             require(value.get("production_mode") != "mono" or len(puzzle.colors) == 1,
@@ -362,9 +345,20 @@ def validate(value, *, active=True, definition_bytes=None, production_mode=None)
 
 
 def project(value):
+    return project_rating(value["rating"])
+
+
+def embedded_method(rating):
+    method = rating["method"]
+    return method.get("id") if isinstance(method,dict) else method
+
+
+def project_rating(rating):
     from . import sd2_catalog_rating as sd2
-    if method(value) == "picross-difficulty-0.4": return sd2.project(value)
-    r = value["rating"]["result"]
+    if embedded_method(rating) == sd2.METHOD_ID:
+        return sd2.project({"rating": rating})
+    require(embedded_method(rating) == METHOD_ID, "Unsupported difficulty method")
+    r = rating["result"]
     require(r["status"] == "rated", "Cannot project incomplete rating")
     level = "L" + str(r["level"])
     return {"method": METHOD_ID, "level": level, "assessment_type": "instrumented", "confidence": "medium",
@@ -431,57 +425,3 @@ def active_record(checked, previous=None, *, report=None, kind="analysis"):
             return qualified
     value = checked if checked.get("format") == current_rating.FORMAT else current_rating.from_checked(checked)
     return current_rating.active(value,previous)
-
-
-def checked_from_active(value):
-    if value.get("format") == "picross-current-difficulty-v1":
-        return deepcopy(validate(value))
-    from . import sd2_catalog_rating as sd2
-    validate(value)
-    return validate(hashed({"format": sd2.CHECKED if value["format"] == sd2.FORMAT else CHECKED if value["format"] == FORMAT else LEGACY_CHECKED,
-        **{k: deepcopy(value[k]) for k in fields(value)},
-        **{k: deepcopy(value["adoption"][k]) for k in ("analysis_report_hash", "verification_hash", "tool")}}, "checked_hash"), active=False)
-
-
-def source_paths(root, *registries, temporary=()):
-    """Validate the whole active namespace, including unregistered/alias paths.
-
-    Reports are a distinct namespace, never an alternative active source.
-    Empty canonical directories may remain after an interrupted rollback.
-    """
-    from .content_update import path_in
-    from .catalog_analysis import run_id
-    allowed = {e["id"] for registry in registries for e in registry["entries"]}
-    base = path_in(root, "content/difficulty")
-    if not base.exists(): return set()
-    require(base.is_dir(), "Difficulty namespace must be a directory")
-    found = set()
-    for child in base.iterdir():
-        if child.relative_to(root).as_posix() in temporary: continue
-        directory = path_in(root, child.relative_to(root).as_posix())
-        require(directory.is_dir(), "Misplaced difficulty source: " + child.name)
-        if child.name == "reports":
-            for run in directory.iterdir():
-                run_id(run.name)
-                run = path_in(root, run.relative_to(root).as_posix())
-                require(run.is_dir(), "Difficulty report run must be a directory")
-                for report in run.iterdir():
-                    if report.relative_to(root).as_posix() in temporary: continue
-                    report = path_in(root, report.relative_to(root).as_posix())
-                    require(report.name in ("report.json", "report.md") and report.is_file(), "Misplaced difficulty report")
-            continue
-        identity(child.name)
-        for item in directory.iterdir():
-            if item.relative_to(root).as_posix() in temporary: continue
-            require(child.name in allowed, "Unregistered difficulty source: " + child.name)
-            item = path_in(root, item.relative_to(root).as_posix())
-            require(item.name == "rating.json" and item.is_file(), "Misplaced difficulty source / path collision: " + str(item))
-            found.add(item.relative_to(root).as_posix())
-    return found
-
-
-def load_sources(root, registry):
-    from . import catalog_io as io
-    return {e["id"]: validate(io.json_bytes(io.read(root,path(e["id"]),LIMIT),LIMIT),
-                             definition_bytes=io.read(root,"game/"+e["definition"],2*1024*1024),production_mode=e["mode"])
-            for e in registry["entries"]}

@@ -1,0 +1,213 @@
+{
+  "added": {
+    "added_at": "2026-10-28T18:06:42Z",
+    "provenance": {
+      "commit": null,
+      "evidence": null,
+      "kind": "registration",
+      "reason": "Successful first playable registration in the shared transaction.",
+      "reference_time": "2026-10-28T18:06:42Z"
+    }
+  },
+  "background": {
+    "asset": {
+      "bytes": 778061,
+      "file": "game/art/backgrounds/pz-5f5a379b5abb4c979ee23f807aec9418.png",
+      "sha256": "c9d04b1252891c5c6db6e8f68126883b15d96de6e6326cd6957bd6234ef6495e"
+    },
+    "image_revision": 3,
+    "status": "selected"
+  },
+  "category_id": "landschaften-natur",
+  "definition": {
+    "bytes": 8302,
+    "file": "game/data/content/chocolate_hills_001.json",
+    "sha256": "460a11ea9cfc6e0a5b84afe324683496e25489664cbb3cc60085f6db4058bffc"
+  },
+  "difficulty": {
+    "compact_analysis": {
+      "analysis_hash": "00fb6dae695dfd0d0bbcfe9698b91a63714e40c4faf4008d9a3bb6f1fa9da6b6",
+      "deduction_complete": true,
+      "line_analysis_complete": true,
+      "line_fixpoint_confirmed": true,
+      "new_singletons": 576,
+      "profiles_hash": "50bcd1ca4836ec2af61cd1b51ff746faa3e5ed0c19c4a00e43e584810ee234cf",
+      "r4": null,
+      "reason": null,
+      "result_hash": "1545024484b34ec5f126c279506463e99450873c22b33ba98ac4adf62e19c6d8",
+      "status": "solved",
+      "structure": {
+        "adjacent_color_changes": 234,
+        "cells": 576,
+        "clue_length_histogram": {
+          "1": 132,
+          "10": 1,
+          "11": 2,
+          "12": 2,
+          "13": 1,
+          "2": 42,
+          "20": 1,
+          "3": 34,
+          "31": 1,
+          "4": 27,
+          "5": 23,
+          "6": 9,
+          "7": 5,
+          "8": 5
+        },
+        "colors": 4,
+        "geometric_slack": 360,
+        "height": 16,
+        "mandatory_gaps": 2,
+        "short_blocks": 174,
+        "total_clue_length": 790,
+        "total_clues": 285,
+        "width": 36
+      },
+      "trace_hash": "d7bbdc7ed730517275d02c6b74675d81f52f84757cd9ff167a11a5b130ccd5e9",
+      "wave_count": 14
+    },
+    "logic_binding": {
+      "matrix_hash": "da0c97eb2ac1915cdd1690dbdb300e6982531dc65e9b13eb855930fdbe653a07"
+    },
+    "rating": {
+      "analysis_result_hash": "1545024484b34ec5f126c279506463e99450873c22b33ba98ac4adf62e19c6d8",
+      "format": "picross-catalog-sd2-rating-v1",
+      "method": "picross-difficulty-0.4",
+      "method_hash": "5508f0742aa858a6adc31aa621433e68298b915fb0fd6b8d9e74e576ba87caaf",
+      "rating_hash": "5e063a2d20b50d2c6b01f0fa46aa8003856c3fe6a28f7816f8cdebb4fde0a9aa",
+      "result": {
+        "analysis_result_hash": "1545024484b34ec5f126c279506463e99450873c22b33ba98ac4adf62e19c6d8",
+        "assessment": {
+          "boundaries": {
+            "distance_lower": [
+              197,
+              672
+            ],
+            "distance_upper": [
+              475,
+              672
+            ],
+            "lower": [
+              3,
+              1
+            ],
+            "nearest_distance": [
+              197,
+              672
+            ],
+            "upper": [
+              4,
+              1
+            ]
+          },
+          "contributions": {
+            "demand": [
+              61,
+              28
+            ],
+            "search": [
+              83,
+              96
+            ],
+            "workload": [
+              1,
+              4
+            ]
+          },
+          "level": 4,
+          "level_without_workload": 4,
+          "score": [
+            2213,
+            672
+          ],
+          "signals": {
+            "context": [
+              5,
+              7
+            ],
+            "fluent": false,
+            "highest_family": "E2",
+            "longest_narrow_run": 1,
+            "narrow_waves": 1,
+            "peak_search": [
+              77,
+              96
+            ],
+            "raw_workload": [
+              1,
+              4
+            ],
+            "spans": 285,
+            "workload_ceiling": 4,
+            "workload_guard": "none"
+          },
+          "without_workload": [
+            2045,
+            672
+          ]
+        },
+        "confidence": "medium",
+        "estimated_minutes": null,
+        "explanation": "Model estimate from synthetic references; no human calibration or time estimate. Demand, search and bounded workload use independently checked line profiles.",
+        "format": "picross-sd2-rating-v1",
+        "method": "picross-difficulty-0.4",
+        "method_hash": "5508f0742aa858a6adc31aa621433e68298b915fb0fd6b8d9e74e576ba87caaf",
+        "profile_scope": "complete_line",
+        "reason": "complete_line",
+        "status": "rated"
+      },
+      "source": {
+        "bytes": 8305,
+        "definition_id": "pz-5f5a379b5abb4c979ee23f807aec9418",
+        "engine_logic_hash": "09d427c606f741ea1f0d0f516ebc5362a714752ba16723ae79590637c25dacb1",
+        "kind": "runtime",
+        "production_mode": "unknown",
+        "runtime_revision": 1,
+        "sha256": "83ea57f0bcb928e123a5afb4a8b9bd9bd70b1197a3ae4979e036dc2b88abaad7"
+      }
+    },
+    "rating_revision": 1
+  },
+  "format": "picross-puzzle-record-v1",
+  "id": "pz-5f5a379b5abb4c979ee23f807aec9418",
+  "mode": "color",
+  "name": "Chocolate Hills",
+  "reveal": {
+    "asset": {
+      "bytes": 2487600,
+      "file": "game/art/content/chocolate_hills_001.png",
+      "sha256": "37006bfe03d3800da227acfe8c210868c00e66bb27710f14c17c1c07af1b8a81"
+    },
+    "catalog": {
+      "generator": "picross-catalog-reveal-1",
+      "profiles": [
+        {
+          "asset": {
+            "bytes": 28112,
+            "file": "game/art/catalog/pz-5f5a379b5abb4c979ee23f807aec9418-ui100.png",
+            "sha256": "03f5db44108cd29cd7ce421aa240a303b9104f6266b98bbd47e3ab73df726ed6"
+          },
+          "height": 112,
+          "profile": "catalog-ui100-v1",
+          "width": 168
+        },
+        {
+          "asset": {
+            "bytes": 42511,
+            "file": "game/art/catalog/pz-5f5a379b5abb4c979ee23f807aec9418-ui125.png",
+            "sha256": "1d881befaa9cf8e51928068e93c69eae60ba9a526c445523034a6b29eafb782c"
+          },
+          "height": 140,
+          "profile": "catalog-ui125-v1",
+          "width": 210
+        }
+      ],
+      "source_height": 1024,
+      "source_width": 1536
+    },
+    "image_revision": 1
+  },
+  "save_slot": "chocolate_hills_001",
+  "visible": true
+}

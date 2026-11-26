@@ -30,8 +30,9 @@ Abnahme stehen getrennt am jeweiligen Head im Issue/PR.
 `game/book/main.gd`. Windows und Web verwenden dieselbe Szene. `book/content.gd`
 ergänzt die Darstellung von `ui/main.gd`; Registry, Definitionen, Session,
 SaveStore, Sortierpräferenz, Recovery und Webstorage bleiben gemeinsam.
-`game/data/registry.json` ist die Projektion der autoritativen Inhaltsregistry;
-der Spieler enthält keine festen Studienrätsel.
+`game/data/registry.json` ist die v9-Projektion der führenden Rätselrecords
+und der gemeinsamen Kategorien nach [RI-ONE](../production/PUZZLE_INTEGRATION_SINGLE_PATH.md).
+Der Spieler enthält keine festen Studienrätsel.
 
 `game/book/` enthält Buchkörper, Seiten, Informationsnavigation und die
 Materialbilder Papier/Leder/Tisch samt Import-/Herkunftsdaten. Die Belege liegen

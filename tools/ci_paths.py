@@ -10,20 +10,14 @@ def content_path(path: str) -> bool:
         # The pointer has exactly one position; do not fall through to the
         # general revision-file rule for nested or otherwise malformed pointers.
         return re.fullmatch(r'content/authoring/pz-[a-z0-9][a-z0-9-]{0,59}/current-view\.json', path) is not None
-    if path in {"content/categories.json", "content/registry.json", "content/authoring/index.json",
+    if path in {"content/categories.json", "content/authoring/index.json",
                 "content/authoring/README.md", "game/data/registry.json"}:
         return True
     if re.fullmatch(r"game/data/content/[a-z][a-z0-9_-]{0,63}\.json", path):
         return True
     if re.fullmatch(r"game/art/content/[a-z][a-z0-9_-]{0,63}\.(png|svg|txt)", path):
         return True
-    if re.fullmatch(r"content/added/pz-[a-z0-9][a-z0-9-]{0,59}\.json", path):
-        return True
-    if re.fullmatch(r"content/difficulty/pz-[a-z0-9][a-z0-9-]{0,59}/rating\.json", path):
-        return True
-    if re.fullmatch(r"content/reveals/pz-[a-z0-9][a-z0-9-]{0,59}\.json", path):
-        return True
-    if re.fullmatch(r"content/backgrounds/pz-[a-z0-9][a-z0-9-]{0,59}\.json", path):
+    if re.fullmatch(r"content/puzzles/pz-[a-z0-9][a-z0-9-]{0,59}\.json", path):
         return True
     if re.fullmatch(r"game/art/catalog/pz-[a-z0-9][a-z0-9-]{0,59}-ui(100|125)\.png", path):
         return True

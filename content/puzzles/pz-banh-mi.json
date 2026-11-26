@@ -1,0 +1,203 @@
+{
+  "added": {
+    "added_at": "2026-11-21T21:27:44Z",
+    "provenance": {
+      "commit": null,
+      "evidence": null,
+      "kind": "registration",
+      "reason": "Successful first playable registration in the shared transaction.",
+      "reference_time": "2026-11-21T21:27:44Z"
+    }
+  },
+  "background": {
+    "asset": {
+      "bytes": 277727,
+      "file": "game/art/backgrounds/pz-banh-mi.png",
+      "sha256": "13411275a6889059d971c9c72cc9d4d5dfbc99200496aed0c8ecc79debe8e6f9"
+    },
+    "image_revision": 1,
+    "status": "selected"
+  },
+  "category_id": "gerichte-herzhaftes",
+  "definition": {
+    "bytes": 5410,
+    "file": "game/data/content/pz-banh-mi.json",
+    "sha256": "6ca2091d15a0408ccb0d5755d76b8a762375a22b3b321a779395b1e7496fff40"
+  },
+  "difficulty": {
+    "compact_analysis": {
+      "analysis_hash": "b5737cdf05030614d3e34a1f136e51e6f0e76e84bb39ffd8e3beb075ee6f1f9e",
+      "deduction_complete": true,
+      "line_analysis_complete": true,
+      "line_fixpoint_confirmed": true,
+      "new_singletons": 448,
+      "profiles_hash": "db420f4bb3c4765b43a5be6c3c053134f5f7b9dd87a252198e5b2639498eed77",
+      "r4": null,
+      "reason": null,
+      "result_hash": "b473b5842e04d27a3f0ed4da8471bfcd60b41c47b5fe4014d0cc1c1ee29c713c",
+      "status": "solved",
+      "structure": {
+        "adjacent_color_changes": 137,
+        "cells": 448,
+        "clue_length_histogram": {
+          "1": 95,
+          "13": 1,
+          "18": 1,
+          "2": 47,
+          "3": 13,
+          "4": 4,
+          "5": 4,
+          "6": 2,
+          "7": 1,
+          "9": 6
+        },
+        "colors": 4,
+        "geometric_slack": 528,
+        "height": 16,
+        "mandatory_gaps": 0,
+        "short_blocks": 142,
+        "total_clue_length": 368,
+        "total_clues": 174,
+        "width": 28
+      },
+      "trace_hash": "e147923d1ed5df7af940a5439b7a41ef1a19c947081a739cc1554d575bfd50ce",
+      "wave_count": 9
+    },
+    "logic_binding": {
+      "matrix_hash": "edda54b0ca52eeb6aee4f1066e467716469d700c939ab1fb7cbbfd1a318b02c6"
+    },
+    "rating": {
+      "analysis_result_hash": "b473b5842e04d27a3f0ed4da8471bfcd60b41c47b5fe4014d0cc1c1ee29c713c",
+      "format": "picross-catalog-sd2-rating-v1",
+      "method": "picross-difficulty-0.4",
+      "method_hash": "5508f0742aa858a6adc31aa621433e68298b915fb0fd6b8d9e74e576ba87caaf",
+      "rating_hash": "c25e3e952989fa9a91add7b1c3e4fbbc38f3de088f139591a270787085ca0daa",
+      "result": {
+        "analysis_result_hash": "b473b5842e04d27a3f0ed4da8471bfcd60b41c47b5fe4014d0cc1c1ee29c713c",
+        "assessment": {
+          "boundaries": {
+            "distance_lower": null,
+            "distance_upper": [
+              67,
+              128
+            ],
+            "lower": null,
+            "nearest_distance": [
+              67,
+              128
+            ],
+            "upper": [
+              1,
+              1
+            ]
+          },
+          "contributions": {
+            "demand": [
+              1,
+              4
+            ],
+            "search": [
+              29,
+              128
+            ],
+            "workload": [
+              0,
+              1
+            ]
+          },
+          "level": 1,
+          "level_without_workload": 1,
+          "score": [
+            61,
+            128
+          ],
+          "signals": {
+            "context": [
+              0,
+              1
+            ],
+            "fluent": true,
+            "highest_family": "E1",
+            "longest_narrow_run": 0,
+            "narrow_waves": 0,
+            "peak_search": [
+              29,
+              128
+            ],
+            "raw_workload": [
+              81,
+              640
+            ],
+            "spans": 121,
+            "workload_ceiling": 3,
+            "workload_guard": "fluent"
+          },
+          "without_workload": [
+            61,
+            128
+          ]
+        },
+        "confidence": "medium",
+        "estimated_minutes": null,
+        "explanation": "Model estimate from synthetic references; no human calibration or time estimate. Demand, search and bounded workload use independently checked line profiles.",
+        "format": "picross-sd2-rating-v1",
+        "method": "picross-difficulty-0.4",
+        "method_hash": "5508f0742aa858a6adc31aa621433e68298b915fb0fd6b8d9e74e576ba87caaf",
+        "profile_scope": "complete_line",
+        "reason": "complete_line",
+        "status": "rated"
+      },
+      "source": {
+        "bytes": 5410,
+        "definition_id": "pz-banh-mi",
+        "engine_logic_hash": "b4768916d3fd7e40a2e1b4e486615231ba55664980f220c08f6a794a20b23168",
+        "kind": "runtime",
+        "production_mode": "unknown",
+        "runtime_revision": 4,
+        "sha256": "6ca2091d15a0408ccb0d5755d76b8a762375a22b3b321a779395b1e7496fff40"
+      }
+    },
+    "rating_revision": 1
+  },
+  "format": "picross-puzzle-record-v1",
+  "id": "pz-banh-mi",
+  "mode": "color",
+  "name": "Bánh Mì",
+  "reveal": {
+    "asset": {
+      "bytes": 2965033,
+      "file": "game/art/content/pz-banh-mi.png",
+      "sha256": "f7144cc5123c29278c6ac9133176d0f943ec561469f7cbff54febecf17f687da"
+    },
+    "catalog": {
+      "generator": "picross-catalog-reveal-1",
+      "profiles": [
+        {
+          "asset": {
+            "bytes": 46968,
+            "file": "game/art/catalog/pz-banh-mi-ui100.png",
+            "sha256": "e1337c049afbd2fdf36edd1ff3497eea31243320a5c0366b547327eb62f66fcf"
+          },
+          "height": 88,
+          "profile": "catalog-ui100-v1",
+          "width": 264
+        },
+        {
+          "asset": {
+            "bytes": 71696,
+            "file": "game/art/catalog/pz-banh-mi-ui125.png",
+            "sha256": "ef9a24bfcf23aa69853fdeea7ecf200ee68d9d34183d33115e1648af260c8247"
+          },
+          "height": 110,
+          "profile": "catalog-ui125-v1",
+          "width": 329
+        }
+      ],
+      "source_height": 724,
+      "source_width": 2172
+    },
+    "image_revision": 1
+  },
+  "save_slot": "pz-banh-mi",
+  "visible": true
+}

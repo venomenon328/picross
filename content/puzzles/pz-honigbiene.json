@@ -1,0 +1,206 @@
+{
+  "added": {
+    "added_at": "2026-11-26T09:29:06Z",
+    "provenance": {
+      "commit": null,
+      "evidence": null,
+      "kind": "registration",
+      "reason": "Successful first playable registration in the shared transaction.",
+      "reference_time": "2026-11-26T09:29:06Z"
+    }
+  },
+  "background": {
+    "asset": {
+      "bytes": 1066714,
+      "file": "game/art/backgrounds/pz-honigbiene.png",
+      "sha256": "00b42fec9c3ddebc58cb8f30f420cf6c7e4413882c3ac58a0e4d5c3a730914fb"
+    },
+    "image_revision": 1,
+    "status": "selected"
+  },
+  "category_id": "insekten-kleine-tiere",
+  "definition": {
+    "bytes": 3171,
+    "file": "game/data/content/pz-honigbiene.json",
+    "sha256": "b8e297a182ec5d68222807227b97e3fbd8058624caf9bac8f08703a4c7f5c6fd"
+  },
+  "difficulty": {
+    "compact_analysis": {
+      "analysis_hash": "977d39bbd1fd77f8f7c5da7868034ac9f4e2d5554c17072a304c79a088fbf8d0",
+      "deduction_complete": true,
+      "line_analysis_complete": true,
+      "line_fixpoint_confirmed": true,
+      "new_singletons": 225,
+      "profiles_hash": "57bcf8a4aa6c6cf25872416294bebbf1278825e4777878f41050171ef89d183e",
+      "r4": null,
+      "reason": null,
+      "result_hash": "2ac29cb6484d73996ee4f5b1d0ccf7726bae1356d67314537c36aace3edba5c4",
+      "status": "solved",
+      "structure": {
+        "adjacent_color_changes": 61,
+        "cells": 225,
+        "clue_length_histogram": {
+          "1": 43,
+          "2": 26,
+          "3": 16,
+          "4": 9,
+          "5": 3,
+          "7": 1,
+          "9": 1
+        },
+        "colors": 3,
+        "geometric_slack": 232,
+        "height": 15,
+        "mandatory_gaps": 8,
+        "short_blocks": 69,
+        "total_clue_length": 210,
+        "total_clues": 99,
+        "width": 15
+      },
+      "trace_hash": "72212a7b1ce6833e25da66e6da5a7e921a51555440ddaeabd00e1483eeab294e",
+      "wave_count": 16
+    },
+    "logic_binding": {
+      "matrix_hash": "c6250467ec34fe49d21907a65103f874c4fefdb94f496ff9685370bd70e4ac50"
+    },
+    "rating": {
+      "analysis_result_hash": "2ac29cb6484d73996ee4f5b1d0ccf7726bae1356d67314537c36aace3edba5c4",
+      "format": "picross-catalog-sd2-rating-v1",
+      "method": "picross-difficulty-0.4",
+      "method_hash": "5508f0742aa858a6adc31aa621433e68298b915fb0fd6b8d9e74e576ba87caaf",
+      "rating_hash": "0cf6a5557e247dbc89cbbe6b9d22385e6d859e87a5157ba04ca2a12e66ad0ad1",
+      "result": {
+        "analysis_result_hash": "2ac29cb6484d73996ee4f5b1d0ccf7726bae1356d67314537c36aace3edba5c4",
+        "assessment": {
+          "boundaries": {
+            "distance_lower": [
+              689,
+              720
+            ],
+            "distance_upper": [
+              31,
+              720
+            ],
+            "lower": [
+              1,
+              1
+            ],
+            "nearest_distance": [
+              31,
+              720
+            ],
+            "upper": [
+              2,
+              1
+            ]
+          },
+          "contributions": {
+            "demand": [
+              1,
+              1
+            ],
+            "search": [
+              227,
+              288
+            ],
+            "workload": [
+              27,
+              160
+            ]
+          },
+          "level": 2,
+          "level_without_workload": 2,
+          "score": [
+            1409,
+            720
+          ],
+          "signals": {
+            "context": [
+              0,
+              1
+            ],
+            "fluent": false,
+            "highest_family": "E1",
+            "longest_narrow_run": 1,
+            "narrow_waves": 2,
+            "peak_search": [
+              25,
+              36
+            ],
+            "raw_workload": [
+              27,
+              160
+            ],
+            "spans": 148,
+            "workload_ceiling": 3,
+            "workload_guard": "none"
+          },
+          "without_workload": [
+            515,
+            288
+          ]
+        },
+        "confidence": "medium",
+        "estimated_minutes": null,
+        "explanation": "Model estimate from synthetic references; no human calibration or time estimate. Demand, search and bounded workload use independently checked line profiles.",
+        "format": "picross-sd2-rating-v1",
+        "method": "picross-difficulty-0.4",
+        "method_hash": "5508f0742aa858a6adc31aa621433e68298b915fb0fd6b8d9e74e576ba87caaf",
+        "profile_scope": "complete_line",
+        "reason": "complete_line",
+        "status": "rated"
+      },
+      "source": {
+        "bytes": 3171,
+        "definition_id": "pz-honigbiene",
+        "engine_logic_hash": "262451adeaceedf2d2a856b70e87011436773316dae08da7d44445b518590047",
+        "kind": "runtime",
+        "production_mode": "unknown",
+        "runtime_revision": 2,
+        "sha256": "b8e297a182ec5d68222807227b97e3fbd8058624caf9bac8f08703a4c7f5c6fd"
+      }
+    },
+    "rating_revision": 1
+  },
+  "format": "picross-puzzle-record-v1",
+  "id": "pz-honigbiene",
+  "mode": "color",
+  "name": "Honigbiene",
+  "reveal": {
+    "asset": {
+      "bytes": 1737037,
+      "file": "game/art/content/pz-honigbiene.png",
+      "sha256": "2126a3101e108a27a258015927e1c8fe48ed07c4a50ab236a76d7022eb2ba122"
+    },
+    "catalog": {
+      "generator": "picross-catalog-reveal-1",
+      "profiles": [
+        {
+          "asset": {
+            "bytes": 18516,
+            "file": "game/art/catalog/pz-honigbiene-ui100.png",
+            "sha256": "e310d6c77fadc808b04c1bf5f63c3dec7efc8f6d448c39ea657aa9cf45d4a847"
+          },
+          "height": 112,
+          "profile": "catalog-ui100-v1",
+          "width": 112
+        },
+        {
+          "asset": {
+            "bytes": 27230,
+            "file": "game/art/catalog/pz-honigbiene-ui125.png",
+            "sha256": "ed8377556e9d33f783a78f2ccde7c2a07aadb00f9e3f7c9c1c68de43d96e9d69"
+          },
+          "height": 140,
+          "profile": "catalog-ui125-v1",
+          "width": 140
+        }
+      ],
+      "source_height": 1254,
+      "source_width": 1254
+    },
+    "image_revision": 1
+  },
+  "save_slot": "pz-honigbiene",
+  "visible": true
+}

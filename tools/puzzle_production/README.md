@@ -1408,13 +1408,14 @@ python -m tools.puzzle_production.catalog_analysis plan-adoption --checkout <che
 python -m tools.puzzle_production.catalog_analysis adopt --checkout <checkout> --work-dir <work/preview>
 ```
 
-Erst `adopt` schreibt aktive Ratings und beide Dauerberichte. Unvollständige
-Versuche ersetzen keine gültigen aktiven Werte. Identische Übernahme ist No-op;
-alte Produktionsbelege, Definitionen, Revisionen, Kategorien und Saves bleiben.
-Report-v2 bindet zusätzlich alle gelesenen Quellen. `plan-adoption` und `adopt`
-prüfen vor einem No-op den erwarteten Übernahmezustand einschließlich dieser
-Quellen; nach zwischenzeitlicher Kategorie-/Registry-/Ratingänderung stoppen beide
-konkret ohne Mutation. Der aktuelle gemeinsame Katalogjournalvertrag steht in
+Erst `adopt` schreibt die aktiven Bewertungen im Feld `difficulty` der betroffenen
+Einzelrecords, die Runtimeprojektion und beide Dauerberichte. Unvollständige
+Versuche ersetzen keine gültigen aktiven Werte. Identische Übernahme ist ein No-op.
+Produktionsbelege, Definitionen, Rasterrevisionen, Kategorien und Saves bleiben erhalten.
+Der aktuelle Bericht `picross-puzzle-difficulty-report-v1` bindet die gelesenen
+Quellen. `plan-adoption` und `adopt` prüfen vor einem No-op den erwarteten
+Übernahmezustand einschließlich dieser Bindungen. Bei abweichenden Quellen
+stoppen beide ohne Mutation. Der aktuelle gemeinsame Katalogjournalvertrag steht in
 [SD-Catalog](../../docs/difficulty/SD_CATALOG.md#aktuelle-katalogjournale);
 frühere Journalgenerationen sind keine aktuellen Recoveryeingänge.
 Der gemeinsame Lock schützt Registrierung, Editor, Sync und Adoption. Nach Unterbrechung:
@@ -1423,15 +1424,17 @@ Der gemeinsame Lock schützt Registrierung, Editor, Sync und Adoption. Nach Unte
 python -m tools.puzzle_production.target_adapter recover-registration --checkout <checkout>
 ```
 
-Recovery prüft vollständig vor Mutation und stellt eine gültige Altprojektion
-her. Fremdänderungen erhalten Dateien und Journal; den Konflikt klären, nicht
-den Lock löschen oder durch `sync-runtime` umgehen. Formen und Grenzen stehen im
+Recovery prüft vor der Mutation alle gebundenen Bytes und stellt die gültige
+Projektion vom Beginn der unterbrochenen Transaktion wieder her. Bei Fremdänderungen
+bleiben Dateien und Journal erhalten. Den Konflikt klären und Lock sowie Journal
+bis dahin erhalten. Formen und Grenzen stehen im
 [aktuellen Katalogvertrag](../../docs/difficulty/SD_CATALOG.md#aktuelle-katalogjournale).
 
-Alle Quellen-/Recoverywege prüfen auch verwaiste oder falsch platzierte aktive
-Ratingdateien. Nur `content/difficulty/<registrierte-ID>/rating.json` ist aktiv;
-die erlaubten `reports/<run-id>/report.json|report.md` sind getrennt. Fremde und
-aliasartige Dateien bleiben bei Blockade erhalten, statt einen Legacyfallback auszulösen.
+Der aktive Bewertungszustand liegt ausschließlich im Feld `difficulty` des
+Einzelrecords `content/puzzles/<id>.json`. Der gemeinsame Recordzugriff prüft
+das Inventar, die ID-Bindung und die jeweils betroffenen Quellen. Die
+Dauerberichte `report.json` und `report.md` unter
+`content/difficulty/reports/<run-id>/` belegen die Übernahme.
 
 ## Linienverfahren und Ressourcen
 
@@ -1682,9 +1685,9 @@ aktueller Abschluss [Authoring Schritt 5](../../docs/production/authoring/PUZZLE
 
 ## KU-B: Hinzugefügt-Metadaten
 
-`catalog_added` validiert ID-gebundene Sidecars und dauerhafte Quellenbelege;
-Registryprojektion, Registrierung, Update, Sync, Bewertungsadoption und Recovery
-verwenden den aktuellen Katalogtransaktionsweg. Runtimeprojektion und reine
+`catalog_added` validiert Zeitpunkt und Herkunft im Feld `added` des Einzelrecords.
+Registrierung, Pflege, Bewertungsadoption und Recovery nutzen den gemeinsamen
+aktuellen Bestandszugriff. Runtimeprojektion und reine
 Spieler-Lesekompatibilität stehen in [RI-ONE](../../docs/production/PUZZLE_INTEGRATION_SINGLE_PATH.md#21-geschlossene-aktuelle-runtimeprojektion).
 Der separate historische Nachtrag läuft ausdrücklich und ohne Analyse:
 

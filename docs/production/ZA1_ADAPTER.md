@@ -89,15 +89,13 @@ Die Verfahren für direkten Import, feste motivtreue Korrektur, manuelle Ableitu
 
 Neue reguläre Produktion folgt [Authoring](authoring/PUZZLE_AUTHORING.md), [PW-B](../tools/PW_B_CONTRACT.md), [fester Rasterkorrektur](FIXED_RASTER.md) und der beauftragten Phase. Vorhandene gültige Bilder/Proofs nicht nachproduzieren. Bildformat- und Korrekturbefugnisse aus aktuellem Main bleiben erhalten. Alt-WIP ist kein Kompatibilitätsziel und wird nicht automatisch konvertiert.
 
-## PW-RETIRE · Abschluss mehrphasiger Produktion
+## PW-RETIRE · Abschluss der aktuellen Produktion
 
-Nach tatsächlichem Mainmerge dessen vollen Commit und frisch aktualisiertes origin/main prüfen. `retire-production` bestätigt die aktuelle ausgewählte Lieferung, nicht einen Originalexport oder Receipt. Aktuelle Jobs haben einen einzelnen registrierten Record. Ihre Arbeitsbytes werden am eigenen Arbeitsref geprüft; sie müssen nicht im Produkt-Maincommit enthalten sein. Nur bei ausdrücklich älteren mehrphasigen Formen frühere zugeordnete Arbeit zusätzlich auswählen:
+Nach bestätigtem Mainmerge den vollen Commit und frisch aktualisiertes origin/main prüfen. Der Abschluss vergleicht Einzelrecord, ausgewählte Originale und Runtimezeile im gebundenen Main-Tree. Die zugehörigen Arbeitsbytes stammen aus dem eigenen bestätigten Arbeitsref.
 
 ```text
-python -m tools.puzzle_production.target_adapter retire-production --checkout <checkout> --integrated-commit <main-SHA> --puzzle-id <pz-ID> --completed-revision <pz-ID> <frühere-revision> --completed-work <pz-ID> <relativer-arbeitsordner>
+python -m tools.puzzle_production.target_adapter retire-production --checkout <checkout> --integrated-commit <main-SHA> --puzzle-id <pz-ID>
 ```
-
-Zusatzoptionen sind wiederholbar und gehören zur bestehenden Abschlussbefugnis, ohne neue Freigabe pro Vorgängerrecord. Zuordnung aus tatsächlicher aktueller Arbeit und deren unveränderten Arbeitsbytes, keine numerische Revisionsheuristik. Aktuelle Bild-/Definitions-/Notice-/Rating-/Datumsdaten bleiben erhalten.
 
 **Keine neue Abschluss-Notice:** Aktuelle PE-EDIT2-Hintergründe haben keine
 Pflicht-`.txt` am Hintergrundstamm. `retire-production` prüft den ausgewählten
@@ -115,4 +113,4 @@ Eigenständige aktuelle Bild-/Rasteränderungen verwenden den gezielten Editor. 
 
 ## Katalogprofile für Abschlussbilder
 
-Die Erstintegration bereitet zwei Profile aus dem gewählten Original vor. Registrierungsjournal v2 bindet elf Ziele, mit gewähltem Hintergrund dreizehn. Ein belegter identischer Eintrag endet vor der Ableitung als No-op. Recovery verwendet die bereits gebundenen Schreibseiten und prüft fremde Bytes vor jeder Änderung.
+Die Erstintegration bereitet zwei Profile aus dem gewählten Original vor. Das Registrierungsjournal bindet sieben Ziele, mit gewähltem Hintergrund neun. Ein belegter identischer Eintrag endet vor der Ableitung als No-op. Recovery verwendet die bereits gebundenen Schreibseiten und prüft fremde Bytes vor jeder Änderung.

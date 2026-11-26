@@ -97,7 +97,7 @@ def build(cache: Path, output: Path, *, test: bool = False, development: bool = 
         if not test:
             # Inspect the actual exported pack using the existing external probe.
             # This checks package boundaries, not every production puzzle.
-            registry = json.loads((root/'content/registry.json').read_text(encoding='utf-8'))
+            registry = json.loads((root/'game/data/registry.json').read_text(encoding='utf-8'))
             expected = work/'background-sources.json'
             expected.write_text(json.dumps(background_sources), encoding='utf-8')
             pack_env = {**env, 'ZA1_PACK_COUNT': str(sum(e['visible'] for e in registry['entries'])),

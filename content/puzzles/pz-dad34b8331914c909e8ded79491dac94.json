@@ -1,0 +1,214 @@
+{
+  "added": {
+    "added_at": "2026-10-21T16:37:50Z",
+    "provenance": {
+      "commit": null,
+      "evidence": null,
+      "kind": "registration",
+      "reason": "Successful first playable registration in the shared transaction.",
+      "reference_time": "2026-10-21T16:37:50Z"
+    }
+  },
+  "background": {
+    "asset": {
+      "bytes": 846942,
+      "file": "game/art/backgrounds/pz-dad34b8331914c909e8ded79491dac94.png",
+      "sha256": "d4accdc6d103807c2898a341b97348cd3d838d3ab07f1a5e32ec7b0cdaa12edb"
+    },
+    "image_revision": 2,
+    "status": "selected"
+  },
+  "category_id": "landschaften-natur",
+  "definition": {
+    "bytes": 14192,
+    "file": "game/data/content/regenbogen_001.json",
+    "sha256": "1764ba7f716719d8432adbc82bab09c947c053df5ec77766dd78521997b91429"
+  },
+  "difficulty": {
+    "compact_analysis": {
+      "analysis_hash": "86e3b33ad5e99104115ad1270e81f7eff56159b605634e2f9f655491017dcb5b",
+      "deduction_complete": true,
+      "line_analysis_complete": true,
+      "line_fixpoint_confirmed": true,
+      "new_singletons": 1500,
+      "profiles_hash": "87ad5545c9f70992052f2b58c475046f0210c839648937af9c05949327004443",
+      "r4": null,
+      "reason": null,
+      "result_hash": "25e5b96ee3f64b66f8a186e45982407ffbda91a300cf1b8edd65f8946885131f",
+      "status": "solved",
+      "structure": {
+        "adjacent_color_changes": 354,
+        "cells": 1500,
+        "clue_length_histogram": {
+          "1": 28,
+          "10": 5,
+          "11": 1,
+          "13": 3,
+          "14": 4,
+          "15": 4,
+          "17": 3,
+          "2": 237,
+          "3": 84,
+          "4": 36,
+          "5": 15,
+          "6": 10,
+          "7": 8,
+          "8": 6,
+          "9": 8
+        },
+        "colors": 7,
+        "geometric_slack": 1505,
+        "height": 30,
+        "mandatory_gaps": 19,
+        "short_blocks": 265,
+        "total_clue_length": 1476,
+        "total_clues": 452,
+        "width": 50
+      },
+      "trace_hash": "c8ca80254332ce0bbe837c313f488e9516fc6089f3a4a3bf829b8dab428ef46f",
+      "wave_count": 29
+    },
+    "logic_binding": {
+      "matrix_hash": "41ff0bcbfbbac55279f5ad33fb513fe88bfe143ad50c3f85ebf84f2d1090a7c0"
+    },
+    "rating": {
+      "analysis_result_hash": "25e5b96ee3f64b66f8a186e45982407ffbda91a300cf1b8edd65f8946885131f",
+      "format": "picross-catalog-sd2-rating-v1",
+      "method": "picross-difficulty-0.4",
+      "method_hash": "5508f0742aa858a6adc31aa621433e68298b915fb0fd6b8d9e74e576ba87caaf",
+      "rating_hash": "cb28a955bb47e94d10901fa1f66b5dab0ffec31e3a6fd032c1de9c4c9867e31e",
+      "result": {
+        "analysis_result_hash": "25e5b96ee3f64b66f8a186e45982407ffbda91a300cf1b8edd65f8946885131f",
+        "assessment": {
+          "boundaries": {
+            "distance_lower": [
+              26404661,
+              43664580
+            ],
+            "distance_upper": [
+              17259919,
+              43664580
+            ],
+            "lower": [
+              3,
+              1
+            ],
+            "nearest_distance": [
+              17259919,
+              43664580
+            ],
+            "upper": [
+              4,
+              1
+            ]
+          },
+          "contributions": {
+            "demand": [
+              1711,
+              796
+            ],
+            "search": [
+              264449,
+              219420
+            ],
+            "workload": [
+              1,
+              4
+            ]
+          },
+          "level": 4,
+          "level_without_workload": 4,
+          "score": [
+            157398401,
+            43664580
+          ],
+          "signals": {
+            "context": [
+              119,
+              199
+            ],
+            "fluent": false,
+            "highest_family": "E2",
+            "longest_narrow_run": 4,
+            "narrow_waves": 6,
+            "peak_search": [
+              104797,
+              109710
+            ],
+            "raw_workload": [
+              1,
+              4
+            ],
+            "spans": 589,
+            "workload_ceiling": 4,
+            "workload_guard": "none"
+          },
+          "without_workload": [
+            36620564,
+            10916145
+          ]
+        },
+        "confidence": "medium",
+        "estimated_minutes": null,
+        "explanation": "Model estimate from synthetic references; no human calibration or time estimate. Demand, search and bounded workload use independently checked line profiles.",
+        "format": "picross-sd2-rating-v1",
+        "method": "picross-difficulty-0.4",
+        "method_hash": "5508f0742aa858a6adc31aa621433e68298b915fb0fd6b8d9e74e576ba87caaf",
+        "profile_scope": "complete_line",
+        "reason": "complete_line",
+        "status": "rated"
+      },
+      "source": {
+        "bytes": 14192,
+        "definition_id": "pz-dad34b8331914c909e8ded79491dac94",
+        "engine_logic_hash": "88e919d9242d77e7d65db341d52cc24c4048d3a53000b7a03b166c3801840400",
+        "kind": "runtime",
+        "production_mode": "unknown",
+        "runtime_revision": 1,
+        "sha256": "1764ba7f716719d8432adbc82bab09c947c053df5ec77766dd78521997b91429"
+      }
+    },
+    "rating_revision": 2
+  },
+  "format": "picross-puzzle-record-v1",
+  "id": "pz-dad34b8331914c909e8ded79491dac94",
+  "mode": "color",
+  "name": "Regenbogen",
+  "reveal": {
+    "asset": {
+      "bytes": 1602098,
+      "file": "game/art/content/regenbogen_001.png",
+      "sha256": "68943d92c0e4bc8ace14708b1a6f6dcfb46fb7d437bf9f4bcca8c91bc132d88c"
+    },
+    "catalog": {
+      "generator": "picross-catalog-reveal-1",
+      "profiles": [
+        {
+          "asset": {
+            "bytes": 29599,
+            "file": "game/art/catalog/pz-dad34b8331914c909e8ded79491dac94-ui100.png",
+            "sha256": "9070358caefc55fe1f919b6c258cb5ce8e96fde8d2ef297b4b795fa30e4a93c7"
+          },
+          "height": 112,
+          "profile": "catalog-ui100-v1",
+          "width": 180
+        },
+        {
+          "asset": {
+            "bytes": 43145,
+            "file": "game/art/catalog/pz-dad34b8331914c909e8ded79491dac94-ui125.png",
+            "sha256": "b21f194cfaeee034d4d1da102dc7764c82c839f8aef1a707c58b2ffdfae39ef6"
+          },
+          "height": 140,
+          "profile": "catalog-ui125-v1",
+          "width": 224
+        }
+      ],
+      "source_height": 992,
+      "source_width": 1586
+    },
+    "image_revision": 1
+  },
+  "save_slot": "regenbogen_001",
+  "visible": true
+}

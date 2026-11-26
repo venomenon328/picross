@@ -1,8 +1,4 @@
-"""PE-EDIT2 targeted edits. No normal action may certify other content.
-
-The synthetic prerequisite represents externally migrated current sources;
-constructing it is not an editor migration API or a production converter.
-"""
+"""Targeted edits on a synthetic registered puzzle."""
 from copy import deepcopy
 import json
 import os
@@ -13,13 +9,13 @@ import unittest
 from unittest.mock import patch
 
 from tests.puzzle_production.catalog_fixtures import registered
-from tools.puzzle_production import editor_change as edit, catalog_io as io
+from tools.puzzle_production import puzzle_record, editor_change as edit, catalog_io as io
 from tools.puzzle_production import content_registry as registry, catalog_background as bg
 from tools.puzzle_production.contract import write_json, digest
 
 
 def current_fixture(root):
-    return json.loads((root/registry.REGISTRY).read_bytes())["entries"][0]
+    return puzzle_record.entry(puzzle_record.load(root,"pz-current",category_catalog=None))
 
 
 class EditorChangeTests(unittest.TestCase):
@@ -57,14 +53,14 @@ class EditorChangeTests(unittest.TestCase):
         reads = []
         def bounded(root, name, limit, **kw):
             if Path(root) == self.root:
-                self.assertTrue(name in edit.INDEXES or name in (edit.LOCK, edit.STAGE) or '/.editor-' in name, name)
+                self.assertTrue(name in set(edit.INDEXES) | {puzzle_record.path(self.entry["id"]), "game/" + self.entry["definition"]} or name in (edit.LOCK, edit.STAGE) or '/.editor-' in name, name)
                 reads.append(name)
             return original(root, name, limit, **kw)
         with patch.object(io, 'read', side_effect=bounded), patch.object(registry, 'check_checkout', side_effect=AssertionError('full scan')):
             edit.listing(self.root)
             plan = self.metadata_plan()
             edit.apply(self.root, plan)
-            self.assertEqual(set(plan['reads']), set(edit.INDEXES))
+            self.assertEqual(set(plan['reads']), set(edit.INDEXES) | {puzzle_record.path(self.entry['id']), 'game/'+self.entry['definition']})
             before = self.snapshot()
             noop = self.metadata_plan()
             self.assertFalse(noop['changes'])
@@ -122,7 +118,7 @@ class EditorChangeTests(unittest.TestCase):
         with patch.object(edit, '_prepare_raster', side_effect=AssertionError('solver')):
             plan = edit.plan(self.root, self.request(text=detail['raster']['text'].replace(' ', '  ')+'\n', profile='line'))
         self.assertFalse(plan['changes'])
-        self.assertEqual(set(plan['reads']), set(edit.INDEXES)|{'game/'+self.entry['definition']})
+        self.assertEqual(set(plan['reads']), set(edit.INDEXES)|{puzzle_record.path(self.entry['id']), 'game/'+self.entry['definition']})
 
     def test_image_change_no_provenance_and_explicit_shared_diagnostic(self):
         from io import BytesIO
@@ -131,7 +127,7 @@ class EditorChangeTests(unittest.TestCase):
         image = image.getvalue()
         plan = edit.plan(self.root, self.request(reveal={'upload': 'image'}),
                          uploads={'image': {'raw': image, 'suffix': 'png', 'checked': {'sha256': io.checksum(image), 'width': 128, 'height': 128}}})
-        self.assertNotIn('provenance', json.dumps(plan))
+        self.assertNotIn('usage_basis', json.dumps(plan))
         edit.apply(self.root, plan)
         registry.check_checkout(self.root)
         self.assertEqual((self.root/'game'/self.entry['reveal']).read_bytes(), image)
@@ -169,7 +165,7 @@ class EditorChangeTests(unittest.TestCase):
         plan['entry']['definition'] = 'data/content/foreign.json'
         plan['plan_hash'] = digest({k: v for k, v in plan.items() if k != 'plan_hash'})
         before = self.snapshot()
-        with self.assertRaisesRegex(ValueError, 'Selected plan entry'): edit.apply(self.root, plan)
+        with self.assertRaisesRegex(ValueError, 'Selected plan entry lacks bound record or definition'): edit.apply(self.root, plan)
         self.assertEqual(before, self.snapshot())
         raw = b'<svg xmlns="http://www.w3.org/2000/svg" width="128" height="128"/>'
         from tools.puzzle_production.editor_image_input import validate_reveal
@@ -177,9 +173,9 @@ class EditorChangeTests(unittest.TestCase):
             'image': {'raw': raw, 'suffix': 'svg', 'checked': validate_reveal(raw, '.svg')}})
         self.assertTrue(all("game/art/catalog/" + self.entry["id"] + "-" + label + ".png" in plan["changes"]
                             for label in ("ui100", "ui125")))
-        del plan['changes']['content/reveals/'+self.entry['id']+'.json']
+        del plan['changes'][puzzle_record.path(self.entry['id'])]
         plan['plan_hash'] = digest({k: v for k, v in plan.items() if k != 'plan_hash'})
-        with self.assertRaisesRegex(ValueError, 'lacks current image source|without current source'): edit.apply(self.root, plan)
+        with self.assertRaisesRegex(ValueError, 'Editor projection differs|Unbound asset change'): edit.apply(self.root, plan)
         self.assertEqual(before, self.snapshot())
 
     def test_reveal_suffix_switch_preserves_foreign_files_and_round_trips(self):

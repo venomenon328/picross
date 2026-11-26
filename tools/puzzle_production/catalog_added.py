@@ -1,13 +1,11 @@
 """KU-B authoritative added dates. Pure validation; never reads Git or analyzes puzzles."""
 from datetime import datetime, timezone
-import hashlib
 import re
 
 from .authoring_package import require, sha
 from .contract import canonical_bytes, exact_keys
 from . import catalog_rating as rating
 
-FORMAT = "picross-added-v1"
 LIMIT = 64 * 1024
 REPORT_LIMIT = 8 * 1024 * 1024
 ROOT = "content/added"
@@ -27,20 +25,13 @@ def commit(value):
     return value
 
 
-def path(identifier):
-    return ROOT + "/" + rating.identity(identifier) + ".json"
-
-
 def report_path(run):
     from .catalog_analysis import run_id
     return ROOT + "/reports/" + run_id(run) + ".json"
 
 
-def validate(value, identifier=None):
-    exact_keys(value, {"format", "id", "added_at", "provenance"})
-    require(value["format"] == FORMAT, "Unsupported added format")
-    rating.identity(value["id"])
-    require(identifier is None or value["id"] == identifier, "Wrong added ID")
+def validate_fields(value):
+    exact_keys(value, {"added_at", "provenance"})
     timestamp(value["added_at"])
     p = exact_keys(value["provenance"], {"kind", "reference_time", "commit", "evidence", "reason"})
     require(p["kind"] in ("registration", "direct", "git-snapshot", "unknown"), "Invalid added provenance")
@@ -62,53 +53,9 @@ def validate(value, identifier=None):
     return value
 
 
-def encoded(value):
-    return canonical_bytes(validate(value)) + b"\n"
-
-
 def registration(identifier):
     now = datetime.now(timezone.utc).isoformat(timespec="seconds").replace("+00:00", "Z")
-    return {"format": FORMAT, "id": identifier, "added_at": now,
+    rating.identity(identifier)
+    return {"added_at": now,
             "provenance": {"kind": "registration", "reference_time": now, "commit": None,
                            "evidence": None, "reason": "Successful first playable registration in the shared transaction."}}
-
-
-def source_paths(root, *registries, extra_reports=(), temporary=()):
-    """Inspect the whole namespace, including aliases and Windows reparse points."""
-    from .content_update import path_in
-    allowed = {path(e["id"]) for r in registries for e in r["entries"]}
-    reports = set(extra_reports)
-    records = {}
-    for name in sorted(allowed):
-        p = path_in(root, name)
-        require(not p.exists() or p.is_file(), "Added source must be a regular file")
-        if p.exists():
-            raw = rating.read_file(p, LIMIT)
-            record = validate(rating.bytes_json(raw, LIMIT), p.stem)
-            require(raw == encoded(record), "Noncanonical added source")
-            records[name] = record
-            if record["provenance"]["evidence"]:
-                reports.add(record["provenance"]["evidence"]["path"])
-    directory = path_in(root, ROOT)
-    if directory.exists():
-        require(directory.is_dir(), "Added namespace must be a directory")
-        for p in directory.iterdir():
-            name = p.relative_to(root).as_posix()
-            path_in(root, name)
-            if name in temporary: continue
-            if name == ROOT + "/reports":
-                require(p.is_dir(), "Added reports must be a directory")
-                for report in p.iterdir():
-                    n = report.relative_to(root).as_posix()
-                    if n in temporary: continue
-                    require(n in reports and path_in(root, n).is_file(), "Unknown added evidence file: " + n)
-            else:
-                require(name in allowed and p.is_file(), "Unknown added source: " + name)
-    return records, reports
-
-
-def load_sources(root, registry):
-    """Current date values do not replay historical report provenance."""
-    from . import catalog_io as io
-    return {e["id"]: validate(io.json_bytes(io.read(root,path(e["id"]),LIMIT),LIMIT),e["id"])
-            for e in registry["entries"]}

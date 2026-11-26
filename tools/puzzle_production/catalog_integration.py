@@ -4,6 +4,7 @@ from hashlib import sha1
 from . import current_content as content, current_registration as transaction
 from . import catalog_rating as rating, catalog_added as added, catalog_method, categories
 from . import catalog_io as io, catalog_profiles, operation_diagnostics as diagnostic
+from . import puzzle_record, puzzle_catalog
 from .integration_input import Input, open_input
 from .authoring_package import require
 
@@ -35,11 +36,11 @@ def same(current, incoming):
     return (current["entry"] == incoming.entry and current["definition"] == incoming.definition_raw and
             current["metadata"] == value["metadata"] and current["reveal_bytes"] == incoming.reveal["asset"] and
             current["notice"] == incoming.reveal["notice"] and
-            current["background"]["current"]["status"] == value["background"]["status"] and
+            current["record"]["background"]["status"] == value["background"]["status"] and
             (incoming.background is None or
              current.get("background_bytes") == incoming.background["asset"] and
              current.get("background_notice") == incoming.background["notice"]) and
-            rating_result(current["rating"]) == rating_result(incoming.checked))
+            all(current["record"]["difficulty"][k] == incoming.checked[k] for k in ("rating","compact_analysis")))
 
 
 @diagnostic.measured("Input/Plan")
@@ -95,55 +96,51 @@ def _register(operation, root, *, apply=False, fail_step=None, publication_secon
                     not workspace.changes(snapshot.root), 'Registration requires a clean bound integration worktree')
     method_record = catalog_method.from_bytes(snapshot.raw[catalog_method.PATH])
     require(rating.method(incoming.checked) == catalog_method.current(method_record)["method"], "New input requires current difficulty method")
-    value = deepcopy(snapshot.registry)
-    value["entries"].append(entry); value["entries"].sort(key=lambda e: e["id"])
-    value["metadata"].append(incoming.value["metadata"]); value["metadata"].sort(key=lambda e: e["id"])
+    for old in snapshot.runtime["entries"]:
+        for key in ("save_slot","definition","reveal"):
+            require(old[key].rsplit(".",1)[0].casefold() != entry[key].rsplit(".",1)[0].casefold(),
+                    "Occupied current " + key)
     raw = incoming.definition_raw
     original = content.ref("game/"+entry["reveal"], incoming.reveal["asset"])
-    background = content.source(entry, raw, {"image_revision": 1, "status": incoming.value["background"]["status"],
-        "asset": content.ref("game/art/backgrounds/"+entry["id"]+".png", incoming.background["asset"]) if incoming.background else None}, "background")
-    background_name = content.source_path(entry["id"], "background")
-    value["backgrounds"].append({"id": entry["id"], "source": content.ref(background_name, content.encoded(background))})
-    value["backgrounds"].sort(key=lambda e: e["id"])
-    content.validate(value, snapshot.catalog)
-    active = rating.active_record(incoming.checked)
-    changes = {content.REGISTRY: content.encoded(value),
-               "game/"+entry["definition"]: raw, "game/"+entry["reveal"]: incoming.reveal["asset"],
-               content.notice_path(entry): incoming.reveal["notice"],
-               rating.path(entry["id"]): rating.encoded(active),
-               background_name: content.encoded(background)}
+    bg = {"image_revision":1, "status":incoming.value["background"]["status"],
+          "asset":content.ref("game/art/backgrounds/"+entry["id"]+".png",incoming.background["asset"]) if incoming.background else None}
+    changes = {"game/"+entry["definition"]:raw, original["file"]:incoming.reveal["asset"],
+               content.notice_path(entry):incoming.reveal["notice"]}
     if incoming.background:
         changes["game/art/backgrounds/"+entry["id"]+".png"] = incoming.background["asset"]
         changes["game/art/backgrounds/"+entry["id"]+".txt"] = incoming.background["notice"]
-    reveal_name = content.source_path(entry["id"], "reveal")
-    profile_names = {catalog_profiles.path(entry["id"], label) for label, _, _ in catalog_profiles.PROFILES}
-    planned_names = set(changes) | profile_names | {reveal_name, content.RUNTIME}
-    for name in planned_names - {content.REGISTRY, content.RUNTIME}:
+    record_name = puzzle_record.path(entry["id"])
+    profile_names = {catalog_profiles.path(entry["id"],label) for label,_,_ in catalog_profiles.PROFILES}
+    planned_names = set(changes) | profile_names | {record_name,content.RUNTIME}
+    for name in planned_names - {content.RUNTIME}:
         require(snapshot.read(name, missing=True) is None, "Occupied current path: "+name)
-    require(snapshot.read(added.path(entry["id"]), missing=True) is None, "Occupied added date")
     incoming.recheck(); snapshot.recheck()
-    plan = {"status": "planned", "registered": False, "id": entry["id"], "category": category,
-            "changes": [{"path": n, "operation": "replace" if n in (content.REGISTRY, content.RUNTIME) else "add"} for n in sorted(planned_names)] +
-                       [{"path": added.path(entry["id"]), "operation": "add-on-success"}],
-            "user_saves_modified": False}
+    plan = {"status":"planned", "registered":False, "id":entry["id"], "category":category,
+            "changes":[{"path":n,"operation":"replace" if n == content.RUNTIME else "add"} for n in sorted(planned_names)],
+            "user_saves_modified":False}
     # A bound source already supplies the qualified geometry. Profile names
     # are fixed, so a read-only plan can check every collision before rendering.
     if not apply and incoming.recheck_source is not None:
         return plan
     catalog, profiles = operation.profiles(original)
     require(set(profiles) == profile_names, 'Catalog profile paths differ from plan')
-    reveal = content.source(entry, raw, {"image_revision": 1, "asset": original}, "reveal", catalog=catalog)
-    date = added.registration(entry["id"]) if apply else {"added_at": None}
-    delivery = {"entry": entry, "metadata": incoming.value["metadata"], "reveal": reveal, "background": background,
-                "rating": active, "added": date}
+    if not apply:
+        return plan
+    date = added.registration(entry["id"])
+    active = rating.active_record(incoming.checked)
+    record = {"format":puzzle_record.FORMAT, **{k:entry[k] for k in ("id","save_slot","mode","visible","category_id")},
+              "name":incoming.value["metadata"]["name"], "definition":content.ref("game/"+entry["definition"],raw),
+              "added":{k:date[k] for k in ("added_at","provenance")},
+              "difficulty":puzzle_catalog.difficulty_fields(active), "background":bg,
+              "reveal":{"image_revision":1,"asset":original,"catalog":{k:v for k,v in catalog.items() if k != "source_sha256"}}}
+    puzzle_record.validate(record,entry["id"],raw,category_catalog=snapshot.catalog)
     runtime = deepcopy(snapshot.runtime)
-    runtime["entries"].append(content.runtime_row(delivery)); runtime["entries"].sort(key=lambda e: e["id"])
+    runtime["entries"].append(puzzle_record.runtime_row(record))
+    runtime["entries"].sort(key=lambda e:e["id"])
     changes.update(profiles)
-    changes[reveal_name] = content.encoded(reveal)
+    changes[record_name] = puzzle_record.encode(record)
     changes[content.RUNTIME] = content.encoded(runtime)
     incoming.recheck(); snapshot.recheck()
-    if not apply: return plan
-    changes[added.path(entry["id"])] = added.encoded(date)
     journal = transaction.prepare(snapshot, changes)
     incoming.recheck()
     result = transaction.execute(snapshot, journal, publication_seconds=publication_seconds,

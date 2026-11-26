@@ -1,0 +1,208 @@
+{
+  "added": {
+    "added_at": "2026-11-15T21:10:34Z",
+    "provenance": {
+      "commit": null,
+      "evidence": null,
+      "kind": "registration",
+      "reason": "Successful first playable registration in the shared transaction.",
+      "reference_time": "2026-11-15T21:10:34Z"
+    }
+  },
+  "background": {
+    "asset": {
+      "bytes": 587148,
+      "file": "game/art/backgrounds/pz-marienkaefer.png",
+      "sha256": "9c6014f51fbf1a0ce8debfc1a9a4e5246113efb8f6c8606e599154693322e108"
+    },
+    "image_revision": 2,
+    "status": "selected"
+  },
+  "category_id": "insekten-kleine-tiere",
+  "definition": {
+    "bytes": 5309,
+    "file": "game/data/content/marienkaefer_001.json",
+    "sha256": "491896044bcc34960e9af15b9c4476f0ad4cb853518ec5611eba041f57a87ebf"
+  },
+  "difficulty": {
+    "compact_analysis": {
+      "analysis_hash": "197b26f2883facbde53ab076ac590fd666530320c2711023c7914702e01c8850",
+      "deduction_complete": true,
+      "line_analysis_complete": true,
+      "line_fixpoint_confirmed": true,
+      "new_singletons": 400,
+      "profiles_hash": "0410bd2194b45f326a75400daea6ffd8ee2ce9f218f87c611994340f7adf8e77",
+      "r4": null,
+      "reason": null,
+      "result_hash": "405da5ac3d18ba173b5da183f5920dfdb8c335dc482434d26e4fff0f59d0ea80",
+      "status": "solved",
+      "structure": {
+        "adjacent_color_changes": 123,
+        "cells": 400,
+        "clue_length_histogram": {
+          "1": 72,
+          "2": 59,
+          "3": 15,
+          "4": 14,
+          "5": 8,
+          "6": 1,
+          "7": 3,
+          "8": 1,
+          "9": 2
+        },
+        "colors": 3,
+        "geometric_slack": 403,
+        "height": 20,
+        "mandatory_gaps": 13,
+        "short_blocks": 131,
+        "total_clue_length": 384,
+        "total_clues": 175,
+        "width": 20
+      },
+      "trace_hash": "8faa4f05f77774cea8255ada80ec58fbfa7684b4f36f1794ee4369844222cef6",
+      "wave_count": 28
+    },
+    "logic_binding": {
+      "matrix_hash": "32f1381ef138c02c8d05a3b810c3cb40bcfededb904827501590be1b330d711c"
+    },
+    "rating": {
+      "analysis_result_hash": "405da5ac3d18ba173b5da183f5920dfdb8c335dc482434d26e4fff0f59d0ea80",
+      "format": "picross-catalog-sd2-rating-v1",
+      "method": "picross-difficulty-0.4",
+      "method_hash": "5508f0742aa858a6adc31aa621433e68298b915fb0fd6b8d9e74e576ba87caaf",
+      "rating_hash": "c3253872fdc97a48d30d5856ad7519bb8264a230d386b155ab3f315fb3e7b51e",
+      "result": {
+        "analysis_result_hash": "405da5ac3d18ba173b5da183f5920dfdb8c335dc482434d26e4fff0f59d0ea80",
+        "assessment": {
+          "boundaries": {
+            "distance_lower": [
+              31441,
+              89440
+            ],
+            "distance_upper": [
+              57999,
+              89440
+            ],
+            "lower": [
+              3,
+              1
+            ],
+            "nearest_distance": [
+              31441,
+              89440
+            ],
+            "upper": [
+              4,
+              1
+            ]
+          },
+          "contributions": {
+            "demand": [
+              109,
+              52
+            ],
+            "search": [
+              6917,
+              6880
+            ],
+            "workload": [
+              1,
+              4
+            ]
+          },
+          "level": 4,
+          "level_without_workload": 4,
+          "score": [
+            299761,
+            89440
+          ],
+          "signals": {
+            "context": [
+              5,
+              13
+            ],
+            "fluent": false,
+            "highest_family": "E2",
+            "longest_narrow_run": 1,
+            "narrow_waves": 2,
+            "peak_search": [
+              196,
+              215
+            ],
+            "raw_workload": [
+              1,
+              4
+            ],
+            "spans": 229,
+            "workload_ceiling": 4,
+            "workload_guard": "none"
+          },
+          "without_workload": [
+            277401,
+            89440
+          ]
+        },
+        "confidence": "medium",
+        "estimated_minutes": null,
+        "explanation": "Model estimate from synthetic references; no human calibration or time estimate. Demand, search and bounded workload use independently checked line profiles.",
+        "format": "picross-sd2-rating-v1",
+        "method": "picross-difficulty-0.4",
+        "method_hash": "5508f0742aa858a6adc31aa621433e68298b915fb0fd6b8d9e74e576ba87caaf",
+        "profile_scope": "complete_line",
+        "reason": "complete_line",
+        "status": "rated"
+      },
+      "source": {
+        "bytes": 5318,
+        "definition_id": "pz-marienkaefer",
+        "engine_logic_hash": "1869e8041921b6a3813b09cd6a2ba8e7d75997958dbcb43de826e3059ccb20d0",
+        "kind": "runtime",
+        "production_mode": "unknown",
+        "runtime_revision": 1,
+        "sha256": "0a8e291c16ed7a46832773fa8d331b46004732fdae7bc9a1d1710935dda6977e"
+      }
+    },
+    "rating_revision": 1
+  },
+  "format": "picross-puzzle-record-v1",
+  "id": "pz-marienkaefer",
+  "mode": "color",
+  "name": "Marienkäfer",
+  "reveal": {
+    "asset": {
+      "bytes": 1799222,
+      "file": "game/art/content/marienkaefer_001.png",
+      "sha256": "9ea7f3248efc6d95de6f947c692ee9142d63c7bbe9689fbe57e560c00c662270"
+    },
+    "catalog": {
+      "generator": "picross-catalog-reveal-1",
+      "profiles": [
+        {
+          "asset": {
+            "bytes": 18772,
+            "file": "game/art/catalog/pz-marienkaefer-ui100.png",
+            "sha256": "7f16f7a0c276930e1227f62500e5a04999341d85922d88292c3dbc8254842dd4"
+          },
+          "height": 112,
+          "profile": "catalog-ui100-v1",
+          "width": 112
+        },
+        {
+          "asset": {
+            "bytes": 27261,
+            "file": "game/art/catalog/pz-marienkaefer-ui125.png",
+            "sha256": "255808bd8d05958b4867032525adcb32f9e2bf548d9f89f59426ae89e5216aea"
+          },
+          "height": 140,
+          "profile": "catalog-ui125-v1",
+          "width": 140
+        }
+      ],
+      "source_height": 1254,
+      "source_width": 1254
+    },
+    "image_revision": 1
+  },
+  "save_slot": "marienkaefer_001",
+  "visible": true
+}

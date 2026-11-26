@@ -1,0 +1,219 @@
+{
+  "added": {
+    "added_at": "2026-10-14T14:53:45Z",
+    "provenance": {
+      "commit": "5abbd0ea628c5c8afb5260d557db950a1f9c4efb",
+      "evidence": {
+        "path": "content/added/reports/ku-b-initial.json",
+        "sha256": "e6d7a01e740adbc40cdc90e64c733f95907c8924cfe1f0a4bb734bb7bc6b7884"
+      },
+      "kind": "git-snapshot",
+      "reason": "No direct UTC first-registration receipt found in reviewed sources; earliest verified visible integrated catalog snapshot including bound PR history. Commit UTC is a reconstructed reference, not tool execution time.",
+      "reference_time": "2026-10-14T14:53:45Z"
+    }
+  },
+  "background": {
+    "asset": {
+      "bytes": 642106,
+      "file": "game/art/backgrounds/pz-dbbebc72556d4f0c9a37ab69275480e9.png",
+      "sha256": "de96497a4d55cbeb7520e22f8a86f3a5326d84521bb1ac5431076b4733c3e4df"
+    },
+    "image_revision": 3,
+    "status": "selected"
+  },
+  "category_id": "saeuger",
+  "definition": {
+    "bytes": 4693,
+    "file": "game/data/content/giraffe_001.json",
+    "sha256": "90ac8dfd3a149ee8d82e0d86cb4e81902d978a3d96e73b1e8f667a71776c2f7b"
+  },
+  "difficulty": {
+    "compact_analysis": {
+      "analysis_hash": "aa8a4f1176ba78843b10fff2a012a5f991051d4b26134ef224f7178f8d7a0792",
+      "deduction_complete": true,
+      "line_analysis_complete": true,
+      "line_fixpoint_confirmed": true,
+      "new_singletons": 864,
+      "profiles_hash": "44ce97bffcefa06f9130a1be595473ac5a9e8af4eda22de4a28fb606ec9fd291",
+      "r4": null,
+      "reason": null,
+      "result_hash": "d9c29a5bc3d487d84ede54bf66933c5efc6de03f8a31204842b30260d9bf09e1",
+      "status": "solved",
+      "structure": {
+        "adjacent_color_changes": 0,
+        "cells": 864,
+        "clue_length_histogram": {
+          "1": 26,
+          "10": 4,
+          "11": 1,
+          "12": 3,
+          "13": 4,
+          "14": 2,
+          "16": 3,
+          "19": 1,
+          "2": 28,
+          "23": 1,
+          "3": 7,
+          "4": 10,
+          "5": 5,
+          "6": 3,
+          "7": 3,
+          "8": 3,
+          "9": 2
+        },
+        "colors": 1,
+        "geometric_slack": 1175,
+        "height": 36,
+        "mandatory_gaps": 47,
+        "short_blocks": 54,
+        "total_clue_length": 506,
+        "total_clues": 106,
+        "width": 24
+      },
+      "trace_hash": "36908f976f104f8f5bacffb1cd4aa80c7f3e07a3f43d99030da74f96fa6d04df",
+      "wave_count": 26
+    },
+    "logic_binding": {
+      "matrix_hash": "6d3eba8b2d159d2b48ff929a18f20130b54cc7266761cb604222a6dfbc7bc955"
+    },
+    "rating": {
+      "analysis_result_hash": "d9c29a5bc3d487d84ede54bf66933c5efc6de03f8a31204842b30260d9bf09e1",
+      "format": "picross-catalog-sd2-rating-v1",
+      "method": "picross-difficulty-0.4",
+      "method_hash": "5508f0742aa858a6adc31aa621433e68298b915fb0fd6b8d9e74e576ba87caaf",
+      "rating_hash": "96371034f2d55be3f67bfc4986baa15fbc5500f3af7f36a23cbdb9497bdc33f8",
+      "result": {
+        "analysis_result_hash": "d9c29a5bc3d487d84ede54bf66933c5efc6de03f8a31204842b30260d9bf09e1",
+        "assessment": {
+          "boundaries": {
+            "distance_lower": [
+              100358,
+              226855
+            ],
+            "distance_upper": [
+              126497,
+              226855
+            ],
+            "lower": [
+              3,
+              1
+            ],
+            "nearest_distance": [
+              100358,
+              226855
+            ],
+            "upper": [
+              4,
+              1
+            ]
+          },
+          "contributions": {
+            "demand": [
+              21,
+              10
+            ],
+            "search": [
+              198251,
+              181484
+            ],
+            "workload": [
+              1,
+              4
+            ]
+          },
+          "level": 4,
+          "level_without_workload": 4,
+          "score": [
+            780923,
+            226855
+          ],
+          "signals": {
+            "context": [
+              2,
+              5
+            ],
+            "fluent": false,
+            "highest_family": "E2",
+            "longest_narrow_run": 4,
+            "narrow_waves": 7,
+            "peak_search": [
+              38220,
+              45371
+            ],
+            "raw_workload": [
+              1,
+              4
+            ],
+            "spans": 293,
+            "workload_ceiling": 4,
+            "workload_guard": "none"
+          },
+          "without_workload": [
+            2896837,
+            907420
+          ]
+        },
+        "confidence": "medium",
+        "estimated_minutes": null,
+        "explanation": "Model estimate from synthetic references; no human calibration or time estimate. Demand, search and bounded workload use independently checked line profiles.",
+        "format": "picross-sd2-rating-v1",
+        "method": "picross-difficulty-0.4",
+        "method_hash": "5508f0742aa858a6adc31aa621433e68298b915fb0fd6b8d9e74e576ba87caaf",
+        "profile_scope": "complete_line",
+        "reason": "complete_line",
+        "status": "rated"
+      },
+      "source": {
+        "bytes": 4693,
+        "definition_id": "pz-dbbebc72556d4f0c9a37ab69275480e9",
+        "engine_logic_hash": "7571a8e3a316ade75d30691d447ed27f354b77950cbf81cd768efd2f08a8b520",
+        "kind": "runtime",
+        "production_mode": "unknown",
+        "runtime_revision": 1,
+        "sha256": "90ac8dfd3a149ee8d82e0d86cb4e81902d978a3d96e73b1e8f667a71776c2f7b"
+      }
+    },
+    "rating_revision": 2
+  },
+  "format": "picross-puzzle-record-v1",
+  "id": "pz-dbbebc72556d4f0c9a37ab69275480e9",
+  "mode": "mono",
+  "name": "Giraffe",
+  "reveal": {
+    "asset": {
+      "bytes": 1829142,
+      "file": "game/art/content/giraffe_001.png",
+      "sha256": "1c047af76afe3862377047299624019487fc80ffbaa7bf8993f498b4b4120ee1"
+    },
+    "catalog": {
+      "generator": "picross-catalog-reveal-1",
+      "profiles": [
+        {
+          "asset": {
+            "bytes": 11619,
+            "file": "game/art/catalog/pz-dbbebc72556d4f0c9a37ab69275480e9-ui100.png",
+            "sha256": "bcc6f4250e3e26e8545a5390e9878035e23e80096f925c278652651c79f445ba"
+          },
+          "height": 112,
+          "profile": "catalog-ui100-v1",
+          "width": 75
+        },
+        {
+          "asset": {
+            "bytes": 16696,
+            "file": "game/art/catalog/pz-dbbebc72556d4f0c9a37ab69275480e9-ui125.png",
+            "sha256": "29c919c2f448918bb56f80f2478c70ffd16c9bd15bfb037cad379d102a1a827b"
+          },
+          "height": 140,
+          "profile": "catalog-ui125-v1",
+          "width": 94
+        }
+      ],
+      "source_height": 1536,
+      "source_width": 1024
+    },
+    "image_revision": 1
+  },
+  "save_slot": "giraffe_001",
+  "visible": true
+}

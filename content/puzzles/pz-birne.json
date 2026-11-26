@@ -1,0 +1,214 @@
+{
+  "added": {
+    "added_at": "2026-11-12T19:58:38Z",
+    "provenance": {
+      "commit": null,
+      "evidence": null,
+      "kind": "registration",
+      "reason": "Successful first playable registration in the shared transaction.",
+      "reference_time": "2026-11-12T19:58:38Z"
+    }
+  },
+  "background": {
+    "asset": {
+      "bytes": 592814,
+      "file": "game/art/backgrounds/pz-birne.png",
+      "sha256": "76df09b4fb93a7dd8da906cb6c13360df9c20f89e56eabf0f1b160e795316420"
+    },
+    "image_revision": 3,
+    "status": "selected"
+  },
+  "category_id": "obst-nuesse",
+  "definition": {
+    "bytes": 2017,
+    "file": "game/data/content/birne_001.json",
+    "sha256": "ca31a64958a40a3614e2e5483cbeb2c6146e6125e1f8821be00124524b86a730"
+  },
+  "difficulty": {
+    "compact_analysis": {
+      "analysis_hash": "e414219971f4f85c55ecefc3e473a2411755d3eab4a10483dbf4d7f4aa462db0",
+      "deduction_complete": true,
+      "line_analysis_complete": true,
+      "line_fixpoint_confirmed": true,
+      "new_singletons": 308,
+      "profiles_hash": "a13acf8d5ff793e9ccc4c74f5a700b1806a6b6cc23cce362105c235837655834",
+      "r4": null,
+      "reason": null,
+      "result_hash": "bd81127254cd552459cf9bacb0f845b470bbeac2d409a285fc7041936933f64a",
+      "status": "solved",
+      "structure": {
+        "adjacent_color_changes": 0,
+        "cells": 308,
+        "clue_length_histogram": {
+          "1": 1,
+          "10": 1,
+          "11": 5,
+          "12": 4,
+          "15": 2,
+          "17": 2,
+          "19": 2,
+          "2": 5,
+          "3": 2,
+          "4": 5,
+          "5": 5,
+          "6": 3,
+          "7": 1,
+          "8": 4,
+          "9": 2
+        },
+        "colors": 1,
+        "geometric_slack": 256,
+        "height": 22,
+        "mandatory_gaps": 8,
+        "short_blocks": 6,
+        "total_clue_length": 352,
+        "total_clues": 44,
+        "width": 14
+      },
+      "trace_hash": "935f5a532ed826435f19a93125857bb589580a18196926843669855794d2aa29",
+      "wave_count": 17
+    },
+    "logic_binding": {
+      "matrix_hash": "6f5e89d805de02364c4bbcbf727b0f0a4d3f39448533a72cbccfe6811015ca37"
+    },
+    "rating": {
+      "analysis_result_hash": "bd81127254cd552459cf9bacb0f845b470bbeac2d409a285fc7041936933f64a",
+      "format": "picross-catalog-sd2-rating-v1",
+      "method": "picross-difficulty-0.4",
+      "method_hash": "5508f0742aa858a6adc31aa621433e68298b915fb0fd6b8d9e74e576ba87caaf",
+      "rating_hash": "bee2d4004fc30c7c6d9119fe46a337713102d447b87df13089db32d6a250935e",
+      "result": {
+        "analysis_result_hash": "bd81127254cd552459cf9bacb0f845b470bbeac2d409a285fc7041936933f64a",
+        "assessment": {
+          "boundaries": {
+            "distance_lower": [
+              9393,
+              12160
+            ],
+            "distance_upper": [
+              2767,
+              12160
+            ],
+            "lower": [
+              1,
+              1
+            ],
+            "nearest_distance": [
+              2767,
+              12160
+            ],
+            "upper": [
+              2,
+              1
+            ]
+          },
+          "contributions": {
+            "demand": [
+              1,
+              1
+            ],
+            "search": [
+              203,
+              304
+            ],
+            "workload": [
+              67,
+              640
+            ]
+          },
+          "level": 2,
+          "level_without_workload": 2,
+          "score": [
+            21553,
+            12160
+          ],
+          "signals": {
+            "context": [
+              0,
+              1
+            ],
+            "fluent": false,
+            "highest_family": "E1",
+            "longest_narrow_run": 1,
+            "narrow_waves": 1,
+            "peak_search": [
+              23,
+              38
+            ],
+            "raw_workload": [
+              67,
+              640
+            ],
+            "spans": 107,
+            "workload_ceiling": 3,
+            "workload_guard": "none"
+          },
+          "without_workload": [
+            507,
+            304
+          ]
+        },
+        "confidence": "medium",
+        "estimated_minutes": null,
+        "explanation": "Model estimate from synthetic references; no human calibration or time estimate. Demand, search and bounded workload use independently checked line profiles.",
+        "format": "picross-sd2-rating-v1",
+        "method": "picross-difficulty-0.4",
+        "method_hash": "5508f0742aa858a6adc31aa621433e68298b915fb0fd6b8d9e74e576ba87caaf",
+        "profile_scope": "complete_line",
+        "reason": "complete_line",
+        "status": "rated"
+      },
+      "source": {
+        "bytes": 2040,
+        "definition_id": "pz-birne",
+        "engine_logic_hash": "a650b45ffdb9c0bbff8bc1890acfcd2eaf63e7a7b679442bef2608b2431a978c",
+        "kind": "runtime",
+        "production_mode": "unknown",
+        "runtime_revision": 1,
+        "sha256": "6caf1d1c81ed59e2d439fcad62f9f9dae506409f98ddbe952a5bdf2c1dc058c8"
+      }
+    },
+    "rating_revision": 1
+  },
+  "format": "picross-puzzle-record-v1",
+  "id": "pz-birne",
+  "mode": "mono",
+  "name": "Birne",
+  "reveal": {
+    "asset": {
+      "bytes": 1684666,
+      "file": "game/art/content/birne_001.png",
+      "sha256": "c3554f13119addaf9735b4127c1a27095b2045ef45e671a20233a847b6ea54d4"
+    },
+    "catalog": {
+      "generator": "picross-catalog-reveal-1",
+      "profiles": [
+        {
+          "asset": {
+            "bytes": 14698,
+            "file": "game/art/catalog/pz-birne-ui100.png",
+            "sha256": "f5198335a1a166273669a778995465d7cf88b37d3d81df9a7ae11345f6945d34"
+          },
+          "height": 112,
+          "profile": "catalog-ui100-v1",
+          "width": 90
+        },
+        {
+          "asset": {
+            "bytes": 21531,
+            "file": "game/art/catalog/pz-birne-ui125.png",
+            "sha256": "3f08cbdcc65003e5b476a6bb59f19a80e821aa01d6efbf9a701f08a94a3a71f6"
+          },
+          "height": 140,
+          "profile": "catalog-ui125-v1",
+          "width": 113
+        }
+      ],
+      "source_height": 1402,
+      "source_width": 1122
+    },
+    "image_revision": 1
+  },
+  "save_slot": "birne_001",
+  "visible": true
+}

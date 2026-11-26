@@ -18,45 +18,56 @@ def validate(value, *, definition_bytes=None, production_mode=None, active=False
     common.source(value["current_source"]); common.binding(value["logic_binding"])
     integer(value["rating_revision"],1,1000000,"rating revision")
     common.check_hash(value,"record_hash")
-    if value["method"]==catalog_method.NEW:
+    require(value["method"] == common.embedded_method(value["rating"]), "Rating method differs")
+    validate_fields(value["rating"], value["compact_analysis"], value["production_mode"],
+                    value["current_source"], value["logic_binding"], definition_bytes=definition_bytes, active=active)
+    return value
+
+
+def validate_fields(rating, analysis, production_mode, source_binding, logic_binding, *, definition_bytes, active):
+    method_id = common.embedded_method(rating)
+    require(method_id in catalog_method.METHODS, "Unknown assessment method")
+    common.mode(production_mode)
+    common.source(source_binding)
+    common.binding(logic_binding)
+    if method_id==catalog_method.NEW:
         from . import sd2_catalog_rating as method
-        method.compact(value["compact_analysis"])
-        require(value["compact_analysis"]["analysis_hash"]==value["logic_binding"]["analysis_hash"],"Assessment logic differs")
-        method.rating(value["rating"],value["compact_analysis"],value["current_source"]["id"])
-        color_count = value["compact_analysis"]["structure"]["colors"]
+        method.compact(analysis)
+        require(analysis["analysis_hash"]==logic_binding["analysis_hash"],"Assessment logic differs")
+        method.rating(rating,analysis,source_binding["id"])
+        color_count = analysis["structure"]["colors"]
     else:
-        common._compact(value["compact_analysis"])
-        common._rating(value["rating"],value["compact_analysis"],value["current_source"]["id"])
-        color_count = value["compact_analysis"]["metrics"]["workload"]["colors"]
+        common._compact(analysis)
+        common._rating(rating,analysis,source_binding["id"])
+        color_count = analysis["metrics"]["workload"]["colors"]
     if not active:
-        require_color_count(value["production_mode"], color_count)
-    require(value["rating"]["result"]["status"]=="rated","Complete current assessment required")
+        require_color_count(production_mode, color_count)
+    require(rating["result"]["status"]=="rated","Complete current assessment required")
     if definition_bytes is not None:
-        data,puzzle,source,logic=common.definition(definition_bytes,method=value["method"])
-        require(value["current_source"]==source and value["logic_binding"]==logic and
-                value["rating"]["source"]["engine_logic_hash"]==puzzle.logic_hash,"Stale assessment definition")
+        data,puzzle,source,logic=common.definition(definition_bytes,method=method_id)
+        require(source_binding==source and logic_binding==logic and
+                rating["source"]["engine_logic_hash"]==puzzle.logic_hash,"Stale assessment definition")
         if not active:
-            require_color_count(value["production_mode"], len(used_foreground(data["solution"])))
+            require_color_count(production_mode, len(used_foreground(data["solution"])))
         else:
-            require(value["production_mode"] != "mono" or len(puzzle.colors) == 1,
+            require(production_mode != "mono" or len(puzzle.colors) == 1,
                     "Mono assessment has multiple colors")
-        if value["method"]==catalog_method.NEW:
+        if method_id==catalog_method.NEW:
             from .sd2_profiles import structure
-            require(value["compact_analysis"]["structure"]==structure(puzzle),"Assessment geometry differs")
+            require(analysis["structure"]==structure(puzzle),"Assessment geometry differs")
         else:
-            workload=value["compact_analysis"]["metrics"]["workload"]
+            workload=analysis["metrics"]["workload"]
             require((workload["width"],workload["height"],workload["colors"])==
                     (puzzle.width,puzzle.height,len(puzzle.colors)),"Assessment geometry differs")
             for axis,lines in (("row",data["rows"]),("column",data["columns"])):
                 require(workload["clue_count"][axis]==sum(map(len,lines)) and
                         workload["clue_length_sum"][axis]==sum(c["length"] for line in lines for c in line),
                         "Assessment clues differ")
-        if value["compact_analysis"]["r4"]:
+        if analysis["r4"]:
             from .contract import selected_profile
-            r4=value["compact_analysis"]["r4"]
+            r4=analysis["r4"]
             require(r4["proof_profile_hash"]==digest(selected_profile(puzzle,"paired-lines-color")) and
                     r4["baseline_profile_hash"]==digest(puzzle.profile),"Assessment R4 profile differs")
-    return value
 
 
 def _assessment(value, method):

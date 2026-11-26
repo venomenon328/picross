@@ -1,0 +1,211 @@
+{
+  "added": {
+    "added_at": "2026-10-13T15:30:26Z",
+    "provenance": {
+      "commit": "d4247764e419e40aa06ec74f1d2c7f0cfc6c5a68",
+      "evidence": {
+        "path": "content/added/reports/ku-b-initial.json",
+        "sha256": "e6d7a01e740adbc40cdc90e64c733f95907c8924cfe1f0a4bb734bb7bc6b7884"
+      },
+      "kind": "git-snapshot",
+      "reason": "No direct UTC first-registration receipt found in reviewed sources; earliest verified visible integrated catalog snapshot including bound PR history. Commit UTC is a reconstructed reference, not tool execution time.",
+      "reference_time": "2026-10-13T15:30:26Z"
+    }
+  },
+  "background": {
+    "asset": {
+      "bytes": 712349,
+      "file": "game/art/backgrounds/pz-c71563f1b8c940de998afdd62f09.png",
+      "sha256": "2a1e4947d0c1228aa1c178c7ec3e3923e5dda03e32243c0c3097c0258fba4104"
+    },
+    "image_revision": 2,
+    "status": "selected"
+  },
+  "category_id": "insekten-kleine-tiere",
+  "definition": {
+    "bytes": 11050,
+    "file": "game/data/content/stirnlappenbasilisk_001.json",
+    "sha256": "0c13e049c23fbc0a58b3251a5644950045101fc3d3bcf36b4d2e0cc8194190e6"
+  },
+  "difficulty": {
+    "compact_analysis": {
+      "analysis_hash": "ffa33efd84fd8a25a790039fa5d959e4156d318b69a4ca7d8377db6d9c8f7fda",
+      "deduction_complete": true,
+      "line_analysis_complete": true,
+      "line_fixpoint_confirmed": true,
+      "new_singletons": 1250,
+      "profiles_hash": "46a347a09999c2eeb6d391a5f5ff5f3c5307c3bd4eb3fb70025ffa313394cb77",
+      "r4": null,
+      "reason": null,
+      "result_hash": "fea8f9de1a297f071bc54a17e38c2dcf7312531a92adb5a4dab011c0ca0f87e3",
+      "status": "solved",
+      "structure": {
+        "adjacent_color_changes": 247,
+        "cells": 1250,
+        "clue_length_histogram": {
+          "1": 206,
+          "11": 2,
+          "2": 76,
+          "3": 27,
+          "4": 14,
+          "5": 9,
+          "6": 8,
+          "7": 2,
+          "8": 1
+        },
+        "colors": 3,
+        "geometric_slack": 1841,
+        "height": 25,
+        "mandatory_gaps": 27,
+        "short_blocks": 282,
+        "total_clue_length": 632,
+        "total_clues": 345,
+        "width": 50
+      },
+      "trace_hash": "c7d85f196e6bce58f430fbbc9b4a85a901c183eeb9a175c78a6017414cfa8323",
+      "wave_count": 55
+    },
+    "logic_binding": {
+      "matrix_hash": "dbf78c41b5f9cdf22fa2b9044e797ed4cea54e0b42767b9a1068197f2dbc8d87"
+    },
+    "rating": {
+      "analysis_result_hash": "fea8f9de1a297f071bc54a17e38c2dcf7312531a92adb5a4dab011c0ca0f87e3",
+      "format": "picross-catalog-sd2-rating-v1",
+      "method": "picross-difficulty-0.4",
+      "method_hash": "5508f0742aa858a6adc31aa621433e68298b915fb0fd6b8d9e74e576ba87caaf",
+      "rating_hash": "6c9cc77ecf5d22f22c596c6846487633be92d4bc4def17af89e5ed513696ae63",
+      "result": {
+        "analysis_result_hash": "fea8f9de1a297f071bc54a17e38c2dcf7312531a92adb5a4dab011c0ca0f87e3",
+        "assessment": {
+          "boundaries": {
+            "distance_lower": [
+              646537,
+              995400
+            ],
+            "distance_upper": [
+              348863,
+              995400
+            ],
+            "lower": [
+              3,
+              1
+            ],
+            "nearest_distance": [
+              348863,
+              995400
+            ],
+            "upper": [
+              4,
+              1
+            ]
+          },
+          "contributions": {
+            "demand": [
+              157,
+              72
+            ],
+            "search": [
+              67409,
+              55300
+            ],
+            "workload": [
+              1,
+              4
+            ]
+          },
+          "level": 4,
+          "level_without_workload": 4,
+          "score": [
+            3632737,
+            995400
+          ],
+          "signals": {
+            "context": [
+              13,
+              18
+            ],
+            "fluent": false,
+            "highest_family": "E2",
+            "longest_narrow_run": 6,
+            "narrow_waves": 23,
+            "peak_search": [
+              13396,
+              13825
+            ],
+            "raw_workload": [
+              1,
+              4
+            ],
+            "spans": 639,
+            "workload_ceiling": 4,
+            "workload_guard": "none"
+          },
+          "without_workload": [
+            3383887,
+            995400
+          ]
+        },
+        "confidence": "medium",
+        "estimated_minutes": null,
+        "explanation": "Model estimate from synthetic references; no human calibration or time estimate. Demand, search and bounded workload use independently checked line profiles.",
+        "format": "picross-sd2-rating-v1",
+        "method": "picross-difficulty-0.4",
+        "method_hash": "5508f0742aa858a6adc31aa621433e68298b915fb0fd6b8d9e74e576ba87caaf",
+        "profile_scope": "complete_line",
+        "reason": "complete_line",
+        "status": "rated"
+      },
+      "source": {
+        "bytes": 11050,
+        "definition_id": "pz-c71563f1b8c940de998afdd62f09",
+        "engine_logic_hash": "c569b15b15293e8571ccbf11e5aa9a37569e2e1cce849d21e3ead77db6b2cde4",
+        "kind": "runtime",
+        "production_mode": "unknown",
+        "runtime_revision": 1,
+        "sha256": "0c13e049c23fbc0a58b3251a5644950045101fc3d3bcf36b4d2e0cc8194190e6"
+      }
+    },
+    "rating_revision": 2
+  },
+  "format": "picross-puzzle-record-v1",
+  "id": "pz-c71563f1b8c940de998afdd62f09",
+  "mode": "color",
+  "name": "Stirnlappenbasilisk",
+  "reveal": {
+    "asset": {
+      "bytes": 1122126,
+      "file": "game/art/content/stirnlappenbasilisk_001.png",
+      "sha256": "1a66386a87d6303dbc68131170333d847496e18b48e6ba236f4577d2ddcebb24"
+    },
+    "catalog": {
+      "generator": "picross-catalog-reveal-1",
+      "profiles": [
+        {
+          "asset": {
+            "bytes": 27190,
+            "file": "game/art/catalog/pz-c71563f1b8c940de998afdd62f09-ui100.png",
+            "sha256": "aa5b06ebc718e98adeabfede5240acfa804dabd261764e34374bbabab044b6d7"
+          },
+          "height": 112,
+          "profile": "catalog-ui100-v1",
+          "width": 244
+        },
+        {
+          "asset": {
+            "bytes": 39649,
+            "file": "game/art/catalog/pz-c71563f1b8c940de998afdd62f09-ui125.png",
+            "sha256": "0f2d7f79e5dd4bc8521333adbd53b19363c2965858f2f561dffea7461b1b9a85"
+          },
+          "height": 140,
+          "profile": "catalog-ui125-v1",
+          "width": 305
+        }
+      ],
+      "source_height": 850,
+      "source_width": 1850
+    },
+    "image_revision": 1
+  },
+  "save_slot": "stirnlappenbasilisk_001",
+  "visible": true
+}

@@ -88,6 +88,8 @@ Der Akteur führt diese Schritte im selben Chat aus:
    Download, Sichtung, Entscheidung, Publikation, PR/CI, Merge und Rückbau
    mit ihrem tatsächlichen Stand ausweisen.
 
+Der Main-Worker bestimmt registrierte IDs über Runtime v9, Kategorien und Recordnamen am selben Git-Commit. Zur Erstintegration nimmt der Produktbranch genau den neuen Rätselrecord, die gewählten Ressourcen und die erweiterte Runtime auf. Das bestätigte Main-Ergebnis bindet den Record vor dem Retirement.
+
 ## Aufruf und Bindungen
 
 Der Akteur liest den veröffentlichten Record an der erwarteten Arbeits-SHA.

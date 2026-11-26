@@ -1,0 +1,203 @@
+{
+  "added": {
+    "added_at": "2026-11-22T15:44:32Z",
+    "provenance": {
+      "commit": null,
+      "evidence": null,
+      "kind": "registration",
+      "reason": "Successful first playable registration in the shared transaction.",
+      "reference_time": "2026-11-22T15:44:32Z"
+    }
+  },
+  "background": {
+    "asset": {
+      "bytes": 1280600,
+      "file": "game/art/backgrounds/pz-nasi-lemak.png",
+      "sha256": "aa91cdb50767215a374747ad9341fbfdd52ce94dfa297a859dc548f972a574ea"
+    },
+    "image_revision": 1,
+    "status": "selected"
+  },
+  "category_id": "gerichte-herzhaftes",
+  "definition": {
+    "bytes": 7449,
+    "file": "game/data/content/pz-nasi-lemak.json",
+    "sha256": "607507593c2b03cb8e839d15300d5b2992cab49c687d6b089c4a2fa18fdbb9ed"
+  },
+  "difficulty": {
+    "compact_analysis": {
+      "analysis_hash": "d257ee2439268539d19c6155064a05bef799990f09f4127dbb4cd74d0c907d6f",
+      "deduction_complete": true,
+      "line_analysis_complete": true,
+      "line_fixpoint_confirmed": true,
+      "new_singletons": 510,
+      "profiles_hash": "e6c35a816d34c3c4026ee33e59ed2087572a053aeb91443db54ade379f97b58f",
+      "r4": null,
+      "reason": null,
+      "result_hash": "24fc47ebcbd37d1777e03bae839e982b71b3b2d844edd9f7d07c58c3b0fc2b26",
+      "status": "solved",
+      "structure": {
+        "adjacent_color_changes": 208,
+        "cells": 510,
+        "clue_length_histogram": {
+          "1": 96,
+          "11": 4,
+          "2": 62,
+          "3": 24,
+          "4": 23,
+          "5": 19,
+          "6": 7,
+          "7": 5,
+          "8": 11,
+          "9": 4
+        },
+        "colors": 5,
+        "geometric_slack": 296,
+        "height": 17,
+        "mandatory_gaps": 0,
+        "short_blocks": 158,
+        "total_clue_length": 724,
+        "total_clues": 255,
+        "width": 30
+      },
+      "trace_hash": "76cbd05737420cdbc615ac6fc16b206f3a796d40255b5614a88389675af7298f",
+      "wave_count": 11
+    },
+    "logic_binding": {
+      "matrix_hash": "76fbcbceafee919c7586990c359f2f828cfe33247c2722703624bdea571255aa"
+    },
+    "rating": {
+      "analysis_result_hash": "24fc47ebcbd37d1777e03bae839e982b71b3b2d844edd9f7d07c58c3b0fc2b26",
+      "format": "picross-catalog-sd2-rating-v1",
+      "method": "picross-difficulty-0.4",
+      "method_hash": "5508f0742aa858a6adc31aa621433e68298b915fb0fd6b8d9e74e576ba87caaf",
+      "rating_hash": "0f6b596ae68f0bec826030511294a880959d885488e9a219428ee3324f417914",
+      "result": {
+        "analysis_result_hash": "24fc47ebcbd37d1777e03bae839e982b71b3b2d844edd9f7d07c58c3b0fc2b26",
+        "assessment": {
+          "boundaries": {
+            "distance_lower": null,
+            "distance_upper": [
+              673,
+              1275
+            ],
+            "lower": null,
+            "nearest_distance": [
+              673,
+              1275
+            ],
+            "upper": [
+              1,
+              1
+            ]
+          },
+          "contributions": {
+            "demand": [
+              1,
+              4
+            ],
+            "search": [
+              1133,
+              5100
+            ],
+            "workload": [
+              0,
+              1
+            ]
+          },
+          "level": 1,
+          "level_without_workload": 1,
+          "score": [
+            602,
+            1275
+          ],
+          "signals": {
+            "context": [
+              0,
+              1
+            ],
+            "fluent": true,
+            "highest_family": "E1",
+            "longest_narrow_run": 0,
+            "narrow_waves": 0,
+            "peak_search": [
+              1133,
+              5100
+            ],
+            "raw_workload": [
+              1,
+              4
+            ],
+            "spans": 259,
+            "workload_ceiling": 3,
+            "workload_guard": "fluent"
+          },
+          "without_workload": [
+            602,
+            1275
+          ]
+        },
+        "confidence": "medium",
+        "estimated_minutes": null,
+        "explanation": "Model estimate from synthetic references; no human calibration or time estimate. Demand, search and bounded workload use independently checked line profiles.",
+        "format": "picross-sd2-rating-v1",
+        "method": "picross-difficulty-0.4",
+        "method_hash": "5508f0742aa858a6adc31aa621433e68298b915fb0fd6b8d9e74e576ba87caaf",
+        "profile_scope": "complete_line",
+        "reason": "complete_line",
+        "status": "rated"
+      },
+      "source": {
+        "bytes": 7449,
+        "definition_id": "pz-nasi-lemak",
+        "engine_logic_hash": "006e7d3c9c022896aa0034b52782356ce9e8d06f21b4d3542fa318304398713d",
+        "kind": "runtime",
+        "production_mode": "unknown",
+        "runtime_revision": 2,
+        "sha256": "607507593c2b03cb8e839d15300d5b2992cab49c687d6b089c4a2fa18fdbb9ed"
+      }
+    },
+    "rating_revision": 1
+  },
+  "format": "picross-puzzle-record-v1",
+  "id": "pz-nasi-lemak",
+  "mode": "color",
+  "name": "Nasi Lemak",
+  "reveal": {
+    "asset": {
+      "bytes": 2031563,
+      "file": "game/art/content/pz-nasi-lemak.png",
+      "sha256": "e7d7b4cbdafdf6c735cd5fcb77fcc05c3d1be9b28456d86b6082665b21a6a213"
+    },
+    "catalog": {
+      "generator": "picross-catalog-reveal-1",
+      "profiles": [
+        {
+          "asset": {
+            "bytes": 24487,
+            "file": "game/art/catalog/pz-nasi-lemak-ui100.png",
+            "sha256": "16aea440347b404869162c7433e527fe0fb944dee0c45e294d9e86d1233e2926"
+          },
+          "height": 112,
+          "profile": "catalog-ui100-v1",
+          "width": 135
+        },
+        {
+          "asset": {
+            "bytes": 36441,
+            "file": "game/art/catalog/pz-nasi-lemak-ui125.png",
+            "sha256": "333ebcdcd32e46e5409fca484a1594fb0b7bb6df7c8f036f35a0b20e3249a3e2"
+          },
+          "height": 140,
+          "profile": "catalog-ui125-v1",
+          "width": 168
+        }
+      ],
+      "source_height": 1145,
+      "source_width": 1374
+    },
+    "image_revision": 1
+  },
+  "save_slot": "pz-nasi-lemak",
+  "visible": true
+}
