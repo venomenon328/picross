@@ -399,7 +399,7 @@ function orderControls(view,panel){
     status.textContent='Zuerst den privaten Drive-Stammordner speichern. Deine Eingaben bleiben hier erhalten.';return;
    }
    const body=startBody(),epoch=generation;
-   const form=$('orderFields');form.inert=true;
+   const view=$('view');view.inert=true;
    starting=true;copy.disabled=true;
    try{
     const value=await inboxAction('start',body,false);
@@ -408,13 +408,22 @@ function orderControls(view,panel){
     if(!order||order.result)throw Error('Auftragsstatus hat sich geändert. Bitte den aktuellen Stand prüfen.');
     if(draft)chooseMotif(order.puzzle_id);
     else{viewEdited=0;updatePrompt();}
-    $('copyOrder').focus();
    }catch(exc){if(epoch===generation)status.textContent=exc.message;return;}
-   finally{starting=false;form.inert=false;copy.disabled=false;if(currentOrder()&&$('copyOrder'))updatePrompt();}
+   finally{
+    starting=false;view.inert=false;copy.disabled=false;
+    if(epoch!==generation||currentOrder())updatePrompt();
+   }
+   $('copyOrder').focus();
   }
-  const target=$('orderText'),message=$('orderStatus');
-  try{await navigator.clipboard.writeText(order?order.prompt:target.value);message.textContent='Auftrag kopiert.';}
-  catch{$('orderPreview').open=true;target.focus();target.select();message.textContent='Kopieren fehlgeschlagen. Den markierten Auftrag manuell oder erneut kopieren.';}
+  const target=$('orderText'),message=$('orderStatus'),shown=$('orderPreview'),epoch=generation;
+  const stillSelected=()=>epoch===generation&&order?.request_id===currentOrder()?.request_id;
+  try{
+   await navigator.clipboard.writeText(order?order.prompt:target.value);
+   if(stillSelected())message.textContent='Auftrag kopiert.';
+  }catch{
+   if(!stillSelected())return;
+   shown.open=true;target.focus();target.select();message.textContent='Kopieren fehlgeschlagen. Den markierten Auftrag manuell oder erneut kopieren.';
+  }
  };
  const secondary=node('div',undefined,'receiptActions');secondary.id='orderSecondary';
  const retry=node('button');retry.id='receiptRetry';retry.onclick=()=>changeReceipt('retry');
@@ -489,7 +498,7 @@ function drainImages(){
  }
 }
 function imageRequest(path,signal){return new Promise((resolve,reject)=>{imageQueue.push({path,signal,resolve,reject});drainImages();});}
-function dispose(){localSelection=null;viewEdited=0;closeRemoval();generation++;controller?.abort();controller=new AbortController();for(const url of urls)URL.revokeObjectURL(url);urls=[];assetLoads=new Map();readyImages=new Set();$('large').close();}
+function dispose(){$('view').inert=false;localSelection=null;viewEdited=0;closeRemoval();generation++;controller?.abort();controller=new AbortController();for(const url of urls)URL.revokeObjectURL(url);urls=[];assetLoads=new Map();readyImages=new Set();$('large').close();}
 function sourceStatus(value){
  const age=value.synced_at?new Date(value.synced_at).toLocaleString('de-DE'):'unbekannt';
  const source=value.mode==='local'?'Nur lokale Gitstände · Remote-Sicherung nicht bestätigt':!value.remote_confirmed?['Remote nicht aktuell bestätigt','letzter Cache: '+age,value.sync_error].filter(Boolean).join(' · '):'Remote zuletzt geladen: '+age;
@@ -1031,6 +1040,9 @@ function showInbox(value,navigate=true){
   if(currentMotif())chooseMotif(localSelection);
   else if(previous.result||!recoverDraft(previous))adopt(listing);
  }else if(JSON.stringify(previous)!==JSON.stringify(order)){
+  if(order&&localSelection&&!currentMotif()&&previous?.request_id!==order.request_id){
+   chooseMotif(localSelection);return;
+  }
   if($('copyOrder'))updatePrompt();
   if(!order&&currentMotif())setText($('motifStatus'),currentMotif().status);
  }
