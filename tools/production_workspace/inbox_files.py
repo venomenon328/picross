@@ -103,8 +103,12 @@ def locked_windows_file(path, *, deleting=True):
 
 def retire(root, name, expected):
     path = source_path(root, name)
-    if not path.exists():
+    try:
+        info = path.lstat()
+    except FileNotFoundError:
         return
+    require(stat.S_ISREG(info.st_mode) and not getattr(info, 'st_file_attributes', 0) & 1024,
+            'Eingangsdatei wurde ersetzt. Sie bleibt erhalten.')
     require(os.name == 'nt', 'Bereinigung benötigt Windows-Dateibindung.')
     with locked_windows_file(path) as (stream, remove):
         info = os.fstat(stream.fileno())

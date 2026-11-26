@@ -6,6 +6,8 @@ from pathlib import Path
 from tempfile import TemporaryDirectory
 from types import SimpleNamespace
 import unittest
+from unittest.mock import Mock, patch
+import threading
 from uuid import uuid4
 
 from PIL import Image
@@ -120,6 +122,63 @@ class InboxTests(unittest.TestCase):
                 request['record']['budgets']['used']['image_corrections'] += 1
                 request['files'] = [{'path': altered['file']['file']}]
                 contract.delta({**order, 'intent': 'correction'}, request, old)
+
+    def test_restart_after_publish_and_cleanup_does_not_consume_order_twice(self):
+        self.deliver()
+        (self.folder / self.filename).write_bytes(self.png)
+        self.service.operation = threading.Lock()
+        self.service.acquire_operation = self.service.operation.acquire
+        confirmed = {'head': 'b' * 40, 'record_sha256': 'd' * 64, 'release_id': 42}
+        publications = {}
+
+        def publish(order, request, stage, save):
+            order['step'] = 'publish'
+            save()
+            if not publications:
+                publications[order['request_id']] = confirmed
+                raise ConnectionError('response lost')
+            return publications[order['request_id']]
+
+        self.inbox.writer.publish = publish
+        self.inbox.advance(self.order)
+        self.assertTrue(self.order['paused'])
+        binding = {k: self.order[k] for k in ('puzzle_id', 'request_id')}
+        resumed = Inbox(self.service)
+        resumed.writer.publish = Mock(side_effect=publish)
+        order = resumed.data['orders'][binding['puzzle_id']]
+        resumed.action('retry', binding)
+        with patch.object(files, 'retire', side_effect=PermissionError):
+            resumed.advance(order)
+        self.assertEqual((order['step'], order['result']), ('cleanup', confirmed))
+        restarted = Inbox(self.service)
+        restarted.writer.publish = Mock(side_effect=AssertionError('Duplicate publication'))
+        restarted.action('retry', binding)
+        order = restarted.data['orders'][binding['puzzle_id']]
+        def retire(root, name, expected):
+            self.assertEqual(files.read(root, name, expected['bytes'])[1], expected)
+            (root / name).unlink()
+        with patch.object(files, 'retire', side_effect=retire):
+            restarted.advance(order)
+        self.assertEqual(order['step'], 'done')
+        with self.assertRaises(ValueError):
+            restarted.action('retry', binding)
+        restarted.action('cancel', binding)
+        self.deliver()
+        with self.assertRaises(ValueError):
+            restarted.action('retry', binding)
+        self.assertEqual(Inbox(self.service).data['orders'], {})
+        restarted.writer.publish.assert_not_called()
+
+    def test_wrong_job_format_and_windows_delivery_alias_are_rejected(self):
+        for key, value in [('puzzle_id', 'pz-other'), ('format', 'unknown')]:
+            altered = {**self.value, key: value}
+            with self.assertRaises(ValueError):
+                contract.envelope(current.encoded(altered), self.manifest, self.order)
+        for alias in (self.filename.upper(), self.filename + '.', self.filename + ':payload'):
+            altered = deepcopy(self.value)
+            altered['request']['files'][0]['source'] = alias
+            with self.assertRaises(ValueError):
+                contract.envelope(current.encoded(altered), self.manifest, self.order)
 
     @unittest.skipUnless(os.name == 'nt', 'Windows file disposition')
     def test_confirmed_cleanup_deletes_only_opened_file(self):
