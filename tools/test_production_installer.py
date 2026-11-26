@@ -657,10 +657,11 @@ class AppReleaseTests(unittest.TestCase):
         commit()
         self.assertEqual(first, payload.fingerprint(root), 'Test-only code must not trigger an app update')
         for name in ('content/a.json', 'game/main.gd', 'docs/NOT-PACKAGED.md', 'tools/ci_modular.py',
-                     'tools/ci_growth.py', 'tools/work_ref_check.py', 'tools/publish_git.py', 'tools/work_publish.py'):
+                     'tools/work_ref_check.py'):
             write(name, b'irrelevant'); commit()
             self.assertEqual(first, payload.fingerprint(root))
-        for name in ('tools/puzzle_production/sd2_validation_0_4.json', 'tools/puzzle_production/sd2_rating_freeze.py'):
+        for name in ('tools/ci_growth.py', 'tools/publish_git.py', 'tools/work_publish.py',
+                     'tools/puzzle_production/sd2_validation_0_4.json', 'tools/puzzle_production/sd2_rating_freeze.py'):
             with self.subTest(name=name):
                 write(name, (source / name).read_bytes() + b'\n')
                 self.assertEqual(first, payload.fingerprint(root), 'Working bytes must not define the fingerprint')
@@ -749,9 +750,14 @@ class AppReleaseTests(unittest.TestCase):
         self.assertEqual(set(build_windows.PRODUCTION_WRITER_EXCLUDES), expected)
         for app in (PW, PE):
             with self.subTest(app=app.key):
-                self.assertTrue(expected <= set(build_windows.frozen_excludes(app)))
+                excluded = expected - payload.PW_WRITER_MODULES if app == PW else expected
+                self.assertTrue(excluded <= set(build_windows.frozen_excludes(app)))
+                if app == PW:
+                    self.assertFalse(payload.PW_WRITER_MODULES & set(build_windows.frozen_excludes(app)))
+                    for name in payload.PW_WRITER_MODULES:
+                        self.assertTrue(payload.selected(name.replace('.', '/') + '.py', app=app))
                 self.assertTrue(payload.selected('tools/work_refs.py', app=app))
-                for name in expected:
+                for name in excluded:
                     self.assertFalse(payload.selected(name.replace('.', '/') + '.py', app=app))
                     with self.assertRaisesRegex(RuntimeError, 'Produktionswriter'):
                         build_windows.verify_no_production_writers({name}, app)

@@ -8,7 +8,7 @@ Aufruf. Das Ergebnis nennt den gesicherten Arbeitsstand und den nächsten Schrit
 
 Der Worker hält den qualifizierten Eingang und die Katalogprofile für Plan und Registrierung in einem Aufruf. Bei getrennter lokaler Ausführung bindet der Adapter dieselbe Auswahl über den [Jobworktree](PRODUCTION_GIT_WORKSPACE.md#einstieg-und-wiederaufnahme).
 
-[PW-IMPORT](PW_IMPORT.md) beschreibt den freigegebenen, noch nicht implementierten
+[PW-IMPORT](PW_IMPORT.md) beschreibt den gebundenen
 Weg für neue native Originale über Drive und den lokalen Assistenten. Die hier
 beschriebenen Remoteoperationen verwenden weiterhin tatsächlich veröffentlichte
 Job-/Dateibindungen. Nach bestätigtem Import können insbesondere Schritt 3 sowie

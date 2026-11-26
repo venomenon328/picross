@@ -15,7 +15,7 @@ import zlib
 import pyexpat
 import decimal
 from .release import release, version_tuple
-from .payload import (PRODUCTION, PW_IMAGE_SOURCES, audit_analysis, bound_input, fingerprint, git as git_bytes,
+from .payload import (PRODUCTION, PW_IMAGE_SOURCES, PW_WRITER_MODULES, audit_analysis, bound_input, fingerprint, git as git_bytes,
                       pw_method_files, verify_pw_reader_resources)
 from .update_verifier import production_trust
 
@@ -38,12 +38,14 @@ PRODUCTION_WRITER_EXCLUDES = (
 
 
 def frozen_excludes(app):
-    return FROZEN_EXCLUDES + (PRODUCTION_WRITER_EXCLUDES if app in (PW, PE) else ())
+    if app == PW:
+        return FROZEN_EXCLUDES + tuple(n for n in PRODUCTION_WRITER_EXCLUDES if n not in PW_WRITER_MODULES)
+    return FROZEN_EXCLUDES + (PRODUCTION_WRITER_EXCLUDES if app == PE else ())
 
 
 def verify_no_production_writers(names, app):
     if app in (PW, PE):
-        leaked = sorted(set(names) & set(PRODUCTION_WRITER_EXCLUDES))
+        leaked = sorted(set(names) & set(frozen_excludes(app)))
         if leaked:
             raise RuntimeError('Frozen-Payload enthält Produktionswriter: ' + ', '.join(leaked))
 
@@ -273,6 +275,9 @@ def verify_update_payload(image, pyz, audit, *, app=PW):
     if app in (PW, PE, PG):
         required |= {'tools.production_workspace.update_client', 'tools.production_workspace.update_storage',
                      'tools.production_workspace.update_windows', 'tools.production_workspace.app_updates'}
+    if app == PW:
+        required |= PW_WRITER_MODULES | {'tools.production_workspace.inbox', 'tools.production_workspace.inbox_writer',
+                                         'tools.production_workspace.inbox_files', 'tools.production_workspace.inbox_contract'}
     if app == PE:
         required |= {'tools.puzzle_editor.app_updates', 'tools.puzzle_editor.server', 'tools.puzzle_editor.worker', 'tools.puzzle_editor.desktop',
                      'tools.puzzle_production.editor_change', 'tools.puzzle_production.current_content',

@@ -153,8 +153,8 @@ Korrektur oder Neugenerierung mangelhafter Einzelkandidaten. Sie sind Teil des
 Bildauftrags und erfordern keine vorgezogene Wahl ungeeigneter Bytes. Die
 Bildtypnorm und insbesondere die Abschlussbild-Kernanforderungen nach
 [Qualität §3.1](../PUZZLE_QUALITY.md#31-abschlussbildphase) bleiben verbindlich.
-Dies ist die fachlich freigegebene Korrekturregel; ihre vollständige maschinelle
-Durchsetzung im [PW-IMPORT-Weg](../../tools/PW_IMPORT.md) ist noch nicht implementiert.
+Der [PW-IMPORT-Weg](../../tools/PW_IMPORT.md) bindet Korrekturauftrag, Bildbytes
+und fachliches Urteil an die betroffene Variante.
 
 Nach vollständiger Vorlage nur die gewählte Darstellung korrigieren;
 ausgenommen ist die eigenständige

@@ -95,10 +95,11 @@ Begrenzte Stil- oder Kantenfeinheiten bleiben nach §6 am konkreten Befund
 redaktionell entscheidbar, wenn die genannten Kernanforderungen erfüllt sind.
 Die negative Bewertung und ihre tatsächliche Annahme bleiben getrennt sichtbar;
 nicht jedes Detail unter Q-B02/Q-B03 wird dadurch zur harten Voraussetzung.
-Die fachliche Präzisierung ist als Soll freigegeben. Ihre vollständige
-maschinelle Abbildung im Import-/Annahmeweg gehört zu
-[PW-IMPORT-A](../tools/PW_IMPORT.md#import-06--qualität-und-entscheidungen)
-und ist noch nicht implementiert; ein erfolgreicher Transport belegt sie nicht.
+Für begrenzte Stilabweichungen verwendet der Akteur die Unterregel `illustration-detail`.
+Der Kernbefund `illustration` bleibt gesperrt. Für PNG-Originale prüft der Builder
+freie und sichtbare Pixel. Eine ausdrücklich verlangte deckende Ausführung wird
+im Briefing als eigene Zeile `Bildgrund: ausdrücklich deckend` festgehalten.
+Die Sichtprüfung bewertet die tatsächlichen Konturen und Aussparungen.
 
 ### 3.2 Motivvorlage
 

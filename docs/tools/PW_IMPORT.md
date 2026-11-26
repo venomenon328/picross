@@ -5,8 +5,8 @@ Status: `approved-specification`
 Zuständigkeit: Transport und lokale Übernahme neuer kreativer Produktionsdateien.
 Umsetzung und Prüfplan: [PW-IMPORT / #910](https://github.com/venomenon328/picross/issues/910), Paket `PW-IMPORT-A`.
 
-Diese Spezifikation ist freigegeben, aber noch nicht implementiert. Der aktuelle
-PW-Reader wird dadurch nicht rückwirkend zum Writer. Die tatsächliche Lieferung
+Der lokale Empfänger verwendet für jeden aktivierten Auftrag den v3-Builder
+und den PW-LOCAL-Publisher. Der Browser zeigt den veröffentlichten Record. Die tatsächliche Lieferung
 und die Erfüllung der Startvoraussetzungen stehen im Issue/PR. Der schrittweise
 Produktionsabschluss bleibt bei [PW-FINAL / #907](https://github.com/venomenon328/picross/issues/907).
 
@@ -174,8 +174,8 @@ abgelöst; technisch identische Wiederholung behält ihre Lieferkennung.
 Die Eingangskennung wird im begrenzten aktuellen Operationszustand geführt,
 nicht durch Pflichtfelder oder dauerhafte Historien im Produktionsrecord.
 Ein maschinenlesbarer Validator für diese Hülle und die Abbildung auf den
-bestehenden Builder gehören zur Implementierung; dieser Dokumentstand
-behauptet noch kein ausführbares neues Schema.
+bestehenden Builder gehören zur Implementierung; die ausführbare Hüllenprüfung steht in
+[inbox_contract.py](../../tools/production_workspace/inbox_contract.py).
 
 ## IMPORT-05 · Empfang, Integrität und Veröffentlichung
 
@@ -253,8 +253,8 @@ visuelle Prüfung. Der Transport verändert keine Alpha- oder Farbdaten, um
 einen Befund scheinbar zu beheben.
 
 Die fachliche Qualitätsnorm bleibt [PUZZLE_QUALITY](../production/PUZZLE_QUALITY.md)
-mit den [Bildtypnormen](../production/images/README.md). Die entsprechende maschinelle Abbildung wird erst in PW-IMPORT-A umgesetzt;
-diese Spezifikation behauptet noch keine geänderte Kandidatenbedienung.
+mit den [Bildtypnormen](../production/images/README.md). Der gemeinsame Qualifikationskern prüft freie und sichtbare PNG-Bereiche. Die
+gezeichnete Ausarbeitung beurteilt der sichtig arbeitende Akteur am Original.
 
 ## IMPORT-07 · Wiederaufnahme und begrenzte Bereinigung
 

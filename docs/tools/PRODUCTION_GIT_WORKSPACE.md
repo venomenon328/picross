@@ -10,8 +10,8 @@ Der Builder sichert neue Kandidatenbefunde im aktuellen Record des Jobworktrees.
 
 Für eine Wiederaufnahme den Arbeitsref und den erwarteten Commit lesen, Releasegeneration und Originale abgleichen und die dort gebundenen Kandidatenergebnisse verwenden. Ein Pfadwechsel bei bytegleichem Inhalt erfordert keine neue Bildentscheidung.
 
-Der geplante lokale Importwriter nach [PW-IMPORT](PW_IMPORT.md) verwendet diese
-Arbeitsablage ebenfalls. Er ist noch nicht implementiert. Sein synchronisierter
+Der lokale Importwriter nach [PW-IMPORT](PW_IMPORT.md) verwendet diese
+Arbeitsablage im privaten Appzustand unter `import-writer`. Sein synchronisierter
 Dateieingang bleibt außerhalb des Git-Stores und der Worktrees; der bestehende
 PW-Lesecache wird dadurch nicht zum vollständigen Schreibcheckout.
 

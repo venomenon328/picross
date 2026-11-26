@@ -55,7 +55,7 @@ def preflight(gui=False):
             raise ValueError('Programmpaket unvollständig oder beschädigt. Interne Dateien der Bildprüfung '
                              'konnten nicht geladen werden. App erneut installieren oder vollständig entpacken.') from exc
     try:
-        for module in ('presentation', 'repository', 'server', 'current_view', 'motifs'):
+        for module in ('presentation', 'repository', 'server', 'current_view', 'motifs', 'inbox_writer'):
             importlib.import_module('tools.production_workspace.' + module)
         importlib.import_module('tools.puzzle_production.authoring_workflow')
         from PIL import Image, __version__
@@ -158,7 +158,11 @@ class Runtime:
             raise ValueError('Standardbrowser konnte nicht geöffnet werden. Windows-Standardbrowser einrichten und erneut öffnen.')
 
     def refresh(self):
+        from .inbox import Inbox
+        if self.service.inbox is None:
+            self.service.inbox = Inbox(self.service)
         self.service.start_refresh()
+        self.service.inbox.start()
 
     def request_stop(self):
         if self.stop_thread is not None:
@@ -175,6 +179,8 @@ class Runtime:
             self.server.server_close()  # Joins actual requests, including a P2 transaction.
             if self.service.update_thread:
                 self.service.update_thread.join()
+            if self.service.inbox and self.service.inbox.thread:
+                self.service.inbox.thread.join()
             self.lock.close()
         except Exception:
             self.error = 'Beendigung nicht vollständig bestätigt. Instanzzustand und laufende eigene Arbeit prüfen.'

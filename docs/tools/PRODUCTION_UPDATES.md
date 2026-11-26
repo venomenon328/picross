@@ -74,6 +74,7 @@ erhält `contents:write`; Prüf-/PR-Code erhält kein Release-Schreibrecht.
 committeten Gitdateien samt Pfad, Gitmodus, Bytezahl und SHA-256 auf einen kanonischen
 Fingerprint ab. Sämtliche eingesammelten Produktions-Pythonmodule, App-Reader,
 UI, MSI-/Build-/Prüfcode, Pins, Guard, Lizenztexte, Icon und START sind Eingaben.
+Der Originalempfang und seine Git-/Publishermodule sind PW-Baueingaben. Der Appstop wartet auf den Empfangsthread.
 Zum PW-Payload gehören auch die unveränderten Pythonoriginale und JSON-Dateien,
 die die unterstützten eingefrorenen Bewertungsmethoden tatsächlich lesen. Dazu
 zählen deren gebundene Methoden-, Referenz-, Kalibrierungs-, Vergleichs- und
