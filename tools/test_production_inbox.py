@@ -175,7 +175,8 @@ class InboxTests(unittest.TestCase):
             ref = content.ref(f'content/authoring/{job}/data/{ident}.png', stream.getvalue())
             return {'id': ident, 'role': role, 'label': ident, 'file': ref, 'review': {}, 'rights': None}
 
-        for role, action in [('reveal', 'resume-close'), ('motif', 'resume'), ('motif', 'resume-close')]:
+        for role, action in [('reveal', 'resume-close'), ('motif', 'resume'), ('motif', 'resume-close'),
+                             ('reveal', 'assessment'), ('motif', 'assessment')]:
             with self.subTest(role=role, action=action):
                 previous = deepcopy(base)
                 previous['test_only'] = False
@@ -194,7 +195,10 @@ class InboxTests(unittest.TestCase):
                 self.service.removal.remote_head.return_value = head
                 assets = [{'id': a['id'], 'role': a['role'], 'caption': a['label']} for a in previous['assets']]
                 self.service.detail = Mock(return_value={**source, 'title': 'Fuchs', 'assets': assets,
-                    'facts': {'state': state, 'blockers': [], 'candidates': {
+                    'revision': 'current', 'source_url': 'https://github.com/venomenon328/picross/tree/' + head,
+                    'record': {'file': f'content/authoring/{job}/current/record.json'},
+                    'facts': {'state': state, 'authoring_version': '0.8.0', 'originals': {'record': record},
+                              'blockers': [], 'candidates': {
                         a['id']: {'missing': ['Prüfung offen'] if role == 'motif' and a['role'] == 'motif' else [],
                                   'findings': []} for a in assets}},
                     'offers': [{'id': a['id'], 'kind': role, 'asset_ids': [a['id']], 'label': a['caption']}
@@ -210,11 +214,20 @@ class InboxTests(unittest.TestCase):
                 self.assertEqual(copied, order['prompt'])
                 self.assertNotEqual(order['request_id'], receipt['request_id'])
                 self.assertEqual(order['source'], {'main_commit': 'a' * 40, 'work_head': head, 'record_sha256': record_hash})
-                self.assertEqual((order['intent'], order['phase'], order['child']), ('offer', role, job))
+                expected_intent = 'assessment' if action == 'assessment' else 'offer'
+                self.assertEqual((order['intent'], order['phase'], order['child']), (expected_intent, role, job))
                 self.assertEqual(order['folder']['id'], 'fixture')
                 self.assertIsNone(order['choice'])
                 self.assertEqual(order['declarations'], {})
                 self.assertEqual(order['brief'], '')
+                if action == 'assessment':
+                    self.assertEqual(order['target'], 'existing')
+                    request = {'format': current.REQUEST, 'record': deepcopy(previous),
+                               'expected': record_hash, 'files': []}
+                    contract.delta(order, request, previous)
+                    self.assertEqual(request['record']['assets'], previous['assets'])
+                    self.assertEqual(request['record']['budgets'], previous['budgets'])
+                    continue
                 delivery = deepcopy(previous)
                 new = asset('addition', role, 'purple')
                 delivery['assets'].append(new)

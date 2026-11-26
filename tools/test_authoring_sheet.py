@@ -15,7 +15,7 @@ const row={id:'one',criterion:'Q-H02',binding:'b'.repeat(64),eligible:true,decis
 const other={...row,id:'two',binding:'c'.repeat(64)};
 const cards={A:{missing:[],findings:[row,other]},B:{missing:['Proof fehlt'],findings:[]}};
 const v={puzzle_id,revision:'current',commit:sha,source_url:'https://github.com/venomenon328/picross/tree/'+sha,
- record:{file:'content/authoring/pz-test/current/record.json'},assets:[],offers:[{id:'A',kind:'raster'},{id:'B',kind:'raster'}],
+ record:{file:'content/authoring/pz-test/current/record.json'},assets:[{id:'A',role:'raster'},{id:'B',role:'raster'}],offers:[{id:'A',kind:'raster'},{id:'B',kind:'raster'}],
  facts:{state:'raster_review',authoring_version:'0.8.0',candidates:cards}};
 const intent={selection:'A',kind:'raster',findings:{[row.binding]:{accepted:true,treatment:'Blau behalten'}}};
 assert.throws(()=>P.prompt(v,intent),/Offene Voraussetzungen/);
@@ -24,9 +24,103 @@ const order=P.prompt(v,intent);
 for(const word of ['Blau behalten','Unverändert beibehalten',row.binding,other.binding,'Schritt 4','Rasterangebot A'])assert(order.includes(word));
 assert.throws(()=>P.prompt(v,{...intent,selection:'B'}),/Offene Voraussetzungen/);
 const correction=P.prompt(v,{action:'rework',selection:'B',kind:'raster',feedback:'Proof ergänzen'});
-assert.match(correction,/Korrekturgrundlage: B/);assert.doesNotMatch(correction,/Ich wähle/);
+assert.match(correction,/Korrekturgrundlage: raster\/B/);assert.doesNotMatch(correction,/Ich wähle/);
 """
         subprocess.run(['node','-e',probe],cwd=ROOT,check=True)
+
+    def test_target_phase_open_assessment_and_resume_keep_their_own_scope(self):
+        probe = r"""
+const assert=require('node:assert/strict'),P=require('./tools/production_workspace/ui/workflow.js');
+const sha='a'.repeat(40),hash='b'.repeat(64),row={id:'outline',criterion:'Q-B02',binding:hash,eligible:true,decision:null};
+const assets=[{id:'v',role:'reveal'},{id:'v-other',role:'reveal'},{id:'m',role:'motif'},
+ {id:'r',role:'raster'},{id:'d',role:'raster_draft'},{id:'bg',role:'background'}];
+const v={puzzle_id:'pz-test',revision:'current',commit:sha,source_url:'https://github.com/venomenon328/picross/tree/'+sha,
+ record:{file:'content/authoring/pz-test/current/record.json'},assets,offers:[],
+ facts:{state:'motif_review',authoring_version:'0.8.0',
+  candidates:Object.fromEntries(assets.map((a,i)=>[a.id,{missing:['Sichtung fehlt'],
+   findings:[{...row,binding:a.id==='m'?hash:(i+2).toString(16).repeat(64)}]}])),
+  originals:{record:{selected:{reveal:'v',motif:null,raster:null,background:null},assets}},
+  published:{proposed:[],approved:[]}}};
+const personal={workroot:'E:/synthetic',merge:true,executors:{1:'Codex',2:'ChatGPT',3:'Codex',4:'ChatGPT',5:'Codex'}};
+const correction={action:'rework',selection:'v',kind:'reveal',feedback:'Kontur erhalten.\nNur den Zweig verkürzen.'};
+let text=P.prompt(v,correction,personal);
+assert.equal(P.promptStep(v,correction),1);assert.match(text,/Authoring 0.8.0, Schritt 1/);
+assert.match(text,/Ausführung mit Codex/);assert.ok(text.includes(correction.feedback));
+assert.ok(text.includes('/blob/'+sha+'/'+v.record.file));assert.match(text,/reveal\/v/);
+assert.doesNotMatch(text,/Ich wähle|Ich gebe|Ich erteile|Draft-PR|Squash-Merge|PW_REMOTE/);
+assert.throws(()=>P.prompt(v,{...correction,selection:'v-other'},personal),/Korrekturgrundlage/);
+assert.throws(()=>P.prompt(v,{...correction,kind:'motif'},personal),/Rolle/);
+assert.deepEqual(P.actionTargets(v,'assessment').map(a=>a.id),['m']);
+for(const executor of P.executors){
+ const opts={...personal,executors:{2:executor}};
+ const assessment={action:'assessment',selection:'m',kind:'motif',feedback:'NICHT SENDEN'};
+ text=P.prompt(v,assessment,opts);
+ assert.equal(P.promptStep(v,assessment),2);assert.match(text,/unveränderte Angebot motif\/m neu sichten und bewerten/);
+ assert.ok(text.includes('Ausführung mit '+executor));
+ assert.doesNotMatch(text,/NICHT SENDEN|Ich wähle|Ich gebe|Ich erteile|Draft-PR|Squash-Merge|Korrekturgrundlage/);
+ assert.throws(()=>P.prompt(v,{...assessment,selection:'v',kind:'reveal'},opts),/offenes Reveal- oder Motivangebot/);
+ const accepted=P.prompt(v,{...assessment,findings:{[hash]:{accepted:true,treatment:'Rand erhalten'}}},opts);
+ assert.match(accepted,/"Entscheidung":"Annahme"/);assert.match(accepted,/Rand erhalten/);
+ const foreign=v.facts.candidates.v.findings[0],own={accepted:true,treatment:'Rand erhalten'};
+ for(const [stored,edit] of [[null,{accepted:true,treatment:'Fremde Annahme'}],
+  [{action:'accept',treatment:'Veröffentlicht'},{accepted:false,treatment:'Widerrufen'}],
+  [{action:'accept',treatment:'Veröffentlicht'},{accepted:true,treatment:'Andere Behandlung'}]]){
+  foreign.decision=stored;
+  const invalid={...assessment,findings:{[hash]:own,[foreign.binding]:edit}},before=JSON.stringify(invalid);
+  assert.throws(()=>P.prompt(v,invalid,opts),/nicht zum Bewertungsziel/);
+  assert.throws(()=>P.inboxInputs(v,invalid,'assessment'),/nicht zum Bewertungsziel/);
+  assert.throws(()=>P.inboxFindings(v,invalid),/nicht zum Bewertungsziel/);
+  assert.equal(JSON.stringify(invalid),before,'reject without changing unsent declarations');
+ }
+ foreign.decision={action:'accept',treatment:'Veröffentlicht'};
+ const unchanged={...assessment,findings:{[hash]:own,[foreign.binding]:{accepted:true,treatment:'Veröffentlicht'}}};
+ assert.deepEqual(P.inboxFindings(v,unchanged),{[hash]:own},'already published foreign value is no new declaration');
+ assert.doesNotMatch(P.prompt(v,unchanged,opts),/Veröffentlicht|"Kandidat":"v"/);
+ assert.equal(P.inboxInputs(v,unchanged,'assessment').feedback,'');
+ assert.throws(()=>P.prompt(v,{...assessment,findings:{unknown:own}},opts),/Befundbindung/);
+ foreign.decision=null;
+}
+v.facts.state='reveal_review';v.facts.originals.record.selected.reveal=null;
+assert.deepEqual(P.actionTargets(v,'assessment').map(a=>a.id),['v','v-other']);
+v.facts.state='content_ready';Object.assign(v.facts.originals.record.selected,{reveal:'v',motif:'m',raster:'r',background:'bg'});
+for(const [selection,kind,n] of [['v','reveal',1],['m','motif',2],['r','raster',3],['bg','background',4]]){
+ const intent={action:'rework',selection,kind,feedback:'Ein gezielter Wunsch'};
+ assert.equal(P.promptStep(v,intent),n);assert.match(P.prompt(v,intent,personal),new RegExp('Authoring 0.8.0, Schritt '+n));
+}
+v.facts.state='raster_review';v.facts.originals.record.selected.raster=null;
+assert.equal(P.promptStep(v,{action:'rework',selection:'d',kind:'raster'}),3);
+v.facts.state='motif_review';v.facts.originals.record.selected.motif=null;
+const resume={action:'resume',selection:'m',kind:'motif',findings:{[hash]:{accepted:true,treatment:'NICHT ERKLÄREN'}}};
+text=P.prompt(v,resume,personal);assert.equal(P.promptStep(v,resume),2);
+assert.doesNotMatch(text,/NICHT ERKLÄREN|"Entscheidung"|Ich wähle|Ich gebe|Ich erteile|Draft-PR|Squash-Merge/);
+v.facts.state='background_review';v.facts.originals.record.selected.background=null;
+for(const executor of P.executors){
+ text=P.prompt(v,{action:'resume'},{...personal,executors:{4:executor}});
+ assert.match(text,/Hintergrundangebote fertig aufbereiten und bewerten/);
+ assert.equal(text.includes('PW_REMOTE.md'),executor==='ChatGPT');
+ if(executor==='Codex')assert.doesNotMatch(text,/ChatGPT|Inbox|Request|Drive/);
+ else assert.doesNotMatch(text,/Codex|E:\/synthetic/);
+}
+v.facts.state='registered';assert.deepEqual(P.actionTargets(v,'rework'),[]);
+assert.throws(()=>P.prompt(v,{action:'rework',selection:'bg',kind:'background',feedback:'Mehr Wald'}),/Korrekturgrundlage/);
+const reference={name:'reference.png',bytes:1234,sha256:'c'.repeat(64)};
+text=P.prompt(null,{brief:'Neues Motiv',inputImage:reference.name,reference},personal);
+for(const item of [reference.name,String(reference.bytes),reference.sha256])assert.ok(text.includes(item));
+assert.doesNotMatch(text,/Produktionsdatensatz|Draft-PR|Squash-Merge/);
+for(const ref of [undefined,null,{}, {...reference,bytes:undefined},{...reference,bytes:0},
+ {...reference,bytes:32*1024*1024+1},{...reference,sha256:'incomplete'},{...reference,name:'other.png'}]){
+ const input={brief:'Neues Motiv',inputImage:reference.name,reference:ref};
+ for(const executor of P.executors)assert.throws(()=>P.prompt(null,input,{executors:{1:executor}}),/Referenzdatei/);
+ assert.throws(()=>P.inboxInputs(null,input,'continue'),/Referenzdatei/);
+}
+const failed={brief:'Motiv',inputImage:'reference.png',referenceError:'Hashprüfung fehlgeschlagen'};
+assert.throws(()=>P.prompt(null,failed),/Hashprüfung fehlgeschlagen/);
+assert.throws(()=>P.inboxInputs(null,failed,'continue'),/Hashprüfung fehlgeschlagen/);
+assert.deepEqual(P.inboxInputs(null,{brief:'Motiv',inputImage:reference.name,reference},'continue').reference,reference);
+"""
+        result = subprocess.run(['node', '-e', probe], cwd=ROOT, capture_output=True,
+                                text=True, encoding='utf-8')
+        self.assertEqual(result.returncode, 0, result.stderr)
 
     def test_actual_generator_for_all_five_steps_correction_resume_and_source_guards(self):
         probe = r"""
@@ -60,8 +154,9 @@ assert.doesNotMatch(text,/Abschlussbereinigung|ausschließlich innerhalb dieser 
 assert.doesNotMatch(text,/Abschlussbereinigung eigener Arbeitsdaten nach WORKSPACE ausdrücklich beauftragt/);
 assert.equal(text,P.prompt(null,{brief:'Synthetischer Test, keine Produktion'},{...opts,cleanup:false}));
 assert.throws(()=>P.prompt(null,{},opts),/Motiv/);
-const fresh=both(null,{brief:'Erstes Motiv',inputImage:'reference.png',notes:'Kelch erhalten',grid:{width:'20'}},1);
-for(const part of ['Erstes Motiv','reference.png','Kelch erhalten','20 Zellen','native Bildgenerierung'])assert.ok(fresh.includes(part));
+const fresh=both(null,{brief:'Erstes Motiv',inputImage:'reference.png',
+ reference:{name:'reference.png',bytes:1234,sha256:'c'.repeat(64)},notes:'Kelch erhalten',grid:{width:'20'}},1);
+for(const part of ['Erstes Motiv','reference.png','Kelch erhalten','20 Zellen','PW_IMPORT.md'])assert.ok(fresh.includes(part));
 for(const mode of ['mono','color'])for(const [state,n,current,kind] of [['brief_ready',1,1,null],['reveal_review',2,1,'reveal'],['motif_review',3,2,null],['motif_approved',3,3,null],
  ['raster_review',3,3,null],['raster_ready',4,3,'raster'],['background_review',5,4,'background'],['content_ready',5,5,null],['editorially_approved',5,5,null],['registered',5,5,null]]){
  v.facts.published={proposed:[{mode,foreground_colors:mode==='mono'?1:3}],approved:[]};
@@ -69,18 +164,18 @@ for(const mode of ['mono','color'])for(const [state,n,current,kind] of [['brief_
  const intent={selection:kind?'A':null,kind,parameters:'etwa 25 × 20',context:'Landschaft'};
  both(v,intent,n);
  text=P.prompt(v,intent,opts);assert.match(text,new RegExp('Schritt '+n));
- assert.match(text,/kein Merge/);assert.ok(text.includes(record.file));assert.ok(text.includes('b'.repeat(40)));
+ if(n===5)assert.match(text,/kein Merge/);else assert.doesNotMatch(text,/Draft-PR|Commit, Push|Merge/);assert.ok(text.includes(record.file));assert.ok(text.includes('b'.repeat(40)));
  assert.match(text,new RegExp('AGENTS.md.*Authoring 0.8.0, Schritt '+n+'\\.'));
  assert.doesNotMatch(text,/monochrom|Monochrom|RGB|tools\.(work_publish|publish_git)|RI-ONE|Proof|Copilot|Reviewer|Endmatrix/);
  if(n<4)assert.doesNotMatch(text,/Kontextwunsch|Kontextzeichnungen|Hintergrundkandidaten/);
  if(kind)assert.throws(()=>P.prompt(v,{},opts),/wählen/);
- for(const action of ['resume','rework']){
+ for(const action of ['resume']){
   both(v,{action,feedback:'Linie korrigieren'},current);
   const changed=P.prompt(v,{action,feedback:'Linie korrigieren'},opts);
   assert.ok(changed.includes(record.file));
   assert.match(changed,new RegExp('Authoring 0.8.0, Schritt '+current+'\\.'));
   assert.doesNotMatch(changed,/Ich wähle|Ich gebe|Ich erteile|Squash-Merge|Integration|monochrom|Monochrom|tools\./);
-  assert.match(changed,/kein Merge/);
+  assert.doesNotMatch(changed,/Commit, Push|Draft-PR/);
  }
 }
 v.facts.state='background_review';assert.match(P.prompt(v,{selection:'none'},opts),/ausdrücklich für keinen Hintergrund/);
@@ -117,7 +212,7 @@ const first = build(grid);
 assert.ok(first.includes(base.notes));
 assert.match(first,/Breite: exakt 28 Zellen.*Höhe: exakt 19 Zellen/s);
 assert.match(first,/ungefähr 4 Vordergrundfarben/);
-assert.match(first,/Abschlussbilder als reveal_review zur Auswahl/);
+assert.match(first,/Abschlussbilder als reveal_review.*zur Auswahl/);
 assert.doesNotMatch(first,/Monochrom|monochrom|ohne Leerfelder/);
 assert.match(build({...grid,sizeAccuracy:'approx',colorAccuracy:'exact'}),/Breite: ungefähr 28 Zellen.*Höhe: ungefähr 19 Zellen.*exakt 4/s);
 assert.match(build({mode:'mono'}),/Rastermodus: monochrom\./);
@@ -135,21 +230,22 @@ assert.match(build({...grid,width:'1',height:'50',colors:'8'}),/Breite: exakt 1 
 const record={file:'content/authoring/pz-test/r01/record.json',sha256:'a'.repeat(64)};
 const value={commit:'b'.repeat(40),source_url:'https://github.com/venomenon328/picross/tree/'+'b'.repeat(40),
  record,puzzle_id:'pz-test',revision:'r01',facts:{state:'reveal_review',authoring_version:'0.8.0'},
- offers:[{id:'A',kind:'reveal',record}]};
+ assets:[{id:'A',role:'reveal'},{id:'M',role:'motif'}],offers:[{id:'A',kind:'reveal',record}]};
 const intent={grid,kind:'reveal',selection:'A'};
 assert.equal(P.orderStep(value),2);
 assert.match(P.prompt(value,intent,{}),/Schritt 2.*Breite: exakt 28 Zellen/s);
 value.facts.state='motif_review';
 assert.doesNotMatch(P.prompt(value,intent,{}),/Breite: exakt 28 Zellen/);
 assert.doesNotMatch(P.prompt(value,intent,{}),/Monochrom|RGB|Angebotslabel/);
-const correction=P.prompt(value,{...intent,action:'rework',feedback:'Raster anpassen'},{});
+const correction=P.prompt(value,{...intent,action:'rework',selection:'M',kind:'motif',feedback:'Raster anpassen'},{});
 assert.match(correction,/Breite: exakt 28 Zellen/);
 assert.match(correction,/Authoring 0.8.0, Schritt 2/);
 assert.doesNotMatch(correction,/Ich gebe.*frei/);
 value.facts.state='reveal_review';
-const revealCorrection=P.prompt(value,{...intent,action:'rework',feedback:'Kontur korrigieren',parameters:'Kelch erhalten'},{});
+assert.throws(()=>P.prompt(value,{...intent,action:'rework',feedback:'Kontur korrigieren',parameters:'Kelch erhalten'},{}),/Motivvorlagenwünsche gehören/);
+const revealCorrection=P.prompt(value,{...intent,action:'rework',feedback:'Kontur korrigieren',notes:'Kelch erhalten'},{});
 assert.match(revealCorrection,/Authoring 0.8.0, Schritt 1/);
-assert.match(revealCorrection,/Breite: exakt 28 Zellen/);assert.match(revealCorrection,/Wünsche zur Motivvorlage: Kelch erhalten/);
+assert.match(revealCorrection,/Breite: exakt 28 Zellen/);assert.match(revealCorrection,/Motivhinweise:.*Kelch erhalten/s);
 """
         result = subprocess.run(['node', '-e', probe], cwd=ROOT, capture_output=True,
                                 text=True, encoding='utf-8')
@@ -183,7 +279,8 @@ assert.equal(P.publishedGrid(v).width,'22');
 text=P.prompt(v,{...selected,grid:{width:'25'}},{});assert.match(text,/Neue Absicht.*Breite: ungefähr 25 Zellen/);
 v.facts.state='motif_review';
 assert.match(P.prompt(v,{},{}),/Schritt 3: Ich gebe.*Parameterkorridor.*frei/);
-text=P.prompt(v,{action:'rework',feedback:'Anpassen',grid:{width:'25'}},{});
+v.assets=[{id:'M',role:'motif'}];
+text=P.prompt(v,{action:'rework',selection:'M',kind:'motif',feedback:'Anpassen',grid:{width:'25'}},{});
 assert.match(text,/Neue Absicht/);assert.doesNotMatch(text,/Ich gebe.*frei/);
 published.approved=[];published.proposed=[p,{width:30}];assert.deepEqual(P.publishedGrid(v),{});
 published.proposed=[{...p,width:[15,20]}];assert.equal(P.publishedGrid(v).width,undefined);
@@ -291,8 +388,8 @@ for(const intent of [selected,{selection:'none'}]){
  assert.match(draft,/Draft-PR.*kein Merge/);assert.doesNotMatch(draft,/Squash-Merge|Produktionsabschluss/);
 }
 for(const action of ['resume','rework']){
- const text=P.prompt(v,{...selected,action,feedback:'Striche korrigieren'},{merge:true});
- assert.doesNotMatch(text,/Ich erteile|Ich wähle|Squash-Merge|work_publish retire/);assert.match(text,/kein Merge/);
+ const text=P.prompt(v,{selection:action==='rework'?'bg':'A',kind:'background',action,feedback:'Striche korrigieren'},{merge:true});
+ assert.doesNotMatch(text,/Ich erteile|Ich wähle|Squash-Merge|work_publish retire|Commit, Push|Draft-PR/);
 }
 for(const intent of [{},{selection:'missing',kind:'background'},{selection:'A',kind:'raster'}])assert.throws(()=>P.prompt(v,intent,{}));
 assert.throws(()=>P.prompt({...v,facts:{...v.facts,composition:null}},selected,{}),/Schlussübersicht/);

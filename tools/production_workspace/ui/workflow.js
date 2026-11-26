@@ -5,13 +5,52 @@ const PW = (()=>{
  const phase={brief_ready:1,reveal_review:1,motif_review:2,motif_approved:3,raster_review:3,raster_ready:3,background_review:4,content_ready:5,editorially_approved:5,registered:5};
  const executors=['ChatGPT','Codex'];
  const defaultExecutors={1:'Codex',2:'Codex',3:'ChatGPT',4:'Codex',5:'ChatGPT'};
+ const roleStep={reveal:1,motif:2,raster:3,raster_draft:3,background:4};
  function step(value){return value?phase[value.facts.state]||null:1;}
  function orderStep(value){
   if(value?.facts.candidates&&value.facts.state==='raster_review'&&value.offers.some(o=>o.kind==='raster'))return 4;
   return ({reveal_review:2,motif_review:3,raster_ready:4,background_review:5})[value?.facts.state]||step(value);}
- function promptStep(value,intent={}){
-  return (intent.action||'continue')==='continue'?orderStep(value):step(value);
+ function actionTargets(value,action){
+  if(!value||value.facts.state==='registered'||!['rework','assessment'].includes(action))return [];
+  const selected=value.facts.originals?.record?.selected||{},current=step(value);
+  return (value.assets||[]).filter(asset=>{
+   const n=roleStep[asset.role],role=asset.role==='raster_draft'?'raster':asset.role;
+   if(!n||value.facts.candidates&&!Object.hasOwn(value.facts.candidates,asset.id))return false;
+   if(action==='assessment')return ['reveal','motif'].includes(role)&&
+    value.facts.state===role+'_review'&&!selected[role];
+   return selected[role]===asset.id||!selected[role]&&current<=n;
+  });
  }
+ function orderTarget(value,intent={}){
+  const action=intent.action||'continue',state=value?.facts.state;
+  const invalid=error=>({step:null,role:null,target:null,inbox:false,error});
+  if(!['continue','rework','assessment','resume','background_change','raster_diagnosis'].includes(action))
+   return invalid('Bitte eine gültige Aktion wählen.');
+  if(!value&&!['continue','resume'].includes(action))return invalid('Ein neuer Entwurf beginnt mit dem Abschlussbildauftrag.');
+  let n=action==='continue'?orderStep(value):step(value),role=null,target=null,inbox=false;
+  if(['rework','assessment'].includes(action)){
+   const asset=actionTargets(value,action).find(a=>a.id===intent.selection);
+   if(!asset)return invalid(action==='assessment'
+    ?'Bitte ein offenes Reveal- oder Motivangebot dieser Phase zur Neubewertung wählen.'
+    :'Bitte eine verfügbare Korrekturgrundlage wählen.');
+   if(intent.kind&&intent.kind!==asset.role&&!(asset.role==='raster_draft'&&intent.kind==='raster'))
+    return invalid('Die gewählte Rolle passt nicht zur Korrektur-/Bewertungsgrundlage.');
+   role=asset.role;target=asset.id;n=roleStep[role];
+   inbox=Boolean(value.facts.candidates)&&['reveal','motif','background'].includes(role);
+  }else if(action==='background_change'){
+   if(state!=='registered')return invalid('Eine spätere Hintergrundrevision braucht einen tatsächlich registrierten Stand.');
+   n=5;role='background';
+  }else if(action==='raster_diagnosis'){
+   n=3;role='raster';target=intent.diagnosis?.target||null;
+  }else{
+   role=({1:'reveal',2:'motif',3:'raster',4:'background'})[n]||null;
+   inbox=(!value||Boolean(value.facts.candidates))&&(action==='continue'?[1,2,4].includes(n):
+    !value||['brief_ready','reveal_review','motif_review'].includes(state));
+  }
+  if(!n)return invalid('Dieser Stand benötigt einen eigenen ausdrücklich beauftragten Folgeauftrag.');
+  return {step:n,role,target,inbox,error:null};
+ }
+ function promptStep(value,intent={}){return orderTarget(value,intent).step;}
  function options(saved){
   const v=saved&&typeof saved==='object'&&!Array.isArray(saved)?saved:{};
   const selected=v.executors&&typeof v.executors==='object'&&!Array.isArray(v.executors)?v.executors:{};
@@ -21,20 +60,18 @@ const PW = (()=>{
   }
   return {workroot:typeof v.workroot==='string'?v.workroot:'',merge:typeof v.merge==='boolean'?v.merge:true,executors:preferences};
  }
- function executionOrder(n,action,opts){
+ function executionOrder(route,action,opts){
+  const n=route.step;
   if(opts.executors[n]==='Codex'){
    const lines=['Ausführung mit Codex. Nutze den lokalen Produktionsweg nach docs/tools/PRODUCTION_GIT_WORKSPACE.md.'];
    if(opts.workroot.trim())lines.push(`Lokale Codex-Arbeitswurzel: ${opts.workroot.trim()}.`);
    return lines;
   }
-  let entry='Nutze native Bildgenerierung, Originalsichtung und den sicheren Publisherweg nach den Pflichtquellen.';
+  let entry='Nutze den gebundenen Einstieg in docs/tools/PW_REMOTE.md.';
   if(action==='background_change')
-   entry='Nutze den gezielten Bestands- und Revisionsweg nach Authoring Schritt 5 §9 mit Bildgenerierung und Originalsichtung nach Bedarf.';
-  else if(n===4)
-   entry='Nutze docs/tools/PW_REMOTE.md für die fällige Rasterwahl, gebundene Aufbereitung und Originalsichtung. Kreative Bildarbeit und ihre Sicherung folgen den regulären Pflichtquellen.';
-  else if(n>=3)
-   entry='Nutze den gebundenen Einstieg in docs/tools/PW_REMOTE.md für die tatsächlich beauftragte Operation.';
-  return [`Ausführung mit ChatGPT. ${entry} Bei fehlendem Zugriff oder fehlenden Fähigkeiten den betroffenen Teil und den gesicherten Stand benennen.`];
+   entry='Nutze den gezielten Bestands- und Revisionsweg nach Authoring Schritt 5 §9.';
+  else if(route.inbox||n<3)entry='Nutze den gebundenen Bildauftrag nach docs/tools/PW_IMPORT.md.';
+  return [`Ausführung mit ChatGPT. ${entry}`];
  }
  function pendingBackground(value){
   return value?.facts.state==='background_review'&&value.facts.originals?.record?.assets?.some(
@@ -140,15 +177,60 @@ const PW = (()=>{
   if(grid.mode!=='mono'&&grid.colors)parts.push(colorRequest(grid.colors,grid.colorAccuracy,grid.mode));
   return parts;
  }
+ function correctionInputs(value,intent,grid){
+  if(intent.action!=='rework')return;
+  const route=orderTarget(value,intent);
+  if(route.error)throw Error(route.error);
+  for(const [key,phases,label] of [['notes',[1],'Motivhinweise gehören zum Abschlussbildauftrag'],
+   ['parameters',[2,3],'Motivvorlagenwünsche gehören zum Motiv- oder Rasterauftrag'],
+   ['context',[4],'Kontextwünsche gehören zum Hintergrundauftrag']]){
+   if(intent[key]?.trim()&&!phases.includes(route.step))throw Error(label+'. Eingabe oder Korrekturgrundlage anpassen.');
+  }
+  if(grid.length&&route.step===4)throw Error('Rasterwünsche gehören zum Abschlussbild-, Motiv- oder Rasterauftrag. Eingabe oder Korrekturgrundlage anpassen.');
+ }
+ function referenceInput(value,intent){
+  const ref=intent.reference;
+  if(value||!intent.inputImage&&!ref)return ref||'';
+  if(!ref||typeof ref!=='object'||Array.isArray(ref)||Object.keys(ref).sort().join(',')!=='bytes,name,sha256'||
+     typeof ref.name!=='string'||!ref.name||ref.name.length>255||/[\\/:\x00-\x1f]/.test(ref.name)||
+     !/\.(png|jpe?g)$/i.test(ref.name)||intent.inputImage&&ref.name!==intent.inputImage||
+     !Number.isInteger(ref.bytes)||ref.bytes<1||ref.bytes>32*1024*1024||
+     typeof ref.sha256!=='string'||!/^[a-f0-9]{64}$/.test(ref.sha256))
+   throw Error(intent.referenceError||'Die Referenzdatei benötigt eine vollständige passende Bindung aus Name, Bytezahl und SHA-256. Datei erneut auswählen.');
+  return ref;
+ }
+ function inboxFindings(value,intent){
+  if(intent.action==='resume')return {};
+  const edits=intent.findings||{};
+  if(intent.action!=='assessment')return edits;
+  const route=orderTarget(value,intent),result={};
+  if(route.error)throw Error(route.error);
+  for(const [binding,edit] of Object.entries(edits)){
+   const found=Object.entries(value.facts.candidates||{}).flatMap(([target,card])=>
+    card.findings.filter(row=>row.binding===binding).map(row=>({target,row})));
+   if(found.length!==1||!edit||typeof edit.accepted!=='boolean'||typeof edit.treatment!=='string')
+    throw Error('Befundbindung für die Neubewertung ist veraltet oder nicht eindeutig. Vormerkung prüfen.');
+   const {target,row}=found[0],stored=row.decision;
+   if(edit.accepted===(stored?.action==='accept')&&(!edit.accepted||edit.treatment===stored?.treatment))continue;
+   if(target!==route.target)throw Error('Die neue Befundentscheidung gehört nicht zum Bewertungsziel '+route.target+'. Andere Vormerkung zuerst klären.');
+   if(!row.eligible)throw Error('Die Befundentscheidung am Bewertungsziel ist nicht verfügbar.');
+   if(edit.accepted&&!edit.treatment.trim())throw Error('Bitte den Umgang mit dem Befund bestätigen.');
+   result[binding]=edit;
+  }
+  return result;
+ }
  function inboxInputs(value,intent,action){
   if(action!=='correction'&&['rework','background_change'].includes(intent.action)&&intent.feedback?.trim())
    throw Error('Für den eingegebenen Änderungswunsch den Empfangsauftrag „Gewählte Variante korrigieren“ wählen.');
   const grid=value?gridChanges(value,intent):gridRequest(intent.grid);
+  correctionInputs(value,intent,grid);
+  inboxFindings(value,intent);
+  const reference=referenceInput(value,intent);
   return {
    brief:value?'':(intent.brief||'').trim(), notes:(intent.notes||'').trim(),
    parameters:(intent.parameters||'').trim(), context:(intent.context||'').trim(),
    feedback:action==='correction'?(intent.feedback||'').trim():'',
-   reference:intent.reference||'', grid
+   reference, grid
   };
  }
  function choiceReady(value,target,intent){
@@ -158,10 +240,10 @@ const PW = (()=>{
    row.eligible&&(intent.findings?.[row.binding]?.accepted??(row.decision?.action==='accept')));
  }
  function findingOrders(value,intent){
-  const lines=[];
+  const lines=[],edits=inboxFindings(value,intent);
   for(const [target,card] of Object.entries(value?.facts.candidates||{})){
    for(const row of card.findings){
-    const edit=intent.findings?.[row.binding];
+    const edit=edits[row.binding];
     const stored=row.decision;
     if(!edit||!row.eligible)continue;
     if(edit.accepted&&!edit.treatment.trim())throw Error('Bitte den Umgang mit dem Befund bestätigen.');
@@ -217,7 +299,7 @@ const PW = (()=>{
    const dimensions=d=>`${d.width} × ${d.height}`;
    return [
     `Schritt 3: Für ${identity} genehmige ich die konkrete Parameter-/Korridorneufreigabe der Alternative ${crop.parameter+1} (bisheriger SHA-256 ${crop.parameters_sha256}): ${cropChanges(crop).join(', ')}. Alle übrigen Werte dieser Alternative und die übrigen Alternativen bleiben gültig. Der belegte Zuschnitt führt von ${dimensions(crop.before)} auf ${dimensions(crop.after)} Zellen.`,
-    `Ich beabsichtige die Rasterwahl ${decision.target} und die anschließende Fortsetzung in Schritt 4. Binde zuerst diese neue Parameteralternative und die davon abhängige Motiventscheidung. Prüfe die frische Endrevision, Hinweise, unabhängige vollständige Deduktion mit Endmatrixvergleich, Difficulty und alle weiteren Pflichtgates am Endraster. Publiziere die gültige Rasterwahl und die Fortsetzung erst nach erfolgreichen Prüfungen. Bleibt ein Gate offen, lege den konkreten Befund in Schritt 3 vor.`
+    `Ich beabsichtige die Rasterwahl ${decision.target} und die Fortsetzung in Schritt 4 nach erfolgreicher Qualifikation mit dieser neuen Parameterbindung. Andernfalls den offenen Befund in Schritt 3 vorlegen.`
    ];
   }
   if(decision.kind!=='frame'||!card.diagnostics?.frame||card.diagnostics.frame.exception)
@@ -226,17 +308,19 @@ const PW = (()=>{
   if(!reason)throw Error('Bitte die technische frame-Ausnahme begründen.');
   return [
    `Schritt 3: Für ${identity} erkläre ich ausdrücklich eine technische frame-Ausnahme für den festgestellten H-01-Randbefund. Begründung: ${reason}`,
-   'Binde meine tatsächliche Erklärung mit eigenem Beleg an genau diesen Kandidaten, diese Endrevision und den Definitionshash. Prüfe die Ausnahme technisch, zeige den weiterhin negativen Randbefund und den separaten Ausnahmebeleg. Lege den aktuellen Prüfstand mit allen übrigen Pflichtgates vor.'
+   'Die Ausnahme binden und den aktuellen Prüfstand mit Randbefund und Ausnahmebeleg veröffentlichen und vorlegen.'
   ];
  }
  function prompt(value,intent={},personal={}){
-  const action=intent.action||'continue',order=orderStep(value),opts=options(personal);
-  const n=promptStep(value,intent);
-  if(!n)throw Error('Dieser Stand benötigt einen eigenen ausdrücklich beauftragten Folgeauftrag.');
+  const action=intent.action||'continue',order=orderStep(value),opts=options(personal),route=orderTarget(value,intent);
+  const n=route.step;
+  if(route.error)throw Error(route.error);
+  const editedGrid=(n<=2||action==='rework')?(value?gridChanges(value,intent):gridRequest(intent.grid)):[];
+  correctionInputs(value,intent,editedGrid);
+  const reference=referenceInput(value,intent);
   if(value&&value.facts.authoring_version!=='0.8.0')throw Error('Dieser historische Stand gehört nicht zum neuen 0.8-Produktionsweg.');
   const remote=value?.source_url?.match(/^https:\/\/github\.com\/([A-Za-z0-9_.-]+\/[A-Za-z0-9_.-]+)\/tree\/([a-f0-9]{40})$/);
   if(value&&(!remote||value.commit!==remote[2]))throw Error('Remote-Sicherung nicht bestätigt. Arbeitsstand zuerst mit dem PW-B-Publisher sichern, dann Quellen aktualisieren.');
-  if(!['continue','rework','resume','background_change','raster_diagnosis'].includes(action))throw Error('Bitte eine gültige Aktion wählen.');
   const lines=[`Repository: ${remote?.[1]||'venomenon328/picross'} · Ziel: main. Verbindlich: AGENTS.md im aktuellen main und die dort gerouteten Pflichtquellen für Authoring 0.8.0, Schritt ${n}.`];
   if(value){
    if(!/^pz-[a-z0-9]+(?:-[a-z0-9]+)*$/.test(value.puzzle_id)||!/^[A-Za-z0-9][A-Za-z0-9._-]{0,31}$/.test(value.revision)||value.record?.file!==`content/authoring/${value.puzzle_id}/${value.revision}/record.json`)throw Error('Der kanonische Produktionsrecord ist nicht eindeutig gebunden.');
@@ -244,12 +328,12 @@ const PW = (()=>{
   }else{
    if(!intent.brief?.trim())throw Error('Bitte zuerst dein Motiv beschreiben.');
    lines.push(`Neues Motiv: ${intent.brief.trim()}`);
-   if(intent.inputImage)lines.push(`Beigefügte Referenzdatei: ${intent.inputImage}.`);
+   if(reference)lines.push(`Beigefügte Referenzdatei: ${JSON.stringify(reference)}.`);
   }
   const selected=value?.offers.find(o=>o.id===intent.selection&&o.kind===intent.kind);
   const cards=value?.facts.candidates;
   if(cards){
-   if(action!=='raster_diagnosis')lines.push(...findingOrders(value,intent));
+   if(!['raster_diagnosis','resume'].includes(action))lines.push(...findingOrders(value,intent));
    if(action==='continue'){
     if(value.facts.blockers?.length)throw Error('Auftragsweite Voraussetzung offen: '+value.facts.blockers[0]);
     const required=new Set(selected?[selected.id]:[]);
@@ -266,28 +350,30 @@ const PW = (()=>{
   }else if(action==='background_change'){
    if(value?.facts.state!=='registered')throw Error('Eine spätere Hintergrundrevision braucht einen tatsächlich registrierten Stand.');
    if(!intent.feedback?.trim())throw Error('Bitte die gewünschte Hintergrundänderung beschreiben.');
-   lines.push(`Spätere Hintergrundrevision nach Authoring Schritt 5 §9: ${intent.feedback.trim()}`);
+   lines.push(`Spätere Hintergrundrevision nach Authoring Schritt 5 §9: ${intent.feedback.trim()}\nDie neue Hintergrundfassung zur Entscheidung vorlegen.`);
   }else if(action==='rework'){
    if(!intent.feedback?.trim())throw Error('Bitte die gewünschte Korrektur beschreiben.');
-   lines.push(`Korrektur in Schritt ${step(value)}: ${intent.feedback.trim()}. Korrigierten Stand zur fälligen Entscheidung vorlegen.`);
+   lines.push(`Korrekturgrundlage: ${route.role}/${route.target}. Änderungswunsch:\n${intent.feedback.trim()}\nKorrigierten Stand veröffentlichen und zur fälligen Entscheidung vorlegen.`);
    if(cards){
-    const base=intent.selection;
-    if(!cards[base])throw Error('Bitte die Korrekturgrundlage wählen.');
-    lines.push(`Korrekturgrundlage: ${base}. Geltende Behandlungen berücksichtigen. Korrigierte Bytes zur Wahl vorlegen.`);
+    const base=route.target;
     for(const row of cards[base].findings){
      const edit=intent.findings?.[row.binding];
      if(edit&&!edit.accepted&&edit.treatment.trim()&&row.decision?.action!=='accept')
-      lines.push(JSON.stringify({Befund:row.id,Korrekturhinweis:edit.treatment}));
+      lines.push(JSON.stringify({Kandidat:base,Befund:row.id,Bindung:row.binding,Korrekturhinweis:edit.treatment}));
     }
-   }else if(selected)lines.push(`Betroffenes Angebot: ${selected.kind}/${selected.id}.`);
+   }
+  }else if(action==='assessment'){
+   lines.push(`Ausschließlich das vorhandene unveränderte Angebot ${route.role}/${route.target} neu sichten und bewerten; die Bewertung am Arbeitsstand veröffentlichen.`);
   }else if(action==='resume'){
-   lines.push(`Schritt ${n} am gebundenen Datensatz wieder aufnehmen.`);
-   if(pendingBackground(value))lines.push('Über docs/tools/PW_REMOTE.md am veröffentlichten Hintergrund prepare, Originalzustellung, tatsächliche Sichtung und assessment ausführen. Keine neue Inbox-Lieferung.');
+   if(!value)lines.push('Schritt 1: Abschlussbilder als reveal_review veröffentlichen und zur Auswahl vorlegen.');
+   else if(n===5)lines.push('Nur den offenen Git-/PR-/Abschlussrest am gebundenen Stand mit der bereits tatsächlich erteilten Befugnis fortsetzen.');
+   else if(pendingBackground(value))lines.push('Die veröffentlichten Hintergrundangebote fertig aufbereiten und bewerten, dann als qualifizierte Angebote veröffentlichen und zur Wahl vorlegen.');
+   else lines.push(`Die noch offene Arbeit in Schritt ${n} am gebundenen Stand fortsetzen und sichern; bestehende gültige Angebote und Entscheidungen erhalten.`);
   }else if(!value||value.facts.state==='brief_ready'){
-   lines.push('Schritt 1: Abschlussbilder als reveal_review zur Auswahl vorlegen.');
+   lines.push('Schritt 1: Abschlussbilder als reveal_review veröffentlichen und zur Auswahl vorlegen.');
   }else if(value.facts.state==='reveal_review'){
    if(!selected||selected.kind!=='reveal')throw Error('Bitte ein Abschlussbild wählen.');
-   lines.push(`Schritt 2: Ich wähle und gebe Abschlussbild ${selected.id} unverändert frei. Motivvorlage und Parameterkorridor als motif_review vorlegen.`);
+   lines.push(`Schritt 2: Ich wähle und gebe Abschlussbild ${selected.id} unverändert frei. Motivvorlage und Parameterkorridor als motif_review veröffentlichen und zur Wahl vorlegen.`);
   }else if(value.facts.state==='motif_review'){
    if(cards){
     const proposed=parameterOptions(value.facts.published?.proposed);
@@ -295,41 +381,38 @@ const PW = (()=>{
     if(selected?.kind!=='motif')throw Error('Bitte die Motivvorlage wählen.');
     const choice=intent.parameter===undefined&&proposed.length===1?proposed[0]:proposed.find(({index})=>index===intent.parameter);
     if(!choice)throw Error('Bitte eine vollständige Parameteralternative wählen.');
-    const entry=proposed.length===1?'den einzigen vollständigen Vorschlag':'die ausdrücklich gewählte Alternative';
-    lines.push(`Schritt 3: Ich gebe Motivvorlage ${selected.id} und ${entry} in parameters.proposed (Eintrag ${choice.index+1}, von 1 gezählt) unverändert frei. Lies und prüfe das vollständige Original im gebundenen Datensatz. Qualifizierte Rasterangebote vorlegen.`);
+    lines.push(`Schritt 3: Ich gebe Motivvorlage ${selected.id} und parameters.proposed, Eintrag ${choice.index+1} (von 1 gezählt), unverändert frei. Qualifizierte Rasterangebote veröffentlichen und zur Wahl vorlegen.`);
    }else lines.push('Schritt 3: Ich gebe die unveränderte Motivvorlage samt vorgeschlagenem Parameterkorridor im Datensatz frei. Qualifizierte Rasterangebote als raster_ready vorlegen.');
   }else if(order===3){
-   lines.push('Schritt 3: Die bereits freigegebene Rasterproduktion bis zu qualifizierten Rasterangeboten fortsetzen.');
+   lines.push('Schritt 3: Die bereits freigegebene Rasterproduktion einschließlich nötiger zulässiger Iterationen bis zu qualifizierten Rasterangeboten fortsetzen; veröffentlichen und zur Wahl vorlegen.');
   }else if(order===4){
    if(!selected||selected.kind!=='raster')throw Error('Bitte ein qualifiziertes Rasterangebot wählen.');
-   lines.push(`Schritt 4: Ich wähle das qualifizierte Rasterangebot ${selected.id}. Jede Kontextzeichnung im vorgesehenen HG31-Profil vorbereiten, Original und fertige PNG-Datei sichten und die gebundenen Angebote als background_review vorlegen.`);
+   lines.push(`Schritt 4: Ich wähle das qualifizierte Rasterangebot ${selected.id}. Qualifizierte Hintergrundangebote mit Originalen, fertiger Ableitung und Urteilen als background_review veröffentlichen und zur Wahl vorlegen.`);
   }else{
    const final=finalAssets(value,intent);
    if(value.facts.state==='background_review'){
     lines.push(final.choice==='none'?'Schritt 5: Ich entscheide mich ausdrücklich für keinen Hintergrund.':final.choice==='standard'?'Schritt 5: Ich wähle ausdrücklich den Standardhintergrund.':`Schritt 5: Ich wähle die unveränderte Kontextzeichnung aus Angebot ${final.choice}.`);
-    if(cards&&final.background)lines.push('Gewähltes Profil: '+value.facts.originals.record.assets.find(a=>a.id===final.background.id).profile+'.');
     lines.push('Ich erteile die Endabnahme dieser Hintergrundentscheidung mit dem gewählten Raster und Reveal und beauftrage deren Integration.');
    }else if(value.facts.state==='registered')lines.push('Schritt 5: Git-/PR-Abschluss der bereits registrierten unveränderten Lieferung fortsetzen.');
    else if(value.facts.state==='editorially_approved')lines.push('Schritt 5: Die bereits endabgenommene unveränderte Lieferung integrieren.');
    else lines.push('Schritt 5: Ich erteile die Endabnahme der gebundenen unveränderten Raster-, Reveal- und Hintergrundfassung (gegebenenfalls none) und beauftrage deren Integration.');
   }
   const published=value?.facts.published;
-  // Input controls belong to the displayed view; corrections route their actual phase.
-  if(order===1&&intent.notes?.trim())lines.push(`Neue/zusätzliche Motivhinweise:\n${intent.notes.trim()}`);
-  if(order<=2||(order===3&&action==='rework')){
-   const grid=(value?gridChanges(value,intent):gridRequest(intent.grid)).join(' ');
+  if(n===1&&intent.notes?.trim())lines.push(`Neue/zusätzliche Motivhinweise:\n${intent.notes.trim()}`);
+  if(n<=2||(n===3&&action==='rework')){
+   const grid=editedGrid.join(' ');
    if(grid)lines.push(`${published?'Neue Absicht gegenüber den veröffentlichten Vorgaben':'Vorgaben für das spätere Lösungsraster'}: ${grid}`);
   }
-  if((order===2||(order===3&&action==='rework'))&&intent.parameters?.trim())lines.push(`Neue/zusätzliche Wünsche zur Motivvorlage: ${intent.parameters.trim()}`);
-  if(order===4&&intent.context?.trim())lines.push(`Kontextwunsch: ${intent.context.trim()}`);
-  lines.push(...executionOrder(n,action,opts));
+  if((n===2||(n===3&&action==='rework'))&&intent.parameters?.trim())lines.push(`Neue/zusätzliche Wünsche zur Motivvorlage: ${intent.parameters.trim()}`);
+  if(n===4&&intent.context?.trim())lines.push(`Kontextwunsch: ${intent.context.trim()}`);
+  lines.push(...executionOrder(route,action,opts));
   const isClosing=closing(value,intent);
   if(isClosing&&opts.merge){
    lines.push('Commit, Push und PR; bei erfüllten Pflichtgates nach Authoring Schritt 5 §8 per Squash-Merge nach main integrieren und den Produktionsabschluss nach §9 ausführen.');
   }
-  else lines.push('Commit, Push und Draft-PR im beauftragten Umfang; kein Merge.');
+  else if(isClosing)lines.push('Commit, Push und Draft-PR nach Authoring Schritt 5 §§8–9; kein Merge.');
   return lines.join('\n\n');
  }
- return {steps,step,orderStep,promptStep,executors,prompt,inboxInputs,choiceReady,publishedGrid,parameterOptions,options,closing,pendingBackground,finalAssets,axes,cropChanges};
+ return {steps,step,orderStep,orderTarget,actionTargets,promptStep,executors,prompt,inboxInputs,inboxFindings,choiceReady,publishedGrid,parameterOptions,options,closing,pendingBackground,finalAssets,axes,cropChanges};
 })();
 if(typeof module!=='undefined')module.exports=PW;
