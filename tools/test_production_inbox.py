@@ -186,7 +186,7 @@ class InboxTests(unittest.TestCase):
                 previous['assets'].append(asset('existing', role, 'teal'))
                 record = {**previous, 'format': current.findings.PUBLISHED}
                 record_hash = contract.io.checksum(current.encoded(record))
-                source = {'id': 'row', 'puzzle_id': job, 'commit': head, 'source': 'remote'}
+                source = {'id': 'row', 'puzzle_id': job, 'commit': head, 'source': 'remote', 'ref': 'content/pw/' + job}
                 self.service.status.return_value.update(mode='remote', jobs=[source], errors=[], motifs=[
                     {'puzzle_id': job, 'current_job': 'row', 'notes': [], 'versions': [{'sources': ['row']}]}])
                 self.service.selected = Mock(return_value={**source, '_record': record,
@@ -482,14 +482,18 @@ class InboxTests(unittest.TestCase):
         with patch.object(writer.publisher, 'publisher_auth', return_value=nullcontext()), \
              patch.object(writer.ws, 'store_for', return_value=(None, self.root)), \
              patch.object(writer.ws, 'prepare', return_value={'job': self.root}), \
-             patch.object(writer.git, 'remote_head', side_effect=[main, None] * 4), \
+             patch.object(writer.git, 'remote_head', side_effect=[main, None] * 7 + [main, 'c' * 40]), \
              patch.object(writer.git, 'git') as git, patch.object(writer, 'GitSource') as git_source, \
              patch.object(writer.deliveries, 'registered_ids', return_value=set()), \
              patch.object(current, 'build', side_effect=ValueError('builder reached')) as build:
             git_source.return_value.read.return_value = None
             clarified = (b':100644 100644 4573b0d872443737f771261ec2305bef2ef00fcc '
                          b'8fe7dd048b1dc5b318c41bc3714852f26ac3e158 M\0docs/tools/PW_IMPORT.md\0')
-            for rules in (clarified.replace(b'100644 100644', b'100644 100755'),
+            ui_blob = b'86449648233ed6fd453cd3019655f00ee4b1560a'
+            from_913 = clarified.replace(b'8fe7dd048b1dc5b318c41bc3714852f26ac3e158', ui_blob)
+            from_914 = from_913.replace(b'4573b0d872443737f771261ec2305bef2ef00fcc',
+                                        b'8fe7dd048b1dc5b318c41bc3714852f26ac3e158')
+            for rules in (from_914.replace(ui_blob, b'f' * 40), clarified.replace(b'100644 100644', b'100644 100755'),
                           clarified + clarified.replace(b'docs/tools/PW_IMPORT.md', b'AGENTS.md')):
                 with self.subTest(rules=rules):
                     git.return_value = rules
@@ -497,16 +501,67 @@ class InboxTests(unittest.TestCase):
                         self.inbox.writer.publish(self.order, received, self.inbox.stage(self.order), self.inbox.save)
                     build.assert_not_called()
             with patch.object(self.inbox.writer, 'bound_work', return_value=self.root):
-                for rules in (clarified, b''):
+                for rules in (clarified, from_913, from_914, b''):
                     git.return_value = rules
                     with self.assertRaisesRegex(ValueError, 'builder reached'):
                         self.inbox.writer.publish(self.order, received, self.inbox.stage(self.order), self.inbox.save)
                     self.assertEqual(git.call_args.args[1:9],
                                      ('diff', '--raw', '-z', '--no-abbrev', '--no-renames', source['main_commit'], main, '--'))
-            self.assertEqual(build.call_count, 2)
+            self.order['step'] = 'stage'
+            git.return_value = from_914
+            with self.assertRaisesRegex(ValueError, 'Arbeitsbranch ist fortgeschritten'):
+                self.inbox.writer.publish(self.order, received, self.inbox.stage(self.order), self.inbox.save)
+            self.assertEqual(build.call_count, 4)
             build.assert_called_with(received, self.inbox.stage(self.order), self.root)
         self.assertEqual(self.order['source'], source)
         self.assertEqual((self.inbox.stage(self.order) / self.filename).read_bytes(), self.png)
+
+    def test_confirmed_import_after_restart_matches_only_own_descendant(self):
+        from tools.production_workspace.server import Service
+        from tools.production_workspace.sources import GitSource
+
+        self.prepare_service()
+        root = self.root / 'history'
+        subprocess.run(['git', 'init', '-q', str(root)], check=True)
+
+        def commit(message):
+            subprocess.run(['git', '-C', str(root), '-c', 'user.name=Test', '-c', 'user.email=test@example.org',
+                            'commit', '-q', '--allow-empty', '-m', message], check=True)
+            return subprocess.check_output(['git', '-C', str(root), 'rev-parse', 'HEAD'], text=True).strip()
+
+        base, published, successor = (commit(message) for message in ('base', 'published', 'follow-up'))
+        subprocess.run(['git', '-C', str(root), 'checkout', '-q', '--detach', base], check=True)
+        divergent = commit('other line')
+        job = self.order['puzzle_id']
+        self.order.update(step='cleanup', paused=True, result={'head': published}, remaining=[])
+        self.inbox.save()
+        repo = self.service.repository
+        repo.local, repo.cached = GitSource(root), None
+        service = Service(repo)
+        service.inbox = Inbox(service)
+        row = dict(puzzle_id=job, title='Test', phase='Briefing', current_view=True, binding='binding',
+                   revision='current', ref='content/pw/' + job, source='remote', commit=successor)
+        repo.refresh = lambda: dict(jobs=[row], remote_confirmed=True, relations={})
+        binding = {k: self.order[k] for k in ('request_id', 'puzzle_id')}
+        service.listing(refresh=True)
+        with self.assertRaisesRegex(ValueError, 'Veröffentlichung zuerst fortsetzen'):
+            service.inbox.action('acknowledge', binding)
+
+        service.inbox.data['orders'][job]['step'] = 'done'
+        service.inbox.save()
+        service.inbox = Inbox(service)
+        for changes in ({'commit': divergent}, {'ref': 'main'}, {'puzzle_id': 'pz-other'},
+                        {'source': 'local'}, {'current_view': False}):
+            with self.subTest(changes=changes), patch.dict(row, changes):
+                snapshot = service.listing(refresh=True)
+                self.assertNotIn('receipt_ancestor', snapshot['jobs'][0])
+                with self.assertRaisesRegex(ValueError, 'Gitquellen'):
+                    service.inbox.action('acknowledge', binding)
+                self.assertIn(job, Inbox(service).data['orders'])
+        snapshot = service.listing(refresh=True)
+        self.assertEqual(snapshot['jobs'][0]['receipt_ancestor'], published)
+        service.inbox.action('acknowledge', binding)
+        self.assertFalse(Inbox(service).data['orders'])
 
     def check_bound_delta(self, previous, request, phase, intent):
         source = {**self.order['source'], 'work_head': 'b' * 40,
@@ -645,7 +700,9 @@ class InboxTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, 'Gitquellen'):
             restarted.action('acknowledge', binding)
         self.service.status.return_value['jobs'].append(
-            {'puzzle_id': order['puzzle_id'], 'commit': confirmed['head'], 'source': 'remote'})
+            {'id': 'row', 'puzzle_id': order['puzzle_id'], 'commit': confirmed['head'], 'source': 'remote',
+             'ref': 'content/pw/' + order['puzzle_id']})
+        self.service.status.return_value['motifs'] = [{'puzzle_id': order['puzzle_id'], 'current_job': 'row'}]
         restarted.action('acknowledge', binding)
         self.deliver()
         with self.assertRaises(ValueError):

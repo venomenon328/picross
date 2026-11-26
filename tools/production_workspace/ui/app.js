@@ -371,6 +371,7 @@ function orderControls(view,panel){
  const info=node('details');info.id='receiptDetails';
  const reason=node('p');reason.id='receiptReason';
  info.append(node('summary','Details zur Übernahme'),reason);receipt.append(heading,state,info);
+ const review=node('a');review.id='receiptSource';review.target='_blank';review.rel='noopener noreferrer';receipt.append(review);
  const execution=node('div',undefined,'orderExecution'),executorLabel=node('label','Auftrag ausführen mit:'),executor=node('select');
  execution.id='orderExecution';executor.id='executor';
  for(const name of PW.executors){const option=node('option',name);option.value=name;executor.append(option);}
@@ -961,13 +962,22 @@ function showOrder(order){
  $('receiptDetails').hidden=!order.status;setText($('receiptReason'),order.status||'');
  const cancel=['scan','stage','stale','blocked'].includes(order.step);
  const retry=order.paused&&['scan','stage','build','publish','cleanup'].includes(order.step);
- const loaded=detail&&active?.commit===order.result?.head&&active.source==='remote';
+ const source=pending||listing,match=order.result&&resultJob(source,order);
+ const loaded=detail&&match&&active?.id===match.id;
+ const review=$('receiptSource');
+ review.hidden=!order.result||Boolean(match)||completedIn(source,order.puzzle_id);
+ if(!review.hidden){
+  const tip=source?.sources?.find(s=>s.source==='remote'&&s.ref==='content/pw/'+order.puzzle_id)?.commit;
+  const compare=source?.remote_confirmed&&tip&&tip!==order.result.head;
+  review.href='https://github.com/venomenon328/picross/'+(compare?'compare/'+order.result.head+'...'+tip:'commit/'+order.result.head);
+  setText(review,compare?'Import und aktuellen Arbeitsstand auf GitHub vergleichen':'Bestätigten Import auf GitHub ansehen');
+ }
  const copy=$('copyOrder');copy.hidden=Boolean(order.result&&loaded);
  copy.disabled=starting||busyReceipt===order.request_id;
  setText(copy,order.result?'Veröffentlichten Arbeitsstand laden':'Auftrag kopieren');
  const preview=$('orderPreview');preview.hidden=Boolean(order.result);
  if($('orderText').value!==order.prompt)$('orderText').value=order.prompt||'';
- setText($('executorHint'),order.result?(loaded?'Der bestätigte Gitstand ist geöffnet.':'Der bestätigte Arbeitsstand wird aus den Gitquellen geladen.'):
+ setText($('executorHint'),order.result?(loaded?'Der bestätigte Gitstand ist geöffnet.':'Quellen aktualisieren. Bleibt die Zuordnung offen, den bestätigten Import prüfen und den Produktionsbranch mit der zuständigen Person klären.'):
   order.paused?(['build','publish'].includes(order.step)?'Die Veröffentlichung ist bereits begonnen. Prüfe die Quelle und setze dieselbe Übernahme fort.':'Prüfe die Details zur Übernahme.'):'Der Auftrag ist für ChatGPT gespeichert. Du kannst ihn erneut kopieren.');
  $('orderSecondary').hidden=!cancel&&!retry;
  const recovery=$('receiptRetry');recovery.hidden=!retry;recovery.disabled=copy.disabled;
@@ -1052,7 +1062,8 @@ let loadingResult=null;
 function resultJob(source,order){
  if(!source?.remote_confirmed||source.update?.state==='error')return null;
  const motif=source.motifs.find(m=>m.puzzle_id===order.puzzle_id);
- return source.jobs.find(j=>j.id===motif?.current_job&&j.commit===order.result.head&&j.source==='remote'&&j.puzzle_id===order.puzzle_id);
+ return source.jobs.find(j=>j.id===motif?.current_job&&j.source==='remote'&&j.ref==='content/pw/'+order.puzzle_id&&j.puzzle_id===order.puzzle_id&&
+  (j.commit===order.result.head||j.receipt_ancestor===order.result.head));
 }
 function reconcileResult(){
  const order=currentOrder();
@@ -1062,7 +1073,7 @@ function reconcileResult(){
   inboxAction('acknowledge',receiptBinding(background)).catch(exc=>setText($('inboxMessage'),exc.message));
  }
  if(!order?.result||draft)return;
- const loaded=detail&&active?.source==='remote'&&active.commit===order.result.head;
+ const loaded=detail&&active?.id===resultJob(pending||listing,order)?.id;
  if(loaded?order.step==='done':!viewEdited&&!remoteExplicit&&(!active||detail))loadResult(order,false);
 }
 async function loadResult(order,explicit){
@@ -1078,7 +1089,7 @@ async function loadResult(order,explicit){
    if(!detail||active?.id!==job.id||active?.commit!==job.commit){
     const loaded=await(await request('/api/jobs/'+job.id)).json();
     if(!stillHere())return;
-    if(loaded.puzzle_id!==order.puzzle_id||loaded.commit!==order.result.head)throw Error('Quellenstand inzwischen geändert. Arbeitsstand erneut laden.');
+    if(loaded.puzzle_id!==order.puzzle_id||loaded.commit!==job.commit)throw Error('Quellenstand inzwischen geändert. Arbeitsstand erneut laden.');
     await adopt(source,{id:job.id,detail:loaded});
    }
    if(!detail||currentOrder()?.request_id!==order.request_id||active?.id!==job.id)return;

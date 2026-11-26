@@ -6,12 +6,12 @@
     "tools"
   ],
   "purpose": "Einheitliche Produktionsnavigation und wiederaufnehmbarer Auftrag im Hauptbereich.",
-  "omitted": "Writer, Validator, Transport und Spielregeln bleiben unverändert. T02 prüft Layout, Interaktion und Windows-Lieferbindung am Frozen-Kandidaten.",
+  "omitted": "B02 prüft die eng gebundene Writer-Kompatibilität. Validator, Transport und Spielregeln bleiben unverändert. T02 prüft Layout, Interaktion und Windows-Lieferbindung am Frozen-Kandidaten.",
   "test_changes": [
     {
       "path": "tools/test_production_inbox.py",
       "disposition": "change-scoped",
-      "reason": "Persistente Zuordnung, getrennte Abbruch-/Quittungsaktionen und gebundener Wiederanlauf."
+      "reason": "Quittungsabschluss bei bestätigter Abstammung, Schutz von Bereinigungsresten und genaue Writer-Dokumentbindung."
     },
     {
       "path": "tools/production_workspace/check_ui_loading.cjs",

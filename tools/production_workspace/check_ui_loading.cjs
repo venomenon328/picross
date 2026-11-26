@@ -187,12 +187,16 @@ const run = code => vm.runInContext(code, context);
     assert(!expired.ok,'the old binding cannot cancel the new receipt');
     const live=reload('currentOrder()');
     reloaded.done={...live,result:{head:'b'.repeat(40)},step:'done'};
-    reloaded.remote={remote_confirmed:true,jobs:[{id:'row',source:'remote',puzzle_id:first,commit:'b'.repeat(40)}],
+    reloaded.remote={remote_confirmed:true,jobs:[{id:'row',source:'remote',ref:'content/pw/'+first,puzzle_id:first,commit:'b'.repeat(40)}],
       motifs:[{puzzle_id:first,current_job:'row'}]};
     assert.equal(reload('resultJob(remote,done).id'),'row');
     assert.equal(reload("resultJob(remote,{...done,puzzle_id:'pz-fremd'})"),undefined);
     assert.equal(reload("resultJob(remote,{...done,result:{head:'c'.repeat(40)}})"),undefined);
     assert.equal(reload('resultJob({...remote,remote_confirmed:false},done)'),null);
+    reloaded.remote.jobs[0].commit='c'.repeat(40);
+    assert.equal(reload('resultJob(remote,done)'),undefined);
+    reloaded.remote.jobs[0].receipt_ancestor=reloaded.done.result.head;
+    assert.equal(reload('resultJob(remote,done).commit'),'c'.repeat(40));
     reloaded.fetch=()=>new Promise(resolve=>{releasePoll=resolve;});
     reload('showInbox({...inboxState,orders:[done]})');
     reload("newDraft();remember('brief','Ungesendeter Motivtext')");

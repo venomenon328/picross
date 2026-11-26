@@ -10,10 +10,15 @@ from .inbox_contract import REPOSITORY, delta
 from .sources import GitSource, check_commit
 
 
-# #914 clarifies the producer's consumption report without changing the terms
-# of an already activated order. Only this exact regular-file edit is compatible.
-BUDGET_CONTRACT_DIFF = (b':100644 100644 4573b0d872443737f771261ec2305bef2ef00fcc '
-                        b'8fe7dd048b1dc5b318c41bc3714852f26ac3e158 M\0docs/tools/PW_IMPORT.md\0')
+# Only these forward edits clarify budget reporting (#914) or describe the UI
+# (#917). A second changed path, different mode or unknown blob cannot match.
+IMPORT_913 = b'4573b0d872443737f771261ec2305bef2ef00fcc'
+IMPORT_914 = b'8fe7dd048b1dc5b318c41bc3714852f26ac3e158'
+IMPORT_917 = b'86449648233ed6fd453cd3019655f00ee4b1560a'
+COMPATIBLE_RULE_DIFFS = {b''} | {
+    b':100644 100644 ' + old + b' ' + new + b' M\0docs/tools/PW_IMPORT.md\0'
+    for old, new in ((IMPORT_913, IMPORT_914), (IMPORT_913, IMPORT_917), (IMPORT_914, IMPORT_917))
+}
 
 
 class StaleBuild(ValueError):
@@ -88,7 +93,7 @@ class Writer:
                 rules_delta = git.git(db, 'diff', '--raw', '-z', '--no-abbrev', '--no-renames', pinned, main, '--', 'AGENTS.md',
                                       'docs/production', 'docs/tools/PW_B_CONTRACT.md', 'docs/tools/PW_IMPORT.md',
                                       'content/authoring/' + job, 'content/puzzles/' + job + '.json')
-                require(rules_delta in (b'', BUDGET_CONTRACT_DIFF), 'Auftragsgrundlage auf main verändert. Auftrag aktualisieren.')
+                require(rules_delta in COMPATIBLE_RULE_DIFFS, 'Auftragsgrundlage auf main verändert. Auftrag aktualisieren.')
             require(not source.read(main, current.path(job), current.LIMIT, missing=True),
                     'Der Job hat bereits einen Arbeitsrecord auf main.')
             name = current.path(job)
