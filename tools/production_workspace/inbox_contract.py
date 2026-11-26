@@ -82,6 +82,9 @@ def envelope(raw, filename, order):
         sources = [a for a in record['assets'] if a['role'] == 'input']
         require(len(sources) == 1 and all(sources[0]['file'][k] == reference[k] for k in ('bytes', 'sha256')),
                 'Genau die gebundene Referenzdatei mitliefern.')
+        require(all(a['file']['sha256'] != reference['sha256'] and
+                    a['file']['file'].casefold() != sources[0]['file']['file'].casefold() for a in by_path.values()),
+                'Die Referenz darf nicht zugleich als Bildangebot geliefert werden.')
         by_path[sources[0]['file']['file']] = sources[0]
     paths = set()
     for index, item in enumerate(request['files'], 1):
@@ -93,8 +96,8 @@ def envelope(raw, filename, order):
                 not any(part.startswith('.') for part in PurePosixPath(name).parts), 'Original kollidiert mit Produktionsmetadaten.')
         paths.add(name.casefold())
         suffix = PurePosixPath(name).suffix
-        allowed = {'reveal': {'.png', '.svg'}, 'motif': {'.png', '.jpg', '.jpeg'}, 'background': {'.png'}}
-        allowed['input'] = {'.png', '.jpg', '.jpeg'}
+        allowed = {'reveal': {'.png', '.svg'}, 'motif': {'.png', '.jpg', '.jpeg'},
+                   'background': {'.png'}, 'input': {'.png', '.jpg', '.jpeg'}}
         require(suffix in allowed[by_path[name]['role']] and item['source'] == f'{delivery}--{index}{suffix}',
                 'Quelldateiname oder Bildtyp passt nicht zur Lieferung.')
         require(by_path[name]['file'] == {'file': name, 'bytes': item['bytes'], 'sha256': item['sha256']} and

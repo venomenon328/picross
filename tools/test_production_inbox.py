@@ -184,15 +184,20 @@ class InboxTests(unittest.TestCase):
         request = self.value['request']
         source = deepcopy(request['record']['assets'][0])
         source.update(id='ref', role='input', label='Vorlage')
-        source['file'] = content.ref('content/authoring/pz-current/data/reference.png', self.png)
+        stream = BytesIO()
+        Image.new('RGB', (4, 4), 'blue').save(stream, format='PNG')
+        source['file'] = content.ref('content/authoring/pz-current/data/reference.png', stream.getvalue())
         request['record']['assets'].append(source)
-        reference = {'name': 'Vorlage.png', 'bytes': len(self.png), 'sha256': source['file']['sha256']}
+        reference = {'name': 'Vorlage.png', 'bytes': source['file']['bytes'], 'sha256': source['file']['sha256']}
         self.order['inputs'] = {'reference': reference}
         request['files'].append({'path': source['file']['file'], 'source': self.value['delivery_id'] + '--2.png',
                                  'bytes': reference['bytes'], 'sha256': reference['sha256']})
         contract.reference_binding(reference)
         contract.envelope(current.encoded(self.value), self.manifest, self.order)
         contract.delta(self.order, request, None)
+        reveal = request['record']['assets'][0]['file']
+        with patch.dict(reveal, {'sha256': reference['sha256']}), self.assertRaisesRegex(ValueError, 'Bildangebot'):
+            contract.envelope(current.encoded(self.value), self.manifest, self.order)
         reference['sha256'] = 'f' * 64
         with self.assertRaises(ValueError):
             contract.envelope(current.encoded(self.value), self.manifest, self.order)
