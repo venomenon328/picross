@@ -6,7 +6,7 @@
     "tools",
     "production.adapter"
   ],
-  "purpose": "Importer, Wiederaufnahme und gemeinsamer Authoring-Übergang für kumulierten Bildkorrekturverbrauch. Der Werkzeugdiff erfordert den regulären Windows-x64-Spielerbau.",
+  "purpose": "Importer, Wiederaufnahme und gemeinsamer Authoring-Übergang für kumulierten Bildkorrekturverbrauch einschließlich synchronisiertem CMD-Fallback. Der Werkzeugdiff erfordert den regulären Windows-x64-Spielerbau.",
   "omitted": "Unveränderte Bildaufbereitung, Solver, Katalog, native Spielmodule, Preflight, Delivery, Sync und Browserdiagnose. T02 prüft den nicht veröffentlichenden PW-Windows-Kandidaten und den synthetischen Empfang separat.",
   "test_changes": [
     {
