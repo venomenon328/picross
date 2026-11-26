@@ -592,7 +592,7 @@ weiterhin ausschließlich lesend abgeglichen werden.
 | Reservation | `format` = `picross-integration-batch-reservation-v1`, `number,plan_sha256,job_id,puzzle_id,operation,phase,ordinal,inputs_sha256,tool_sha256,budgets,output_dir` |
 | Result | `format` = `picross-integration-batch-result-v1`, `number,status,native,diagnostics,elapsed_seconds,error,exit_code,reached,output_files,remaining` |
 | Attempt | `reservation,result` (Result/null; null heißt unklar/unterbrochen, niemals erfolgreich) |
-| Reached | `entry,files` (unveränderter nativer Registryeintrag und sortierte FileRefs relativ zum Zielcheckout) |
+| Reached | `entry,files` (aus dem bestätigten Einzelrecord abgeleitete Identität und sortierte FileRefs relativ zum Zielcheckout) |
 | Lesender Batchabgleich | `status` = `reconciled`, `id`, `reached`; beziehungsweise `status` = `rollback-confirmed`, `id`, `plan_hash` für den vollständig frisch bestätigten alten Bildplanstand, niemals für Erfolg |
 | JobView | `job_id,puzzle_id,operation,status,historical_completed,current_verified,attempt,reached,reason,next_step` |
 | Checkpoint | `format` = `picross-integration-batch-checkpoint-v1`, `batch_id,plan,plans,bindings,attempts,jobs,status` |
@@ -661,9 +661,9 @@ native Recovery, dann frisches Resume. Kein Locklöschen als Reparatur.
    Keine neue Herkunfts-/Namespaceprüfung und kein Mutationsfallback.
 3. Gebuchter Erfolg, danach weitere Erfolge: alten Bildplan nicht mehr aufrufen.
    Für jeden Job wird vorher eine eigene endliche Abgleicherlaubnis reserviert.
-   `integration_batch_operations.reached` liest die gemeinsamen aktuellen Indizes
+   `integration_batch_operations.reached` liest die Runtime v9, Kategorien und das flache ID-Inventar
    und ausschließlich die ausgewählte Lieferung über `current_registration.Snapshot`.
-   Aktueller Registryeintrag und jobbezogene Livebytes müssen exakt zur gebuchten
+   Aktueller Einzelrecord, Runtimezeile und jobbezogene Livebytes müssen exakt zur gebuchten
    `reached`-Bindung passen. Keine Vollkatalogaufnahme, Produktionsarchivprüfung
    oder Wiederherstellung alter Bildpläne. Dieser `reconciled`-Abgleich ist kein
    gelockerter nativer Bild-No-op.

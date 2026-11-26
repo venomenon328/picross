@@ -59,19 +59,24 @@ def validate(plan, changes, branch, read):
         raise ValueError('Invalid production package plan')
     if branch != product_branch(job):
         raise ValueError('Production package must match the integration branch')
+    from tools.puzzle_production import puzzle_record, categories
     runtime, = registry_additions(read(RUNTIME, old=True), read(RUNTIME), job,
         'picross-runtime-registry-v9', ('entries',))
     record_path = f'content/puzzles/{job}.json'
-    record = read(record_path)
+    record = puzzle_record.decode(read(record_path, raw=True), job)
     definition = f'data/content/{job}.json'
     reveal = runtime.get('reveal')
-    if (not isinstance(record,dict) or record.get('format') != 'picross-puzzle-record-v1'
-            or record.get('id') != job or runtime.get('key') != job or runtime.get('save_slot') != job
-            or runtime.get('definition') != definition or record.get('definition',{}).get('file') != 'game/'+definition
-            or reveal not in (f'art/content/{job}.png', f'art/content/{job}.svg')
-            or record.get('reveal',{}).get('asset',{}).get('file') != 'game/'+reveal
-            or any(record.get(k) != runtime.get(k) for k in ('save_slot','name','category_id','visible'))):
-        raise ValueError('Record or runtime does not match the new puzzle')
+    if (record["save_slot"] != job or record["definition"]["file"] != "game/"+definition or
+            reveal not in (f"art/content/{job}.png", f"art/content/{job}.svg")):
+        raise ValueError("Record or runtime does not match the new puzzle")
+    catalog = categories.validate(read(categories.PATH))
+    puzzle_record.validate(record, job, read("game/"+definition, raw=True), category_catalog=catalog)
+    if puzzle_record.runtime_row(record) != runtime:
+        raise ValueError("Record projection does not match the new runtime row")
+    new_runtime = read(RUNTIME)
+    if (set(new_runtime) != {"format","entries","categories"} or new_runtime["categories"] != categories.ordered(catalog)
+            or [row["id"] for row in new_runtime["entries"]] != sorted({row["id"] for row in new_runtime["entries"]})):
+        raise ValueError("Invalid runtime category or row order")
     additions = {record_path, 'game/'+definition, 'game/'+reveal, f'game/art/content/{job}.txt',
                  *(f'game/art/catalog/{job}-ui{scale}.png' for scale in (100,125))}
     preference = record.get('background')

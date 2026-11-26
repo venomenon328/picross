@@ -31,6 +31,34 @@ from . import catalog_io as io, reveal_source as reveal
 
 from . import operation_diagnostics as diagnostic
 
+@contextmanager
+def owned_journal(root, stage, lock, raw, rollback):
+    """A writer may automatically recover only the journal it exclusively created."""
+    staged = io.safe(root,stage)
+    with staged.open("xb") as stream:
+        identity = os.fstat(stream.fileno())
+        require(stream.write(raw) == len(raw), "Short journal write")
+        stream.flush()
+        os.fsync(stream.fileno())
+    try:
+        rename(staged,io.safe(root,lock),replace=False)
+        yield
+    except (OSError, ValueError, Aborted) as error:
+        outer = io._deadline.set(None)
+        try:
+            target = io.safe(root,lock)
+            if target.exists() and os.path.samestat(target.stat(),identity) and io.read(root,lock,len(raw)) == raw:
+                rollback()
+            elif staged.exists() and os.path.samestat(staged.stat(),identity) and io.read(root,stage,len(raw)) == raw:
+                staged.unlink()
+                sync_directory(staged.parent)
+        except (OSError, ValueError, Aborted) as recovery_error:
+            error.add_note("Recovery incomplete: " + str(recovery_error))
+        finally:
+            io._deadline.reset(outer)
+        raise
+
+
 def staging(root):
     directory = io.safe(root, "content")
     return sorted(p.relative_to(root).as_posix() for p in directory.iterdir()

@@ -371,12 +371,16 @@ class Checked:
             ap.require(selected['raster'] is not None and 'raster' in decisions, 'Actual qualified raster choice required')
         if j['operation']=='background':
             from . import catalog_rating
-            from . import current_delivery
-            result = current_delivery.snapshot(lambda n,limit,missing=False:read(n,limit),j['puzzle_id'])
-            ap.require(result['mode'] == j['target']['mode'] and
-                       result['files'].get('game/'+result['entry']['definition']) == j['target']['definition'] and
-                       result['files'].get('game/'+result['runtime']['reveal']) == j['target']['reveal'],
-                       'Background target differs from the registered record')
+            from . import puzzle_record, categories
+            key = j['puzzle_id']
+            cats = categories.validate(io.json_bytes(read(categories.PATH,categories.MAX_BYTES),categories.MAX_BYTES))
+            target = puzzle_record.load(None,key,category_catalog=cats,read=read)
+            runtime = io.json_bytes(read(content.RUNTIME,content.RUNTIME_LIMIT),content.RUNTIME_LIMIT)
+            row = next((r for r in runtime["entries"] if r["id"] == key),None)
+            ap.require(row == puzzle_record.runtime_row(target) and target["mode"] == j["target"]["mode"] and
+                       target["definition"] == j["target"]["definition"] and
+                       target["reveal"]["asset"] == j["target"]["reveal"],
+                       "Background target differs from registered record")
             definition,_,_,_=catalog_rating.definition(self.bound(j['target']['definition'],2*LIMIT))
             ap.require(definition['id']==j['puzzle_id'], 'Background target differs')
             ap.require(selected['reveal'] is not None and next(a for a in j['assets'] if a['id']==selected['reveal'])['file']==j['target']['reveal'], 'Active reveal reference differs')
@@ -1260,7 +1264,7 @@ def _complete(root, record_path, commit, current_input, raw, job, source):
             ap.require(prepared==io.json_bytes((expected/'request.json').read_bytes(),LIMIT), 'Background handoff differs')
             for name in prepared['imports'].values():
                 ap.require(io.read(io.external(current_input),name,32*LIMIT)==(expected/name).read_bytes(), 'Background input changed')
-    result=current_delivery.snapshot(lambda n,limit,missing=False:source.read(commit,n,limit,missing),job['puzzle_id'])
+    result=current_delivery.from_source(source,commit,job['puzzle_id'])
     checked.matches(result)
     if incoming is not None:
         from . import puzzle_catalog
@@ -1306,7 +1310,7 @@ def retire(root, ids, integrated_commit, *, source_commits=None):
             # Optional background TXT is genuinely allowed to be absent.
             from tools.production_workspace.sources import GitSource
             source=GitSource(root)
-            result=current_delivery.snapshot(lambda n,limit,missing=False:source.read(main,n,limit,missing),identity_id)
+            result=current_delivery.from_source(source,main,identity_id)
             raw=io.read(root,record_path,LIMIT,missing=True)
             if raw is None: raw=source.read(work_commit,record_path,LIMIT)
             job=io.json_bytes(raw,LIMIT)

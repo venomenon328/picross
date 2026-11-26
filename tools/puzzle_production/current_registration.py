@@ -101,7 +101,7 @@ def validate(value):
     exact_keys(value, {"format", "id", "dependencies", "files"})
     require(value["format"] == FORMAT, "Only current registration recovery is supported")
     identifier = rating.identity(value["id"])
-    require(isinstance(value["files"], dict) and 2 <= len(value["files"]) <= 13 and
+    require(isinstance(value["files"], dict) and len(value["files"]) in (7,9) and
             isinstance(value["dependencies"], dict) and len(value["dependencies"]) <= 8, "Invalid journal inventory")
     sides = {}
     for name, pair in value["files"].items():
@@ -185,55 +185,40 @@ def _publish(snapshot, journal, *, publication_seconds=None, recovery_seconds=No
                                recovery_seconds=recovery_seconds):
         snapshot.recheck()
         boundary("before-journal")
-        with io.safe(root, STAGE).open("xb") as stream:
-            require(stream.write(raw) == len(raw), "Short journal write")
-            stream.flush(); os.fsync(stream.fileno())
-        publication.rename(io.safe(root, STAGE), io.safe(root, LOCK), replace=False)
-        boundary("after-journal")
-        expected=dict(snapshot.raw)
-        def guard():
-            snapshot.tracked.recheck()
-            require(io.read(root,LOCK,LIMIT)==raw,"Writer lock changed")
-            for path,data in expected.items():
-                require(io.read(root,path,content.LIMIT,missing=True)==data,"Changed current dependency: "+path)
-            if source_check is not None: source_check()
-        try:
-            snapshot.recheck(locked=True)
+        with publication.owned_journal(root,STAGE,LOCK,raw,lambda: recover(root,recovery_seconds=recovery_seconds)):
+            boundary("after-journal")
+            expected=dict(snapshot.raw)
+            def guard():
+                snapshot.tracked.recheck()
+                require(io.read(root,LOCK,LIMIT)==raw,"Writer lock changed")
+                for path,data in expected.items():
+                    require(io.read(root,path,content.LIMIT,missing=True)==data,"Changed current dependency: "+path)
+                if source_check is not None: source_check()
+            try:
+                snapshot.recheck(locked=True)
+                guard()
+            except Exception:
+                # Nothing was written. Do not retain a stale plan over another edit.
+                require(io.read(root, LOCK, LIMIT) == raw, "Writer lock changed")
+                io.safe(root, LOCK).unlink(); publication.sync_directory(root/"content")
+                raise
+            for step, name in enumerate(sorted(sides, key=lambda n: (n == content.RUNTIME, n)), 1):
+                guard()
+                write(root, name, *sides[name], raw, guard=guard)
+                expected[name]=sides[name][1]
+                if fail_step == step: raise RuntimeError("Injected current publication interruption")
             guard()
-        except Exception:
-            # Nothing was written. Do not retain a stale plan over another edit.
+            for name, (_, new) in sides.items():
+                require(io.read(root, name, content.LIMIT) == new, "Final readback differs")
             require(io.read(root, LOCK, LIMIT) == raw, "Writer lock changed")
             io.safe(root, LOCK).unlink(); publication.sync_directory(root/"content")
-            raise
-        for step, name in enumerate(sorted(sides, key=lambda n: (n == content.RUNTIME, n)), 1):
-            guard()
-            write(root, name, *sides[name], raw, guard=guard)
-            expected[name]=sides[name][1]
-            if fail_step == step: raise RuntimeError("Injected current publication interruption")
-        guard()
-        for name, (_, new) in sides.items():
-            require(io.read(root, name, content.LIMIT) == new, "Final readback differs")
-        require(io.read(root, LOCK, LIMIT) == raw, "Writer lock changed")
-        io.safe(root, LOCK).unlink(); publication.sync_directory(root/"content")
-        diagnostics.durable("registered")
-    return {"status": "registered", "registered": True, "id": journal["id"]}
+            diagnostics.durable("registered")
+        return {"status": "registered", "registered": True, "id": journal["id"]}
 
 
 def execute(snapshot, journal, *, publication_seconds=None, recovery_seconds=None, fail_step=None, source_check=None):
-    try:
-        return _publish(snapshot,journal,publication_seconds=publication_seconds,recovery_seconds=recovery_seconds,
-                        fail_step=fail_step,source_check=source_check)
-    except (InvalidInput, Aborted, OSError) as error:
-        # A controlled failure gets an independent rollback budget. Injected
-        # process-interruption RuntimeError deliberately leaves the journal.
-        outer = io._deadline.set(None)
-        try:
-            try:
-                if pending(snapshot.root): recover(snapshot.root, recovery_seconds=recovery_seconds)
-            except (InvalidInput, Aborted, OSError, ValueError) as recovery_error:
-                error.add_note("Recovery incomplete; current journal retained: " + str(recovery_error))
-        finally: io._deadline.reset(outer)
-        raise
+    return _publish(snapshot,journal,publication_seconds=publication_seconds,recovery_seconds=recovery_seconds,
+                    fail_step=fail_step,source_check=source_check)
 
 
 def recover(root, *, recovery_seconds=None):

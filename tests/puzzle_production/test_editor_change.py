@@ -165,7 +165,7 @@ class EditorChangeTests(unittest.TestCase):
         plan['entry']['definition'] = 'data/content/foreign.json'
         plan['plan_hash'] = digest({k: v for k, v in plan.items() if k != 'plan_hash'})
         before = self.snapshot()
-        with self.assertRaisesRegex(ValueError, 'Foreign selected entry'): edit.apply(self.root, plan)
+        with self.assertRaisesRegex(ValueError, 'Selected plan entry lacks bound record or definition'): edit.apply(self.root, plan)
         self.assertEqual(before, self.snapshot())
         raw = b'<svg xmlns="http://www.w3.org/2000/svg" width="128" height="128"/>'
         from tools.puzzle_production.editor_image_input import validate_reveal

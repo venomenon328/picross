@@ -33,18 +33,16 @@ nach historischen Producer-/Integrationsbytes.
 
 | Form | Methoden | Heutige Verwendung |
 | --- | --- | --- |
-| `picross-current-difficulty-v1` | 0.3, 0.4 | Aktive Hülle für neue Integration und Ratingübernahme; SD-Catalog definiert sie. |
-| `picross-catalog-difficulty-v1`, `picross-catalog-difficulty-v2` | nur 0.3 | Bestehende aktive Dateien bleiben direkt lesbar. |
-| `picross-catalog-difficulty-v3` | nur 0.4 | Bestehende aktive Dateien bleiben direkt lesbar. |
-| `picross-checked-difficulty-v1`, `picross-checked-difficulty-v2` | nur 0.3 | Geprüfte Analyse-Arbeitsdaten; v1 besitzt keine Modusbindung. |
-| `picross-checked-difficulty-v3` | nur 0.4 | Geprüfte Analyse-Arbeitsdaten. |
-| SD-A-v1, SD2-A-v1 und SD2-B-v1 | jeweils eigener Analyzer-/Methodenvertrag | Eigenständige geschlossene Analyse-/Bewertungsbundles. |
-| `picross-catalog-difficulty-report-v1` bis `-v6` | v1–v3 nur 0.3; v4–v6 0.3/0.4 | Struktur-/Markdownreader; aktuelle Vorschau/Adoption verwendet ausschließlich v6. |
-| `picross-difficulty-activation-plan-v1` bis `-v3` | 0.3/0.4 | Strukturreader; aktuelle Aktivierung verwendet ausschließlich v3. |
+| `picross-puzzle-record-v1.difficulty` | 0.3, 0.4 | Aktive Bewertung mit gemeinsamem Record-/Definitionsbezug nach SD-Catalog. |
+| `picross-current-difficulty-v1` | 0.3, 0.4 | Geprüfter aktueller Integrationseingang. |
+| `picross-checked-difficulty-v1`, `-v2`, `-v3` | v1/v2 für 0.3, v3 für 0.4 | Geprüfte Analyzer-Arbeitsdaten. v1 ohne Modus kann keine Registrierung autorisieren. |
+| SD-A-v1, SD2-A-v1 und SD2-B-v1 | Methodenabhängig | Eigenständige geschlossene Analyse- und Bewertungsbundles. |
+| `picross-puzzle-difficulty-report-v1` | 0.3, 0.4 | Aktuelle Vorschau und Adoption. Ältere gespeicherte Berichte bleiben an ihre ursprünglichen Quellen gebunden. |
+| `picross-puzzle-method-plan-v1` | 0.3, 0.4 | Aktuelle Aktivierung mit frischer Quellenbindung. |
 
 Unbekannte/doppelte Schlüssel, nichtendliche Zahlen, falsche Typen einschließlich
 bool statt Integer und fremde Methoden sind Fehler. Eine fehlende oder defekte
-heute erforderliche aktive Ratingdatei stoppt den Reader; es gibt keinen
+heute erforderliche Bewertung im Rätselrecord stoppt den Reader; es gibt keinen
 Fallback auf `entry.production`. Historische 0.1-/0.2-Werte bleiben nur in ihren
 unterstützten Projektions-/Berichtsformen lesbar.
 
@@ -141,7 +139,7 @@ Defaultänderung nicht nachträglich bewertet; RI definiert diesen No-op.
 
 ## C-V01-03 · Auswahlbericht und Runtime
 
-### Aktueller Bericht v6 und historische Strukturreader
+### Aktueller Auswahlbericht und historische Strukturreader
 
 Alle Berichtsversionen haben exakt `format,run_id,result,result_hash,operation`.
 `run_id` erfüllt `[a-z][a-z0-9-]{0,63}`. Limit **16 MiB**, höchstens **10000**
@@ -157,6 +155,8 @@ UTC-Zeit `YYYY-MM-DDTHH:MM:SSZ`.
 | v3 | v2 | `previous_rating_revision` / 80003 |
 | v4–v6 | v2 + `method` | `previous_rating_revision,assessment` / 80004 |
 
+Im aktuellen Bericht bindet `snapshot` die Kategorien und die Runtime. `sources` enthält zusätzlich die gewählten Records, ihre Definitionen und die aktive Methode. `previous_record_hash` bindet die vollständigen kanonischen Vorgängerbytes. Die Zeile enthält auch den Hash der übrigen Recordfelder, damit eine Wiederholung zwischen übernommener Bewertung und späterer fremder Pflege unterscheiden kann.
+
 Jede Zeile hat als Basismenge exakt `id,current_source,logic_binding,old,proposed,
 status,reason,rating_hash,checked_hash,previous_record_hash` plus die oben
 benannten Versionsfelder. `status` ist `rated`, `unrated`, `invalid_input` oder
@@ -167,7 +167,7 @@ Eine vorhandene Vorgängerbewertung bindet Hash und Revision 1…1000000;
 bei fehlendem Vorgänger sind beide null.
 
 `selection` ist `ids` oder `all`, `source_commit` ein 40-stelliger kleiner
-Git-SHA. `snapshot` hat exakt `content/registry.json,game/data/registry.json,
+Git-SHA. Im historischen Berichtsformat enthielt `snapshot` exakt `content/registry.json,game/data/registry.json,
 content/categories.json` mit SHA-256-Werten. `sources` bildet relative aktuelle
 Dateinamen auf SHA-256 oder erwartete Abwesenheit null ab. Die aktuelle
 Quellenmenge ist in SD-Catalog definiert; frühere Quelleninventare werden nicht
@@ -220,8 +220,7 @@ Alle Aktivierungspläne v1/v2/v3 haben exakt
 - `sources`: relative aktuelle Dateinamen auf SHA-256 oder null, einschließlich Defaultpfad.
 - `result_hash`: kanonischer Hash aller übrigen Felder.
 
-Limit **16 MiB/80004 Quellen**. Der Strukturreader akzeptiert v1–v3, der
-aktuelle Planer/Adopter ausschließlich `picross-difficulty-activation-plan-v4`.
+Der aktuelle Planer und Adopter prüfen ausschließlich `picross-puzzle-method-plan-v1` mit höchstens 16 MiB. Gebunden sind Kategorien, Runtime und Methodenrecord.
 `catalog_method plan` benötigt Checkout, erwartete Methode, Zielmethode, exakten
 Zielhash und neuen externen Ausgabepfad. Gleiche Ziel-/Ausgangsmethode erzeugt
 keinen Aktivierungsplan.

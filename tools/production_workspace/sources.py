@@ -198,6 +198,13 @@ class LocalSource:
         self.root, self.seen = io.external(root), {}
         self.history = GitSource(root)
 
+    def puzzle_ids(self, commit):
+        if commit is not None:
+            return self.history.puzzle_ids(commit)
+        from tools.puzzle_production import puzzle_record
+        from tools.puzzle_production.sparse_registration import TrackedPaths
+        return puzzle_record.inventory(self.root, TrackedPaths(self.root))
+
     def read(self, commit, name, limit=JSON_LIMIT, missing=False):
         read_path(name)
         if commit is not None:
@@ -225,6 +232,9 @@ class _ReadScope:
     """
     def __init__(self, source):
         self.source, self.cache, self.seen = source, LRU(), {}
+
+    def puzzle_ids(self, commit):
+        return self.source.puzzle_ids(commit)
 
     def read(self, commit, name, limit=JSON_LIMIT, missing=False):
         key = (commit, name)

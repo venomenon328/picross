@@ -1,13 +1,13 @@
 """Selected committed delivery used for completion and main comparison."""
-from . import catalog_io as io, categories, current_content as content, puzzle_catalog
+from . import puzzle_catalog
 from .authoring_package import require
 from .contract import digest
 
 
-def snapshot(read, identifier):
-    runtime = io.json_bytes(read(content.RUNTIME,content.RUNTIME_LIMIT),content.RUNTIME_LIMIT)
-    catalog = categories.validate(io.json_bytes(read(categories.PATH,categories.MAX_BYTES),categories.MAX_BYTES))
-    puzzle_catalog.validate_runtime(runtime,catalog,[r["id"] for r in runtime["entries"]])
+def from_source(source, commit, identifier):
+    def read(name, limit, *, missing=False):
+        return source.read(commit,name,limit,missing)
+    catalog,runtime = puzzle_catalog.index(read,source.puzzle_ids(commit))
     row = next((r for r in runtime["entries"] if r["id"] == identifier),None)
     require(row is not None,"Selected delivery missing")
     checked = puzzle_catalog.delivery(read,identifier,catalog,row)

@@ -1384,8 +1384,7 @@ ohne einen solchen Lauf auch keine Browserabnahme.
 ### 13.4 Profilimport und Spielerexport in isolierten Kopien
 
 Der aktive `background_assets`-Quellnamensraum enthält ausschließlich seine
-gebundenen PNG-/TXT-Dateien. HP-I2 erweitert weder `catalog_background.source_paths()`
-noch Writer-/Journal-/Recoveryzulassung um ungebundene `.png.import`-Dateien.
+gebundenen PNG-/TXT-Dateien. Der Import liest `background` im Einzelrecord, vergleicht die Entscheidung mit der Runtimezeile und prüft die ausgewählten PNG-/Noticebytes. Die technischen `.png.import`-Dateien entstehen in der isolierten Buildkopie.
 Ein gemeinsamer Importvorbereiter arbeitet ausschließlich in eigenen isolierten
 Godot-/Native-/Windows-/Webkopien. Er erhält die PNG2304-Bytes, setzt verlustfreie
 Texturkompression (`compress/mode=0`), Mipmaps (`mipmaps/generate=true`), keine
@@ -1398,7 +1397,7 @@ Direkter Editorimport im schreibenden Inhaltscheckout ist kein neuer unterstütz
 Produktionsweg; den isolierten Einstieg beschreibt die Werkzeuganleitung.
 
 Regressionskopien übernehmen keine wachsende Sammlung echter Hintergründe.
-Sie verwenden nur kleine feste synthetische selected-/none-/Legacyfälle.
+Sie verwenden nur kleine feste synthetische selected-/none-/standard-Fälle.
 Vor regulärem Spielerexport sind die wirklichen aktiven Ressourcen konsistent
 zum aktuellen Runtimekatalog wiederherzustellen; synthetische Dateien und
 deren Importreste sind vollständig zu entfernen. Windows- und Web-PCK führen

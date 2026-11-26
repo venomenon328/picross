@@ -1,13 +1,11 @@
 """KU-B authoritative added dates. Pure validation; never reads Git or analyzes puzzles."""
 from datetime import datetime, timezone
-import hashlib
 import re
 
 from .authoring_package import require, sha
 from .contract import canonical_bytes, exact_keys
 from . import catalog_rating as rating
 
-FORMAT = "picross-added-v1"
 LIMIT = 64 * 1024
 REPORT_LIMIT = 8 * 1024 * 1024
 ROOT = "content/added"

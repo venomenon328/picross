@@ -252,26 +252,9 @@ Dieselbe erfolgreich gespeicherte Auswahl ist ein echter Schreib-No-op.
 Sitzungswirkung, No-op/Retry, Browserhydration, Einzeltabsperre und gemeinsame
 IDBFS-Warteschlange folgen D03; Sortier-/Seiten-/Identitätssemantik folgt D02.
 
-### Exakte Planzeilen und Folgepläne
+### Übernahme eines direkten Erstaufnahmebelegs
 
-Eine Planzeile hat exakt `id,old,old_record,proposed,kind,reference_time,commit,evidence,reason`.
-`old_record` bewahrt die ursprünglichen kanonischen UTF-8-Bytes als String oder null;
-sein Hash muss zur Quellbindung passen. Bereits vorhandene Records bleiben
-bytegleich erhalten, einschließlich unbekannter Werte. Bei solchen Zeilen ist
-`evidence` null und die übrige Herkunft unverändert. Ein Folgeplan kann so neue
-fehlende IDs erfassen, ohne bestehende Datierungen neu zu erfinden.
-
-Ein Beleg hat exakt `key,kind,commit,path,content,sha256,reference_time,integration`.
-`checkout-runtime` hält die ursprüngliche Runtime für die No-op-Gegenprüfung.
-Gitbelege binden Registrybytes, Kategorien, Runtime, Definition-/Bildhashes und
-Integration über `kind,base_commit,merge_commit,pull_request,categories,runtime,bindings`.
-Der PR-Beleg enthält die gelesenen `number,url,state,mergedAt,mergeCommit,headRefOid,commits`;
-Merge-SHA und ausgewählter Commit müssen diesem gebundenen PR zugeordnet sein.
-Direkte Belege enthalten exakt `id,event,success,registered_at` mit
-`event=first-playable-registration` und `success=true`. Widersprüchliche direkte
-Zeitbelege ergeben begründetes unbekannt, keinen stillen Rückfall auf Git.
-Alle Ebenen werden vor Übernahme strukturell und gegen die Quellen geprüft.
-
+Ein expliziter Nachtrag für ein bisher unbekanntes Datum enthält ID, Ereignis `first-playable-registration`, Erfolg und UTC-Zeitpunkt. Der Plan bindet Belegbytes und Hash sowie die gewählten Records. Widersprüchliche Ereigniszeiten lassen den Wert unbekannt. Bereits bekannte Erstaufnahmen bleiben erhalten. Die Übernahme schreibt den gebundenen Plan als Nachtragsbericht, die betroffenen Records und die Runtime in einer Transaktion. Eine identische Wiederholung prüft Bericht und wirksame Datumswerte.
 
 ## KU-B · Anforderungsschlüssel
 

@@ -91,4 +91,4 @@ Diff und [CI-Vertrag](../ci/CI_WORKFLOW_V2.md).
 
 ## Katalogprofile für Abschlussbilder
 
-Die aktuelle Quellenmenge enthält beide Katalogprofile je ID. Ihre Strukturgrenze beträgt 110.005 Quellen. Difficultybericht v7 und Aktivierungsplan v4 haben jeweils 16 MiB, Added-Plan v6 hat 8 MiB und Katalogjournal v2 hat 24 MiB Budget. Vor Publikation zählen die vollständigen kanonischen Seiten einschließlich Berichten. Eine technische Profiländerung erfordert keine Neubewertung.
+Die aktuelle Quellenmenge enthält beide Katalogprofile je ID. Ihre Strukturgrenze beträgt 110.005 Quellen. Der aktuelle Difficultybericht und der Methodenplan haben jeweils 16 MiB, der Datumsplan 8 MiB und das Katalogjournal 24 MiB Budget. Vor Publikation zählen die vollständigen kanonischen Seiten einschließlich Berichten. Eine technische Profiländerung erfordert keine Neubewertung.

@@ -19,6 +19,11 @@ class TrackedPaths:
         self.index = io.external(self.git('rev-parse', '--path-format=absolute', '--git-path', 'index').decode().strip())
         self.head = self.git('rev-parse', 'HEAD').strip().decode('ascii')
         self.stamp = self.signature()
+        self.hidden_records = set()
+        for entry in self.git('ls-files','-t','-z','--','content/puzzles').split(b'\0')[:-1]:
+            status,name = entry.split(b' ',1)
+            if status == b'S':
+                self.hidden_records.add(name.decode('utf8'))
         self.names = {}
         tree = {}
         for row in self.git('ls-tree', '-r', '-z', self.head).split(b'\0')[:-1]:

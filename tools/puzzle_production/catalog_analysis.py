@@ -17,14 +17,13 @@ from .contract import Aborted, InvalidInput, InvalidProof, canonical_bytes, dige
 from . import catalog_rating as rating, catalog_transaction as tx, catalog_difficulty
 from .analysis_contract import AnalysisBudget
 from .difficulty_rating import METHOD_ID, frozen_method
-from . import catalog_method
+from . import catalog_method, puzzle_record, puzzle_catalog
 
 LEGACY_FORMAT = "picross-catalog-difficulty-report-v1"
 PREVIOUS_FORMAT = "picross-catalog-difficulty-report-v2"
 AT_FORMAT = "picross-catalog-difficulty-report-v3"
 SD2_FORMAT = "picross-catalog-difficulty-report-v4"
 FORMAT = "picross-catalog-difficulty-report-v5"
-from . import puzzle_record, puzzle_catalog
 HISTORICAL_IMAGE_FORMAT = "picross-catalog-difficulty-report-v7"
 IMAGE_FORMAT = "picross-puzzle-difficulty-report-v1"
 SOURCE_FORMATS = (IMAGE_FORMAT, HISTORICAL_IMAGE_FORMAT, FORMAT, SD2_FORMAT, AT_FORMAT, PREVIOUS_FORMAT)
@@ -124,7 +123,7 @@ def validate_report(report):
                    ({"method"} if report["format"] in METHOD_FORMATS else set()))
     if report["format"] in SOURCE_FORMATS:
         from .authoring_package import relative
-        require(isinstance(r["sources"], dict) and len(r["sources"]) <= (110005 if report["format"] == IMAGE_FORMAT else 80004 if report["format"] in METHOD_FORMATS else 80003 if report["format"] == AT_FORMAT else 70003), "Invalid report sources")
+        require(isinstance(r["sources"], dict) and len(r["sources"]) <= (110005 if report["format"] in (IMAGE_FORMAT,HISTORICAL_IMAGE_FORMAT) else 80004 if report["format"] in METHOD_FORMATS else 80003 if report["format"] == AT_FORMAT else 70003), "Invalid report sources")
         for name, value in r["sources"].items():
             relative(name)
             if value is not None: sha(value)

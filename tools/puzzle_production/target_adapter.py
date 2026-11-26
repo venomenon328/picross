@@ -44,8 +44,6 @@ def main(argv=None):
     p.add_argument("--checkout",required=True,type=Path)
     p.add_argument("--integrated-commit",required=True)
     p.add_argument("--puzzle-id",action="append",required=True)
-    p.add_argument("--completed-revision",nargs=2,action="append",default=[])
-    p.add_argument("--completed-work",nargs=2,action="append",default=[])
     for child in sub.choices.values():
         child.add_argument("--operation-report",type=Path)
     args=parser.parse_args(argv)
@@ -71,9 +69,8 @@ def main(argv=None):
         elif args.command=="check-registry":result=registry.check_checkout(args.checkout)
         elif args.command=="sync-runtime":result=registry.sync_runtime(args.checkout)
         else:
-            from .integrated_content import retire
-            result=retire(args.checkout,args.puzzle_id,args.integrated_commit,
-                          completed_revisions=args.completed_revision,completed_work=args.completed_work)
+            from .current_authoring import retire
+            result=retire(args.checkout,args.puzzle_id,args.integrated_commit)
         observation.outcome=result.get("status","completed")
         print(json.dumps(result,ensure_ascii=False))
         return 0

@@ -44,6 +44,11 @@ def capture(root, identifiers=(), *, allow_stale=False):
     cats = categories.validate(io.json_bytes(bound(categories.PATH,categories.MAX_BYTES),categories.MAX_BYTES))
     raw = bound(RUNTIME,content.RUNTIME_LIMIT)
     runtime = None if allow_stale else puzzle_catalog.validate_runtime(io.json_bytes(raw,content.RUNTIME_LIMIT),cats,ids)
+    if allow_stale:
+        old = io.json_bytes(raw,content.RUNTIME_LIMIT)
+        exact_keys(old, {"format","entries","categories"})
+        require(old["format"] == content.RUNTIME_FORMAT and
+                [row["id"] for row in old["entries"]] == sorted(ids), "Cannot sync a different record inventory")
     rows = {} if runtime is None else {r["id"]:r for r in runtime["entries"]}
     bound(catalog_method.PATH,catalog_method.LIMIT,missing=True)
     records = {}
@@ -130,13 +135,16 @@ def validate_journal(root,journal,*,before_write=False):
     exact_keys(journal,{"format","operation","old","new","retained"})
     require(journal["format"] == FORMAT and len(content.encoded(journal)) <= LIMIT, "Invalid catalog journal")
     op = journal["operation"]
-    require(op in ("sync","method-activation","adoption"),"Unknown catalog operation")
+    require(op in ("sync","method-activation","adoption","added-adoption"),"Unknown catalog operation")
     require(journal["old"].keys() == journal["new"].keys(), "Different catalog sides")
     sides = {s:{n:raw.encode() if raw is not None else None for n,raw in journal[s].items()} for s in ("old","new")}
     old,new = sides["old"],sides["new"]
     cats = categories.validate(io.json_bytes(old[categories.PATH],categories.MAX_BYTES))
     require(new[categories.PATH] == old[categories.PATH],"Foreign category change")
     ids = puzzle_record.inventory(root)
+    if op == "added-adoption":
+        from . import catalog_added_history
+        return catalog_added_history.validate_journal(root,journal,sides,ids,cats)
     if op == "method-activation":
         require(old.keys() == {RUNTIME,categories.PATH,catalog_method.PATH} and not journal["retained"]
                 and old[RUNTIME] == new[RUNTIME],"Foreign activation targets")
@@ -148,6 +156,9 @@ def validate_journal(root,journal,*,before_write=False):
                 following["method"] != catalog_method.current(previous)["method"], "Invalid method transition")
         return sides
     if op == "sync":
+        prior = io.json_bytes(old[RUNTIME],content.RUNTIME_LIMIT)
+        require(prior["format"] == content.RUNTIME_FORMAT and [row["id"] for row in prior["entries"]] == sorted(ids),
+                "Cannot recover a different record inventory")
         require(old.keys() == {RUNTIME,categories.PATH}, "Foreign sync target")
         retained = {}
         def bound(n,limit):
@@ -213,25 +224,26 @@ def execute(root,journal,additions=None,*,fail_step=None,**unused):
     sides=validate_journal(root,journal,before_write=True)
     guard(root,journal,old_only=True)
     raw=content.encoded(journal)
-    with io.safe(root,STAGE).open("xb") as stream:
-        stream.write(raw);stream.flush();os.fsync(stream.fileno())
-    publication.rename(io.safe(root,STAGE),io.safe(root,LOCK),replace=False)
-    guard(root,journal,old_only=True)
-    expected=dict(sides["old"])
-    def fresh():
-        require(read(root,LOCK)==raw,"Catalog lock changed")
-        require(all(read(root,n)==v for n,v in expected.items()),"Current catalog phase changed")
-        require(all(file_hash(root,n)==h for n,h in journal["retained"].items()),"Foreign retained data")
-    for step,name in enumerate(sorted(sides["old"],key=lambda n:(n==RUNTIME,n)),1):
+    def rollback():
+        with io.budget():
+            recover(root)
+    with publication.owned_journal(root,STAGE,LOCK,raw,rollback):
+        guard(root,journal,old_only=True)
+        expected=dict(sides["old"])
+        def fresh():
+            require(read(root,LOCK)==raw,"Catalog lock changed")
+            require(all(read(root,n)==v for n,v in expected.items()),"Current catalog phase changed")
+            require(all(file_hash(root,n)==h for n,h in journal["retained"].items()),"Foreign retained data")
+        for step,name in enumerate(sorted(sides["old"],key=lambda n:(n==RUNTIME,n)),1):
+            fresh()
+            if sides["old"][name]!=sides["new"][name]:
+                registration.write(root,name,sides["old"][name],sides["new"][name],raw,guard=fresh)
+                expected[name]=sides["new"][name]
+            if fail_step==step: raise RuntimeError("Injected current catalog interruption")
         fresh()
-        if sides["old"][name]!=sides["new"][name]:
-            registration.write(root,name,sides["old"][name],sides["new"][name],raw,guard=fresh)
-            expected[name]=sides["new"][name]
-        if fail_step==step: raise RuntimeError("Injected current catalog interruption")
-    fresh()
-    require(read(root,LOCK)==raw,"Catalog journal changed")
-    io.safe(root,LOCK).unlink();publication.sync_directory(root/"content")
-    return {"status":"applied"}
+        require(read(root,LOCK)==raw,"Catalog journal changed")
+        io.safe(root,LOCK).unlink();publication.sync_directory(root/"content")
+        return {"status":"applied"}
 
 
 def recover(root):

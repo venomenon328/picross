@@ -386,6 +386,9 @@ def validate(value, *, journal=False):
         allowed.add(PATH)
     require(isinstance(value["reads"], dict) and isinstance(value["changes"], dict), "Invalid read/write set")
     require(set(INDEXES) <= set(value["reads"]), "Missing index conflict bindings")
+    if identifier is not None:
+        require({puzzle_record.path(identifier),"game/"+entry["definition"]} <= value["reads"].keys(),
+                "Selected plan entry lacks bound record or definition")
     for name, expected_hash in value["reads"].items():
         relative(name)
         if re.fullmatch(r"content/puzzles/pz-[a-z0-9][a-z0-9-]{0,59}\.json",name):
@@ -410,11 +413,11 @@ def validate(value, *, journal=False):
 
 
 @catalog_method.bound_validation
-def validate_targets(value, sides, actual):
+def validate_targets(root, value, sides, actual):
     """Closed technical deltas, using already read bytes; no plan rebuilding."""
     target = {**actual, **{name: pair[1] for name, pair in sides.items()}}
     old_runtime,runtime = (io.json_bytes(data[registry.RUNTIME],current_content.RUNTIME_LIMIT) for data in (actual,target))
-    ids = [r["id"] for r in old_runtime["entries"]]
+    ids = puzzle_record.inventory(root)
     old_cats,cats = (categories.validate(io.json_bytes(data[categories.PATH],categories.MAX_BYTES)) for data in (actual,target))
     puzzle_catalog.validate_runtime(old_runtime,old_cats,ids)
     puzzle_catalog.validate_runtime(runtime,cats,ids)
@@ -536,6 +539,7 @@ def apply(root, value):
         for name, expected_hash in value["reads"].items():
             actual[name] = io.read(root, name, FILE_LIMIT, missing=True)
             require(checksum(actual[name]) == expected_hash, "Relevant input changed: "+name)
+        validate_targets(root,value,sides,actual)
         require(not pending(root), "Publication started during no-op readback")
         return {"status": "noop", "files": [], **readback(actual, value["id"])}
     journal = {k: deepcopy(value[k]) for k in ("action", "id", "entry", "reads", "changes", "quality")}
@@ -543,35 +547,35 @@ def apply(root, value):
     raw = publication.journal_bytes(journal)
     journal_hash = checksum(raw)
     checkpoint("before-journal")
-    with io.safe(root, STAGE).open("xb") as stream:
-        require(stream.write(raw) == len(raw), "Short journal write")
-        stream.flush(); os.fsync(stream.fileno())
-    publication.rename(io.safe(root, STAGE), io.safe(root, LOCK), replace=False)
-    lock_identity = io.signature(io.safe(root, LOCK).stat())
-    checkpoint("after-journal")
-    # One fresh relevant-input pass under the common lock, byte based even when
-    # an external writer preserves mtime. No reconstruction of the preparation.
-    actual = {}
-    try:
-        require(io.signature(io.safe(root, LOCK).stat()) == lock_identity, "Writer lock changed")
-        for name, expected in value["reads"].items():
-            actual[name] = io.read(root, name, FILE_LIMIT, missing=True)
-            require(checksum(actual[name]) == expected, "Relevant input changed: "+name)
-        validate_targets(value, sides, actual)
-    except Exception:
-        # No target write has started. Release only our byte-identical journal;
-        # a stale plan must not strand a foreign edit behind an unusable lock.
-        if io.read(root, LOCK, LIMIT) == raw:
-            io.safe(root, LOCK).unlink(); publication.sync_directory(root/"content")
-        raise
-    for name in sorted(sides, key=lambda n: (n == registry.RUNTIME, n)):
-        require(io.signature(io.safe(root, LOCK).stat()) == lock_identity, "Writer lock changed")
-        actual[name] = _write(root, name, *sides[name], journal_hash)
-    require(io.read(root, LOCK, LIMIT) == raw, "Writer journal changed")
-    io.safe(root, LOCK).unlink(); publication.sync_directory(root/"content")
-    checkpoint("complete")
-    return {"status": "updated", "files": sorted(sides), **readback(actual, value["id"]),
-            "definition_sha256": checksum(actual.get("game/"+value["entry"]["definition"])) if value["entry"] else None}
+    def rollback():
+        with io.budget():
+            recover(root)
+    with publication.owned_journal(root,STAGE,LOCK,raw,rollback):
+        lock_identity = io.signature(io.safe(root, LOCK).stat())
+        checkpoint("after-journal")
+        # One fresh relevant-input pass under the common lock, byte based even when
+        # an external writer preserves mtime. No reconstruction of the preparation.
+        actual = {}
+        try:
+            require(io.signature(io.safe(root, LOCK).stat()) == lock_identity, "Writer lock changed")
+            for name, expected in value["reads"].items():
+                actual[name] = io.read(root, name, FILE_LIMIT, missing=True)
+                require(checksum(actual[name]) == expected, "Relevant input changed: "+name)
+            validate_targets(root, value, sides, actual)
+        except Exception:
+            # No target write has started. Release only our byte-identical journal;
+            # a stale plan must not strand a foreign edit behind an unusable lock.
+            if io.read(root, LOCK, LIMIT) == raw:
+                io.safe(root, LOCK).unlink(); publication.sync_directory(root/"content")
+            raise
+        for name in sorted(sides, key=lambda n: (n == registry.RUNTIME, n)):
+            require(io.signature(io.safe(root, LOCK).stat()) == lock_identity, "Writer lock changed")
+            actual[name] = _write(root, name, *sides[name], journal_hash)
+        require(io.read(root, LOCK, LIMIT) == raw, "Writer journal changed")
+        io.safe(root, LOCK).unlink(); publication.sync_directory(root/"content")
+        checkpoint("complete")
+        return {"status": "updated", "files": sorted(sides), **readback(actual, value["id"]),
+                "definition_sha256": checksum(actual.get("game/"+value["entry"]["definition"])) if value["entry"] else None}
 
 
 @operation
@@ -607,7 +611,7 @@ def recover(root):
         if target not in sides:
             old_inputs[target] = io.read(root, target, FILE_LIMIT, missing=True)
             require(checksum(old_inputs[target]) == expected, "Recovery dependency changed: "+target)
-    validate_targets(journal, sides, old_inputs)
+    validate_targets(root, journal, sides, old_inputs)
     for temporary, temp in temps.items():
         require(io.read(root, temporary, FILE_LIMIT) == temp, "Recovery temporary changed")
         io.safe(root, temporary).unlink(); publication.sync_directory(io.safe(root, temporary).parent)

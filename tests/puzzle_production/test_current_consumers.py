@@ -85,6 +85,38 @@ class CurrentConsumerTests(unittest.TestCase):
         self.assertEqual(metadata.view(self.root)['entries'][0]['name'],'Current name')
         registry.check_checkout(self.root)
 
+    def test_direct_date_adoption_recovery_and_idempotence(self):
+        import subprocess
+        from tools.puzzle_production import catalog_added_history as dates, catalog_io as io
+        key = 'pz-current'
+        name = puzzle_record.path(key)
+        record = puzzle_record.load(self.root,key,category_catalog=None)
+        moment = '2024-06-12T12:00:00Z'
+        old = {'added_at':None,'provenance':{'kind':'unknown','reference_time':None,'commit':None,
+               'evidence':{'path':added.report_path('synthetic-original'),'sha256':'b'*64},'reason':'Unknown first date'}}
+        record['added'] = old
+        (self.root/name).write_bytes(puzzle_record.encode(record))
+        registry.sync_runtime(self.root)
+        def git(*args):
+            return subprocess.check_output(['git','-C',str(self.root),*args],text=True).strip()
+        git('init','-q')
+        git('add','.')
+        git('-c','user.name=Test','-c','user.email=test@example.invalid','commit','-qm','Synthetic catalog')
+        receipt = content.encoded({'id':key,'event':'first-playable-registration','success':True,'registered_at':moment})
+        evidence = {'key':'first','kind':'direct','path':'receipts/first.json','commit':None,'content':receipt.decode(),
+                    'reference_time':moment,'integration':None,'sha256':io.checksum(receipt)}
+        plan = dates.plan(self.root,'date-test',git('rev-parse','HEAD'),direct=[evidence])
+        file = self.work/'plan.json'
+        file.write_bytes(content.encoded(plan))
+        with self.assertRaises(RuntimeError):
+            dates.adopt(self.root,file,apply=True,fail_step=3)
+        registry.recover(self.root)
+        self.assertEqual(puzzle_record.load(self.root,key,category_catalog=None)['added'],old)
+        self.assertEqual(dates.adopt(self.root,file,apply=True)['status'],'adopted')
+        self.assertEqual(puzzle_record.load(self.root,key,category_catalog=None)['added']['added_at'],moment)
+        self.assertEqual(dates.adopt(self.root,file,apply=True)['status'],'no-op')
+        registry.check_checkout(self.root)
+
     def test_separate_current_background_request_repeat_and_reverse(self):
         request={'format':editor_cli.REQUEST,'id':'pz-current','metadata':None,'text':None,'profile':None,
                  'reveal':None,'background':{'status':'none','upload':None},'imports':{}}

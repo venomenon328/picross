@@ -370,8 +370,13 @@ class GitBinding(unittest.TestCase):
             git('init', '-q')
             git('config', 'user.name', 'Synthetic')
             git('config', 'user.email', 'synthetic@example.invalid')
+            from tools.puzzle_production import categories, current_content, puzzle_record
+            fixture = json.loads((ci.ROOT / "tests/puzzle_production/fixtures/catalog/ci-record.json").read_bytes())
+            record = fixture["record"]
+            catalog = {"format":categories.FORMAT,"categories":[{"id":"test","name":"Test","order":1}]}
+            put(categories.PATH,catalog)
             other = {'id': 'pz-older', 'name': 'Older'}
-            runtime = dict(format='picross-runtime-registry-v9', categories=[], entries=[other])
+            runtime = dict(format='picross-runtime-registry-v9', categories=catalog['categories'], entries=[other])
             put(production.RUNTIME, runtime)
             put('game/data/content/pz-older.json', other)
             put(ci.PLAN_PATH, package())
@@ -380,22 +385,21 @@ class GitBinding(unittest.TestCase):
                      f'game/art/content/{job}.png', f'game/art/content/{job}.txt',
                      f'game/art/catalog/{job}-ui100.png', f'game/art/catalog/{job}-ui125.png')
             record_path = f'content/puzzles/{job}.json'
-            row = {'id': job, 'key': job, 'save_slot': job, 'definition': f'data/content/{job}.json',
-                   'reveal': f'art/content/{job}.png', 'category_id': 'fixture'}
             plan = production.package(job)
             put(ci.PLAN_PATH, plan)
             for path in paths:
                 put(path, {'id': job})
             for status in ('none', 'standard', 'selected'):
-                asset = {'file': f'art/backgrounds/{job}.png'} if status == 'selected' else None
-                runtime['entries'] = [other, {**row, 'name': 'Synthetic', 'background': {'status': status, 'asset': asset}}]
+                dest = f'game/art/backgrounds/{job}.png'
+                asset = current_content.ref(dest, b'{}') if status == 'selected' else None
+                record['background'] = {'status':status,'asset':asset,'image_revision':1}
+                runtime['entries'] = [other,puzzle_record.runtime_row(record)]
                 put(production.RUNTIME, runtime)
-                put(record_path, {'format':'picross-puzzle-record-v1','id':job,'save_slot':job,'name':'Synthetic',
-                                  'category_id':'fixture','definition':{'file':'game/'+row['definition']},
-                                  'reveal':{'asset':{'file':'game/'+row['reveal']}},
-                                  'background':{'status':status,'asset':{'file':'game/'+asset['file']} if asset else None}})
+                put(record_path,record)
+                (root/record_path).write_bytes(puzzle_record.encode(record))
+                (root/record['definition']['file']).write_bytes(current_content.encoded(fixture['definition']))
                 if asset:
-                    put('game/' + asset['file'], {})
+                    put(asset['file'], {})
                     put(f'game/art/backgrounds/{job}.txt', {})
                 head = commit('valid integration: ' + status)
                 for event in ('pull_request', 'push'):

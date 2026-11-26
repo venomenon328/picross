@@ -165,13 +165,12 @@ class EditorHTTPTests(unittest.TestCase):
         self.assertTrue(not thread or not thread.is_alive(), "Worker did not drain")
         return self.service.status()["job"]
 
-    def test_old_runtime_has_no_migration_route_and_never_writes(self):
+    def test_invalid_runtime_rejects_listing_without_writes(self):
         path = self.root/"game/data/registry.json"
-        value = json.loads(path.read_bytes()); value["format"] = "picross-runtime-registry-v7"
+        value = json.loads(path.read_bytes()); value["format"] = "invalid-test-format"
         write_json(path, value)
         before = {p: (p.read_bytes(), p.stat().st_mtime_ns) for p in self.root.rglob("*") if p.is_file()}
         self.assertGreaterEqual(self.call(API+"catalog")[0],400)
-        self.assertGreaterEqual(self.call(API+"migration", {"snapshot": "unsupported"})[0], 400)
         self.assertEqual(before, {p: (p.read_bytes(), p.stat().st_mtime_ns) for p in before})
 
     def test_theme_persists_across_new_port_without_worker_or_content_write(self):

@@ -4,7 +4,7 @@ Ein thematisch zusammenhängendes Nonogramm-Spiel in Entwicklung: kuratierte
 Bildrätsel, präzise Mausbedienung und ein illustriertes Album.
 
 Das reguläre Godot-Spielprojekt liegt unter [game/](game/README.md). Der integrierte
-Stand lädt registrierte Workflow-Rätsel aus `content/registry.json` und bietet
+Stand lädt registrierte Rätsel aus der v9-Projektion `game/data/registry.json` und bietet
 Buchpräsentation, Vollsicht, unabhängige Hinweisnavigation, Undo/Redo sowie lokale
 Save-/Backup-Recovery. Der aktuelle [Projektvertrag](docs/PROJECT_PROFILE.md)
 führt Entwicklungsbindungen und Fachquellen. Godot Standard 4.7.2-stable und Windows sind die aktuelle Entwicklungsbindung;

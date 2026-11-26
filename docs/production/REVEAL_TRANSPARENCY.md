@@ -76,7 +76,7 @@ benötigte aktuelle Bildbindung. Sie ist kein Rasterupdate.
 | Fortschritt | Saves, Redo, Abschlusszustand und Recent-Marker bleiben gültig; kein Reset, keine Migration und keine Rückstufung. |
 | Metadaten | Schwierigkeit, Rating-/Added-Daten und ihre Bindungen bleiben erhalten; ein neues Bild ist keine neue Katalogaufnahme. |
 | Tatsächliche Entscheidungen | Aktuelle Bildwahl und benötigte Nutzungsgrundlagen bleiben konkret an die gewählten Bytes gebunden. Tatsächlich vorhandene alte Belege nicht auf einen neuen Bildhash umschreiben; ihre Aufbewahrung oder Rekonstruktion ist keine Voraussetzung der aktuellen Produktion. |
-| Neue Bildfassung | Neue Bild-/Recordrevision mit tatsächlicher Entscheidung und aktueller Identitäts-/Bytebindung. Herkunft, Rechte und tatsächlich nötige Notices erhalten. |
+| Neue Bildfassung | Neue Bildrevision im Einzelrecord mit tatsächlicher Entscheidung und aktueller Identitäts-/Bytebindung. Herkunft, Rechte und tatsächlich nötige Notices erhalten. |
 
 Der aktuelle Editor prüft die ausgewählten neuen Bildbytes und die relevanten
 aktuellen Bindungen gemäß PE §13. Die ausdrückliche Eigentümerauswahl erzeugt
@@ -92,7 +92,7 @@ Vorschau ohne Dateibindung oder frühere Auswahl ist keine Freigabe neuer Bytes.
 ## 4. Gemeinsamer technischer Vertrag
 
 Erstregistrierung verwendet den aktuellen `picross-integration-input-v1` nach
-RI/ZA-1. Aktuelle Quellen binden Identität und Livebytes; Produktionsarchive,
+RI/ZA-1. Das Feld `reveal` des Einzelrecords bindet Bildrevision, Originalasset, natürliche Maße und beide Katalogprofile. Die Projektion leitet `source_sha256` vom Originalasset ab. Identität und Definition sind gemeinsam gebunden; Produktionsarchive,
 Producer- oder Regelbuch-Allowlisten sind keine neue Integrationsvoraussetzung.
 Raster-, Reveal-, Hintergrund- und Metadatenpflege bleiben getrennte Operationen.
 

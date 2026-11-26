@@ -41,7 +41,7 @@ def check_checkout(root, replay=False, *, check_projection=True, pending_journal
         record = puzzle_record.load(root,identifier,category_catalog=catalog)
         row = puzzle_record.runtime_row(record)
         puzzle_catalog.delivery(lambda n,limit,missing=False: catalog_io.read(root,n,limit,missing=missing),
-                                identifier,catalog,row)
+                                identifier,catalog,row,record=record)
         rows.append(row)
     result = {"format":current.RUNTIME_FORMAT,"entries":rows,"categories":categories.ordered(catalog)}
     puzzle_catalog.validate_runtime(result,catalog,ids)

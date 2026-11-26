@@ -57,7 +57,7 @@ genügt; der Editor übernimmt keine verpflichtende Buchinszenierung des Spiels.
 
 ## 2. Datenautorität und Änderungsgrenzen
 
-Lesbare JSON-Quellen mit stabilen IDs bleiben maßgeblich. Die relationale Zuordnung
+Für jede registrierte ID ist `content/puzzles/<id>.json` die führende Quelle. Die relationale Zuordnung
 von Kategorien und Rätseln wird durch den gemeinsamen Datenzugriff geprüft.
 SQLite und ein eigener Datenbankserver sind für diesen Umfang nicht vorgesehen.
 Bilder bleiben Dateien. Der Spieler liest vorbereitete Laufzeitdaten und benötigt

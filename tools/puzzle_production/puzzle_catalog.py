@@ -59,9 +59,10 @@ def difficulty_fields(assessment):
         "logic_binding":binding}
 
 
-def delivery(read, identifier, catalog, row):
+def delivery(read, identifier, catalog, row, *, record=None):
     """Read the selected record and the assets that establish its current delivery."""
-    record = puzzle_record.load(None, identifier, category_catalog=catalog, read=read)
+    if record is None:
+        record = puzzle_record.load(None, identifier, category_catalog=catalog, read=read)
     require(puzzle_record.runtime_row(record) == row, "Selected puzzle projection differs: " + identifier)
     entry = puzzle_record.entry(record)
     files = {}

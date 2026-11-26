@@ -211,77 +211,9 @@ def _automatic(operation, directory):
 
 
 def complete(root, record_path, commit, *, current_input):
-    """Close only authoring metadata after an existing committed registration."""
-    from tools.puzzle_production import authoring_builder as builder
-    from .sources import INDEX, check_commit, production_path, git
-    production_path(record_path); check_commit(commit)
-    root = io.external(root)
+    """Close the selected current job against its committed delivery."""
     from tools.puzzle_production import current_authoring
-    current = p.parse(io.read(root, record_path, JSON_LIMIT))
-    if current.get('format') in current_authoring.FORMATS:
-        return current_authoring.complete(root, record_path, commit, current_input=current_input)
-    from tools.puzzle_production import catalog_integration, integration_input, current_delivery
-    incoming = integration_input.Input(current_input)
-    ap.require(catalog_integration.reached(current_input, root), 'Selected final input is not currently registered')
-    ap.require(git(root, 'merge-base', 'HEAD', commit).decode().strip() == commit, 'Registration is not in current history')
-    with builder.writer(builder.git_root(root) / 'authoring-builder.lock'):
-        from . import current_view
-        source = LocalSource(root)
-        before_raw = source.read(None, record_path)
-        before = p.parse(before_raw)
-        ap.require(before['puzzle_id'] == incoming.entry['id'], 'Completion input belongs to another job')
-        actual = current_delivery.snapshot(lambda name,limit,missing=False:source.read(None,name,limit,missing), before['puzzle_id'])
-        committed = current_delivery.snapshot(lambda name,limit,missing=False:source.read(commit,name,limit,missing), before['puzzle_id'])
-        ap.require(current_delivery.same(actual,committed), 'Commit does not contain the selected current delivery')
-        view_before = current_view.observe(root, before['puzzle_id'])
-        ap.require(before['format'] in ('picross-authoring-record-v3', 'picross-authoring-record-v4') and
-                   before['state'] in ('editorially_approved', 'registered'), 'Completion requires actual final approval')
-        after = deepcopy(before)
-        if before['state'] != 'registered':
-            from tools.puzzle_production import current_delivery
-            binding = {"operation": "register", "commit": commit,
-                       "result": current_delivery.snapshot(lambda name,limit,missing=False:source.read(commit,name,limit,missing),before["puzzle_id"])}
-            after.update(state='registered', integration=binding, blockers=[],
-                         next_step='5 · Lokal registriert; PR-Selbstreview, Pflichtchecks und Git-/Mainabschluss prüfen')
-        ap.require(after['integration']['commit'] == commit, 'Completion belongs to another registration')
-        p.registration(source, after)
-        directory = record_path.rsplit('/', 1)[0]
-        after_raw = p.data(after)
-        projection_path = directory + '/workspace.json'
-        previous = source.read(None, projection_path)
-        proposed = p.validate(p.parse(previous))
-        for ref in [proposed['record'], *(o['record'] for o in proposed['offers'])]:
-            if ref['commit'] is None and ref['file'] == record_path:
-                ap.require(ref['sha256'] in (io.checksum(before_raw),io.checksum(after_raw)),
-                           'Projection belongs to another current record')
-                ref.update(sha256=io.checksum(after_raw),bytes=len(after_raw))
-        projection = p.data(proposed)
-        incoming.recheck()
-        # A restart may find the new record with the old derived view. Only its
-        # own record references can be rebound; other foreign view bytes stop.
-        old_view, new_view = p.parse(previous), p.parse(projection)
-        for view in (old_view, new_view):
-            for ref in [view['record'], *(o['record'] for o in view['offers'])]:
-                if ref['commit'] is None and ref['file'] == record_path:
-                    ref['sha256'], ref['bytes'] = '', 0
-        ap.require(old_view == new_view, 'Completion would replace a foreign projection')
-        source.recheck()
-        with tempfile.TemporaryDirectory(prefix='.pw-completion-', dir=root / directory) as temporary:
-            for name, raw, observed in ((record_path, after_raw, before_raw), (projection_path, projection, previous)):
-                ap.require(io.read(root, name, JSON_LIMIT) == observed, 'Completion target changed')
-                if raw != observed:
-                    staged = Path(temporary) / Path(name).name
-                    builder.write_new(staged, raw)
-                    os.replace(staged, io.safe(root, name))
-        # A retry can recover the old pointer only from the actual committed
-        # predecessor, never by accepting arbitrary old hash claims.
-        prior = {record_path: before_raw, projection_path: previous}
-        if before['state'] == 'registered':
-            head = source.history.resolve(git(root, 'rev-parse', 'HEAD').decode().strip())
-            prior = {name: source.history.read(head, name) for name in prior}
-        current_view.publish(root, before['puzzle_id'], before['revision'], view_before, previous=prior)
-        return {'status': 'reused' if before_raw == after_raw and previous == projection else 'completed',
-                'state': 'registered', 'record': record_path, 'integration_commit': commit}
+    return current_authoring.complete(root,record_path,commit,current_input=current_input)
 
 
 def main(argv=None):

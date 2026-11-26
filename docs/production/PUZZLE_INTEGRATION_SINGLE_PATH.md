@@ -196,8 +196,8 @@ genügen die aktuellen Nutzdaten aus §2. Nicht mehr vorhandene alte
 Arbeitsdateien sind kein Inhaltsdefekt. Neue/offene Arbeit derselben ID,
 fremde Daten und benötigte Rechteinformationen bleiben erhalten.
 
-Die PW-Liste blendet eine registrierte ID anhand der gültigen Inhaltsregistry
-am gebundenen Maincommit dauerhaft aus. Spätere Pflege verwendet den bestehenden
+Die PW-Liste blendet eine registrierte ID anhand der abgeglichenen Runtimezeilen und Recordnamen
+im gebundenen Main-Tree dauerhaft aus. Spätere Pflege verwendet den bestehenden
 Editor-/Revisionsweg. Completion und Retirement prüfen weiterhin das fachliche
 Ergebnis. Nach bestätigter autorisierter Integration führt der Produktionsakteur
 den gebundenen v2-Abschluss aus und liest das Fehlen des eigenen Branches,
@@ -230,7 +230,7 @@ Die folgenden Verbraucher teilen die aktuelle Inhaltsautorität:
 | `content_registry`, `catalog_integration` | Aktuelle Inhaltsautorität, keine Paket-/Receiptgeneration als Bestandspflicht |
 | `catalog_transaction`, `catalog_publication`, `registration_*` | Genau aktuelle Erstregistrierung/Recovery; gemeinsame Writer anderer Operationen weiter funktionsfähig |
 | `editor_change`, Bild-/Raster-/Rating-/Datumreader | Aktuelle Zustandsbindung ohne ursprüngliche Produktionspakete |
-| `integrated_content`, Receipt-/Retirementreader | Ergebnisbezogener Abschluss ohne historischen Dauerreceipt |
+| `current_delivery`, PW-Completion und Retirement | Ergebnisbezogener Abschluss ohne historischen Dauerreceipt |
 | PW-Projektor, Präsentation, Lieferungs-/Listenleser, Batch | Derselbe Eingang/Kern und aktueller Abschluss; keine versteckte Ersatzroute |
 
 RI, ZA-1, SD-Catalog, PW/PW-B, Authoring Schritt 5, Hintergrund-/Reveal-/

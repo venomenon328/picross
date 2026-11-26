@@ -2,6 +2,7 @@
 from copy import deepcopy
 from pathlib import PurePosixPath
 import json
+import stat
 
 from . import catalog_added, catalog_io as io, catalog_profiles, categories
 from . import current_content as content, current_rating
@@ -117,15 +118,19 @@ def inventory(root, tracked=None):
     if directory.exists():
         require(directory.is_dir(), "Puzzle namespace must be a directory")
         for file in directory.iterdir():
+            info = file.lstat()
             name = f"{DIRECTORY}/{file.name}"
-            require(io.safe(root, name).is_file(), "Invalid puzzle namespace member: " + name)
+            require(stat.S_ISREG(info.st_mode) and info.st_nlink == 1 and
+                    not getattr(info,"st_file_attributes",0) & 1024, "Invalid puzzle namespace member: " + name)
+            require(len(names) < 10000, "Too many puzzle records")
             names.add(name)
     if tracked is not None and tracked.names is not None:
         for folded, entries in tracked.names.items():
             if folded.startswith(DIRECTORY + "/"):
                 require(len(entries) == 1, "Puzzle namespace case collision")
                 name, mode = next(iter(entries))
-                require(mode == b"100644", "Invalid tracked puzzle record mode")
+                require(mode == b"100644" and (name in names or name in tracked.hidden_records),
+                        "Missing or invalid tracked puzzle record: "+name)
                 names.add(name)
     for name in names:
         identifier = PurePosixPath(name).stem

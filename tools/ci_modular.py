@@ -20,6 +20,8 @@ from ci_paths import content_path
 import ci_production_plan as production_plan
 
 ROOT = Path(__file__).resolve().parents[1]
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
 PLAN_PATH = production_plan.PLAN_PATH
 FORMAT = 'development-ci-plan/v1'
 NATIVE = ('core', 'history', 'catalog', 'completion', 'adapters', 'graphics', 'export')
@@ -170,9 +172,10 @@ def load_plan(base, head, event, *, modules='', repository='venomenon328/picross
             raise ValueError('Inherited package plan: update .ci/package.json for this PR')
         candidate = strict_json(raw)
         if isinstance(candidate, dict) and candidate.get('format') == production_plan.FORMAT:
-            def read(path, *, old=False):
+            def read(path, *, old=False, raw=False):
                 sha = base if old else head
-                return strict_json(git('show', f'{sha}:{path}', root=root))
+                data = subprocess.check_output(['git', 'show', f'{sha}:{path}'], cwd=root)
+                return data if raw else strict_json(data)
 
             package = production_plan.validate(candidate, changed, branch, read)
         else:

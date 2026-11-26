@@ -661,7 +661,7 @@ def remove_bound_release(root, job, expected, main, *, confirmed, before_delete=
             'Unexpected work index; preserve other work')
     if not confirmed:
         require(record['state'] == 'registered' and record['integration'], 'Registration required')
-        result = current_delivery.snapshot(lambda n,l,missing=False:source.read(main,n,l,missing),job)
+        result = current_delivery.from_source(source,main,job)
         require(current_delivery.same(result, record['integration']['result']), 'Different confirmed main result')
     require(anchor is None or anchor == binding['anchor'], 'Different work tag generation')
     require(release is None or release['id'] == binding['id'], 'Different release generation')
