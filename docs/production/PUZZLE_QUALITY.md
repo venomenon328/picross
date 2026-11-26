@@ -61,6 +61,10 @@ dies gilt auch für spätere Phasen. Bestehende technische Tests tragen ihre
 Render-/Integrationsgarantien. Q-H01/Q-H02 behalten ihren rätselspezifischen Zell-/Hinweisgegenstand
 nach §3.4; spielweite Schrift-, X- und Slotgeometrie bleibt Spielverantwortung.
 
+Für die Wiederaufnahme gelten die [phasengebundenen Prüfgrenzen](authoring/PUZZLE_AUTHORING.md#fällige-prüfungen-und-wiederaufnahme).
+Gültige Urteile gelten für die tatsächlich gesichteten, identischen Inhalte.
+Fehlt ein fälliges Urteil, die betroffene Ansicht nach §2.1 öffnen.
+
 ## 3. Redaktionelle Kriterien nach Darstellung und Prüfzeitpunkt
 
 Alle folgenden Kriterien sind **redaktionell abweichbar**. Herkunft und fällige

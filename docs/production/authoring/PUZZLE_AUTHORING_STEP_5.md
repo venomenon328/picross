@@ -1,6 +1,6 @@
 # Schritt 5: Abschluss und Integration
 
-**Version 0.8.0 · Dokumentrevision 12 · 21.11.2026 · PROD-SLIM**
+**Version 0.8.0 · Dokumentrevision 13 · 26.11.2026 · PW-REMOTE-G**
 
 Pflicht: [Kern und Phasenroute](PUZZLE_AUTHORING.md#11-pflichtquellen-nach-phase),
 danach diese Phase. Vorhandene passende Bild-/Rasterbelege verwenden; ihre
@@ -60,6 +60,13 @@ Werkzeug- und CI-Pakete brauchen eine eigene Mergebefugnis. Der Produkt-PR träg
 die gebundenen Liefer-, Endabnahme-, Selbstreview- und CI-Belege. Ein ausdrücklich
 zugeordnetes Issue kann dort referenziert werden.
 
+Vor dem Merge das frische Branchobjekt, die erreichbaren effektiven oder
+zugeordneten Rulesets und die tatsächlichen PR-/Check-/Mergeability-Gates
+prüfen. Bei `protected=false`, erreichbarer Regelliste ohne einschlägige Sperre
+und eindeutiger Mergeability endet die Schutzprüfung. Bei einem Schutzindikator
+die zuständige erreichbare Regel gezielt klären. Fehlende erforderliche Rechte
+oder Belege blockieren. Nur tatsächlich eingesehene Regeln ausweisen.
+
 ### PW-FIND · Behandlung in der Schlussentscheidung
 
 Für aktuelle Befundentscheidungen gilt der Weg nach
@@ -106,7 +113,7 @@ Eigentümerentscheidung vom 14.10.2026: Ein final auf main integriertes Rätsel 
 
 Den bestätigten Mainstand und das Ergebnis des Retirement im Produkt-PR
 kommentieren. Bei offenen Resten die konkrete Generation und den tatsächlichen
-Restzustand angeben.
+Restzustand angeben. Mit bestätigtem §9-Readback und dessen Mitteilung ist der Auftrag beendet. Der gemergte Integrationsbranch bleibt bestehen.
 
 Dauerhaft bleiben aktuelle Definition, Matrix, Hinweise, Bilder, Rechte, Notices,
 IDs, Save-Slots, Revisionen, Namen, Kategorien, Bewertungen und Added-Daten.
@@ -117,3 +124,10 @@ Spätere echte Änderungen bleiben eigene Aufträge. Fehlende frühere Arbeitsda
 ## Katalogprofile für Abschlussbilder
 
 Bei der Erstintegration erzeugt der Fachkern automatisch beide Katalogprofile. Für den Abschluss werden die aktuelle Revealquelle und die gelieferten Profilbytes mitgeprüft.
+
+Das zuvor in Groß- und Kleinansicht beurteilte Reveal ist die Bildfreigabe.
+Die registrierungs- und completiongebundene technische Prüfung umfasst
+tatsächliche Profilbytes, PNG, Maße, Pfade und Hashes sowie die Identität
+mit dem Produktcommit. Bei vollständigem Nachweis ist die Profilprüfung
+erledigt. Eine weitere Untersuchung folgt nur aus einem konkreten technischen
+Befund oder einem gesonderten Bild-/UI-Auftrag.

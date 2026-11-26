@@ -478,3 +478,76 @@ class ContinuationTests(unittest.TestCase):
         with patch.object(collect.remote.work_refs, 'FIXTURE', False):
             with self.assertRaisesRegex(ValueError, 'Stale Main'):
                 collect.collect(api, REPO, MAIN, JOB, 150, 2)
+
+
+class OriginalDeliveryTests(unittest.TestCase):
+    def test_live_observations_required_before_output(self):
+        from tools import production_remote_delivery as delivery, production_remote_inspect as inspect
+        evidence, _ = observation()
+        release = evidence['release'].copy()
+        del release['assets']
+        original = b'image bytes'
+        checksum = sha256(original).hexdigest()
+        ref = dict(file=f'content/authoring/{JOB}/data/picture.png', bytes=len(original), sha256=checksum,
+                   asset=dict(asset_id=14, release_id=127, job=JOB, repository=REPO))
+        record = dict(format='picross-authoring-current-v3', operation='production', puzzle_id=JOB,
+                      assets=[dict(role='reveal', id='offer', file=ref, rights='synthetic')],
+                      selected={'reveal': None}, test_only=True, work_release=dict(id=127, anchor=TAG))
+        raw = (reader.canonical(record) + '\n').encode()
+        contents = dict(evidence['input_record'], size=len(raw), sha=reader.blob_id(raw), content=b64encode(raw).decode())
+        req = dict(format='pw-remote-v2', repository=REPO, job=JOB, operation='inspect', expected=INPUT,
+                   record_sha256=sha256(raw).hexdigest(), main=MAIN, tools=MAIN,
+                   input={'items': [dict(role='reveal', candidate='offer')]})
+        ctx = delivery.context(req, REQUEST, 42, 1, 40, 2)
+        common = dict(repository=evidence['repository'], head_repository=evidence['repository'])
+        trigger = dict(common, id=40, run_attempt=2, status='completed', conclusion='success',
+                       event='push', head_branch=ctx['ref'], head_sha=REQUEST, path='.github/workflows/work-growth.yml')
+        run = dict(common, id=42, run_attempt=1, status='in_progress', conclusion=None, event='workflow_run',
+                   head_branch='main', head_sha=MAIN, path='.github/workflows/pw-remote.yml',
+                   display_title='PW remote ' + ctx['ref'])
+        asset = dict(id=14, size=len(original), name='original-' + checksum, digest='sha256:' + checksum,
+                     label='picross-original:' + release['tag_name'], state='uploaded')
+        data = dict(request_commit=dict(evidence['request_commit'],
+                    message='PW remote request v1\n\n' + reader.canonical(dict(mode='execute', request=req))),
+                    main_commit=evidence['main_commit'], input_commit=dict(sha=INPUT), input_record=contents,
+                    trigger=trigger, run=run, attempt=run.copy(), release=release, tag=evidence['work_tag'], assets=[asset])
+        files = {name: Path(module.__file__).read_bytes() for name, module in
+                 ((delivery.READER, delivery), (delivery.COMMON, reader))}
+        pins = {name: reader.blob_id(raw) for name, raw in files.items()}
+        files[delivery.ORIGINALS] = reader.canonical(data).encode()
+        with TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            stage = root / 'stage'
+            archive = root / 'delivery.zip'
+            output = root / 'opened'
+            inspect.stage(req, record, ctx, stage, lambda _: original, lambda: None, transport=files)
+            with ZipFile(archive, 'w') as bundle:
+                for entry in stage.iterdir():
+                    bundle.write(entry, entry.name)
+            now = datetime.now(timezone.utc)
+            repo_id = reader.REPOSITORIES[REPO]
+            artifact = dict(id=24, name=delivery.artifact_name(ctx), expired=False, size_in_bytes=archive.stat().st_size,
+                            digest='sha256:' + sha256(archive.read_bytes()).hexdigest(), created_at=now.isoformat(),
+                            expires_at=(now + timedelta(days=1)).isoformat(), workflow_run=dict(id=42, head_sha=MAIN,
+                            head_branch='main', repository_id=repo_id, head_repository_id=repo_id))
+            collection = dict(run, repository_id=repo_id)
+            def check(**kwargs):
+                return delivery.verify_originals(archive, artifact, collection, tools=MAIN, pins=pins, **kwargs)
+            check(staging=True)
+            with self.assertRaises(ValueError):
+                check()
+            collection.update(status='completed', conclusion='success')
+            self.assertEqual(check()['status'], 'read-live')
+            _, _, _, _, fresh = delivery.original_binding(data)
+            for name in fresh:
+                with self.subTest(name=name), self.assertRaises(ValueError):
+                    check(observations=(fresh | {name: 'different'}).items(), output=output)
+                self.assertFalse(output.exists())
+            with patch.dict(pins, {delivery.READER: '0'*40}), self.assertRaises(ValueError):
+                check()
+            with patch.dict(data['attempt'], run_attempt=3), self.assertRaises(ValueError):
+                delivery.original_binding(data)
+            with patch.dict(asset, id=9), self.assertRaises(ValueError):
+                delivery.original_binding(data)
+            check(observations=fresh.items(), output=output)
+            self.assertEqual((output / 'offer--reveal.png').read_bytes(), original)

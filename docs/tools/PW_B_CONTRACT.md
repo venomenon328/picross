@@ -380,3 +380,8 @@ oder historischer Vererbungsbaum; Retirement und benötigte Produktnachweise ble
 ## Katalogprofile für Abschlussbilder
 
 Integrationseingang v1 und Authoringrecord v2 führen das gewählte Original. Die automatische Ableitung gehört zur Erstintegration. Completion vergleicht die aktuelle Revealquelle und beide tatsächlichen Profilbytes gegen den Integrationscommit.
+
+Registrierung und Completion binden die tatsächlich geprüften Profilbytes
+an Revealquelle, PNG-Maße, Pfad und Digest. Mit bestätigter Byteidentität
+am gelieferten Produktcommit erfüllt dieser Nachweis die technische
+Profilprüfung in Schritt 5. Eine zusätzliche Miniaturabnahme entfällt.

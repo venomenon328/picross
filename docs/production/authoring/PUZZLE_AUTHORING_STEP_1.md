@@ -1,13 +1,13 @@
 # Schritt 1: Abschlussbilder
 
-**Version 0.8.0 · Dokumentrevision 10 · 17.11.2026 · PROD-SLIM**
+**Version 0.8.0 · Dokumentrevision 11 · 26.11.2026 · PW-REMOTE-G**
 
 Pflicht: [Kern und Phasenroute](PUZZLE_AUTHORING.md#11-pflichtquellen-nach-phase),
 danach diese Phase und die dort zugeordnete Bildnorm. Zusätzlich:
 [Qualität](../PUZZLE_QUALITY.md) §2/§3.1.
 Sicherung, Wiederaufnahme, gemeinsame Bildkorrektur und Abschlussausgabe: Kern §§6–7.
 
-Jedes Abschlussbild vor der Vorlage anhand der gespeicherten Originalbytes, Maße, Rechte und Q-B01–03 qualifizieren. Die Motivphase verwendet die gebundene Wahl und die gemessenen Maße.
+Jedes Abschlussbild vor der Vorlage anhand der gespeicherten Originalbytes, Maße, Rechte und Q-B01–03 qualifizieren. Die Motivphase übernimmt die gebundene Wahl, die gemessenen Maße und die gültigen Urteile aus Groß- und Kleinansicht.
 
 ## 2. Abschlussbild zuerst
 

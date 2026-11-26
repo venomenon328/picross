@@ -6,9 +6,13 @@ from pathlib import Path
 import re
 import stat
 import tempfile
-from zipfile import ZipFile
+from zipfile import BadZipFile, ZipFile
 
-# The invoking chat can load this single trusted file at the pinned tool SHA.
+if __package__:
+    from . import production_remote_reader as shared
+else:
+    import production_remote_reader as shared
+
 MIB = 1024 * 1024
 
 
@@ -180,7 +184,7 @@ def resolve_sources(req, record):
                     ref = asset['prepared']['file']
                 else:
                     derive = 'prepare-background'
-        if ref is None and 'delivery' in req and (role in ('proof', 'difficulty') or role.startswith('crop-')):
+        if ref is None and req.get('format') == WIRE_V2 and (role in ('proof', 'difficulty') or role.startswith('crop-')):
             reason = ('No certified difficulty is attached to this revision' if role == 'difficulty'
                       else 'No proof is attached to this revision' if role == 'proof'
                       else 'No crop is attached to this revision')
@@ -248,7 +252,8 @@ def metadata(row, ctx, artifact_id, now):
     return row
 
 
-def verify_archive(archive, row, ctx, req, record_bytes, *, artifact_id, output=None, now=None, result=None):
+def verify_archive(archive, row, ctx, req, record_bytes, *, artifact_id, output=None, now=None, result=None,
+                   transport=None):
     """Compare independently read bindings, then expose a new directory of verified bytes."""
     now = now or datetime.now(timezone.utc)
     metadata(row, ctx, artifact_id, now)
@@ -268,6 +273,8 @@ def verify_archive(archive, row, ctx, req, record_bytes, *, artifact_id, output=
         stream.seek(0)
         with ZipFile(stream) as bundle:
             names = [s['file'] for s in expected] + ['manifest.json']
+            if transport is not None:
+                names.extend(transport)
             entries = bundle.infolist()
             require(len(entries) == len(names) and {e.orig_filename for e in entries} == set(names)
                     and all(e.orig_filename == e.filename and not e.is_dir() and not e.flag_bits & 1
@@ -275,13 +282,21 @@ def verify_archive(archive, row, ctx, req, record_bytes, *, artifact_id, output=
                             and not (e.external_attr & 0x410) for e in entries), 'Unsafe or extra archive members')
             require(bundle.getinfo('manifest.json').file_size <= MIB, 'Oversized manifest')
             manifest = exact_keys(parse(bundle.read('manifest.json')),
-                                  {'format', 'context', 'release', 'purpose', 'expires', 'files'} | ({'missing'} if v2 else set()))
+                                  {'format', 'context', 'release', 'purpose', 'expires', 'files'} | ({'missing'} if v2 else set())
+                                  | ({'transport'} if transport is not None else set()))
             require(manifest['format'] == (FORMAT_V2 if v2 else FORMAT) and manifest.get('missing', []) == missing
                     and manifest['context'] == ctx and manifest['purpose'] == 'authoring-review'
                     and manifest['release'] == record['work_release'] and now < expiry(manifest['expires'])
                     <= expiry(row['created_at']) + timedelta(days=1, minutes=5)
                     and isinstance(manifest['files'], list) and len(manifest['files']) == len(expected),
                     'Manifest does not bind this request, release and attempt')
+            if transport is not None:
+                require(manifest['transport'] == transport and expiry(manifest['expires']) <= expiry(row['expires_at']),
+                        'Different original inputs or delivery expiry')
+                for name, identity in transport.items():
+                    require(bundle.getinfo(name).file_size == identity['bytes']
+                            and sha256(bundle.read(name)).hexdigest() == identity['sha256'],
+                            'Different transport member')
             with tempfile.TemporaryDirectory(dir=output.parent if output else None) as scratch:
                 staged = Path(scratch) / 'checked'
                 staged.mkdir()
@@ -310,14 +325,16 @@ def verify_archive(archive, row, ctx, req, record_bytes, *, artifact_id, output=
     return manifest
 
 
-def consume(req, record, trigger, worker, artifact, archive, output, *, result=None):
+def run_context(req, record, trigger, worker, result, *, collecting=False):
     """The caller supplies fresh Connector REST metadata independently of the ZIP."""
     require((req['operation'] in READS or 'delivery' in req) and req['tools'] == req['main'], 'Expected a bound delivery request')
     repo = req['repository']
     for run in (trigger, worker):
         require(run['repository']['full_name'] == run['head_repository']['full_name'] == repo
                 and run['repository']['id'] == run['head_repository']['id'] == REPOSITORIES[repo]
-                and run['status'] == 'completed' and run['conclusion'] == 'success', 'Unconfirmed workflow run')
+                and ((run['status'], run['conclusion']) == ('completed', 'success') or
+                     collecting and run is worker and (run['status'], run['conclusion']) == ('in_progress', None)),
+                'Unconfirmed workflow run')
     successor = publication(req, result['input_commit'], result['commit'], record, result['record'])[2] if result else None
     ctx = context(req, trigger['head_sha'], worker['id'], worker['run_attempt'], trigger['id'], trigger['run_attempt'], successor)
     require(trigger['event'] == 'push' and trigger['path'] == '.github/workflows/work-growth.yml'
@@ -325,10 +342,156 @@ def consume(req, record, trigger, worker, artifact, archive, output, *, result=N
             and worker['path'] == '.github/workflows/pw-remote.yml' and worker['head_sha'] == req['main']
             and worker['head_branch'] == 'main' and worker['display_title'] == 'PW remote ' + ctx['ref'],
             'Foreign trigger or worker')
+    return ctx
+
+
+def consume(req, record, trigger, worker, artifact, archive, output, *, result=None):
+    ctx = run_context(req, record, trigger, worker, result)
     return verify_archive(archive, artifact, ctx, req, record, artifact_id=artifact['id'], output=output, result=result)
 
 
+READER = 'production_remote_delivery.py'
+COMMON = 'production_remote_reader.py'
+ORIGINALS = 'originals.json'
+LIMITS = {READER: 131072, COMMON: 131072, ORIGINALS: 16 * MIB}
+
+
+def identities(files):
+    return {name: {'bytes': len(raw), 'sha256': sha256(raw).hexdigest()} for name, raw in files.items()}
+
+
+def unpack_bindings(archive, artifact, pins):
+    from hashlib import sha1
+    require(set(pins) == {READER, COMMON}, 'Expected trusted reader blobs')
+    require(archive.stat().st_size == artifact['size_in_bytes'], 'Different downloaded length')
+    with ZipFile(archive) as bundle:
+        files = {}
+        for name, limit in LIMITS.items():
+            rows = [r for r in bundle.infolist() if r.orig_filename == name]
+            require(len(rows) == 1 and rows[0].filename == name and 0 < rows[0].file_size <= limit,
+                    'Missing or oversized original binding')
+            raw = bundle.read(rows[0])
+            if name in pins:
+                require(sha1(f'blob {len(raw)}\0'.encode() + raw).hexdigest() == pins[name],
+                        'Different trusted Reader Git blob')
+            files[name] = raw
+    return identities(files), shared.parse(files[ORIGINALS])
+
+
+def original_binding(data):
+    request = data['request_commit']
+    title, separator, message = request['message'].rstrip('\n').partition('\n\n')
+    envelope = shared.parse(message)
+    req = exact_keys(envelope, {'request', 'mode'})['request']
+    require(title == 'PW remote request v1' and separator and envelope['mode'] == 'execute'
+            and shared.canonical(envelope) == message, 'Different canonical request')
+    repo, job, main = req['repository'], req['job'], req['main']
+    path = f'content/authoring/{job}/current/record.json'
+    fields = {'request_commit', 'main_commit', 'input_commit', 'input_record', 'trigger', 'run', 'attempt',
+              'release', 'tag', 'assets'}
+    is_result = 'delivery' in req
+    product = req['operation'] == 'inspect-product'
+    exact_keys(data, fields | ({'result_commit', 'result_record'} if is_result else set())
+               | ({'product_commit', 'pr'} if product else set()))
+    require(shared.JOB.fullmatch(job) and req['tools'] == main and req['format'] in ('pw-remote-v1', WIRE_V2)
+            and data['main_commit']['sha'] == main and data['main_commit']['tree']['sha'] == request['tree']['sha'],
+            'Different job, tool revision or invocation tree')
+    shared.commit_parents(request, data['trigger']['head_sha'], [main])
+    work = req['expected']
+    require(data['input_commit']['sha'] == work, 'Different input work commit')
+    raw = shared.record_bytes(data['input_record'], repo, work, path)
+    require(sha256(raw).hexdigest() == req['record_sha256'], 'Different input record')
+    result = None
+    live_record = data['input_record']
+    if is_result:
+        work = data['result_commit']['sha']
+        live_record = data['result_record']
+        result = dict(input_commit=data['input_commit'], commit=data['result_commit'],
+                      record=shared.record_bytes(live_record, repo, work, path))
+    record = parse(result['record'] if result else raw)
+    require(record['test_only'] is (repo == 'venomenon328/picross-remote-test'), 'Different production boundary')
+    trigger, run = data['trigger'], data['run']
+    require(data['attempt'] == run and (run['status'], run['conclusion']) == ('in_progress', None),
+            'Different collection attempt')
+    ctx = run_context(req, raw, trigger, run, result, collecting=True)
+    release, tag = data['release'], 'work-prod-' + job
+    anchor = shared.ref(data['tag'], 'tags/' + tag)
+    require(record['work_release'] == dict(id=release['id'], anchor=anchor) and release['target_commitish'] == anchor
+            and release['tag_name'] == tag and release['body'] == 'Picross production job ' + job
+            and release['draft'] is False and release['prerelease'] is True and release['immutable'] is False,
+            'Different release generation')
+    fresh = dict(ack='absent', main=main, work=work, record=live_record['sha'], tag=anchor,
+                 repository=str(ctx['repository_id']), request=request['sha'],
+                 trigger=f"{trigger['id']}:{trigger['run_attempt']}:{trigger['head_sha']}:completed:success",
+                 release=shared.canonical(release))
+    refs = {}
+    for spec in sources(req, record):
+        ref = spec['source']
+        if 'asset' in ref:
+            asset = ref['asset']
+            require(asset['repository'] == repo and asset['job'] == job and asset['release_id'] == release['id'],
+                    'Foreign original asset')
+            expected = (ref['bytes'], ref['sha256'])
+            require(refs.setdefault(asset['asset_id'], expected) == expected, 'Conflicting original asset')
+    assets = data['assets']
+    require(len(assets) == len(refs) and {a['id'] for a in assets} == refs.keys(), 'Missing original asset')
+    for asset in assets:
+        size, checksum = refs[asset['id']]
+        require(asset['name'] == 'original-' + checksum and asset['size'] == size and asset['state'] == 'uploaded'
+                and asset['label'] == 'picross-original:' + tag and asset['digest'] in (None, 'sha256:' + checksum),
+                'Different release asset')
+        fresh['asset-' + str(asset['id'])] = shared.canonical(asset)
+    if product:
+        head = req['product']
+        owner = shared.owner(data['product_commit'], head, main)
+        parents = data['input_commit']['parents']
+        require(len(parents) == 1 and shared.owner(data['input_commit'], work, parents[0]['sha']) == owner,
+                'Different product owner')
+        pr = shared.associated(req, data['pr'], head, owner, repository_id=ctx['repository_id'])
+        fresh.update(product=head, pr=shared.canonical(pr))
+    return req, raw, result, ctx, fresh
+
+
+def verify_originals(archive, artifact, collection, *, tools, pins, observations=None, output=None, staging=False):
+    transport, data = unpack_bindings(archive, artifact, pins)
+    req, raw, result, ctx, fresh = original_binding(data)
+    require(tools == ctx['tools'] and shared.matching_fields(collection, dict(id=ctx['run'], run_attempt=ctx['attempt'],
+            head_sha=tools, head_branch='main', path='.github/workflows/pw-remote.yml', repository_id=ctx['repository_id'])),
+            'Different collection identity')
+    state = (collection['status'], collection['conclusion'])
+    require(state == (('in_progress', None) if staging else ('completed', 'success')), 'Unconfirmed collection')
+    if observations is not None:
+        shared.confirm_fresh({'expected_fresh': fresh}, observations)
+    require(output is None or observations is not None and not staging, 'Fresh readbacks required before opening')
+    manifest = verify_archive(archive, artifact, ctx, req, raw, artifact_id=artifact['id'], output=output,
+                              transport=transport, result=result)
+    if staging or observations is not None:
+        return manifest
+    return dict(status='read-live', context=ctx, release=data['release']['id'], sources=sorted(fresh))
+
+
+def originals_cli(argv):
+    import argparse
+    parser = argparse.ArgumentParser(description='Open bound originals using independent Connector readbacks.')
+    shared.arguments(parser)
+    parser.add_argument('--common-blob', required=True)
+    parser.add_argument('--output', type=Path)
+    args = parser.parse_args(argv)
+    try:
+        artifact, collection = shared.connector_metadata(args)
+        result = verify_originals(args.archive, artifact, collection, tools=args.tools,
+                                  pins={READER: args.reader_blob, COMMON: args.common_blob},
+                                  observations=args.fresh or None, output=args.output)
+        print(json.dumps(result, ensure_ascii=False))
+    except (BadZipFile, KeyError, TypeError, ValueError, OSError) as error:
+        parser.exit(1, f'Original delivery blocked ({type(error).__name__}). Check the bound inputs.\n')
+
+
 if __name__ == '__main__':
+    import sys
+    if sys.argv[1:2] == ['originals']:
+        originals_cli(sys.argv[2:])
+        sys.exit(0)
     import argparse
     parser = argparse.ArgumentParser(description='Verify a connector download and open a fresh inspection directory.')
     for option in ('request', 'record', 'trigger', 'worker', 'artifact', 'archive', 'output'):

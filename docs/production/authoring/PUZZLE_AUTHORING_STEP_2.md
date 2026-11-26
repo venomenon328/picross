@@ -1,13 +1,13 @@
 # Schritt 2: Motivvorlage
 
-**Version 0.8.0 · Dokumentrevision 12 · 23.11.2026 · KORRIDOR-NORM-A**
+**Version 0.8.0 · Dokumentrevision 13 · 26.11.2026 · PW-REMOTE-G**
 
 Pflicht: [Kern und Phasenroute](PUZZLE_AUTHORING.md#11-pflichtquellen-nach-phase),
 danach diese Phase und die dort zugeordnete Bildnorm. Zusätzlich:
 [Qualität](../PUZZLE_QUALITY.md) §2/§3.2 und H-03/H-04 aus §4.
 Sicherung, Wiederaufnahme, gemeinsame Bildkorrektur und Abschlussausgabe: Kern §§6–7.
 
-Vor dem Motivangebot jede Vorlage zusammen mit der gewählten Revealreferenz und dem vorgeschlagenen Parameterkorridor beurteilen. Motivurteile, Rechte und Dateibindung gehören in denselben Arbeitsrecord.
+Vor dem Motivangebot jede Vorlage zusammen mit der gewählten Revealreferenz und dem vorgeschlagenen Parameterkorridor beurteilen. Motivurteile, Rechte und Dateibindung gehören in denselben Arbeitsrecord. Bei Wiederaufnahme nur offene Urteile oder geänderte Motiv-, Farb- und Parameterbindungen prüfen.
 
 ## 2. Motivvorlage nach Revealfreigabe
 

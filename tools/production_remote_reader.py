@@ -595,19 +595,24 @@ def confirm_fresh(result, values):
     require(len(fresh) == len(values), 'Duplicate fresh observation')
 
 
+def connector_metadata(args):
+    ident, name, size, checksum, created, expires, run, head, repo, origin, branch, expired = args.artifact
+    artifact = dict(id=int(ident), name=name, size_in_bytes=int(size), digest=checksum, created_at=created,
+                    expires_at=expires, expired={'true': True, 'false': False}[expired],
+                    workflow_run=dict(id=int(run), head_sha=head, head_branch=branch,
+                                      repository_id=int(repo), head_repository_id=int(origin)))
+    run, attempt, head, branch, path, repo, status, conclusion = args.collection
+    collection = dict(id=int(run), run_attempt=int(attempt), head_sha=head, head_branch=branch,
+                      path=path, repository_id=int(repo), status=status, conclusion=conclusion)
+    return artifact, collection
+
+
 def continuation(argv):
     parser = argparse.ArgumentParser(description='Verify an Actions continuation ZIP. Use fresh Connector reads.')
     arguments(parser)
     args = parser.parse_args(argv)
     try:
-        ident, name, size, checksum, created, expires, run, head, repo, origin, branch, expired = args.artifact
-        artifact = dict(id=int(ident), name=name, size_in_bytes=int(size), digest=checksum, created_at=created,
-                        expires_at=expires, expired={'true': True, 'false': False}[expired],
-                        workflow_run=dict(id=int(run), head_sha=head, head_branch=branch,
-                                          repository_id=int(repo), head_repository_id=int(origin)))
-        run, attempt, head, branch, path, repo, status, conclusion = args.collection
-        collection = dict(id=int(run), run_attempt=int(attempt), head_sha=head, head_branch=branch,
-                          path=path, repository_id=int(repo), status=status, conclusion=conclusion)
+        artifact, collection = connector_metadata(args)
         result = verify_continuation(args.archive, artifact, collection, tools=args.tools, reader_blob=args.reader_blob)
         fresh = dict(args.fresh)
         if not fresh:

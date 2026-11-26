@@ -2,7 +2,6 @@
 from datetime import datetime, timedelta, timezone
 import os
 from pathlib import Path
-import subprocess
 import tempfile
 from contextlib import ExitStack
 from time import monotonic, sleep
@@ -74,12 +73,59 @@ def read_git(commit, ref):
     return data
 
 
-def stage(req, record, ctx, output, read, recheck):
+def collect(req, ctx, record, release, result):
+    from . import production_remote as remote
+
+    def fields(row, names):
+        return {key: row[key] for key in names.split()}
+
+    def run(endpoint, *, worker=False):
+        row = pw.api(endpoint)
+        selected = fields(row, 'id run_attempt workflow_id event path head_branch head_sha status conclusion')
+        if worker:
+            selected['display_title'] = row['display_title']
+        for key in ('repository', 'head_repository'):
+            selected[key] = fields(row[key], 'id full_name')
+        return selected
+
+    def contents(commit):
+        # Exclude URL fields unrelated to exact Git Contents authentication.
+        return fields(pw.api(f'contents/{current.path(req["job"])}?ref={commit}'),
+                      'type path url size sha encoding content')
+
+    selected = {ref['asset']['asset_id'] for spec in delivery.sources(req, record)
+                for ref in [spec['source']] if 'asset' in ref}
+    endpoint = f'actions/runs/{ctx["run"]}'
+    data = dict(request_commit=pw.api('git/commits/' + ctx['commit']), main_commit=pw.api('git/commits/' + req['main']),
+                input_commit=result['input_commit'] if result else pw.api('git/commits/' + req['expected']),
+                input_record=contents(req['expected']), trigger=run(f'actions/runs/{ctx["trigger"]}'),
+                run=run(endpoint, worker=True), attempt=run(endpoint + f'/attempts/{ctx["attempt"]}', worker=True),
+                release=fields(release, 'id target_commitish tag_name body draft prerelease immutable'),
+                tag=pw.api('git/ref/tags/' + release['tag_name']),
+                assets=[fields(a, 'id name size digest label state') for a in release['assets'] if a['id'] in selected])
+    if result:
+        data.update(result_commit=result['commit'], result_record=contents(result['commit']['sha']))
+    if req['operation'] == 'inspect-product':
+        pr = pw.api('pulls/' + str(req['pr']))
+        data.update(product_commit=pw.api('git/commits/' + req['product']), pr=fields(pr, 'number state body'))
+        for key in ('head', 'base'):
+            data['pr'][key] = {**fields(pr[key], 'ref sha'), 'repo': fields(pr[key]['repo'], 'full_name id')}
+    # Compare the actual staged inputs with the bound live request before upload.
+    checked_req, _, _, checked_ctx, _ = delivery.original_binding(data)
+    require(req == checked_req and ctx == checked_ctx, 'Collected a different request or publication')
+    files = {name: publish_git.git(remote.TOOLS, 'show', 'HEAD:tools/' + name)
+             for name in (delivery.READER, delivery.COMMON)}
+    files[delivery.ORIGINALS] = current.encoded(data)
+    require(all(0 < len(raw) <= delivery.LIMITS[name] for name, raw in files.items()), 'Oversized original input')
+    return files
+
+
+def stage(req, record, ctx, output, read, recheck, *, transport=None):
     """Only selected references are materialized. Never infer a visual decision."""
     specs, missing = delivery.resolve_sources(req, record)
     v2 = req.get('format') == delivery.WIRE_V2
     manifest = {'format': delivery.FORMAT_V2 if v2 else delivery.FORMAT, 'context': ctx, 'release': record['work_release'],
-                'purpose': 'authoring-review', 'expires': (datetime.now(timezone.utc) + timedelta(days=1)).isoformat(),
+                'purpose': 'authoring-review', 'expires': (datetime.now(timezone.utc).replace(microsecond=0) + timedelta(hours=23, minutes=59)).isoformat(),
                 'files': []}
     if v2:
         manifest['missing'] = missing
@@ -92,6 +138,10 @@ def stage(req, record, ctx, output, read, recheck):
         private = Path(tmp)
         files = private / 'delivery'
         files.mkdir(mode=0o700)
+        if transport is not None:
+            manifest['transport'] = delivery.identities(transport)
+            for name, data in transport.items():
+                (files / name).write_bytes(data)
         for spec in specs:
             ref = spec['source']
             key = ((ref['asset']['release_id'], ref['asset']['asset_id']) if 'asset' in ref else ref['file'],
@@ -125,7 +175,7 @@ def stage(req, record, ctx, output, read, recheck):
         from .puzzle_production.catalog_publication import rename
         rename(files, output, replace=False)
     return {'original_count': len(cache), 'original_bytes': sum(map(len, cache.values())), 'seconds': seconds,
-            'editor': engine_metrics, 'artifact': delivery.artifact_name(ctx), 'members': len(specs) + 1}
+            'editor': engine_metrics, 'artifact': delivery.artifact_name(ctx), 'members': len(specs) + 1 + len(transport or {})}
 
 
 def github_context(req, source, successor=None):
@@ -158,19 +208,35 @@ def upload_record(req, ctx):
     return row
 
 
-def download_uploaded(artifact_id, archive):
-    # Fresh metadata can precede the availability of the binary endpoint.
+def download_uploaded(artifact_id, archive, *, size):
+    from urllib.request import Request
+    from .production_remote_continuation import signed_location, signed_opener
+
+    require(type(artifact_id) is int and artifact_id > 0 and type(size) is int and size > 0,
+            'Expected a bound artifact ID and byte length')
     for delay in (0, 2, 5, 10):
         if delay:
             sleep(delay)
-        with archive.open('wb') as stream:
-            result = subprocess.run(['gh', 'api', f'repos/{pw.REPO}/actions/artifacts/{artifact_id}/zip'],
-                                    stdout=stream, stderr=subprocess.PIPE, timeout=180,
-                                    env={**os.environ, 'GH_TOKEN': github_rest.publisher_token()})
-        if result.returncode == 0:
+        signed = False
+        try:
+            location = signed_location(f'actions/artifacts/{artifact_id}/zip')
+            signed = True
+            with github_rest.transport_errors(), signed_opener().open(Request(location), timeout=30) as response:
+                require(response.status == 200, 'Expected Actions ZIP download')
+                remaining = size
+                with archive.open('wb') as stream:
+                    while remaining:
+                        block = response.read(min(1024 * 1024, remaining))
+                        require(block, 'Incomplete Actions ZIP')
+                        stream.write(block)
+                        remaining -= len(block)
+                    require(not response.read(1), 'Oversized Actions ZIP')
             return
-        transient = any(f'HTTP {status}'.encode() in result.stderr for status in (404, 502, 503, 504))
-        require(transient and delay < 10, f'Cannot download uploaded Actions artifact {artifact_id}')
+        except github_rest.Failure as error:
+            if delay < 10 and (error.status in (404, 502, 503, 504) or signed and error.status == 403
+                               or error.kind == 'network' and error.status is None):
+                continue
+            raise ValueError(f'Cannot download Actions artifact {artifact_id} ({error.status or error.kind})') from None
 
 
 def process(action, root, req, mode, ref, source, check):
@@ -191,7 +257,8 @@ def process(action, root, req, mode, ref, source, check):
             if 'asset' in ref:
                 return work_assets.read(ref, 64 * current.LIMIT, releases=cache)
             return read_git(req.get('product', req['expected']), ref)
-        return stage(req, record, ctx, root / 'pw-delivery', read, recheck)
+        return stage(req, record, ctx, root / 'pw-delivery', read, recheck,
+                     transport=collect(req, ctx, record, release, result))
     if mode == 'preflight':
         require(action == 'inspect-ack', 'Preflight produces no artifact')
         check()
@@ -201,8 +268,13 @@ def process(action, root, req, mode, ref, source, check):
     if action == 'inspect-verify':
         with tempfile.TemporaryDirectory(dir=root) as tmp:
             archive = Path(tmp) / 'artifact.zip'
-            download_uploaded(row['id'], archive)
-            manifest = delivery.verify_archive(archive, row, ctx, req, raw, artifact_id=row['id'], result=result)
+            download_uploaded(row['id'], archive, size=row['size_in_bytes'])
+            from . import production_remote as remote
+            run = pw.api(f'actions/runs/{ctx["run"]}')
+            pins = {name: remote.ws.git(remote.TOOLS, 'rev-parse', 'HEAD:tools/' + name)
+                    for name in (delivery.READER, delivery.COMMON)}
+            manifest = delivery.verify_originals(archive, row, {**run, 'repository_id': run['repository']['id']},
+                                                 tools=req['tools'], pins=pins, staging=True)
             require(current.encoded(manifest) == (root / 'pw-delivery/manifest.json').read_bytes(),
                     'Uploaded manifest differs from staging')
         recheck()
