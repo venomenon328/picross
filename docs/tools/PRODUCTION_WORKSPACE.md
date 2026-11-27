@@ -491,8 +491,12 @@ die phasenbezogene Quellenroute einschließlich der zugeordneten Bildtypnormen, 
 die Volllektüre aller Fachhandbücher. Nur neue Absicht, Freigabe, Änderung oder
 Aufhebung sowie persönliche Befugnisse ergänzen.
 Das gilt für alle Phasen, Korrekturen, Wiederaufnahme und spätere Bildaufträge.
-Korrektur und Wiederaufnahme verweisen auf die tatsächlich bearbeitete Phase;
-nur Fortsetzen beziehungsweise eine neue Auswahl darf den Folgeschritt beauftragen.
+Bei einer Korrektur bestimmt die Rolle der konkreten Arbeitsgrundlage die Phase:
+Reveal 1, Motiv 2, Raster einschließlich Sichtungsentwurf 3, Hintergrund 4.
+Dieselbe Zuordnung steuert Auftragskopf, Ausführungspräferenz, Vorschau und
+Bildempfang; der globale Jobzustand ersetzt sie bei einem Rücksprung nicht.
+Wiederaufnahme bleibt in der offenen Phase; nur Fortsetzen beziehungsweise
+eine neue Auswahl darf den Folgeschritt beauftragen.
 Neue Eingaben der jeweiligen Auftragsart bleiben im gekürzten Prompt erhalten. Allgemeine
 Mono-/Farbregeln, Bildvorgaben, Publikationsbefehle, Prüf- und Abschlussverfahren
 gehören ausschließlich in die Pflichtquellen. Auch passende Regeln werden nicht
@@ -513,12 +517,30 @@ Vorschau und Kopieraktion und erhält ungesendete Absichten und den Mergeumfang.
 
 Codex-Aufträge verweisen auf [PW-LOCAL](PRODUCTION_GIT_WORKSPACE.md). Nur dabei
 ist die optionale Codex-Arbeitswurzel sichtbar und wird bei nichtleerem Wert
-mitgegeben. ChatGPT-Aufträge verwenden den gebundenen [Remote-Weg](PW_REMOTE.md)
-für Schritt 3, die passenden Wahl-, Aufbereitungs- und Sichtungsoperationen
-in Schritt 4 und Erstintegration/Git-Abschluss in Schritt 5. Kreative
-Bildarbeit in 1, 2 und 4 folgt der regulären Authoringroute, einschließlich
-Originalsichtung und sicherer Veröffentlichung. Spätere Hintergrundrevisionen
-verwenden den eigenen Bestandsweg nach Authoring Schritt 5 §9.
+mitgegeben. Auch die Aufbereitung/Bewertung veröffentlichter Hintergründe wird
+lokal beauftragt. ChatGPT-Bildangebote und -korrekturen verwenden den gebundenen
+[Bildempfang](PW_IMPORT.md); Rasterarbeit, Hintergrundaufbereitung nach bestätigtem
+Import und Erstintegration/Git-Abschluss verwenden [PW-REMOTE](PW_REMOTE.md).
+Spätere Hintergrundrevisionen verwenden den eigenen Bestandsweg nach
+Authoring Schritt 5 §9. Die aktuellen Regeln stammen aus main, der bestehende
+Produktionsstand aus dem festen Recordlink. Private Empfangsbindungen stehen
+zusätzlich im aktivierten Bildauftrag.
+
+„Bild neu bewerten“ richtet sich ausschließlich an ein noch offenes Reveal-
+oder Motivangebot der aktuellen Phase. Die Auswahl bietet nur diese Ziele an;
+bereits gewählte frühere Bilder sind keine neuen Bewertungsziele. Codex sichtet
+die vorhandenen unveränderten Bytes lokal und sichert die Bewertung, ChatGPT
+verwendet das bestehende Empfangs-Assessment. Beide Aufträge binden das
+gewählte Bild und die zulässigen neuen Befundentscheidungen an diesem Bild.
+Vorgemerkte kreative Wünsche bleiben mit sichtbarem Hinweis in der Ansicht
+erhalten. Bei offenen Eingaben erfolgt der Wechsel auf den veröffentlichten
+Nachfolger ausdrücklich. Die Neubewertung erzeugt weder neue Bildbytes noch
+eine Auswahl, Endabnahme oder Integrationsbefugnis.
+
+Reguläre Frühphasenaufträge enden bei der veröffentlichten Auswahlvorlage nach
+Authoring; sie verlangen keinen Produkt-PR. Diagnoseaufträge transportieren die
+konkrete Crop-/Frame-Erklärung mit ihren Bindungen und dem gewünschten Ende.
+Ihre allgemeinen Prüfverfahren stehen ausschließlich in Schritt 3.
 
 ChatGPT-Aufträge sind für einen frischen Chat mit dem festen Record oder dem
 neuen Motivbriefing und der beigefügten Referenz bestimmt. Bei Unterbrechung
@@ -532,6 +554,10 @@ gebundenen Text auch nach einem Neustart. Ein gespeicherter Motivtext allein
 bleibt ein Entwurf. Übernahmestatus und fachliche Gitphase sind getrennt sichtbar.
 Nach abgeschlossener Bereinigung lädt PW auch einen nachgewiesenen Nachfolger des Imports auf demselben Produktionsbranch. Bei ungeklärter Abstammung bleibt die Quittung sichtbar. Der Hauptbereich verlinkt den bestätigten Import oder den Vergleich mit dem aktuellen Arbeitsstand auf GitHub.
 Passives Ansehen und erneutes Kopieren erteilen keine zusätzliche Befugnis.
+Neue Vorlagen ändern keinen bereits gespeicherten Auftrag. Vor der Aktivierung
+eines Bildempfangs gibt es noch keinen ausführbaren Producertext; anschließend
+zeigen Vorschau und Kopie denselben gebundenen Text. Eine Vorschau vor dem Start
+ist keine zusätzliche Pflicht.
 
 Vorgefüllte Quellwerte sind keine neue Absicht oder Freigabe. Der Folgeauftrag
 trennt den veröffentlichten Kontext von Änderungen, ausdrücklich aufgehobenen
@@ -658,8 +684,10 @@ bestätigtes main bleiben getrennte technische Tatsachen; kein UI-Writer entsteh
 Ohne gültigen gespeicherten Mergewert ist der bedingte Merge eingeschaltet. Ein
 explizites gespeichertes `false` bleibt erhalten. Die Option und die Wirkung des
 konkreten Schlussauftrags sind sichtbar; Kopieren ist noch kein Absenden.
-Korrektur und Wiederaufnahme erzeugen weder eine neue Endabnahme noch eine neue
-Mergefreigabe. Vorhandene passende Endabnahmen werden nicht erneut erklärt.
+Korrektur, Neubewertung und Wiederaufnahme erzeugen weder eine neue Endabnahme
+noch eine neue Mergefreigabe. Wiederaufnahme übernimmt keine vorgemerkte Auswahl
+oder neue Befunderklärung. Vorhandene passende Endabnahmen werden nicht erneut
+erklärt; ein registrierter Stand erhält nur seinen noch offenen Git-/PR-Abschluss.
 Unabhängigen Rätsel-Proof, vollständiges PR-Diff-Selbstreview, das Verbot
 routinemäßiger Zweitreview-/Copilot-Anfragen und die tatsächlichen Mergegates regelt
 [Authoring Schritt 5 §8](../production/authoring/PUZZLE_AUTHORING_STEP_5.md#8-abgenommenes-ergebnis-ins-spiel-integrieren).

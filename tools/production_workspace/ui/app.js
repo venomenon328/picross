@@ -35,6 +35,8 @@ $('merge').onchange=()=>{
 };
 function refreshChoices(){
  if(!detail?.facts.candidates)return;
+ const targetAction=['rework','assessment'].includes(intent.action);
+ const targets=targetAction?new Set(PW.actionTargets(detail,intent.action).map(asset=>asset.id)):null;
  document.querySelectorAll('[data-rework-shortcut]').forEach(button=>{button.hidden=intent.action==='rework';});
  document.querySelectorAll('[data-readiness]').forEach(status=>{
   const card=detail.facts.candidates[status.dataset.readiness];
@@ -51,16 +53,23 @@ function refreshChoices(){
  });
  document.querySelectorAll('button[data-candidate]').forEach(button=>{
   const target=button.dataset.candidate;
-  button.disabled=!readyImages.has(target)||(intent.action!=='rework'&&!PW.choiceReady(detail,target,intent));
-  button.textContent=intent.action==='rework'?'Als Korrekturgrundlage wählen':'Diese Variante wählen';
+  button.disabled=!readyImages.has(target)||(targetAction?!targets.has(target):!PW.choiceReady(detail,target,intent));
+  button.textContent=intent.action==='assessment'?'Zur Neubewertung wählen':intent.action==='rework'?'Als Korrekturgrundlage wählen':'Diese Variante wählen';
   button.setAttribute('aria-pressed',String(intent.selection===target));
  });
+}
+function hasUnsentCreativeInputs(){
+ return ['brief','notes','parameters','context','feedback','inputImage'].some(key=>intent[key]?.trim())||
+  Boolean(intent.reference)||Object.values(intent.grid||{}).some(Boolean)||
+  Object.values(intent.removeGrid||{}).some(Boolean);
 }
 function updatePrompt(){
  refreshChoices();
  const box=$('orderText'),button=$('copyOrder'),status=$('orderStatus');
  if(!box||!button)return;
  const order=currentOrder();
+ const assessing=order?order.intent==='assessment':intent.action==='assessment';
+ $('assessmentDraftNotice').hidden=!assessing||!hasUnsentCreativeInputs();
  $('orderFields').hidden=Boolean(order);
  $('orderExecution').hidden=Boolean(order);
  $('receiptInfo').hidden=!order;
@@ -68,7 +77,7 @@ function updatePrompt(){
  $('orderSecondary').hidden=true;
  $('orderPreview').hidden=false;
  button.hidden=false;
- const executor=personal.executors[PW.promptStep(detail,intent)];
+ const route=PW.orderTarget(detail,intent),executor=personal.executors[route.step];
  $('executor').value=executor||'';
  $('executor').disabled=!executor;
  $('workrootField').hidden=executor!=='Codex';
@@ -80,6 +89,7 @@ function updatePrompt(){
  if(imageOrder)button.textContent='Auftrag starten und kopieren';
  if($('finalScope'))$('finalScope').hidden=!final;
  try{
+  if(route.error)throw Error(route.error);
   if(detail&&remoteFresh===false)throw Error('Remote nicht aktuell bestätigt. Vor einem Cloudfolgeauftrag die Quellen erfolgreich aktualisieren.');
   if(final){
    const images=PW.finalAssets(detail,intent);
@@ -103,11 +113,8 @@ function updatePrompt(){
    $('executorHint').textContent='Der genaue Auftrag entsteht beim Start. PW bindet deine Vorgaben, prüft die eingehenden Originale und veröffentlicht den passenden Arbeitsstand.';
   }else{
    box.value=PW.prompt(detail,intent,personal);
-   const prior=active?.puzzle_id||inboxState?.drafts?.[draft?.id];
-   if(prior&&inboxState?.generations?.[prior]){
-    const guard='Vor der Fortsetzung von '+prior+' den bestätigten Gitstand, vorhandene externe Originale und den tatsächlichen Korrekturverbrauch klären. Bestehende Entscheidungen und Budgets berücksichtigen.';
-    box.value+='\n\n'+guard;$('executorHint').textContent=guard;
-   }
+   const unpublished=!detail&&inboxState?.drafts?.[draft?.id];
+   if(unpublished)box.value+='\n\nNoch unveröffentlichte Produktions-ID: '+unpublished+'.';
   }
   button.disabled=starting;
   status.textContent=final?(personal.merge?'Auftrag bis main und Produktionsabschluss – nach erfüllten Pflichtgates.':'Auftrag bis Draft-PR – kein Merge.'):'';
@@ -281,7 +288,7 @@ function workflow(view,value){
   const canDecide=diagnosticStage&&Object.values(value.facts.candidates||{}).some(({diagnostics:d})=>
    d&&(d.frame&&!d.frame.exception||d.crop&&PW.cropChanges(d.crop).length));
   const actions=[['continue','Fortsetzen / Entscheidung senden'],['rework','Gezielt korrigieren'],['resume','Arbeit wieder aufnehmen']];
-  if(value.facts.candidates&&['reveal_review','motif_review'].includes(value.facts.state))
+  if(PW.actionTargets(value,'assessment').length)
    actions.push(['assessment','Bild neu bewerten']);
   if(canDecide)actions.push(['raster_diagnosis','Technische Rasterentscheidung']);
   if(value.facts.state==='registered')actions.push(['background_change','Separater Hintergrundfolgeauftrag']);
@@ -293,14 +300,21 @@ function workflow(view,value){
   }
   label.append(select);section.append(label);
   const correction=node('div');correction.hidden=true;field(correction,'Was soll geändert werden?','feedback').id='correctionFeedback';section.append(correction);
+  let refreshTargets=()=>{};
   if(value.facts.candidates){
-   const base=node('select'),baseLabel=node('label','Korrekturgrundlage');
-   const empty=node('option','Bitte wählen');empty.value='';base.append(empty);
-   for(const asset of value.assets.filter(a=>Object.hasOwn(value.facts.candidates,a.id))){
-    const option=node('option',asset.caption);option.value=asset.id;base.append(option);
-   }
+   const base=node('select'),baseLabel=node('label'),baseTitle=node('span');
+   refreshTargets=()=>{
+    const action=intent.action==='assessment'?'assessment':'rework',targets=PW.actionTargets(value,action);
+    baseTitle.textContent=action==='assessment'?'Bild zur Neubewertung':'Korrekturgrundlage';
+    const empty=node('option','Bitte wählen');empty.value='';base.replaceChildren(empty);
+    for(const asset of targets){const option=node('option',asset.caption);option.value=asset.id;base.append(option);}
+    if(['rework','assessment'].includes(intent.action)&&!targets.some(asset=>asset.id===intent.selection)){
+     delete intent.selection;delete intent.kind;
+    }
+    base.value=intent.selection||'';
+   };
    base.id='correctionBase';base.onchange=()=>{intent.selection=base.value;intent.kind=value.assets.find(a=>a.id===base.value)?.role;updatePrompt();};
-   baseLabel.append(base);correction.append(baseLabel);
+   baseLabel.append(baseTitle,base);correction.append(baseLabel);refreshTargets();
   }
   if(order===3)gridFields(correction,false);
   const diagnosis=node('div');diagnosis.hidden=true;
@@ -308,13 +322,13 @@ function workflow(view,value){
   const frameReason=node('div');const reasonInput=field(frameReason,'Warum ist die Randabweichung für dieses Raster akzeptabel?','frameReason');
   reasonInput.id='frameReason';diagnosis.append(frameReason);section.append(diagnosis);
   select.onchange=()=>{
-   if(motifReview&&intent.action==='rework'&&select.value!=='rework'){
+   if(['rework','assessment'].includes(intent.action)&&!['rework','assessment'].includes(select.value)){
     delete intent.selection;delete intent.kind;
     if($('selectionStatus'))$('selectionStatus').textContent=selectionHint;
    }
    intent.action=select.value;
    if(parameterChoice)parameterChoice.hidden=select.value!=='continue';
-   if($('correctionBase'))$('correctionBase').value=intent.selection||'';
+   refreshTargets();
    correction.hidden=!['rework','background_change','assessment'].includes(select.value);
    $('correctionFeedback').hidden=select.value==='assessment';
    diagnosis.hidden=select.value!=='raster_diagnosis';
@@ -408,7 +422,10 @@ function orderControls(view,panel){
     order=value.orders.find(o=>o.puzzle_id===value.started);
     if(!order||order.result)throw Error('Auftragsstatus hat sich geändert. Bitte den aktuellen Stand prüfen.');
     if(draft)chooseMotif(order.puzzle_id);
-    else{viewEdited=0;updatePrompt();}
+    else{
+     if(body.action!=='assessment'||!hasUnsentCreativeInputs())viewEdited=0;
+     updatePrompt();
+    }
    }catch(exc){if(epoch===generation)status.textContent=exc.message;return;}
    finally{
     starting=false;view.inert=false;copy.disabled=false;
@@ -431,7 +448,9 @@ function orderControls(view,panel){
  const cancel=node('button','Automatische Übernahme abbrechen');cancel.id='receiptCancel';cancel.onclick=()=>changeReceipt('cancel');
  const explanation=node('p',undefined,'hint');explanation.id='cancelHint';
  secondary.append(retry,cancel,explanation);
- actions.append(copy,status);panel.append(receipt,execution,destination,actions,preview,secondary);view.append(panel);updatePrompt();
+ const retained=node('p','Vorgemerkte Wünsche bleiben in dieser Ansicht erhalten. Die Neubewertung betrifft nur das gewählte Bild und seine gebundenen Befundentscheidungen.','hint');
+ retained.id='assessmentDraftNotice';retained.setAttribute('role','status');
+ actions.append(copy,status);panel.append(receipt,execution,destination,retained,actions,preview,secondary);view.append(panel);updatePrompt();
 }
 function choose(id,kind,button){
  viewEdited++;
@@ -442,7 +461,7 @@ function choose(id,kind,button){
  intent.selection=id;intent.kind=kind;if($('correctionBase'))$('correctionBase').value=id;
  document.querySelectorAll('[data-choice]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.choice===id)));
  if(button.dataset.choice){button.setAttribute('aria-pressed','true');}
- if($('selectionStatus'))$('selectionStatus').textContent=intent.action==='rework'?`Korrekturgrundlage: ${label}.`:`Wahl vorgemerkt: ${label}.`;
+ if($('selectionStatus'))$('selectionStatus').textContent=intent.action==='assessment'?`Neubewertung: ${label}.`:intent.action==='rework'?`Korrekturgrundlage: ${label}.`:`Wahl vorgemerkt: ${label}.`;
  refreshFinalPreview();const alternatives=$('backgroundOptions');if(alternatives)alternatives.open=false;updatePrompt();
 }
 function newDraft(id){
@@ -918,17 +937,14 @@ function currentOrder(){
 }
 function orderById(id){return inboxState?.orders.find(order=>order.puzzle_id===id);}
 function usesInbox(){
- if(personal.executors[PW.promptStep(detail,intent)]!=='ChatGPT')return false;
- if(!detail)return true;
- if(!detail.facts.candidates)return false;
- if(intent.action==='resume')return Boolean(currentOrder()&&!currentOrder().result)||
-  ['brief_ready','reveal_review','motif_review'].includes(detail.facts.state);
- if(['rework','assessment'].includes(intent.action))
-  return ['reveal','motif','background'].includes(detail.assets.find(a=>a.id===intent.selection)?.role);
- return (!intent.action||intent.action==='continue')&&[1,2,4].includes(PW.orderStep(detail));
+ const route=PW.orderTarget(detail,intent);
+ return !route.error&&route.inbox&&personal.executors[route.step]==='ChatGPT';
 }
 function startBody(){
  if(!listing||pending)throw Error('Zuerst den aktuellen Quellenstand laden.');
+ const route=PW.orderTarget(detail,intent);
+ if(route.error)throw Error(route.error);
+ if(!route.inbox)throw Error('Diese Handlung verwendet den regulären Folgeauftrag.');
  if(detail&&intent.action==='rework'&&!intent.feedback?.trim())throw Error('Bitte die gewünschte Korrektur beschreiben.');
  const action=intent.action||'continue',resume=action==='resume',candidate=resume?'':(intent.selection||'');
  if(!detail&&!intent.brief?.trim())throw Error('Bitte zuerst dein Motiv beschreiben.');
@@ -936,12 +952,12 @@ function startBody(){
   throw Error('Bitte die gewünschte Variante wählen. Ein ausstehendes Angebot über „Arbeit wieder aufnehmen“ fortsetzen.');
  if(candidate&&!readyImages.has(candidate))throw Error('Die gewählte Variante zuerst vollständig laden.');
  if(detail&&action==='continue'&&candidate&&!PW.choiceReady(detail,candidate,intent))throw Error('Offene Voraussetzungen für '+candidate+'.');
- if(intent.inputImage&&!intent.reference)throw Error(intent.referenceError||'Die Referenzdatei für die Byteprüfung auswählen.');
+ if(action!=='assessment'&&intent.inputImage&&!intent.reference)throw Error(intent.referenceError||'Die Referenzdatei für die Byteprüfung auswählen.');
  const job=active?.puzzle_id||inboxState?.drafts?.[draft?.id];
  const inputs=PW.inboxInputs(detail,intent,action==='rework'?'correction':action);
  if(resume&&detail?.facts.state==='reveal_review')inputs.parameters='';
  return {snapshot:listing.snapshot,jid:active?.id||'',draft_id:draft?.id||'',candidate,action,inputs,
-  findings:JSON.stringify(resume?{}:(intent.findings||{})),expected:currentOrder()?.request_id||inboxState?.generations?.[job]||''};
+  findings:JSON.stringify(PW.inboxFindings(detail,intent)),expected:currentOrder()?.request_id||inboxState?.generations?.[job]||''};
 }
 function orderTitle(order){
  return order?.inputs?.brief?.trim().split('\n')[0]||order?.brief?.trim().split('\n')[0]||order?.puzzle_id||'';

@@ -620,11 +620,11 @@ const combined = PW.prompt(value,intent);
 assert.equal(PW.promptStep(value,intent),3);
 assert.equal(PW.promptStep(value,{kind:'raster',selection:'a'}),4);
 assert.match(combined,/Authoring 0\.8\.0, Schritt 3.*PW_REMOTE\.md/s);
-assert.match(combined,/anschließende Fortsetzung in Schritt 4/);
+assert.match(combined,/Fortsetzung in Schritt 4 nach erfolgreicher Qualifikation/);
 assert.match(combined,/Minimum 18 → 17/);
 assert.match(combined,/20 × 3 auf 17 × 3 Zellen/);
 assert.match(combined,/beabsichtige die Rasterwahl b/);
-assert.match(combined,/erst nach erfolgreichen Prüfungen/);
+assert.match(combined,/mit dieser neuen Parameterbindung/);
 assert.doesNotMatch(combined,/Ich wähle das qualifizierte Rasterangebot b/);
 assert.equal(PW.choiceReady(value,'b',intent),false);
 assert.match(PW.prompt(value,{kind:'raster',selection:'a'}),/Ich wähle das qualifizierte Rasterangebot a/);
@@ -663,17 +663,17 @@ const complete = {width:20,height:23,mode:'color',foreground_colors:2,
 const published = {approved:[complete],proposed:[invalid]};
 const value = {commit, source_url:'https://github.com/fixture/test/tree/'+commit,
  puzzle_id:'pz-fixture', revision:'current', record:{file:'content/authoring/pz-fixture/current/record.json'},
- offers:[{id:'motif-a',kind:'motif'}], facts:{state:'motif_review', authoring_version:'0.8.0',
+ assets:[{id:'motif-a',role:'motif'}], offers:[{id:'motif-a',kind:'motif'}], facts:{state:'motif_review', authoring_version:'0.8.0',
  candidates:{'motif-a':{missing:[],findings:[]}},blockers:[],published}};
 const intent = {selection:'motif-a',kind:'motif'};
 assert.throws(()=>PW.prompt(value,intent),/fehlt ein vollständiger Parametervorschlag/);
 published.proposed = [invalid,complete];
-assert.match(PW.prompt(value,intent),/einzigen vollständigen Vorschlag.*Eintrag 2/);
+assert.match(PW.prompt(value,intent),/Motivvorlage motif-a und parameters\.proposed, Eintrag 2 \(von 1 gezählt\), unverändert frei/);
 assert.throws(()=>PW.prompt(value,{...intent,parameter:0}),/Parameteralternative wählen/);
 published.proposed.push({...complete,width:24});
 for(const parameter of [undefined,null,'2',0,-1,4,1.5])
  assert.throws(()=>PW.prompt(value,{...intent,parameter}),/Parameteralternative wählen/);
-assert.match(PW.prompt(value,{...intent,parameter:2}),/ausdrücklich gewählte Alternative.*Eintrag 3/);
+assert.match(PW.prompt(value,{...intent,parameter:2}),/parameters\.proposed, Eintrag 3 \(von 1 gezählt\), unverändert frei/);
 assert.doesNotMatch(PW.prompt(value,{...intent,parameter:2}),/foreground_color_constraint/);
 value.facts.candidates['motif-a'].findings = [{id:'finding-a',binding:'a',criterion:'TEST',eligible:true}];
 const findings={a:{accepted:true,treatment:'Kontur {A} beibehalten'}};
@@ -685,7 +685,7 @@ assert.match(correction,/Kante \[A\]/);
 assert.match(correction,/Lokale Codex-Arbeitswurzel: E:\/Auftrag/);
 assert.doesNotMatch(correction,/gebe Motivvorlage|parameters\.proposed/);
 const resume=PW.prompt(value,{...intent,parameter:2,action:'resume'});
-assert.match(resume,/Schritt 2 am gebundenen Datensatz wieder aufnehmen/);
+assert.match(resume,/offene Arbeit in Schritt 2 am gebundenen Stand fortsetzen/);
 assert.doesNotMatch(resume,/gebe Motivvorlage|parameters\.proposed/);
 """
         result = subprocess.run(['node', '-e', script, str(module.resolve())], capture_output=True,

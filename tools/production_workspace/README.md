@@ -2,8 +2,8 @@
 
 Der fünfstufige Assistent für neue Authoring-0.8.0-Produktionen verwendet
 genau einen aktuellen Record nach PROD-SLIM und daraus abgeleitete Ansichten.
-Der aktuelle operative Regelstand ist **Authoring 0.8.0, Dokumentrevision 10**;
-der aktuelle Datenvertrag steht in PW-B. Normale Produktion liest den
+Der operative Regelstand ist **Authoring 0.8.0** in der aktuellen
+Phasenquelle; der aktuelle Datenvertrag steht in PW-B. Normale Produktion liest den
 Produktionseinstieg in [AGENTS](../../AGENTS.md),
 [Authoring §1.1](../../docs/production/authoring/PUZZLE_AUTHORING.md#11-pflichtquellen-nach-phase),
 die [Bildnorm-Leseregeln](../../docs/production/images/README.md) und
@@ -28,7 +28,7 @@ gewähltes Raster, Reveal und Hintergrund/none. „Endabnahme & Integration: Auf
 kopieren“ erzeugt einen gemeinsamen Schlussauftrag; erst sein Absenden erklärt
 die Freigabe. Bedingter Squash-Merge nach PR-Diff-Selbstprüfung und aktuellen Gates
 ist ohne gespeicherte Einstellung der Standard; ein ausdrückliches Nein bleibt
-als Draft-Auftrag erhalten. Korrektur/Wiederaufnahme erklären keine neue Endabnahme
+als Draft-Auftrag erhalten. Korrektur, Neubewertung und Wiederaufnahme erklären keine neue Endabnahme
 oder Mergefreigabe. Der geprüfte aktuelle Record bleibt unten
 aufklappbar und kopierbar. Quellenwerte, Regeln und nicht beauftragte lokale
 Bereinigung werden nicht routinemäßig im Prompt wiederholt. PW2-C nimmt konkret
@@ -202,6 +202,16 @@ sich die Wahl pro beauftragtem Schritt im aktuellen Browser. Ohne eigene Wahl
 beginnen Schritt 1, 2 und 4 mit Codex sowie Schritt 3 und 5 mit ChatGPT.
 Eine Anschlussabsicht in Schritt 4 ändert die Ausführungswahl eines
 Rasterdiagnoseauftrags in Schritt 3 nicht.
+Bei „Gezielt korrigieren“ entscheidet das gewählte Bild über den beauftragten
+Schritt: auch aus einer späteren Phase verwendet eine Reveal-Korrektur Schritt 1
+und dessen Ausführungswahl, eine Motivkorrektur Schritt 2, Rasterkorrektur Schritt 3
+und Hintergrundkorrektur Schritt 4.
+
+„Bild neu bewerten“ bietet nur offene Abschlussbilder beziehungsweise
+Motivvorlagen der aktuellen Phase an. Der Auftrag bewertet die vorhandenen
+Bytes und sichert das Urteil. Codex arbeitet lokal, ChatGPT über den
+Bildempfang. Bereits gewählte frühere Bilder lassen sich bei Bedarf als
+Korrekturgrundlage verwenden, aber nicht hier neu bewerten.
 
 Bei Codex kannst du hier eine Arbeitswurzel hinterlegen. Beim Wechsel zu
 ChatGPT verschwindet das Feld und der Pfad bleibt für Codex gespeichert.
@@ -209,6 +219,16 @@ Sende den kopierten ChatGPT-Auftrag in einem neuen Chat. Setze nach einer
 Unterbrechung am zuletzt gesichert veröffentlichten Stand an. Offene
 Eingaben, Wahlen und der Umfang eines Schlussauftrags bleiben beim
 Ausführungswechsel erhalten.
+Die Wiederaufnahme veröffentlicht noch offene Arbeit derselben Phase. Eine
+vorgemerkte Wahl oder Befundänderung wird dabei nicht abgesendet. Bereits
+veröffentlichte Hintergründe werden mit Codex lokal und mit ChatGPT über
+PW-REMOTE fertig aufbereitet und bewertet. Frühe Produktionsaufträge enden
+bei der gesicherten Auswahlvorlage; der Produkt-PR gehört zum Schlussauftrag.
+
+Vor dem Start eines ChatGPT-Bildempfangs bleibt die ausführbare Textvorschau
+leer. Nach „Auftrag starten und kopieren“ sind Vorschau und Kopie an den
+gespeicherten Auftrag gebunden. Erneutes Kopieren und Neustart verwenden
+denselben Text; geänderte Einstellungen gelten erst für einen neuen Auftrag.
 
 Bei v3-Ständen steht die Bereitschaft auf der Bildkarte. Die Erklärung eines Befunds lässt sich mit Enter öffnen. Beim Bildempfang bindet die Start-und-Kopieraktion Annahme und Behandlung, beim übrigen Auftragsweg das Absenden. „Korrigieren“ an der Karte setzt die Arbeitsgrundlage und springt zum Änderungsfeld. Die Auswahl einer Motivvorlage umfasst auch die konkrete Parameteralternative.
 
