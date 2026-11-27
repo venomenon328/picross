@@ -78,11 +78,14 @@ oder Zugangsdaten im Repository.
 
 „Auftrag starten und kopieren“ im Produktionsbereich aktiviert genau einen Empfang.
 PW weist dem Entwurf beim ersten Start eine freie Produktions-ID zu. Jeder neue
-Auftrag bindet einen direkten Kindordner mit dieser ID. Nur ChatGPT löst dessen
-Namen, Typ und Elternbindung vollständig paginiert über den Drive-Connector auf.
-Bei Abwesenheit erstellt der Akteur den Ordner einmal. Nach Antwortverlust und
-vor dem Upload prüft er die eindeutige Zuordnung erneut und verwendet die
-tatsächliche Ordner-ID. Ein gleichnamiger Nichtordner oder mehrere Treffer
+Auftrag bindet einen direkten Kindordner mit dieser ID. ChatGPT sucht über den
+Drive-Connector vollständig paginiert nach sämtlichen direkten Treffern mit
+exakt diesem Namen und `trashed=false`, einschließlich gleichnamiger Nichtordner.
+Der Akteur prüft Namen, Typ und Eltern-ID jedes Treffers. Einen eindeutig passenden
+Ordner verwendet er wieder; bei Abwesenheit erstellt er ihn einmal und liest
+ID und Elternbindung zurück. Nach Antwortverlust löst er die Zuordnung vor einem
+erneuten Erstellversuch neu auf. Vor dem Upload prüft er sie nochmals und verwendet
+die tatsächliche Kind-ID. Ein gleichnamiger Nichtordner oder mehrere Treffer
 sperren die Lieferung. PW wartet auf das synchronisierte Kindverzeichnis.
 Eine geänderte Einstellung gilt für neu gestartete Aufträge. Vor dem Update
 begonnene flache Lieferungen werden im ursprünglich gebundenen Eingang beendet.
@@ -129,16 +132,34 @@ automatisch an einen nachträglichen Workhead. Die bereits beauftragte
 Remote-Fortsetzung nach Schritt 4 verwendet ihren eigenen bestehenden
 Erwartungs-/Wiederaufnahmevertrag.
 
-Der kopierte ChatGPT-Auftrag enthält die feste Quellenreferenz beziehungsweise
-das neue Motivbriefing, neue Absicht, zulässigen Umfang, Zielordner-ID und
-Auftragskennung sowie einen kurzen Verweis auf diesen Vertrag und Authoring.
+Der kopierte ChatGPT-Auftrag nennt Bildrolle, Handlung und Endzustand. Er verweist
+auf AGENTS und diesen Vertrag, insbesondere IMPORT-02/03/04/07, am vollständig
+gebundenen `source.main_commit`. Die gerouteten Authoring- und Bildquellen gelten
+von derselben Regelbasis. Ein vorhandener Job erhält einen festen HTTPS-Link auf
+seinen kanonischen Record am `source.work_head`; bei Neuanlage stehen stattdessen
+das gebundene neue Briefing und die gebundenen Limits im Auftrag.
+Die vollständige `source`-Bindung, Request-ID, Job, Rolle/Absicht, erforderliches
+Ziel sowie Drive-Stammordner-ID und kanonischer Kindname bleiben erhalten.
+Neue Auswahl-/Befunderklärungen und Referenzidentitäten werden vollständig
+transportiert; bestehende Fachangaben, Entscheidungen und Budgets aus dem Record
+gelesen. Nur bedeutungslose optionale Leerwerte entfallen aus der lesbaren
+Projektion. Die interne Order und Pflichtfelder der Lieferhülle bleiben vollständig.
+Die allgemeinen Verfahren stehen in diesem Vertrag, nicht nochmals im Prompt.
+
+Nur eine neue Aktivierung erzeugt und speichert den Text. Anzeige, Kopie und
+Neustart verwenden denselben gespeicherten String, auch nach einem Vorlagenwechsel
+oder geänderten Einstellungen. Das gilt ebenso für eine zuvor gespeicherte
+Textfassung. Die Quellenprüfung vor Veröffentlichung bleibt wirksam: Geänderte
+Mainregeln können einen solchen Auftrag sperren. Ein dann erforderlicher neuer
+Auftrag wird bewusst am aktuellen Stand aktiviert, nicht automatisch umgebunden.
 
 Der Empfänger bindet neue Motivhinweise, Rasterwünsche je Achse, ausdrücklich
 aufgehobene Vorgaben, Motivvorlagenwünsche, Korrekturtext und Kontextwunsch an
-die gewählte Bildrolle und Handlung. Bei der Neuanlage wird das gebundene
-Briefing übernommen. Bei bestehenden Jobs bleibt das bisherige Briefing erhalten;
-neue Absichten werden als exakt gebundener Zusatz fortgeschrieben. Der normale
-Auftragsweg bindet den Namen, die Bytezahl und SHA-256 der gewählten PNG-/JPEG-
+die gewählte Bildrolle und Handlung. Bei der Neuanlage wird das vollständig
+gebundene Briefing unverändert übernommen. Bei bestehenden Jobs bleibt das
+bisherige Briefing unverändert; nur ein nichtleerer gebundener Zusatz wird mit
+genau zwei LF-Zeichen (`\n\n`) angehängt. Ein leerer Zusatz ändert das Briefing nicht.
+Der normale Auftragsweg bindet den Namen, die Bytezahl und SHA-256 der gewählten PNG-/JPEG-
 Referenz. Der Benutzer hängt die Datei beim Absenden nativ in ChatGPT an.
 Vor der Generierung öffnet der Akteur die tatsächliche Anlage, prüft alle drei
 Werte und dokumentiert die erforderliche Herkunft. Eine fehlende oder mehrdeutige

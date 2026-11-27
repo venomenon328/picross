@@ -24,28 +24,49 @@ def uuid4_text(value):
 def producer_prompt(root_id, binding, reference):
     import json
     job = binding['puzzle_id']
-    prompt = (f"Arbeite in {REPOSITORY} nach AGENTS.md, den für diese Phase gerouteten Authoring-/Bildquellen "
-              "und docs/tools/PW_IMPORT.md am gebundenen Commit. Übernimm die kreative Arbeit und tatsächliche "
-              "Originalsichtung. Liefere ausschließlich beauftragte Bytes und das Manifest. Die Windows-PW "
-              "prüft und veröffentlicht den Arbeitsstand mit ihrer gh-Anmeldung. "
-              f"Drive: Suche unter Root-ID {root_id} ausschließlich das direkte Kind mit exaktem Namen {job}. "
-              "Prüfe alle Ergebnisseiten einschließlich gleichnamiger Nichtordner, Eltern-ID, exakten Namen, "
-              "Ordnertyp und trashed=false. Bei Mehrdeutigkeit oder Nichtordner mit Konflikt stoppen. "
-              "Eindeutigen Ordner wiederverwenden, bei Abwesenheit einmal erstellen und ID und Elternbindung "
-              "zurücklesen. Nach Antwortverlust zuerst erneut auflösen. Vor Upload eindeutige Zuordnung nochmals "
-              "prüfen und ausschließlich die tatsächliche Kind-ID verwenden. Originale zuerst, Manifest zuletzt. "
-              "Bei Neuanlage brief unverändert übernehmen, sonst nichtleeren Zusatz mit zwei Zeilenumbrüchen "
-              "anhängen. Rasterwünsche sind keine Parameterfreigabe. Auftragsbindung: "
-              + json.dumps(binding, ensure_ascii=False))
+    role, intent = binding['phase'], binding['intent']
+    step, subject = {'reveal': (1, 'das Abschlussbild'), 'motif': (2, 'die Motivvorlage'),
+                     'background': (4, 'das Hintergrundoriginal')}[role]
+    source = binding['source']
+    rules = f"https://github.com/{REPOSITORY}/blob/{source['main_commit']}"
+    if intent == 'assessment':
+        goal = (f"Bewerte {subject} {binding['target']} an den unveränderten Originalbytes neu; "
+                "liefere das Urteil ohne neue Bildbytes.")
+    elif intent == 'correction':
+        goal = (f"Korrigiere {subject} {binding['target']} gemäß dem gebundenen Änderungswunsch. "
+                "Lege die korrigierte Fassung zur fälligen Wahl vor.")
+    else:
+        goal = {
+            'reveal': 'Erzeuge und sichte die Abschlussbilder; lege das qualifizierte Angebot zur Wahl vor.',
+            'motif': ('Erzeuge und sichte die Motivvorlage mit geschützten Merkmalen und vollständigen '
+                      'Parametervorschlägen; lege sie zur Freigabe vor.'),
+            'background': 'Erzeuge und sichte die Hintergrundoriginale für das anschließende qualifizierte Angebot.',
+        }[role]
+    projected = {key: binding[key] for key in ('request_id', 'puzzle_id', 'phase', 'intent', 'source')}
+    if source['work_head'] is None:
+        projected['limits'] = binding['limits']
+    for key in ('target', 'brief', 'choice', 'declarations'):
+        if binding[key]:
+            projected[key] = binding[key]
+    lines = [f'Repository: {REPOSITORY} · ChatGPT · Authoring, Schritt {step}.',
+             f'Lies {rules}/AGENTS.md und die dort für diese Phase gerouteten Authoring-/Bildquellen sowie '
+             f'{rules}/docs/tools/PW_IMPORT.md (IMPORT-02/03/04/07).']
+    if source['work_head'] is not None:
+        lines.append(f"Produktionsdatensatz: https://github.com/{REPOSITORY}/blob/{source['work_head']}/"
+                     f'content/authoring/{job}/current/record.json')
+    lines.append(goal)
+    delivery = 'tatsächliche Urteile und Manifest' if intent == 'assessment' else 'Originale, tatsächliche Urteile und Manifest'
+    lines.append(f'Liefere {delivery} über den gebundenen Drive-Eingang; PW prüft und veröffentlicht.')
+    lines.append('Auftragsbindung: ' + json.dumps(projected, ensure_ascii=False))
+    lines.append('Drive-Eingang: ' + json.dumps({'root_id': root_id, 'child': job}, ensure_ascii=False))
     if reference:
-        prompt += (" Öffne die native Chat-Anlage als Original vor der Generierung. Prüfe Name, Bytezahl und "
-                   "SHA-256 gegen " + json.dumps(reference, ensure_ascii=False) + ". Bei fehlender oder mehrdeutiger "
-                   "Anlage anhalten. Dokumentiere Herkunft nach Authoring und liefere dieselben Bytes als genau "
-                   "ein input-Asset im ersten Reveal, getrennt von den Bildangeboten.")
-    if binding['phase'] == 'background':
-        prompt += (" Nach bestätigter Veröffentlichung Schritt 4 am veröffentlichten Stand über PW_REMOTE "
-                   "mit prepare, Originalzustellung, tatsächlicher Sichtung und assessment fortsetzen.")
-    return prompt
+        lines.append('Native Referenzanlage: ' + json.dumps(reference, ensure_ascii=False))
+    if role == 'background':
+        lines.append('Nach bestätigtem Import am veröffentlichten Nachfolger über '
+                     f'{rules}/docs/tools/PW_REMOTE.md#originale-in-chatgpt-sichten fortsetzen: aufbereiten, '
+                     'Original und fertige Ausgabe tatsächlich sichten, Bewertung sichern und das '
+                     'qualifizierte Hintergrundangebot zur Wahl vorlegen.')
+    return '\n\n'.join(lines)
 
 
 def reference_binding(value):

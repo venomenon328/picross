@@ -228,7 +228,17 @@ bei der gesicherten Auswahlvorlage; der Produkt-PR gehört zum Schlussauftrag.
 Vor dem Start eines ChatGPT-Bildempfangs bleibt die ausführbare Textvorschau
 leer. Nach „Auftrag starten und kopieren“ sind Vorschau und Kopie an den
 gespeicherten Auftrag gebunden. Erneutes Kopieren und Neustart verwenden
-denselben Text; geänderte Einstellungen gelten erst für einen neuen Auftrag.
+denselben Text, auch wenn er vor einem Programmupdate erzeugt wurde. Neue
+Vorlagen und geänderte Einstellungen gelten erst für einen neu gestarteten Auftrag.
+
+Reguläre Aufträge lesen aktuelle Regeln aus main und Produktionsdaten aus dem
+festen Recordlink. Ein aktivierter ChatGPT-Bildauftrag bindet dagegen auch seine
+Regelquellen an den beim Start gelesenen Maincommit. Er enthält die konkrete
+Arbeit, neue Eingaben und die private Empfangsbindung; die Verfahren liest der
+Akteur über den kurzen [PW-IMPORT-Verweis](../../docs/tools/PW_IMPORT.md).
+Eine unveränderte Rekopie hebt die Quellenprüfung vor Veröffentlichung nicht auf.
+Hält sie wegen geänderter Regeln an, muss ein nötiger neuer Auftrag bewusst am
+aktuellen Stand gestartet werden.
 
 Bei v3-Ständen steht die Bereitschaft auf der Bildkarte. Die Erklärung eines Befunds lässt sich mit Enter öffnen. Beim Bildempfang bindet die Start-und-Kopieraktion Annahme und Behandlung, beim übrigen Auftragsweg das Absenden. „Korrigieren“ an der Karte setzt die Arbeitsgrundlage und springt zum Änderungsfeld. Die Auswahl einer Motivvorlage umfasst auch die konkrete Parameteralternative.
 

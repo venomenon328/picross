@@ -1,32 +1,22 @@
 {
   "format": "development-ci-plan/v1",
   "issue": "https://github.com/venomenon328/picross/issues/918",
-  "package": "PW-PROMPT-A",
+  "package": "PW-PROMPT-B",
   "modules": [
     "tools"
   ],
-  "purpose": "Gemeinsame Aktions-/Zielphase, knappe reguläre Produktionsaufträge und korrekt getrennte Codex-/ChatGPT-Wege; bestehende Generator-, UI-, Empfangs- und Payloadprüfungen.",
-  "omitted": "Keine Fachalgorithmen, Originalbytes, Transport-/Writer-, Auth- oder Installeränderung. production.*, native.*, sync.server, delivery und preflight bleiben ungewählt. A-T01 prüft einmalig die synthetische Promptmatrix mit vollständigen Vorher-/Nachherpaaren; A-T02 den vorhandenen UI-/Loopbackharness und deterministischen CMD-Abgleich. Das ist keine Browser-/Windowsbedienprobe oder Liveproduktion. Regulärer Windows-x64-Spielerbau nach tatsächlichem Werkzeugdiff; keine neue manuelle Vor-Merge-Abnahme.",
+  "purpose": "Knappe aktivierte ChatGPT-Bildaufträge mit vollständiger privater Quellen-/Entscheidungsbindung, eindeutiger Handlung und stabilem gespeichertem Text.",
+  "omitted": "Keine Änderung an Fachkern, Transport, Writer, Authentisierung, Lieferhülle oder Paketierungsverfahren. production.*, native.*, preflight, delivery und sync.server bleiben ungewählt. B-T01 prüft einmalig tatsächlich aktivierbare synthetische Bindungen und vollständige Vorher-/Nachhertexte; B-T02 den vorhandenen UI-/Loopbackharness und deterministischen CMD-Abgleich. Keine reale Bildproduktion, Drive-Lieferung, Browserbedienung oder Windowsinstallation. Der reguläre Windows-x64-Spielerbau folgt dem Werkzeugdiff; er belegt keinen PW-Windows-Start.",
   "test_changes": [
-    {
-      "path": "tools/test_production_workspace.py",
-      "disposition": "change-scoped",
-      "reason": "Bestehende Diagnose-/Parameterwahlregressionen semantisch auf den knappen Wortlaut und eine reale Zielprojektion anpassen; Bindungen, bedingte Crop-Folge und unveränderte Ausnahmengründe bleiben geprüft."
-    },
-    {
-      "path": "tools/test_authoring_sheet.py",
-      "disposition": "change-scoped",
-      "reason": "Kleine dauerhafte Regressionen für Zielphase, Executor, offene Assessmentziele ohne kreative Vormerkungen und vollständige neue Befunderklärungen ohne zusätzliche Befugnisse. Vorhandene Quellen-/Wahl-/Teilachsen-/Mergefälle weiterverwenden."
-    },
     {
       "path": "tools/test_production_inbox.py",
       "disposition": "change-scoped",
-      "reason": "Bestehende Loopbackmatrix um reine Reveal-/Motivbewertung erweitern. Echte Startbindung, kreative Vormerkungen aus dem Assessment ausschließen und unveränderte Briefing-, Original-, Budget- und Auswahlbindung prüfen."
+      "reason": "Kleine semantische Producerfälle sichern Rollen-/Aktionsziel, vollständige neue Bindungen und feste Quellen. Gespeicherte Alttexte bleiben bei Vorlagen-/Einstellungswechsel, Rekopie und Neustart identisch; vorhandene Hüllen-/Delta-/Budgetprüfungen bleiben zuständig."
     },
     {
       "path": "tools/production_workspace/check_ui_loading.cjs",
       "disposition": "change-scoped",
-      "reason": "Der UI-Zustandsharness prüft Ziel- und Executorwechsel, Rückkorrektur und offene Assessmentziele. Er prüft außerdem den Erhalt kreativer Vormerkungen bei Aktionswechsel und Empfangsstart sowie Vorschau, Kopie und Rekopie."
+      "reason": "Vorhandenen Start-/Vorschau-/Kopie-/Fehlerharness auf tatsächliche Root-/Job-/Requestbindung statt entfallender Drive-Verfahrensprosa prüfen; gespeicherte Rekopie unverändert nachweisen."
     }
   ],
   "core_change": null,

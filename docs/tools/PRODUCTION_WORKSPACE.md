@@ -484,8 +484,9 @@ Browserstorage. Langsame/abgebrochene Ladevorgänge lassen andere Jobs bedienbar
 
 PW-B erzeugt pro Handlung einen kurzen, überprüfbaren Auftrag mit Repository,
 fixiertem erreichbarem Quellencommit, einem kanonischen Recordpfad als Einstieg
-und tatsächlichen Auswahl-IDs. Daraus erreichbare Parameter, Briefings, Hashes,
-Paket-/Projektionspfade und allgemeine Regeln werden nicht in Folgeaufträge kopiert.
+und tatsächlichen Auswahl-IDs. Bei regulären Folgeaufträgen werden daraus
+erreichbare Parameter, Briefings, Hashes, Paket-/Projektionspfade und allgemeine
+Regeln nicht kopiert.
 Ein kurzer verbindlicher Verweis auf AGENTS und Authoring 0.8.0 genügt; er aktiviert
 die phasenbezogene Quellenroute einschließlich der zugeordneten Bildtypnormen, nicht
 die Volllektüre aller Fachhandbücher. Nur neue Absicht, Freigabe, Änderung oder
@@ -522,9 +523,14 @@ lokal beauftragt. ChatGPT-Bildangebote und -korrekturen verwenden den gebundenen
 [Bildempfang](PW_IMPORT.md); Rasterarbeit, Hintergrundaufbereitung nach bestätigtem
 Import und Erstintegration/Git-Abschluss verwenden [PW-REMOTE](PW_REMOTE.md).
 Spätere Hintergrundrevisionen verwenden den eigenen Bestandsweg nach
-Authoring Schritt 5 §9. Die aktuellen Regeln stammen aus main, der bestehende
-Produktionsstand aus dem festen Recordlink. Private Empfangsbindungen stehen
-zusätzlich im aktivierten Bildauftrag.
+Authoring Schritt 5 §9. Reguläre Aufträge lesen die aktuellen Regeln aus main
+und den bestehenden Produktionsstand aus dem festen Recordlink. Beim aktivierten
+ChatGPT-Bildempfang stammen AGENTS, geroutete Authoring-/Bildquellen und PW-IMPORT
+dagegen aus der gebundenen Regelbasis `source.main_commit`. Der vorhandene Record
+bleibt am `source.work_head` erreichbar. Die vollständige technische Quellen- und
+private Empfangsbindung sowie unveröffentlichte Eingaben bleiben nach
+[IMPORT-03](PW_IMPORT.md#import-03--einrichtung-und-tatsächlicher-auftrag) im
+knappen Bildauftrag; allgemeine Empfangsverfahren stehen dort in der Quelle.
 
 „Bild neu bewerten“ richtet sich ausschließlich an ein noch offenes Reveal-
 oder Motivangebot der aktuellen Phase. Die Auswahl bietet nur diese Ziele an;
@@ -554,7 +560,9 @@ gebundenen Text auch nach einem Neustart. Ein gespeicherter Motivtext allein
 bleibt ein Entwurf. Übernahmestatus und fachliche Gitphase sind getrennt sichtbar.
 Nach abgeschlossener Bereinigung lädt PW auch einen nachgewiesenen Nachfolger des Imports auf demselben Produktionsbranch. Bei ungeklärter Abstammung bleibt die Quittung sichtbar. Der Hauptbereich verlinkt den bestätigten Import oder den Vergleich mit dem aktuellen Arbeitsstand auf GitHub.
 Passives Ansehen und erneutes Kopieren erteilen keine zusätzliche Befugnis.
-Neue Vorlagen ändern keinen bereits gespeicherten Auftrag. Vor der Aktivierung
+Neue Vorlagen oder Einstellungen ändern keinen bereits gespeicherten Auftrag,
+auch keine in einem früheren Programmstand gespeicherte Textfassung. Die
+Quellenprüfung vor Veröffentlichung bleibt nach PW-IMPORT wirksam. Vor der Aktivierung
 eines Bildempfangs gibt es noch keinen ausführbaren Producertext; anschließend
 zeigen Vorschau und Kopie denselben gebundenen Text. Eine Vorschau vor dem Start
 ist keine zusätzliche Pflicht.
