@@ -66,6 +66,7 @@ class Writer:
             require(raw == GitSource(db).read(actual, current.path(job), current.LIMIT),
                     'Nachfolgerrecord nicht unabhängig bestätigt.')
             require(git.remote_head(db, 'refs/heads/content/pw/' + job) == actual, 'Arbeitsstand erneut prüfen.')
+        order['superseded_work'] = {'leaf': work.name, 'parent': parent}
         raise StaleBuild(f'Konflikt: Ein anderer Arbeitsstand ({actual}) ist veröffentlicht. '
                          f'Der eigene Build ist unveröffentlicht. Arbeitsbaum {work.name} und '
                          f'Eingangskopie inbox-stage/{order["request_id"]} bleiben erhalten. '
@@ -117,10 +118,9 @@ class Writer:
                 if order['step'] == 'build':
                     work = self.bound_work(db, order)
                 else:
-                    paths = ws.prepare(self.root, job, main, main, expected, inbox=True)
+                    paths = ws.prepare(self.root, job, main, main, expected, originals=expected is not None,
+                                       inbox=True, abandoned=order.get('abandoned_work'))
                     work = Path(paths['job'])
-                    if expected:
-                        publisher.resume(work, job, expected, auth='gh')
                     order.update(step='build', work_leaf=work.name, build_parent=expected or main)
                     save()
                 # Hydration strips release locators. Translate the verified remote

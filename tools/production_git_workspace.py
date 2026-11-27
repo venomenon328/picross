@@ -70,8 +70,9 @@ def read_binding(root):
     if raw is None:
         return None
     value = io.json_bytes(raw, current.LIMIT)
+    store = io.external(value['store'])
     require(value['path'] == str(root) and value['repository'] == REPO
-            and git_root(root) == io.external(value['store']), 'Worktree ownership differs')
+            and git_root(root) == store and state.parent == store / 'worktrees', 'Worktree ownership differs')
     return value
 
 
@@ -146,6 +147,9 @@ def changes(root):
 
 def check_work(root, job, *, resumed=False):
     """Every exceptional local byte belongs to the current draft or its named originals."""
+    from .production_worktree_resume import JOURNAL
+    require(not io.safe(gitdir(root), JOURNAL).exists(),
+            'Local resume interrupted; rerun the bound PW-LOCAL entry before editing or publishing')
     name = current.path(job)
     raw = io.read(root, name, current.LIMIT, missing=True)
     refs = {}
@@ -254,28 +258,33 @@ def open_tree(base, db, leaf, commit, job, role, branch=None):
 
 
 def inbox_job_leaf(base, db, job, parent):
-    # Keep superseded drafts intact. Reuse the current detached worktree across
-    # later successful imports, even after an earlier conflict needed a new one.
+    # Legacy replacement leaves remain independently owned by this job.
     from .production_worktree_publish import JOURNAL
     canonical = io.safe(base, 'job-' + job)
-    if not canonical.exists():
-        return canonical.name
     prefix = 'inbox-' + job + '.'
+    candidates = []
     for path in (canonical, *sorted(base.glob(prefix + '*'))):
+        if not path.exists():
+            continue
         if path != canonical:
             check_commit(path.name[len(prefix):])
         path = io.safe(base, path.name)
-        owner = read_binding(path)
-        require(owner and owner['store'] == str(db) and owner['job'] == job and owner['role'] == 'job',
+        owner = read_binding(path) if io.safe(path, '.git').is_file() else None
+        require(owner and owner['store'] == str(db) and owner['job'] == job and owner['role'] == 'job'
+                and owner['branch'] is None and git(path, 'rev-parse', '--abbrev-ref', 'HEAD') == 'HEAD',
                 'Fremder Import-Arbeitsbaum. Vorhandene Dateien prüfen.')
-        require(not (gitdir(path) / JOURNAL).exists(), 'Offene Publikation zuerst im eigenen Arbeitsbaum klären.')
-        if git(path, 'rev-parse', 'HEAD') == parent:
+        require(not io.safe(gitdir(path), JOURNAL).exists(),
+                'Offene Publikation zuerst im ursprünglichen Empfangsauftrag klären.')
+        head = git(path, 'rev-parse', 'HEAD')
+        if head == parent:
             return path.name
-    return prefix + parent
-
+        distance = int(git(path, 'rev-list', '--count', head + '..' + parent))
+        if git(path, 'merge-base', head, parent) == head:
+            candidates.append((distance, path.name))
+    return min(candidates)[1] if candidates else canonical.name
 
 def prepare(root, job, tools_commit, main, expected, *, integration=None, integration_head=None,
-            originals=False, repository=REPO, inbox=False):
+            originals=False, repository=REPO, inbox=False, abandoned=None):
     current.path(job)
     for oid in (tools_commit, main, expected, integration_head):
         if oid is not None:
@@ -306,17 +315,47 @@ def prepare(root, job, tools_commit, main, expected, *, integration=None, integr
             git(db, 'update-ref', tracking, main, old_main or '0' * 40)
         if integration_head:
             git(db, 'merge-base', '--is-ancestor', main, integration_head)
-        toolbox = open_tree(base, db, 'tools-' + tools_commit, tools_commit, job, 'tools')
+        from . import production_worktree_publish as publication, production_worktree_resume as resume
+        from .production_workspace.release_catalog import LOCK_BRANCH
+        require(not originals or expected, 'Originals require an exact published work commit')
         leaf = inbox_job_leaf(base, db, job, expected or main) if inbox else 'job-' + job
-        data = open_tree(base, db, leaf, expected or main, job, 'job')
-        if originals:
-            from .work_publish import hydrate, bound_record
-            from .production_worktree_publish import JOURNAL
-            require(expected and not (gitdir(data) / JOURNAL).exists(), 'Expected published job without pending transaction')
-            with current.qualification.operation():
-                published = GitSource(data).read(expected, current.path(job), current.LIMIT)
-                current.qualification._published(bound_record(published, job))
-                hydrate(data, job, expected)
+        data = io.safe(base, leaf)
+        def check_resume_refs():
+            check_refs()
+            require(transport.remote_head(db, 'refs/heads/' + LOCK_BRANCH) is None and
+                    not io.safe(gitdir(data), 'work-production-catalog-owner').exists(),
+                    'A production catalog writer is active; finish its owning operation and retry')
+        if data.exists():
+            owner = read_binding(data)
+            require(owner and owner['store'] == str(db) and owner['role'] == 'job' and owner['job'] == job and
+                    owner['branch'] is None and git(data, 'rev-parse', '--abbrev-ref', 'HEAD') == 'HEAD',
+                    'Foreign worktree or wrong job branch; use the owned detached workspace')
+            state = gitdir(data)
+            if io.safe(state, publication.JOURNAL).exists():
+                require(not inbox, 'Open Inbox publication; retry its original activated order')
+                publication.recover(data, job, expected, main, check_refs)
+            head = git(data, 'rev-parse', 'HEAD')
+            pending = io.safe(state, resume.JOURNAL).exists()
+            if expected is not None and (originals or head != expected or pending):
+                try:
+                    resume.resume(data, job, expected, originals=originals, check_refs=check_resume_refs)
+                except resume.UnsecuredWork:
+                    if not (inbox and not pending and head != expected and
+                            abandoned == {'leaf': leaf, 'parent': head}):
+                        raise
+                    # A specifically revoked stale build remains intact.
+                    leaf = 'inbox-' + job + '.' + expected
+                    check_refs()
+                    data = open_tree(base, db, leaf, expected, job, 'job')
+                    if originals:
+                        resume.resume(data, job, expected, originals=True, check_refs=check_resume_refs)
+            else:
+                data = open_tree(base, db, leaf, expected or main, job, 'job')
+        else:
+            data = open_tree(base, db, leaf, expected or main, job, 'job')
+            if originals:
+                resume.resume(data, job, expected, originals=True, check_refs=check_resume_refs)
+        toolbox = open_tree(base, db, 'tools-' + tools_commit, tools_commit, job, 'tools')
         result = {'store': str(db), 'tools': str(toolbox), 'tool_commit': tools_commit, 'job': str(data),
                   'data_commit': expected or main, 'main': main, 'temporary': str(io.safe(base, 'tmp'))}
         if integration:

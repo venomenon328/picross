@@ -257,6 +257,20 @@ def delete_ref(root, ref, expected):
     require(transport.remote_head(root, ref) is None, 'Conditional ref removal not confirmed')
 
 
+def check_catalog_owner(root, owner):
+    """Never create a local claim over a foreign or unknown recovery lease."""
+    state = workspace.gitdir(root)
+    raw = io.read(state, 'work-production-catalog-owner', 8192, missing=True)
+    actual = transport.remote_head(root, 'refs/heads/' + release_catalog.LOCK_BRANCH)
+    if raw is None:
+        require(actual is None, 'Another production catalog writer owns the lease; finish it before recovery')
+    else:
+        receipt = io.json_bytes(raw, 8192)
+        nonce = receipt.get('nonce')
+        require(receipt.get('owner') == owner and transport.SHA.fullmatch(nonce or '') and actual in (None, nonce),
+                'Different production catalog lease; resume its owning operation')
+
+
 @contextmanager
 def catalog_writer(root, main, *, owner=None):
     """Serialize cooperating jobs across hosts. A killed process resumes from its local token."""
@@ -517,15 +531,15 @@ def finish_pushed_request(root, job, parent, main, actual):
     """Complete the transport of the exact successor already verified before push."""
     ref = 'refs/heads/content/pw/' + job
     tag_ref = 'refs/tags/work-prod-' + job
-    previous = bound_record(remote_record(parent, job), job)
+    previous = bound_record(remote_record(parent, job), job) if parent else None
     result = bound_record(remote_record(actual, job), job)
     binding = result['work_release']
-    require(binding == previous['work_release'], 'Changed release generation after publication')
+    require(previous is None or binding == previous['work_release'], 'Changed release generation after publication')
     rows, _ = catalog()
     release = fresh_generation(rows, job, transport.remote_head(root, tag_ref), binding)
     retained = {r['asset']['asset_id'] for r in current.references(result) if 'asset' in r}
     previous_ids = {r['asset']['asset_id'] for r in current.references(previous)
-                    if 'asset' in r and r['asset']['release_id'] == binding['id']}
+                    if 'asset' in r and r['asset']['release_id'] == binding['id']} if previous else set()
     require(retained <= {a['id'] for a in release['assets']}, 'Missing bound assets after publication')
     require(transport.remote_head(root, ref) == actual and transport.remote_head(root, 'refs/heads/main') == main,
             'Work ref or Main changed during publication recovery')

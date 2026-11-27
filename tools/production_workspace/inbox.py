@@ -28,6 +28,7 @@ class Inbox:
         self.data = io.json_bytes(raw, 8 * current.LIMIT) if raw else {'folder': None, 'orders': {}}
         self.data.setdefault('drafts', {})
         self.data.setdefault('generations', {})
+        self.data.setdefault('abandoned_work', {})
         # Existing receipts used the flat configured folder. Freeze it before any edit.
         for order in self.data['orders'].values():
             order.setdefault('folder', self.data['folder'])
@@ -132,8 +133,12 @@ class Inbox:
                         registered = completed.get('confirmed') and job in completed.get('completed_ids', [])
                         require(source.get('remote_confirmed') and (matched or registered),
                                 'Bestätigten Arbeitsstand zuerst aus den Gitquellen laden.')
-                    if order['step'] != 'stale':
+                    if order['step'] == 'stale':
+                        self.data['abandoned_work'][order['puzzle_id']] = order['superseded_work']
+                    else:
                         self.discard_stage(order)
+                        if action == 'acknowledge':
+                            self.data['abandoned_work'].pop(order['puzzle_id'], None)
                     if action == 'cancel' and not order['source']['work_head'] and order['puzzle_id'] not in self.data['drafts'].values():
                         self.data['drafts'][str(uuid4())] = order['puzzle_id']
                     self.data['generations'][order['puzzle_id']] = str(uuid4())
@@ -318,6 +323,8 @@ class Inbox:
         # The prompt contains only the remote folder binding.
         order['folder'] = dict(folder)
         order['child'] = job
+        if job in self.data['abandoned_work']:
+            order['abandoned_work'] = self.data['abandoned_work'][job]
         order['prompt'] = contract.producer_prompt(folder['id'], binding, body['inputs']['reference'])
         self.data['orders'][job] = order
 

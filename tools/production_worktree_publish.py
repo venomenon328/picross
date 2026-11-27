@@ -23,6 +23,29 @@ def previous_operation(root, job, expected):
     return None
 
 
+def recover(root, job, expected, main, check_refs):
+    """Complete only the already-pushed local publication owned by this job."""
+    from . import work_publish as publisher
+    state = ws.gitdir(root)
+    value = io.json_bytes(io.read(state, JOURNAL, 8192), 8192)
+    prior = value.get('expected')
+    target = value.get('target')
+    require(expected is not None and expected == target and previous_operation(root, job, prior) == value,
+            'Own publication pending; retry its original publisher command and read back the work ref')
+    require(ws.git(root, 'show', '-s', '--format=%B', target) == 'Publish current ' + job,
+            'Bound remote or Inbox publication pending; retry its original request')
+    check_refs()
+    with current.qualification.operation():
+        operation = Publication(root, job, prior, main, expected)
+        if not operation.value['confirmed']:
+            owner = {'operation': 'publish', 'job': job, 'expected': prior, 'draft': value['draft']}
+            publisher.check_catalog_owner(root, owner)
+            with publisher.catalog_writer(root, main, owner=owner):
+                publisher.finish_pushed_request(root, job, prior, main, target)
+        check_refs()
+        return operation.finish(target)
+
+
 def checkpoint(step):
     """Interruption boundary for the managed publisher."""
 

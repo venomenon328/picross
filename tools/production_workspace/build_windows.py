@@ -31,7 +31,7 @@ FROZEN_EXCLUDES = ('tools.puzzle_production.za1_fixtures', 'tests')
 # PyInstaller even when the installed readers never call them. Keep the Git
 # worktree/remote publication chain outside both desktop applications.
 PRODUCTION_WRITER_EXCLUDES = (
-    'tools.production_git_workspace', 'tools.production_worktree_publish',
+    'tools.production_git_workspace', 'tools.production_worktree_publish', 'tools.production_worktree_resume',
     'tools.publish_git', 'tools.work_publish', 'tools.production_remote',
     'tools.production_remote_pr', 'tools.production_remote_steps',
 )

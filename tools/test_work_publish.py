@@ -309,6 +309,47 @@ op.finish(target)
         self.assertEqual(pub.finish(self.root, job, completed), 'closed')
         self.assertEqual(pub.finish(self.root, job, completed), 'no-op')
 
+    def test_external_successors_resume_in_the_same_worktree(self):
+        from tools import production_git_workspace as space
+        paths, open_job = self.managed()
+        f = self.fixture
+        job = 'pz-current'
+        name = current.path(job)
+        f.publish()
+        first = pub.push_job(self.root, job, None)
+        other_area = f.work / 'external writer'
+        other_area.mkdir()
+        other = space.prepare(other_area, job, self.tool, self.main, first, originals=True)
+        self.assertNotEqual(paths['store'], other['store'])
+        f.root = Path(other['job'])
+        self.enterContext(patch.object(pub, 'remote_record', side_effect=lambda oid, job: GitSource(Path(self.remote)).read(oid, current.path(job))))
+        fixtures.git(other['store'], 'config', 'user.name', 'External writer')
+        fixtures.git(other['store'], 'config', 'user.email', 'external@example.invalid')
+        f.job = json.loads((f.root / name).read_bytes())
+        heads = []
+        build = f.publish
+
+        def advance():
+            result = build()
+            heads.append(pub.push_job(f.root, job, heads[-1] if heads else first))
+            pub.resume(f.root, job, heads[-1])
+            return result
+
+        f.publish = advance
+        f.raster_ready()
+        expected = heads[-1]
+        published = pub.remote_record(expected, job)
+        result = open_job(expected, originals=True)
+        self.assertEqual(result['job'], paths['job'])
+        self.assertEqual(result['store'], paths['store'])
+        self.assertEqual(space.git(self.root, 'rev-parse', 'HEAD'), expected)
+        self.assertEqual(space.git(self.root, 'write-tree'), space.git(self.root, 'rev-parse', expected + '^{tree}'))
+        local = (self.root / name).read_bytes()
+        self.assertEqual(local, current.encoded(pub.local_record(json.loads(published))))
+        for ref in current.references(json.loads(published)):
+            self.assertEqual(current.io.file_hash(self.root, ref['file'], ref['bytes']), ref['sha256'])
+        self.assertEqual(open_job(expected, originals=True), result)
+
     def test_test_only_input_requires_bound_synthetic_catalog(self):
         from tests.puzzle_production.current_fixtures import fingerprints
         from tools.puzzle_production.catalog_integration import TEST_CATALOG

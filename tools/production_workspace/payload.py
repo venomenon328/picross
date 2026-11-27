@@ -26,6 +26,7 @@ IGNORED = {
     'helper_diagnostic.py', 'packaging/HelperDiagnostic.cs',  # Explicit, non-installing T02 adapter.
 }
 PW_WRITER_MODULES = frozenset({'tools.production_git_workspace', 'tools.production_worktree_publish',
+                               'tools.production_worktree_resume',
                                'tools.work_publish', 'tools.publish_git', 'tools.ci_growth'})
 METHOD_04 = PRODUCTION + 'sd2_method_0_4.json'
 METHOD_03 = PRODUCTION + 'difficulty_method_0_3.json'
