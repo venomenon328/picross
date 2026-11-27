@@ -65,8 +65,8 @@ const context = vm.createContext({
   fetch: async (path, options) => {
     if(path.startsWith('/api/removal/')||path.startsWith('/api/inbox/'))options={...options,headers:{...options.headers,Origin:origin}};
     if(mode==='inbox'&&path==='/api/jobs')return new Promise(()=>{});
+    if(path==='/api/inbox/start')starts++;
     if(mode==='inbox'&&path==='/api/inbox/start'){
-      starts++;
       const response=await fetch(origin+path,options);
       assert.equal(response.status,200);
       if(starts===1)throw Error('Test: Aktivierungsantwort verloren');
@@ -106,7 +106,13 @@ const run = code => vm.runInContext(code, context);
     await until(()=>run('inboxState?.folder&&readyImages.has("one")&&detail')&&get('copyOrder').onclick);
     if(action==='copy-bound'){
       const original=run('currentOrder().prompt');
+      const request=run('currentOrder().request_id');
+      assert.equal(get('orderText').value,original);
+      run("personal.executors[2]='Codex';personal.workroot='E:/Changed';intent.parameters='Ungesendeter Wunsch';updatePrompt()");
       await get('copyOrder').onclick();assert.equal(copied,original);
+      assert.equal(get('orderText').value,original);
+      assert.equal(run('currentOrder().request_id'),request);
+      assert.equal(starts,0,'stored re-copy never activates another request');
       console.log(JSON.stringify(copied));return;
     }
     await until(()=>run('!currentOrder()'));
@@ -181,7 +187,11 @@ const run = code => vm.runInContext(code, context);
       assert.equal(run('intent.grid.width'),'20');
       assert.equal(run('intent.removeGrid.height'),true);
     }
-    assert.match(copied,/Drive: Suche unter Root-ID fixture/);
+    const binding=JSON.parse(copied.split('Auftragsbindung: ')[1].split('\n')[0]);
+    const drive=JSON.parse(copied.split('Drive-Eingang: ')[1].split('\n')[0]);
+    assert.equal(binding.request_id,run('currentOrder().request_id'));
+    assert.equal(binding.puzzle_id,run('currentOrder().puzzle_id'));
+    assert.deepEqual(drive,{root_id:'fixture',child:binding.puzzle_id});
     assert.equal(get('copyOrder').textContent,'Auftrag kopieren');
     assert.equal(copied,get('orderText').value,'bound preview and copy are identical');
     const request=run('currentOrder().request_id');
@@ -191,6 +201,17 @@ const run = code => vm.runInContext(code, context);
   }
   if(mode==='inbox'){
     await until(()=>run('inboxState?.folder'));
+    if(action==='copy-bound'){
+      const get=id=>document.getElementById(id);
+      run("listing={snapshot:'snapshot',jobs:[],motifs:[],errors:[]};showInbox(inboxState);chooseMotif('pz-fuchs')");
+      const original=run('currentOrder().prompt'),request=run('currentOrder().request_id');
+      run("personal.executors[1]='Codex';personal.workroot='E:/Changed';intent.brief='Ungesendeter Text';updatePrompt()");
+      assert.equal(get('orderText').value,original);
+      await get('copyOrder').onclick();assert.equal(copied,original);
+      assert.equal(run('currentOrder().request_id'),request);
+      assert.equal(starts,0,'restart and changed settings preserve the saved text without activation');
+      console.log(JSON.stringify(copied));return;
+    }
     run("listing={snapshot:'snapshot',jobs:[],motifs:[],errors:[]};newDraft();remember('brief','Fuchs');personal.executors[1]='ChatGPT';updatePrompt()");
     const get=id=>document.getElementById(id);
     assert.equal(starts,0);

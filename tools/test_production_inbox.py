@@ -152,6 +152,64 @@ class InboxTests(unittest.TestCase):
             server.server_close()
             thread.join()
 
+    def prompt_data(self, prompt, label):
+        return json.JSONDecoder().raw_decode(prompt.split(label + ': ', 1)[1])[0]
+
+    def assert_producer_binding(self, order):
+        prompt = order['prompt']
+        binding = self.prompt_data(prompt, 'Auftragsbindung')
+        for key in ('request_id', 'puzzle_id', 'phase', 'intent', 'source'):
+            self.assertEqual(binding[key], order[key])
+        self.assertEqual(self.prompt_data(prompt, 'Drive-Eingang'),
+                         {'root_id': order['folder']['id'], 'child': order['child']})
+        main_url = 'https://github.com/venomenon328/picross/blob/' + order['source']['main_commit']
+        self.assertIn(main_url + '/AGENTS.md', prompt)
+        self.assertIn(main_url + '/docs/tools/PW_IMPORT.md', prompt)
+        self.assertIn('IMPORT-02/03/04/07', prompt)
+        head = order['source']['work_head']
+        if head:
+            self.assertIn('https://github.com/venomenon328/picross/blob/' + head +
+                          '/content/authoring/' + order['puzzle_id'] + '/current/record.json', prompt)
+            self.assertNotIn('limits', binding)
+        else:
+            self.assertIsNone(binding['source']['record_sha256'])
+            self.assertNotIn('/current/record.json', prompt)
+            self.assertEqual(binding['limits'], order['limits'])
+        self.assertNotIn(str(order['folder']['directory']), prompt)
+        for unwanted in ('HANDOFF', 'MODEL_SELECTION', 'Draft-PR', 'Squash-Merge', 'trashed=false', 'Ergebnisseiten'):
+            self.assertNotIn(unwanted, prompt)
+        return binding
+
+    def test_new_producer_prompt_preserves_bound_brief_limits_and_native_reference(self):
+        self.prepare_service()
+        reference = {'name': 'Fuchs – Vorlage.png', 'bytes': len(self.png),
+                     'sha256': contract.io.checksum(self.png)}
+        for supplied in ('', reference):
+            with self.subTest(reference=bool(supplied)):
+                body = self.new_start()
+                body['inputs'].update(notes='Rückenlinie „A“ erhalten.\nZweite Zeile bleibt.', reference=supplied)
+                job = self.inbox.action('start', body)['started']
+                order = self.inbox.data['orders'][job]
+                projected = self.assert_producer_binding(order)
+                self.assertEqual(set(projected), {'request_id', 'puzzle_id', 'phase', 'intent', 'source', 'brief', 'limits'})
+                self.assertEqual(projected['brief'], order['brief'])
+                self.assertEqual(projected['source']['work_head'], None)
+                if supplied:
+                    self.assertEqual(self.prompt_data(order['prompt'], 'Native Referenzanlage'), supplied)
+                else:
+                    self.assertNotIn('Native Referenzanlage:', order['prompt'])
+                # The projection must use already bound values, never its own defaults or text cleanup.
+                binding = {key: order[key] for key in ('request_id', 'puzzle_id', 'phase', 'intent', 'target',
+                           'source', 'brief', 'choice', 'declarations', 'limits')}
+                binding = deepcopy(binding)
+                binding.update(brief='  Gebundener Text\n\nmit Randabstand.  ',
+                               limits={'raster_candidates': 4, 'repair_rounds': 1, 'image_corrections': 3})
+                before = deepcopy(binding)
+                projected = self.prompt_data(contract.producer_prompt('fixture', binding, supplied), 'Auftragsbindung')
+                self.assertEqual(projected['brief'], binding['brief'])
+                self.assertEqual(projected['limits'], binding['limits'])
+                self.assertEqual(binding, before)
+
     def test_normal_copy_handshake_through_loopback(self):
         self.prepare_service()
         self.inbox.data['orders'].clear()
@@ -161,6 +219,42 @@ class InboxTests(unittest.TestCase):
         self.assertEqual(copied, order['prompt'])
         self.assertEqual(order['puzzle_id'], 'pz-fuchs')
         self.assertNotIn(str(self.folder), order['prompt'])
+        self.assert_producer_binding(order)
+
+    def test_producer_prompt_keeps_complete_new_choice_and_finding_declaration(self):
+        self.prepare_service()
+        self.inbox.data['orders'].clear()
+        record = deepcopy(self.value['request']['record'])
+        record.update(format=current.findings.PUBLISHED, test_only=False)
+        finding = {'target': 'one', 'content': current.findings.identity(record, 'one'), 'id': 'edge',
+                   'criterion': 'Q-B03', 'rule': 'edge-quality', 'properties': 'Synthetische Kontur',
+                   'context': 'Linke Kante', 'effect': 'Ein Strich bleibt offen', 'extent': 'Ein Detail',
+                   'description': 'Synthetischer Kantenbefund', 'method': 'Synthetische Sichtung',
+                   'actor': 'Prüfer', 'timestamp_utc': '2026-11-27T09:00:00Z', 'result': 'Warnung', 'decision': None}
+        record['findings'] = [finding]
+        key = current.findings.binding(finding)
+        self.service.removal.remote_head.return_value = 'b' * 40
+        self.service.selected = Mock(return_value={'puzzle_id': 'pz-current', 'commit': 'b' * 40,
+            '_record': record, '_projection': {'record': {'sha256': 'c' * 64}}})
+        self.service.detail = Mock(return_value={'facts': {'candidates': {'one': {
+            'missing': [], 'findings': [{'binding': key, 'eligible': True, 'decision': None}]}}}})
+        treatment = 'Kontur „A“ bewusst erhalten.\nKeine zusätzliche Linie.'
+        body = self.new_start()
+        body.update(jid='row', draft_id='', candidate='one',
+                    findings=json.dumps({key: {'accepted': True, 'treatment': treatment}}))
+        body['inputs'].update(brief='', notes='', parameters='Ohren und Schweif erhalten.',
+            grid=['Breite: ungefähr 18 Zellen.', 'Höhe: bisherigen Wunsch ausdrücklich aufheben.'])
+        self.inbox.action('start', body)
+        order = self.inbox.data['orders']['pz-current']
+        projected = self.assert_producer_binding(order)
+        self.assertEqual(projected['choice'], order['choice'])
+        self.assertEqual(projected['declarations'], order['declarations'])
+        self.assertEqual(projected['declarations'][key]['treatment'], treatment)
+        self.assertEqual(set(projected['declarations'][key]),
+                         {'binding', 'action', 'treatment', 'actor', 'timestamp_utc', 'statement', 'source'})
+        self.assertEqual(projected['brief'], order['brief'])
+        self.assertNotIn(record['brief'], order['prompt'])
+        self.assertNotIn('target', projected)
 
     def test_resume_current_image_offer_through_loopback(self):
         from tests.puzzle_production.test_current_authoring import decide
@@ -215,6 +309,8 @@ class InboxTests(unittest.TestCase):
                 copied = self.loopback_probe('inbox-resume', action)
                 order = Inbox(self.service).data['orders'][job]
                 self.assertEqual(copied, order['prompt'])
+                projected = self.assert_producer_binding(order)
+                self.assertFalse({'choice', 'declarations', 'brief'} & projected.keys())
                 self.assertNotEqual(order['request_id'], receipt['request_id'])
                 self.assertEqual(order['source'], {'main_commit': 'a' * 40, 'work_head': head, 'record_sha256': record_hash})
                 expected_intent = 'assessment' if action == 'assessment' else 'offer'
@@ -273,15 +369,21 @@ class InboxTests(unittest.TestCase):
                     self.assertEqual(followup['choice']['id'], 'one')
                     self.assertEqual(followup['choice']['decision']['scope'], 'reveal')
                     self.assertIn('Kontur für die Motivvorlage erhalten', followup['brief'])
+                    projected = self.assert_producer_binding(followup)
+                    self.assertEqual(projected['choice'], followup['choice'])
+                    self.assertEqual(projected['brief'], followup['brief'])
                     self.assertEqual(self.loopback_probe('inbox-resume', 'copy-bound'), copied)
                     self.assertEqual(Inbox(self.service).data['orders'][job], followup)
 
     def test_root_change_draft_identity_and_legacy_operation(self):
         self.prepare_service()
         body = self.new_start()
-        self.inbox.action('start', body)
+        stored_text = 'Vor dem Vorlagenwechsel gespeicherter Auftrag.\nFuchs – Quelle und Ziel bleiben gebunden.\n'
+        with patch.object(contract, 'producer_prompt', return_value=stored_text):
+            self.inbox.action('start', body)
         job = 'pz-fuchs'
         order = self.inbox.data['orders'][job]
+        source = deepcopy(order['source'])
         self.assertFalse(self.inbox.advance(order))
         self.assertIn('synchronisierten Rätselordner', order['status'])
         self.assertFalse((self.folder / job).exists())
@@ -290,8 +392,13 @@ class InboxTests(unittest.TestCase):
         self.inbox.action('configure', {'directory': str(other), 'folder_id': 'other'})
         resumed = Inbox(self.service)
         resumed.writer.check_access = Mock()
-        resumed.action('start', body)
+        with patch.object(contract, 'producer_prompt', side_effect=AssertionError('Stored request was regenerated')):
+            resumed.action('start', body)
+            self.inbox = resumed
+            self.assertEqual(self.loopback_probe('inbox', 'copy-bound'), stored_text)
         self.assertEqual(resumed.data['orders'][job]['request_id'], order['request_id'])
+        self.assertEqual(resumed.data['orders'][job]['source'], source)
+        self.assertEqual(resumed.data['orders'][job]['prompt'], stored_text)
         self.assertEqual(resumed.data['orders']['pz-current']['folder']['directory'], str(self.folder))
         self.assertEqual(resumed.data['orders'][job]['folder']['directory'], str(self.folder))
         body['inputs']['brief'] = 'Neuer Titel'
@@ -302,6 +409,8 @@ class InboxTests(unittest.TestCase):
         replacement = resumed.data['orders'][job]
         self.assertNotEqual(replacement['request_id'], order['request_id'])
         self.assertEqual(replacement['folder']['directory'], str(other))
+        self.assertNotEqual(replacement['prompt'], stored_text)
+        self.assert_producer_binding(replacement)
         second = resumed.action('start', self.new_start())['started']
         self.assertNotEqual(second, job)
         (other / second).write_text('kein Ordner')
@@ -336,6 +445,28 @@ class InboxTests(unittest.TestCase):
             self.assertEqual(order['child'], 'pz-current')
             self.assertEqual(order['choice']['id'] if order['choice'] else order['target'],
                              '' if action == 'resume' else target)
+            projected = self.assert_producer_binding(order)
+            self.assertIn('Schritt ' + {'reveal': '1', 'motif': '2', 'background': '4'}[role], order['prompt'])
+            if action == 'assessment':
+                self.assertEqual(projected['target'], target)
+                self.assertIn('unveränderten Originalbytes', order['prompt'])
+                self.assertIn('ohne neue Bildbytes', order['prompt'])
+                self.assertNotIn('Originale,', order['prompt'])
+                self.assertNotIn('choice', projected)
+            elif action == 'rework':
+                self.assertEqual(projected['target'], target)
+                self.assertEqual(projected['brief'], order['brief'])
+                self.assertIn('Korrigiere', order['prompt'])
+                self.assertIn('zur fälligen Wahl', order['prompt'])
+                self.assertNotIn('choice', projected)
+            elif role == 'motif':
+                self.assertEqual(projected['choice'], order['choice'])
+                self.assertIn('Parametervorschlägen', order['prompt'])
+            if role == 'background':
+                self.assertIn('Nach bestätigtem Import am veröffentlichten Nachfolger', order['prompt'])
+                self.assertIn('/docs/tools/PW_REMOTE.md#originale-in-chatgpt-sichten', order['prompt'])
+                self.assertIn('Original und fertige Ausgabe tatsächlich sichten', order['prompt'])
+                self.assertIn('qualifizierte Hintergrundangebot zur Wahl', order['prompt'])
             body['expected'] = order['request_id']
 
     def test_only_exact_native_attachment_can_enter_first_reveal(self):
